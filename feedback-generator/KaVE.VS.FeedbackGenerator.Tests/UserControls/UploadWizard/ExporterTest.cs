@@ -24,13 +24,13 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Streams;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.Tests.Utils.Logging;
 using KaVE.VS.FeedbackGenerator.Utils.Export;
 using Moq;
 using NUnit.Framework;
@@ -51,10 +51,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         private IDataExportAnonymizer _anonymizer;
         private IUserProfileEventGenerator _exportEventGenerator;
         private UserProfileEvent _userProfileEvent;
+        private InMemoryLogManager _logManager;
+        private static readonly DateTime SomeDate = DateTime.Today;
 
         [SetUp]
         public void SetUp()
         {
+            _logManager = new InMemoryLogManager();
+
+            _lastPublishedStream = null;
             _publisher = Mock.Of<IPublisher>();
             Mock.Get(_publisher).Setup(p => p.Publish(It.IsAny<MemoryStream>())).Callback<MemoryStream>(
                 stream => { _lastPublishedStream = new MemoryStream(stream.ToArray()); });
@@ -68,156 +73,118 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             Mock.Get(_exportEventGenerator).Setup(e => e.ShouldCreateEvent()).Returns(false);
             Mock.Get(_exportEventGenerator).Setup(e => e.CreateEvent()).Returns(_userProfileEvent);
 
-            _sut = new Exporter(_anonymizer, _exportEventGenerator);
+            _sut = new Exporter(_logManager, _anonymizer, _exportEventGenerator);
         }
 
         [Test]
-        public void ShouldSilentlySkipPublishingOfEmptyEventList()
+        public void SkipsPublishingIfNoEvents()
         {
-            _sut.Export(new IDEEvent[0], _publisher);
-            Mock.Get(_publisher).Verify(p => p.Publish(It.IsAny<MemoryStream>()), Times.Never);
+            WhenEverythingIsExported();
+
+            AssertNothingPublished();
         }
 
         [Test]
-        public void ShouldNotSilentlySkipEmptyEventListIfProfileIsProvided()
+        public void PublishesEvents()
+        {
+            var log1Entries = IDEEventTestFactory.SomeEvents(25);
+            _logManager.Add(SomeDate, log1Entries);
+            var log2Entries = IDEEventTestFactory.SomeEvents(5);
+            _logManager.Add(SomeDate.AddDays(-1), log2Entries);
+
+            WhenEverythingIsExported();
+
+            AssertPublishedEvents(log1Entries.Union(log2Entries));
+        }
+
+        [Test]
+        public void PublishesOnlyOlderEvents()
+        {
+            var dateTime = DateTime.Now;
+            var newerEvent = IDEEventTestFactory.SomeEvent(dateTime);
+            var olderEvent = IDEEventTestFactory.SomeEvent(dateTime.AddMinutes(-2));
+            _logManager.Add(SomeDate, newerEvent, olderEvent);
+
+            _sut.Export(dateTime.AddMinutes(-1), _publisher);
+
+            AssertPublishedEvents(olderEvent);
+        }
+
+        [Test]
+        public void PublishesProfileEvent()
         {
             Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
-            _sut.Export(new List<IDEEvent>(), _publisher);
-            Mock.Get(_publisher).Verify(p => p.Publish(It.IsAny<MemoryStream>()));
+            var logEntries = IDEEventTestFactory.SomeEvents(25);
+            _logManager.Add(SomeDate, logEntries);
+
+            WhenEverythingIsExported();
+
+            AssertPublishedEvents(new[] {_userProfileEvent}.Union(logEntries));
         }
 
         [Test]
-        public void ShouldInvokePublisher()
-        {
-            var events = IDEEventTestFactory.SomeEvents(25);
-            _sut.Export(events, _publisher);
-            Mock.Get(_publisher).Verify(p => p.Publish(It.IsAny<MemoryStream>()));
-        }
-
-        [Test]
-        public void ShouldCreateOneFilePerEvent()
-        {
-            var events = IDEEventTestFactory.SomeEvents(25);
-            _sut.Export(events, _publisher);
-            var zipFile = GetZipFileFromExport();
-            Assert.AreEqual(25, zipFile.Entries.Count);
-        }
-
-        [Test]
-        public void ShouldCreateOneFilePerEvent_PlusOneIfUserProfileIsEnabled()
-        {
-            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
-            var events = IDEEventTestFactory.SomeEvents(25);
-            _sut.Export(events, _publisher);
-            var zipFile = GetZipFileFromExport();
-            Assert.AreEqual(25 + 1, zipFile.Entries.Count);
-        }
-
-        [Test]
-        public void ShouldPersistAllProvidedEvents()
-        {
-            var expecteds = IDEEventTestFactory.SomeEvents(25);
-
-            _sut.Export(expecteds, _publisher);
-            var actuals = GetExportedEvents().ToList();
-
-            CollectionAssert.AreEquivalent(expecteds, actuals);
-        }
-
-        [Test]
-        public void ShouldPersistAllProvidedEvents_PlusUserProfileIfEnabled()
+        public void PublishesProfileEventIfNoEvents()
         {
             Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
 
-            var expecteds = IDEEventTestFactory.SomeEvents(25);
-            expecteds.Add(_userProfileEvent);
+            WhenEverythingIsExported();
 
-            _sut.Export(expecteds, _publisher);
-            var actuals = GetExportedEvents().ToList();
-
-            CollectionAssert.AreEquivalent(expecteds, actuals);
+            AssertPublishedEvents(_userProfileEvent);
         }
 
         [Test]
-        public void ExportShouldContainCorrectUserProfileEvent()
+        public void AppendsProfileEvent()
         {
             Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+            _logManager.Add(SomeDate, IDEEventTestFactory.SomeEvents(3));
 
-            var someEvents = IDEEventTestFactory.SomeEvents(1);
-            _sut.Export(someEvents, _publisher);
+            WhenEverythingIsExported();
 
-            var exportedEvents = GetExportedEvents();
-            CollectionAssert.Contains(exportedEvents, _userProfileEvent);
+            var actualEvents = GetLastExportEvents();
+            Assert.AreEqual(_userProfileEvent, actualEvents.Last());
         }
 
         [Test]
-        public void ShouldCreateFileNamesFromEventIndexAndType()
+        public void CreatesFileNamesFromEventIndexAndType()
         {
-            var events = Lists.NewList<IDEEvent>(new EditEvent(), new ErrorEvent(), new WindowEvent());
-            var expected = new[]
-            {
-                "0-EditEvent.json",
-                "1-ErrorEvent.json",
-                "2-WindowEvent.json"
-            };
+            _logManager.Add(
+                SomeDate,
+                IDEEventTestFactory.Some<EditEvent>(),
+                IDEEventTestFactory.Some<ErrorEvent>(),
+                IDEEventTestFactory.Some<WindowEvent>());
 
-            _sut.Export(events, _publisher);
+            WhenEverythingIsExported();
 
-            var zipFile = GetZipFileFromExport();
+            var zipFile = GetLastExport();
             var actual = zipFile.EntryFileNames;
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(new[] {"0-EditEvent.json", "1-ErrorEvent.json", "2-WindowEvent.json"}, actual);
         }
 
         [Test]
-        public void ShouldCreateFileNamesFromEventIndexAndType_PlusUserProfileIfEnabled()
-        {
-            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
-
-            var events = Lists.NewList<IDEEvent>(new EditEvent(), new ErrorEvent(), new WindowEvent());
-            var expected = new[]
-            {
-                "0-EditEvent.json",
-                "1-ErrorEvent.json",
-                "2-WindowEvent.json",
-                "3-UserProfileEvent.json"
-            };
-
-            _sut.Export(events, _publisher);
-
-            var zipFile = GetZipFileFromExport();
-            var actual = zipFile.EntryFileNames;
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void ShouldInvokeAnonymizerOnEveryEvent()
+        public void InvokesAnonymizerOnEveryEvent()
         {
             var expected = IDEEventTestFactory.SomeEvents(13);
+            _logManager.Add(SomeDate, expected);
             var actual = new List<IDEEvent>();
             Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>()))
                 .Callback<IDEEvent>(actual.Add)
                 .Returns<IDEEvent>(ideEvent => ideEvent);
 
-            _sut.Export(expected, _publisher);
+            WhenEverythingIsExported();
 
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void ShouldCreateZipFromAnonymizedEvents()
+        public void ExportsAnonymizedEvents()
         {
-            var original = IDEEventTestFactory.SomeEvents(3);
-            var anonymousEvent = new TestIDEEvent {TestProperty = "It's me!"};
+            _logManager.Add(SomeDate, IDEEventTestFactory.SomeEvents(3));
+            IDEEvent anonymousEvent = IDEEventTestFactory.SomeEvent();
             Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns(anonymousEvent);
 
-            _sut.Export(original, _publisher);
+            WhenEverythingIsExported();
 
-            var actuals = GetExportedEvents().ToList();
-
-            Assert.AreEqual(3, actuals.Count);
-
-            var expected = new IDEEvent[] {anonymousEvent, anonymousEvent, anonymousEvent};
-            CollectionAssert.AreEqual(expected, actuals);
+            AssertPublishedEvents(anonymousEvent, anonymousEvent, anonymousEvent);
         }
 
         [Test]
@@ -225,7 +192,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             var exportStarted = false;
             _sut.ExportStarted += () => exportStarted = true;
-            _sut.Export(new List<IDEEvent>(), _publisher);
+
+            WhenEverythingIsExported();
 
             Assert.IsTrue(exportStarted);
         }
@@ -235,16 +203,19 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             var exportEnded = false;
             _sut.ExportEnded += () => exportEnded = true;
-            _sut.Export(new List<IDEEvent>(), _publisher);
+
+            WhenEverythingIsExported();
 
             Assert.IsTrue(exportEnded);
         }
 
         [Test]
-        public void ShouldReportProgress()
+        public void ReportsProgress()
         {
-            var events = IDEEventTestFactory.SomeEvents(25);
-            var expected = events.Select((e, i) => Properties.UploadWizard.WritingEvents.FormatEx(i*4)).ToList();
+            var logEntries = IDEEventTestFactory.SomeEvents(25);
+            _logManager.Add(SomeDate, logEntries);
+
+            var expected = logEntries.Select((e, i) => Properties.UploadWizard.WritingEvents.FormatEx(i*4)).ToList();
             expected.Add(Properties.UploadWizard.WritingEvents.FormatEx(100));
             expected.Add(Properties.UploadWizard.CompressingEvents);
             expected.Add(Properties.UploadWizard.PublishingEvents);
@@ -253,62 +224,86 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             Action<string> eventProcessed = actual.Add;
             _sut.StatusChanged += eventProcessed;
-            _sut.Export(events, _publisher);
+            WhenEverythingIsExported();
             _sut.StatusChanged -= eventProcessed;
 
             Assert.AreEqual(expected, actual);
         }
 
         [Test(Description = "Entry limit for standard ZIP file should not limit export")]
-        public void ShouldExportMoreThan65535Events()
+        public void ExportsMoreThan65535Events()
         {
             var manyEvents = IDEEventTestFactory.SomeEvents(65536);
+            _logManager.Add(SomeDate, manyEvents);
 
-            _sut.Export(manyEvents, _publisher);
+            WhenEverythingIsExported();
         }
 
-        [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]
-        public void ShouldUploadValidZipToServer()
+        [Test, Ignore("Manual Integration Test")]
+        public void Manual_Step1_ExportToServer()
         {
             Registry.RegisterComponent<IIoUtils>(new IoUtils());
             _sut.Export(
-                _eventsForRealLifeExample,
+                DateTime.Now,
                 new HttpPublisher(new Uri("http://kave.st.informatik.tu-darmstadt.de/test/upload")));
             Registry.Clear();
         }
 
-        [Test, Ignore("manual test that the server received valid file - RealLifeExample part 2")]
-        public void ShouldCompareUploadedFile()
+        [Test, Ignore("Manual Integration Test")]
+        public void Manual_Step2_CheckUploadedFile()
         {
-            var zipFile = new ZipFile(@"C:\compare.zip");
-            var actual = zipFile.Entries.Select(ExtractIDEEvent);
+            var actual = ReadEvents(new ZipFile(@"C:\compare.zip"));
             CollectionAssert.AreEquivalent(_eventsForRealLifeExample, actual);
         }
 
-        private IEnumerable<IDEEvent> GetExportedEvents()
+        private void WhenEverythingIsExported()
         {
-            var zipFile = GetZipFileFromExport();
-            return zipFile.Entries.Select(ExtractIDEEvent);
+            _sut.Export(DateTime.Now, _publisher);
         }
 
-        private ZipFile GetZipFileFromExport()
+        private void AssertNothingPublished()
         {
+            Assert.IsNull(_lastPublishedStream);
+        }
+
+        private void AssertPublishedEvents(params IDEEvent[] expectedEvents)
+        {
+            AssertPublishedEvents(expectedEvents.ToList());
+        }
+
+        private void AssertPublishedEvents(IEnumerable<IDEEvent> expectedEvents)
+        {
+            var actualEvents = GetLastExportEvents();
+            CollectionAssert.AreEquivalent(expectedEvents, actualEvents);
+        }
+
+        private IEnumerable<IDEEvent> GetLastExportEvents()
+        {
+            return ReadEvents(GetLastExport());
+        }
+
+        private static IEnumerable<IDEEvent> ReadEvents(ZipFile zipFile)
+        {
+            foreach (var entry in zipFile.Entries)
+            {
+                using (var jsonStream = new MemoryStream())
+                {
+                    entry.Extract(jsonStream);
+                    var json = jsonStream.AsString();
+                    yield return json.ParseJsonTo<IDEEvent>();
+                }
+            }
+        }
+
+        private ZipFile GetLastExport()
+        {
+            Assert.NotNull(_lastPublishedStream, "nothing published");
             var tempFileName = Path.GetTempFileName();
             using (var fileStream = File.Open(tempFileName, FileMode.Create))
             {
                 _lastPublishedStream.CopyTo(fileStream);
             }
             return new ZipFile(tempFileName);
-        }
-
-        private static IDEEvent ExtractIDEEvent(ZipEntry entry)
-        {
-            using (var out2 = new MemoryStream())
-            {
-                entry.Extract(out2);
-                var json = out2.AsString();
-                return json.ParseJsonTo<IDEEvent>();
-            }
         }
     }
 }

@@ -27,6 +27,7 @@ using KaVE.Commons.Utils.Json;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.Utils.Export
 {
@@ -41,48 +42,94 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
     [ShellComponent]
     public class Exporter : IExporter
     {
+        private readonly ILogManager _logManager;
         private readonly IDataExportAnonymizer _anonymizer;
-        private readonly IUserProfileEventGenerator _exportEventGenerator;
+        private readonly IUserProfileEventGenerator _profileEventGenerator;
 
-        public Exporter(IDataExportAnonymizer anonymizer, IUserProfileEventGenerator exportEventGenerator)
+        public Exporter(ILogManager logManager,
+            IDataExportAnonymizer anonymizer,
+            IUserProfileEventGenerator profileEventGenerator)
         {
-            _exportEventGenerator = exportEventGenerator;
+            _logManager = logManager;
             _anonymizer = anonymizer;
+            _profileEventGenerator = profileEventGenerator;
         }
 
         public event Action ExportStarted = () => { };
         public event Action<string> StatusChanged = s => { };
         public event Action ExportEnded = () => { };
 
-        public void Export(IList<IDEEvent> events, IPublisher publisher)
+        public void Export(DateTime exportTime, IPublisher publisher)
         {
             ExportStarted();
             try
             {
-                var isEmptyEventList = events.IsEmpty();
-                var shouldCreateUserProfileEvent = _exportEventGenerator.ShouldCreateEvent();
-                if (isEmptyEventList && !shouldCreateUserProfileEvent)
+                var events = LoadEventsToExport(exportTime);
+                MaybeAppendUserProfile(events);
+                if (SomethingToExport(events))
                 {
-                    return;
-                }
-
-                if (shouldCreateUserProfileEvent)
-                {
-                    events.Add(_exportEventGenerator.CreateEvent());
-                }
-
-                using (var stream = new MemoryStream())
-                {
-                    var anonymousEvents = events.Select(_anonymizer.Anonymize).ToList();
-
-                    WriteEventsToZipStream(anonymousEvents, events.Count, stream);
-                    StatusChanged(Properties.UploadWizard.PublishingEvents);
-                    publisher.Publish(stream);
+                    DoExport(events, publisher);
                 }
             }
             finally
             {
                 ExportEnded();
+            }
+        }
+
+        private ICollection<IDEEvent> LoadEventsToExport(DateTime exportTime)
+        {
+            var events = new List<IDEEvent>();
+            foreach (var log in _logManager.Logs)
+            {
+                events.AddRange(log.ReadAll().Where(e => e.TriggeredAt <= exportTime));
+            }
+            return events;
+        }
+
+        private void MaybeAppendUserProfile(ICollection<IDEEvent> events)
+        {
+            if (_profileEventGenerator.ShouldCreateEvent())
+            {
+                events.Add(_profileEventGenerator.CreateEvent());
+            }
+        }
+
+        private static bool SomethingToExport(ICollection<IDEEvent> events)
+        {
+            return !events.IsEmpty();
+        }
+
+        [Obsolete]
+        public void Export(IList<IDEEvent> events, IPublisher publisher)
+        {
+            ExportStarted();
+            try
+            {
+                MaybeAppendUserProfile(events);
+
+                if (events.IsEmpty())
+                {
+                    return;
+                }
+
+                DoExport(events, publisher);
+            }
+            finally
+            {
+                ExportEnded();
+            }
+        }
+
+        private void DoExport(ICollection<IDEEvent> events, IPublisher publisher)
+        {
+            using (var stream = new MemoryStream())
+            {
+                var anonymousEvents = events.Select(_anonymizer.Anonymize).ToList();
+
+                WriteEventsToZipStream(anonymousEvents, events.Count, stream);
+                StatusChanged(Properties.UploadWizard.PublishingEvents);
+                publisher.Publish(stream);
             }
         }
 

@@ -37,15 +37,18 @@ namespace KaVE.Commons.TestUtils.Model.Events
 
         public static TestIDEEvent SomeEvent(DateTime? triggeredAt = null)
         {
+            var testIDEEvent = Some<TestIDEEvent>(triggeredAt);
+            testIDEEvent.TestProperty = Random.Next().ToString(CultureInfo.InvariantCulture);
+            return testIDEEvent;
+        }
+
+        public static TEvent Some<TEvent>(DateTime? triggeredAt = null) where TEvent : IDEEvent, new()
+        {
             if (triggeredAt == null)
             {
                 triggeredAt = DateTime.Now;
             }
-            return new TestIDEEvent
-            {
-                TestProperty = Random.Next().ToString(CultureInfo.InvariantCulture),
-                TriggeredAt = triggeredAt
-            };
+            return new TEvent {TriggeredAt = triggeredAt};
         }
     }
 }

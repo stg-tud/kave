@@ -37,7 +37,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 
         public void Add(DateTime logDate, params IDEEvent[] logEntries)
         {
-            var log = new InMemoryLog {Date = logDate};
+            Add(logDate, logEntries.ToList());
+        }
+
+        public void Add(DateTime logDate, IEnumerable<IDEEvent> logEntries)
+        {
+            var log = new InMemoryLog { Date = logDate };
             logEntries.ForEach(log.Append);
             _logs.Add(logDate, log);
         }
