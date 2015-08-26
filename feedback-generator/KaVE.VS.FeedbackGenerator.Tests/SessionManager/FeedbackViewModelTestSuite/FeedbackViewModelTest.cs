@@ -205,6 +205,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
             Assert.IsFalse(wasSetToBusy);
         }
 
+        [Test]
+        public void TakesOverExportBusyMessage()
+        {
+            var busyMessage = "";
+            _uut.OnPropertyChanged(fvm => fvm.BusyMessage, message => busyMessage = message);
+
+            _mockExporter.Raise(exporter => exporter.StatusChanged += null, "my message");
+
+            Assert.AreEqual("my message", busyMessage);
+        }
+
         private void WhenEventsOfSingleSelectedSessionAreLoaded()
         {
             // ReSharper disable once UnusedVariable
