@@ -58,6 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
         public FeedbackViewModel(ILogManager logManager, IExporter exporter) : this(logManager)
         {
             exporter.ExportStarted += () => SetBusy("");
+            exporter.ExportEnded += SetIdle;
         }
 
         private void OnLogCreated(ILog log)
