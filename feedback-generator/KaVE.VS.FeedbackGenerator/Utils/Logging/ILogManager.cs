@@ -82,6 +82,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
         /// <summary>
         ///     Returns the log for today. If there is none, it will be created.
         /// </summary>
+        /// TODO Make this a method, because it has a side effect.
         ILog CurrentLog { get; }
 
         long LogsSizeInBytes { get; }

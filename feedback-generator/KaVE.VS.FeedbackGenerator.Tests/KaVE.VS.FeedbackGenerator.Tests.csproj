@@ -266,6 +266,7 @@
     <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
     <Compile Include="Utils\Logging\LogFileTest.cs" />
     <Compile Include="Utils\Logging\LogFileUtilsTest.cs" />
+    <Compile Include="Utils\Logging\LogManagerContractTest.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
     <Compile Include="VsIntegrationMocks\TestDTE.cs" />
