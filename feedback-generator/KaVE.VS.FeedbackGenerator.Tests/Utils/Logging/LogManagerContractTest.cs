@@ -15,8 +15,11 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Util;
+using KaVE.Commons.Utils.Collections;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NUnit.Framework;
 
@@ -167,6 +170,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void RaisesDeleteOnAllDeletedLogs()
+        {
+            GivenLogsExist(Today, Yesterday, TwoDaysAgo);
+            var actualLogs = new HashSet<DateTime>();
+
+            Uut.Logs.ForEach(log => log.Deleted += theLog => actualLogs.Add(theLog.Date));
+            Uut.DeleteAllLogs();
+
+            Assert.AreEqual(new[] { Today, Yesterday, TwoDaysAgo }, actualLogs);
+        }
+
+        [Test]
         public void DeletesOldLogs()
         {
             GivenLogsExist(Yesterday);
@@ -185,6 +200,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
             Uut.DeleteLogsOlderThan(Yesterday);
 
             Assert.AreEqual(expectedLogs, Uut.Logs);
+        }
+
+        [Test]
+        public void RaisesDeleteOnlyOnDeletedLogs()
+        {
+            GivenLogsExist(Today, TwoDaysAgo);
+            var actualLogs = new HashSet<DateTime>();
+
+            Uut.Logs.ForEach(log => log.Deleted += theLog => actualLogs.Add(theLog.Date));
+            Uut.DeleteLogsOlderThan(Yesterday);
+
+            Assert.AreEqual(new[] { TwoDaysAgo }, actualLogs);
         }
 
         // TODO add test for partial deletion of log on same day
