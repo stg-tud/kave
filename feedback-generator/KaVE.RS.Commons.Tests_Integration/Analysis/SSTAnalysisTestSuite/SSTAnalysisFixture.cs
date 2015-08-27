@@ -66,6 +66,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             KaVE.Commons.Model.Names.CSharp.TypeName.Get(
                 "System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
 
+        internal static readonly ITypeName ActionOfInt = TypeName("TODO, mscorlib, 4.0.0.0");
+
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetHashCode =
             MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
@@ -156,9 +158,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return MethodName.Get("[{0}] [{1}].{2}()".FormatEx(returnType, declType, name));
         }
 
-        public static IMethodName Method(ITypeName returnType, ITypeName declType, string name, params IParameterName[] parameters)
+        public static IMethodName Method(ITypeName returnType,
+            ITypeName declType,
+            string name,
+            params IParameterName[] parameters)
         {
-            return MethodName.Get("[{0}] [{1}].{2}({3})".FormatEx(returnType, declType, name, string.Join(" ,", parameters.ToString())));
+            return
+                MethodName.Get(
+                    "[{0}] [{1}].{2}({3})".FormatEx(
+                        returnType,
+                        declType,
+                        name,
+                        string.Join(" ,", parameters.ToString())));
         }
 
         public static IFieldName Field(ITypeName valueType, ITypeName declType, string name)
@@ -168,12 +179,31 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         public static IEventName Event(ITypeName declType, string name)
         {
-            return EventName.Get("[d:[{0}] [{1}].([{2}] sender, [{3}] e)] [{4}].{5}".FormatEx(Void, EventHandler, Object, EventArgs, declType, name));
+            return
+                EventName.Get(
+                    "[d:[{0}] [{1}].([{2}] sender, [{3}] e)] [{4}].{5}".FormatEx(
+                        Void,
+                        EventHandler,
+                        Object,
+                        EventArgs,
+                        declType,
+                        name));
         }
 
-        public static IPropertyName Property(ITypeName valueType, ITypeName declType, string name, bool hasGetter = true, bool hasSetter = true)
+        public static IPropertyName Property(ITypeName valueType,
+            ITypeName declType,
+            string name,
+            bool hasGetter = true,
+            bool hasSetter = true)
         {
-            return PropertyName.Get("{3}{4}[{0}] [{1}].{2}".FormatEx(valueType, declType, name, hasGetter ? "get " : "", hasSetter ? "set " : ""));
+            return
+                PropertyName.Get(
+                    "{3}{4}[{0}] [{1}].{2}".FormatEx(
+                        valueType,
+                        declType,
+                        name,
+                        hasGetter ? "get " : "",
+                        hasSetter ? "set " : ""));
         }
 
         public static IStatement EmptyCompletion

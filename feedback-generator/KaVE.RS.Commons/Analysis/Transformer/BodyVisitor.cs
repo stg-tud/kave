@@ -123,7 +123,12 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public override void VisitAssignmentExpression(IAssignmentExpression expr, IList<IStatement> body)
         {
-            var isTarget = _marker.AffectedNode == expr;
+            if (IsTargetMatch(expr, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+
+            var isTarget = IsTargetMatch(expr, CompletionCase.Undefined);
 
             body.Add(
                 new Assignment
@@ -135,6 +140,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                             ? new CompletionExpression()
                             : _exprVisitor.ToAssignableExpr(expr.Source, body)
                 });
+
+            if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
         }
 
         public override void VisitExpressionStatement(IExpressionStatement stmt, IList<IStatement> body)

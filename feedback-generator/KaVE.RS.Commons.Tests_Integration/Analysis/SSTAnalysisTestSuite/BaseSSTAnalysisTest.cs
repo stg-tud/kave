@@ -239,6 +239,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return new FieldReference {Reference = VarRef(target), FieldName = fieldName};
         }
 
+        protected static EventReference EventRef(string name, ITypeName type, string target = "this")
+        {
+            var eventName = EventName.Get(MemberName(name, type));
+            return new EventReference {Reference = VarRef(target), EventName = eventName};
+        }
+
         private static string MemberName(string name, ITypeName type)
         {
             return string.Format("[{0}] [N.C, TestProject].{1}", type, name);
