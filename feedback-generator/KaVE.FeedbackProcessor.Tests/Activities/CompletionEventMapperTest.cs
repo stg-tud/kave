@@ -37,7 +37,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Selections = Lists.NewList<IProposalSelection>(),
                 ProposalCollection = new ProposalCollection(),
                 Context2 = new Context(),
-                Prefix = "",
                 TerminatedState = TerminationState.Unknown
             };
 

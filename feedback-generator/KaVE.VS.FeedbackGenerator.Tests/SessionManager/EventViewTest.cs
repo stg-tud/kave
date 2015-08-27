@@ -98,7 +98,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                         Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].SomeMethod([ParameterType,P] p)")
                     }
                 },
-                Prefix = "Some"
             };
 
             var view = new EventViewModel(completionEvent);

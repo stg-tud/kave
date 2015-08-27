@@ -106,7 +106,6 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                         }
                     }
                 },
-                Prefix = "Foo",
                 Selections =
                 {
                     new ProposalSelection

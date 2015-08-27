@@ -82,7 +82,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                         SelectedAfter = TimeSpan.FromSeconds(3)
                     }
                 },
-                Prefix = "Some",
                 TerminatedBy = IDEEvent.Trigger.Typing,
                 TerminatedState = TerminationState.Cancelled
             };

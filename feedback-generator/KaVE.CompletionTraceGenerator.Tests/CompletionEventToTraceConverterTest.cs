@@ -128,7 +128,6 @@ namespace KaVE.CompletionTraceGenerator.Tests
             var secondEvent = TestFactory.CreateAnonymousCompletionEvent(42);
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
             secondEvent.TerminatedState = TerminationState.Cancelled;
-            secondEvent.Prefix = "Get";
 
             var expected = new CompletionTrace {DurationInMillis = 75};
             expected.AppendAction(CompletionAction.NewFilter("Get"));
@@ -152,7 +151,6 @@ namespace KaVE.CompletionTraceGenerator.Tests
             var secondEvent = TestFactory.CreateAnonymousCompletionEvent(23);
             var filteredProposals = proposals.Take(4).ToList();
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
-            secondEvent.Prefix = "isE";
             secondEvent.ProposalCollection = new ProposalCollection(filteredProposals);
             secondEvent.AddSelection(proposals[0]);
             secondEvent.AddSelection(proposals[3]);

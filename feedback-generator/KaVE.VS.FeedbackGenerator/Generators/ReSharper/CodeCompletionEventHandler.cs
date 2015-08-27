@@ -114,7 +114,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         {
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
-            _event.Prefix = prefix;
             HandleDisplayedItemsChanged(displayedItems);
         }
 
@@ -138,7 +137,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
-            _event.Prefix = newPrefix;
             HandleDisplayedItemsChanged(displayedLookupItems);
             if (lastSelection != null && _lastDisplayedItems.Any(l => l != null && l.ToProposal().Equals(lastSelection.Proposal)))
             {

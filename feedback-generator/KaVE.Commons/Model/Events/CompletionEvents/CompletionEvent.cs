@@ -33,9 +33,6 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         public IProposalCollection ProposalCollection { get; set; }
 
         [DataMember]
-        public string Prefix { get; set; }
-
-        [DataMember]
         public IKaVEList<IProposalSelection> Selections { get; set; }
 
         [DataMember]
@@ -44,12 +41,13 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [DataMember]
         public TerminationState TerminatedState { get; set; }
 
+        public string Prefix { get { return ""; } }
+
         public CompletionEvent()
         {
             Selections = Lists.NewList<IProposalSelection>();
             ProposalCollection = new ProposalCollection();
             Context2 = new Context();
-            Prefix = "";
             TerminatedState = TerminationState.Unknown;
         }
 

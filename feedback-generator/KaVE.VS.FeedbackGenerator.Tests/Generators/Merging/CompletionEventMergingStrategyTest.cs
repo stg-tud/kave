@@ -52,7 +52,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
                 ActiveWindow = activeWindow,
                 ActiveDocument = activeDocument,
                 TriggeredAt = now,
-                Prefix = "",
                 ProposalCollection = _proposalCollection,
                 TerminatedAt = now.AddMilliseconds(100)
             };
@@ -63,7 +62,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
                 ActiveWindow = activeWindow,
                 ActiveDocument = activeDocument,
                 TriggeredAt = now.AddMilliseconds(200),
-                Prefix = "a",
                 ProposalCollection = new ProposalCollection(_proposalCollection.Proposals.Take(3).ToList()),
                 TerminatedAt = now.AddMilliseconds(300),
                 TerminatedState = TerminationState.Applied,

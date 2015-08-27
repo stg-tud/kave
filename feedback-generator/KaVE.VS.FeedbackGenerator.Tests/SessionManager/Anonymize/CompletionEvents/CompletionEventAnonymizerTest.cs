@@ -31,7 +31,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         {
             return new CompletionEvent
             {
-                Prefix = "get",
                 ProposalCollection = new ProposalCollection(
                     new[]
                     {

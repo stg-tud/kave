@@ -58,14 +58,12 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             {
                 Context2 = SomeContext,
                 ProposalCollection = {SomeProposal},
-                Prefix = "x",
                 Selections = {new ProposalSelection()},
                 TerminatedBy = IDEEvent.Trigger.Click,
                 TerminatedState = TerminationState.Filtered
             };
             Assert.AreEqual(SomeContext, sut.Context2);
             Assert.AreEqual(new ProposalCollection {SomeProposal}, sut.ProposalCollection);
-            Assert.AreEqual("x", sut.Prefix);
             Assert.AreEqual(Lists.NewList(new ProposalSelection()), sut.Selections);
             Assert.AreEqual(IDEEvent.Trigger.Click, sut.TerminatedBy);
             Assert.AreEqual(TerminationState.Filtered, sut.TerminatedState);
@@ -99,7 +97,6 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             {
                 Context2 = SomeContext,
                 ProposalCollection = {new Proposal()},
-                Prefix = "x",
                 Selections = {new ProposalSelection()},
                 TerminatedBy = IDEEvent.Trigger.Click,
                 TerminatedState = TerminationState.Filtered
@@ -108,7 +105,6 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             {
                 Context2 = SomeContext,
                 ProposalCollection = {new Proposal()},
-                Prefix = "x",
                 Selections = {new ProposalSelection()},
                 TerminatedBy = IDEEvent.Trigger.Click,
                 TerminatedState = TerminationState.Filtered
@@ -130,15 +126,6 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         public void Equality_DifferentProposalCollection()
         {
             var a = new ComplEvent {ProposalCollection = {new Proposal()}};
-            var b = new ComplEvent();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentPrefix()
-        {
-            var a = new ComplEvent {Prefix = "x"};
             var b = new ComplEvent();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

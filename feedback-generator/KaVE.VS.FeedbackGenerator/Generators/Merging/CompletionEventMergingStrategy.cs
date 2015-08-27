@@ -70,12 +70,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Merging
                 IDESessionUUID = evt2.IDESessionUUID,
                 ActiveDocument = evt2.ActiveDocument,
                 ActiveWindow = evt2.ActiveWindow,
-                Context2 = evt2.Context2,
                 // properties that need be taken from first event
                 TriggeredBy = evt1.TriggeredBy,
                 TriggeredAt = evt1.TriggeredAt,
                 // properties that need be taken from later event
-                Prefix = evt2.Prefix,
+                Context2 = evt2.Context2,
                 ProposalCollection = evt2.ProposalCollection,
                 Selections = GetRebasedSelections(evt2, evt1.TriggeredAt, evt2.TriggeredAt),
                 TerminatedState = evt2.TerminatedState,
