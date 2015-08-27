@@ -83,13 +83,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                     }
                 },
                 TerminatedBy = IDEEvent.Trigger.Typing,
-                TerminatedState = TerminationState.Cancelled
+                TerminatedState = TerminationState.Cancelled,
+                ProposalCount = 1
             };
 
             var expected = String.Join(
                 Environment.NewLine,
                 "    \"TerminatedBy\": \"Typing\"",
-                "    \"TerminatedState\": \"Cancelled\"");
+                "    \"TerminatedState\": \"Cancelled\"",
+                "    \"ProposalCount\": 1");
             var actual = completionEvent.GetDetailsAsJson();
             Assert.AreEqual(expected, actual);
         }

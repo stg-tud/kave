@@ -27,6 +27,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         {
             var sut = new ProposalSelection();
             Assert.AreEqual(new Proposal(), sut.Proposal);
+            Assert.AreEqual(ProposalSelection.DefaultIndex, sut.Index);
             Assert.False(sut.SelectedAfter.HasValue);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -45,10 +46,12 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             var sut = new ProposalSelection
             {
                 Proposal = new Proposal {Relevance = 1},
-                SelectedAfter = TimeSpan.FromMinutes(2)
+                SelectedAfter = TimeSpan.FromMinutes(2),
+                Index = 3
             };
             Assert.AreEqual(new Proposal {Relevance = 1}, sut.Proposal);
             Assert.AreEqual(TimeSpan.FromMinutes(2), sut.SelectedAfter);
+            Assert.AreEqual(3, sut.Index);
         }
 
         [Test]
@@ -66,12 +69,14 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             var a = new ProposalSelection
             {
                 Proposal = new Proposal {Relevance = 1},
-                SelectedAfter = TimeSpan.FromMinutes(2)
+                SelectedAfter = TimeSpan.FromMinutes(2),
+                Index = 3
             };
             var b = new ProposalSelection
             {
                 Proposal = new Proposal {Relevance = 1},
-                SelectedAfter = TimeSpan.FromMinutes(2)
+                SelectedAfter = TimeSpan.FromMinutes(2),
+                Index = 3
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -99,6 +104,15 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         public void Equality_DifferentSelectedAfterZero()
         {
             var a = new ProposalSelection {SelectedAfter = TimeSpan.FromMinutes(0)};
+            var b = new ProposalSelection();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentIndices()
+        {
+            var a = new ProposalSelection { Index = 1 };
             var b = new ProposalSelection();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

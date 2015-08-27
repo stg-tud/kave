@@ -47,6 +47,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             Assert.AreEqual(Lists.NewList<IProposalSelection>(), sut.Selections);
             Assert.AreEqual(IDEEvent.Trigger.Unknown, sut.TerminatedBy);
             Assert.AreEqual(TerminationState.Unknown, sut.TerminatedState);
+            Assert.AreEqual(0, sut.ProposalCount);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -73,10 +74,11 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         public void AddSelection()
         {
             var sut = new ComplEvent {TriggeredAt = DateTime.Now};
-            sut.AddSelection(SomeProposal);
+            sut.AddSelection(SomeProposal, 1);
             Assert.AreEqual(1, sut.Selections.Count);
             var actual = sut.Selections[0];
             Assert.AreEqual(SomeProposal, actual.Proposal);
+            Assert.AreEqual(1, actual.Index);
             Assert.True(actual.SelectedAfter.HasValue);
             Assert.Less(actual.SelectedAfter.Value.Milliseconds, 50);
         }

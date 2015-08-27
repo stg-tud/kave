@@ -43,6 +43,9 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [DataMember]
         public TerminationState TerminatedState { get; set; }
 
+        [DataMember]
+        public int ProposalCount { get; set; }
+
         public string Prefix
         {
             get
@@ -59,12 +62,13 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
             ProposalCollection = new ProposalCollection();
             Context2 = new Context();
             TerminatedState = TerminationState.Unknown;
+            ProposalCount = 0;
         }
 
-        public void AddSelection([NotNull] IProposal proposal)
+        public void AddSelection([NotNull] IProposal proposal, int index = -1)
         {
             var selectedAfter = DateTime.Now - TriggeredAt;
-            Selections.Add(new ProposalSelection {Proposal = proposal, SelectedAfter = selectedAfter});
+            Selections.Add(new ProposalSelection {Proposal = proposal, SelectedAfter = selectedAfter, Index = index });
         }
 
         private bool Equals(CompletionEvent other)

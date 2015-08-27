@@ -29,19 +29,26 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [DataMember]
         public TimeSpan? SelectedAfter { get; set; }
 
-        public ProposalSelection()
+        [DataMember]
+        public int Index { get; set; }
+
+        public static int DefaultIndex
         {
-            Proposal = new Proposal();
+            get { return -1; }
         }
+
+        public ProposalSelection() : this(new Proposal()) {}
 
         public ProposalSelection(IProposal p)
         {
             Proposal = p;
+            Index = DefaultIndex;
         }
 
         private bool Equals(ProposalSelection other)
         {
-            return SelectedAfter.Equals(other.SelectedAfter) && Equals(Proposal, other.Proposal);
+            return SelectedAfter.Equals(other.SelectedAfter) && Equals(Proposal, other.Proposal) &&
+                   Equals(Index, other.Index);
         }
 
         public override bool Equals(object obj)
@@ -55,6 +62,7 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
             {
                 var hashCode = SelectedAfter.HasValue ? SelectedAfter.GetHashCode() : -1;
                 hashCode = (hashCode*397) ^ Proposal.GetHashCode();
+                hashCode = (hashCode*397) ^ Index.GetHashCode();
                 return hashCode;
             }
         }

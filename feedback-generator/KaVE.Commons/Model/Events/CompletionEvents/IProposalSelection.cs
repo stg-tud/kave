@@ -25,5 +25,7 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         IProposal Proposal { get; }
 
         TimeSpan? SelectedAfter { get; set; }
+
+        int Index { get; set; }  
     }
 }

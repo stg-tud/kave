@@ -24,18 +24,19 @@ using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.MessageBus;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    [SolutionComponent, Language(typeof(CSharpLanguage))]
+    [SolutionComponent, Language(typeof (CSharpLanguage))]
     internal class CodeCompletionEventGeneratorRegistration
     {
         public CodeCompletionEventGeneratorRegistration(CodeCompletionLifecycleManager manager,
@@ -89,15 +90,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     public class CodeCompletionEventHandler : EventGeneratorBase
     {
         /// <summary>
-        /// Transforming a large amount of lookup items to proposals takes a considerable amount of time.
-        /// In some cases, autocompletion will propose the entire class library, thus freezing up the
-        /// UI for several seconds.
+        ///     Transforming a large amount of lookup items to proposals takes a considerable amount of time.
+        ///     In some cases, autocompletion will propose the entire class library, thus freezing up the
+        ///     UI for several seconds.
         /// </summary>
-        private static readonly int ProposalTransformationLimit = 250;
+        private const int ProposalTransformationLimit = 250;
 
         private CompletionEvent _event;
         private Context _context;
-        private ILookupItem[] _lastDisplayedItems; 
+        private ILookupItem[] _lastDisplayedItems;
 
         public CodeCompletionEventHandler(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
@@ -119,12 +120,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleDisplayedItemsChanged(IEnumerable<ILookupItem> displayedItems)
         {
-            _lastDisplayedItems = displayedItems.Take(ProposalTransformationLimit).ToArray();
+            _lastDisplayedItems = displayedItems.AsArray();
         }
 
         public void HandleSelectionChanged(ILookupItem selectedItem)
         {
-            _event.AddSelection(selectedItem.ToProposal());
+            _event.AddSelection(selectedItem.ToProposal(), FindIndexOf(selectedItem));
         }
 
         public void HandlePrefixChanged(string newPrefix, IEnumerable<ILookupItem> displayedLookupItems)
@@ -138,12 +139,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
             HandleDisplayedItemsChanged(displayedLookupItems);
-            if (lastSelection != null && _lastDisplayedItems.Any(l => l != null && l.ToProposal().Equals(lastSelection.Proposal)))
+            if (lastSelection != null &&
+                _lastDisplayedItems.Any(l => l != null && l.ToProposal().Equals(lastSelection.Proposal)))
             {
                 _event.Selections.Add(lastSelection);
             }
             _event.TriggeredBy = IDEEvent.Trigger.Automatic;
-
         }
 
         public void HandleClosed()
@@ -167,7 +168,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         protected void Fire(CompletionEvent @event)
         {
-            @event.ProposalCollection = _lastDisplayedItems.ToProposalCollection();
+            @event.ProposalCount = _lastDisplayedItems.Length;
+            @event.ProposalCollection = _lastDisplayedItems.Take(ProposalTransformationLimit).ToProposalCollection();
+
             base.Fire(@event);
         }
 
@@ -177,6 +180,20 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             infoEvent.Info = info;
 
             base.Fire(infoEvent);
+        }
+
+        private int FindIndexOf(ILookupItem selectedItem)
+        {
+            try
+            {
+                return _lastDisplayedItems.Select((item, index) => new {Selection = item, Index = index})
+                                          .First(itemIndexPair => itemIndexPair.Selection.Equals(selectedItem))
+                                          .Index;
+            }
+            catch
+            {
+                return ProposalSelection.DefaultIndex;
+            }
         }
     }
 }
