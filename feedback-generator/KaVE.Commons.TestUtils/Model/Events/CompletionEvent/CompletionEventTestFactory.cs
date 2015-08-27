@@ -21,6 +21,10 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils.Model.Names;
 using KaVE.Commons.Utils.Collections;
@@ -105,6 +109,21 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
         private static MethodHierarchy GetAnonymousMethodHierarchy()
         {
             return new MethodHierarchy(TestNameFactory.GetAnonymousMethodName());
+        }
+
+        public static void AddPrefix(this ICompletionEvent completionEvent, string newPrefix)
+        {
+            var methodDeclarationContainingCompletionExpression = new MethodDeclaration
+            {
+                Body =
+                    Lists.NewList<IStatement>(
+                        new ExpressionStatement
+                        {
+                            Expression = new CompletionExpression { Token = newPrefix }
+                        })
+            };
+
+            completionEvent.Context2.SST.Methods.Add(methodDeclarationContainingCompletionExpression);
         }
     }
 }

@@ -88,7 +88,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
 
             var expected = String.Join(
                 Environment.NewLine,
-                "    \"Prefix\": \"Some\"",
                 "    \"TerminatedBy\": \"Typing\"",
                 "    \"TerminatedState\": \"Cancelled\"");
             var actual = completionEvent.GetDetailsAsJson();

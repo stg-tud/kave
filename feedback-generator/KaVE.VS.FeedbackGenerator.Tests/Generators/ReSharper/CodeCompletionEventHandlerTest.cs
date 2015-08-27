@@ -107,7 +107,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 
             var ce = GetLastPublished<CompletionEvent>();
             Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TriggeredBy);
-            Assert.AreEqual("a", ce.Prefix);
         }
 
         [Test]

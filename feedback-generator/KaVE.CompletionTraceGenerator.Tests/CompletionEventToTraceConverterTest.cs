@@ -19,6 +19,7 @@ using KaVE.Commons.Utils.Logging;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
 using Moq;
 using NUnit.Framework;
 using TestFactory = KaVE.Commons.TestUtils.Model.Events.CompletionEvent.CompletionEventTestFactory;
@@ -128,11 +129,12 @@ namespace KaVE.CompletionTraceGenerator.Tests
             var secondEvent = TestFactory.CreateAnonymousCompletionEvent(42);
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
             secondEvent.TerminatedState = TerminationState.Cancelled;
+            secondEvent.AddPrefix("Get");
 
             var expected = new CompletionTrace {DurationInMillis = 75};
             expected.AppendAction(CompletionAction.NewFilter("Get"));
             expected.AppendAction(CompletionAction.NewCancel());
-
+            
             _sut.Process(firstEvent);
             _sut.Process(secondEvent);
 
@@ -155,6 +157,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
             secondEvent.AddSelection(proposals[0]);
             secondEvent.AddSelection(proposals[3]);
             secondEvent.TerminatedState = TerminationState.Applied;
+            secondEvent.AddPrefix("isE");
 
             var expected = new CompletionTrace {DurationInMillis = 35};
             expected.AppendAction(CompletionAction.NewStep(Direction.Down));

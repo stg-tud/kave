@@ -17,6 +17,8 @@
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
+using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils;
@@ -41,7 +43,15 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [DataMember]
         public TerminationState TerminatedState { get; set; }
 
-        public string Prefix { get { return ""; } }
+        public string Prefix
+        {
+            get
+            {
+                var builder = new StringBuilder();
+                Context2.SST.Accept(new CompletionPrefixVisitor(), builder);
+                return builder.ToString();
+            }
+        }
 
         public CompletionEvent()
         {

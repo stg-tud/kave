@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
@@ -99,6 +100,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                     }
                 },
             };
+            completionEvent.AddPrefix("Some");
 
             var view = new EventViewModel(completionEvent);
             Assert.IsNotNullOrEmpty(view.XamlProposalsRepresentation);
