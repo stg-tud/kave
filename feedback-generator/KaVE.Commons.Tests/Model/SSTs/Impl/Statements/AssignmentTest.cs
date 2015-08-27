@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
@@ -32,6 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
             var sut = new Assignment();
             Assert.AreEqual(new UnknownReference(), sut.Reference);
             Assert.AreEqual(new UnknownExpression(), sut.Expression);
+            Assert.AreEqual(AssignmentType.Equals, sut.Kind);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -42,10 +42,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
             var sut = new Assignment
             {
                 Reference = new VariableReference {Identifier = "x"},
-                Expression = new ConstantValueExpression()
+                Expression = new ConstantValueExpression(),
+                Kind = AssignmentType.Add
             };
             Assert.AreEqual(new VariableReference {Identifier = "x"}, sut.Reference);
             Assert.AreEqual(new ConstantValueExpression(), sut.Expression);
+            Assert.AreEqual(AssignmentType.Add, sut.Kind);
         }
 
         [Test]
@@ -60,8 +62,18 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = SSTUtil.AssignmentToLocal("a", new ConstantValueExpression());
-            var b = SSTUtil.AssignmentToLocal("a", new ConstantValueExpression());
+            var a = new Assignment
+            {
+                Reference = new VariableReference {Identifier = "x"},
+                Expression = new ConstantValueExpression(),
+                Kind = AssignmentType.Add
+            };
+            var b = new Assignment
+            {
+                Reference = new VariableReference {Identifier = "x"},
+                Expression = new ConstantValueExpression(),
+                Kind = AssignmentType.Add
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -69,8 +81,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_DifferentReference()
         {
-            var a = SSTUtil.AssignmentToLocal("a", new ConstantValueExpression());
-            var b = SSTUtil.AssignmentToLocal("b", new ConstantValueExpression());
+            var a = new Assignment
+            {
+                Reference = new VariableReference {Identifier = "x"}
+            };
+            var b = new Assignment();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -78,8 +93,23 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_DifferentExpression()
         {
-            var a = SSTUtil.AssignmentToLocal("a", new ConstantValueExpression());
-            var b = SSTUtil.AssignmentToLocal("a", new ComposedExpression());
+            var a = new Assignment
+            {
+                Expression = new ConstantValueExpression()
+            };
+            var b = new Assignment();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentKind()
+        {
+            var a = new Assignment
+            {
+                Kind = AssignmentType.Add
+            };
+            var b = new Assignment();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

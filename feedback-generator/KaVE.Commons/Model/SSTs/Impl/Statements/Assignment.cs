@@ -28,6 +28,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
     {
         public IAssignableReference Reference { get; set; }
         public IAssignableExpression Expression { get; set; }
+        public AssignmentType Kind { get; set; }
 
         public Assignment()
         {
@@ -42,15 +43,18 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
 
         private bool Equals(Assignment other)
         {
-            return Equals(Reference, other.Reference) && Equals(Expression, other.Expression);
+            return Equals(Reference, other.Reference) && Equals(Expression, other.Expression) &&
+                   Equals(Kind, other.Kind);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return 11 + (Reference.GetHashCode()*397) ^
-                       Expression.GetHashCode();
+                var hashCode = Reference.GetHashCode();
+                hashCode = (hashCode*397) ^ Expression.GetHashCode();
+                hashCode = (hashCode*397) ^ (int) Kind;
+                return hashCode;
             }
         }
 

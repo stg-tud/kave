@@ -28,6 +28,13 @@ namespace KaVE.Commons.Model.SSTs.Statements
         [NotNull]
         IAssignableExpression Expression { get; }
 
-        // TODO introduce operator enum (=, +=, -=)
+        AssignmentType Kind { get; }
+    }
+
+    public enum AssignmentType
+    {
+        Equals,
+        Add,
+        Remove
     }
 }
