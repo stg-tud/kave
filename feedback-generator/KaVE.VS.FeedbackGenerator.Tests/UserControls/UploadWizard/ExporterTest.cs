@@ -216,21 +216,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void ReportsProgress()
         {
-            var logEntries = TestEventFactory.SomeEvents(25);
+            var logEntries = TestEventFactory.SomeEvents(4);
             _logManager.Add(SomeDate, logEntries);
-
-            var expected = logEntries.Select((e, i) => Properties.UploadWizard.WritingEvents.FormatEx(i*4)).ToList();
-            expected.Add(Properties.UploadWizard.WritingEvents.FormatEx(100));
-            expected.Add(Properties.UploadWizard.CompressingEvents);
-            expected.Add(Properties.UploadWizard.PublishingEvents);
-
             var actual = new List<string>();
+            _sut.StatusChanged += actual.Add;
 
-            Action<string> eventProcessed = actual.Add;
-            _sut.StatusChanged += eventProcessed;
             WhenEverythingIsExported();
-            _sut.StatusChanged -= eventProcessed;
 
+            var expected = new List<string>
+            {
+                Properties.UploadWizard.FetchingEvents,
+                Properties.UploadWizard.WritingEvents.FormatEx(0),
+                Properties.UploadWizard.WritingEvents.FormatEx(25),
+                Properties.UploadWizard.WritingEvents.FormatEx(50),
+                Properties.UploadWizard.WritingEvents.FormatEx(75),
+                Properties.UploadWizard.WritingEvents.FormatEx(100),
+                Properties.UploadWizard.CompressingEvents,
+                Properties.UploadWizard.PublishingEvents
+            };
             Assert.AreEqual(expected, actual);
         }
 

@@ -150,10 +150,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             var expected = new List<string>
             {
                 Properties.UploadWizard.Export_BusyMessage,
-                string.Format(
-                    "{0} ({1})",
-                    Properties.UploadWizard.Export_BusyMessage,
-                    Properties.UploadWizard.FetchingEvents),
                 Properties.UploadWizard.Export_BusyMessage + " (13%)",
                 Properties.UploadWizard.Export_BusyMessage + " (42%)",
                 Properties.UploadWizard.Export_BusyMessage + " (finishing)"

@@ -113,33 +113,41 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         {
             var worker = (BackgroundWorker) sender;
             _exportType = (UploadWizardControl.ExportType) args.Argument;
-            Action<string> reportExportStatusChange = exportStatus => worker.ReportProgress(0, exportStatus);
 
-            reportExportStatusChange(Properties.UploadWizard.FetchingEvents);
-            
+            Action<string> reportExportStatusChange = exportStatus => worker.ReportProgress(0, exportStatus);
+            _exporter.StatusChanged += reportExportStatusChange;
+
             try
             {
-                _exporter.StatusChanged += reportExportStatusChange;
-                IPublisher publisher;
-                if (_exportType == UploadWizardControl.ExportType.ZipFile)
-                {
-                    publisher = new FilePublisher(AskForExportLocation);
-                }
-                else
-                {
-                    publisher = new HttpPublisher(GetUploadUrl());
-                }
+                var publisher = CreatePublisher();
                 args.Result = _exporter.Export(_exportTime, publisher);
-
                 _logManager.DeleteLogsOlderThan(_exportTime);
-
-                UserProfileSettings.Comment = "";
-                _settingsStore.SetSettings(UserProfileSettings);
+                ResetUserComment();
             }
             finally
             {
                 _exporter.StatusChanged -= reportExportStatusChange;
             }
+        }
+
+        private void ResetUserComment()
+        {
+            UserProfileSettings.Comment = "";
+            _settingsStore.SetSettings(UserProfileSettings);
+        }
+
+        private IPublisher CreatePublisher()
+        {
+            IPublisher publisher;
+            if (_exportType == UploadWizardControl.ExportType.ZipFile)
+            {
+                publisher = new FilePublisher(AskForExportLocation);
+            }
+            else
+            {
+                publisher = new HttpPublisher(GetUploadUrl());
+            }
+            return publisher;
         }
 
         private static string AskForExportLocation()

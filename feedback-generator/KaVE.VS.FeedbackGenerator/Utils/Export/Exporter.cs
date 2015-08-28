@@ -84,6 +84,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
 
         private ICollection<IDEEvent> LoadEventsToExport(DateTime exportTime)
         {
+            StatusChanged(Properties.UploadWizard.FetchingEvents);
             var events = new List<IDEEvent>();
             foreach (var log in _logManager.Logs)
             {
