@@ -92,9 +92,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             var log2Entries = TestEventFactory.SomeEvents(5);
             _logManager.Add(SomeDate.AddDays(-1), log2Entries);
 
-            WhenEverythingIsExported();
+            var numberOfEvents = WhenEverythingIsExported();
 
             AssertPublishedEvents(log1Entries.Union(log2Entries));
+            Assert.AreEqual(30, numberOfEvents);
         }
 
         [Test]
@@ -105,9 +106,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             var olderEvent = TestEventFactory.SomeEvent(dateTime.AddMinutes(-2));
             _logManager.Add(SomeDate, newerEvent, olderEvent);
 
-            _sut.Export(dateTime.AddMinutes(-1), _publisher);
+            var numberOfEvents = _sut.Export(dateTime.AddMinutes(-1), _publisher);
 
             AssertPublishedEvents(olderEvent);
+            Assert.AreEqual(1, numberOfEvents);
         }
 
         [Test]
@@ -117,9 +119,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             var logEntries = TestEventFactory.SomeEvents(25);
             _logManager.Add(SomeDate, logEntries);
 
-            WhenEverythingIsExported();
+            var numberOfEvents = WhenEverythingIsExported();
 
             AssertPublishedEvents(new[] {_userProfileEvent}.Union(logEntries));
+            Assert.AreEqual(26, numberOfEvents);
         }
 
         [Test]
@@ -127,9 +130,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
 
-            WhenEverythingIsExported();
+            var numberOfEvents = WhenEverythingIsExported();
 
             AssertPublishedEvents(_userProfileEvent);
+            Assert.AreEqual(1, numberOfEvents);
         }
 
         [Test]
@@ -256,9 +260,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             CollectionAssert.AreEquivalent(_eventsForRealLifeExample, actual);
         }
 
-        private void WhenEverythingIsExported()
+        private int WhenEverythingIsExported()
         {
-            _sut.Export(DateTime.Now, _publisher);
+            return _sut.Export(DateTime.Now, _publisher);
         }
 
         private void AssertNothingPublished()

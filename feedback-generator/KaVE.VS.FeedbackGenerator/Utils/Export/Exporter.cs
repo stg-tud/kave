@@ -36,7 +36,11 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
         event Action ExportStarted;
         event Action<string> StatusChanged;
         event Action ExportEnded;
-        void Export(DateTime exportTime, IPublisher publisher);
+
+        /// <summary>
+        /// Exports all events before the given export time. Returns the number of exported events.
+        /// </summary>
+        int Export(DateTime exportTime, IPublisher publisher);
     }
 
     [ShellComponent]
@@ -59,7 +63,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
         public event Action<string> StatusChanged = s => { };
         public event Action ExportEnded = () => { };
 
-        public void Export(DateTime exportTime, IPublisher publisher)
+        public int Export(DateTime exportTime, IPublisher publisher)
         {
             ExportStarted();
             try
@@ -70,6 +74,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
                 {
                     DoExport(events, publisher);
                 }
+                return events.Count;
             }
             finally
             {
