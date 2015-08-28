@@ -27,6 +27,7 @@ using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.Reflection;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
@@ -156,14 +157,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             };
 
             var actual = new List<string>();
-
-            _uut.PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == "BusyMessage")
-                {
-                    actual.Add(_uut.BusyMessage);
-                }
-            };
+            _uut.OnPropertyChanged(uwc => uwc.BusyMessage, actual.Add);
 
             WhenExportIsExecuted();
 
