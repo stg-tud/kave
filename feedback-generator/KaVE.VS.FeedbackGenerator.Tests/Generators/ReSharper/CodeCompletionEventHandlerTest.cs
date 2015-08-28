@@ -168,5 +168,33 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             var ce = GetLastPublished<CompletionEvent>();
             Assert.AreEqual(expected, ce.ProposalCollection);
         }
+
+        [TestCase(13, TestName = "Less proposals than transformation limit"), TestCase(1000, TestName = "More proposals than transformation limit")]
+        public void ShouldSetProposalCount(int testProposalCount)
+        {
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(testProposalCount);
+
+            _generator.HandleTriggered("", lookupItems);
+            _generator.HandleClosed();
+            _generator.HandleApplied(IDEEvent.Trigger.Typing, lookupItems[1]);
+
+            var completionEvent = GetSinglePublished<CompletionEvent>();
+            Assert.AreEqual(testProposalCount, completionEvent.ProposalCount);
+        }
+
+        [Test]
+        public void ShouldSetIndexOfSelections()
+        {
+            const int testIndex = 4;
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(5);
+
+            _generator.HandleTriggered("", lookupItems);
+            _generator.HandleSelectionChanged(lookupItems[testIndex]);
+            _generator.HandleClosed();
+            _generator.HandleApplied(IDEEvent.Trigger.Typing, lookupItems[1]);
+
+            var actualEvent = GetSinglePublished<CompletionEvent>();
+            Assert.AreEqual(testIndex, actualEvent.Selections[0].Index);
+        }
     }
 }
