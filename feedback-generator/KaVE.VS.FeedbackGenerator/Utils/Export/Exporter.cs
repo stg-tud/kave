@@ -85,12 +85,11 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
         private ICollection<IDEEvent> LoadEventsToExport(DateTime exportTime)
         {
             StatusChanged(Properties.UploadWizard.FetchingEvents);
-            var events = new List<IDEEvent>();
-            foreach (var log in _logManager.Logs)
-            {
-                events.AddRange(log.ReadAll().Where(e => e.TriggeredAt <= exportTime));
-            }
-            return events;
+            return
+                _logManager.Logs.SelectMany(log => log.ReadAll())
+                           .Where(e => e.TriggeredAt <= exportTime)
+                           .Select(_anonymizer.Anonymize)
+                           .ToList();
         }
 
         private void MaybeAppendUserProfile(ICollection<IDEEvent> events)
@@ -110,9 +109,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
         {
             using (var stream = new MemoryStream())
             {
-                var anonymousEvents = events.Select(_anonymizer.Anonymize).ToList();
-
-                WriteEventsToZipStream(anonymousEvents, events.Count, stream);
+                WriteEventsToZipStream(events, events.Count, stream);
                 StatusChanged(Properties.UploadWizard.PublishingEvents);
                 publisher.Publish(stream);
             }
