@@ -17,14 +17,13 @@
 using System;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.SSTPrinter;
+using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
-using KaVE.VS.FeedbackGenerator.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
@@ -88,7 +87,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
                 {
                     proposalRepresentation.Append("• ");
 
-                    AppendProposalName(proposalRepresentation, proposal, completionEvent.Prefix);
+                    AppendProposalName(proposalRepresentation, proposal);
 
                     proposalRepresentation.AppendLine();
                 }
@@ -104,6 +103,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
             get { return _xamlSelections ?? (_xamlSelections = GetFormattedSelections()); }
         }
 
+        [CanBeNull]
         private string GetFormattedSelections()
         {
             var completionEvent = Event as CompletionEvent;
@@ -116,12 +116,8 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
                 {
                     proposalRepresentation.Append("• ");
 
-                    if (selection.SelectedAfter != null)
-                    {
-                        proposalRepresentation.Append("<Bold>").Append(selection.SelectedAfter).Append("</Bold> ");
-                    }
-
-                    AppendProposalName(proposalRepresentation, selection.Proposal, completionEvent.Prefix);
+                    AppendPrefix(proposalRepresentation, selection.SelectedAfter, selection.Index);
+                    AppendProposalName(proposalRepresentation, selection.Proposal);
 
                     proposalRepresentation.AppendLine();
                 }
@@ -132,16 +128,22 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
             return null;
         }
 
-        private static void AppendProposalName(StringBuilder proposalRepresentation, IProposal proposal, string prefix)
+        private static void AppendPrefix(StringBuilder proposalRepresentation, TimeSpan? selectedAfter, int selectionIndex)
+        {
+            proposalRepresentation.Append("<Bold>");
+            if (selectedAfter != null)
+            {
+                proposalRepresentation.Append(selectedAfter);
+            }
+            proposalRepresentation.Append(string.Format(" at index {0}", selectionIndex));
+            proposalRepresentation.Append("</Bold> ");
+        }
+
+        private static void AppendProposalName(StringBuilder proposalRepresentation, IProposal proposal)
         {
             if (proposal.Name != null)
             {
                 var identifier = proposal.Name.Identifier.EncodeSpecialChars();
-
-                if (!String.IsNullOrEmpty(prefix))
-                {
-                    identifier = Regex.Replace(identifier, prefix, "<Bold>$0</Bold>", RegexOptions.IgnoreCase);
-                }
 
                 proposalRepresentation.Append(identifier);
             }

@@ -20,7 +20,6 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
@@ -80,31 +79,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 
             var view = new EventViewModel(completionEvent);
             Assert.IsNotNullOrEmpty(view.XamlProposalsRepresentation);
-        }
-
-        [Test]
-        public void HighlightsPrefixInProposalBox()
-        {
-            var completionEvent = new CompletionEvent
-            {
-                ProposalCollection =
-                {
-                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
-                    new Proposal
-                    {
-                        Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].SomeEvent")
-                    },
-                    new Proposal
-                    {
-                        Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].SomeMethod([ParameterType,P] p)")
-                    }
-                },
-            };
-            completionEvent.AddPrefix("Some");
-
-            var view = new EventViewModel(completionEvent);
-            Assert.IsNotNullOrEmpty(view.XamlProposalsRepresentation);
-            StringAssert.Contains("<Bold>Some</Bold>", view.XamlProposalsRepresentation);
         }
 
         [Test]
@@ -185,7 +159,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 
             var view = new EventViewModel(completionEvent);
             Assert.AreEqual(
-                "• <Bold>00:00:01</Bold> TypeLookupItem:TestDelegate&lt;string&gt;[]\r\n",
+                "• <Bold>00:00:01 at index -1</Bold> TypeLookupItem:TestDelegate&lt;string&gt;[]\r\n",
                 view.XamlSelectionsRepresentation);
         }
 
