@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldDropAllEventsWithoutPrecedingCommandEvent()
         {
-            var eventList = IDEEventTestFactory.SomeEvents(5);
+            var eventList = TestEventFactory.SomeEvents(5);
             eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(), _uut.Map(ideEvent)));
         }
 
@@ -47,10 +47,10 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void GeneratesNewConcurrentEventForCommandAndFollowup()
         {
             var expectedCommandEvent = new CommandEvent();
-            var expectedFollowupEvent = IDEEventTestFactory.SomeEvent();
+            var expectedFollowupEvent = TestEventFactory.SomeEvent();
             var eventList = new KaVEList<IDEEvent>
             {
-                IDEEventTestFactory.SomeEvent(),
+                TestEventFactory.SomeEvent(),
                 expectedCommandEvent,
                 expectedFollowupEvent
             };
@@ -70,8 +70,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void OnlyGeneratesOneConcurrentEventForCommandAndFollowup()
         {
             var expectedCommandEvent = new CommandEvent();
-            var firstFollowupEvent = IDEEventTestFactory.SomeEvent();
-            var secondFollowupEvent = IDEEventTestFactory.SomeEvent();
+            var firstFollowupEvent = TestEventFactory.SomeEvent();
+            var secondFollowupEvent = TestEventFactory.SomeEvent();
 
             var expectedConcurrentEvent = new ConcurrentEvent
             {

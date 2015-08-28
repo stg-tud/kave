@@ -70,7 +70,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         [Test]
         public void LogsEvent()
         {
-            var someEvent = IDEEventTestFactory.SomeEvent();
+            var someEvent = TestEventFactory.SomeEvent();
 
             WhenLoggerReceives(someEvent);
 
@@ -88,8 +88,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         [Test]
         public void ShouldNotFailIfLoggingFails()
         {
-            var failingEvent = IDEEventTestFactory.SomeEvent();
-            var someEvent = IDEEventTestFactory.SomeEvent();
+            var failingEvent = TestEventFactory.SomeEvent();
+            var someEvent = TestEventFactory.SomeEvent();
 
             OnCurrentLogAppend(
                 e =>
@@ -108,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         // RS9 TODO: this tests regularly fails during the build... what's going on here?
         public void ShouldFlushOnShutdown()
         {
-            var anEvent = IDEEventTestFactory.SomeEvent();
+            var anEvent = TestEventFactory.SomeEvent();
             var shutdownEvent = new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown};
 
             WhenLoggerReceives(anEvent);
@@ -126,14 +126,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 
         private void AssertNoAppendToCurrentLog()
         {
-            _logHandler(IDEEventTestFactory.SomeEvent()); // send another event to flush buffer
+            _logHandler(TestEventFactory.SomeEvent()); // send another event to flush buffer
 
             Assert.IsFalse(_logAppendSignal.WaitOne(1000), "nothing appended");
         }
 
         private void AssertAppendToCurrentLog(params IDEEvent[] events)
         {
-            _logHandler(IDEEventTestFactory.SomeEvent()); // send another event to flush buffer
+            _logHandler(TestEventFactory.SomeEvent()); // send another event to flush buffer
             WaitForLogAppend();
 
             CollectionAssert.AreEqual(events, _loggedEvents);

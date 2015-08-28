@@ -31,7 +31,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         [Test]
         public void DropsEvent()
         {
-            AssertDrop(IDEEventTestFactory.SomeEvent());
+            AssertDrop(TestEventFactory.SomeEvent());
         }
     }
 }

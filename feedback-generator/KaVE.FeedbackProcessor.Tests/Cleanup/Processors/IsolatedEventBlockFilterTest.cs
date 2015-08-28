@@ -41,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotDropEventsWithoutPrecedingLongBreak()
         {
-            var someEvent = IDEEventTestFactory.SomeEvent(DateTimeFactory.SomeWorkingHoursDateTime());
+            var someEvent = TestEventFactory.SomeEvent(DateTimeFactory.SomeWorkingHoursDateTime());
 
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(someEvent), _uut.Map(someEvent));
         }
@@ -50,8 +50,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void ShouldDropEventAfterLongBreak()
         {
             var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            var eventBeforeBreak = IDEEventTestFactory.SomeEvent(someDateTime);
-            var eventAfterBreak = IDEEventTestFactory.SomeEvent(someDateTime + _uut.LongBreak);
+            var eventBeforeBreak = TestEventFactory.SomeEvent(someDateTime);
+            var eventAfterBreak = TestEventFactory.SomeEvent(someDateTime + _uut.LongBreak);
 
             _uut.Map(eventBeforeBreak);
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Map(eventAfterBreak));
@@ -61,9 +61,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void ShouldDropMultipleEventsAfterLongBreak()
         {
             var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            var eventBeforeBreak = IDEEventTestFactory.SomeEvent(someDateTime);
-            var firstEventAfterBreak = IDEEventTestFactory.SomeEvent(someDateTime + _uut.LongBreak);
-            var secondEventAfterBreak = IDEEventTestFactory.SomeEvent(someDateTime + _uut.LongBreak);
+            var eventBeforeBreak = TestEventFactory.SomeEvent(someDateTime);
+            var firstEventAfterBreak = TestEventFactory.SomeEvent(someDateTime + _uut.LongBreak);
+            var secondEventAfterBreak = TestEventFactory.SomeEvent(someDateTime + _uut.LongBreak);
 
             _uut.Map(eventBeforeBreak);
             _uut.Map(firstEventAfterBreak);
@@ -74,10 +74,10 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void ShouldInsertDroppedEventsIfNoSecondLongBreakOccurs()
         {
             var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            var eventBeforeBreak = IDEEventTestFactory.SomeEvent(someDateTime);
-            var droppedEvent = IDEEventTestFactory.SomeEvent(someDateTime + _uut.LongBreak);
+            var eventBeforeBreak = TestEventFactory.SomeEvent(someDateTime);
+            var droppedEvent = TestEventFactory.SomeEvent(someDateTime + _uut.LongBreak);
             var eventAfterBlockSpanWithoutLongBreak =
-                IDEEventTestFactory.SomeEvent(
+                TestEventFactory.SomeEvent(
                     someDateTime + _uut.LongBreak + _uut.MaximumBlockSpan + TimeSpan.FromTicks(1));
 
             _uut.Map(eventBeforeBreak);
@@ -92,9 +92,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void ShouldNotInsertDroppedEventsIfASecondLongBreakOccurs()
         {
             var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            var eventBeforeBreak = IDEEventTestFactory.SomeEvent(someDateTime);
-            var droppedEvent = IDEEventTestFactory.SomeEvent(someDateTime + _uut.LongBreak);
-            var eventAfterSecondLongBreak = IDEEventTestFactory.SomeEvent(
+            var eventBeforeBreak = TestEventFactory.SomeEvent(someDateTime);
+            var droppedEvent = TestEventFactory.SomeEvent(someDateTime + _uut.LongBreak);
+            var eventAfterSecondLongBreak = TestEventFactory.SomeEvent(
                 someDateTime + _uut.LongBreak + _uut.LongBreak);
 
             _uut.Map(eventBeforeBreak);
@@ -107,9 +107,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
 
-            var eventBeforeBreak = IDEEventTestFactory.SomeEvent(someDateTime);
-            var droppedEvent = IDEEventTestFactory.SomeEvent(someDateTime + _uut.LongBreak);
-            var eventAfterSecondLongBreak = IDEEventTestFactory.SomeEvent(
+            var eventBeforeBreak = TestEventFactory.SomeEvent(someDateTime);
+            var droppedEvent = TestEventFactory.SomeEvent(someDateTime + _uut.LongBreak);
+            var eventAfterSecondLongBreak = TestEventFactory.SomeEvent(
                 someDateTime + _uut.LongBreak + _uut.LongBreak);
 
             _uut.Map(eventBeforeBreak);

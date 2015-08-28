@@ -40,7 +40,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
         [SetUp]
         public void SetUp()
         {
-            _displayedEvents = IDEEventTestFactory.SomeEvents(3);
+            _displayedEvents = TestEventFactory.SomeEvents(3);
 
             _mockLog = LogTestHelper.MockLog();
             _mockLog.Setup(log => log.ReadAll()).Returns(_displayedEvents);

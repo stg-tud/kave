@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterAnyOtherEvents()
         {
-            var someOtherEvent = IDEEventTestFactory.SomeEvent();
+            var someOtherEvent = TestEventFactory.SomeEvent();
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(someOtherEvent), _uut.Map(someOtherEvent));
         }
     }

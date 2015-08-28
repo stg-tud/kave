@@ -72,7 +72,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
         [Test]
         public void ShouldReadEventsFromLog()
         {
-            var expected = IDEEventTestFactory.SomeEvents(3);
+            var expected = TestEventFactory.SomeEvents(3);
             GivenLogContainsEvents(expected);
 
             var actuals = WhenEventViewModelsAreLoaded().Select(evm => evm.Event);
@@ -125,7 +125,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
         [Test]
         public void ShouldAddNewEventsIfLogEntryIsAppended()
         {
-            var expected = IDEEventTestFactory.SomeEvents(3);
+            var expected = TestEventFactory.SomeEvents(3);
             GivenLogContainsEvents(expected.Take(2).ToList());
 
             WhenEventViewModelsAreLoaded();
@@ -138,11 +138,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
         [Test]
         public void ShouldReReadLogAfterRefresh()
         {
-            GivenLogContainsEvents(IDEEventTestFactory.SomeEvents(1));
+            GivenLogContainsEvents(TestEventFactory.SomeEvents(1));
 
             WhenEventViewModelsAreLoaded();
 
-            var expected = IDEEventTestFactory.SomeEvents(3);
+            var expected = TestEventFactory.SomeEvents(3);
             _mockLog.Setup(log => log.ReadAll()).Returns(expected);
 
             _uut.Refresh();
@@ -154,7 +154,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
         [Test]
         public void ShouldKeepSelectionOnRefresh()
         {
-            GivenLogContainsEvents(IDEEventTestFactory.SomeEvents(3));
+            GivenLogContainsEvents(TestEventFactory.SomeEvents(3));
             var viewModels = WhenEventViewModelsAreLoaded();
             var expecteds = viewModels.Take(2).ToList();
             _uut.SelectedEvents = expecteds;

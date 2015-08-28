@@ -21,7 +21,7 @@ using KaVE.Commons.Model.Events;
 
 namespace KaVE.Commons.TestUtils.Model.Events
 {
-    public static class IDEEventTestFactory
+    public static class TestEventFactory
     {
         private static readonly Random Random = new Random();
 
@@ -35,6 +35,9 @@ namespace KaVE.Commons.TestUtils.Model.Events
             return list;
         }
 
+        /// <summary>
+        /// Creates a random TestIDEEvent. If no trigger date is passed, DateTime.Now is used.
+        /// </summary>
         public static TestIDEEvent SomeEvent(DateTime? triggeredAt = null)
         {
             var testIDEEvent = Some<TestIDEEvent>(triggeredAt);
@@ -42,6 +45,9 @@ namespace KaVE.Commons.TestUtils.Model.Events
             return testIDEEvent;
         }
 
+        /// <summary>
+        /// Creates a fresh event instance. If no trigger date is passed, DateTime.Now is used.
+        /// </summary>
         public static TEvent Some<TEvent>(DateTime? triggeredAt = null) where TEvent : IDEEvent, new()
         {
             if (triggeredAt == null)

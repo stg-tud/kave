@@ -64,7 +64,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
         public static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
         {
-            var eventList = IDEEventTestFactory.SomeEvents(Random.Next(2, 10));
+            var eventList = TestEventFactory.SomeEvents(Random.Next(2, 10));
             var lastEventTime = DateTimeFactory.SomeWorkingHoursDateTime();
             eventList.ForEach(
                 ideEvent =>
@@ -73,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                     ideEvent.TriggeredAt = lastEventTime;
                 });
 
-            var lateEvent = IDEEventTestFactory.SomeEvent();
+            var lateEvent = TestEventFactory.SomeEvent();
             lateEvent.TriggeredAt = new DateTime(lastEventTime.Ticks + eventTimeDifferenceInTicks + 1);
             eventList.Add(lateEvent);
 

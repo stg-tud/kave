@@ -31,7 +31,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         [Test]
         public void ReplacesByAnyActivity()
         {
-            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any);
+            AssertMapsToActivity(TestEventFactory.SomeEvent(), Activity.Any);
         }
     }
 }

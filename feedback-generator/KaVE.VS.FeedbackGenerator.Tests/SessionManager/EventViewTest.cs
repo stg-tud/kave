@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         [Test]
         public void DoesntDisplayContextForOtherEvents()
         {
-            var someEvent = IDEEventTestFactory.SomeEvent();
+            var someEvent = TestEventFactory.SomeEvent();
 
             var view = new EventViewModel(someEvent);
             Assert.IsNull(view.XamlContextRepresentation);
@@ -84,7 +84,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         [Test]
         public void DoesntDisplayProposalsForOtherEvents()
         {
-            var someEvent = IDEEventTestFactory.SomeEvent();
+            var someEvent = TestEventFactory.SomeEvent();
 
             var view = new EventViewModel(someEvent);
             Assert.IsNull(view.XamlProposalsRepresentation);
@@ -136,7 +136,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         [Test]
         public void DoesntFormatSelectionsForOtherEvents()
         {
-            var someEvent = IDEEventTestFactory.SomeEvent();
+            var someEvent = TestEventFactory.SomeEvent();
 
             var view = new EventViewModel(someEvent);
             Assert.IsNull(view.XamlSelectionsRepresentation);

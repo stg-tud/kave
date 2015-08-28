@@ -70,7 +70,7 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
         {
             Assert.AreEqual(
                 "TestIDEEvent -> no mapping found",
-                EventMappingUtils.GetAbstractStringOf(IDEEventTestFactory.SomeEvent()));
+                EventMappingUtils.GetAbstractStringOf(TestEventFactory.SomeEvent()));
         }
     }
 }

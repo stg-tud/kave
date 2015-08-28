@@ -58,7 +58,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void InsertsStartupIfFirstEventIsSomethingElse()
         {
-            var someEvent = IDEEventTestFactory.SomeEvent();
+            var someEvent = TestEventFactory.SomeEvent();
             someEvent.TriggeredAt = new DateTime(2015, 1, 23, 14, 7, 12);
 
             var missingStartupEvent = CreateStartupEvent();
@@ -93,7 +93,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
         private static TestIDEEvent CreateSomeEventAfter(IDEEvent startupEvent)
         {
-            var subsequentEvent = IDEEventTestFactory.SomeEvent();
+            var subsequentEvent = TestEventFactory.SomeEvent();
             SetTriggeredAtToAfter(subsequentEvent, startupEvent);
             return subsequentEvent;
         }

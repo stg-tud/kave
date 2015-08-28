@@ -151,7 +151,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
         [Test]
         public void ShouldNotInvokeEventSelectionEventIfNoEventsWereSelectedPreviously()
         {
-            var sessions = new[] {Fix.SomeLog(IDEEventTestFactory.SomeEvents(4))};
+            var sessions = new[] {Fix.SomeLog(TestEventFactory.SomeEvents(4))};
             WhenViewModelIsRefreshedWithSessions(sessions);
             _uut.SelectedSessions = new[] {_uut.Sessions.First()};
             var eventInvoked = false;
@@ -165,7 +165,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
         [TestCase(1), TestCase(2)]
         public void ShouldInvokeEventSelectionEventIfEventsWereSelectedPreviously(int numberOfSelection)
         {
-            var sessions = new[] {Fix.SomeLog(IDEEventTestFactory.SomeEvents(3))};
+            var sessions = new[] {Fix.SomeLog(TestEventFactory.SomeEvents(3))};
             WhenViewModelIsRefreshedWithSessions(sessions);
             _uut.SelectedSessions = new[] {_uut.Sessions.First()};
             WhenEventsOfSingleSelectedSessionAreLoaded();

@@ -28,7 +28,7 @@ namespace KaVE.FeedbackProcessor.Tests.Model
         public void GetsTriggeredAtIfSet()
         {
             var someDateTime = new DateTime();
-            var ideEvent = IDEEventTestFactory.SomeEvent();
+            var ideEvent = TestEventFactory.SomeEvent();
             ideEvent.TriggeredAt = someDateTime;
 
             Assert.AreEqual(someDateTime, ideEvent.GetTriggeredAt());
@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Model
         [Test, ExpectedException]
         public void GetTriggeredAtThrowsIfNotSet()
         {
-            var ideEvent = IDEEventTestFactory.SomeEvent();
+            var ideEvent = TestEventFactory.SomeEvent();
             ideEvent.TriggeredAt = null;
 
             ideEvent.GetTriggeredAt();

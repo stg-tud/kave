@@ -60,7 +60,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldIgnoreAllOtherEvents()
         {
-            _uut.OnEvent(IDEEventTestFactory.SomeEvent());
+            _uut.OnEvent(TestEventFactory.SomeEvent());
 
             CollectionAssert.IsEmpty(_uut.Statistic);
         }

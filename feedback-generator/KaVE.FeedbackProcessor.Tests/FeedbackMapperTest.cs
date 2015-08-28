@@ -321,7 +321,7 @@ namespace KaVE.FeedbackProcessor.Tests
             {
                 base.ProcessAnyEvent(@event);
 
-                var newEvent = IDEEventTestFactory.SomeEvent();
+                var newEvent = TestEventFactory.SomeEvent();
                 newEvent.IDESessionUUID = @event.IDESessionUUID;
 
                 ReplaceCurrentEventWith(newEvent);
@@ -334,7 +334,7 @@ namespace KaVE.FeedbackProcessor.Tests
             {
                 base.ProcessAnyEvent(@event);
 
-                var newEvent = IDEEventTestFactory.SomeEvent();
+                var newEvent = TestEventFactory.SomeEvent();
                 newEvent.IDESessionUUID = @event.IDESessionUUID;
 
                 Insert(newEvent);
@@ -345,7 +345,7 @@ namespace KaVE.FeedbackProcessor.Tests
         {
             public override IKaVESet<IDEEvent> OnStreamEnds()
             {
-                return Sets.NewHashSet<IDEEvent>(IDEEventTestFactory.SomeEvent());
+                return Sets.NewHashSet<IDEEvent>(TestEventFactory.SomeEvent());
             }
         }
     }

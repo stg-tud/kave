@@ -87,9 +87,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void PublishesEvents()
         {
-            var log1Entries = IDEEventTestFactory.SomeEvents(25);
+            var log1Entries = TestEventFactory.SomeEvents(25);
             _logManager.Add(SomeDate, log1Entries);
-            var log2Entries = IDEEventTestFactory.SomeEvents(5);
+            var log2Entries = TestEventFactory.SomeEvents(5);
             _logManager.Add(SomeDate.AddDays(-1), log2Entries);
 
             WhenEverythingIsExported();
@@ -101,8 +101,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         public void PublishesOnlyOlderEvents()
         {
             var dateTime = DateTime.Now;
-            var newerEvent = IDEEventTestFactory.SomeEvent(dateTime);
-            var olderEvent = IDEEventTestFactory.SomeEvent(dateTime.AddMinutes(-2));
+            var newerEvent = TestEventFactory.SomeEvent(dateTime);
+            var olderEvent = TestEventFactory.SomeEvent(dateTime.AddMinutes(-2));
             _logManager.Add(SomeDate, newerEvent, olderEvent);
 
             _sut.Export(dateTime.AddMinutes(-1), _publisher);
@@ -114,7 +114,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         public void PublishesProfileEvent()
         {
             Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
-            var logEntries = IDEEventTestFactory.SomeEvents(25);
+            var logEntries = TestEventFactory.SomeEvents(25);
             _logManager.Add(SomeDate, logEntries);
 
             WhenEverythingIsExported();
@@ -136,7 +136,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         public void AppendsProfileEvent()
         {
             Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
-            _logManager.Add(SomeDate, IDEEventTestFactory.SomeEvents(3));
+            _logManager.Add(SomeDate, TestEventFactory.SomeEvents(3));
 
             WhenEverythingIsExported();
 
@@ -149,9 +149,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             _logManager.Add(
                 SomeDate,
-                IDEEventTestFactory.Some<EditEvent>(),
-                IDEEventTestFactory.Some<ErrorEvent>(),
-                IDEEventTestFactory.Some<WindowEvent>());
+                TestEventFactory.Some<EditEvent>(),
+                TestEventFactory.Some<ErrorEvent>(),
+                TestEventFactory.Some<WindowEvent>());
 
             WhenEverythingIsExported();
 
@@ -163,7 +163,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void InvokesAnonymizerOnEveryEvent()
         {
-            var expected = IDEEventTestFactory.SomeEvents(13);
+            var expected = TestEventFactory.SomeEvents(13);
             _logManager.Add(SomeDate, expected);
             var actual = new List<IDEEvent>();
             Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>()))
@@ -178,8 +178,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void ExportsAnonymizedEvents()
         {
-            _logManager.Add(SomeDate, IDEEventTestFactory.SomeEvents(3));
-            IDEEvent anonymousEvent = IDEEventTestFactory.SomeEvent();
+            _logManager.Add(SomeDate, TestEventFactory.SomeEvents(3));
+            IDEEvent anonymousEvent = TestEventFactory.SomeEvent();
             Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns(anonymousEvent);
 
             WhenEverythingIsExported();
@@ -212,7 +212,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void ReportsProgress()
         {
-            var logEntries = IDEEventTestFactory.SomeEvents(25);
+            var logEntries = TestEventFactory.SomeEvents(25);
             _logManager.Add(SomeDate, logEntries);
 
             var expected = logEntries.Select((e, i) => Properties.UploadWizard.WritingEvents.FormatEx(i*4)).ToList();
@@ -233,7 +233,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test(Description = "Entry limit for standard ZIP file should not limit export")]
         public void ExportsMoreThan65535Events()
         {
-            var manyEvents = IDEEventTestFactory.SomeEvents(65536);
+            var manyEvents = TestEventFactory.SomeEvents(65536);
             _logManager.Add(SomeDate, manyEvents);
 
             WhenEverythingIsExported();

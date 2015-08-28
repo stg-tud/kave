@@ -42,9 +42,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
 
-            var eventBeforeBreak = IDEEventTestFactory.SomeEvent(someDateTime);
-            var droppedEvent = IDEEventTestFactory.SomeEvent(someDateTime + _uut.LongBreak);
-            var eventAfterSecondLongBreak = IDEEventTestFactory.SomeEvent(
+            var eventBeforeBreak = TestEventFactory.SomeEvent(someDateTime);
+            var droppedEvent = TestEventFactory.SomeEvent(someDateTime + _uut.LongBreak);
+            var eventAfterSecondLongBreak = TestEventFactory.SomeEvent(
                 someDateTime + _uut.LongBreak + _uut.LongBreak);
 
             _uut.OnEvent(eventBeforeBreak);

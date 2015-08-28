@@ -38,9 +38,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CountsEvents()
         {
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent());
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent());
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent());
+            _uut.AddEvent(TestEventFactory.SomeEvent());
+            _uut.AddEvent(TestEventFactory.SomeEvent());
+            _uut.AddEvent(TestEventFactory.SomeEvent());
 
             Assert.AreEqual(3, _uut.NumberOfEvents);
         }
@@ -50,8 +50,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var firstActionTriggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(firstActionTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(firstActionTriggeredAt.AddMinutes(1)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(firstActionTriggeredAt));
+            _uut.AddEvent(TestEventFactory.SomeEvent(firstActionTriggeredAt.AddMinutes(1)));
 
             Assert.AreEqual(firstActionTriggeredAt, _uut.FirstActivityAt);
         }
@@ -61,8 +61,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var lastActionTriggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(lastActionTriggeredAt.AddMinutes(-10)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(lastActionTriggeredAt));
+            _uut.AddEvent(TestEventFactory.SomeEvent(lastActionTriggeredAt.AddMinutes(-10)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(lastActionTriggeredAt));
 
             Assert.AreEqual(lastActionTriggeredAt, _uut.LastActivityAt);
         }
@@ -72,11 +72,11 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
 
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(1)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(5)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(7)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt.AddMinutes(1)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt.AddMinutes(5)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt.AddMinutes(7)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
 
             Assert.AreEqual(0, _uut.NumberOfBreaks);
         }
@@ -86,8 +86,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
 
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
 
             Assert.AreEqual(1, _uut.NumberOfBreaks);
         }
@@ -97,10 +97,10 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
 
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
 
             Assert.AreEqual(2, _uut.NumberOfBreaks);
         }
@@ -110,10 +110,10 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
 
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
+            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
 
             var breaks = new[] {TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(14)};
 
