@@ -8,7 +8,6 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
         public override void Visit(ICompletionExpression entity, StringBuilder context)
         {
             context.Append(entity.Token);
-            base.Visit(entity, context);
         }
     }
 }
