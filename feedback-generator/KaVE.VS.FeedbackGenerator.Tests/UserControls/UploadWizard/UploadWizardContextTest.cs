@@ -237,15 +237,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void SuccessfulZipExportNotificationHasCorrectMessage()
         {
+            _mockExporter.Setup(
+                e => e.Export(_testDateUtils.Now, It.IsAny<IPublisher>())).Returns(23);
+
             WhenExportIsExecuted(UploadWizardControl.ExportType.ZipFile);
 
             var actual = _linkNotificationHelper.Context;
-            // TODO @Sven: extend setup to include some events that are exported here
-            // TODO @Seb: help sven with above task
             var expected = new LinkNotification
             {
                 Caption = UploadWizardMessages.Title,
-                Message = Properties.UploadWizard.ExportSuccess.FormatEx(0),
+                Message = Properties.UploadWizard.ExportSuccess.FormatEx(23),
                 LinkDescription = Properties.UploadWizard.ExportSuccessLinkDescription,
                 Link = TestUploadUrl
             };
@@ -255,15 +256,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void SuccessfulDirectUploadNotificationHasCorrectMessage()
         {
+            _mockExporter.Setup(
+                e => e.Export(_testDateUtils.Now, It.IsAny<IPublisher>())).Returns(42);
+
             WhenExportIsExecuted();
 
             var actual = _notificationHelper.Context;
-            // TODO @Sven: extend setup to include some events that are exported here
-            // TODO @Seb: help sven with above task
             var expected = new Notification
             {
                 Caption = UploadWizardMessages.Title,
-                Message = Properties.UploadWizard.ExportSuccess.FormatEx(0)
+                Message = Properties.UploadWizard.ExportSuccess.FormatEx(42)
             };
             Assert.AreEqual(expected, actual);
         }

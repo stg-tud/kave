@@ -116,22 +116,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             Action<string> reportExportStatusChange = exportStatus => worker.ReportProgress(0, exportStatus);
 
             reportExportStatusChange(Properties.UploadWizard.FetchingEvents);
-            var events = ExtractEventsForExport();
-
+            
             try
             {
                 _exporter.StatusChanged += reportExportStatusChange;
+                IPublisher publisher;
                 if (_exportType == UploadWizardControl.ExportType.ZipFile)
                 {
-                    _exporter.Export(_exportTime, new FilePublisher(AskForExportLocation));
+                    publisher = new FilePublisher(AskForExportLocation);
                 }
                 else
                 {
-                    _exporter.Export(_exportTime, new HttpPublisher(GetUploadUrl()));
+                    publisher = new HttpPublisher(GetUploadUrl());
                 }
+                args.Result = _exporter.Export(_exportTime, publisher);
 
                 _logManager.DeleteLogsOlderThan(_exportTime);
-                args.Result = events.Count;
 
                 UserProfileSettings.Comment = "";
                 _settingsStore.SetSettings(UserProfileSettings);
@@ -140,16 +140,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             {
                 _exporter.StatusChanged -= reportExportStatusChange;
             }
-        }
-
-        private IList<IDEEvent> ExtractEventsForExport()
-        {
-            var events = new List<IDEEvent>();
-            foreach (var log in _logManager.Logs)
-            {
-                events.AddRange(log.ReadAll().Where(e => e.TriggeredAt <= _exportTime));
-            }
-            return events;
         }
 
         private static string AskForExportLocation()
