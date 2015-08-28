@@ -36,7 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
         event Action ExportStarted;
         event Action<string> StatusChanged;
         event Action ExportEnded;
-        void Export(IList<IDEEvent> events, IPublisher publisher);
+        void Export(DateTime exportTime, IPublisher publisher);
     }
 
     [ShellComponent]

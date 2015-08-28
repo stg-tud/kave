@@ -123,11 +123,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
                 _exporter.StatusChanged += reportExportStatusChange;
                 if (_exportType == UploadWizardControl.ExportType.ZipFile)
                 {
-                    _exporter.Export(events, new FilePublisher(AskForExportLocation));
+                    _exporter.Export(_exportTime, new FilePublisher(AskForExportLocation));
                 }
                 else
                 {
-                    _exporter.Export(events, new HttpPublisher(GetUploadUrl()));
+                    _exporter.Export(_exportTime, new HttpPublisher(GetUploadUrl()));
                 }
 
                 _logManager.DeleteLogsOlderThan(_exportTime);

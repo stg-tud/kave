@@ -138,7 +138,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void ShouldPropagateExportStatus()
         {
-            _mockExporter.Setup(e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
+            _mockExporter.Setup(e => e.Export(It.IsAny<DateTime>(), It.IsAny<IPublisher>()))
                          .Callback(
                              () =>
                              {
@@ -181,7 +181,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             _mockExporter.Verify(
                 exporter =>
-                    exporter.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<FilePublisher>()));
+                    exporter.Export(It.IsAny<DateTime>(), It.IsAny<FilePublisher>()));
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             _mockExporter.Verify(
                 exporter =>
-                    exporter.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<HttpPublisher>()));
+                    exporter.Export(It.IsAny<DateTime>(), It.IsAny<HttpPublisher>()));
         }
 
         [Test]
@@ -200,9 +200,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             HttpPublisher httpPublisher = null;
             _mockExporter.Setup(
                 exporter =>
-                    exporter.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<HttpPublisher>()))
-                         .Callback<IEnumerable<IDEEvent>, IPublisher>(
-                             (evts, publisher) => httpPublisher = (HttpPublisher) publisher);
+                    exporter.Export(It.IsAny<DateTime>(), It.IsAny<HttpPublisher>()))
+                         .Callback<DateTime, IPublisher>(
+                             (exportTime, publisher) => httpPublisher = (HttpPublisher) publisher);
 
             WhenExportIsExecuted(UploadWizardControl.ExportType.HttpUpload);
             try
@@ -272,7 +272,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         public void FailingExportCreatesNotification()
         {
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
+                e => e.Export(It.IsAny<DateTime>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
 
             WhenExportIsExecuted();
@@ -284,7 +284,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         public void FailingExportNotificationHasCorrectMessage()
         {
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
+                e => e.Export(It.IsAny<DateTime>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
 
             WhenExportIsExecuted();
@@ -303,7 +303,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             var exception = new AssertException("TEST");
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>())).Throws(exception);
+                e => e.Export(It.IsAny<DateTime>(), It.IsAny<IPublisher>())).Throws(exception);
 
             WhenExportIsExecuted();
 
@@ -324,25 +324,26 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         }
 
         [Test]
-        public void ShouldExportAllEventsThatStartetBeforeOrAtExportTime()
+        public void PassesExportTimeToExporter()
         {
             _testDateUtils.Now = DateTime.Now;
-            var logContent = new[]
-            {
-                new TestIDEEvent {TriggeredAt = _testDateUtils.Now.AddSeconds(-1)},
-                new TestIDEEvent {TriggeredAt = _testDateUtils.Now},
-                new TestIDEEvent {TriggeredAt = _testDateUtils.Now.AddSeconds(1)}
-            };
-            _mockLogs[0].Setup(log => log.ReadAll()).Returns(logContent);
-            var expectedExport = logContent.Take(2);
-            IEnumerable<IDEEvent> actualExport = null;
+            var invoked = false;
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
-                         .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);
+                e => e.Export(_testDateUtils.Now, It.IsAny<IPublisher>()))
+                         .Callback<DateTime, IPublisher>((export, p) => invoked = true);
 
             WhenExportIsExecuted();
 
-            Assert.AreEqual(expectedExport, actualExport);
+            Assert.IsTrue(invoked);
+        }
+
+        [Test]
+        public void DeletesEventsBeforeExportTime()
+        {
+            _testDateUtils.Now = DateTime.Now;
+
+            WhenExportIsExecuted();
+
             _mockLogFileManager.Verify(lm => lm.DeleteLogsOlderThan(_testDateUtils.Now));
         }
 
