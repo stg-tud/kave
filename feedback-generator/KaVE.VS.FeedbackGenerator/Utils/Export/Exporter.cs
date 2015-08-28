@@ -100,27 +100,6 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
             return !events.IsEmpty();
         }
 
-        [Obsolete]
-        public void Export(IList<IDEEvent> events, IPublisher publisher)
-        {
-            ExportStarted();
-            try
-            {
-                MaybeAppendUserProfile(events);
-
-                if (events.IsEmpty())
-                {
-                    return;
-                }
-
-                DoExport(events, publisher);
-            }
-            finally
-            {
-                ExportEnded();
-            }
-        }
-
         private void DoExport(ICollection<IDEEvent> events, IPublisher publisher)
         {
             using (var stream = new MemoryStream())
