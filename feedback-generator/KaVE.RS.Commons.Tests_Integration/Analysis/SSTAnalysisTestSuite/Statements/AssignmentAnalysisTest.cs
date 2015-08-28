@@ -207,7 +207,16 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         [Test]
         public void Assigning_Literals()
         {
-            Assert.Fail();
+            CompleteInMethod(@"
+                int i;
+                i = 3;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                Assign("i", new ConstantValueExpression()),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
@@ -221,46 +230,145 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("o", Fix.Object),
-                Assign("o", new UnknownExpression()),
-                // TODO fix this (ComposedExpression!)
+                Assign("o", RefExpr("this")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void Assigning_Literals_Null()
+        {
+            CompleteInMethod(@"
+                object o;
+                o = null;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("o", Fix.Object),
+                Assign("o", new NullExpression()),
                 ExprStmt(new CompletionExpression()));
         }
 
         [Test]
         public void Assigning_Variables()
         {
-            Assert.Fail();
+            CompleteInMethod(@"
+                int i;
+                int j = 0;
+                i = j;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                VarDecl("j", Fix.Int),
+                Assign("j", new ConstantValueExpression()),
+                Assign("i", RefExpr("j")),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
         public void Assigning_Events()
         {
-            Assert.Fail();
+            CompleteInClass(@"
+                private event Action E;
+                public void M(){
+                    var e = E;
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("e", Fix.Action),
+                Assign(VarRef("e"), RefExpr(EventRef("E", Fix.Action))),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Assigning_Methods()
+        {
+            CompleteInClass(@"
+                private void H() {}
+                public void M(){
+                    Action a = H;
+                    $
+                }
+            ");
+
+            AssertBody(
+                "M",
+                VarDecl("a", Fix.Action),
+                Assign(VarRef("a"), RefExpr(MethodRef("H", Fix.Void, Fix.TestClass))),
+                Fix.EmptyCompletion);
         }
 
         [Test]
         public void Assigning_Properties()
         {
-            Assert.Fail();
+            CompleteInClass(@"
+                private int P { get; set; }
+                public void M(){
+                    var p = P;
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("p", Fix.Int),
+                Assign(VarRef("p"), RefExpr(PropRef("P", Fix.Int))),
+                Fix.EmptyCompletion);
         }
 
         [Test]
         public void Assigning_Fields()
         {
-            Assert.Fail();
+            CompleteInClass(@"
+                private int _f;
+                public void M(){
+                    var f = _f;
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("f", Fix.Int),
+                Assign(VarRef("f"), RefExpr(FieldRef("_f", Fix.Int))),
+                Fix.EmptyCompletion);
         }
 
         [Test]
         public void Assigning_InvocationExpressions()
         {
-            Assert.Fail();
+            CompleteInMethod(@"
+                var o = this.ToString();
+                $
+            ");
+
+            AssertBody(
+                VarDecl("o", Fix.String),
+                Assign("o", Invoke("this", Fix.ToString(Fix.Object))),
+                Fix.EmptyCompletion);
         }
 
         [Test]
         public void Assigning_Composed()
         {
-            // TODO create separate test suite for this kind of expressions
-            Assert.Fail();
+            // TODO create separate test suite for boolean and arithmetic expressions
+            CompleteInMethod(@"
+                var a = true;
+                var b = false;
+                var isX = a || b;
+            ");
+
+            AssertBody(
+                VarDecl("a", Fix.Bool),
+                Assign("a", new ConstantValueExpression()),
+                VarDecl("b", Fix.Bool),
+                Assign("b", new ConstantValueExpression()),
+                VarDecl("isX", Fix.Bool),
+                Assign("b", new UnknownExpression()),
+                // TODO implement
+                Fix.EmptyCompletion);
         }
 
         [Test]
@@ -271,19 +379,29 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 $
             ");
 
-            Assert.Fail();
+            AssertBody(
+                VarDecl("i", Fix.Bool),
+                Assign("i", new ConstantValueExpression()),
+                VarDecl("j", Fix.Bool),
+                Assign("j", new ConstantValueExpression()),
+                Fix.EmptyCompletion);
         }
 
         [Test]
         public void Fancy2()
         {
             CompleteInMethod(@"
-                int i = 1;
-                var j = (i = 2);
+                int i;
+                var j = i = 2;
                 $
             ");
 
-            Assert.Fail();
+            AssertBody(
+                VarDecl("i", Fix.Bool),
+                Assign("i", new ConstantValueExpression()),
+                VarDecl("j", Fix.Bool),
+                Assign("j", RefExpr("i")),
+                Fix.EmptyCompletion);
         }
 
         [Test]
@@ -344,6 +462,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             ");
 
             AssertBody(
+                "M",
                 new Assignment
                 {
                     Reference = EventRef("E", Fix.ActionOfInt),
@@ -411,6 +530,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             ");
 
             AssertBody(
+                "M",
                 new Assignment
                 {
                     Reference = EventRef("E", Fix.ActionOfInt),

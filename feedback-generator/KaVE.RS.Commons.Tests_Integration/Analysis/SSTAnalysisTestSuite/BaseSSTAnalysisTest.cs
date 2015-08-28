@@ -270,6 +270,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return new MethodReference {MethodName = methodName, Reference = declTypeRef};
         }
 
+        protected static MethodReference MethodRef(string name,
+            ITypeName retType,
+            ITypeName declType,
+            string varRef = "this")
+        {
+            return MethodRef(Method("[{0}] [{1}].{2}()", retType, declType, name), VarRef(varRef));
+        }
+
         protected IVariableDeclaration VarDecl(string varName, ITypeName type)
         {
             return new VariableDeclaration

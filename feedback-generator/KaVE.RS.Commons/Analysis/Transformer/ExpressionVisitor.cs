@@ -221,14 +221,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         private VariableReference CreateVariableReference(ICSharpExpression refExpr,
             IList<IStatement> body)
         {
-            var assignableRef = ToAssignableReference(refExpr, body);
+            var reference = ToReference(refExpr, body);
 
-            if (assignableRef is UnknownReference)
+            if (reference is UnknownReference)
             {
                 return new VariableReference();
             }
 
-            var varRef = assignableRef as VariableReference;
+            var varRef = reference as VariableReference;
             if (varRef != null)
             {
                 return varRef;
@@ -247,13 +247,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 new Assignment
                 {
                     Reference = newVarRef,
-                    Expression = new ReferenceExpression {Reference = assignableRef}
+                    Expression = new ReferenceExpression {Reference = reference}
                 });
             return newVarRef;
         }
 
         [NotNull]
-        private IAssignableReference ToAssignableReference(ICSharpExpression csExpr,
+        private IReference ToReference(ICSharpExpression csExpr,
             IList<IStatement> body)
         {
             if (csExpr == null || csExpr is IThisExpression)
@@ -323,6 +323,26 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     };
                 }
 
+                var @event = elem as IEvent;
+                if (@event != null)
+                {
+                    return new EventReference
+                    {
+                        EventName = @event.GetName<IEventName>(),
+                        Reference = baseRef
+                    };
+                }
+
+                var method = elem as IMethod;
+                if (method != null)
+                {
+                    return new MethodReference
+                    {
+                        MethodName = method.GetName<IMethodName>(),
+                        Reference = baseRef
+                    };
+                }
+
                 var localVar = elem as ILocalVariable;
                 var parameter = elem as IParameter;
                 if (localVar != null || parameter != null)
@@ -331,8 +351,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
             }
 
-            Asserts.Fail("unsupported case");
-            return null;
+            return new UnknownReference();
         }
 
         public override IAssignableExpression VisitObjectCreationExpression(IObjectCreationExpression expr,
@@ -396,10 +415,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             {
                 return new ReferenceExpression
                 {
-                    Reference = new VariableReference
-                    {
-                        Identifier = name
-                    }
+                    Reference = ToReference(expr, context)
                 };
             }
             return new ReferenceExpression

@@ -30,43 +30,49 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     internal class SSTAnalysisFixture
     {
+        internal static readonly ITypeName TestClass = TypeName.Get("N.C, TestProject");
+
         internal static readonly ITypeName Int =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Int32, mscorlib, 4.0.0.0");
+            TypeName.Get("System.Int32, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Byte =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Byte, mscorlib, 4.0.0.0");
+            TypeName.Get("System.Byte, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName IntArray =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Int32[], mscorlib, 4.0.0.0");
+            TypeName.Get("System.Int32[], mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Void =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Void, mscorlib, 4.0.0.0");
+            TypeName.Get("System.Void, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Unknown = UnknownTypeName.Instance;
 
         internal static readonly ITypeName String =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.String, mscorlib, 4.0.0.0");
+            TypeName.Get("System.String, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Bool =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
+            TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Object =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+            TypeName.Get("System.Object, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Exception =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
+            TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName IOException =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.IO.IOException, mscorlib, 4.0.0.0");
+            TypeName.Get("System.IO.IOException, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Type =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Type, mscorlib, 4.0.0.0");
+            TypeName.Get("System.Type, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName ListOfInt =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get(
+            TypeName.Get(
                 "System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
 
-        internal static readonly ITypeName ActionOfInt = TypeName("TODO, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Action =
+            TypeName.Get(
+                "d:[System.Void, mscorlib, 4.0.0.0] [System.Action, mscorlib, 4.0.0.0].()");
+
+        internal static readonly ITypeName ActionOfInt = TypeInProject("TODO(Action<int>), mscorlib, 4.0.0.0");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetHashCode =
@@ -111,10 +117,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             MethodName.Get(string.Format("[{0}] [{1}]..ctor([{2}] message)", Void, Exception, String));
 
         public static readonly ITypeName EventHandler =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.EventHandler, mscorlib, 4.0.0.0");
+            TypeName.Get("System.EventHandler, mscorlib, 4.0.0.0");
 
         public static readonly ITypeName EventArgs =
-            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.EventArgs, mscorlib, 4.0.0.0");
+            TypeName.Get("System.EventArgs, mscorlib, 4.0.0.0");
 
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {
@@ -143,9 +149,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return MethodName.Get(cGet);
         }
 
-        public static ITypeName TypeName(string simpleName)
+        public static ITypeName TypeInCoreLib(string simpleName)
         {
-            return KaVE.Commons.Model.Names.CSharp.TypeName.Get(simpleName + ", TestProject");
+            return TypeName.Get(simpleName + ", mscorlib, 4.0.0.0");
+        }
+
+        public static ITypeName TypeInProject(string simpleName)
+        {
+            return TypeName.Get(simpleName + ", TestProject");
         }
 
         public static IParameterName Parameter(ITypeName parameterType, string name)
