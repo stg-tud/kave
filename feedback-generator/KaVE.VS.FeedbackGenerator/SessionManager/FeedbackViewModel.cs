@@ -54,9 +54,9 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
             SetupRefresh();
             _logManager.LogCreated += OnLogCreated;
 
-            exporter.ExportStarted += () => SetBusy("");
+            exporter.ExportStarted += () => SetBusy(Properties.UploadWizard.Export_BusyMessage);
             exporter.ExportEnded += SetIdle;
-            exporter.StatusChanged += SetBusy;
+            exporter.StatusChanged += msg => SetBusy(string.Format("{0} ({1})", Properties.UploadWizard.Export_BusyMessage, msg));
         }
 
         private void OnLogCreated(ILog log)
