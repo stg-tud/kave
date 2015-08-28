@@ -38,7 +38,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
         event Action ExportEnded;
 
         /// <summary>
-        /// Exports all events before the given export time. Returns the number of exported events.
+        ///     Exports all events before the given export time. Returns the number of exported events.
         /// </summary>
         int Export(DateTime exportTime, IPublisher publisher);
     }
