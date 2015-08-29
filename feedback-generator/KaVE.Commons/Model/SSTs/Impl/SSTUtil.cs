@@ -109,7 +109,7 @@ namespace KaVE.Commons.Model.SSTs.Impl
             return new InvocationExpression
             {
                 MethodName = name,
-                Parameters = Lists.NewListFrom(parameters),
+                Parameters = Lists.NewListFrom(parameters)
             };
         }
 
@@ -122,7 +122,7 @@ namespace KaVE.Commons.Model.SSTs.Impl
             {
                 Reference = new VariableReference {Identifier = id},
                 MethodName = name,
-                Parameters = Lists.NewListFrom(parameters),
+                Parameters = Lists.NewListFrom(parameters)
             };
         }
 

@@ -29,11 +29,15 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
+using IBreakStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IBreakStatement;
+using IExpressionStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IExpressionStatement;
+using IReturnStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IReturnStatement;
 using IStatement = KaVE.Commons.Model.SSTs.IStatement;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
@@ -130,22 +134,85 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             var isTarget = IsTargetMatch(expr, CompletionCase.Undefined);
 
-            body.Add(
-                new Assignment
-                {
-                    Reference =
-                        expr.Dest != null ? _exprVisitor.ToAssignableRef(expr.Dest, body) : new UnknownReference(),
-                    Expression =
-                        isTarget
-                            ? new CompletionExpression()
-                            : _exprVisitor.ToAssignableExpr(expr.Source, body)
-                });
+            var sstRef = _exprVisitor.ToAssignableRef(expr.Dest, body) ?? new UnknownReference();
+
+            var sstExpr =
+                isTarget
+                    ? new CompletionExpression()
+                    : _exprVisitor.ToAssignableExpr(expr.Source, body);
+
+            var esOp = TryGetEventSubscription(expr);
+            if (esOp.HasValue)
+            {
+                body.Add(
+                    new EventSubscriptionStatement
+                    {
+                        Reference = sstRef,
+                        Operation = esOp.Value,
+                        Expression = sstExpr
+                    });
+            }
+            else
+            {
+                body.Add(
+                    new Assignment
+                    {
+                        Reference = sstRef,
+                        Expression = IsFancyAssign(expr) ? new ComposedExpression() : sstExpr
+                    });
+            }
 
             if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
             {
                 body.Add(EmptyCompletionExpression);
             }
         }
+
+        private static bool IsFancyAssign(IAssignmentExpression expr)
+        {
+            return expr.AssignmentType != AssignmentType.EQ;
+        }
+
+        private EventSubscriptionOperation? TryGetEventSubscription(IAssignmentExpression expr)
+        {
+            if (expr.Dest == null)
+            {
+                return null;
+            }
+            var type = expr.Dest.GetExpressionType().ToIType().GetName();
+            if (!type.IsDelegateType)
+            {
+                return null;
+            }
+            var isAdd = expr.AssignmentType == AssignmentType.PLUSEQ;
+            if (isAdd)
+            {
+                return EventSubscriptionOperation.Add;
+            }
+
+            var isRemove = expr.AssignmentType == AssignmentType.MINUSEQ;
+            if (isRemove)
+            {
+                return EventSubscriptionOperation.Remove;
+            }
+
+            return null;
+        }
+
+        /*private static AssignmentOperation ToOperation(AssignmentType assignmentType)
+        {
+            switch (assignmentType)
+            {
+                case AssignmentType.EQ:
+                    return AssignmentOperation.Equals;
+                case AssignmentType.PLUSEQ:
+                    return AssignmentOperation.Add;
+                case AssignmentType.MINUSEQ:
+                    return AssignmentOperation.Remove;
+                default:
+                    return AssignmentOperation.Unknown;
+            }
+        }*/
 
         public override void VisitExpressionStatement(IExpressionStatement stmt, IList<IStatement> body)
         {

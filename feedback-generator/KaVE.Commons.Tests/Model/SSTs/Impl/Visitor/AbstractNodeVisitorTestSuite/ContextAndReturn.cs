@@ -357,6 +357,20 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
         }
 
         [Test]
+        public void EventSubscriptionStatement()
+        {
+            AssertReturn(
+                new EventSubscriptionStatement
+                {
+                    Reference = _vr,
+                    Expression = _e1
+                });
+
+            AssertAccept(_vr);
+            AssertAccept(_e1);
+        }
+
+        [Test]
         public void ExpressionStatement()
         {
             AssertReturn(

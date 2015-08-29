@@ -153,7 +153,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             }
 
             c.Type(stmt.Name.ReturnType).Space().Text(stmt.Name.Name);
-            
+
             if (stmt.Name.HasTypeParameters)
             {
                 c.TypeParameters(stmt.Name.TypeParameters);
@@ -247,6 +247,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(IContinueStatement stmt, SSTPrintingContext c)
         {
             c.Indentation().Keyword("continue").Text(";");
+        }
+
+        public void Visit(IEventSubscriptionStatement stmt, SSTPrintingContext c)
+        {
+            c.Text("TODO: IEventSubscriptionStatement");
         }
 
         public void Visit(IExpressionStatement stmt, SSTPrintingContext c)
@@ -506,7 +511,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             }
 
             c.Text("(");
-            
+
             foreach (var parameter in expr.Parameters)
             {
                 parameter.Accept(this, c);

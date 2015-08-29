@@ -68,9 +68,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public IAssignableReference ToAssignableRef(ICSharpExpression csExpr, IList<IStatement> body)
         {
-            return csExpr == null
-                ? new UnknownReference()
-                : csExpr.Accept(_toAssignableRef, body) ?? new UnknownReference();
+            if (csExpr == null)
+            {
+                return new UnknownReference();
+            }
+
+            var reference = ToReference(csExpr, body);
+            var assignableRef = reference as IAssignableReference ?? new UnknownReference();
+            return assignableRef;
         }
 
         public ISimpleExpression ToSimpleExpression(ICSharpExpression csExpr, IList<IStatement> body)

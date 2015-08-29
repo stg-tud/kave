@@ -24,12 +24,13 @@ using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
-    public class Assignment : IAssignment
+    public class EventSubscriptionStatement : IEventSubscriptionStatement
     {
         public IAssignableReference Reference { get; set; }
+        public EventSubscriptionOperation Operation { get; set; }
         public IAssignableExpression Expression { get; set; }
 
-        public Assignment()
+        public EventSubscriptionStatement()
         {
             Reference = new UnknownReference();
             Expression = new UnknownExpression();
@@ -40,9 +41,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
             return this.Equals(obj, Equals);
         }
 
-        private bool Equals(Assignment other)
+        private bool Equals(EventSubscriptionStatement other)
         {
-            return Equals(Reference, other.Reference) && Equals(Expression, other.Expression);
+            return Reference.Equals(other.Reference) && Operation == other.Operation &&
+                   Expression.Equals(other.Expression);
         }
 
         public override int GetHashCode()
@@ -50,9 +52,15 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
             unchecked
             {
                 var hashCode = Reference.GetHashCode();
+                hashCode = (hashCode*397) ^ (int) Operation;
                 hashCode = (hashCode*397) ^ Expression.GetHashCode();
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
@@ -63,11 +71,6 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
         public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
         {
             return visitor.Visit(this, context);
-        }
-
-        public override string ToString()
-        {
-            return this.ToStringReflection();
         }
     }
 }

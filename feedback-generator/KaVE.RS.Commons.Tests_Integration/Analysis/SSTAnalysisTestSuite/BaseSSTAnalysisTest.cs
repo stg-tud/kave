@@ -222,7 +222,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         #region instantiation helper
 
-        protected static VariableReference VarRef(string id = "")
+        protected static IVariableReference VarRef(string id = "")
         {
             return new VariableReference {Identifier = id};
         }
@@ -378,6 +378,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         protected static ITypeName Type(string shortName)
         {
             return TypeName.Get("N." + shortName + ", TestProject");
+        }
+
+        protected static IAssignableExpression ComposedExpr(params string[] ids)
+        {
+            return new ComposedExpression
+            {
+                References = Lists.NewListFrom(ids.Select(VarRef))
+            };
         }
 
         #endregion

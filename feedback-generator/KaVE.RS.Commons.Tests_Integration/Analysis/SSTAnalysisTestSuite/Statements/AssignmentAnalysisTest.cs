@@ -17,7 +17,6 @@
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -186,25 +185,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         [Test]
-        public void SimpleVariableToVariableAssignment()
-        {
-            CompleteInMethod(@"
-                int i, j;
-                i = 1;
-                j = i;
-                $
-            ");
-
-            AssertBody(
-                VarDecl("i", Fix.Int),
-                VarDecl("j", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
-                Assign("j", new UnknownExpression()),
-                // TODO fix this (ComposedExpression!)
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
         public void Assigning_Literals()
         {
             CompleteInMethod(@"
@@ -351,27 +331,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         [Test]
-        public void Assigning_Composed()
-        {
-            // TODO create separate test suite for boolean and arithmetic expressions
-            CompleteInMethod(@"
-                var a = true;
-                var b = false;
-                var isX = a || b;
-            ");
-
-            AssertBody(
-                VarDecl("a", Fix.Bool),
-                Assign("a", new ConstantValueExpression()),
-                VarDecl("b", Fix.Bool),
-                Assign("b", new ConstantValueExpression()),
-                VarDecl("isX", Fix.Bool),
-                Assign("b", new UnknownExpression()),
-                // TODO implement
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
         public void Fancy1()
         {
             CompleteInMethod(@"
@@ -380,9 +339,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             ");
 
             AssertBody(
-                VarDecl("i", Fix.Bool),
+                VarDecl("i", Fix.Int),
                 Assign("i", new ConstantValueExpression()),
-                VarDecl("j", Fix.Bool),
+                VarDecl("j", Fix.Int),
                 Assign("j", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
@@ -405,142 +364,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         [Test]
-        public void Event_AddingListener_Lambda()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E += i => { };
-                    $
-                }
-            ");
-
-            AssertBody(
-                new Assignment
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression(), // TODO: LambdaExpression
-                    Kind = AssignmentType.Add
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_AddingListener_DefaultDelegate()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E += delegate { };
-                    $
-                }
-            ");
-
-            AssertBody(
-                new Assignment
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression(), // TODO: LambdaExpression
-                    Kind = AssignmentType.Add
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_AddingListener_Method()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E += Listener;
-                    $
-                }
-                private void Listener(int i) {}
-            ");
-
-            AssertBody(
-                "M",
-                new Assignment
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression(), // TODO: RefExpr(MethodReference)
-                    Kind = AssignmentType.Add
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_RemovingListener_Lambda()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E -= i => { };
-                    $
-                }
-            ");
-
-            AssertBody(
-                new Assignment
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression(), // TODO: LambdaExpression
-                    Kind = AssignmentType.Add
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_RemovingListener_DefaultDelegate()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E -= delegate { };
-                    $
-                }
-            ");
-
-            AssertBody(
-                new Assignment
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression(), // TODO: LambdaExpression
-                    Kind = AssignmentType.Add
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_RemovingListener_Method()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E -= Listener;
-                    $
-                }
-                private void Listener(int i) {}
-            ");
-
-            AssertBody(
-                "M",
-                new Assignment
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression(), // TODO: RefExpr(MethodReference)
-                    Kind = AssignmentType.Add
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
         public void SyntacticSugar_Add()
         {
             CompleteInMethod(@"
@@ -555,8 +378,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 new Assignment
                 {
                     Reference = VarRef("i"),
-                    Kind = AssignmentType.Add,
-                    Expression = new ConstantValueExpression()
+                    Expression = ComposedExpr() // TODO: extend
                 },
                 Fix.EmptyCompletion);
         }
@@ -576,9 +398,32 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 new Assignment
                 {
                     Reference = VarRef("i"),
-                    Kind = AssignmentType.Remove,
-                    Expression = new ConstantValueExpression()
+                    Expression = ComposedExpr() // TODO: extend
                 },
+                Fix.EmptyCompletion);
+        }
+
+        // TODO extend syntactic sugar examples and move them to separate file
+
+        [Test]
+        public void Assigning_Composed()
+        {
+            // TODO create separate test suite for boolean and arithmetic expressions
+            CompleteInMethod(@"
+                var a = true;
+                var b = false;
+                var isX = a || b;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("a", Fix.Bool),
+                Assign("a", new ConstantValueExpression()),
+                VarDecl("b", Fix.Bool),
+                Assign("b", new ConstantValueExpression()),
+                VarDecl("isX", Fix.Bool),
+                Assign("isX", new UnknownExpression()),
+                // TODO implement (ComposedExpression)
                 Fix.EmptyCompletion);
         }
     }

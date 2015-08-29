@@ -40,6 +40,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(IAssignment stmt, TContext context);
         void Visit(IBreakStatement stmt, TContext context);
         void Visit(IContinueStatement stmt, TContext context);
+        void Visit(IEventSubscriptionStatement stmt, TContext context);
         void Visit(IExpressionStatement stmt, TContext context);
         void Visit(IGotoStatement stmt, TContext context);
         void Visit(ILabelledStatement stmt, TContext context);
@@ -99,6 +100,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(IAssignment stmt, TContext context);
         TReturn Visit(IBreakStatement stmt, TContext context);
         TReturn Visit(IContinueStatement stmt, TContext context);
+        TReturn Visit(IEventSubscriptionStatement stmt, TContext context);
         TReturn Visit(IExpressionStatement stmt, TContext context);
         TReturn Visit(IGotoStatement stmt, TContext context);
         TReturn Visit(ILabelledStatement stmt, TContext context);

@@ -92,6 +92,12 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual void Visit(IContinueStatement stmt, TContext context) {}
 
+        public virtual void Visit(IEventSubscriptionStatement stmt, TContext context)
+        {
+            stmt.Reference.Accept(this, context);
+            stmt.Expression.Accept(this, context);
+        }
+
         public virtual void Visit(IExpressionStatement stmt, TContext context)
         {
             stmt.Expression.Accept(this, context);
@@ -342,6 +348,13 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual TReturn Visit(IContinueStatement stmt, TContext context)
         {
+            return default(TReturn);
+        }
+
+        public virtual TReturn Visit(IEventSubscriptionStatement stmt, TContext context)
+        {
+            stmt.Reference.Accept(this, context);
+            stmt.Expression.Accept(this, context);
             return default(TReturn);
         }
 

@@ -72,7 +72,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             TypeName.Get(
                 "d:[System.Void, mscorlib, 4.0.0.0] [System.Action, mscorlib, 4.0.0.0].()");
 
-        internal static readonly ITypeName ActionOfInt = TypeInProject("TODO(Action<int>), mscorlib, 4.0.0.0");
+        internal static readonly ITypeName ActionOfInt =
+            TypeName.Get(
+                "d:[System.Void, mscorlib, 4.0.0.0] [System.Action`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] obj)");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetHashCode =

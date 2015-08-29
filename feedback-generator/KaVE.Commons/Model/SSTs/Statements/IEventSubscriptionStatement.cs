@@ -20,12 +20,20 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.SSTs.Statements
 {
-    public interface IAssignment : IStatement
+    public interface IEventSubscriptionStatement : IStatement
     {
         [NotNull]
         IAssignableReference Reference { get; }
 
+        EventSubscriptionOperation Operation { get; set; }
+
         [NotNull]
-        IAssignableExpression Expression { get; }
+        IAssignableExpression Expression { get; set; }
+    }
+
+    public enum EventSubscriptionOperation
+    {
+        Add,
+        Remove
     }
 }
