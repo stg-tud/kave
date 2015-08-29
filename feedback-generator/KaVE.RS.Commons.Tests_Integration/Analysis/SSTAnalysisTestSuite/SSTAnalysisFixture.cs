@@ -124,6 +124,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         public static readonly ITypeName EventArgs =
             TypeName.Get("System.EventArgs, mscorlib, 4.0.0.0");
 
+        // ReSharper disable once InconsistentNaming
+        public static readonly IMethodName TestClass_Init =
+            MethodName.Get(string.Format("[{0}] [{1}]..ctor()", Void, TestClass));
+
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {
             return MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Int, declaringType));
@@ -237,6 +241,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             {
                 References = Lists.NewListFrom(varRefs)
             };
+        }
+
+        public static IMethodName Ctor(ITypeName type, params IParameterName[] parameterNames)
+        {
+            var parameters = string.Join<IParameterName>(",", parameterNames);
+            return MethodName.Get(string.Format("[{0}] [{1}]..ctor({2})", Void, type, parameters));
         }
     }
 }

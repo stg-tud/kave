@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
@@ -141,14 +142,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     ? new CompletionExpression()
                     : _exprVisitor.ToAssignableExpr(expr.Source, body);
 
-            var esOp = TryGetEventSubscription(expr);
-            if (esOp.HasValue)
+            var operation = TryGetEventSubscriptionOperation(expr);
+            if (operation.HasValue)
             {
                 body.Add(
                     new EventSubscriptionStatement
                     {
                         Reference = sstRef,
-                        Operation = esOp.Value,
+                        Operation = operation.Value,
                         Expression = sstExpr
                     });
             }
@@ -173,17 +174,36 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return expr.AssignmentType != AssignmentType.EQ;
         }
 
-        private EventSubscriptionOperation? TryGetEventSubscription(IAssignmentExpression expr)
+        private EventSubscriptionOperation? TryGetEventSubscriptionOperation(IAssignmentExpression expr)
         {
-            if (expr.Dest == null)
+            var isRegularEq = expr.AssignmentType == AssignmentType.EQ;
+            if (isRegularEq)
             {
                 return null;
             }
-            var type = expr.Dest.GetExpressionType().ToIType().GetName();
-            if (!type.IsDelegateType)
+
+            var refExpr = expr.Dest as IReferenceExpression;
+            if (refExpr == null)
             {
                 return null;
             }
+
+            var elem = refExpr.Reference.Resolve().DeclaredElement;
+            if (elem == null)
+            {
+                return null;
+            }
+
+            var loc = elem as ITypeOwner;
+            if (loc != null)
+            {
+                var type = loc.Type.GetName();
+                if (!type.IsDelegateType)
+                {
+                    return null;
+                }
+            }
+
             var isAdd = expr.AssignmentType == AssignmentType.PLUSEQ;
             if (isAdd)
             {

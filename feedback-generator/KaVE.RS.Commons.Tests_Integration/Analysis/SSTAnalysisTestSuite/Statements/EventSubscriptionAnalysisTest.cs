@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+using System;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -25,7 +28,61 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
     internal class EventSubscriptionAnalysisTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void Event_AddingListener_Lambda()
+        public void Operation_Adding()
+        {
+            CompleteInClass(@"
+                private event Action<int> E;
+                public void M()
+                {
+                    E += Listener;
+                    $
+                }
+                private void Listener(int i) {}
+            ");
+
+            var listenerName =
+                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
+
+            AssertBody(
+                "M",
+                new EventSubscriptionStatement
+                {
+                    Reference = EventRef("E", Fix.ActionOfInt),
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = RefExpr(MethodRef(listenerName, VarRef("this")))
+                },
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void Operation_Removing()
+        {
+            CompleteInClass(@"
+                private event Action<int> E;
+                public void M()
+                {
+                    E -= Listener;
+                    $
+                }
+                private void Listener(int i) {}
+            ");
+
+            var listenerName =
+                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
+
+            AssertBody(
+                "M",
+                new EventSubscriptionStatement
+                {
+                    Reference = EventRef("E", Fix.ActionOfInt),
+                    Operation = EventSubscriptionOperation.Remove,
+                    Expression = RefExpr(MethodRef(listenerName, VarRef("this")))
+                },
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void Right_Lambda()
         {
             CompleteInClass(@"
                 private event Action<int> E;
@@ -46,7 +103,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         [Test]
-        public void Event_AddingListener_DefaultDelegate()
+        public void Right_DefaultDelegate()
         {
             CompleteInClass(@"
                 private event Action<int> E;
@@ -67,7 +124,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         [Test]
-        public void Event_AddingListener_Method()
+        public void Right_Method()
         {
             CompleteInClass(@"
                 private event Action<int> E;
@@ -79,171 +136,162 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 private void Listener(int i) {}
             ");
 
-            AssertBody(
-                "M",
-                new EventSubscriptionStatement
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression() // TODO: RefExpr(MethodReference)
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_AddingListener_NewHandler()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E += new object(); // TODO adapt
-                    $
-                }
-            ");
-
-            Assert.Fail();
-        }
-
-        [Test]
-        public void Event_RemovingListener_Lambda()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E -= i => { };
-                    $
-                }
-            ");
-
-            AssertBody(
-                new EventSubscriptionStatement
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression() // TODO: LambdaExpression
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_RemovingListener_DefaultDelegate()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E -= delegate { };
-                    $
-                }
-            ");
-
-            AssertBody(
-                new EventSubscriptionStatement
-                {
-                    Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression() // TODO: LambdaExpression
-                },
-                ExprStmt(new CompletionExpression()));
-        }
-
-        [Test]
-        public void Event_RemovingListener_Method()
-        {
-            CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
-                {
-                    E -= Listener;
-                    $
-                }
-                private void Listener(int i) {}
-            ");
+            var listenerName =
+                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
 
             AssertBody(
                 "M",
                 new EventSubscriptionStatement
                 {
                     Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression() // TODO: RefExpr(MethodReference)
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = RefExpr(MethodRef(listenerName, VarRef("this")))
                 },
                 ExprStmt(new CompletionExpression()));
         }
 
         [Test]
-        public void Event_RemovingListener_NewHandler()
+        public void Right_NewHandler()
         {
             CompleteInClass(@"
-                private event Action<int> E;
+                private event Handler E;
+                private delegate void Handler(int i);
+                private void Listener(int i) { }
+
                 public void M()
                 {
-                    E -= new object(); // TODO adapt
+                    E += new Handler(Listener);
                     $
                 }
             ");
 
-            Assert.Fail();
+            var delegateType =
+                TypeName.Get(string.Format("d:[{0}] [N.C+Handler, TestProject].([{1}] i)", Fix.Void, Fix.Int));
+            var parameter = ParameterName.Get(string.Format("[{0}] target", delegateType));
+            var ctor = Fix.Ctor(delegateType, parameter);
+
+            var listenerName =
+                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
+
+            AssertBody(
+                "M",
+                new EventSubscriptionStatement
+                {
+                    Reference = EventRef("E", delegateType),
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = InvokeCtor(ctor, RefExpr(MethodRef(listenerName, VarRef("this"))))
+                },
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
-        public void LeftSide_ImpliciteThis()
+        public void Left_ImpliciteThis()
         {
             CompleteInClass(@"
                 private event Action<int> E;
                 public void M()
                 {
-                    E -= new object(); // TODO adapt
+                    E += delegate{};
                     $
                 }
             ");
 
-            Assert.Fail();
+            AssertBody(
+                new EventSubscriptionStatement
+                {
+                    Reference = EventRef("E", Fix.ActionOfInt),
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = new UnknownExpression() // TODO
+                },
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
-        public void LeftSide_ExpliciteThis()
+        public void Left_ExpliciteThis()
         {
             CompleteInClass(@"
                 private event Action<int> E;
                 public void M()
                 {
-                    E -= new object(); // TODO adapt
+                    this.E += delegate{};
                     $
                 }
             ");
 
-            Assert.Fail();
+            AssertBody(
+                new EventSubscriptionStatement
+                {
+                    Reference = EventRef("E", Fix.ActionOfInt),
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = new UnknownExpression() // TODO
+                },
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
-        public void LeftSide_Member()
+        public void Left_Field()
         {
-            // TODO separate cases for field, props, etc.?
             CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
+                private Action<int> _f;
+                public void M(C c)
                 {
-                    E -= new object(); // TODO adapt
+                    c._f += delegate{};
                     $
                 }
             ");
 
-            Assert.Fail();
+            AssertBody(
+                new EventSubscriptionStatement
+                {
+                    Reference = FieldRef("_f", Fix.ActionOfInt, "c"),
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = new UnknownExpression() // TODO
+                },
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
-        public void LeftSide_Variable()
+        public void Left_Property()
         {
             CompleteInClass(@"
-                private event Action<int> E;
-                public void M()
+                private Action<int> P {get;set;}
+                public void M(C c)
                 {
-                    var e = E;
-                    e += delegate{};
+                    c.P += delegate{};
                     $
                 }
             ");
 
-            Assert.Fail();
+            AssertBody(
+                new EventSubscriptionStatement
+                {
+                    Reference = PropRef("P", Fix.ActionOfInt, "c"),
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = new UnknownExpression() // TODO
+                },
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void Left_Variable()
+        {
+            CompleteInMethod(@"
+                Action<int> e = null;
+                e += delegate{};
+                $
+            ");
+            Action<int> e = null;
+            e += delegate { };
+            AssertBody(
+                VarDecl("e", Fix.ActionOfInt),
+                Assign("e", new NullExpression()),
+                new EventSubscriptionStatement
+                {
+                    Reference = VarRef("e"),
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = new UnknownExpression() // TODO
+                },
+                ExprStmt(new CompletionExpression()));
         }
     }
 }
