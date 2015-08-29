@@ -196,6 +196,16 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return new ContinueStatement();
         }
 
+        public override IStatement Visit(IEventSubscriptionStatement stmt, int context)
+        {
+            return new EventSubscriptionStatement
+            {
+                Reference = _ref.Anonymize(stmt.Reference),
+                Operation = stmt.Operation,
+                Expression = Anonymize(stmt.Expression)
+            };
+        }
+
         public override IStatement Visit(IExpressionStatement stmt, int context)
         {
             return new ExpressionStatement

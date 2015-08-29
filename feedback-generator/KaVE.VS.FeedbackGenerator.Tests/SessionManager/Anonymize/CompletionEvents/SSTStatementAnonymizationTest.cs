@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
@@ -87,6 +88,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         public void ContinueStatement()
         {
             AssertAnonymization(new ContinueStatement(), new ContinueStatement());
+        }
+
+        [Test]
+        public void EventSubscriptionStatement()
+        {
+            AssertAnonymization(
+                new EventSubscriptionStatement
+                {
+                    Reference = AnyVarReference,
+                    Operation = EventSubscriptionOperation.Remove,
+                    Expression = AnyExpression
+                },
+                new EventSubscriptionStatement
+                {
+                    Reference = AnyVarReferenceAnonymized,
+                    Operation = EventSubscriptionOperation.Remove,
+                    Expression = AnyExpressionAnonymized
+                });
         }
 
         [Test]
