@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using JetBrains.Application.BuildScript.Application.Zones;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TestFramework;
@@ -29,20 +28,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
     public interface IThisTestZone : ITestsZone, IRequire<PsiFeatureTestZone> {}
 
     [SetUpFixture]
-    public class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IThisTestZone>
-    {
-        public override void TearDown()
-        {
-            try
-            {
-                base.TearDown();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-    }
+    public class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IThisTestZone> {}
 
     [ZoneMarker]
     public class ZoneMarker {}

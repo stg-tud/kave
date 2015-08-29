@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
@@ -30,27 +30,9 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class SolutionAnalysisTest : BaseTestWithExistingSolution
     {
-        public override void TearDown()
-        {
-            try
-            {
-                base.TearDown();
-            }
-            catch (Exception)
-            {
-                // sometimes (always?) the tear down fails
-            }
-        }
-
-        protected override string RelativeTestDataPath
-        {
-            get { return @"TestSolution"; }
-        }
-
-
         protected override FileSystemPath ExistingSolutionFilePath
         {
-            get { return GetTestDataFilePath2("TestSolution.sln"); }
+            get { return GetTestDataFilePath2(Path.Combine("..", "TestSolution", "TestSolution.sln")); }
         }
 
         [Test]
