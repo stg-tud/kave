@@ -72,6 +72,12 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                     FindAvailableTarget(target);
                 }
 
+                if (Result.AffectedNode is IAssignmentExpression && HasError(Result.AffectedNode))
+                {
+                    Result.Case = CompletionCase.Undefined;
+                    return;
+                }
+
                 if (isAssign)
                 {
                     Result.Case = CompletionCase.Undefined;
