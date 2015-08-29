@@ -221,7 +221,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             ");
 
             AssertNodeIsAssignment("i", LastCompletionMarker.AffectedNode);
-            AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
+            AssertCompletionCase(CompletionCase.Undefined);
 
             AssertBody(
                 VarDecl("i", Fix.Int),
