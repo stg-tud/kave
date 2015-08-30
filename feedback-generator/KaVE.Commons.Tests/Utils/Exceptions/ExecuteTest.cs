@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.IO;
 using System.Threading;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
@@ -42,7 +43,7 @@ namespace KaVE.Commons.Tests.Utils.Exceptions
             new NullReferenceException(),
             new ArgumentException(),
             new ArithmeticException(),
-            new IndexOutOfRangeException(), 
+            new IndexOutOfRangeException(),
             new FormatException(),
             new InvalidCastException(),
             new InvalidOperationException(),
@@ -63,7 +64,7 @@ namespace KaVE.Commons.Tests.Utils.Exceptions
             Execute.WithExceptionLogging(_mockLogger.Object, () => { throw new Exception(); });
         }
 
-        [Test, ExpectedException(typeof(ThreadInterruptedException))]
+        [Test, ExpectedException(typeof (ThreadInterruptedException))]
         public void ShouldNotHandleThreadInterruptedException()
         {
             Execute.WithExceptionLogging(_mockLogger.Object, () => { throw new ThreadInterruptedException(); });
@@ -79,8 +80,22 @@ namespace KaVE.Commons.Tests.Utils.Exceptions
             }
             catch (Exception e)
             {
-                Assert.That(e.StackTrace, Is.StringContaining("KaVE.Commons.Tests.Utils.Exceptions.ExecuteTest.ThrowException()"));
+                Assert.That(
+                    e.StackTrace,
+                    Is.StringContaining("KaVE.Commons.Tests.Utils.Exceptions.ExecuteTest.ThrowException()"));
             }
+        }
+
+        [Test, TestCaseSource("_blockedAndLoggedExceptions")]
+        public void ShouldSuppressException(Exception e)
+        {
+            Execute.AndSupressExceptions(() => { throw e; });
+        }
+
+        [Test, ExpectedException(typeof (IOException))]
+        public void ShouldNotSuppressOtherExceptions()
+        {
+            Execute.AndSupressExceptions(() => { throw new IOException(); });
         }
 
         private static void ThrowException()

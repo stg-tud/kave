@@ -53,5 +53,20 @@ namespace KaVE.Commons.Utils.Exceptions
                 throw;
             }
         }
+
+        public static void AndSupressExceptions(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                if (!SupressedExceptionTypes.Contains(e.GetType()))
+                {
+                    throw;
+                }
+            }
+        }
     }
 }

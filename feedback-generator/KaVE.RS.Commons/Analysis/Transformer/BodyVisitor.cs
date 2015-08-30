@@ -33,6 +33,7 @@ using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
@@ -578,7 +579,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
             foreach (var stmt in block.Statements)
             {
-                stmt.Accept(this, body);
+                Execute.AndSupressExceptions(
+                    delegate { stmt.Accept(this, body); });
             }
         }
 
