@@ -18,7 +18,9 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
@@ -122,6 +124,54 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new UnknownStatement();
             AssertPrint(sst, "???;");
+        }
+
+        [Test]
+        public void EventSubscriptionStatement_Subscribe()
+        {
+            var sst = new EventSubscriptionStatement
+            {
+                Reference = new EventReference
+                {
+                    EventName = EventName.Get("[EventType,P] [DeclaringType,P].SomeEvent"),
+                    Reference = SSTUtil.VariableReference("o")
+                },
+                Expression = new ReferenceExpression
+                {
+                    Reference = new MethodReference
+                    {
+                        MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].Handler()"),
+                        Reference = SSTUtil.VariableReference("this")
+                    }
+                },
+                Operation = EventSubscriptionOperation.Add
+            };
+
+            AssertPrint(sst, "o.SomeEvent += this.Handler;");
+        }
+
+        [Test]
+        public void EventSubscriptionStatement_Unsubscribe()
+        {
+            var sst = new EventSubscriptionStatement
+            {
+                Reference = new EventReference
+                {
+                    EventName = EventName.Get("[EventType,P] [DeclaringType,P].SomeEvent"),
+                    Reference = SSTUtil.VariableReference("o")
+                },
+                Expression = new ReferenceExpression
+                {
+                    Reference = new MethodReference
+                    {
+                        MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].Handler()"),
+                        Reference = SSTUtil.VariableReference("this")
+                    }
+                },
+                Operation = EventSubscriptionOperation.Remove
+            };
+
+            AssertPrint(sst, "o.SomeEvent -= this.Handler;");
         }
     }
 }

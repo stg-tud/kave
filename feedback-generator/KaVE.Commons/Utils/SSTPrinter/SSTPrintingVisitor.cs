@@ -251,7 +251,22 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IEventSubscriptionStatement stmt, SSTPrintingContext c)
         {
-            c.Text("TODO: IEventSubscriptionStatement");
+            c.Indentation();
+            stmt.Reference.Accept(this, c);
+            c.Space();
+
+            if (stmt.Operation == EventSubscriptionOperation.Add)
+            {
+                c.Text("+=");
+            }
+            else if (stmt.Operation == EventSubscriptionOperation.Remove)
+            {
+                c.Text("-=");
+            }
+
+            c.Space();
+            stmt.Expression.Accept(this, c);
+            c.Text(";");
         }
 
         public void Visit(IExpressionStatement stmt, SSTPrintingContext c)
