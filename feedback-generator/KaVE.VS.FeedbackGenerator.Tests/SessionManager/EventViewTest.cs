@@ -223,5 +223,25 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                 "\r\n\r\n<Span Foreground=\"Blue\">class</Span> <Span Foreground=\"#2B91AF\">C</Span>&lt;<Bold>?</Bold>&gt;\r\n{\r\n}",
                 view.XamlContextRepresentation);
         }
+
+        [Test]
+        public void DoesntAddHighlightingToEncodedSpecialChars()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                Selections =
+                {
+                    new ProposalSelection
+                    {
+                        Proposal = new Proposal {Name = Name.Get("System.Threading.ThreadLocal`1[[T -> T]], mscorlib, 4.0.0.0")},
+                        SelectedAfter = TimeSpan.FromSeconds(1)
+                    }
+                },
+                Prefix = "t"
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.AreEqual("• <Bold>00:00:01</Bold> Sys<Bold>t</Bold>em.<Bold>T</Bold>hreading.<Bold>T</Bold>hreadLocal`1[[<Bold>T</Bold> -&gt; <Bold>T</Bold>]], mscorlib, 4.0.0.0\r\n", view.XamlSelectionsRepresentation);
+        }
     }
 }
