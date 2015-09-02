@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -221,6 +222,24 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                         name,
                         hasGetter ? "get " : "",
                         hasSetter ? "set " : ""));
+        }
+
+        public static ICompletionExpression CompletionOnVar(IVariableReference varRef, string token)
+        {
+            return new CompletionExpression
+            {
+                VariableReference = varRef,
+                Token = token
+            };
+        }
+
+        public static ICompletionExpression CompletionOnType(ITypeName typeName, string token)
+        {
+            return new CompletionExpression
+            {
+                TypeReference = typeName,
+                Token = token
+            };
         }
 
         public static IStatement EmptyCompletion

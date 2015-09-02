@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -33,13 +35,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 object.$
             ");
 
-            AssertBody(
-                ExprStmt(
-                    new CompletionExpression
-                    {
-                        TypeReference = Fix.Object,
-                        Token = ""
-                    }));
+            AssertBody(ExprStmt(Fix.CompletionOnType(Fix.Object, "")));
         }
 
         [Test]
@@ -86,6 +82,164 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             AssertBody(
                 "M",
                 ExprStmt(Invoke("this", nMethod, RefExpr(namePropertyRef))));
+        }
+
+        [Test]
+        public void UnnecessaryReassignmentOfThis()
+        {
+            CompleteInClass(@"
+                public void M()
+                {
+                    this.GetH$
+                }");
+
+            //C $0;
+            //$0 = this;
+            //$0.GetH$;
+
+            AssertBody(
+                "M",
+                ExprStmt(Fix.CompletionOnVar(VarRef("this"), "GetH")));
+        }
+
+        [Test]
+        public void AssigningArray()
+        {
+            CompleteInMethod(@"
+                var array = new[] {1, 2, 3, 4, 5};
+                array.$");
+
+            // Analysis will assign UnknownExpression. Should probably be ConstantValueExpression instead.
+            AssertBody(
+                VarDecl("array", ArrayTypeName.From(Fix.Int, 1)),
+                VarAssign("array", new ConstantValueExpression()),
+                ExprStmt(Fix.CompletionOnVar(VarRef("array"), "")));
+
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ExtensionMethod()
+        {
+            CompleteInMethod(@"
+                static class C2
+                {
+                    public static void DoSth(this C1 a, int arg) { }
+                }
+
+                class C1
+                {
+                    public void M()
+                    {
+                        var a = new C1();
+                        a.DoSth(1);
+                        $
+                    }
+                }");
+
+
+            //{
+            //    "$type": "[SST:Statements.ExpressionStatement]",
+            //    "Expression": {
+            //        "$type": "[SST:Expressions.Assignable.InvocationExpression]",
+            //        "Reference": {
+            //            "$type": "[SST:References.VariableReference]",
+            //            "Identifier": ""
+            //        },
+            //        "MethodName": "CSharp.MethodName:static [System.Void, mscorlib, 4.0.0.0] [AnalysisTests.C2, AnalysisTests].DoSth([AnalysisTests.C1, AnalysisTests] a, [System.String, mscorlib, 4.0.0.0] arg)",
+            //        "Parameters": [
+            //            {
+            //                "$type": "[SST:Expressions.Simple.ConstantValueExpression]"
+            //            }
+            //        ]
+            //    }
+            //},
+
+            // Should add instance "a" as first parameter.
+            Assert.Fail();
+        }
+
+        [Test]
+        public void CompletingNewMember()
+        {
+            CompleteInClass(@"public str$");
+
+            // This will produce a broken method declaration with name "CSharp.MethodName:[?] [?].???()".
+            // It seems impossible to represent a trigger point like this in a meaningful way.
+
+            Assert.Fail();
+        }
+
+        [Test]
+        public void LostTriggerPoint()
+        {
+            CompleteInClass(@"
+                public C Method()
+                {
+                    this.Method().$
+
+                    Console.WriteLine(""asdf"");
+                    return this;
+                }");
+
+            // Trigger point is lost in this case. The static method call is corrupted.
+            // This only happens if no prefix is used. Results are as expected when completing with a prefix.
+
+            //C1 $0;
+            //$0 = this.Method();
+            //.???("...");
+            //return this;
+
+            //{
+            //    "$type": "[SST:Statements.ExpressionStatement]",
+            //    "Expression": {
+            //        "$type": "[SST:Expressions.Assignable.InvocationExpression]",
+            //        "Reference": {
+            //            "$type": "[SST:References.VariableReference]",
+            //            "Identifier": ""
+            //        },
+            //        "MethodName": "CSharp.MethodName:[?] [?].???()",
+            //        "Parameters": [
+            //            {
+            //                "$type": "[SST:Expressions.Simple.ConstantValueExpression]"
+            //            }
+            //        ]
+            //    }
+            //},
+
+            Assert.Fail();
+        }
+
+        [Test]
+        public void FieldMistakenForVariable()
+        {
+            // Same thing happens with properties etc. Does not happen when using explicit this.
+            CompleteInClass(@" 
+                public string Str;
+
+                public void M()
+                {
+                    Str.$
+                }");
+
+
+            //{
+            //    "$type": "[SST:Statements.ExpressionStatement]",
+            //    "Expression": {
+            //        "$type": "[SST:Expressions.Assignable.CompletionExpression]",
+            //        "VariableReference": {
+            //            "$type": "[SST:References.VariableReference]",
+            //            "Identifier": "Str"
+            //        },
+            //        "Token": ""
+            //    }
+            //}
+
+            AssertBody(
+                "M",
+                VarDecl("$0", Fix.String),
+                VarAssign("$0", RefExpr(FieldRef(Fix.Field(Fix.String, Type("C"), "Str"), VarRef("this")))),
+                ExprStmt(Fix.CompletionOnVar(VarRef("$0"), "")));
         }
     }
 }
