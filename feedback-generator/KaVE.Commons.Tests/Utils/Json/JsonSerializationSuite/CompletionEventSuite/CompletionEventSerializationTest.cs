@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
@@ -27,6 +28,20 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
 {
     internal class CompletionEventSerializationTest : SerializationTestBase
     {
+        [Test, Ignore("Needs a valid source file")]
+        public void VerifyUsingCaseRunner()
+        {
+            const string testSource = @"C:\Test.txt";
+
+            Action<string, string> shouldParseAndSerializeCorrectly = (source, target) =>
+            {
+                var actualString = source.ParseJsonTo<CompletionEvent>().ToCompactJson();
+                Assert.AreEqual(target, actualString);
+            };
+
+            SerializationCaseRunner.RunSerializationExamples(shouldParseAndSerializeCorrectly, testSource);
+        }
+
         [Test]
         public void VerifyToJson()
         {

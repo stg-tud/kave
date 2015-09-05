@@ -58,6 +58,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Events\CompletionEvent\SerializationCaseRunner.cs" />
     <Compile Include="Model\Names\NameAssert.cs" />
     <Compile Include="AsyncTestHelper.cs" />
     <Compile Include="ItIsException.cs" />
