@@ -30,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
     internal class GitEventGeneratorIntegrationTest : EventGeneratorTestBase
     {
         // WARNING: this directory will be created automatically but not deleted
-        private const string TemporaryTestDirectory = @"H:\IntegrationTest\";
+        private const string TemporaryTestDirectory = @"C:\Users\Mattis\Desktop\tmp";
 
         private const string RelativeSolutionPath = @"feedback-generator\KaVE.Feedback.sln";
         private const string RelativeGitLogPath = @".git\logs";
@@ -88,7 +88,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             Thread.Sleep(500);
 
             var actualEvent = GetSinglePublished<GitEvent>();
-            Assert.AreEqual(TestCommitString, actualEvent.Content);
+            Assert.AreEqual(new[] {TestCommitString}, actualEvent.Content);
             Assert.AreEqual(TestRepositoryDirectory, actualEvent.RepositoryDirectory);
         }
 
@@ -96,7 +96,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         public void DeleteTemporaryFilesAndFolders()
         {
             File.Delete(GitLogFile);
-            
+
             try
             {
                 DeleteTemporaryDirectory();
