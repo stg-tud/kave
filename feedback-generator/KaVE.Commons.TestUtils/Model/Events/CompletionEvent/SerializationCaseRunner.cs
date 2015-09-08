@@ -23,41 +23,47 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
 {
     public static class SerializationCaseRunner
     {
+        private const char Separator = '|';
+
         public static void RunSerializationExamples(Action<string, string> assertion, string source)
         {
             foreach (var testCase in GetTestCases(source))
             {
                 try
                 {
-                    assertion(testCase.Item1, testCase.Item2);
+                    assertion(testCase.Input, testCase.Expected);
                 }
                 catch (Exception exception)
                 {
                     throw new Exception(
-                        string.Format("An exception occured in case '{0}'", testCase.Item1),
+                        string.Format("An exception occured in case '{0}'", testCase.Name),
                         exception);
                 }
             }
         }
 
-        private static IEnumerable<Tuple<string, string>> GetTestCases(string source)
+        private static IEnumerable<TestCase> GetTestCases(string source)
         {
             /*
              *  Expected source content is:
              *  
-             *  <source>
-             *  <source>
-             *  etc...
-             *  <target>
+             *  <case_name>|<case_input>
+             *  <case_name>|<case_input>
+             *  ...
+             *  <expected>
              *  
              *  Empty lines are ignored.
+             *  case_name is optional.
              */
 
             var lines = ReadAllLines(source).RemoveEmptyLines().ToArray();
-            var inputs = lines.Take(lines.Length - 1);
-            var expected = lines[lines.Length - 1];
+            var caseLines = lines.Take(lines.Length - 1);
+            var expectedLine = lines[lines.Length - 1];
 
-            var testCases = inputs.Select(input => new Tuple<string, string>(input, expected));
+            var testCases =
+                caseLines.Select(
+                    nameAndInput =>
+                        new TestCase(GetTestCaseName(nameAndInput), GetTestCaseInput(nameAndInput), expectedLine));
             return testCases;
         }
 
@@ -76,6 +82,38 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
         private static IEnumerable<string> RemoveEmptyLines(this IEnumerable<string> strings)
         {
             return strings.Where(line => !string.IsNullOrWhiteSpace(line));
+        }
+
+        private static string GetTestCaseName(string sourceLine)
+        {
+            return sourceLine.Split(Separator)[0];
+        }
+
+        private static string GetTestCaseInput(string sourceLine)
+        {
+            try
+            {
+                return sourceLine.Split(Separator)[1];
+            }
+            catch
+            {
+                // For unnamed cases name and input are the same
+                return GetTestCaseName(sourceLine);
+            }
+        }
+
+        private struct TestCase
+        {
+            public readonly string Input;
+            public readonly string Expected;
+            public readonly string Name;
+
+            public TestCase(string name, string input, string expected)
+            {
+                Expected = expected;
+                Input = input;
+                Name = name;
+            }
         }
     }
 }
