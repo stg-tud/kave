@@ -15,25 +15,32 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
 {
     public static class SerializationCaseRunner
     {
-        public static void RunSerializationExamples(Action<string, string> assertion, string caseSource)
+        public static void RunSerializationExamples(Action<string, string> assertion, string source)
         {
-            var sourcesToTarget = GetSerializationStrings(caseSource);
-
-            foreach (var source in sourcesToTarget.Item1)
+            foreach (var testCase in GetTestCases(source))
             {
-                assertion(source, sourcesToTarget.Item2);
+                try
+                {
+                    assertion(testCase.Item1, testCase.Item2);
+                }
+                catch (Exception exception)
+                {
+                    throw new TestFailedException(
+                        string.Format("An exception occured in case '{0}'", testCase.Item1),
+                        exception);
+                }
             }
         }
 
-        private static Tuple<string[], string> GetSerializationStrings(string source)
+        private static IEnumerable<Tuple<string, string>> GetTestCases(string source)
         {
             /*
              *  Expected source content is:
@@ -41,21 +48,43 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
              *  <source>
              *  <source>
              *  etc...
-             *  <empty line>
              *  <target>
+             *  
+             *  Empty lines are ignored.
              */
 
-            var allLines = ReadAllLines(source);
-            var sources = allLines.ToList().Take(allLines.Length - 2).ToArray();
+            var allLines = ReadAllLines(source).RemoveEmptyLines().ToArray();
+            var sources = allLines.ToList().Take(allLines.Length - 1).ToArray();
             var target = allLines[allLines.Length - 1];
 
-            return new Tuple<string[], string>(sources, target);
+            var cases = new Tuple<string, string>[sources.Length];
+            for (var i = 0; i < sources.Length; i++)
+            {
+                cases[i] = new Tuple<string, string>(sources[i], target);
+            }
+
+            return cases;
         }
 
-        [Pure]
         private static string[] ReadAllLines(string source)
         {
             return File.ReadAllLines(source);
+        }
+
+        private static IEnumerable<string> RemoveEmptyLines(this IEnumerable<string> strings)
+        {
+            return strings.Where(line => !string.IsNullOrWhiteSpace(line));
+        }
+    }
+
+    public class TestFailedException : Exception
+    {
+        public TestFailedException(string message, Exception innerException)
+            : base(message, innerException) {}
+
+        public override string ToString()
+        {
+            return "Test failed";
         }
     }
 }
