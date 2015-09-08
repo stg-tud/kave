@@ -33,7 +33,7 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
                 }
                 catch (Exception exception)
                 {
-                    throw new TestFailedException(
+                    throw new Exception(
                         string.Format("An exception occured in case '{0}'", testCase.Item1),
                         exception);
                 }
@@ -74,17 +74,6 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
         private static IEnumerable<string> RemoveEmptyLines(this IEnumerable<string> strings)
         {
             return strings.Where(line => !string.IsNullOrWhiteSpace(line));
-        }
-    }
-
-    public class TestFailedException : Exception
-    {
-        public TestFailedException(string message, Exception innerException)
-            : base(message, innerException) {}
-
-        public override string ToString()
-        {
-            return "Test failed";
         }
     }
 }
