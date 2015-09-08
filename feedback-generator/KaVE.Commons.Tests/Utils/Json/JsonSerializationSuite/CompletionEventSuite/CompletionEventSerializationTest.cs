@@ -31,15 +31,14 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         [Test, Ignore("Needs a valid source file")]
         public void VerifyUsingCaseRunner()
         {
-            const string testSource = @"C:\Test.txt";
+            const string testSource = @"C:\TestSource.txt";
+            SerializationCaseRunner.RunSerializationExamples(ShouldParseAndSerializeCorrectly, testSource);
+        }
 
-            Action<string, string> shouldParseAndSerializeCorrectly = (source, target) =>
-            {
-                var actualString = source.ParseJsonTo<CompletionEvent>().ToCompactJson();
-                Assert.AreEqual(target, actualString);
-            };
-
-            SerializationCaseRunner.RunSerializationExamples(shouldParseAndSerializeCorrectly, testSource);
+        private static void ShouldParseAndSerializeCorrectly(string example, string expected)
+        {
+            var actualString = example.ParseJsonTo<CompletionEvent>().ToCompactJson();
+            Assert.AreEqual(expected, actualString);
         }
 
         [Test]

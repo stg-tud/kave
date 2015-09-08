@@ -53,22 +53,24 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
              *  Empty lines are ignored.
              */
 
-            var allLines = ReadAllLines(source).RemoveEmptyLines().ToArray();
-            var sources = allLines.ToList().Take(allLines.Length - 1).ToArray();
-            var target = allLines[allLines.Length - 1];
+            var lines = ReadAllLines(source).RemoveEmptyLines().ToArray();
+            var inputs = lines.Take(lines.Length - 1);
+            var expected = lines[lines.Length - 1];
 
-            var cases = new Tuple<string, string>[sources.Length];
-            for (var i = 0; i < sources.Length; i++)
-            {
-                cases[i] = new Tuple<string, string>(sources[i], target);
-            }
-
-            return cases;
+            var testCases = inputs.Select(input => new Tuple<string, string>(input, expected));
+            return testCases;
         }
 
-        private static string[] ReadAllLines(string source)
+        private static IEnumerable<string> ReadAllLines(string source)
         {
-            return File.ReadAllLines(source);
+            try
+            {
+                return File.ReadAllLines(source);
+            }
+            catch (Exception exception)
+            {
+                throw new IOException(string.Format("Could not find test source in {0}", source), exception);
+            }
         }
 
         private static IEnumerable<string> RemoveEmptyLines(this IEnumerable<string> strings)
