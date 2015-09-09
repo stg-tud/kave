@@ -38,7 +38,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
                         new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
                         new Proposal {Name = NamespaceName.Get("Some.Namepsace")}
                     }),
-                Selections = 
+                Selections =
                 {
                     new ProposalSelection(new Proposal {Name = TypeName.Get("MyType, EnclosingProject")})
                     {
@@ -118,7 +118,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             {
                 TypeShape = new TypeShape
                 {
-                    TypeHierarchy = new TypeHierarchy("3Rx860ySZTppa3kHpN1N8Q==, aUaDMpYpDqsiSh5nQjiWFw=="),
+                    TypeHierarchy = new TypeHierarchy("3Rx860ySZTppa3kHpN1N8Q==, aUaDMpYpDqsiSh5nQjiWFw==")
                 },
                 SST = new SST
                 {
@@ -143,9 +143,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(
             CompletionEvent original,
-            CompletionEvent anonymized)
-        {
-            Assert.AreEqual(original.Prefix, anonymized.Prefix);
-        }
+            CompletionEvent anonymized) {}
     }
 }

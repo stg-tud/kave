@@ -46,16 +46,6 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [DataMember]
         public int ProposalCount { get; set; }
 
-        public string Prefix
-        {
-            get
-            {
-                var builder = new StringBuilder();
-                Context2.SST.Accept(new CompletionPrefixVisitor(), builder);
-                return builder.ToString();
-            }
-        }
-
         public CompletionEvent()
         {
             Selections = Lists.NewList<IProposalSelection>();
@@ -74,7 +64,7 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         private bool Equals(CompletionEvent other)
         {
             return base.Equals(other) && Equals(Context2, other.Context2) &&
-                   Equals(ProposalCollection, other.ProposalCollection) && string.Equals(Prefix, other.Prefix) &&
+                   Equals(ProposalCollection, other.ProposalCollection) && 
                    Selections.SequenceEqual(other.Selections) && TerminatedBy == other.TerminatedBy &&
                    TerminatedState == other.TerminatedState;
         }
@@ -91,7 +81,6 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
                 var hashCode = base.GetHashCode();
                 hashCode = (hashCode*397) ^ Context2.GetHashCode();
                 hashCode = (hashCode*397) ^ ProposalCollection.GetHashCode();
-                hashCode = (hashCode*397) ^ Prefix.GetHashCode();
                 hashCode = (hashCode*397) ^ Selections.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) TerminatedBy;
                 hashCode = (hashCode*397) ^ (int) TerminatedState;

@@ -154,7 +154,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
             Assert.AreEqual(_event.TriggeredAt, mergedEvent.TriggeredAt);
             Assert.AreEqual(_event.TriggeredBy, mergedEvent.TriggeredBy);
             // has to be taken from subsequent event
-            Assert.AreEqual(_subsequentEvent.Prefix, mergedCompletionEvent.Prefix);
             Assert.AreEqual(_subsequentEvent.ProposalCollection, mergedCompletionEvent.ProposalCollection);
             Assert.AreEqual(_subsequentEvent.TerminatedState, mergedCompletionEvent.TerminatedState);
             Assert.AreEqual(_subsequentEvent.TerminatedAt, mergedCompletionEvent.TerminatedAt);

@@ -50,12 +50,6 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         IProposalCollection ProposalCollection { get; }
 
         /// <summary>
-        ///     The typed prefix that is used to filter the proposal list.
-        /// </summary>
-        [NotNull]
-        string Prefix { get; }
-
-        /// <summary>
         ///     The list of proposals from the ProposalCollection that where
         ///     selected while the code completion was active. Proposals appear in
         ///     the order of selection.

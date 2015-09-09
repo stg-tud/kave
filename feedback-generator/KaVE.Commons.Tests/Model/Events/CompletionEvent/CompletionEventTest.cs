@@ -43,7 +43,6 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             var sut = new ComplEvent();
             Assert.AreEqual(new Context(), sut.Context2);
             Assert.AreEqual(new ProposalCollection(), sut.ProposalCollection);
-            Assert.AreEqual("", sut.Prefix);
             Assert.AreEqual(Lists.NewList<IProposalSelection>(), sut.Selections);
             Assert.AreEqual(IDEEvent.Trigger.Unknown, sut.TerminatedBy);
             Assert.AreEqual(TerminationState.Unknown, sut.TerminatedState);
