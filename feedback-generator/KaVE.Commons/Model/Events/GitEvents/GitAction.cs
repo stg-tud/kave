@@ -44,15 +44,14 @@ namespace KaVE.Commons.Model.Events.GitEvents
             unchecked
             {
                 var hashCode = ExecutedAt != null ? ExecutedAt.GetHashCode() : 1;
-                hashCode = (hashCode * 397) ^ (int) ActionType;
+                hashCode = (hashCode*397) ^ (int) ActionType;
                 return hashCode;
             }
         }
-    }
 
-    public enum GitActionType
-    {
-        Unknown = 0,
-        Commit
+        public override string ToString()
+        {
+            return string.Format("[{0}] {1}", ExecutedAt, ActionType);
+        }
     }
 }

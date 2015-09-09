@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+using System;
 using System.IO;
-using JetBrains.Util;
 using KaVE.Commons.Model.Events.GitEvents;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -27,9 +28,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 {
     internal class GitEventGeneratorUnitTest : EventGeneratorTestBase
     {
-        private const string TestRepositoryDirectory = @"C:\Users\SomeUser\Documents\SomeRepository";
-        private const string TestContent = "SomeTestContent";
-        private const string RelativeGitLogPath = @".git\logs\";
+        private const string TestContent =
+            "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 TestUsername <TestMail@domain.de> 1441217745 +0200	commit: Test commit";
 
         private TestGitEventGenerator _uut;
 
@@ -39,27 +39,26 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             _uut = new TestGitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
         }
 
-        [Test, Ignore("Not yet implemented")]
+        [Test]
         public void ShouldSetContent()
         {
-            ChangeFile(TestContent);
+            WriteFile(TestContent);
 
             var actualEvent = GetSinglePublished<GitEvent>();
-            Assert.AreEqual(new[] {TestContent}, actualEvent.Content);
+            var expectedGitAction = new GitAction
+            {
+                ActionType = GitActionType.Commit,
+                ExecutedAt = new DateTime(2015, 9, 2, 20, 15, 45)
+            };
+            CollectionAssert.AreEqual(Lists.NewList(expectedGitAction), actualEvent.Content);
         }
 
-        private void ChangeFile(string newLine)
+        private void WriteFile(string newLine)
         {
-            var newContent = _uut.Content.AsList();
-            newContent.Add(newLine);
-            _uut.Content = newContent.ToArray();
-
+            _uut.Content = new[] {newLine};
             _uut.OnGitHistoryFileChanged(
                 null,
-                new FileSystemEventArgs(
-                    WatcherChangeTypes.Changed,
-                    Path.Combine(TestRepositoryDirectory, RelativeGitLogPath),
-                    "HEAD"));
+                new FileSystemEventArgs(WatcherChangeTypes.All, string.Empty, string.Empty));
         }
 
         private class TestGitEventGenerator : GitEventGenerator

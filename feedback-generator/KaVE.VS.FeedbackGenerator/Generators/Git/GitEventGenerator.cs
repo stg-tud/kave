@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using JetBrains.ProjectModel;
 using KaVE.Commons.Model.Events.GitEvents;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
@@ -31,32 +36,55 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
         public void OnGitHistoryFileChanged(object sender, FileSystemEventArgs args)
         {
-            var content = ReadLogContent(args.FullPath);
-            var repositoryDirectory = GetRepositoryDirectory(args.FullPath);
-
-            Fire(content, repositoryDirectory);
+            var logContent = ReadLogContent(args.FullPath);
+            var eventContent = ReadGitActionsFrom(logContent);
+            Fire(eventContent);
         }
 
-        public void Fire(string[] logContent, string repositoryDirectory)
+        private void Fire(IKaVEList<GitAction> content)
         {
             var gitEvent = Create<GitEvent>();
-
-            // TODO: generate event content from logContent 
-
-            Fire(gitEvent);
-        }
-
-        [Pure]
-        private static string GetRepositoryDirectory(string logPath)
-        {
-            // logPath is at <repository>\.git\log\HEAD
-            return Directory.GetParent(Directory.GetParent(Directory.GetParent(logPath).FullName).FullName).FullName;
+            gitEvent.Content = content;
+            FireNow(gitEvent);
         }
 
         [Pure]
         protected virtual string[] ReadLogContent(string fullPath)
         {
             return File.ReadAllLines(fullPath);
+        }
+
+        private static IKaVEList<GitAction> ReadGitActionsFrom(IEnumerable<string> logContent)
+        {
+            var gitActions = Lists.NewList<GitAction>();
+
+            foreach (
+                var gitAction in
+                    logContent.Select(
+                        logEntry =>
+                            new GitAction
+                            {
+                                ExecutedAt = ExtractExecutedAtFrom(logEntry),
+                                ActionType = ExtractActionTypeFrom(logEntry)
+                            }))
+            {
+                gitActions.Add(gitAction);
+            }
+
+            return gitActions;
+        }
+
+        private static GitActionType ExtractActionTypeFrom([NotNull] string entry)
+        {
+            return new Regex("\t.*:").Match(entry).Value.TrimEnd(':').ToActionType();
+        }
+
+        private static DateTime? ExtractExecutedAtFrom([NotNull] string entry)
+        {
+            // Unix timestamp is seconds since 1970-01-01T00:00:00Z
+            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(int.Parse(entry.Split(' ')[4])).ToLocalTime();
+            return dateTime;
         }
     }
 }

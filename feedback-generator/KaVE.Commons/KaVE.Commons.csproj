@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Events\GitEvents\GitAction.cs" />
+    <Compile Include="Model\Events\GitEvents\GitActionType.cs" />
     <Compile Include="Model\Events\GitEvents\GitEvent.cs" />
     <Compile Include="Model\Events\UserProfiles\Educations.cs" />
     <Compile Include="Model\Events\UserProfiles\Likert7Point.cs" />

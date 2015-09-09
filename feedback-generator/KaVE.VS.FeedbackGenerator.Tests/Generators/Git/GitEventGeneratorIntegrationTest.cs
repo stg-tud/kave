@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.IO;
 using System.Threading;
 using JetBrains.ProjectModel;
@@ -29,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
     internal class GitEventGeneratorIntegrationTest : EventGeneratorTestBase
     {
         private const string TestCommitString =
-            "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 M8is <M8is@live.de> 1441217745 +0200	commit: Test commit";
+            "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 TestUsername <TestMail@domain.de> 1441217745 +0200	commit: Test commit";
 
         private string _dirTmp;
 
@@ -79,7 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             Directory.CreateDirectory(directoryInfo.FullName);
         }
 
-        [Test, Ignore("Not yet implemented")]
+        [Test]
         public void IntegrationTest()
         {
             using (var stream = new StreamWriter(FileGitLog))
@@ -90,7 +91,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             Thread.Sleep(500);
 
             var actualEvent = GetSinglePublished<GitEvent>();
-            Assert.AreEqual(Lists.NewList(TestCommitString), actualEvent.Content);
+            var expectedGitAction = new GitAction
+            {
+                ActionType = GitActionType.Commit,
+                ExecutedAt = new DateTime(2015, 9, 2, 20, 15, 45)
+            };
+            CollectionAssert.AreEqual(Lists.NewList(expectedGitAction), actualEvent.Content);
         }
     }
 }

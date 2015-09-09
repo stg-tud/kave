@@ -80,5 +80,13 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
+
+        [Test]
+        public void ToStringTest()
+        {
+            var action = new GitAction {ExecutedAt = new DateTime(1924, 8, 23, 19, 48, 12), ActionType = GitActionType.Commit};
+
+            Assert.AreEqual("[23.08.1924 19:48:12] Commit", action.ToString());
+        }
     }
 }
