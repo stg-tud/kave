@@ -16,7 +16,7 @@
 
 using System.IO;
 using JetBrains.Util;
-using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.GitEvents;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
@@ -39,7 +39,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             _uut = new TestGitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
         }
 
-        [Test]
+        [Test, Ignore("Not yet implemented")]
         public void ShouldSetContent()
         {
             ChangeFile(TestContent);

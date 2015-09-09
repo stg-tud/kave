@@ -16,9 +16,8 @@
 
 using System.IO;
 using JetBrains.ProjectModel;
-using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.GitEvents;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
@@ -38,10 +37,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             Fire(content, repositoryDirectory);
         }
 
-        public void Fire(string[] content, string repositoryDirectory)
+        public void Fire(string[] logContent, string repositoryDirectory)
         {
             var gitEvent = Create<GitEvent>();
-            gitEvent.Content = Lists.NewList(content);
+
+            // TODO: generate event content from logContent 
 
             Fire(gitEvent);
         }

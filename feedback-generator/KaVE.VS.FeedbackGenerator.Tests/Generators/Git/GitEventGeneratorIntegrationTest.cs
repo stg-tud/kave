@@ -18,7 +18,7 @@ using System.IO;
 using System.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
-using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.GitEvents;
 using KaVE.Commons.Utils.Collections;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
 using Moq;
@@ -79,7 +79,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             Directory.CreateDirectory(directoryInfo.FullName);
         }
 
-        [Test]
+        [Test, Ignore("Not yet implemented")]
         public void IntegrationTest()
         {
             using (var stream = new StreamWriter(FileGitLog))

@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-using System.Runtime.Serialization;
-using KaVE.Commons.Utils.Collections;
-
-namespace KaVE.Commons.Model.Events
+namespace KaVE.Commons.Model.Events.GitEvents
 {
-    [DataContract]
-    public class GitEvent : IDEEvent
+    public class GitAction
     {
-        [DataMember]
-        public IKaVEList<string> Content { get; set; }
+        
     }
 }
