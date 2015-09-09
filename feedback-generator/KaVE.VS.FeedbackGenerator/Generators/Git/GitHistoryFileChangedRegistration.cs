@@ -23,8 +23,11 @@ using KaVE.JetBrains.Annotations;
 namespace KaVE.VS.FeedbackGenerator.Generators.Git
 {
     [SolutionComponent]
-    internal class GitHistoryFileChangedRegistration
+    internal class GitHistoryFileChangedRegistration : IDisposable
     {
+        [CanBeNull]
+        private readonly FileSystemWatcher _watcher;
+
         private const string RelativeGitLogPath = @".git\logs";
 
         public GitHistoryFileChangedRegistration([NotNull] ISolution solution,
@@ -37,12 +40,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
                 return;
             }
 
-            var watcher = new FileSystemWatcher
+            _watcher = new FileSystemWatcher
             {
                 Path = repositoryDirectory,
                 EnableRaisingEvents = true
             };
-            watcher.Changed += gitEventGenerator.OnGitHistoryFileChanged;
+            _watcher.Changed += gitEventGenerator.OnGitHistoryFileChanged;
         }
 
         private static string GetGitLogPath(ISolution solution)
@@ -77,6 +80,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
         private static bool ContainsGitFolder(string currentDirectory)
         {
             return Directory.Exists(Path.Combine(currentDirectory, ".git"));
+        }
+
+        public void Dispose()
+        {
+            if (_watcher != null)
+            {
+                _watcher.Dispose();
+            }
         }
     }
 }

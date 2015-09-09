@@ -40,15 +40,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         }
 
         [Test]
-        public void ShouldSetRepositoryPath()
-        {
-            ChangeFile(TestContent);
-
-            var actualEvent = GetSinglePublished<GitEvent>();
-            Assert.AreEqual(TestRepositoryDirectory, actualEvent.RepositoryDirectory);
-        }
-
-        [Test]
         public void ShouldSetContent()
         {
             ChangeFile(TestContent);

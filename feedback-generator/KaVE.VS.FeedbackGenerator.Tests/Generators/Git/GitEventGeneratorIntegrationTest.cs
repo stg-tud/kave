@@ -14,73 +14,75 @@
  * limitations under the License.
  */
 
-using System;
 using System.IO;
 using System.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Collections;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
 using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 {
-    [Ignore("Run these tests manually with your own TemporaryTestDirectory")]
     internal class GitEventGeneratorIntegrationTest : EventGeneratorTestBase
     {
-        // WARNING: this directory will be created automatically but not deleted
-        private const string TemporaryTestDirectory = @"C:\Users\Mattis\Desktop\tmp";
-
-        private const string RelativeSolutionPath = @"feedback-generator\KaVE.Feedback.sln";
-        private const string RelativeGitLogPath = @".git\logs";
-
-        private const string TestRepositoryName = "kave";
-        private const string GitLogFileName = "HEAD";
-
         private const string TestCommitString =
             "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 M8is <M8is@live.de> 1441217745 +0200	commit: Test commit";
 
-        private static string TestRepositoryDirectory
+        private string _dirTmp;
+
+        private string FileGitLog
         {
-            get { return Path.Combine(TemporaryTestDirectory, TestRepositoryName); }
+            get { return _dirTmp + @"\repo\.git\logs\HEAD"; }
         }
 
-        private static string GitLogPath
+        private string FileSolution
         {
-            get { return Path.Combine(TestRepositoryDirectory, RelativeGitLogPath); }
-        }
-
-        private static string GitLogFile
-        {
-            get { return Path.Combine(GitLogPath, GitLogFileName); }
-        }
-
-        private static string SolutionFile
-        {
-            get { return Path.Combine(TestRepositoryDirectory, RelativeSolutionPath); }
+            get { return _dirTmp + @"\repo\project\Solution.sln"; }
         }
 
         private GitEventGenerator _uut;
         private Mock<ISolution> _solutionMock;
+        private GitHistoryFileChangedRegistration _watcher;
 
         [SetUp]
         public void Setup()
         {
-            Directory.CreateDirectory(GitLogPath);
+            _dirTmp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(_dirTmp);
+            CreateParent(FileGitLog);
+            CreateParent(FileSolution);
 
             _solutionMock = new Mock<ISolution>();
-            _solutionMock.Setup(solution => solution.SolutionFilePath).Returns(FileSystemPath.Parse(SolutionFile));
+            _solutionMock.Setup(solution => solution.SolutionFilePath).Returns(FileSystemPath.Parse(FileSolution));
             _uut = new GitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
 
-            // ReSharper disable once UnusedVariable
-            var registerSolution = new GitHistoryFileChangedRegistration(_solutionMock.Object, _uut);
+            _watcher = new GitHistoryFileChangedRegistration(_solutionMock.Object, _uut);
         }
 
-        [Test, Ignore("Manual test")]
+        [TearDown]
+        public void DeleteTemporaryFilesAndFolders()
+        {
+            _watcher.Dispose();
+
+            if (Directory.Exists(_dirTmp))
+            {
+                Directory.Delete(_dirTmp, true);
+            }
+        }
+
+        private static void CreateParent(string path)
+        {
+            var directoryInfo = Directory.GetParent(path);
+            Directory.CreateDirectory(directoryInfo.FullName);
+        }
+
+        [Test]
         public void IntegrationTest()
         {
-            using (var stream = new StreamWriter(GitLogFile))
+            using (var stream = new StreamWriter(FileGitLog))
             {
                 stream.Write(TestCommitString);
             }
@@ -88,37 +90,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             Thread.Sleep(500);
 
             var actualEvent = GetSinglePublished<GitEvent>();
-            Assert.AreEqual(new[] {TestCommitString}, actualEvent.Content);
-            Assert.AreEqual(TestRepositoryDirectory, actualEvent.RepositoryDirectory);
-        }
-
-        [TearDown]
-        public void DeleteTemporaryFilesAndFolders()
-        {
-            File.Delete(GitLogFile);
-
-            try
-            {
-                DeleteTemporaryDirectory();
-            }
-            catch (Exception exception)
-            {
-                MessageBox.ShowInfo("Deleting the temporary directory failed: " + exception.Message);
-            }
-        }
-
-        private static void DeleteTemporaryDirectory()
-        {
-            // this is a workaround for avoiding a "The directory is not empty" exception
-            // see http://zacharykniebel.com/blog/web-development/2013/june/21/solving-the-csharp-bug-when-recursively-deleting-directories
-            try
-            {
-                Directory.Delete(TemporaryTestDirectory, true);
-            }
-            catch (IOException)
-            {
-                Directory.Delete(TemporaryTestDirectory, true);
-            }
+            Assert.AreEqual(Lists.NewList(TestCommitString), actualEvent.Content);
         }
     }
 }

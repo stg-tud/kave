@@ -15,6 +15,7 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Events
 {
@@ -22,9 +23,6 @@ namespace KaVE.Commons.Model.Events
     public class GitEvent : IDEEvent
     {
         [DataMember]
-        public string RepositoryDirectory { get; set; }
-
-        [DataMember]
-        public string[] Content { get; set; }
+        public IKaVEList<string> Content { get; set; }
     }
 }
