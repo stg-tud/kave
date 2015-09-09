@@ -14,10 +14,45 @@
  * limitations under the License.
  */
 
+using System;
+using System.Runtime.Serialization;
+using KaVE.Commons.Utils;
+
 namespace KaVE.Commons.Model.Events.GitEvents
 {
+    [DataContract]
     public class GitAction
     {
-        
+        [DataMember]
+        public DateTime? ExecutedAt { get; set; }
+
+        [DataMember]
+        public GitActionType ActionType { get; set; }
+
+        private bool Equals(GitAction other)
+        {
+            return Equals(ExecutedAt, other.ExecutedAt) && Equals(ActionType, other.ActionType);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = ExecutedAt != null ? ExecutedAt.GetHashCode() : 1;
+                hashCode = (hashCode * 397) ^ (int) ActionType;
+                return hashCode;
+            }
+        }
+    }
+
+    public enum GitActionType
+    {
+        Unknown = 0,
+        Commit
     }
 }
