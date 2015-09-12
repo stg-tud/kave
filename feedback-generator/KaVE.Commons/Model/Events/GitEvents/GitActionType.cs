@@ -15,28 +15,54 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace KaVE.Commons.Model.Events.GitEvents
 {
     public enum GitActionType
     {
-        // TODO: implement further action types (e.g. rebase)
         Unknown = 0,
-        Commit
+        Branch,
+        Checkout,
+        Clone,
+        Commit,
+        CommitAmend,
+        Merge,
+        Pull,
+        Rebase,
+        RebaseFinished,
+        Reset
     }
 
     public static class GitActionTypeExtensions
     {
-        public static GitActionType ToActionType(this string value)
+        private static readonly Dictionary<Regex, GitActionType> SpecialPatterns = new Dictionary
+            <Regex, GitActionType>
+        {
+            {new Regex(@"commit \(amend\)"), GitActionType.CommitAmend},
+            {new Regex("rebase finished"), GitActionType.RebaseFinished},
+            {new Regex("pull.*"), GitActionType.Pull},
+            {new Regex("merge.*"), GitActionType.Merge}
+        };
+
+        public static GitActionType ToGitActionType(this string value)
         {
             try
             {
-                return (GitActionType) Enum.Parse(typeof(GitActionType), value, true);
+                return (GitActionType) Enum.Parse(typeof (GitActionType), value, true);
             }
             catch
             {
-                return GitActionType.Unknown;
+                return HandleSpecialCases(value);
             }
+        }
+
+        private static GitActionType HandleSpecialCases(string value)
+        {
+            var match = SpecialPatterns.Keys.FirstOrDefault(regex => regex.IsMatch(value));
+            return match != null ? SpecialPatterns[match] : GitActionType.Unknown;
         }
     }
 }

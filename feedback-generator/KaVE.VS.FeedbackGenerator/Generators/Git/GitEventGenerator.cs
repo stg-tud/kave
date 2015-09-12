@@ -76,14 +76,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
         private static GitActionType ExtractActionTypeFrom([NotNull] string entry)
         {
-            return new Regex("\t.*:").Match(entry).Value.TrimEnd(':').ToActionType();
+            return new Regex("\t.*:").Match(entry).Value.TrimEnd(':').ToGitActionType();
         }
 
         private static DateTime? ExtractExecutedAtFrom([NotNull] string entry)
         {
             // Unix timestamp is seconds since 1970-01-01T00:00:00Z
             var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(int.Parse(entry.Split(' ')[4])).ToLocalTime();
+            var unixTimeStamp = entry.Split(' ')[4];
+            dateTime = dateTime.AddSeconds(int.Parse(unixTimeStamp)).ToLocalTime();
             return dateTime;
         }
     }

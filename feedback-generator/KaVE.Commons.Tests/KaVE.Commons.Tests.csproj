@@ -75,6 +75,7 @@
     <Compile Include="Model\Events\CompletionEvent\ProposalTest.cs" />
     <Compile Include="Model\Events\ErrorEventTest.cs" />
     <Compile Include="Model\Events\GitEvents\GitActionTest.cs" />
+    <Compile Include="Model\Events\GitEvents\GitActionTypeTest.cs" />
     <Compile Include="Model\Events\GitEvents\GitEventTest.cs" />
     <Compile Include="Model\Events\IDEEventTest.cs" />
     <Compile Include="Model\Events\InfoEventTest.cs" />

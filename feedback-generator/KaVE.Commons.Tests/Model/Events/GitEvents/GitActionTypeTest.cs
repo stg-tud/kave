@@ -22,9 +22,35 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
     internal class GitActionTypeTest
     {
         [Test]
-        public void ShouldParseCommit()
+        public void ShouldParseNonSpecialCase()
         {
-            Assert.AreEqual(GitActionType.Commit, "commit".ToActionType());
+            Assert.AreEqual(GitActionType.Commit, "commit".ToGitActionType());
+        }
+
+        [Test]
+        public void ShouldParseCommitAmend()
+        {
+            Assert.AreEqual(GitActionType.CommitAmend, "commit (amend)".ToGitActionType());
+        }
+
+        [Test]
+        public void ShouldParsePull()
+        {
+            Assert.AreEqual(
+                GitActionType.Pull,
+                "pull --progress origin +refs/heads/master:refs/heads/master".ToGitActionType());
+        }
+
+        [Test]
+        public void ShouldParseRebaseFinished()
+        {
+            Assert.AreEqual(GitActionType.RebaseFinished, "rebase finished".ToGitActionType());
+        }
+
+        [Test]
+        public void ShouldParseMerge()
+        {
+            Assert.AreEqual(GitActionType.Merge, "merge origin/master".ToGitActionType());
         }
     }
 }
