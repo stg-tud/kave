@@ -20,6 +20,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Utils.Names;
 
 namespace KaVE.RS.Commons.Analysis
@@ -33,6 +34,7 @@ namespace KaVE.RS.Commons.Analysis
             _typeDeclaration = typeDeclaration;
 
             var typeShape = new TypeShape();
+
             foreach (var m in FindImplementedMethodsInType())
             {
                 var name = m.GetName<IMethodName>();
@@ -42,7 +44,8 @@ namespace KaVE.RS.Commons.Analysis
 
             typeShape.TypeHierarchy = CreateTypeHierarchy(
                 typeDeclaration.DeclaredElement,
-                EmptySubstitution.INSTANCE);
+                EmptySubstitution.INSTANCE,
+                Lists.NewList<ITypeName>());
 
             return typeShape;
         }
@@ -57,30 +60,45 @@ namespace KaVE.RS.Commons.Analysis
         }
 
 
-        private static TypeHierarchy CreateTypeHierarchy(ITypeElement type, ISubstitution substitution)
+        private static TypeHierarchy CreateTypeHierarchy(ITypeElement type,
+            ISubstitution substitution,
+            IKaVEList<ITypeName> seenTypes)
         {
             if (type == null || HasTypeSystemObject(type))
             {
                 return null;
             }
-            var typeName = type.GetName(substitution);
+            var typeName = type.GetName<ITypeName>(substitution);
+            seenTypes.Add(typeName);
             var enclosingClassHierarchy = new TypeHierarchy(typeName.Identifier);
 
             foreach (var superType in type.GetSuperTypes())
             {
                 var resolvedSuperType = superType.Resolve().DeclaredElement;
 
+                if (resolvedSuperType == null)
+                {
+                    continue;
+                }
+
+                var superName = resolvedSuperType.GetName<ITypeName>(substitution);
+                if (seenTypes.Contains(superName))
+                {
+                    continue;
+                }
+
                 var superTypeSubstitution = superType.GetSubstitution();
 
                 var aClass = resolvedSuperType as IClass;
                 if (aClass != null)
                 {
-                    enclosingClassHierarchy.Extends = CreateTypeHierarchy(aClass, superTypeSubstitution);
+                    enclosingClassHierarchy.Extends = CreateTypeHierarchy(aClass, superTypeSubstitution, seenTypes);
                 }
                 var anInterface = resolvedSuperType as IInterface;
                 if (anInterface != null)
                 {
-                    enclosingClassHierarchy.Implements.Add(CreateTypeHierarchy(anInterface, superTypeSubstitution));
+                    enclosingClassHierarchy.Implements.Add(
+                        CreateTypeHierarchy(anInterface, superTypeSubstitution, seenTypes));
                 }
             }
             return enclosingClassHierarchy;

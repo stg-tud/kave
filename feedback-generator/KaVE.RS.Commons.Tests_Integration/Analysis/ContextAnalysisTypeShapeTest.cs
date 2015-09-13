@@ -49,7 +49,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                Decl("N.C", null, "i:N.I"),
+                Decl("N.C", null, "i:N.I")
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
@@ -432,6 +432,35 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                     }
                 }
             };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void RecursiveTypeDefinition()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    class C : C {
+                        public override int M() {
+                            $
+                        }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape;
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy
+                {
+                    Element = Type("C")
+                },
+                MethodHierarchies =
+                {
+                    new MethodHierarchy(MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].M()"))
+                }
+            };
+
             Assert.AreEqual(expected, actual);
         }
 

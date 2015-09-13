@@ -22,6 +22,7 @@ using JetBrains.ReSharper.Psi.Util;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Utils.Names;
 
 namespace KaVE.RS.Commons.Analysis
@@ -32,8 +33,8 @@ namespace KaVE.RS.Commons.Analysis
         {
             var decl = new MethodHierarchy(name);
             var declaringType = method.GetContainingType();
-            decl.Super = FindMethodInSuperTypes(method, declaringType);
-            decl.First = FindFirstMethodInSuperTypes(method, declaringType);
+            decl.Super = FindMethodInSuperTypes(method, declaringType, Lists.NewList<ITypeName>());
+            decl.First = FindFirstMethodInSuperTypes(method, declaringType, Lists.NewList<ITypeName>());
 
             if (decl.First != null && decl.First.Equals(decl.Super))
             {
@@ -45,28 +46,39 @@ namespace KaVE.RS.Commons.Analysis
         public static IMethodName FindFirstMethodInSuperTypes([NotNull] this IMethod method)
         {
             var containingType = method.GetContainingType();
-            return FindFirstMethodInSuperTypes(method, containingType);
+            return FindFirstMethodInSuperTypes(method, containingType, Lists.NewList<ITypeName>());
         }
 
         private static IMethodName FindFirstMethodInSuperTypes(IMethod enclosingMethod,
-            ITypeElement typeDeclaration)
+            ITypeElement typeDeclaration,
+            IKaVEList<ITypeName> seenTypes)
         {
+            var typeName = typeDeclaration.GetName<ITypeName>();
+            seenTypes.Add(typeName);
+
             // TODO use MethodName.Signature
             var encName = GetSimpleName(enclosingMethod);
 
             foreach (var superType in typeDeclaration.GetSuperTypes())
             {
                 var superTypeElement = superType.GetTypeElement();
-                //Asserts.NotNull(superTypeElement);
                 if (superTypeElement == null)
                 {
                     // TODO add test for this (unresolvable super method?)
                     return MethodName.UnknownName;
                 }
 
+                var superTypeName = superTypeElement.GetName<ITypeName>();
+                //Asserts.NotNull(superTypeElement);
+                if (seenTypes.Contains(superTypeName))
+                {
+                    // TODO provoke SOE in test
+                    continue;
+                }
+
                 if (superType.IsInterfaceType() || enclosingMethod.IsOverride)
                 {
-                    var superName = FindFirstMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
+                    var superName = FindFirstMethodInSuperTypes(enclosingMethod, superType.GetTypeElement(), seenTypes);
                     if (superName != null)
                     {
                         return superName;
@@ -92,8 +104,12 @@ namespace KaVE.RS.Commons.Analysis
         }
 
         private static IMethodName FindMethodInSuperTypes(IMethod enclosingMethod,
-            ITypeElement typeDeclaration)
+            ITypeElement typeDeclaration,
+            IKaVEList<ITypeName> seenTypes)
         {
+            var typeName = typeDeclaration.GetName<ITypeName>();
+            seenTypes.Add(typeName);
+
             if (!enclosingMethod.IsOverride)
             {
                 return null;
@@ -110,6 +126,15 @@ namespace KaVE.RS.Commons.Analysis
                     // TODO add test for this (unresolvable super method?)
                     return MethodName.UnknownName;
                 }
+
+                var superTypeName = superTypeElement.GetName<ITypeName>();
+                //Asserts.NotNull(superTypeElement);
+                if (seenTypes.Contains(superTypeName))
+                {
+                    // TODO provoke SOE in test
+                    continue;
+                }
+
                 if (superType.IsClassType())
                 {
                     foreach (var method in superTypeElement.Methods)
@@ -125,7 +150,7 @@ namespace KaVE.RS.Commons.Analysis
                         }
                     }
 
-                    var superName = FindMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
+                    var superName = FindMethodInSuperTypes(enclosingMethod, superType.GetTypeElement(), seenTypes);
                     if (superName != null)
                     {
                         return superName;
