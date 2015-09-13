@@ -29,6 +29,7 @@ namespace KaVE.Commons.Model.Events.GitEvents
         Clone,
         Commit,
         CommitAmend,
+        CommitInitial,
         Merge,
         Pull,
         Rebase,
@@ -42,6 +43,7 @@ namespace KaVE.Commons.Model.Events.GitEvents
             <Regex, GitActionType>
         {
             {new Regex(@"commit \(amend\)"), GitActionType.CommitAmend},
+            {new Regex(@"commit \(initial\)"), GitActionType.CommitInitial},
             {new Regex("rebase finished"), GitActionType.RebaseFinished},
             {new Regex("pull.*"), GitActionType.Pull},
             {new Regex("merge.*"), GitActionType.Merge}

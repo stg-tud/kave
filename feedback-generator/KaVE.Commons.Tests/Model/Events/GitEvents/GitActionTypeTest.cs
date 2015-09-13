@@ -52,5 +52,11 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         {
             Assert.AreEqual(GitActionType.Merge, "merge origin/master".ToGitActionType());
         }
+
+        [Test]
+        public void ShouldParseCommitInitial()
+        {
+            Assert.AreEqual(GitActionType.CommitInitial, "commit (initial)".ToGitActionType());
+        }
     }
 }
