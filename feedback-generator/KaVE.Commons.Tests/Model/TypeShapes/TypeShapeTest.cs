@@ -16,6 +16,7 @@
 
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -91,11 +92,17 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         {
             var a = new TypeShape
             {
-                MethodHierarchies = {new MethodHierarchy()}
+                MethodHierarchies = { new MethodHierarchy() }
             };
             var b = new TypeShape();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+           ToStringAssert.Reflection(new TypeShape());
         }
     }
 }

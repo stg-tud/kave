@@ -54,5 +54,10 @@ namespace KaVE.Commons.Model.TypeShapes
                        MethodHierarchies.GetSetHashCode();
             }
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }

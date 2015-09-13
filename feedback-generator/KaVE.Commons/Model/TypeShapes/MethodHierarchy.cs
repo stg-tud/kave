@@ -17,8 +17,8 @@
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.TypeShapes
 {
@@ -68,6 +68,11 @@ namespace KaVE.Commons.Model.TypeShapes
                 hashCode = (hashCode*397) ^ (First != null ? First.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }
