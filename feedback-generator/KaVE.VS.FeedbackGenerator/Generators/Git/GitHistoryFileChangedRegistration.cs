@@ -27,36 +27,49 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
     {
         [CanBeNull]
         private readonly FileSystemWatcher _watcher;
-
-        private const string RelativeGitLogPath = @".git\logs";
-
+        
         public GitHistoryFileChangedRegistration([NotNull] ISolution solution,
             [NotNull] GitEventGenerator gitEventGenerator)
         {
-            var repositoryDirectory = GetGitLogPath(solution);
-            if (repositoryDirectory.IsNullOrEmpty())
+            var gitLogDirectory = GetGitLogPath(solution);
+            if (gitLogDirectory.IsNullOrEmpty())
             {
-                // TODO: log failure at this point?
                 return;
             }
 
             _watcher = new FileSystemWatcher
             {
-                Path = repositoryDirectory,
+                Filter = "HEAD",
+                Path = gitLogDirectory,
                 EnableRaisingEvents = true
             };
-            _watcher.Changed += gitEventGenerator.OnGitHistoryFileChanged;
+
+            _watcher.Changed +=
+                (sender, args) =>
+                {
+                    var directoryName = Path.GetDirectoryName(args.FullPath);
+                    if (directoryName == null) return;
+
+                    gitEventGenerator.OnGitHistoryFileChanged(
+                        this,
+                        new GitHistoryFileChangedEventArgs(directoryName, solution));
+                };
         }
 
         private static string GetGitLogPath(ISolution solution)
         {
+            const string relativeGitLogPath = @".git\logs";
             var repositoryDirectory = FindRepositoryDirectory(solution.SolutionFilePath.FullPath);
-            return repositoryDirectory.IsNullOrEmpty() ? string.Empty : Path.Combine(repositoryDirectory, RelativeGitLogPath);
+            return repositoryDirectory.IsNullOrEmpty()
+                ? string.Empty
+                : Path.Combine(repositoryDirectory, relativeGitLogPath);
         }
 
         private static string FindRepositoryDirectory(string solutionPath)
         {
-            var currentDirectory = Directory.GetParent(solutionPath).FullName;
+            var currentDirectory = Path.GetDirectoryName(solutionPath);
+            if (currentDirectory == null) return string.Empty;
+
             while (!ContainsGitFolder(currentDirectory))
             {
                 try
@@ -88,6 +101,17 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             {
                 _watcher.Dispose();
             }
+        }
+    }
+
+    public class GitHistoryFileChangedEventArgs : FileSystemEventArgs
+    {
+        public ISolution Solution { get; private set; }
+
+        public GitHistoryFileChangedEventArgs([NotNull] string directory, [NotNull] ISolution solution)
+            : base(WatcherChangeTypes.Changed, directory, "HEAD")
+        {
+            Solution = solution;
         }
     }
 }

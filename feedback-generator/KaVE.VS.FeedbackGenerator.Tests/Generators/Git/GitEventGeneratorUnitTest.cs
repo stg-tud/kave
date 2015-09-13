@@ -15,13 +15,14 @@
  */
 
 using System;
-using System.IO;
+using JetBrains.ProjectModel;
 using KaVE.Commons.Model.Events.GitEvents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
 using KaVE.VS.FeedbackGenerator.MessageBus;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
@@ -32,11 +33,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 TestUsername <TestMail@domain.de> 1441217745 +0200	commit: Test commit";
 
         private TestGitEventGenerator _uut;
+        private Mock<ISolution> _solutionMock;
 
         [SetUp]
         public void Setup()
         {
             _uut = new TestGitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
+
+            _solutionMock = new Mock<ISolution>();
+            _solutionMock.Setup(solution => solution.Name).Returns("SomeSolution");
         }
 
         [Test]
@@ -58,7 +63,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             _uut.Content = new[] {newLine};
             _uut.OnGitHistoryFileChanged(
                 null,
-                new FileSystemEventArgs(WatcherChangeTypes.All, string.Empty, string.Empty));
+                new GitHistoryFileChangedEventArgs("C:\\", _solutionMock.Object));
         }
 
         private class TestGitEventGenerator : GitEventGenerator

@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.ProjectModel;
 using KaVE.Commons.Model.Events.GitEvents;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -34,16 +35,16 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
         public GitEventGenerator([NotNull] IRSEnv env, [NotNull] IMessageBus messageBus, [NotNull] IDateUtils dateUtils)
             : base(env, messageBus, dateUtils) {}
 
-        public void OnGitHistoryFileChanged(object sender, FileSystemEventArgs args)
+        public void OnGitHistoryFileChanged(object sender, GitHistoryFileChangedEventArgs args)
         {
-            var logContent = ReadLogContent(args.FullPath);
-            var eventContent = ReadGitActionsFrom(logContent);
-            Fire(eventContent);
+            var eventContent = ReadGitActionsFrom(ReadLogContent(args.FullPath));
+            Fire(eventContent, SolutionName.Get(args.Solution.Name));
         }
 
-        private void Fire(IKaVEList<GitAction> content)
+        private void Fire(IKaVEList<GitAction> content, SolutionName solutionName)
         {
             var gitEvent = Create<GitEvent>();
+            gitEvent.Solution = solutionName;
             gitEvent.Content = content;
             FireNow(gitEvent);
         }

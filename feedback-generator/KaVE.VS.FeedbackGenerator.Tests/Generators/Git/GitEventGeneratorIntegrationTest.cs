@@ -20,6 +20,7 @@ using System.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.GitEvents;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
 using Moq;
@@ -41,7 +42,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 
         private string FileSolution
         {
-            get { return _dirTmp + @"\repo\project\Solution.sln"; }
+            get { return _dirTmp + @"\repo\project\SomeSolution.sln"; }
         }
 
         private GitEventGenerator _uut;
@@ -58,6 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 
             _solutionMock = new Mock<ISolution>();
             _solutionMock.Setup(solution => solution.SolutionFilePath).Returns(FileSystemPath.Parse(FileSolution));
+            _solutionMock.Setup(solution => solution.Name).Returns("SomeSolution");
             _uut = new GitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
 
             _watcher = new GitHistoryFileChangedRegistration(_solutionMock.Object, _uut);
@@ -96,6 +98,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
                 ActionType = GitActionType.Commit,
                 ExecutedAt = new DateTime(2015, 9, 2, 20, 15, 45)
             };
+            Assert.AreEqual(SolutionName.Get("SomeSolution"), actualEvent.Solution);
             CollectionAssert.AreEqual(Lists.NewList(expectedGitAction), actualEvent.Content);
         }
     }
