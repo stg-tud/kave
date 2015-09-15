@@ -43,7 +43,7 @@ namespace KaVE.Commons.Model.Events.GitEvents
         {
             unchecked
             {
-                var hashCode = ExecutedAt != null ? ExecutedAt.GetHashCode() : 1;
+                var hashCode = (ExecutedAt != null ? ExecutedAt.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (int) ActionType;
                 return hashCode;
             }
