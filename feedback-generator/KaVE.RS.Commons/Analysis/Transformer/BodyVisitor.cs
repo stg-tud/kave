@@ -30,6 +30,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
@@ -589,6 +590,37 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             IList<IStatement> context)
         {
             base.VisitGeneralCatchClause(generalCatchClauseParam, context);
+        }
+
+        public override void VisitUsingStatement(IUsingStatement block, IList<IStatement> body)
+        {
+            AddIf(block, CompletionCase.EmptyCompletionBefore, body);
+
+            var usingBlock = new UsingBlock();
+
+            IVariableReference varRef = new VariableReference();
+
+            // case 1: variable declarations
+            if (block.VariableDeclarations.Any())
+            {
+                var decl = block.VariableDeclarations[0];
+                decl.Accept(this, body);
+                varRef = new VariableReference {Identifier = decl.DeclaredName};
+            }
+            // case 2: expressions (var refs, method calls ...)
+            else if (block.Expressions.Any())
+            {
+                var expr = block.Expressions[0];
+                varRef = _exprVisitor.ToVariableRef(expr, body);
+            }
+
+            usingBlock.Reference = varRef;
+
+            block.Body.Accept(this, usingBlock.Body);
+
+            body.Add(usingBlock);
+
+            AddIf(block, CompletionCase.EmptyCompletionAfter, body);
         }
 
         private void Visit(IBlock block, IKaVEList<IStatement> body)
