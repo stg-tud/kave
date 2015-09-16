@@ -15,6 +15,7 @@
  */
 
 using System;
+using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
