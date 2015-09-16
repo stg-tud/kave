@@ -40,11 +40,14 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         }
 
         [TestCase("LType.field;LType"), TestCase("LType._field;LType"),
-         TestCase("LKaVE/Model/ObjectUsage/Query.type;LKave/Model/ObjectUsage/CoReTypeName")]
+         TestCase("LKaVE/Model/ObjectUsage/Query.type;LKave/Model/ObjectUsage/CoReTypeName"),
+         TestCase("LSampleIB/SecuritiesWindow._сandles;LEcng/Collections/SynchronizedDictionary")
+            // _candles contains no regular c, but some unicode code!
+        ]
         public void ShouldAcceptValidFieldNames(string fieldName)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CoReFieldName(fieldName);
+            var f = new CoReFieldName(fieldName);
         }
     }
 }

@@ -23,13 +23,15 @@ namespace KaVE.Commons.Model.ObjectUsage
     {
         protected CoReName(string name, string validationPattern)
         {
+            // TODO restrict this list of chars to a selection that makes sense
+            var cleanName = new Regex("[^a-zA-Z0-9,.<>?\\/;:\\[\\]{}()$+-_=*$@`~!@#$%^&*]").Replace(name, "_");
             var regex = new Regex("^" + validationPattern + "$");
-            var isMatch = regex.IsMatch(name);
+            var isMatch = regex.IsMatch(cleanName);
             if (!isMatch)
             {
-                Asserts.Fail("core name cannot be validated: {0}", name);
+                Asserts.Fail("core name cannot be validated: {0}", cleanName);
             }
-            Name = name;
+            Name = cleanName;
         }
 
         public string Name { get; private set; }
