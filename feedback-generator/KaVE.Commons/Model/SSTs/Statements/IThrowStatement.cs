@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
-using KaVE.JetBrains.Annotations;
+using KaVE.Commons.Model.SSTs.References;
 
 namespace KaVE.Commons.Model.SSTs.Statements
 {
     public interface IThrowStatement : IStatement
     {
-        [NotNull]
-        ITypeName Exception { get; }
+        IVariableReference Reference { get; }
+
+        bool IsReThrow { get; }
     }
 }

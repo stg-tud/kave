@@ -302,7 +302,15 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IThrowStatement stmt, SSTPrintingContext c)
         {
-            c.Indentation().Keyword("throw").Space().Keyword("new").Space().Text(stmt.Exception.Name).Text("();");
+            c.Indentation().Keyword("throw");
+
+            if (!stmt.IsReThrow)
+            {
+                c.Space();
+                stmt.Reference.Accept(this, c);
+            }
+
+            c.Text(";");
         }
 
         public void Visit(IDoLoop block, SSTPrintingContext c)

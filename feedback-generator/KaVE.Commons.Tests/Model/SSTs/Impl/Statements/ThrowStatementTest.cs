@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
@@ -27,7 +27,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         public void DefaultValues()
         {
             var sut = new ThrowStatement();
-            Assert.AreEqual(TypeName.UnknownName, sut.Exception);
+            Assert.IsNull(sut.Reference);
+            Assert.IsTrue(sut.IsReThrow);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -35,8 +36,10 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void SettingValues()
         {
-            var sut = new ThrowStatement {Exception = TypeName.UnknownName};
-            Assert.AreEqual(TypeName.UnknownName, sut.Exception);
+            var varRef = new VariableReference {Identifier = "e"};
+            var sut = new ThrowStatement {Reference = varRef};
+            Assert.AreEqual(varRef, sut.Reference);
+            Assert.IsFalse(sut.IsReThrow);
         }
 
         [Test]
@@ -51,8 +54,9 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_reallyTheSame()
         {
-            var a = new ThrowStatement {Exception = TypeName.UnknownName};
-            var b = new ThrowStatement {Exception = TypeName.UnknownName};
+            var varRef = new VariableReference {Identifier = "e"};
+            var a = new ThrowStatement {Reference = varRef};
+            var b = new ThrowStatement {Reference = varRef};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -60,8 +64,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_differentException()
         {
-            var a = new ThrowStatement {Exception = TypeName.UnknownName};
-            var b = new ThrowStatement {Exception = TypeName.Get("System.Int32, mscore, 4.0.0.0")};
+            var a = new ThrowStatement {Reference = new VariableReference {Identifier = "e1"}};
+            var b = new ThrowStatement {Reference = new VariableReference {Identifier = "e2"}};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

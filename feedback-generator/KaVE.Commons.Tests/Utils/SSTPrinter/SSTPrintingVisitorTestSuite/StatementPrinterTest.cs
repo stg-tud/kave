@@ -79,11 +79,18 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new ThrowStatement
             {
-                Exception = TypeName.Get("T,P")
+                Reference = new VariableReference { Identifier = "e" }
             };
 
-            // note: we can ignore exception constructors and throwing existing objects
-            AssertPrint(sst, "throw new T();");
+            AssertPrint(sst, "throw e;");
+        }
+
+        [Test]
+        public void ThrowStatement_ReThrow()
+        {
+            var sst = new ThrowStatement();
+
+            AssertPrint(sst, "throw;");
         }
 
         [Test]

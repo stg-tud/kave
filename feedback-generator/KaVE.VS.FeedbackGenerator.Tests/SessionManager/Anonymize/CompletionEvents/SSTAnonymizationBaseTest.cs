@@ -65,8 +65,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             AnyVarDeclarationAnonymized = new VariableDeclaration {Reference = AnyVarReferenceAnonymized};
             AnyExpression = new ReferenceExpression {Reference = AnyVarReference};
             AnyExpressionAnonymized = new ReferenceExpression {Reference = AnyVarReferenceAnonymized};
-            AnyStatement = new ThrowStatement {Exception = Type("abc")};
-            AnyStatementAnonymized = new ThrowStatement {Exception = TypeAnonymized("abc")};
+            AnyStatement = new ThrowStatement {Reference = AnyVarReference};
+            AnyStatementAnonymized = new ThrowStatement {Reference = AnyVarReferenceAnonymized};
 
             AnyLoopHeaderBlock = new LoopHeaderBlockExpression
             {

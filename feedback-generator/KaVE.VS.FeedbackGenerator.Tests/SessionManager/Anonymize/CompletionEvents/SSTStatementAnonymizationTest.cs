@@ -216,8 +216,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         public void ThrowStatement()
         {
             AssertAnonymization(
-                new ThrowStatement {Exception = Type("a")},
-                new ThrowStatement {Exception = TypeAnonymized("a")});
+                new ThrowStatement {Reference = AnyVarReference},
+                new ThrowStatement {Reference = AnyVarReferenceAnonymized});
         }
 
         [Test]

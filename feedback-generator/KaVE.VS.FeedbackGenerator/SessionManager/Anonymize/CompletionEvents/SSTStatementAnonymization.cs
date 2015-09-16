@@ -240,7 +240,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
         {
             return new ThrowStatement
             {
-                Exception = stmt.Exception.ToAnonymousName()
+                Reference = _ref.Anonymize(stmt.Reference)
             };
         }
 

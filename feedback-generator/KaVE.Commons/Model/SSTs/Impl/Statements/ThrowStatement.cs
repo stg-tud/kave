@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using System.Runtime.Serialization;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
+    [DataContract]
     public class ThrowStatement : IThrowStatement
     {
-        public ITypeName Exception { get; set; }
+        [DataMember]
+        public IVariableReference Reference { get; set; }
 
-        public ThrowStatement()
+        public bool IsReThrow
         {
-            Exception = TypeName.UnknownName;
+            get { return Reference == null; }
         }
 
         private bool Equals(ThrowStatement other)
         {
-            return Equals(Exception, other.Exception);
+            return Equals(Reference, other.Reference);
         }
 
         public override bool Equals(object obj)
@@ -43,7 +45,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
 
         public override int GetHashCode()
         {
-            return unchecked (18 + Exception.GetHashCode());
+            return unchecked (18 + (Reference != null ? Reference.GetHashCode() : 0));
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

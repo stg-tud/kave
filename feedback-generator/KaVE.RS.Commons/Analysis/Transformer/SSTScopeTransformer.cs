@@ -207,7 +207,9 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public override void VisitThrowStatement(IThrowStatement throwStatementParam, ScopeTransformerContext context)
         {
-            context.Scope.Body.Add(new ThrowStatement {Exception = throwStatementParam.Exception.Type().GetName()});
+            // TODO retrieve reference
+            //  {Reference = throwStatementParam.Exception.GetReference(context)}
+            context.Scope.Body.Add(new ThrowStatement());
         }
 
         public override void VisitTryStatement(ITryStatement tryStatementParam, ScopeTransformerContext context)

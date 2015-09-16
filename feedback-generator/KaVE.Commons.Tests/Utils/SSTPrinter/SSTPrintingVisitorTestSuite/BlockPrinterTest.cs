@@ -20,6 +20,7 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
@@ -114,7 +115,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new TryBlock
             {
-                Body = {new ThrowStatement {Exception = TypeName.Get("ExceptionType,P")}},
+                Body = {new ThrowStatement {Reference = new VariableReference {Identifier = "e"}}},
                 CatchBlocks =
                 {
                     new CatchBlock
@@ -130,7 +131,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 sst,
                 "try",
                 "{",
-                "    throw new ExceptionType();",
+                "    throw e;",
                 "}",
                 "catch (ExceptionType e)",
                 "{",
@@ -147,7 +148,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new TryBlock
             {
-                Body = {new ThrowStatement {Exception = TypeName.Get("ExceptionType,P")}},
+                Body = {new ThrowStatement {Reference = new VariableReference {Identifier = "e"}}},
                 CatchBlocks =
                 {
                     new CatchBlock
@@ -162,7 +163,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 sst,
                 "try",
                 "{",
-                "    throw new ExceptionType();",
+                "    throw e;",
                 "}",
                 "catch (ExceptionType e)",
                 "{",
@@ -175,7 +176,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new TryBlock
             {
-                Body = {new ThrowStatement {Exception = TypeName.Get("ExceptionType,P")}},
+                Body = {new ThrowStatement {Reference = new VariableReference {Identifier = "e"}}},
                 CatchBlocks =
                 {
                     new CatchBlock
@@ -190,7 +191,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 sst,
                 "try",
                 "{",
-                "    throw new ExceptionType();",
+                "    throw e;",
                 "}",
                 "catch",
                 "{",
@@ -203,7 +204,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new TryBlock
             {
-                Body = {new ThrowStatement {Exception = TypeName.Get("ExceptionType,P")}},
+                Body = {new ThrowStatement {Reference = new VariableReference {Identifier = "e"}}},
                 CatchBlocks =
                 {
                     new CatchBlock
@@ -219,7 +220,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 sst,
                 "try",
                 "{",
-                "    throw new ExceptionType();",
+                "    throw e;",
                 "}",
                 "catch (ExceptionType)",
                 "{",
