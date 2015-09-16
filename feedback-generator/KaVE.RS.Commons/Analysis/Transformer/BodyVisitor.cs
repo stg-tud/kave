@@ -41,6 +41,7 @@ using IBreakStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IBreakStatement;
 using IExpressionStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IExpressionStatement;
 using IReturnStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IReturnStatement;
 using IStatement = KaVE.Commons.Model.SSTs.IStatement;
+using IThrowStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IThrowStatement;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
 {
@@ -341,6 +342,25 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                         Expression = _exprVisitor.ToSimpleExpression(stmt.Value, body) ?? new UnknownExpression()
                     });
             }
+
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitThrowStatement(IThrowStatement stmt, IList<IStatement> body)
+        {
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+
+            var varRef = stmt.Exception == null
+                ? null
+                : _exprVisitor.ToVariableRef(stmt.Exception, body);
+
+            body.Add(new ThrowStatement {Reference = varRef});
 
             if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
             {
