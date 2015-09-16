@@ -16,7 +16,7 @@
 
 using System;
 using JetBrains.ProjectModel;
-using KaVE.Commons.Model.Events.GitEvents;
+using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -49,10 +49,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         {
             WriteFile(TestContent);
 
-            var actualEvent = GetSinglePublished<GitEvent>();
-            var expectedGitAction = new GitAction
+            var actualEvent = GetSinglePublished<VersionControlEvent>();
+            var expectedGitAction = new VersionControlAction
             {
-                ActionType = GitActionType.Commit,
+                ActionType = VersionControlActionType.Commit,
                 ExecutedAt = new DateTime(2015, 9, 2, 20, 15, 45)
             };
             CollectionAssert.AreEqual(Lists.NewList(expectedGitAction), actualEvent.Content);

@@ -18,18 +18,18 @@ using System;
 using System.Runtime.Serialization;
 using KaVE.Commons.Utils;
 
-namespace KaVE.Commons.Model.Events.GitEvents
+namespace KaVE.Commons.Model.Events.VersionControlEvents
 {
     [DataContract]
-    public class GitAction
+    public class VersionControlAction
     {
         [DataMember]
         public DateTime? ExecutedAt { get; set; }
 
         [DataMember]
-        public GitActionType ActionType { get; set; }
+        public VersionControlActionType ActionType { get; set; }
 
-        private bool Equals(GitAction other)
+        private bool Equals(VersionControlAction other)
         {
             return Equals(ExecutedAt, other.ExecutedAt) && Equals(ActionType, other.ActionType);
         }
@@ -51,7 +51,7 @@ namespace KaVE.Commons.Model.Events.GitEvents
 
         public override string ToString()
         {
-            return string.Format("[{0}] {1}", ExecutedAt, ActionType);
+            return this.ToStringReflection();
         }
     }
 }

@@ -14,30 +14,36 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Events.GitEvents;
+using System;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Events.GitEvents
+namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
 {
-    internal class GitEventTest
+    internal class VersionControlEventTest
     {
         private static readonly SolutionName SomeSolution = SolutionName.Get("SomeSolution");
-        private static readonly IKaVEList<GitAction> SomeContent = Lists.NewList(new GitAction());
+        private static readonly IKaVEList<VersionControlAction> SomeContent = Lists.NewList(SomeAction);
+
+        private static VersionControlAction SomeAction
+        {
+            get { return new VersionControlAction {ExecutedAt = DateTime.Now, ActionType = VersionControlActionType.Checkout}; }
+        }
 
         [Test]
         public void DefaultValues()
         {
-            var actualEvent = new GitEvent();
-            Assert.AreEqual(Lists.NewList<GitAction>(), actualEvent.Content);
+            var actualEvent = new VersionControlEvent();
+            Assert.AreEqual(Lists.NewList<VersionControlAction>(), actualEvent.Content);
             Assert.AreEqual(SolutionName.Get(""), actualEvent.Solution);
         }
 
         [Test]
         public void SettingValues()
         {
-            var actualEvent = new GitEvent
+            var actualEvent = new VersionControlEvent
             {
                 Solution = SomeSolution,
                 Content = SomeContent
@@ -49,8 +55,8 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void Equality_Default()
         {
-            var a = new GitEvent();
-            var b = new GitEvent();
+            var a = new VersionControlEvent();
+            var b = new VersionControlEvent();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -58,8 +64,8 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new GitEvent {Solution = SomeSolution, Content = SomeContent};
-            var b = new GitEvent {Solution = SomeSolution, Content = SomeContent};
+            var a = new VersionControlEvent {Solution = SomeSolution, Content = {SomeAction}};
+            var b = new VersionControlEvent {Solution = SomeSolution, Content = {SomeAction}};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -67,19 +73,16 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void Equality_DifferentSolutions()
         {
-            var a = new GitEvent {Solution = SomeSolution, Content = SomeContent};
-            var b = new GitEvent {Content = SomeContent};
+            var a = new VersionControlEvent {Solution = SomeSolution, Content = {SomeAction}};
+            var b = new VersionControlEvent {Content = {SomeAction}};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentContents()
+        public void ToStringReflection()
         {
-            var a = new GitEvent {Solution = SomeSolution, Content = SomeContent};
-            var b = new GitEvent {Solution = SomeSolution};
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+            ToStringAssert.Reflection(new VersionControlEvent());
         }
     }
 }

@@ -20,7 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.ProjectModel;
-using KaVE.Commons.Model.Events.GitEvents;
+using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -41,9 +41,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             Fire(eventContent, SolutionName.Get(args.Solution.Name));
         }
 
-        private void Fire(IKaVEList<GitAction> content, SolutionName solutionName)
+        private void Fire(IKaVEList<VersionControlAction> content, SolutionName solutionName)
         {
-            var gitEvent = Create<GitEvent>();
+            var gitEvent = Create<VersionControlEvent>();
             gitEvent.Solution = solutionName;
             gitEvent.Content = content;
             FireNow(gitEvent);
@@ -55,15 +55,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             return File.ReadAllLines(fullPath);
         }
 
-        private static IKaVEList<GitAction> ReadGitActionsFrom(IEnumerable<string> logContent)
+        private static IKaVEList<VersionControlAction> ReadGitActionsFrom(IEnumerable<string> logContent)
         {
-            var gitActions = Lists.NewList<GitAction>();
+            var gitActions = Lists.NewList<VersionControlAction>();
 
             foreach (
                 var gitAction in
                     logContent.Select(
                         logEntry =>
-                            new GitAction
+                            new VersionControlAction
                             {
                                 ExecutedAt = ExtractExecutedAtFrom(logEntry),
                                 ActionType = ExtractActionTypeFrom(logEntry)
@@ -75,9 +75,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             return gitActions;
         }
 
-        private static GitActionType ExtractActionTypeFrom([NotNull] string entry)
+        private static VersionControlActionType ExtractActionTypeFrom([NotNull] string entry)
         {
-            return new Regex("\t.*:").Match(entry).Value.TrimEnd(':').ToGitActionType();
+            return new Regex("\t.*:").Match(entry).Value.TrimEnd(':').ToVersionControlActionType();
         }
 
         private static DateTime? ExtractExecutedAtFrom([NotNull] string entry)

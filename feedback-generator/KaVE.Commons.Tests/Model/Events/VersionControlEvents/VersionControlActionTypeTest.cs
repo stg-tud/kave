@@ -14,49 +14,49 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Events.GitEvents;
+using KaVE.Commons.Model.Events.VersionControlEvents;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Events.GitEvents
+namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
 {
-    internal class GitActionTypeTest
+    internal class VersionControlActionTypeTest
     {
         [Test]
         public void ShouldParseNonSpecialCase()
         {
-            Assert.AreEqual(GitActionType.Commit, "commit".ToGitActionType());
+            Assert.AreEqual(VersionControlActionType.Commit, "commit".ToVersionControlActionType());
         }
 
         [Test]
         public void ShouldParseCommitAmend()
         {
-            Assert.AreEqual(GitActionType.CommitAmend, "commit (amend)".ToGitActionType());
+            Assert.AreEqual(VersionControlActionType.CommitAmend, "commit (amend)".ToVersionControlActionType());
         }
 
         [Test]
         public void ShouldParsePull()
         {
             Assert.AreEqual(
-                GitActionType.Pull,
-                "pull --progress origin +refs/heads/master:refs/heads/master".ToGitActionType());
+                VersionControlActionType.Pull,
+                "pull --progress origin +refs/heads/master:refs/heads/master".ToVersionControlActionType());
         }
 
         [Test]
         public void ShouldParseRebaseFinished()
         {
-            Assert.AreEqual(GitActionType.RebaseFinished, "rebase finished".ToGitActionType());
+            Assert.AreEqual(VersionControlActionType.RebaseFinished, "rebase finished".ToVersionControlActionType());
         }
 
         [Test]
         public void ShouldParseMerge()
         {
-            Assert.AreEqual(GitActionType.Merge, "merge origin/master".ToGitActionType());
+            Assert.AreEqual(VersionControlActionType.Merge, "merge origin/master".ToVersionControlActionType());
         }
 
         [Test]
         public void ShouldParseCommitInitial()
         {
-            Assert.AreEqual(GitActionType.CommitInitial, "commit (initial)".ToGitActionType());
+            Assert.AreEqual(VersionControlActionType.CommitInitial, "commit (initial)".ToVersionControlActionType());
         }
     }
 }

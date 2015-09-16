@@ -15,27 +15,28 @@
  */
 
 using System;
-using KaVE.Commons.Model.Events.GitEvents;
+using KaVE.Commons.Model.Events.VersionControlEvents;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Events.GitEvents
+namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
 {
-    internal class GitActionTest
+    internal class VersionControlActionTest
     {
         private static readonly DateTime SomeDateTime = new DateTime(903492580);
-        private const GitActionType SomeGitAction = GitActionType.Commit;
+        private const VersionControlActionType SomeGitAction = VersionControlActionType.Commit;
 
         [Test]
         public void DefaultValues()
         {
-            Assert.AreEqual(null, new GitAction().ExecutedAt);
-            Assert.AreEqual(GitActionType.Unknown, new GitAction().ActionType);
+            Assert.AreEqual(null, new VersionControlAction().ExecutedAt);
+            Assert.AreEqual(VersionControlActionType.Unknown, new VersionControlAction().ActionType);
         }
 
         [Test]
         public void SettingValues()
         {
-            var actualEvent = new GitAction
+            var actualEvent = new VersionControlAction
             {
                 ExecutedAt = SomeDateTime,
                 ActionType = SomeGitAction
@@ -48,8 +49,8 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void Equality_Default()
         {
-            var a = new GitAction();
-            var b = new GitAction();
+            var a = new VersionControlAction();
+            var b = new VersionControlAction();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -57,8 +58,8 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new GitAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
-            var b = new GitAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
+            var a = new VersionControlAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
+            var b = new VersionControlAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -66,8 +67,8 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void Equality_DifferentExecutedAt()
         {
-            var a = new GitAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
-            var b = new GitAction {ActionType = SomeGitAction};
+            var a = new VersionControlAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
+            var b = new VersionControlAction {ActionType = SomeGitAction};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -75,8 +76,8 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void Equality_DifferentActionType()
         {
-            var a = new GitAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
-            var b = new GitAction {ExecutedAt = SomeDateTime};
+            var a = new VersionControlAction {ExecutedAt = SomeDateTime, ActionType = SomeGitAction};
+            var b = new VersionControlAction {ExecutedAt = SomeDateTime};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -84,10 +85,7 @@ namespace KaVE.Commons.Tests.Model.Events.GitEvents
         [Test]
         public void ToStringTest()
         {
-            var someDateTime = new DateTime(1924, 8, 23, 19, 48, 12);
-            var action = new GitAction {ExecutedAt = someDateTime, ActionType = GitActionType.Commit};
-
-            Assert.AreEqual(string.Format("[{0}] Commit", someDateTime), action.ToString());
+            ToStringAssert.Reflection(new VersionControlAction());
         }
     }
 }

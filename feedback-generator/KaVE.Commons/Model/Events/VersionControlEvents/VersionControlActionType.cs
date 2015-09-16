@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace KaVE.Commons.Model.Events.GitEvents
+namespace KaVE.Commons.Model.Events.VersionControlEvents
 {
-    public enum GitActionType
+    public enum VersionControlActionType
     {
         Unknown = 0,
         Branch,
@@ -37,23 +37,23 @@ namespace KaVE.Commons.Model.Events.GitEvents
         Reset
     }
 
-    public static class GitActionTypeExtensions
+    public static class VersionControlActionTypeExtensions
     {
-        private static readonly Dictionary<Regex, GitActionType> SpecialPatterns = new Dictionary
-            <Regex, GitActionType>
+        private static readonly Dictionary<Regex, VersionControlActionType> SpecialPatterns = new Dictionary
+            <Regex, VersionControlActionType>
         {
-            {new Regex(@"commit \(amend\)"), GitActionType.CommitAmend},
-            {new Regex(@"commit \(initial\)"), GitActionType.CommitInitial},
-            {new Regex("rebase finished"), GitActionType.RebaseFinished},
-            {new Regex("pull.*"), GitActionType.Pull},
-            {new Regex("merge.*"), GitActionType.Merge}
+            {new Regex(@"commit \(amend\)"), VersionControlActionType.CommitAmend},
+            {new Regex(@"commit \(initial\)"), VersionControlActionType.CommitInitial},
+            {new Regex("rebase finished"), VersionControlActionType.RebaseFinished},
+            {new Regex("pull.*"), VersionControlActionType.Pull},
+            {new Regex("merge.*"), VersionControlActionType.Merge}
         };
 
-        public static GitActionType ToGitActionType(this string value)
+        public static VersionControlActionType ToVersionControlActionType(this string value)
         {
             try
             {
-                return (GitActionType) Enum.Parse(typeof (GitActionType), value, true);
+                return (VersionControlActionType) Enum.Parse(typeof (VersionControlActionType), value, true);
             }
             catch
             {
@@ -61,10 +61,10 @@ namespace KaVE.Commons.Model.Events.GitEvents
             }
         }
 
-        private static GitActionType HandleSpecialCases(string value)
+        private static VersionControlActionType HandleSpecialCases(string value)
         {
             var match = SpecialPatterns.Keys.FirstOrDefault(regex => regex.IsMatch(value));
-            return match != null ? SpecialPatterns[match] : GitActionType.Unknown;
+            return match != null ? SpecialPatterns[match] : VersionControlActionType.Unknown;
         }
     }
 }

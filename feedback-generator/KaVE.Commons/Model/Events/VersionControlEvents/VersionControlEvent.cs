@@ -19,24 +19,24 @@ using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Commons.Model.Events.GitEvents
+namespace KaVE.Commons.Model.Events.VersionControlEvents
 {
     [DataContract]
-    public class GitEvent : IDEEvent
+    public class VersionControlEvent : IDEEvent
     {
         [DataMember]
-        public IKaVEList<GitAction> Content { get; set; }
+        public IKaVEList<VersionControlAction> Content { get; set; }
 
         [DataMember]
         public SolutionName Solution { get; set; }
 
-        public GitEvent()
+        public VersionControlEvent()
         {
-            Content = new KaVEList<GitAction>();
+            Content = new KaVEList<VersionControlAction>();
             Solution = SolutionName.Get("");
         }
 
-        private bool Equals(GitEvent other)
+        private bool Equals(VersionControlEvent other)
         {
             return base.Equals(other) && Equals(Content, other.Content) && Equals(Solution, other.Solution);
         }

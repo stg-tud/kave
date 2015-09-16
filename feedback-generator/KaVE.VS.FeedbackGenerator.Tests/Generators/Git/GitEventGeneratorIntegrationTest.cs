@@ -19,7 +19,7 @@ using System.IO;
 using System.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
-using KaVE.Commons.Model.Events.GitEvents;
+using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
@@ -92,10 +92,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 
             Thread.Sleep(500);
 
-            var actualEvent = GetSinglePublished<GitEvent>();
-            var expectedGitAction = new GitAction
+            var actualEvent = GetSinglePublished<VersionControlEvent>();
+            var expectedGitAction = new VersionControlAction
             {
-                ActionType = GitActionType.Commit,
+                ActionType = VersionControlActionType.Commit,
                 ExecutedAt = new DateTime(2015, 9, 2, 20, 15, 45)
             };
             Assert.AreEqual(SolutionName.Get("SomeSolution"), actualEvent.Solution);

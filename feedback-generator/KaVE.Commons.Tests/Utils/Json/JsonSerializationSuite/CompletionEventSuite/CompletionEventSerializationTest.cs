@@ -151,7 +151,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                             Relevance = 42
                         },
                         SelectedAfter = now.AddMilliseconds(345).TimeOfDay
-                    },
+                    }
                 },
                 TerminatedBy = IDEEvent.Trigger.Typing,
                 TerminatedState = TerminationState.Applied
