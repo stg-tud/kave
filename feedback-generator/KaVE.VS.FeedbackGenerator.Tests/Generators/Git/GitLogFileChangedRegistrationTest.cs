@@ -127,6 +127,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             Assert.AreEqual(SolutionName.Get(SomeSolution), actualArgs.Solution);
         }
 
+        [Test]
+        public void ShouldNotFailAtConstructionIfGitFolderDoesntExist()
+        {
+            _uut.Dispose();
+            if (Directory.Exists(DirectoryGit))
+            {
+                Directory.Delete(DirectoryGit, true);
+            }
+
+            _uut = new GitLogFileChangedRegistration(_solutionMock.Object, _eventGeneratorDummy);
+        }
+
         private static void CreateParent(string path)
         {
             var directoryInfo = Directory.GetParent(path);

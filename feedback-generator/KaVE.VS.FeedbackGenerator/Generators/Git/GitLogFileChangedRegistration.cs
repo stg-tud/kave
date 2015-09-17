@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Security;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
 using KaVE.Commons.Model.Names.VisualStudio;
@@ -46,6 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             {
                 return;
             }
+
             CreateGitLogFile(gitLogDirectory);
 
             OnWatchStart(gitLogDirectory);
@@ -91,30 +93,21 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
         private static string FindRepositoryDirectory(string solutionPath)
         {
-            var currentDirectory = Path.GetDirectoryName(solutionPath);
-            if (currentDirectory == null)
-            {
-                return string.Empty;
-            }
+            var currentDirectory = new DirectoryInfo(solutionPath);
 
-            while (!ContainsGitFolder(currentDirectory))
+            while (currentDirectory != null && !ContainsGitFolder(currentDirectory.FullName))
             {
                 try
                 {
-                    currentDirectory = Directory.GetParent(currentDirectory).FullName;
+                    currentDirectory = currentDirectory.Parent;
                 }
-                catch (Exception e)
+                catch (SecurityException)
                 {
-                    if (e is UnauthorizedAccessException || e is DirectoryNotFoundException)
-                    {
-                        currentDirectory = string.Empty;
-                        break;
-                    }
-
-                    throw;
+                    return string.Empty;
                 }
             }
-            return currentDirectory;
+
+            return currentDirectory != null ? currentDirectory.FullName : string.Empty;
         }
 
         private static bool ContainsGitFolder(string currentDirectory)
