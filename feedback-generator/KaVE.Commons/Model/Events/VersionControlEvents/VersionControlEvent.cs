@@ -25,20 +25,20 @@ namespace KaVE.Commons.Model.Events.VersionControlEvents
     public class VersionControlEvent : IDEEvent
     {
         [DataMember]
-        public IKaVEList<VersionControlAction> Content { get; set; }
+        public IKaVEList<VersionControlAction> Actions { get; set; }
 
         [DataMember]
         public SolutionName Solution { get; set; }
 
         public VersionControlEvent()
         {
-            Content = new KaVEList<VersionControlAction>();
+            Actions = new KaVEList<VersionControlAction>();
             Solution = SolutionName.Get("");
         }
 
         private bool Equals(VersionControlEvent other)
         {
-            return base.Equals(other) && Equals(Content, other.Content) && Equals(Solution, other.Solution);
+            return base.Equals(other) && Equals(Actions, other.Actions) && Equals(Solution, other.Solution);
         }
 
         public override bool Equals(object obj)
@@ -51,7 +51,7 @@ namespace KaVE.Commons.Model.Events.VersionControlEvents
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = (hashCode*397) ^ Content.GetHashCode();
+                hashCode = (hashCode*397) ^ Actions.GetHashCode();
                 hashCode = (hashCode*397) ^ Solution.GetHashCode();
                 return hashCode;
             }

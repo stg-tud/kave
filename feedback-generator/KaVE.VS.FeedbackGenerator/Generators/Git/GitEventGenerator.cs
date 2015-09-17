@@ -20,56 +20,67 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.ProjectModel;
+using JetBrains.Util.Extension;
 using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
+using NuGet;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Git
 {
-    [SolutionComponent]
-    internal class GitEventGenerator : EventGeneratorBase
+    public interface IGitEventGenerator
     {
-        public GitEventGenerator([NotNull] IRSEnv env, [NotNull] IMessageBus messageBus, [NotNull] IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils) {}
+        void OnGitHistoryFileChanged(object sender, GitLogFileChangedEventArgs args);
+    }
 
-        public void OnGitHistoryFileChanged(object sender, GitHistoryFileChangedEventArgs args)
+    [SolutionComponent]
+    internal class GitEventGenerator : EventGeneratorBase, IGitEventGenerator
+    {
+        private readonly IKaVEList<VersionControlAction> _oldActions;
+
+        public GitEventGenerator([NotNull] IRSEnv env, [NotNull] IMessageBus messageBus, [NotNull] IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
-            var eventContent = ReadGitActionsFrom(ReadLogContent(args.FullPath));
-            Fire(eventContent, SolutionName.Get(args.Solution.Name));
+            _oldActions = Lists.NewList<VersionControlAction>();
+        }
+
+        public void OnGitHistoryFileChanged(object sender, GitLogFileChangedEventArgs args)
+        {
+            var eventContent = ReadNewGitActionsFrom(ReadLogContent(args.FullPath));
+            if (!eventContent.IsEmpty())
+            {
+                Fire(eventContent, args.Solution);
+            }
         }
 
         private void Fire(IKaVEList<VersionControlAction> content, SolutionName solutionName)
         {
             var gitEvent = Create<VersionControlEvent>();
             gitEvent.Solution = solutionName;
-            gitEvent.Content = content;
+            gitEvent.Actions = content;
             FireNow(gitEvent);
         }
 
-        [Pure]
-        protected virtual string[] ReadLogContent(string fullPath)
-        {
-            return File.ReadAllLines(fullPath);
-        }
-
-        private static IKaVEList<VersionControlAction> ReadGitActionsFrom(IEnumerable<string> logContent)
+        private IKaVEList<VersionControlAction> ReadNewGitActionsFrom(IEnumerable<string> logContent)
         {
             var gitActions = Lists.NewList<VersionControlAction>();
 
             foreach (
-                var gitAction in
+                var newAction in
                     logContent.Select(
                         logEntry =>
                             new VersionControlAction
                             {
                                 ExecutedAt = ExtractExecutedAtFrom(logEntry),
                                 ActionType = ExtractActionTypeFrom(logEntry)
-                            }))
+                            })
+                              .Where(gitAction => !_oldActions.Contains(gitAction)))
             {
-                gitActions.Add(gitAction);
+                _oldActions.Add(newAction);
+                gitActions.Add(newAction);
             }
 
             return gitActions;
@@ -77,7 +88,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
         private static VersionControlActionType ExtractActionTypeFrom([NotNull] string entry)
         {
-            return new Regex("\t.*:").Match(entry).Value.TrimEnd(':').ToVersionControlActionType();
+            var substring = new Regex("\t.*: ").Match(entry).Value.SubstringAfter("\t").SubstringBefore(": ");
+            return substring.ToVersionControlActionType();
         }
 
         private static DateTime? ExtractExecutedAtFrom([NotNull] string entry)
@@ -87,6 +99,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             var unixTimeStamp = entry.Split(' ')[4];
             dateTime = dateTime.AddSeconds(int.Parse(unixTimeStamp)).ToLocalTime();
             return dateTime;
+        }
+
+        [Pure]
+        protected virtual IEnumerable<string> ReadLogContent(string fullPath)
+        {
+            return File.ReadAllLines(fullPath);
         }
     }
 }

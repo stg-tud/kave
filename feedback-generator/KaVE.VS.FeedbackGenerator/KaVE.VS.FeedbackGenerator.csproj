@@ -186,7 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generators\Git\GitEventGenerator.cs" />
-    <Compile Include="Generators\Git\GitHistoryFileChangedRegistration.cs" />
+    <Compile Include="Generators\Git\GitLogFileChangedRegistration.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>
     </Compile>

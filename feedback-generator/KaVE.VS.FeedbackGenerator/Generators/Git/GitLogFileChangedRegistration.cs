@@ -18,24 +18,37 @@ using System;
 using System.IO;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Git
 {
     [SolutionComponent]
-    internal class GitHistoryFileChangedRegistration : IDisposable
+    internal class GitLogFileChangedRegistration : IDisposable
     {
         [CanBeNull]
         private readonly FileSystemWatcher _watcher;
-        
-        public GitHistoryFileChangedRegistration([NotNull] ISolution solution,
-            [NotNull] GitEventGenerator gitEventGenerator)
+
+        [NotNull]
+        private readonly ISolution _solution;
+
+        [NotNull]
+        private readonly IGitEventGenerator _eventGenerator;
+
+        public GitLogFileChangedRegistration([NotNull] ISolution solution,
+            [NotNull] IGitEventGenerator gitEventGenerator)
         {
+            _solution = solution;
+            _eventGenerator = gitEventGenerator;
+
             var gitLogDirectory = GetGitLogPath(solution);
             if (gitLogDirectory.IsNullOrEmpty())
             {
                 return;
             }
+            CreateGitLogFile(gitLogDirectory);
+
+            OnWatchStart(gitLogDirectory);
 
             _watcher = new FileSystemWatcher
             {
@@ -44,16 +57,27 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
                 EnableRaisingEvents = true
             };
 
-            _watcher.Changed +=
-                (sender, args) =>
-                {
-                    var directoryName = Path.GetDirectoryName(args.FullPath);
-                    if (directoryName == null) return;
+            _watcher.Changed += OnGitHistoryFileChanged;
+        }
 
-                    gitEventGenerator.OnGitHistoryFileChanged(
-                        this,
-                        new GitHistoryFileChangedEventArgs(directoryName, solution));
-                };
+        private void OnWatchStart(string directory)
+        {
+            _eventGenerator.OnGitHistoryFileChanged(
+                this,
+                new GitLogFileChangedEventArgs(directory, SolutionName.Get(_solution.Name)));
+        }
+
+        private void OnGitHistoryFileChanged(object sender, FileSystemEventArgs args)
+        {
+            var directoryName = Path.GetDirectoryName(args.FullPath);
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            _eventGenerator.OnGitHistoryFileChanged(
+                this,
+                new GitLogFileChangedEventArgs(directoryName, SolutionName.Get(_solution.Name)));
         }
 
         private static string GetGitLogPath(ISolution solution)
@@ -68,7 +92,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
         private static string FindRepositoryDirectory(string solutionPath)
         {
             var currentDirectory = Path.GetDirectoryName(solutionPath);
-            if (currentDirectory == null) return string.Empty;
+            if (currentDirectory == null)
+            {
+                return string.Empty;
+            }
 
             while (!ContainsGitFolder(currentDirectory))
             {
@@ -95,6 +122,19 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             return Directory.Exists(Path.Combine(currentDirectory, ".git"));
         }
 
+        private static void CreateGitLogFile(string gitLogDirectory)
+        {
+            var gitLogFile = Path.Combine(gitLogDirectory, "HEAD");
+            if (!Directory.Exists(gitLogDirectory))
+            {
+                Directory.CreateDirectory(gitLogDirectory);
+            }
+            if (!File.Exists(gitLogFile))
+            {
+                File.Create(gitLogFile).Dispose();
+            }
+        }
+
         public void Dispose()
         {
             if (_watcher != null)
@@ -104,11 +144,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
         }
     }
 
-    public class GitHistoryFileChangedEventArgs : FileSystemEventArgs
+    public class GitLogFileChangedEventArgs : FileSystemEventArgs
     {
-        public ISolution Solution { get; private set; }
+        public SolutionName Solution { get; private set; }
 
-        public GitHistoryFileChangedEventArgs([NotNull] string directory, [NotNull] ISolution solution)
+        public GitLogFileChangedEventArgs([NotNull] string directory, [NotNull] SolutionName solution)
             : base(WatcherChangeTypes.Changed, directory, "HEAD")
         {
             Solution = solution;
