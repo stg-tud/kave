@@ -214,7 +214,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         protected void AssertCompletionMarker<TNodeType>(CompletionCase expectedCase)
         {
-            Assert.That(LastCompletionMarker.AffectedNode is TNodeType);
+            var node = LastCompletionMarker.AffectedNode;
+            if (!(node is TNodeType))
+            {
+                Assert.Fail("expected {0}, but was {1}", typeof(TNodeType), node.GetType());
+            }
             Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
         }
 

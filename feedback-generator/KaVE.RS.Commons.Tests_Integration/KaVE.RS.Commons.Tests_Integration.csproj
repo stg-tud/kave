@@ -202,7 +202,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\BreakStatementAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\PostfixPrefixAndUnaryOperatorAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetMarkerTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\TriggerPointAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\UncheckedTest.cs" />
     <Compile Include="Analysis\TestAnalysisTrigger.cs" />
     <Compile Include="BaseCodeCompletionTest.cs" />

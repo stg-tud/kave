@@ -67,9 +67,18 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
 
                 var isAssign = CSharpTokenType.EQ == tNode.GetTokenType();
 
-                if (target.IsWhitespaceToken() || isAssign)
+                var isLBrace = CSharpTokenType.LBRACE == tNode.GetTokenType();
+                var isRBrace = CSharpTokenType.RBRACE == tNode.GetTokenType();
+
+                if (target.IsWhitespaceToken() || isAssign || isLBrace || isRBrace)
                 {
                     FindAvailableTarget(target);
+                }
+
+                var isSemicolon = CSharpTokenType.SEMICOLON == tNode.GetTokenType();
+                if (isSemicolon)
+                {
+                    FindAvailableTarget(tNode.Parent);
                 }
 
                 if (Result.AffectedNode is IAssignmentExpression && HasError(Result.AffectedNode))
@@ -96,13 +105,29 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                 }
             }
 
-            private void FindAvailableTarget(ICSharpTreeNode target)
+            private void FindAvailableTarget(ITreeNode target)
             {
                 var isOutsideMethodBody = target.Parent is IClassBody;
                 if (isOutsideMethodBody)
                 {
                     // TODO think about this simplification...
                     Result.AffectedNode = null;
+                    Result.Case = CompletionCase.Undefined;
+                    return;
+                }
+
+                var stmt = target as ICSharpStatement;
+                if (stmt != null)
+                {
+                    Result.AffectedNode = stmt;
+                    Result.Case = CompletionCase.EmptyCompletionAfter;
+                    return;
+                }
+
+                var csExpr = target as ICSharpExpression;
+                if (csExpr != null)
+                {
+                    Result.AffectedNode = csExpr;
                     Result.Case = CompletionCase.Undefined;
                     return;
                 }
@@ -167,8 +192,13 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                 return prev.LastChild is IErrorElement;
             }
 
-            private ICSharpTreeNode FindNonBlockParent(ICSharpTreeNode target)
+            private ICSharpTreeNode FindNonBlockParent(ITreeNode target)
             {
+                if (target is IEmptyStatement)
+                {
+                    return FindNonBlockParent(target.Parent);
+                }
+
                 var parent = target.Parent as ICSharpTreeNode;
 
                 if (parent is IChameleonNode)
@@ -196,6 +226,12 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                         }
 
                         return parentStatement;
+                    }
+
+                    var catchClause = block.Parent as IGeneralCatchClause;
+                    if (catchClause != null)
+                    {
+                        return catchClause;
                     }
 
                     // TODO: why is the following needed?

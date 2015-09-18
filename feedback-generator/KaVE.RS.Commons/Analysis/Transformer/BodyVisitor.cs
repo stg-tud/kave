@@ -364,7 +364,12 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             if (stmt.Semicolon == null && IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
             {
                 varRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
-                body.Add(new VariableDeclaration { Type = TypeName.Get("System.Exception, mscorlib, 4.0.0.0"), Reference = varRef});
+                body.Add(
+                    new VariableDeclaration
+                    {
+                        Type = TypeName.Get("System.Exception, mscorlib, 4.0.0.0"),
+                        Reference = varRef
+                    });
                 body.Add(new Assignment {Reference = varRef, Expression = new CompletionExpression()});
             }
             else if (stmt.Exception != null)
@@ -375,6 +380,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             body.Add(new ThrowStatement {Reference = varRef});
 
             if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitEmptyStatement(IEmptyStatement stmt, IList<IStatement> body)
+        {
+            if (stmt == _marker.AffectedNode)
             {
                 body.Add(EmptyCompletionExpression);
             }

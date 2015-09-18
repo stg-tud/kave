@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -208,6 +210,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 }
                 finally {}
             ");
+
+            AssertCompletionMarker<IGeneralCatchClause>(CompletionCase.InBody);
+
             AssertBody(
                 new TryBlock
                 {
