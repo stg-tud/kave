@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.ObjectUsageExport;
 
@@ -48,12 +49,12 @@ namespace KaVE.RS.SolutionAnalysis
             var numTotalCtxs = 0;
             var numTotalUsages = 0;
 
-            foreach (var fileName in ctxZips)
+            using (var cache = new ZipFolderLRUCache<CoReTypeName>(_dirOut, 1000))
             {
-                Log("### processing zip {0}/{1}: {2}", currentZip++, numZips, fileName);
-
-                using (var cache = new ZipFolderLRUCache<CoReTypeName>(_dirOut, 1000))
+                foreach (var fileName in ctxZips)
                 {
+                    Log("### processing zip {0}/{1}: {2}", currentZip++, numZips, fileName);
+
                     var numLocalCtxs = 0;
                     var numLocalUsages = 0;
 
@@ -74,7 +75,8 @@ namespace KaVE.RS.SolutionAnalysis
                             colCounter = 0;
                         }
                         colCounter++;
-                        var usages = _usageExtractor.Export(ctx);
+
+                        var usages = ExtractUsages(ctx);
                         var msg = usages.Count == 0
                             ? "."
                             : string.Format("{0}", usages.Count);
@@ -105,6 +107,19 @@ namespace KaVE.RS.SolutionAnalysis
                 "found a total of {0} contexts and extracted {1} usages\n\n",
                 numTotalCtxs,
                 numTotalUsages);
+        }
+
+        private IKaVEList<Query> ExtractUsages(Context ctx)
+        {
+            try
+            {
+                return _usageExtractor.Export(ctx);
+            }
+            catch (Exception e)
+            {
+                Log("error!!\n{0}", e);
+                return Lists.NewList<Query>();
+            }
         }
 
         private static void Log(string msg, params object[] args)
