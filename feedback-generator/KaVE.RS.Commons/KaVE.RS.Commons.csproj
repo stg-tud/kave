@@ -168,6 +168,7 @@
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\Transformer\BaseSSTTransformer.cs" />
     <Compile Include="Analysis\Transformer\BodyVisitor.cs" />
+    <Compile Include="Analysis\Transformer\ComposedExpressionCreator.cs" />
     <Compile Include="Analysis\Transformer\Context\ArgumentCollectorContext.cs" />
     <Compile Include="Analysis\Transformer\Context\AssignmentGeneratorContext.cs" />
     <Compile Include="Analysis\Transformer\Context\ITransformerContext.cs" />

@@ -404,27 +404,5 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         // TODO extend syntactic sugar examples and move them to separate file
-
-        [Test]
-        public void Assigning_Composed()
-        {
-            // TODO create separate test suite for boolean and arithmetic expressions
-            CompleteInMethod(@"
-                var a = true;
-                var b = false;
-                var isX = a || b;
-                $
-            ");
-
-            AssertBody(
-                VarDecl("a", Fix.Bool),
-                Assign("a", new ConstantValueExpression()),
-                VarDecl("b", Fix.Bool),
-                Assign("b", new ConstantValueExpression()),
-                VarDecl("isX", Fix.Bool),
-                Assign("isX", new UnknownExpression()),
-                // TODO implement (ComposedExpression)
-                Fix.EmptyCompletion);
-        }
     }
 }

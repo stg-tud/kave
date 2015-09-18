@@ -457,5 +457,83 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
             };
         }
+
+        #region ComposedExpressionCreator entry points
+        public override IAssignableExpression VisitAdditiveExpression(IAdditiveExpression expr,
+            IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitMultiplicativeExpression(IMultiplicativeExpression expr,
+            IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitParenthesizedExpression(IParenthesizedExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitCastExpression(ICastExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitConditionalTernaryExpression(IConditionalTernaryExpression expr,
+            IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitConditionalAndExpression(IConditionalAndExpression expr,
+            IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitConditionalOrExpression(IConditionalOrExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitEqualityExpression(IEqualityExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitBitwiseAndExpression(IBitwiseAndExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitBitwiseExclusiveOrExpression(IBitwiseExclusiveOrExpression expr,
+            IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitBitwiseInclusiveOrExpression(IBitwiseInclusiveOrExpression expr,
+            IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitUnaryOperatorExpression(IUnaryOperatorExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitShiftExpression(IShiftExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        public override IAssignableExpression VisitRelationalExpression(IRelationalExpression expr, IList<IStatement> context)
+        {
+            return ComposedExpressionCreator.Create(this, expr, context);
+        }
+        #endregion
     }
 }
