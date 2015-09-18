@@ -50,6 +50,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
     {
         private readonly CompletionTargetMarker _marker;
         private readonly ExpressionVisitor _exprVisitor;
+        private readonly UniqueVariableNameGenerator _nameGen;
 
         private static ExpressionStatement EmptyCompletionExpression
         {
@@ -59,7 +60,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public BodyVisitor(CompletionTargetMarker marker)
         {
             _marker = marker;
-            _exprVisitor = new ExpressionVisitor(new UniqueVariableNameGenerator(), marker);
+            _nameGen = new UniqueVariableNameGenerator();
+            _exprVisitor = new ExpressionVisitor(_nameGen, marker);
         }
 
         public override void VisitNode(ITreeNode node, IList<IStatement> context)
@@ -357,9 +359,18 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 body.Add(EmptyCompletionExpression);
             }
 
-            var varRef = stmt.Exception == null
-                ? null
-                : _exprVisitor.ToVariableRef(stmt.Exception, body);
+            IVariableReference varRef = new VariableReference();
+
+            if (stmt.Semicolon == null && IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
+            {
+                varRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+                body.Add(new VariableDeclaration { Type = TypeName.Get("System.Exception, mscorlib, 4.0.0.0"), Reference = varRef});
+                body.Add(new Assignment {Reference = varRef, Expression = new CompletionExpression()});
+            }
+            else if (stmt.Exception != null)
+            {
+                varRef = _exprVisitor.ToVariableRef(stmt.Exception, body);
+            }
 
             body.Add(new ThrowStatement {Reference = varRef});
 
@@ -616,7 +627,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             usingBlock.Reference = varRef;
 
-            block.Body.Accept(this, usingBlock.Body);
+            var bodyAsIBlock = block.Body as IBlock;
+            if (bodyAsIBlock != null && !bodyAsIBlock.Statements.Any() && IsTargetMatch(block, CompletionCase.InBody))
+            {
+                usingBlock.Body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+            }
+            else
+            {
+                block.Body.Accept(this, usingBlock.Body);
+            }
 
             body.Add(usingBlock);
 

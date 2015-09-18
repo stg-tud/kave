@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
@@ -64,6 +65,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         [Test]
+        public void LonelyThrow_UnassignedVariable()
+        {
+            CompleteInMethod(@"
+                throw e;
+                $");
+
+            AssertBody(
+                new ThrowStatement { Reference = VarRef("e") },
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
         public void TwoThrowsWithCompletionBetween()
         {
             CompleteInMethod(@"
@@ -101,6 +114,48 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                         new ThrowStatement()
                     }
                 },
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void TriggerInside()
+        { 
+            CompleteInMethod(@"throw $");
+
+            AssertBody(
+                VarDecl("$0", Fix.Exception),
+                VarAssign("$0", new CompletionExpression()),
+                new ThrowStatement {Reference = VarRef("$0")},
+                Fix.EmptyCompletion);
+        }
+
+        [Test, Ignore]
+        public void TriggerInside_WithToken()
+        {
+            // Exception => ReferenceExpression:e
+            // Affected Node => ReferenceExpression:e
+            // Case => Undefined
+            CompleteInMethod(@"throw e$");
+
+            AssertBody(
+                VarDecl("$0", Fix.Exception),
+                VarAssign("$0", new CompletionExpression {Token = "e"}),
+                new ThrowStatement { Reference = VarRef("$0") },
+                Fix.EmptyCompletion);
+        }
+
+        [Test, Ignore]
+        public void TriggerInside_WithNewObject()
+        {
+            // Exception => IObjectCreationExpression 
+            // Affected Node => ReferenceName:Ex
+            // Case => Undefined
+            CompleteInMethod(@"throw new Ex$");
+
+            AssertBody(
+                VarDecl("$0", Fix.Exception),
+                VarAssign("$0", new CompletionExpression()), // not sure how this completion would look
+                new ThrowStatement { Reference = VarRef("$0") },
                 Fix.EmptyCompletion);
         }
     }

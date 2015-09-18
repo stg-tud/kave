@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
@@ -39,7 +40,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 using (var sw = new StreamWriter(""file.txt""))
                 {
                     $
-                    return;
                 }");
 
             AssertBody(
@@ -50,8 +50,29 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     Reference = VarRef("sw"),
                     Body =
                     {
-                        Fix.EmptyCompletion,
-                        new ReturnStatement {IsVoid = true}
+                        Fix.EmptyCompletion
+                    }
+                });
+        }
+
+        [Test]
+        public void Default_CompletionWithToken()
+        {
+            CompleteInMethod(@"
+                using (var sw = new StreamWriter(""file.txt""))
+                {
+                    s$
+                }");
+
+            AssertBody(
+                VarDecl("sw", _streamWriter),
+                VarAssign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                new UsingBlock
+                {
+                    Reference = VarRef("sw"),
+                    Body =
+                    {
+                        new ExpressionStatement {Expression = new CompletionExpression {Token = "s"}}
                     }
                 });
         }
