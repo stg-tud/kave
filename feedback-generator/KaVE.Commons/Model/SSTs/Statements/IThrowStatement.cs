@@ -15,11 +15,13 @@
  */
 
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.SSTs.Statements
 {
     public interface IThrowStatement : IStatement
     {
+        [NotNull]
         IVariableReference Reference { get; }
 
         bool IsReThrow { get; }

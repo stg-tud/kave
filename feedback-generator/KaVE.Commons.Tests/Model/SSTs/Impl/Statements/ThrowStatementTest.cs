@@ -27,7 +27,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         public void DefaultValues()
         {
             var sut = new ThrowStatement();
-            Assert.IsNull(sut.Reference);
+            Assert.AreEqual(new VariableReference(), sut.Reference);
             Assert.IsTrue(sut.IsReThrow);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());

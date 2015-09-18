@@ -15,6 +15,7 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -30,7 +31,12 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
 
         public bool IsReThrow
         {
-            get { return Reference == null; }
+            get { return Reference.IsMissing; }
+        }
+
+        public ThrowStatement()
+        {
+            Reference = new VariableReference();
         }
 
         private bool Equals(ThrowStatement other)
@@ -45,7 +51,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
 
         public override int GetHashCode()
         {
-            return unchecked (18 + (Reference != null ? Reference.GetHashCode() : 0));
+            return unchecked (18 + Reference.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
