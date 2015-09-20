@@ -39,6 +39,7 @@ using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
 using IBreakStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IBreakStatement;
+using IContinueStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IContinueStatement;
 using IExpressionStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IExpressionStatement;
 using IReturnStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IReturnStatement;
 using IStatement = KaVE.Commons.Model.SSTs.IStatement;
@@ -388,6 +389,19 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override void VisitEmptyStatement(IEmptyStatement stmt, IList<IStatement> body)
         {
             if (stmt == _marker.AffectedNode)
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitContinueStatement(IContinueStatement stmt, IList<IStatement> body)
+        {
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+            body.Add(new ContinueStatement());
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
             {
                 body.Add(EmptyCompletionExpression);
             }
