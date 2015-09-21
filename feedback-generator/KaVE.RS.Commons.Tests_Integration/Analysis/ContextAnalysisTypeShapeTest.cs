@@ -464,6 +464,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             Assert.AreEqual(expected, actual);
         }
 
+        [Test, Ignore]
+        public void AddTestsForConstructors()
+        {
+            // TODO @Seb: Add tests for constructors!
+        }
+
         private static ITypeName Type(string typeName)
         {
             return TypeName.Get("N." + typeName + ", TestProject");

@@ -30,5 +30,14 @@ namespace KaVE.RS.Commons.Utils.Names
             Asserts.NotNull(declaredElement, "no declared element in declaration");
             return declaredElement.GetName<IMethodName>();
         }
+
+        [NotNull]
+        public static IMethodName GetName([NotNull] this IConstructorDeclaration constructorDeclaration)
+        {
+            // TODO testing!
+            var declaredElement = constructorDeclaration.DeclaredElement;
+            Asserts.NotNull(declaredElement, "no declared element in declaration");
+            return declaredElement.GetName<IMethodName>();
+        }
     }
 }

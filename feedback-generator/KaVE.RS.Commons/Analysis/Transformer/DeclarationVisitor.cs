@@ -16,19 +16,26 @@
 
 using System.Collections.Generic;
 using System.Threading;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
 using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
+using IKaVEStatement = KaVE.Commons.Model.SSTs.IStatement;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
 {
@@ -86,6 +93,84 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
         }
 
+        public override void VisitConstructorDeclaration(IConstructorDeclaration decl, SST context)
+        {
+            var nameGen = new UniqueVariableNameGenerator();
+            var exprVisit = new ExpressionVisitor(nameGen, _marker);
+
+            if (decl.DeclaredElement != null)
+            {
+                var methodName = decl.DeclaredElement.GetName<IMethodName>();
+                _cancellationToken.ThrowIfCancellationRequested();
+
+                var sstDecl = new MethodDeclaration
+                {
+                    Name = methodName,
+                    IsEntryPoint = _entryPoints.Contains(methodName)
+                };
+                context.Methods.Add(sstDecl);
+
+                if (decl == _marker.AffectedNode)
+                {
+                    sstDecl.Body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                }
+
+                if (decl.Initializer != null)
+                {
+                    ITypeMember mref;
+                    var name = MethodName.UnknownName;
+
+                    var substitution = decl.DeclaredElement.IdSubstitution;
+                    var resolvedRef = decl.Initializer.Reference.Resolve();
+                    if (resolvedRef.DeclaredElement != null)
+                    {
+                        name = resolvedRef.DeclaredElement.GetName<IMethodName>(substitution);
+                    }
+
+                    var args = Lists.NewList<ISimpleExpression>();
+                    foreach (var p in decl.Initializer.Arguments)
+                    {
+                        var body = Lists.NewList<IKaVEStatement>();
+                        var expr = exprVisit.ToSimpleExpression(p.Value, body);
+                        if (!body.IsEmpty())
+                        {
+                            _logger.Error("it should not be necessary to perform any inlining!");
+                        }
+                        args.Add(expr);
+                    }
+
+                    var varId = new VariableReference().Identifier; // default value
+                    if (decl.Initializer.Instance != null)
+                    {
+                        var tokenType = decl.Initializer.Instance.GetTokenType();
+                        var isThis = CSharpTokenType.THIS_KEYWORD == tokenType;
+                        var isBase = CSharpTokenType.BASE_KEYWORD == tokenType;
+
+                        varId = isThis ? "this" : isBase ? "base" : varId;
+                    }
+
+                    sstDecl.Body.Add(
+                        new ExpressionStatement
+                        {
+                            Expression = new InvocationExpression
+                            {
+                                Reference = new VariableReference {Identifier = varId},
+                                MethodName = name,
+                                Parameters = args
+                            }
+                        });
+                }
+
+                if (!decl.IsAbstract)
+                {
+                    var bodyVisitor = new BodyVisitor(nameGen, _marker);
+
+                    Execute.AndSupressExceptions(
+                        delegate { decl.Accept(bodyVisitor, sstDecl.Body); });
+                }
+            }
+        }
+
         public override void VisitMethodDeclaration(IMethodDeclaration decl, SST context)
         {
             if (decl.DeclaredElement != null)
@@ -107,7 +192,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
                 if (!decl.IsAbstract)
                 {
-                    var bodyVisitor = new BodyVisitor(_marker);
+                    var bodyVisitor = new BodyVisitor(new UniqueVariableNameGenerator(), _marker);
 
                     Execute.AndSupressExceptions(
                         delegate { decl.Accept(bodyVisitor, sstDecl.Body); });

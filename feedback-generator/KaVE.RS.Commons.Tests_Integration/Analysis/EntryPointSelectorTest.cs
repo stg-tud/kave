@@ -20,7 +20,6 @@ using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
-    [TestFixture]
     internal class EntryPointSelectorTest : BaseCSharpCodeCompletionTest
     {
         [Test]
@@ -41,6 +40,19 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 }");
 
             AssertEntryPoints("C.EP");
+        }
+
+        [Test]
+        public void ConstructorsAreEntryPoints()
+        {
+            CompleteInCSharpFile(@"
+                class C
+                {
+                    public C() {}
+                    $
+                }");
+
+            AssertEntryPoints("C..ctor");
         }
 
         [Test]
@@ -353,8 +365,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
 
             foreach (string epName in entryPointNames)
             {
-                var epParts = epName.Split('.');
-                var ep = "[System.Void, mscorlib, 4.0.0.0] [" + epParts[0] + ", TestProject]." + epParts[1] + "()";
+                var idx = epName.IndexOf('.');
+                var className = epName.Substring(0, idx);
+                var methodName = epName.Substring(idx+1);
+                var ep = "[System.Void, mscorlib, 4.0.0.0] [" + className + ", TestProject]." + methodName + "()";
                 AssertEntryPoint(ep);
             }
         }

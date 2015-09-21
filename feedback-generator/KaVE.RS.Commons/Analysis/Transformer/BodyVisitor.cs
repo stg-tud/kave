@@ -58,10 +58,10 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             get { return new ExpressionStatement {Expression = new CompletionExpression()}; }
         }
 
-        public BodyVisitor(CompletionTargetMarker marker)
+        public BodyVisitor(UniqueVariableNameGenerator nameGen, CompletionTargetMarker marker)
         {
             _marker = marker;
-            _nameGen = new UniqueVariableNameGenerator();
+            _nameGen = nameGen;
             _exprVisitor = new ExpressionVisitor(_nameGen, marker);
         }
 

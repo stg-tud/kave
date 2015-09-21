@@ -37,6 +37,7 @@ using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
 using JB = JetBrains.ReSharper.Psi.CSharp.Tree;
+using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
@@ -125,12 +126,22 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         protected void AssertAllMethods(params IMethodDeclaration[] expectedDecls)
         {
-            var ms = ResultSST.Methods;
+            var ms = Lists.NewListFrom(ResultSST.Methods);
             Assert.AreEqual(expectedDecls.Length, ms.Count);
 
             foreach (var expectedDecl in expectedDecls)
             {
-                Assert.IsTrue(ms.Contains(expectedDecl));
+                if (!ms.Contains(expectedDecl))
+                {
+                    Console.WriteLine("\nexpected:\n");
+                    Console.WriteLine(expectedDecl);
+                    Console.WriteLine("\nbut was:\n");
+                    foreach (var m in ms)
+                    {
+                        Console.WriteLine(m);
+                    }
+                    Assert.Fail("expected method not found in actual list of method declarations");
+                }
             }
         }
 
@@ -217,7 +228,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             var node = LastCompletionMarker.AffectedNode;
             if (!(node is TNodeType))
             {
-                Assert.Fail("expected {0}, but was {1}", typeof(TNodeType), node.GetType());
+                Assert.Fail("expected {0}, but was {1}", typeof (TNodeType), node.GetType());
             }
             Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
         }
@@ -377,6 +388,26 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         protected static IMethodName Method(string methodDef, params object[] args)
         {
             return MethodName.Get(string.Format(methodDef, args));
+        }
+
+        protected static MethodDeclaration ConstructorDecl(string type, params IParameterName[] parameters)
+        {
+            return new MethodDeclaration
+            {
+                Name = Constructor(type, parameters),
+                IsEntryPoint = true
+            };
+        }
+
+        protected static IMethodName Constructor(string type, params IParameterName[] parameters)
+        {
+            var paramList = string.Join<IParameterName>(",", parameters);
+            return Method("[{0}] [{1}]..ctor({2})", Fix.Void, type, paramList);
+        }
+
+        protected static IParameterName Param(ITypeName type, string name)
+        {
+            return ParameterName.Get(string.Format("[{0}] {1}", type, name));
         }
 
         protected static ITypeName Type(string shortName)

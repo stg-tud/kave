@@ -35,6 +35,12 @@ namespace KaVE.RS.Commons.Analysis
 
             var typeShape = new TypeShape();
 
+            foreach (var m in FindImplementedConstructorsInType())
+            {
+                var name = m.GetName<IMethodName>();
+                typeShape.MethodHierarchies.Add(new MethodHierarchy {Element = name});
+            }
+
             foreach (var m in FindImplementedMethodsInType())
             {
                 var name = m.GetName<IMethodName>();
@@ -48,6 +54,22 @@ namespace KaVE.RS.Commons.Analysis
                 Lists.NewList<ITypeName>());
 
             return typeShape;
+        }
+
+        private IEnumerable<IConstructor> FindImplementedConstructorsInType()
+        {
+            var ctors = new HashSet<IConstructor>();
+            if (_typeDeclaration != null && _typeDeclaration.DeclaredElement != null)
+            {
+                foreach (var ctor in _typeDeclaration.DeclaredElement.Constructors)
+                {
+                    if (!ctor.IsImplicit)
+                    {
+                        ctors.Add(ctor);
+                    }
+                }
+            }
+            return ctors;
         }
 
         private IEnumerable<IMethod> FindImplementedMethodsInType()

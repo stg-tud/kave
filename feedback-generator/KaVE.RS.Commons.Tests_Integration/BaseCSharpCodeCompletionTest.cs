@@ -47,12 +47,18 @@ namespace KaVE.RS.Commons.Tests_Integration
 
         protected void CompleteInClass(string classBody)
         {
-            CompleteInCSharpFile(string.Format(@"
-                namespace N {{
+            CompleteInNamespace(string.Format(@"
                     public class C {{
                         {0}
-                    }}
-                }}", classBody));
+                    }}", classBody));
+        }
+
+        protected void CompleteInNamespace(string content, string namespaceName = "N")
+        {
+            CompleteInCSharpFile(string.Format(@"
+                namespace {0} {{
+                    {1}
+                }}", namespaceName, content));
         }
 
         /// <summary>

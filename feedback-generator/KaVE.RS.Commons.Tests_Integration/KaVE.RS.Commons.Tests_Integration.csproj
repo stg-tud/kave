@@ -179,6 +179,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\UsingBlockAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\CurrentlyBrokenTests.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\ConstructorDeclarationAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ComposedExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BasicTest.cs" />
@@ -191,7 +192,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ReturnAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ThrowStatementAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\VariableDeclarationTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\MethodDeclarationAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ConstantValueExpressionTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ReferenceExpressionTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />

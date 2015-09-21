@@ -20,9 +20,9 @@ using KaVE.Commons.Model.SSTs.Impl;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declarations
 {
-    internal class EntrypointsTest : BaseSSTAnalysisTest
+    internal class MethodDeclarationAnalysisTest : BaseSSTAnalysisTest
     {
         [Test]
         public void PrivateIsInlined()

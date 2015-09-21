@@ -26,6 +26,8 @@ namespace KaVE.RS.Commons.Analysis
         public IMethodName Name { get; private set; }
         public IMethodDeclaration Declaration { get; private set; }
         public IMethod Method { get; private set; }
+        public IConstructorDeclaration ConstructorDeclaration { get; private set; }
+        public IConstructor Constructor { get; private set; }
         public bool IsAssemblyReference { get; private set; }
 
         public static MethodRef CreateLocalReference(IMethodName methodName,
@@ -49,6 +51,17 @@ namespace KaVE.RS.Commons.Analysis
                 Declaration = null,
                 Method = method,
                 IsAssemblyReference = true
+            };
+        }
+
+        public static MethodRef CreateConstructorReference(IMethodName methodName, IConstructor ctor, IConstructorDeclaration ctorDecl)
+        {
+            return new MethodRef
+            {
+                Name = methodName,
+                Constructor = ctor,
+                ConstructorDeclaration = ctorDecl,
+                IsAssemblyReference = false
             };
         }
 

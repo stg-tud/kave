@@ -65,6 +65,11 @@ namespace KaVE.RS.Commons.Analysis
                 AnalyzeTransitiveCallsIn(ep);
             }
 
+            foreach (var ctor in _typeDeclaration.MemberDeclarations.OfType<IConstructorDeclaration>())
+            {
+                _entryPoints.Add(CreateRef(ctor));
+            }
+
             var eps = new HashSet<MethodRef>(_entryPoints);
             return eps;
         }
@@ -83,6 +88,11 @@ namespace KaVE.RS.Commons.Analysis
         private static MethodRef CreateRef(IMethodDeclaration md)
         {
             return MethodRef.CreateLocalReference(md.GetName(), md.DeclaredElement, md);
+        }
+
+        private static MethodRef CreateRef(IConstructorDeclaration cd)
+        {
+            return MethodRef.CreateConstructorReference(cd.GetName(), cd.DeclaredElement, cd);
         }
 
         private static bool IsNotPrivateOrInternal(IMethodDeclaration md)
