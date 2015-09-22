@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -39,16 +38,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
         {
             var eventsToday = new List<IDEEvent>
             {
-                IDEEventTestFactory.SomeEvent(DateTime.Today.AddHours(0)),
-                IDEEventTestFactory.SomeEvent(DateTime.Today.AddHours(1)),
-                IDEEventTestFactory.SomeEvent(DateTime.Today.AddHours(2))
+                TestEventFactory.SomeEvent(DateTime.Today.AddHours(0)),
+                TestEventFactory.SomeEvent(DateTime.Today.AddHours(1)),
+                TestEventFactory.SomeEvent(DateTime.Today.AddHours(2))
             };
 
             var eventsYesterday = new List<IDEEvent>
             {
-                IDEEventTestFactory.SomeEvent(DateTime.Today.AddDays(-1).AddHours(0)),
-                IDEEventTestFactory.SomeEvent(DateTime.Today.AddDays(-1).AddHours(1)),
-                IDEEventTestFactory.SomeEvent(DateTime.Today.AddDays(-1).AddHours(2))
+                TestEventFactory.SomeEvent(DateTime.Today.AddDays(-1).AddHours(0)),
+                TestEventFactory.SomeEvent(DateTime.Today.AddDays(-1).AddHours(1)),
+                TestEventFactory.SomeEvent(DateTime.Today.AddDays(-1).AddHours(2))
             };
 
             var mockLogToday = new Mock<ILog>();
@@ -82,7 +81,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
             var hashes = _sourceLogFileManager.Logs.SelectMany(l => l.ReadAll()).Select(e => e.GetHashCode()).ToList();
             Assert.AreEqual(6, hashes.Count);
             LogFileUtils.ResubmitLogs(_sourceLogFileManager, _messageBus);
-            _receivedEvents.ForEach(e => hashes.Remove(e.GetHashCode()));
+            foreach(var e in _receivedEvents)
+            {
+                hashes.Remove(e.GetHashCode());
+            }
             Assert.AreEqual(0, hashes.Count);
         }
     }
