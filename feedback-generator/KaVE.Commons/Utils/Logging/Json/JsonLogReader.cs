@@ -61,7 +61,7 @@ namespace KaVE.Commons.Utils.Logging.Json
                 // TODO think about more concrete exception types
             catch (Exception jre)
             {
-                _logger.Error(jre, json);
+                _logger.Error(jre, json.Replace("{", "{{").Replace("}", "}}"));
                 // supressing broken lines
                 return ReadNext();
             }

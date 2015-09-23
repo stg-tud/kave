@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Linq;
 using KaVE.Commons.Tests.Utils.Json;
 using KaVE.Commons.Utils.Exceptions;
@@ -158,6 +159,17 @@ namespace KaVE.Commons.Tests.Utils.Logging.Json
             }
 
             _mockLogger.Verify(g => g.Error(It.IsAny<JsonReaderException>(), "broken line"));
+        }
+
+        [Test]
+        public void ShouldEscapeErrorContent()
+        {
+            using (var reader = CreateReader("broken line with { curly braces }"))
+            {
+                reader.ReadNext();
+            }
+
+            _mockLogger.Verify(g => g.Error(It.IsAny<JsonReaderException>(), "broken line with {{ curly braces }}"));
         }
 
         [NotNull]
