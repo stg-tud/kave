@@ -19,10 +19,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using JetBrains;
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
-using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
@@ -103,7 +102,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             Registry.Clear();
         }
-        
+
         // TODO @Seb: re-enable
         [Test, Ignore]
         public void ShouldGetUserSettingsFeedback()
@@ -139,12 +138,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void ShouldPropagateExportStatus()
         {
+            // Somewhere between raising StatusChanged and the BusyMessage-PropertyChanged the events get mixed up (the
+            // number of received property changes is always correct, but sometimes the order is mixed up and sometimes
+            // one message is missing and another duplicated). The Thread.Sleep seems to solve this problem... - Sven
             _mockExporter.Setup(e => e.Export(It.IsAny<DateTime>(), It.IsAny<IPublisher>()))
                          .Callback(
                              () =>
                              {
                                  _mockExporter.Raise(e => e.StatusChanged += null, "13%");
+                                 Thread.Sleep(10);
                                  _mockExporter.Raise(e => e.StatusChanged += null, "42%");
+                                 Thread.Sleep(10);
                                  _mockExporter.Raise(e => e.StatusChanged += null, "finishing");
                              });
 
@@ -161,7 +165,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             WhenExportIsExecuted();
 
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [Test]
