@@ -94,9 +94,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
         private static DateTime? ExtractExecutedAtFrom([NotNull] string entry)
         {
+            string unixTimeStamp;
+            try
+            {
+                unixTimeStamp = entry.Split(' ')[4];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return null;
+            }
+            
             // Unix timestamp is seconds since 1970-01-01T00:00:00Z
             var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            var unixTimeStamp = entry.Split(' ')[4];
             dateTime = dateTime.AddSeconds(int.Parse(unixTimeStamp)).ToLocalTime();
             return dateTime;
         }
@@ -104,7 +113,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
         [Pure]
         protected virtual IEnumerable<string> ReadLogContent(string fullPath)
         {
-            return File.ReadAllLines(fullPath);
+            try
+            {
+                return File.ReadAllLines(fullPath);
+            }
+            catch (IOException)
+            {
+                return new string[0];
+            }
         }
     }
 }
