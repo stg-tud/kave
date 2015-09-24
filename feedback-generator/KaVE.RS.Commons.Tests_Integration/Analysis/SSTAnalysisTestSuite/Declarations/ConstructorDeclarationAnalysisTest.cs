@@ -130,6 +130,31 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
         }
 
         [Test]
+        public void ComplexParameter()
+        {
+            CompleteInNamespace(@"
+                class C
+                {
+                    C() : this(new object()) {}
+                    C(object o) {}
+                    $
+                }
+            ");
+
+            var ctor1 = ConstructorDecl("N.C, TestProject");
+            ctor1.Body.Add(
+                VarDecl("$0", Fix.Object));
+            ctor1.Body.Add(
+                Assign("$0", InvokeCtor(Fix.Object_ctor)));
+            ctor1.Body.Add(
+                InvokeStmt("this", Constructor("N.C, TestProject", Param(Fix.Object, "o")), RefExpr("$0")));
+
+            var ctor2 = ConstructorDecl("N.C, TestProject", Param(Fix.Object, "o"));
+
+            AssertAllMethods(ctor1, ctor2);
+        }
+
+        [Test]
         public void Invalid()
         {
             CompleteInNamespace(@"

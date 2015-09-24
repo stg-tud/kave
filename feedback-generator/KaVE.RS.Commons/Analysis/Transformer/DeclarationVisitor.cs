@@ -16,7 +16,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -117,7 +116,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
                 if (decl.Initializer != null)
                 {
-                    ITypeMember mref;
                     var name = MethodName.UnknownName;
 
                     var substitution = decl.DeclaredElement.IdSubstitution;
@@ -130,12 +128,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     var args = Lists.NewList<ISimpleExpression>();
                     foreach (var p in decl.Initializer.Arguments)
                     {
-                        var body = Lists.NewList<IKaVEStatement>();
-                        var expr = exprVisit.ToSimpleExpression(p.Value, body);
-                        if (!body.IsEmpty())
-                        {
-                            _logger.Error("it should not be necessary to perform any inlining!");
-                        }
+                        var expr = exprVisit.ToSimpleExpression(p.Value, sstDecl.Body);
                         args.Add(expr);
                     }
 
