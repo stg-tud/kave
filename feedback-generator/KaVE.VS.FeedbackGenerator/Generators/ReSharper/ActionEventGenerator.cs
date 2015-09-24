@@ -36,7 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void TrackActivity(string activityGroup, string activityId, int count = 1)
         {
-            FireActionEvent(activityId);
+            FireActionEvent(string.Format("{0}:{1}:{2}", activityGroup, count, activityId));
         }
     }
 }

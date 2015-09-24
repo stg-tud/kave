@@ -46,11 +46,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
         {
             const string activityGroup = "SomeActivityGroup";
             const string activityId = "SomeActivityId";
+            const int count = 32;
 
-            _uut.TrackActivity(activityGroup, activityId);
+            _uut.TrackActivity(activityGroup, activityId, count);
 
             var publishedEvent = GetSinglePublished<CommandEvent>();
-            Assert.AreEqual(activityId, publishedEvent.CommandId);
+            Assert.AreEqual(string.Format("{0}:{1}:{2}", activityGroup, count, activityId), publishedEvent.CommandId);
         }
     }
 }
