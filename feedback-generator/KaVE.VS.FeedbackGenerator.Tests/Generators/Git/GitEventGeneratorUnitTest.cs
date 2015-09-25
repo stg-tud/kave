@@ -16,7 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Util;
+using System.Linq;
 using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
@@ -30,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 {
     internal class GitEventGeneratorUnitTest : EventGeneratorTestBase
     {
-        private static IKaVEList<string> InitialContent
+        private static IEnumerable<string> InitialContent
         {
             get
             {
@@ -93,13 +93,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             {
                 WriteLine(line);
             }
+
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
         }
 
         [Test]
         public void ShouldWriteAllContentOnInitialEvent()
         {
-            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
-
             var actualEvent = GetSinglePublished<VersionControlEvent>();
             CollectionAssert.AreEqual(InitialContentActions, actualEvent.Actions);
         }
@@ -107,10 +107,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         [Test]
         public void ShouldWriteContentDeltaOnFileChanged()
         {
-            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
-            
             WriteLine(TestCommitString);
-            
+
             _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
 
             var actualEvent = GetLastPublished<VersionControlEvent>();
@@ -120,6 +118,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         [Test]
         public void ShouldSetSolutionOnFileChanged()
         {
+            DropAllEvents();
+
             WriteLine(TestCommitString);
             _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
 
@@ -130,7 +130,41 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         [Test]
         public void ShouldNotFireWhenLogIsEmpty()
         {
-            // TODO: test this
+            DropAllEvents();
+            _uut.Content.Clear();
+
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
+            AssertNoEvent();
+        }
+
+        [Test]
+        public void ShouldNotFailWhenUnixTimeStampIsInvalidOrCannotBeFound()
+        {
+            const string stringWithInvalidTimeStamp =
+                "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 TestUsername <TestMail@domain.de> invalidtimestamp +0200	commit: Test commit";
+
+            WriteLine(stringWithInvalidTimeStamp);
+
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
+            var publishedEvent = GetLastPublished<VersionControlEvent>();
+            Assert.IsNull(publishedEvent.Actions.Last().ExecutedAt);
+        }
+
+        [Test]
+        public void ShouldHandleUserNamesWithWhitespaces()
+        {
+            const string stringWithWhitespaceUserName =
+                "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 Test Username <TestMail@domain.de> 1441217745 +0200	commit: Test commit";
+
+            WriteLine(stringWithWhitespaceUserName);
+
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
+            var actualEvent = GetLastPublished<VersionControlEvent>();
+            CollectionAssert.AreEqual(Lists.NewList(TestCommitAction), actualEvent.Actions);
+            Assert.AreEqual(SomeSolution, actualEvent.Solution);
         }
 
         private void WriteLine(string newLine)

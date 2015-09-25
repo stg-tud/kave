@@ -26,8 +26,10 @@ using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using NuGet;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Git
 {
@@ -88,26 +90,23 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
         private static VersionControlActionType ExtractActionTypeFrom([NotNull] string entry)
         {
-            var substring = new Regex("\t.*: ").Match(entry).Value.SubstringAfter("\t").SubstringBefore(": ");
+            var substring = Regex.Match(entry, "\t.*: ").Value.SubstringAfter("\t").SubstringBefore(": ");
             return substring.ToVersionControlActionType();
         }
 
         private static DateTime? ExtractExecutedAtFrom([NotNull] string entry)
         {
-            string unixTimeStamp;
             try
             {
-                unixTimeStamp = entry.Split(' ')[4];
+                // Unix timestamp is seconds since 1970-01-01T00:00:00Z
+                var unixTimeStamp = Regex.Match(entry, @"<.*> \d*").Value.SubstringAfter("> ");
+                var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                return dateTime.AddSeconds(int.Parse(unixTimeStamp)).ToLocalTime();
             }
-            catch (IndexOutOfRangeException)
+            catch (Exception)
             {
                 return null;
             }
-            
-            // Unix timestamp is seconds since 1970-01-01T00:00:00Z
-            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(int.Parse(unixTimeStamp)).ToLocalTime();
-            return dateTime;
         }
 
         [Pure]
