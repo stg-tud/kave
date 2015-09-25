@@ -202,7 +202,6 @@
     <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
-    <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\VsWindowButtonClickEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\VsFocusEventGenerator.cs" />
@@ -386,11 +385,7 @@
     <Compile Include="Generators\EventLogger.cs" />
     <Compile Include="Generators\IEventMergeStrategy.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategy.cs" />
-    <Compile Include="Generators\ReSharper\BulbItemInstrumentationComponent.cs" />
-    <Compile Include="Generators\ReSharper\BulbItemInstrumentationExtensions.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandler.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
     <Compile Include="Generators\EventGeneratorBase.cs" />
     <Compile Include="Generators\VisualStudio\BuildEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\DTECommandEventGenerator.cs" />

@@ -211,8 +211,6 @@
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandlerTest.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapperTest.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxyTest.cs" />
     <Compile Include="Generators\TestIDESession.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\DTECommandEventGeneratorTest.cs" />
