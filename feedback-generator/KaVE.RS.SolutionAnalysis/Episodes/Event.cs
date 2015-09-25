@@ -15,8 +15,9 @@
  */
 
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils;
 
-namespace KaVE.FeedbackProcessor.Episodes
+namespace KaVE.RS.SolutionAnalysis.Episodes
 {
     internal class Event
     {
@@ -55,6 +56,11 @@ namespace KaVE.FeedbackProcessor.Episodes
                 hashCode = (hashCode*397) ^ (Method != null ? Method.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 

@@ -25,13 +25,12 @@ using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Episodes;
 
 namespace KaVE.RS.SolutionAnalysis.Episodes
 {
     internal class EventStreamGenerator : AbstractNodeVisitor<IList<Event>>
     {
-        private IMethodName currentName;
+        private IMethodName _currentName;
 
         public override void Visit(ISST sst, IList<Event> events)
         {
@@ -43,17 +42,17 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
 
         private void AddMethodIf(IList<Event> events)
         {
-            if (currentName != null)
+            if (_currentName != null)
             {
                 events.Add(Events.NewStopEvent());
-                events.Add(Events.NewMethodEvent(currentName));
-                currentName = null;
+                events.Add(Events.NewMethodEvent(_currentName));
+                _currentName = null;
             }
         }
 
         public override void Visit(IMethodDeclaration method, IList<Event> events)
         {
-            currentName = method.Name;
+            _currentName = method.Name;
 
             foreach (var stmt in method.Body)
             {
@@ -79,6 +78,21 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
             stmt.Condition.Accept(this, events);
             VisitBody(stmt.Else, events);
             VisitBody(stmt.Then, events);
+        }
+
+        public override void Visit(IUsingBlock stmt, IList<Event> events)
+        {
+            VisitBody(stmt.Body, events);
+        }
+
+        public override void Visit(ITryBlock stmt, IList<Event> events)
+        {
+            VisitBody(stmt.Body, events);
+            foreach (var catchBlock in stmt.CatchBlocks)
+            {
+                VisitBody(catchBlock.Body, events);
+            }
+            VisitBody(stmt.Finally, events);
         }
 
         private void VisitBody(IKaVEList<IStatement> body, IList<Event> events)

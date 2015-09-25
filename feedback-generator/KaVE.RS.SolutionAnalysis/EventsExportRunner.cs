@@ -19,16 +19,17 @@ using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
-using KaVE.FeedbackProcessor.Episodes;
 using KaVE.RS.SolutionAnalysis.Episodes;
 
 namespace KaVE.RS.SolutionAnalysis
 {
     internal class EventsExportRunner
     {
+        public const double EventStreamDelta = 0.001;
+        public const double EventStreamTimeout = 0.5;
+
         private readonly string _dirCtxs;
         private readonly string _dirEvents;
 
@@ -91,7 +92,6 @@ namespace KaVE.RS.SolutionAnalysis
             var eventList = new List<Event>();
 
             var time = 0.000;
-            var delta = 0.001;
 
             foreach (var e in events)
             {
@@ -101,10 +101,16 @@ namespace KaVE.RS.SolutionAnalysis
                     eventList.Add(e);
                 }
 
-                int idx = eventList.IndexOf(e) + 1;
+                var idx = eventList.IndexOf(e) + 1;
+
+                if (e.Kind == EventKind.MethodStart)
+                {
+                    time += EventStreamTimeout;
+                }
 
                 streamFile.Write("{0},{1:0.000}\n", idx, time);
-                time += delta;
+
+                time += EventStreamDelta;
             }
 
             streamFile.Close();
