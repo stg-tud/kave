@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
+using JetBrains;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.Achievements.Utils;
 using NUnit.Framework;
@@ -23,10 +23,15 @@ namespace KaVE.VS.Achievements.Tests.Utils
 {
     internal class FixedSizePriorityQueueTest
     {
+        private static Comparer<int> StandardIntComparer
+        {
+            get { return Comparer.Create<int>((x, y) => x.CompareTo(y)); }
+        }
+
         [Test]
         public void ShouldEnqueueNormally()
         {
-            var uut = new FixedSizePriorityQueue<int>(1, new TestIntegerComparer());
+            var uut = new FixedSizePriorityQueue<int>(1, StandardIntComparer);
 
             uut.Enqueue(0);
 
@@ -36,7 +41,7 @@ namespace KaVE.VS.Achievements.Tests.Utils
         [Test]
         public void ShouldDequeueWhenLimitIsReached()
         {
-            var uut = new FixedSizePriorityQueue<int>(1, new TestIntegerComparer());
+            var uut = new FixedSizePriorityQueue<int>(1, StandardIntComparer);
 
             uut.Enqueue(0);
             uut.Enqueue(1);
@@ -47,9 +52,7 @@ namespace KaVE.VS.Achievements.Tests.Utils
         [Test]
         public void ShouldSortAfterEnqueue()
         {
-            var integerComparer = new TestIntegerComparer();
-
-            var uut = new FixedSizePriorityQueue<int>(2, integerComparer);
+            var uut = new FixedSizePriorityQueue<int>(2, StandardIntComparer);
 
             const int lowerValue = int.MinValue;
             const int higherValue = int.MaxValue;
@@ -60,30 +63,22 @@ namespace KaVE.VS.Achievements.Tests.Utils
             Assert.AreEqual(lowerValue, uut.Dequeue());
         }
 
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldThrowIfLimitIsSmallerThanZero()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new FixedSizePriorityQueue<int>(-1, StandardIntComparer);
+        }
+
         [Test]
         public void ShouldBeEmptyAfterClear()
         {
-            var uut = new FixedSizePriorityQueue<int>(1, new TestIntegerComparer());
+            var uut = new FixedSizePriorityQueue<int>(1, StandardIntComparer);
 
             uut.Enqueue(0);
             uut.Clear();
 
             Assert.IsEmpty(uut.Items);
-        }
-
-        [Test]
-        public void ShouldThrowAnExceptionWhenLimitIsSmallerThanZero()
-        {
-            var uut = new FixedSizePriorityQueue<int>(0, new TestIntegerComparer());
-            Assert.Throws<AssertException>(() => uut.Limit = -1);
-        }
-
-        private class TestIntegerComparer : IComparer<int>
-        {
-            public int Compare(int x, int y)
-            {
-                return x.CompareTo(y);
-            }
         }
     }
 }

@@ -120,7 +120,7 @@ namespace KaVE.VS.Achievements.BaseClasses.AchievementTypes
         }
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged(string propertyName = null)
         {
             var handler = PropertyChanged;
             if (handler != null)

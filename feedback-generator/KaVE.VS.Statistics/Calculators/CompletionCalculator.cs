@@ -127,6 +127,7 @@ namespace KaVE.VS.Statistics.Calculators
             }
         }
 
+        
         /// <summary>
         ///     Prevents overflow
         /// </summary>
@@ -140,6 +141,10 @@ namespace KaVE.VS.Statistics.Calculators
 
         private static int GetSavedKeystrokes(ICompletionEvent completionEvent)
         {
+            // TODO extract prefix from SST 
+            return 0;
+
+            /*
             var p = completionEvent.Selections.LastOrDefault();
             if (p == null ||
                 p.Proposal.Name == null)
@@ -153,7 +158,9 @@ namespace KaVE.VS.Statistics.Calculators
             var fullName = ExtractFullName(prefix, proposalIdentifier);
 
             return fullName.Length - prefix.Length;
+            */
         }
+        
 
         /// <summary>
         ///     Returns the actual code added by the proposal using the given <see cref="prefix" />

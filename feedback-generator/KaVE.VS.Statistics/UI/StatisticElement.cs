@@ -40,7 +40,7 @@ namespace KaVE.VS.Statistics.UI
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged(string propertyName = null)
         {
             var handler = PropertyChanged;
             if (handler != null)

@@ -23,44 +23,27 @@ namespace KaVE.VS.Achievements.Utils
 {
     internal class FixedSizePriorityQueue<T>
     {
-        public int Limit
-        {
-            get { return _limit; }
-            set
-            {
-                Asserts.That(value >= 0, "Limit cannot be smaller than zero!");
-
-                _limit = value;
-                _queue = new PriorityQueue<T>(_limit, _comparer);
-                while (_queue.Count > _limit)
-                {
-                    Dequeue();
-                }
-            }
-        }
-
-        private int _limit;
+        private readonly int _limit;
 
         public IEnumerable<T> Items
         {
             get { return _queue.AsEnumerable(); }
         }
 
-        private readonly IComparer<T> _comparer;
-
-        private PriorityQueue<T> _queue;
+        private readonly JetPriorityQueue<T> _queue;
 
         public FixedSizePriorityQueue(int limit, IComparer<T> comparer)
         {
-            Limit = limit;
-            _comparer = comparer;
+            Asserts.Not(limit < 0);
+            _limit = limit;
+            _queue = new JetPriorityQueue<T>(limit, comparer);
         }
 
         public void Enqueue(T obj)
         {
             _queue.Add(obj);
 
-            if (_queue.Count > Limit)
+            if (_queue.Count > _limit)
             {
                 Dequeue();
             }
@@ -68,7 +51,7 @@ namespace KaVE.VS.Achievements.Utils
 
         public T Dequeue()
         {
-            return _queue.ExtractMin();
+            return _queue.ExtractSafe();
         }
 
         public void Clear()

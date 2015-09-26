@@ -24,7 +24,6 @@ using KaVE.VS.Achievements.UI.AchievementGrids;
 using KaVE.VS.Achievements.UI.Utils;
 using KaVE.VS.Achievements.Utils;
 using KaVE.VS.Statistics.LogCollector;
-using KaVE.VS.Statistics.UI.Utils;
 
 namespace KaVE.VS.Achievements.UI.MainWindow
 {

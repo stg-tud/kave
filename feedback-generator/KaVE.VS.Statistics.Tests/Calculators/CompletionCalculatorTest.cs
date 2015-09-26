@@ -135,7 +135,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             Assert.AreEqual(expectedTotalTimeCancelled, actualStatistic.TotalTimeCancelled);
         }
 
-        [TestCase("var", "[value-type-identifier] variablename", 9),
+        [Ignore("prefix must be derived from sst"), TestCase("var", "[value-type-identifier] variablename", 9),
          TestCase("",
              "set get static [System.Object, mscorlib, 4.0.0.0] [TestProject.Class1, TestProject, 0.0.0.0].Foo()", 3),
          TestCase("Name", "[value-type-identifier] Name.varName", 8),
@@ -144,7 +144,8 @@ namespace KaVE.VS.Statistics.Tests.Calculators
              7),
          TestCase("Re",
              "[TestProject.Tests.RegexTest, TestProject, 0.0.0.0] [TestProject.Tests.RegexTest, TestProject, 0.0.0.0]..ctor()",
-             9), TestCase("Li", "System.Collections.Generic.List`1[[T -> T]], mscorlib, 4.0.0.0", 4),
+             9),
+         TestCase("Li", "System.Collections.Generic.List`1[[T -> T]], mscorlib, 4.0.0.0", 4),
          TestCase("Co", "get [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Count", 3),
          TestCase("CodeCompletion.Model.N", "CodeCompletion.Model.Names, 1.0.0.0", 4),
          TestCase("ref", "ref [System.Int32, mscore, 4.0.0.0] referenceParameter", 15)]
@@ -155,10 +156,10 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             var testEvent = new CompletionEvent
             {
                 TerminatedState = TerminationState.Applied,
-                Prefix = prefix,
                 Selections =
                     Lists.NewList<IProposalSelection>(
-                        new ProposalSelection(new Proposal {Name = Name.Get(fullIdentifier)}))
+                        new ProposalSelection(new Proposal {Name = Name.Get(fullIdentifier)})),
+                Context2 = new Context() // TODO: add trigger point with prefix to Context2.SST
             };
 
             var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(StatisticType);
