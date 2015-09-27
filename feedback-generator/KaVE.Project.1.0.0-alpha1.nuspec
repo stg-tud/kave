@@ -28,7 +28,8 @@
 			<!-- 3rd-Party Dependencies -->
 				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="DotFiles" />
 				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles" />
-        <file src="3rd-party\MsgBox.dll" target="DotFiles" />
+				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Gma.System.MouseKeyHook.dll" target="DotFiles" />
+		<file src="3rd-party\MsgBox.dll" target="DotFiles" />
         <file src="3rd-party\UserNotification.dll" target="DotFiles" />
         <file src="3rd-party\smileNet.dll" target="DotFiles" />
         <file src="3rd-party\System.Net.Http.dll" target="DotFiles" />
