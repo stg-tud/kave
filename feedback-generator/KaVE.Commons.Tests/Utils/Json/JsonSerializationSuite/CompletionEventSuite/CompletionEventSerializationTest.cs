@@ -15,12 +15,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
+using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
@@ -28,17 +29,21 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
 {
     internal class CompletionEventSerializationTest : SerializationTestBase
     {
-        [Test, Ignore("Needs a valid source file")]
-        public void VerifyUsingCaseRunner()
+        private const string TestSourceRootFolder = @"H:\\KaVE\\Tests\\CompletionEventSerialization";
+
+        private static IEnumerable<TestCase> ExternalSerializationTestCases
         {
-            const string testSource = @"C:\TestSource.txt";
-            SerializationCaseRunner.RunSerializationExamples(ShouldParseAndSerializeCorrectly, testSource);
+            get
+            {
+                return ExternalTestCaseProvider.GetTestCases(TestSourceRootFolder);
+            }
         }
 
-        private static void ShouldParseAndSerializeCorrectly(string example, string expected)
+        [TestCaseSource("ExternalSerializationTestCases"), Ignore]
+        public void ParseAndSerialize(TestCase testCase)
         {
-            var actualString = example.ParseJsonTo<CompletionEvent>().ToCompactJson();
-            Assert.AreEqual(expected, actualString);
+            var actualString = testCase.Input.ParseJsonTo<CompletionEvent>().ToCompactJson();
+            Assert.AreEqual(testCase.Expected, actualString);
         }
 
         [Test]
