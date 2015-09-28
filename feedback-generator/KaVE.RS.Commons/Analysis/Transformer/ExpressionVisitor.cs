@@ -127,6 +127,18 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 return new VariableReference();
             }
 
+            var baseExpr = csExpr as IBaseExpression;
+            if (baseExpr != null)
+            {
+                return new VariableReference {Identifier = "base"};
+            }
+
+            var thisExpr = csExpr as IThisExpression;
+            if (thisExpr != null)
+            {
+                return new VariableReference {Identifier = "this"};
+            }
+
             var refExpr = csExpr as IReferenceExpression;
             if (refExpr != null)
             {

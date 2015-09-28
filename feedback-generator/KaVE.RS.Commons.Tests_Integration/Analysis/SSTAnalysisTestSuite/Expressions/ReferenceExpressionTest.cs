@@ -187,5 +187,149 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 InvokeStaticStmt(Fix.Object_static_Equals, RefExpr("o"), RefExpr("this")),
                 ExprStmt(new CompletionExpression()));
         }
+
+        [Test]
+        public void UnnecessaryNormalization_LocalVariable_ExplicitType()
+        {
+            CompleteInMethod(@"
+                object a = new object();
+                var b = a.$
+            ");
+
+            AssertBody(
+                VarDecl("a", Fix.Object),
+                Assign("a", InvokeCtor(Fix.Object_ctor)),
+                VarDecl("b", Fix.Unknown),
+                Assign(
+                    "b",
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("a")
+                    }));
+        }
+
+        [Test]
+        public void UnnecessaryNormalization_LocalVariable_ExplicitType_WithToken()
+        {
+            CompleteInMethod(@"
+                object a = new object();
+                var b = a.G$
+            ");
+
+            AssertBody(
+                VarDecl("a", Fix.Object),
+                Assign("a", InvokeCtor(Fix.Object_ctor)),
+                VarDecl("b", Fix.Unknown),
+                Assign(
+                    "b",
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("a"),
+                        Token = "G"
+                    }));
+        }
+
+        [Test]
+        public void UnnecessaryNormalization_LocalVariable_ImplicitType()
+        {
+            CompleteInMethod(@"
+                var a = new object();
+                var b = a.$
+            ");
+
+            AssertBody(
+                VarDecl("a", Fix.Object),
+                Assign("a", InvokeCtor(Fix.Object_ctor)),
+                VarDecl("b", Fix.Unknown),
+                Assign(
+                    "b",
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("a")
+                    }));
+        }
+
+        [Test]
+        public void UnnecessaryNormalization_LocalVariable_ImplicitType_WithToken()
+        {
+            CompleteInMethod(@"
+                var a = new object();
+                var b = a.G$
+            ");
+
+            AssertBody(
+                VarDecl("a", Fix.Object),
+                Assign("a", InvokeCtor(Fix.Object_ctor)),
+                VarDecl("b", Fix.Unknown),
+                Assign(
+                    "b",
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("a"),
+                        Token = "G"
+                    }));
+        }
+
+        [Test]
+        public void UnnecessaryNormalization_This()
+        {
+            CompleteInMethod(@"
+                this.$
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("this")
+                    }));
+        }
+
+        [Test]
+        public void UnnecessaryNormalization_This_WithToken()
+        {
+            CompleteInMethod(@"
+                this.G$
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("this"),
+                        Token = "G"
+                    }));
+        }
+
+        [Test]
+        public void UnnecessaryNormalization_Base()
+        {
+            CompleteInMethod(@"
+                base.$
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("base")
+                    }));
+        }
+
+        [Test]
+        public void UnnecessaryNormalization_Base_WithToken()
+        {
+            CompleteInMethod(@"
+                base.G$
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("base"),
+                        Token = "G"
+                    }));
+        }
     }
 }
