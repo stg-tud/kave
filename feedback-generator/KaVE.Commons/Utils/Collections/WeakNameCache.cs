@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime;
-using System.Runtime.CompilerServices;
 using KaVE.Commons.Model.Names;
 
 namespace KaVE.Commons.Utils.Collections
@@ -53,18 +50,14 @@ namespace KaVE.Commons.Utils.Collections
                 RunOccasionalMaintenance();
 
                 TName name = null;
-                RunWithReducedProbabilityOfGarbageCollection(
-                    () =>
+                if (_cache.ContainsKey(identifier))
+                {
+                    var weakRef = _cache[identifier];
+                    if (weakRef.IsAlive())
                     {
-                        if (_cache.ContainsKey(identifier))
-                        {
-                            var weakRef = _cache[identifier];
-                            if (weakRef.IsAlive())
-                            {
-                                name = weakRef.Target;
-                            }
-                        }
-                    });
+                        name = weakRef.Target;
+                    }
+                }
 
                 if (name == null)
                 {
@@ -95,23 +88,6 @@ namespace KaVE.Commons.Utils.Collections
                 {
                     _cache.Remove(k);
                 }
-            }
-        }
-
-        // adaptation of GC taken from:
-        // http://stackoverflow.com/questions/6005865/prevent-net-garbage-collection-for-short-period-of-time
-        private static void RunWithReducedProbabilityOfGarbageCollection(Action action)
-        {
-            var oldLatencyMode = GCSettings.LatencyMode;
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try
-            {
-                GCSettings.LatencyMode = GCLatencyMode.LowLatency;
-                action();
-            }
-            finally
-            {
-                GCSettings.LatencyMode = oldLatencyMode;
             }
         }
     }
