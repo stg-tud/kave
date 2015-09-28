@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -114,10 +115,22 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public ILoopHeaderExpression ToLoopHeaderExpression(ICSharpExpression csExpr, IList<IStatement> body)
         {
-            // TODO Loopheader testcases and proper handling
-            return csExpr == null
-                ? new UnknownExpression()
-                : csExpr.Accept(this, body) as ILoopHeaderExpression ?? new UnknownExpression();
+            if (csExpr == null)
+            {
+                return new UnknownExpression();
+            }
+
+            var nestedBody = Lists.NewList<IStatement>();
+            var expr = ToSimpleExpression(csExpr, nestedBody);
+
+            if (nestedBody.Count == 0)
+            {
+                return expr;
+            }
+
+            nestedBody.Add(new ReturnStatement {Expression = expr});
+
+            return new LoopHeaderBlockExpression {Body = nestedBody};
         }
 
         public IVariableReference ToVariableRef(ICSharpExpression csExpr, IList<IStatement> body)
