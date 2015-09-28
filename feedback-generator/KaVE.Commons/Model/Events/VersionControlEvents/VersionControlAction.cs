@@ -24,7 +24,7 @@ namespace KaVE.Commons.Model.Events.VersionControlEvents
     public class VersionControlAction
     {
         [DataMember]
-        public DateTime? ExecutedAt { get; set; }
+        public DateTime ExecutedAt { get; set; }
 
         [DataMember]
         public VersionControlActionType ActionType { get; set; }
@@ -43,7 +43,7 @@ namespace KaVE.Commons.Model.Events.VersionControlEvents
         {
             unchecked
             {
-                var hashCode = (ExecutedAt != null ? ExecutedAt.GetHashCode() : 0);
+                var hashCode = ExecutedAt.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) ActionType;
                 return hashCode;
             }

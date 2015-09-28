@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.ProjectModel;
 using JetBrains.Util.Extension;
@@ -26,10 +25,8 @@ using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using NuGet;
-using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Git
 {
@@ -70,19 +67,27 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
         {
             var gitActions = Lists.NewList<VersionControlAction>();
 
-            foreach (
-                var newAction in
-                    logContent.Select(
-                        logEntry =>
-                            new VersionControlAction
-                            {
-                                ExecutedAt = ExtractExecutedAtFrom(logEntry),
-                                ActionType = ExtractActionTypeFrom(logEntry)
-                            })
-                              .Where(gitAction => !_oldActions.Contains(gitAction)))
+            foreach (var logEntry in logContent)
             {
-                _oldActions.Add(newAction);
-                gitActions.Add(newAction);
+                var executedAt = ExtractExecutedAtFrom(logEntry);
+                var actionType = ExtractActionTypeFrom(logEntry);
+
+                if (executedAt == null || actionType == VersionControlActionType.Unknown)
+                {
+                    continue;
+                }
+
+                var newAction = new VersionControlAction
+                {
+                    ExecutedAt = executedAt.Value,
+                    ActionType = actionType
+                };
+
+                if (!_oldActions.Contains(newAction))
+                {
+                    _oldActions.Add(newAction);
+                    gitActions.Add(newAction);
+                }
             }
 
             return gitActions;
@@ -90,8 +95,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
         private static VersionControlActionType ExtractActionTypeFrom([NotNull] string entry)
         {
-            var substring = Regex.Match(entry, "\t.*: ").Value.SubstringAfter("\t").SubstringBefore(": ");
-            return substring.ToVersionControlActionType();
+            try
+            {
+                var substring = Regex.Match(entry, "\t.*: ").Value.SubstringAfter("\t").SubstringBefore(": ");
+                return substring.ToVersionControlActionType();
+            }
+            catch (Exception)
+            {
+                return VersionControlActionType.Unknown;
+            }
         }
 
         private static DateTime? ExtractExecutedAtFrom([NotNull] string entry)

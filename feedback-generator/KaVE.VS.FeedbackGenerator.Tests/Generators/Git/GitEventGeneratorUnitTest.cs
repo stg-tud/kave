@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
@@ -93,13 +92,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             {
                 WriteLine(line);
             }
-
-            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
         }
 
         [Test]
         public void ShouldWriteAllContentOnInitialEvent()
         {
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
             var actualEvent = GetSinglePublished<VersionControlEvent>();
             CollectionAssert.AreEqual(InitialContentActions, actualEvent.Actions);
         }
@@ -107,6 +106,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         [Test]
         public void ShouldWriteContentDeltaOnFileChanged()
         {
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
             WriteLine(TestCommitString);
 
             _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
@@ -118,8 +119,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         [Test]
         public void ShouldSetSolutionOnFileChanged()
         {
-            DropAllEvents();
-
             WriteLine(TestCommitString);
             _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
 
@@ -128,33 +127,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         }
 
         [Test]
-        public void ShouldNotFireWhenLogIsEmpty()
-        {
-            DropAllEvents();
-            _uut.Content.Clear();
-
-            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
-
-            AssertNoEvent();
-        }
-
-        [Test]
-        public void ShouldNotFailWhenUnixTimeStampIsInvalidOrCannotBeFound()
-        {
-            const string stringWithInvalidTimeStamp =
-                "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 TestUsername <TestMail@domain.de> invalidtimestamp +0200	commit: Test commit";
-
-            WriteLine(stringWithInvalidTimeStamp);
-
-            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
-
-            var publishedEvent = GetLastPublished<VersionControlEvent>();
-            Assert.IsNull(publishedEvent.Actions.Last().ExecutedAt);
-        }
-
-        [Test]
         public void ShouldHandleUserNamesWithWhitespaces()
         {
+            ClearLog();
+
             const string stringWithWhitespaceUserName =
                 "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 Test Username <TestMail@domain.de> 1441217745 +0200	commit: Test commit";
 
@@ -162,9 +138,54 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 
             _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
 
-            var actualEvent = GetLastPublished<VersionControlEvent>();
+            var actualEvent = GetSinglePublished<VersionControlEvent>();
             CollectionAssert.AreEqual(Lists.NewList(TestCommitAction), actualEvent.Actions);
             Assert.AreEqual(SomeSolution, actualEvent.Solution);
+        }
+
+        [Test]
+        public void ShouldNotFireWhenLogIsEmpty()
+        {
+            ClearLog();
+
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
+            AssertNoEvent();
+        }
+
+        [Test]
+        public void ShouldNotAddActionWhenTimeStampCantBeExtracted()
+        {
+            ClearLog();
+
+            const string stringWithInvalidTimeStamp =
+                "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 TestUsername <TestMail@domain.de> invalidtimestamp +0200	commit: Test commit";
+
+            WriteLine(stringWithInvalidTimeStamp);
+
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
+            AssertNoEvent();
+        }
+
+        [Test]
+        public void ShouldNotAddActionWhenActionTypeCantBeExtracted()
+        {
+            ClearLog();
+
+            const string stringWithInvalidTimeStamp =
+                "de75df3fd4322ec96e02c078e90228f121b6b53c 6f2eaaff6079e41af242a41a09b5f9510214d014 TestUsername <TestMail@domain.de> 1441217745 +0200	jghntohj: Test commit";
+
+            WriteLine(stringWithInvalidTimeStamp);
+
+            _uut.OnGitHistoryFileChanged(null, new GitLogFileChangedEventArgs(string.Empty, SomeSolution));
+
+            AssertNoEvent();
+        }
+
+        private void ClearLog()
+        {
+            _uut.Content.Clear();
         }
 
         private void WriteLine(string newLine)

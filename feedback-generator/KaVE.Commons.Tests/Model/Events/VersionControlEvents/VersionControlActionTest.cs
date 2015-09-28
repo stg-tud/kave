@@ -29,8 +29,9 @@ namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
         [Test]
         public void DefaultValues()
         {
-            Assert.AreEqual(null, new VersionControlAction().ExecutedAt);
-            Assert.AreEqual(VersionControlActionType.Unknown, new VersionControlAction().ActionType);
+            var uut = new VersionControlAction();
+            Assert.AreEqual(new DateTime(), uut.ExecutedAt);
+            Assert.AreEqual(VersionControlActionType.Unknown, uut.ActionType);
         }
 
         [Test]
