@@ -66,8 +66,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
-                var sstDecl = new DelegateDeclaration {Name = decl.DeclaredElement.GetName<DelegateTypeName>()};
-                context.Delegates.Add(sstDecl);
+                var name = decl.DeclaredElement.GetName<IDelegateTypeName>();
+
+                if (IsNestedDeclaration(name, context))
+                {
+                    return;
+                }
+
+                context.Delegates.Add(new DelegateDeclaration {Name = name});
             }
         }
 
@@ -76,8 +82,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
-                var sstDecl = new EventDeclaration {Name = decl.DeclaredElement.GetName<IEventName>()};
-                context.Events.Add(sstDecl);
+                var name = decl.DeclaredElement.GetName<IEventName>();
+
+                if (IsNestedDeclaration(name, context))
+                {
+                    return;
+                }
+
+                context.Events.Add(new EventDeclaration {Name = name});
             }
         }
 
@@ -87,8 +99,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
-                var sstDecl = new FieldDeclaration {Name = decl.DeclaredElement.GetName<IFieldName>()};
-                context.Fields.Add(sstDecl);
+                var name = decl.DeclaredElement.GetName<IFieldName>();
+
+                if (IsNestedDeclaration(name, context))
+                {
+                    return;
+                }
+
+                context.Fields.Add(new FieldDeclaration {Name = name});
             }
         }
 
@@ -103,8 +121,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             {
                 var methodName = decl.DeclaredElement.GetName<IMethodName>();
 
-                var isDeclaredInNestedClass = !methodName.DeclaringType.Equals(context.EnclosingType);
-                if (isDeclaredInNestedClass)
+                if (IsNestedDeclaration(methodName, context))
                 {
                     return;
                 }
@@ -179,8 +196,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             {
                 var methodName = decl.DeclaredElement.GetName<IMethodName>();
 
-                var isDeclaredInNestedClass = !methodName.DeclaringType.Equals(context.EnclosingType);
-                if (isDeclaredInNestedClass)
+                if (IsNestedDeclaration(methodName, context))
                 {
                     return;
                 }
@@ -211,13 +227,26 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
-                var sstDecl = new PropertyDeclaration
+                var name = decl.DeclaredElement.GetName<IPropertyName>();
+
+                if (IsNestedDeclaration(name, context))
                 {
-                    Name = decl.DeclaredElement.GetName<IPropertyName>()
-                };
-                context.Properties.Add(sstDecl);
+                    return;
+                }
+
+                context.Properties.Add(new PropertyDeclaration {Name = name});
                 // TODO analyze getter/setter block
             }
+        }
+
+        private static bool IsNestedDeclaration(IDelegateTypeName name, SST context)
+        {
+            return !name.DeclaringType.Equals(context.EnclosingType);
+        }
+
+        private static bool IsNestedDeclaration(IMemberName name, SST context)
+        {
+            return !name.DeclaringType.Equals(context.EnclosingType);
         }
     }
 }

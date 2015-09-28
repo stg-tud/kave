@@ -188,24 +188,5 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
 
             AssertAllMethods(ConstructorDecl("N.C, TestProject"));
         }
-
-        [Test]
-        public void MethodsInNestedClasses()
-        {
-            CompleteInNamespace(@"
-                class C
-                {
-                    public C() {}
-                    $
-
-                    class Nested
-                    {
-                        public void M() {}
-                    }
-                }
-            ");
-
-            AssertAllMethods(ConstructorDecl("N.C, TestProject"));
-        }
     }
 }

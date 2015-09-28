@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -112,6 +113,101 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
                         Name = PropertyName.Get("set get [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].P()")
                     });
             Assert.AreEqual(expected, ResultSST.Properties);
+        }
+
+        [Test]
+        public void NestedClass_Methods()
+        {
+            CompleteInNamespace(@"
+                class C
+                {
+                    $
+                    class Nested
+                    {
+                        public void M() {}
+                    }
+                }
+            ");
+
+            var actual = ResultSST.Methods;
+            var expected = Lists.NewList<IMethodDeclaration>();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NestedClass_Fields()
+        {
+            CompleteInNamespace(@"
+                class C
+                {
+                    $
+                    class Nested
+                    {
+                        public int _f;
+                    }
+                }
+            ");
+
+            var actual = ResultSST.Fields;
+            var expected = Lists.NewList<IFieldDeclaration>();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NestedClass_Properties()
+        {
+            CompleteInNamespace(@"
+                class C
+                {
+                    $
+                    class Nested
+                    {
+                        public int P { get; set; }
+                    }
+                }
+            ");
+
+            var actual = ResultSST.Properties;
+            var expected = Lists.NewList<IPropertyDeclaration>();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NestedClass_Events()
+        {
+            CompleteInNamespace(@"
+                class C
+                {
+                    $
+                    class Nested
+                    {
+                        public event Action _e;
+                    }
+                }
+            ");
+
+            var actual = ResultSST.Events;
+            var expected = Lists.NewList<IEventDeclaration>();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NestedClass_Delegates()
+        {
+            CompleteInNamespace(@"
+                class C
+                {
+                    $
+                    class Nested
+                    {
+                        public delegate int D(int i);
+                    }
+                }
+            ");
+
+            var actual = ResultSST.Delegates;
+            var expected = Lists.NewList<IDelegateDeclaration>();
+            Assert.AreEqual(expected, actual);
         }
     }
 }
