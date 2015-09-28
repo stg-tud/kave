@@ -94,13 +94,20 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public override void VisitConstructorDeclaration(IConstructorDeclaration decl, SST context)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
+
             var nameGen = new UniqueVariableNameGenerator();
             var exprVisit = new ExpressionVisitor(nameGen, _marker);
 
             if (decl.DeclaredElement != null)
             {
                 var methodName = decl.DeclaredElement.GetName<IMethodName>();
-                _cancellationToken.ThrowIfCancellationRequested();
+
+                var isDeclaredInNestedClass = !methodName.DeclaringType.Equals(context.EnclosingType);
+                if (isDeclaredInNestedClass)
+                {
+                    return;
+                }
 
                 var sstDecl = new MethodDeclaration
                 {
@@ -166,10 +173,17 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public override void VisitMethodDeclaration(IMethodDeclaration decl, SST context)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
+
             if (decl.DeclaredElement != null)
             {
                 var methodName = decl.DeclaredElement.GetName<IMethodName>();
-                _cancellationToken.ThrowIfCancellationRequested();
+
+                var isDeclaredInNestedClass = !methodName.DeclaringType.Equals(context.EnclosingType);
+                if (isDeclaredInNestedClass)
+                {
+                    return;
+                }
 
                 var sstDecl = new MethodDeclaration
                 {
