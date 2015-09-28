@@ -65,8 +65,8 @@ namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new VersionControlEvent {Solution = SomeSolution, Actions = {SomeAction}};
-            var b = new VersionControlEvent {Solution = SomeSolution, Actions = {SomeAction}};
+            var a = new VersionControlEvent { Solution = SomeSolution, Actions = SomeContent };
+            var b = new VersionControlEvent { Solution = SomeSolution, Actions = SomeContent };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
