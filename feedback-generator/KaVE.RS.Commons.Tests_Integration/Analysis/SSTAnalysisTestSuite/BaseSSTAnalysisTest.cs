@@ -126,18 +126,28 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         protected void AssertAllMethods(params IMethodDeclaration[] expectedDecls)
         {
-            var ms = Lists.NewListFrom(ResultSST.Methods);
-            Assert.AreEqual(expectedDecls.Length, ms.Count);
+            var actualDecls = Lists.NewListFrom(ResultSST.Methods);
+            if (expectedDecls.Length != actualDecls.Count)
+            {
+                Console.WriteLine("\nexpected {0} declarations, but was:\n", expectedDecls.Length);
+                foreach (var m in actualDecls)
+                {
+                    Console.WriteLine("-----");
+                    Console.WriteLine(m);
+                }
+                Assert.Fail("incorrect number of method declarations");
+            }
 
             foreach (var expectedDecl in expectedDecls)
             {
-                if (!ms.Contains(expectedDecl))
+                if (!actualDecls.Contains(expectedDecl))
                 {
                     Console.WriteLine("\nexpected:\n");
                     Console.WriteLine(expectedDecl);
                     Console.WriteLine("\nbut was:\n");
-                    foreach (var m in ms)
+                    foreach (var m in actualDecls)
                     {
+                        Console.WriteLine("-----");
                         Console.WriteLine(m);
                     }
                     Assert.Fail("expected method not found in actual list of method declarations");
