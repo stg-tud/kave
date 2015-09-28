@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
@@ -26,7 +25,6 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Concurrency;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Transformer;
@@ -42,7 +40,7 @@ namespace KaVE.RS.Commons.Analysis
         private static readonly object Lock = new object();
         private static readonly KaVECancellationTokenSource TokenSource = new KaVECancellationTokenSource();
 
-        private static readonly Dictionary<int, Context> ResultCache = new Dictionary<int, Context>();
+        private static readonly FifoCache<int, Context> ResultCache = new FifoCache<int, Context>(4);
 
         public static ContextAnalysisResult Analyze(ITreeNode node, ILogger logger)
         {
@@ -83,29 +81,14 @@ namespace KaVE.RS.Commons.Analysis
 
                 if (ResultCache.ContainsKey(hashCode))
                 {
-                    return ResultCache[hashCode];
+                    return ResultCache.GetValue(hashCode);
                 }
 
                 var res = AnalyseAsyncInternal(node, logger, token);
-                ResultCache[hashCode] = res.Context;
+                ResultCache.SetValue(hashCode, res.Context);
 
-                RemoveFromCacheAfterTimeout(hashCode, CacheTimeout);
                 return res.Context;
             }
-        }
-
-        private static void RemoveFromCacheAfterTimeout(int hashCode,
-            int timeout)
-        {
-            Task.Factory.StartNew(
-                () =>
-                {
-                    Thread.Sleep(timeout);
-                    lock (Lock)
-                    {
-                        ResultCache.Remove(hashCode);
-                    }
-                });
         }
 
         public class ContextAnalysisResult
