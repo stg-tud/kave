@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Gma.System.MouseKeyHook;
@@ -32,7 +33,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
     {
         private readonly ICtrlKeyStateProvider _controlKeyStateProvider;
 
-        private readonly IKeyboardMouseEvents _globalHook;
+        private readonly IKeyboardMouseEvents _keyboardMouseHook;
 
         public CtrlClickEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
@@ -40,28 +41,28 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             [NotNull] ICtrlKeyStateProvider ctrlKeyStateProvider) : base(env, messageBus, dateUtils)
         {
             _controlKeyStateProvider = ctrlKeyStateProvider;
-            _globalHook = Hook.AppEvents();
-            _globalHook.MouseClick += OnClick;
+            _keyboardMouseHook = Hook.AppEvents();
+            _keyboardMouseHook.MouseClick += OnClick;
         }
 
         public void OnClick(object sender, MouseEventArgs args)
         {
             if (args.Button.Equals(MouseButtons.Left) && _controlKeyStateProvider.CtrlIsPressed)
             {
-                Fire(args.X, args.Y);
+                Fire(args.Location);
             }
         }
 
-        private void Fire(int x, int y)
+        private void Fire(Point location)
         {
             var clickEvent = Create<InfoEvent>();
-            clickEvent.Info = string.Format("CtrlClick triggered at ({0},{1})", x, y);
+            clickEvent.Info = string.Format("CtrlClick triggered at {0}", location);
             Fire(clickEvent);
         }
 
         public void Dispose()
         {
-            _globalHook.Dispose();
+            _keyboardMouseHook.Dispose();
         }
     }
 
