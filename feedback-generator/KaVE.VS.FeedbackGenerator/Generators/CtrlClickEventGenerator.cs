@@ -49,14 +49,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         {
             if (args.Button.Equals(MouseButtons.Left) && _controlKeyStateProvider.CtrlIsPressed)
             {
-                Fire(args.Location);
+                var relativeLocation = new Point(args.X - DTE.ActiveWindow.Left, DTE.ActiveWindow.Top);
+                Fire(args.Location, relativeLocation);
             }
         }
 
-        private void Fire(Point location)
+        private void Fire(Point location, Point locationInActiveWindow)
         {
             var clickEvent = Create<InfoEvent>();
-            clickEvent.Info = string.Format("CtrlClick triggered at {0}", location);
+            clickEvent.Info = string.Format(
+                "CtrlClick triggered at {0} ; In the active Window at {1}",
+                location,
+                locationInActiveWindow);
             Fire(clickEvent);
         }
 

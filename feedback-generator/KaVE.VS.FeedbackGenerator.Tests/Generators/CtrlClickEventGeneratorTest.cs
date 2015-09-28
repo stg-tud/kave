@@ -15,8 +15,10 @@
  */
 
 using System.Windows.Forms;
+using EnvDTE;
 using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.Generators;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators
@@ -25,10 +27,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
     {
         private CtrlClickEventGenerator _uut;
         private CtrlKeyStateProviderDummy _keyState;
+        private Mock<Window> _testWindowMock;
 
         [SetUp]
         public void Setup()
         {
+            _testWindowMock = new Mock<Window>();
+            _testWindowMock.Setup(window => window.Top).Returns(0);
+            _testWindowMock.Setup(window => window.Left).Returns(0);
+            _testWindowMock.Setup(window => window.Width).Returns(0);
+            _testWindowMock.Setup(window => window.Height).Returns(0);
+            TestIDESession.MockDTE.Setup(dte => dte.ActiveWindow).Returns(_testWindowMock.Object);
+
             _keyState = new CtrlKeyStateProviderDummy();
             _uut = new CtrlClickEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _keyState);
         }
