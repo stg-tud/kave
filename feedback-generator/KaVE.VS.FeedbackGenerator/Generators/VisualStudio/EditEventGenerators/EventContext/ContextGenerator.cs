@@ -53,15 +53,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             _logger = logger;
             _solution = intellisenseManager.Solution;
 
-            if (NewContextProvider != null)
-            {
-                NewContextProvider(this);
-            }
+            ContextGeneratorCreated(this);
         }
 
-        public delegate void ContextProviderChangedHandler(object sender);
+        public delegate void ContextProviderChangedHandler(ContextGenerator generator);
 
-        public static event ContextProviderChangedHandler NewContextProvider;
+        public static event ContextProviderChangedHandler ContextGeneratorCreated = delegate {};
 
         public Context GetCurrentContext([NotNull] Document vsDocument)
         {

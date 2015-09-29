@@ -28,8 +28,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         public ContextProvider()
         {
-            ContextGenerator.NewContextProvider +=
-                delegate(object newContextProvider) { _contextGenerator = (ContextGenerator) newContextProvider; };
+            ContextGenerator.ContextGeneratorCreated += generator => _contextGenerator = generator;
         }
 
         public Context GetCurrentContext(Document document)
