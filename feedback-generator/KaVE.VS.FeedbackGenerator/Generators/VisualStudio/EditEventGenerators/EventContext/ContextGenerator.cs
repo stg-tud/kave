@@ -65,17 +65,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         public Context GetCurrentContext([NotNull] Document vsDocument)
         {
-            ComputeNewContextByFilePath(vsDocument.FullName);
-            return CurrentContext;
+            return ComputeNewContextByFilePath(vsDocument.FullName);
         }
 
         public Context GetCurrentContext([NotNull] TextPoint startPoint)
         {
-            ComputeNewContextByFilePath(startPoint.DTE.ActiveDocument.FullName);
-            return CurrentContext;
+            return ComputeNewContextByFilePath(startPoint.DTE.ActiveDocument.FullName);
         }
 
-        private void ComputeNewContextByFilePath([NotNull] string filePath)
+        private Context ComputeNewContextByFilePath([NotNull] string filePath)
         {
             CurrentContext = Context.Default;
 
@@ -88,6 +86,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
                     RunAnalysis(node);
                 }
             }
+
+            return CurrentContext;
         }
 
         private IDocument GetDocument(string filePath)
