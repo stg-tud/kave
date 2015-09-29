@@ -146,7 +146,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         private void RunAnalysis(ITreeNode node)
         {
-            ContextAnalysis.AnalyseAsync(
+            ContextAnalysis.Analyse(
                 node,
                 _logger,
                 context => { CurrentContext = context; },

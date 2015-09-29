@@ -51,14 +51,14 @@ namespace KaVE.RS.Commons.Analysis
             }
         }
 
-        public static void AnalyseAsync(ITreeNode node,
+        public static void Analyse(ITreeNode node,
             ILogger logger,
             Action<Context> onSuccess,
             Action<Exception> onFailure,
             Action onTimeout,
             int timeLimitInMs = DefaultTimeLimitInMs)
         {
-            var context = AnalyseAsyncWithCache(node, logger);
+            var context = AnalyseWithCache(node, logger);
             onSuccess(context);
         }
 
@@ -71,7 +71,7 @@ namespace KaVE.RS.Commons.Analysis
             return result;
         }
 
-        private static Context AnalyseAsyncWithCache(ITreeNode node,
+        private static Context AnalyseWithCache(ITreeNode node,
             ILogger logger)
         {
             lock (Lock)

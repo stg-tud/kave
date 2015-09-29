@@ -94,7 +94,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
                 }
             };
 
-            ContextAnalysis.AnalyseAsync(
+            ContextAnalysis.Analyse(
                 context.NodeInFile,
                 _logger,
                 onSuccess,

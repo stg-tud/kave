@@ -71,7 +71,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            ContextAnalysis.AnalyseAsync(
+            ContextAnalysis.Analyse(
                 context.NodeInFile,
                 _logger,
                 OnSuccess,
