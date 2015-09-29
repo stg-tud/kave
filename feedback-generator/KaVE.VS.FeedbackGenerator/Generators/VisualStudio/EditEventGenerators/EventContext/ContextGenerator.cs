@@ -104,7 +104,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             return null;
         }
 
-        public ITreeNode FindEntryNode(IDocument document)
+        private ITreeNode FindEntryNode(IDocument document)
         {
             ITreeNode node = null;
             ReadLockCookie.Execute(
