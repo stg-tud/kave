@@ -37,8 +37,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
         private readonly TextEditorEvents _textEditorEvents;
         private EditEvent _currentEditEvent;
 
-        private readonly Timer _eventSendingTimer = new Timer(InactivityPeriodToCompleteEditAction);
-        private readonly object _eventLock = new object();
+        private readonly Timer _editingTimout = new Timer(InactivityPeriodToCompleteEditAction) {AutoReset = false};
+        private readonly object _lock = new object();
         private TextPoint _currentStartPoint;
 
         public EditEventGenerator(IRSEnv env,
@@ -47,37 +47,40 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
             IContextProvider contextProvider)
             : base(env, messageBus, dateUtils)
         {
-            // TODO RS9 deactivated for now
-            /*
             _contextProvider = contextProvider;
             _textEditorEvents = DTE.Events.TextEditorEvents;
             _textEditorEvents.LineChanged += TextEditorEvents_LineChanged;
-            _eventSendingTimer.Elapsed += (source, e) => FireCurrentEditEvent();
-             */
+            _editingTimout.Elapsed += FireCurrentEditEvent;
         }
 
         private void TextEditorEvents_LineChanged(TextPoint startPoint, TextPoint endPoint, int hint)
         {
-            _eventSendingTimer.Stop();
-            _currentEditEvent = _currentEditEvent ?? Create<EditEvent>();
-            _currentEditEvent.NumberOfChanges += 1;
-            // TODO subtract whitespaces from change size
-            _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
-            _currentStartPoint = startPoint;
-            _eventSendingTimer.Start();
+            lock (_lock)
+            {
+                _editingTimout.Stop();
+                _currentEditEvent = _currentEditEvent ?? Create<EditEvent>();
+                _currentEditEvent.NumberOfChanges += 1;
+                // TODO subtract whitespaces from change size
+                _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
+                _currentStartPoint = startPoint;
+                _editingTimout.Start();
+            }
         }
 
-        private void FireCurrentEditEvent()
+        private void FireCurrentEditEvent(object sender, ElapsedEventArgs e)
         {
-            _eventSendingTimer.Stop();
-            _currentEditEvent.Context2 = _contextProvider.GetCurrentContext(_currentStartPoint);
-            FireNow(_currentEditEvent);
-            _currentEditEvent = null;
+            lock (_lock)
+            {
+                _editingTimout.Stop();
+                _currentEditEvent.Context2 = _contextProvider.GetCurrentContext(_currentStartPoint);
+                FireNow(_currentEditEvent);
+                _currentEditEvent = null;
+            }
         }
 
         public void Dispose()
         {
-            _eventSendingTimer.Close();
+            _editingTimout.Close();
         }
     }
 }
