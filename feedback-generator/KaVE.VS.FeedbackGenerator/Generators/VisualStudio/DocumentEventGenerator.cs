@@ -18,7 +18,6 @@ using EnvDTE;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Utils.Names;
 
@@ -30,15 +29,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DocumentEvents _documentEvents;
 
-        private readonly DelayedEditEventGenerator _delayedEditEventGenerator;
-
         public DocumentEventGenerator(IRSEnv env,
             IMessageBus messageBus,
-            IDateUtils dateUtils,
-            DelayedEditEventGenerator delayedEditEventGenerator)
+            IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
         {
-            _delayedEditEventGenerator = delayedEditEventGenerator;
             _documentEvents = DTE.Events.DocumentEvents;
             _documentEvents.DocumentOpened += HandleDocumentOpened;
             _documentEvents.DocumentSaved += HandleDocumentSaved;
@@ -47,7 +42,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         private void HandleDocumentOpened(Document document)
         {
-            _delayedEditEventGenerator.TryFireWithContext(document);
             Fire(document, DocumentEvent.DocumentAction.Opened);
         }
 
