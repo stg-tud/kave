@@ -21,7 +21,7 @@ using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTA
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions.
     ComposedExpressionAnalysisTestSuite
 {
-    internal class BasicTests : BaseSSTAnalysisTest
+    internal class BasicTest : BaseSSTAnalysisTest
     {
         [Test]
         public void Casts()

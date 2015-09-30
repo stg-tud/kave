@@ -21,154 +21,150 @@ using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTA
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions.
     ComposedExpressionAnalysisTestSuite
 {
-    internal class ArithmeticExpressionTests : BaseSSTAnalysisTest
+    internal class BooleanExpressionTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void AddingTwoInts()
+        public void BooleanAndOnTwoValues()
         {
             CompleteInMethod(@"
-                var i = 1 + 2;
+                var i = true && false;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", ComposedExpr()),
                 Fix.EmptyCompletion);
         }
 
         [Test]
-        public void AddingThreeInts()
+        public void BooleanAndOnThreeValues()
         {
             CompleteInMethod(@"
-                var i = 1 + 2 + 3;
+                var i = true && false && true;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", ComposedExpr()),
                 Fix.EmptyCompletion);
         }
 
         [Test]
-        public void AddingVariables()
+        public void BooleanAndWithVariables()
         {
             CompleteInMethod(@"
-                var i = 1;
-                var j = i + 2;
+                var i = false;
+                var j = true && i;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", new ConstantValueExpression()),
-                VarDecl("j", Fix.Int),
+                VarDecl("j", Fix.Bool),
                 VarAssign("j", ComposedExpr("i")),
                 Fix.EmptyCompletion);
         }
 
         [Test]
-        public void AddingConstantToMethodResult()
-        {
-            CompleteInClass(@"
-                public int GetInt() { return 1; }
-                public void M() 
-                {
-                    var i = 1 + GetInt();
-                    $
-                }");
-
-            AssertBody(
-                "M",
-                VarDecl("i", Fix.Int),
-                VarDecl("$0", Fix.Int),
-                VarAssign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                VarAssign("i", ComposedExpr("$0")),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void AddingConstantToMethodResult_Chained()
-        {
-            CompleteInClass(@"
-                public int GetInt() { return 1; }
-                public C NewInstance() { return new C(); }
-                public void M() 
-                {
-                    var i = 1 + NewInstance().GetInt();
-                    $
-                }");
-
-            AssertBody(
-                "M",
-                VarDecl("i", Fix.Int),
-                VarDecl("$0", Type("C")),
-                VarAssign("$0", Invoke("this", Fix.Method(Type("C"), Type("C"), "NewInstance"))),
-                VarDecl("$1", Fix.Int),
-                VarAssign("$1", Invoke("$0", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                VarAssign("i", ComposedExpr("$1")),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void SubtractingTwoInts()
+        public void BooleanOrOnTwoValues()
         {
             CompleteInMethod(@"
-                var i = 1 - 2;
+                var i = true || false;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", ComposedExpr()),
                 Fix.EmptyCompletion);
         }
 
         [Test]
-        public void MultiplyingTwoInts()
+        public void BooleanEqualityOnTwoValues()
         {
             CompleteInMethod(@"
-                var i = 1 * 2;
+                var i = 1 == 2;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", ComposedExpr()),
                 Fix.EmptyCompletion);
         }
 
         [Test]
-        public void DividingTwoInts()
+        public void BooleanInequalityOnTwoValues()
         {
             CompleteInMethod(@"
-                var i = 1 / 2;
+                var i = 1 != 2;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", ComposedExpr()),
                 Fix.EmptyCompletion);
         }
 
         [Test]
-        public void NestedArithmeticExpressions()
+        public void NegationExpression()
         {
             CompleteInMethod(@"
-                var i = 1 + (2 * 3 - (4 / 5));
+                var i = !false;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", ComposedExpr()),
                 Fix.EmptyCompletion);
         }
 
         [Test]
-        public void Modulus()
+        public void Relational_Greater()
         {
             CompleteInMethod(@"
-                var i = 100 % 6;
+                var i = 2 > 1;
                 $");
 
             AssertBody(
-                VarDecl("i", Fix.Int),
+                VarDecl("i", Fix.Bool),
+                VarAssign("i", ComposedExpr()),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Relational_GreaterOrEqual()
+        {
+            CompleteInMethod(@"
+                var i = 2 >= 1;
+                $");
+
+            AssertBody(
+                VarDecl("i", Fix.Bool),
+                VarAssign("i", ComposedExpr()),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Relational_Less()
+        {
+            CompleteInMethod(@"
+                var i = 2 < 1;
+                $");
+
+            AssertBody(
+                VarDecl("i", Fix.Bool),
+                VarAssign("i", ComposedExpr()),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Relational_LessOrEqual()
+        {
+            CompleteInMethod(@"
+                var i = 2 <= 1;
+                $");
+
+            AssertBody(
+                VarDecl("i", Fix.Bool),
                 VarAssign("i", ComposedExpr()),
                 Fix.EmptyCompletion);
         }
