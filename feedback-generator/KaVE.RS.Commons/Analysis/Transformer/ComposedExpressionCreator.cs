@@ -15,10 +15,12 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Utils.Collections;
 using IStatement = KaVE.Commons.Model.SSTs.IStatement;
@@ -33,7 +35,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             var visitor = new ComposedExpressionCreator(expressionVisitor);
             expr.Accept(visitor, context);
-            return new ComposedExpression {References = visitor._collectedRefs};
+
+            if (visitor._collectedRefs.Any())
+            {
+                return new ComposedExpression {References = visitor._collectedRefs};
+            }
+            
+            return new ConstantValueExpression();
         }
 
         private readonly ExpressionVisitor _expressionVisitor;

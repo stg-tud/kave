@@ -32,7 +32,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -45,7 +45,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -74,7 +74,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -87,7 +87,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -100,7 +100,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -113,7 +113,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -126,7 +126,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -139,7 +139,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -152,7 +152,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -165,7 +165,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                VarAssign("i", ComposedExpr()),
+                VarAssign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
     }
