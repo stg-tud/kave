@@ -70,25 +70,20 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
-        private static readonly Regex SignatureSyntax = new Regex("\\]\\.((([^([]+)(?:`[0-9]+\\[[^(]+\\]){0,1})\\(.*\\))$");
+        private static readonly Regex SignatureSyntax =
+            new Regex("\\]\\.((([^([]+)(?:`[0-9]+\\[[^(]+\\]){0,1})\\(.*\\))$");
 
         private MethodName(string identifier)
             : base(identifier) {}
 
         public override string Name
         {
-            get
-            {
-                return SignatureSyntax.Match(Identifier).Groups[3].Value;
-            }
+            get { return SignatureSyntax.Match(Identifier).Groups[3].Value; }
         }
 
         private string FullName
         {
-            get
-            {
-                return SignatureSyntax.Match(Identifier).Groups[2].Value;
-            }
+            get { return SignatureSyntax.Match(Identifier).Groups[2].Value; }
         }
 
         public IList<ITypeName> TypeParameters
@@ -118,7 +113,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public bool IsConstructor
         {
-            get { return Name.Equals(".ctor"); }
+            get { return Name.Equals(".ctor") || Name.Equals(".cctor"); }
         }
 
         public ITypeName ReturnType
@@ -128,10 +123,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public string Signature
         {
-            get
-            {
-                return SignatureSyntax.Match(Identifier).Groups[1].Value;
-            }
+            get { return SignatureSyntax.Match(Identifier).Groups[1].Value; }
         }
     }
 }

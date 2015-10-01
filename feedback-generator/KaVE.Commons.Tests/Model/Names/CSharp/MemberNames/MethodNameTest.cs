@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.ObjectUsage;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
@@ -183,6 +182,14 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         public void ShouldBeConstructor()
         {
             var methodName = MethodName.Get("[MyType, A, 0.0.0.1] [MyType, A, 0.0.0.1]..ctor()");
+
+            Assert.IsTrue(methodName.IsConstructor);
+        }
+
+        [Test]
+        public void ShouldBeConstructor_Static()
+        {
+            var methodName = MethodName.Get("[MyType, A, 0.0.0.1] [MyType, A, 0.0.0.1]..cctor()");
 
             Assert.IsTrue(methodName.IsConstructor);
         }
