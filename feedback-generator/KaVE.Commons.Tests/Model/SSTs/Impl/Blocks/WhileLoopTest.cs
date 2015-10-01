@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -24,7 +25,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
-    public class WhileLoopTest
+    internal class WhileLoopTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
@@ -39,10 +40,30 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new WhileLoop {Condition = new ConstantValueExpression()};
-            sut.Body.Add(new ReturnStatement());
+            var sut = new WhileLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
             Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
+        }
+
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new WhileLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
+            AssertChildren(sut, sut.Condition, sut.Body.First());
         }
 
         [Test]

@@ -28,7 +28,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 
         public IEnumerable<ISSTNode> Children
         {
-            get { return Lists.NewList<ISSTNode>(); }
+            get { return Body; }
         }
 
         public UncheckedBlock()

@@ -32,7 +32,15 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 
         public IEnumerable<ISSTNode> Children
         {
-            get { return Lists.NewList<ISSTNode>(); }
+            get
+            {
+                var children = Lists.NewList<ISSTNode>(Reference);
+                foreach (var stmt in DefaultSection)
+                {
+                    children.Add(stmt);
+                }
+                return children;
+            }
         }
 
         public SwitchBlock()

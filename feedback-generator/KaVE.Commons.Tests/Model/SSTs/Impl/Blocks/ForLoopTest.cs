@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -24,7 +25,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
-    internal class ForLoopTest
+    internal class ForLoopTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
@@ -41,15 +42,31 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new ForLoop {Condition = new ConstantValueExpression()};
-            sut.Init.Add(new GotoStatement());
-            sut.Step.Add(new BreakStatement());
-            sut.Body.Add(new ContinueStatement());
+            var sut = new ForLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Init = {new GotoStatement()},
+                Step = {new BreakStatement()},
+                Body = {new ContinueStatement()}
+            };
 
             Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new GotoStatement()), sut.Init);
             Assert.AreEqual(Lists.NewList(new BreakStatement()), sut.Step);
             Assert.AreEqual(Lists.NewList(new ContinueStatement()), sut.Body);
+        }
+
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new ForLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Init = {new GotoStatement()},
+                Step = {new BreakStatement()},
+                Body = {new ContinueStatement()}
+            };
+            AssertChildren(sut, sut.Init.First(), sut.Condition, sut.Step.First(), sut.Body.First());
         }
 
         [Test]

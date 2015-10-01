@@ -20,8 +20,15 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
-    public class UnsafeBlockTest
+    internal class UnsafeBlockTest : SSTBaseTest
     {
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new UnsafeBlock();
+            AssertChildren(sut);
+        }
+
         [Test]
         public void Equality()
         {

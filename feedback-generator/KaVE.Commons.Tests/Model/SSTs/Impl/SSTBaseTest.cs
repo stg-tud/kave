@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Linq;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
@@ -23,12 +24,27 @@ using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils.Collections;
+using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl
 {
     internal abstract class SSTBaseTest
     {
+        protected static void AssertChildren(ISSTNode sut, params ISSTNode[] expecteds)
+        {
+            var actualsEnum = sut.Children.GetEnumerator();
+            var expectedsEnum = expecteds.GetEnumerator();
+            while (expectedsEnum.MoveNext())
+            {
+                Assert.True(actualsEnum.MoveNext());
+                // ReSharper disable once PossibleUnintendedReferenceComparison
+                Assert.True(expectedsEnum.Current == actualsEnum.Current);
+            }
+            Assert.False(actualsEnum.MoveNext());
+        }
+
         protected ISimpleExpression Label(string label)
         {
             return new ConstantValueExpression {Value = label};
@@ -52,7 +68,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
 
         protected IMethodName GetMethod(string simpleName)
         {
-            var methodName = string.Format("[T1, P1] [T2, P2].{0}()", simpleName);
+            var methodName = String.Format("[T1, P1] [T2, P2].{0}()", simpleName);
             return MethodName.Get(methodName);
         }
 

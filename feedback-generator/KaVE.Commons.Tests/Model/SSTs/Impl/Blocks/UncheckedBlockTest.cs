@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -23,7 +24,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
-    internal class UncheckedBlockTest
+    internal class UncheckedBlockTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
@@ -37,9 +38,15 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new UncheckedBlock();
-            sut.Body.Add(new BreakStatement());
+            var sut = new UncheckedBlock {Body = {new BreakStatement()}};
             Assert.AreEqual(Lists.NewList(new BreakStatement()), sut.Body);
+        }
+
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new UncheckedBlock {Body = {new BreakStatement()}};
+            AssertChildren(sut, sut.Body.First());
         }
 
         [Test]

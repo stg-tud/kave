@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -24,7 +25,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
-    public class LockBlockTest
+    internal class LockBlockTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
@@ -46,6 +47,17 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
             };
             Assert.AreEqual(new VariableReference {Identifier = "x"}, sut.Reference);
             Assert.AreEqual(Lists.NewList(new BreakStatement()), sut.Body);
+        }
+
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new LockBlock
+            {
+                Reference = new VariableReference {Identifier = "x"},
+                Body = {new BreakStatement()}
+            };
+            AssertChildren(sut, sut.Reference, sut.Body.First());
         }
 
         [Test]

@@ -32,7 +32,19 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 
         public IEnumerable<ISSTNode> Children
         {
-            get { return Lists.NewList<ISSTNode>(); }
+            get
+            {
+                var children = Lists.NewList<ISSTNode>(Condition);
+                foreach (var stmt in Then)
+                {
+                    children.Add(stmt);
+                }
+                foreach (var stmt in Else)
+                {
+                    children.Add(stmt);
+                }
+                return children;
+            }
         }
 
         public IfElseBlock()

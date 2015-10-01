@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -24,7 +25,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
-    internal class IfElseBlockTest
+    internal class IfElseBlockTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
@@ -40,12 +41,27 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new IfElseBlock {Condition = new ConstantValueExpression()};
-            sut.Then.Add(new ReturnStatement());
-            sut.Else.Add(new ContinueStatement());
+            var sut = new IfElseBlock
+            {
+                Condition = new ConstantValueExpression(),
+                Then = {new ReturnStatement()},
+                Else = {new ContinueStatement()}
+            };
             Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Then);
             Assert.AreEqual(Lists.NewList(new ContinueStatement()), sut.Else);
+        }
+
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new IfElseBlock
+            {
+                Condition = new ConstantValueExpression(),
+                Then = {new ReturnStatement()},
+                Else = {new ContinueStatement()}
+            };
+            AssertChildren(sut, sut.Condition, sut.Then.First(), sut.Else.First());
         }
 
         [Test]

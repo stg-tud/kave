@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -39,10 +40,30 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new UsingBlock {Reference = SomeVarRef("a")};
-            sut.Body.Add(new ReturnStatement());
+            var sut = new UsingBlock
+            {
+                Reference = SomeVarRef("a"),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
             Assert.AreEqual(SomeVarRef("a"), sut.Reference);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
+        }
+
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new UsingBlock
+            {
+                Reference = SomeVarRef("a"),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
+            AssertChildren(sut, sut.Reference, sut.Body.First());
         }
 
         [Test]

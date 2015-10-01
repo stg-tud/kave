@@ -31,7 +31,15 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 
         public IEnumerable<ISSTNode> Children
         {
-            get { return Lists.NewList<ISSTNode>(); }
+            get
+            {
+                var children = Lists.NewList<ISSTNode>(Condition);
+                foreach (var stmt in Body)
+                {
+                    children.Add(stmt);
+                }
+                return children;
+            }
         }
 
         public WhileLoop()

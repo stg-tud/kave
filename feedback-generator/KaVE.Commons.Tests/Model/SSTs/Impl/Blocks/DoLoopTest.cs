@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
-    internal class DoLoopTest
+    internal class DoLoopTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
@@ -39,11 +41,31 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new DoLoop {Condition = new ConstantValueExpression()};
-            sut.Body.Add(new ReturnStatement());
+            var sut = new DoLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
 
             Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
+        }
+
+        [Test]
+        public void ChildrenIdentity()
+        {
+            var sut = new DoLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
+            AssertChildren(sut, sut.Condition, sut.Body.First());
         }
 
         [Test]
