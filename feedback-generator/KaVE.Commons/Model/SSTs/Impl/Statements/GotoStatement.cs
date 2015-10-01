@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
     public class GotoStatement : IGotoStatement
     {
         public string Label { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public GotoStatement()
         {

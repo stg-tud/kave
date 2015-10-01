@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -26,6 +27,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
         public IKaVEList<IStatement> Body { get; set; }
         public IKaVEList<ICatchBlock> CatchBlocks { get; set; }
         public IKaVEList<IStatement> Finally { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public TryBlock()
         {

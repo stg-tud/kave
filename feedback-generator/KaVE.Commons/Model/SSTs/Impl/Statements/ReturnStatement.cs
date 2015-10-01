@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
@@ -26,6 +28,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
     {
         public ISimpleExpression Expression { get; set; }
         public bool IsVoid { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public ReturnStatement()
         {

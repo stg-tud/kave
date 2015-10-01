@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -30,6 +31,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
         public IVariableDeclaration Declaration { get; set; }
         public IVariableReference LoopedReference { get; set; }
         public IKaVEList<IStatement> Body { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public ForEachLoop()
         {

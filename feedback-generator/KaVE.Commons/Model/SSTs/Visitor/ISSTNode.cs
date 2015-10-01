@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace KaVE.Commons.Model.SSTs.Visitor
 {
     public interface ISSTNode
     {
+        IEnumerable<ISSTNode> Children { get; }
+
         void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context);
+
         TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context);
     }
 }

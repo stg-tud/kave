@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
@@ -54,6 +55,11 @@ namespace KaVE.Commons.Model.SSTs.Impl
         public IKaVESet<IMethodDeclaration> NonEntryPoints
         {
             get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => !m.IsEntryPoint)); }
+        }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
         }
 
         public SST()

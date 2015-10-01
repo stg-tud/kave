@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -28,6 +29,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
         public ISimpleExpression Condition { get; set; }
         public IKaVEList<IStatement> Then { get; set; }
         public IKaVEList<IStatement> Else { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public IfElseBlock()
         {

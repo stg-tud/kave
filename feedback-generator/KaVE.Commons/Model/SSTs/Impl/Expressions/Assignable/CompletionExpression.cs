@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
@@ -27,6 +29,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public ITypeName TypeReference { get; set; }
         public IVariableReference VariableReference { get; set; }
         public string Token { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public CompletionExpression()
         {

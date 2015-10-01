@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -28,6 +29,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
         public IMethodName Name { get; set; }
         public bool IsEntryPoint { get; set; }
         public IKaVEList<IStatement> Body { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public MethodDeclaration()
         {

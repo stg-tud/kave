@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
@@ -28,6 +29,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
         public IVariableReference Reference { get; set; }
         public IKaVEList<ICaseBlock> Sections { get; set; }
         public IKaVEList<IStatement> DefaultSection { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public SwitchBlock()
         {

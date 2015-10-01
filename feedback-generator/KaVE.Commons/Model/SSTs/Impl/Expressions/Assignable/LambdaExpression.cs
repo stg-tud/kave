@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -27,6 +28,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
     {
         public ILambdaName Name { get; set; }
         public IKaVEList<IStatement> Body { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public LambdaExpression()
         {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -30,6 +31,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public IVariableReference Reference { get; set; }
         public IMethodName MethodName { get; set; }
         public IKaVEList<ISimpleExpression> Parameters { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public InvocationExpression()
         {

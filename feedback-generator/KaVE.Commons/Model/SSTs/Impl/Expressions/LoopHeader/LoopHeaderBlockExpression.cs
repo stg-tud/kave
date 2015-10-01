@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -24,6 +25,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader
     public class LoopHeaderBlockExpression : ILoopHeaderBlockExpression
     {
         public IKaVEList<IStatement> Body { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public LoopHeaderBlockExpression()
         {

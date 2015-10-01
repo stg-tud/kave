@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -25,6 +26,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
     public class ComposedExpression : IComposedExpression
     {
         public IKaVEList<IVariableReference> References { get; set; }
+
+        public IEnumerable<ISSTNode> Children
+        {
+            get { return Lists.NewList<ISSTNode>(); }
+        }
 
         public ComposedExpression()
         {
