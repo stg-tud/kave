@@ -26,20 +26,17 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 {
     [ShellComponent]
-    internal class EditEventGenerator : EventGeneratorBase, IDisposable
+    internal class EditEventGenerator : EventGeneratorBase
     {
         // TODO evaluate good threshold value
-        private const int InactivityPeriodToCompleteEditAction = 2000;
+        private static readonly TimeSpan InactivityPeriodToCompleteEditAction = TimeSpan.FromSeconds(2);
 
+        private readonly IDateUtils _dateUtils;
         private readonly IContextProvider _contextProvider;
 
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly TextEditorEvents _textEditorEvents;
         private EditEvent _currentEditEvent;
-
-        private readonly Timer _editingTimout = new Timer(InactivityPeriodToCompleteEditAction) {AutoReset = false};
-        private readonly object _lock = new object();
-        private TextPoint _currentStartPoint;
 
         public EditEventGenerator(IRSEnv env,
             IMessageBus messageBus,
@@ -47,40 +44,29 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
             IContextProvider contextProvider)
             : base(env, messageBus, dateUtils)
         {
+            _dateUtils = dateUtils;
             _contextProvider = contextProvider;
             _textEditorEvents = DTE.Events.TextEditorEvents;
             _textEditorEvents.LineChanged += TextEditorEvents_LineChanged;
-            _editingTimout.Elapsed += FireCurrentEditEvent;
         }
 
         private void TextEditorEvents_LineChanged(TextPoint startPoint, TextPoint endPoint, int hint)
         {
-            lock (_lock)
+            if (_currentEditEvent == null)
             {
-                _editingTimout.Stop();
-                _currentEditEvent = _currentEditEvent ?? Create<EditEvent>();
-                _currentEditEvent.NumberOfChanges += 1;
-                // TODO subtract whitespaces from change size
-                _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
-                _currentStartPoint = startPoint;
-                _editingTimout.Start();
+                _currentEditEvent = Create<EditEvent>();
+                _currentEditEvent.Context2 = _contextProvider.GetCurrentContext(startPoint);
             }
-        }
 
-        private void FireCurrentEditEvent(object sender, ElapsedEventArgs e)
-        {
-            lock (_lock)
+            _currentEditEvent.NumberOfChanges += 1;
+            // TODO subtract whitespaces from change size
+            _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
+
+            if (_currentEditEvent.TriggeredAt < _dateUtils.Now - InactivityPeriodToCompleteEditAction)
             {
-                _editingTimout.Stop();
-                _currentEditEvent.Context2 = _contextProvider.GetCurrentContext(_currentStartPoint);
                 FireNow(_currentEditEvent);
                 _currentEditEvent = null;
             }
-        }
-
-        public void Dispose()
-        {
-            _editingTimout.Close();
         }
     }
 }
