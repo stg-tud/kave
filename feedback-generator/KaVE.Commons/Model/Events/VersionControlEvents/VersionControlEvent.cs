@@ -25,14 +25,14 @@ namespace KaVE.Commons.Model.Events.VersionControlEvents
     public class VersionControlEvent : IDEEvent
     {
         [DataMember]
-        public IKaVEList<VersionControlAction> Actions { get; set; }
+        public IKaVEList<IVersionControlAction> Actions { get; set; }
 
         [DataMember]
         public SolutionName Solution { get; set; }
 
         public VersionControlEvent()
         {
-            Actions = new KaVEList<VersionControlAction>();
+            Actions = Lists.NewList<IVersionControlAction>();
             Solution = SolutionName.Get("");
         }
 

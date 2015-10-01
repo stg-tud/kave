@@ -20,8 +20,14 @@ using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VersionControlEvents
 {
+    public interface IVersionControlAction
+    {
+        DateTime ExecutedAt { get; set; }
+        VersionControlActionType ActionType { get; set; }
+    }
+
     [DataContract]
-    public class VersionControlAction
+    public class VersionControlAction : IVersionControlAction
     {
         [DataMember]
         public DateTime ExecutedAt { get; set; }

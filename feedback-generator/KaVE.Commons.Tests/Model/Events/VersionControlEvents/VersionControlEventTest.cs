@@ -26,9 +26,9 @@ namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
     internal class VersionControlEventTest
     {
         private static readonly SolutionName SomeSolution = SolutionName.Get("SomeSolution");
-        private static readonly IKaVEList<VersionControlAction> SomeContent = Lists.NewList(SomeAction);
+        private static readonly IKaVEList<IVersionControlAction> SomeContent = Lists.NewList(SomeAction);
 
-        private static VersionControlAction SomeAction
+        private static IVersionControlAction SomeAction
         {
             get { return new VersionControlAction {ExecutedAt = DateTime.Now, ActionType = VersionControlActionType.Checkout}; }
         }
