@@ -103,11 +103,6 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return _currentInterval == null;
         }
 
-        private bool OpenIntervalTimedOut(ActivityEvent @event)
-        {
-            return _currentInterval.End + _activityTimeout < @event.GetTriggeredAt();
-        }
-
         private void StartIntervalAt(ActivityEvent @event)
         {
             _currentInterval = new Interval
