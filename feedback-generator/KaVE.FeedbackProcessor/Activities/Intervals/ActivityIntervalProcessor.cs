@@ -113,5 +113,22 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             };
             Intervals[_currentDeveloper].Add(_currentInterval);
         }
+
+        public void CorrectIntervalsWithTimeout(TimeSpan fromSeconds)
+        {
+            foreach (var intervalStream in Intervals.Values)
+            {
+                Interval previousInterval = null;
+                foreach (var interval in intervalStream)
+                {
+                    if (previousInterval != null)
+                    {
+                        previousInterval.End = interval.Start;
+                    }
+
+                    previousInterval = interval;
+                }
+            }
+        }
     }
 }

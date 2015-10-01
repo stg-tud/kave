@@ -45,11 +45,11 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         {
             _uut.OnStreamStarts(_someDeveloper);
             _uut.OnEvent(SomeEvent(_someDateTime, Activity.Other));
-            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Other, TimeSpan.FromSeconds(1)));
+            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Other, 1));
             _uut.OnStreamEnds();
 
-            AssertIntervals(_uut.Intervals[_someDeveloper],
-                Interval(_someDateTime, Activity.Other, TimeSpan.FromSeconds(4)));
+            AssertIntervals(_someDeveloper,
+                Interval(_someDateTime, Activity.Other, 4));
         }
 
         [Test]
@@ -60,35 +60,50 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Other));
             _uut.OnStreamEnds();
 
-            AssertIntervals(_uut.Intervals[_someDeveloper],
-                Interval(_someDateTime, Activity.Other, TimeSpan.FromSeconds(3)));
+            AssertIntervals(_someDeveloper,
+                Interval(_someDateTime, Activity.Other, 3));
         }
 
         [Test]
         public void Intervals()
         {
             _uut.OnStreamStarts(_someDeveloper);
-            _uut.OnEvent(SomeEvent(_someDateTime, Activity.Other, TimeSpan.FromSeconds(1)));
-            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, TimeSpan.FromSeconds(2)));
+            _uut.OnEvent(SomeEvent(_someDateTime, Activity.Other,1));
+            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
             _uut.OnStreamEnds();
 
-            AssertIntervals(_uut.Intervals[_someDeveloper],
-                Interval(_someDateTime, Activity.Other, TimeSpan.FromSeconds(1)),
-                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, TimeSpan.FromSeconds(2)));
+            AssertIntervals(_someDeveloper,
+                Interval(_someDateTime, Activity.Other, 1),
+                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
         }
 
-        private static void AssertIntervals(IList<ActivityIntervalProcessor.Interval> actuals, params ActivityIntervalProcessor.Interval[] expecteds)
+        [Test]
+        public void ClosesIntervalGapsBelowTimeout()
         {
-            Assert.AreEqual(expecteds, actuals);
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(SomeEvent(_someDateTime, Activity.Other, 1));
+            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+            _uut.OnStreamEnds();
+
+            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(3));
+
+            AssertIntervals(_someDeveloper,
+                Interval(_someDateTime, Activity.Other, 3),
+                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
         }
 
-        private static ActivityIntervalProcessor.Interval Interval(DateTime start, Activity activity, TimeSpan duration)
+        private void AssertIntervals(Developer developer, params ActivityIntervalProcessor.Interval[] expecteds)
+        {
+            Assert.AreEqual(expecteds, _uut.Intervals[developer]);
+        }
+
+        private static ActivityIntervalProcessor.Interval Interval(DateTime start, Activity activity, int durationInSeconds)
         {
             return new ActivityIntervalProcessor.Interval
             {
                 Start = start,
                 Activity = activity,
-                End = start + duration
+                End = start + TimeSpan.FromSeconds(durationInSeconds)
             };
         }
 
@@ -97,9 +112,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             return new ActivityEvent { TriggeredAt = triggeredAt, Activity = activity};
         }
 
-        private static ActivityEvent SomeEvent(DateTime triggeredAt, Activity activity, TimeSpan duration)
+        private static ActivityEvent SomeEvent(DateTime triggeredAt, Activity activity, int durationInSeconds)
         {
-            return new ActivityEvent { TriggeredAt = triggeredAt, Activity = activity, Duration = duration };
+            return new ActivityEvent { TriggeredAt = triggeredAt, Activity = activity, Duration = TimeSpan.FromSeconds(durationInSeconds) };
         }
     }
 }
