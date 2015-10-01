@@ -55,7 +55,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             }
         }
 
-        private void Fire(IKaVEList<VersionControlAction> content, SolutionName solutionName)
+        private void Fire(IKaVEList<IVersionControlAction> content, SolutionName solutionName)
         {
             var gitEvent = Create<VersionControlEvent>();
             gitEvent.Solution = solutionName;
@@ -63,9 +63,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
             FireNow(gitEvent);
         }
 
-        private IKaVEList<VersionControlAction> ReadNewGitActionsFrom(IEnumerable<string> logContent)
+        private IKaVEList<IVersionControlAction> ReadNewGitActionsFrom(IEnumerable<string> logContent)
         {
-            var gitActions = Lists.NewList<VersionControlAction>();
+            var gitActions = Lists.NewList<IVersionControlAction>();
 
             foreach (var logEntry in logContent)
             {
