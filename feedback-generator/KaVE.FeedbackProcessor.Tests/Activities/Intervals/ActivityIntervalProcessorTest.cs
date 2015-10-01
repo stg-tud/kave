@@ -85,7 +85,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
             _uut.OnStreamEnds();
 
-            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(3));
+            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(42));
 
             AssertIntervals(_someDeveloper,
                 Interval(_someDateTime, Activity.Other, 3),
@@ -100,13 +100,30 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
             _uut.OnStreamEnds();
 
-            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(1));
+            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(42));
 
             AssertIntervals(
                 _someDeveloper,
                 Interval(_someDateTime, Activity.Other, 2),
                 Interval(_someDateTime.AddSeconds(2), Activity.Inactive, 1),
                 Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+        }
+
+        [Test]
+        public void InsertsLongInactivityIfGapExceedsThreshold()
+        {
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(SomeEvent(_someDateTime, Activity.Other, 1));
+            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(5), Activity.Navigation, 1));
+            _uut.OnStreamEnds();
+
+            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2));
+
+            AssertIntervals(
+                _someDeveloper,
+                Interval(_someDateTime, Activity.Other, 2),
+                Interval(_someDateTime.AddSeconds(2), Activity.InactiveLong, 3),
+                Interval(_someDateTime.AddSeconds(5), Activity.Navigation, 1));
         }
 
         private void AssertIntervals(Developer developer, params ActivityIntervalProcessor.Interval[] expecteds)

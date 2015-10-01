@@ -114,7 +114,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             Intervals[_currentDeveloper].Add(_currentInterval);
         }
 
-        public void CorrectIntervalsWithTimeout(TimeSpan activityTimeout)
+        public void CorrectIntervalsWithTimeout(TimeSpan activityTimeout, TimeSpan shortInactivityTimeout)
         {
             foreach (var intervalStream in Intervals.Values)
             {
@@ -124,17 +124,15 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     var interval = intervalStream[i];
                     if (previousInterval != null)
                     {
-                        if (interval.Start - previousInterval.End <= activityTimeout)
+                        var gapDuration = interval.Start - previousInterval.End;
+                        if (gapDuration <= activityTimeout)
+                        {
                             previousInterval.End = interval.Start;
+                        }
                         else
                         {
                             previousInterval.End += activityTimeout;
-                            interval = new Interval
-                            {
-                                Start = previousInterval.End,
-                                Activity = Activity.Inactive,
-                                End = interval.Start
-                            };
+                            interval = CreateInactivity(previousInterval.End, interval.Start, shortInactivityTimeout);
                             intervalStream.Insert(i, interval);
                         }
                     }
@@ -142,6 +140,17 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     previousInterval = interval;
                 }
             }
+        }
+
+        private static Interval CreateInactivity(DateTime start, DateTime end, TimeSpan shortInactivityTimeout)
+        {
+            var gapDuration = end - start;
+            return new Interval
+            {
+                Start = start,
+                Activity = gapDuration <= shortInactivityTimeout ? Activity.Inactive : Activity.InactiveLong,
+                End = end
+            };
         }
     }
 }
