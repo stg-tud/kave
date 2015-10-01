@@ -83,14 +83,23 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 StartIntervalAt(@event);
             }
 
-            if (_currentInterval.Activity != @event.Activity)
+            if (_currentInterval.Activity != GetIntervalActivity(@event))
             {
+                if (_currentInterval.Activity == Activity.Away)
+                {
+                    _currentInterval.End = @event.GetTriggeredAt();
+                }
                 StartIntervalAt(@event);
             }
             else
             {
                 _currentInterval.End = GetEnd(@event);
             }
+        }
+
+        private static Activity GetIntervalActivity(ActivityEvent @event)
+        {
+            return @event.Activity == Activity.LeaveIDE ? Activity.Away : @event.Activity;
         }
 
         private static DateTime GetEnd(ActivityEvent @event)
@@ -108,7 +117,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             _currentInterval = new Interval
             {
                 Start = @event.GetTriggeredAt(),
-                Activity = @event.Activity,
+                Activity = GetIntervalActivity(@event),
                 End = GetEnd(@event)
             };
             Intervals[_currentDeveloper].Add(_currentInterval);
