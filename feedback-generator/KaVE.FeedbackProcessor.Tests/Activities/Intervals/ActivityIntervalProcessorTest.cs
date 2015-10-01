@@ -89,7 +89,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 
             AssertIntervals(_someDeveloper,
                 Interval(_someDateTime, Activity.Other, 3),
-                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 4));
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 _someDeveloper,
                 Interval(_someDateTime, Activity.Other, 2),
                 Interval(_someDateTime.AddSeconds(2), Activity.Inactive, 1),
-                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 _someDeveloper,
                 Interval(_someDateTime, Activity.Other, 2),
                 Interval(_someDateTime.AddSeconds(2), Activity.InactiveLong, 3),
-                Interval(_someDateTime.AddSeconds(5), Activity.Navigation, 1));
+                Interval(_someDateTime.AddSeconds(5), Activity.Navigation, 2));
         }
 
         [Test]

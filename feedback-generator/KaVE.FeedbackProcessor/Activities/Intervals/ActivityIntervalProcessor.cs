@@ -154,7 +154,6 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return _currentInterval.Activity != GetIntervalActivity(@event);
         }
 
-
         public void CorrectIntervalsWithTimeout(TimeSpan activityTimeout, TimeSpan shortInactivityTimeout)
         {
             foreach (var intervalStream in Intervals.Values)
@@ -179,6 +178,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     }
 
                     previousInterval = interval;
+                }
+
+                if (previousInterval != null)
+                {
+                    previousInterval.End += activityTimeout;
                 }
             }
         }
