@@ -194,6 +194,9 @@
     <Compile Include="Utils\Events\EventHandlingTest.cs" />
     <Compile Include="Utils\Exceptions\ExecuteTest.cs" />
     <Compile Include="Utils\HashCodeUtilsTest.cs" />
+    <Compile Include="Utils\Histograms\FlatHistogramTest.cs" />
+    <Compile Include="Utils\Histograms\HistogramTest.cs" />
+    <Compile Include="Utils\Histograms\MergingHistogramTest.cs" />
     <Compile Include="Utils\InvokeTest.cs" />
     <Compile Include="Utils\IO\FileSystemExTest.cs" />
     <Compile Include="Utils\IO\IoUtilsTest.cs" />

@@ -93,6 +93,9 @@
     <Compile Include="Utils\DateTime\DateTimeEx.cs" />
     <Compile Include="Utils\DateUtils.cs" />
     <Compile Include="Utils\Exceptions\FileLogger.cs" />
+    <Compile Include="Utils\Histograms\FlatHistogram.cs" />
+    <Compile Include="Utils\Histograms\Histogram.cs" />
+    <Compile Include="Utils\Histograms\MergingHistogram.cs" />
     <Compile Include="Utils\IO\FileSystemEx.cs" />
     <Compile Include="Utils\IO\IIoUtils.cs" />
     <Compile Include="Utils\IO\IoUtils.cs" />

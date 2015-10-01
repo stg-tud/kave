@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.Histograms;
 using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.RS.SolutionAnalysis
@@ -28,8 +28,9 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private readonly RelativeEditLocationAnalysis _locationAnalysis = new RelativeEditLocationAnalysis();
         private readonly string _root;
-        private DateTime startedAt;
+        private DateTime _startedAt;
 
+        private readonly FlatHistogram _flatHist = new FlatHistogram(10);
         private readonly Histogram _histogram2 = new Histogram(2);
         private readonly Histogram _histogram3 = new Histogram(3);
         private readonly Histogram _histogram4 = new Histogram(4);
@@ -53,7 +54,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         public void Run()
         {
-            startedAt = DateTime.Now;
+            _startedAt = DateTime.Now;
 
             var zips = FindFeedbackZips();
             Log(@"found {0} zips:", zips.Count);
@@ -110,6 +111,9 @@ namespace KaVE.RS.SolutionAnalysis
 
                     Console.Write('x');
 
+                    _flatHist.Add(loc.Location, loc.Size);
+
+
                     switch (loc.Size)
                     {
                         case 2:
@@ -145,7 +149,7 @@ namespace KaVE.RS.SolutionAnalysis
             }
 
             Log("");
-            Log("started at {0}", startedAt);
+            Log("started at {0}", _startedAt);
             Log(
                 "finished analyzing {0} events ({1} completion events, {2} with location)",
                 numEvents,
@@ -162,6 +166,9 @@ namespace KaVE.RS.SolutionAnalysis
             Print("histogram 8:", _histogram8);
             Print("histogram 9:", _histogram9);
             Print("histogram 10+:", _histogram10P);
+
+            Console.WriteLine(@"flat histogram:");
+            Console.WriteLine(_flatHist);
         }
 
         private void Print(string title, Histogram h)

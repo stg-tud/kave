@@ -15,9 +15,10 @@
  */
 
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Histograms;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests
+namespace KaVE.Commons.Tests.Utils.Histograms
 {
     internal class MergingHistogramTest
     {

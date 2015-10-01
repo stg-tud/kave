@@ -17,7 +17,7 @@
 using System;
 using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.RS.SolutionAnalysis
+namespace KaVE.Commons.Utils.Histograms
 {
     public class MergingHistogram : Histogram
     {
