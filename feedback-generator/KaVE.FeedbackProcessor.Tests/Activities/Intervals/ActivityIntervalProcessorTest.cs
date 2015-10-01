@@ -92,9 +92,27 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
         }
 
+        [Test]
+        public void InsertsInactivityIfGapExceedsTimeout()
+        {
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(SomeEvent(_someDateTime, Activity.Other, 1));
+            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+            _uut.OnStreamEnds();
+
+            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(1));
+
+            AssertIntervals(
+                _someDeveloper,
+                Interval(_someDateTime, Activity.Other, 2),
+                Interval(_someDateTime.AddSeconds(2), Activity.Inactive, 1),
+                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+        }
+
         private void AssertIntervals(Developer developer, params ActivityIntervalProcessor.Interval[] expecteds)
         {
-            Assert.AreEqual(expecteds, _uut.Intervals[developer]);
+            var actuals = _uut.Intervals[developer];
+            Assert.AreEqual(expecteds, actuals);
         }
 
         private static ActivityIntervalProcessor.Interval Interval(DateTime start, Activity activity, int durationInSeconds)
