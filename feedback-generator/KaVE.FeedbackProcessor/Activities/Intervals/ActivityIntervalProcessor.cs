@@ -60,13 +60,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         public IDictionary<Developer, IList<Interval>> Intervals;
         private Developer _currentDeveloper;
         private Interval _currentInterval;
-        private readonly TimeSpan _activityTimeout;
 
         public ActivityIntervalProcessor()
         {
             Intervals = new Dictionary<Developer, IList<Interval>>();
             RegisterFor<ActivityEvent>(Handle);
-            _activityTimeout = TimeSpan.FromMilliseconds(16000);
         }
 
         public override void OnStreamStarts(Developer developer)
