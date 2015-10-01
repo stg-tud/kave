@@ -139,6 +139,20 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(_someDateTime.AddSeconds(10), Activity.Development, 1));
         }
 
+        [Test]
+        public void InsertsAwayFromLastActivityUntilEnterIDE()
+        {
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(SomeEvent(_someDateTime, Activity.Development, 1));
+            _uut.OnEvent(SomeEvent(_someDateTime.AddSeconds(6), Activity.EnterIDE, 1));
+            _uut.OnStreamEnds();
+
+            AssertIntervals(_someDeveloper,
+                Interval(_someDateTime, Activity.Development, 1),
+                Interval(_someDateTime.AddSeconds(1), Activity.Away, 5),
+                Interval(_someDateTime.AddSeconds(6), Activity.Other, 1));
+        }
+
         private void AssertIntervals(Developer developer, params ActivityIntervalProcessor.Interval[] expecteds)
         {
             var actuals = _uut.Intervals[developer];

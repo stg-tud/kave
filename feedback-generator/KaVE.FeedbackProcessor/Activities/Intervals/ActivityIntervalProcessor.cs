@@ -83,13 +83,28 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 StartIntervalAt(@event);
             }
 
-            if (_currentInterval.Activity != GetIntervalActivity(@event))
+            if (ActivityEndsCurrentInterval(@event))
             {
+                var previousInterval = _currentInterval;
                 if (_currentInterval.Activity == Activity.Away)
                 {
                     _currentInterval.End = @event.GetTriggeredAt();
                 }
                 StartIntervalAt(@event);
+                if (_currentInterval.Activity == Activity.Away)
+                {
+                    _currentInterval.Start = previousInterval.End;
+                    if (@event.Activity == Activity.EnterIDE)
+                    {
+                        _currentInterval.End = @event.GetTriggeredAt();
+                        StartIntervalAt(new ActivityEvent
+                        {
+                            TriggeredAt = @event.GetTriggeredAt(),
+                            Activity = Activity.Other,
+                            Duration = @event.Duration
+                        });
+                    }
+                }
             }
             else
             {
@@ -97,9 +112,14 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             }
         }
 
+        private bool ActivityEndsCurrentInterval(ActivityEvent @event)
+        {
+            return _currentInterval.Activity != GetIntervalActivity(@event);
+        }
+
         private static Activity GetIntervalActivity(ActivityEvent @event)
         {
-            return @event.Activity == Activity.LeaveIDE ? Activity.Away : @event.Activity;
+            return @event.Activity == Activity.LeaveIDE || @event.Activity == Activity.EnterIDE ? Activity.Away : @event.Activity;
         }
 
         private static DateTime GetEnd(ActivityEvent @event)
