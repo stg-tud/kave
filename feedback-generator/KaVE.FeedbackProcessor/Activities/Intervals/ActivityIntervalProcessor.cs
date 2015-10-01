@@ -152,9 +152,10 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return _currentInterval.Activity != GetIntervalActivity(@event);
         }
 
-        public void CorrectIntervalsWithTimeout(TimeSpan activityTimeout, TimeSpan shortInactivityTimeout)
+        public IDictionary<Developer, IList<Interval>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout, TimeSpan shortInactivityTimeout)
         {
-            foreach (var intervalStream in Intervals.Values)
+            IDictionary<Developer, IList<Interval>> correctedIntervals = CloneIntervals();
+            foreach (var intervalStream in correctedIntervals.Values)
             {
                 Interval previousInterval = null;
                 for (var i = 0; i < intervalStream.Count; i++)
@@ -183,6 +184,26 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     previousInterval.End += activityTimeout;
                 }
             }
+            return correctedIntervals;
+        }
+
+        private Dictionary<Developer, IList<Interval>> CloneIntervals()
+        {
+            var intervals = new Dictionary<Developer, IList<Interval>>();
+            foreach (var developerStream in Intervals)
+            {
+                intervals[developerStream.Key] = new List<Interval>();
+                foreach (var interval in developerStream.Value)
+                {
+                    intervals[developerStream.Key].Add(new Interval
+                    {
+                        Start = interval.Start,
+                        Activity = interval.Activity,
+                        End = interval.End
+                    });
+                }
+            }
+            return intervals;
         }
 
         private static Interval CreateInactivity(DateTime start, DateTime end, TimeSpan shortInactivityTimeout)
@@ -194,6 +215,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 Activity = gapDuration <= shortInactivityTimeout ? Activity.Inactive : Activity.InactiveLong,
                 End = end
             };
+        }
+
+        public string IntervalsToDeveloperDayCSV()
+        {
+            return null;
         }
     }
 }

@@ -66,7 +66,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime, Activity.Other, 1),
                 SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 1),
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Other, 1),
                 Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
         }
 
@@ -77,9 +78,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime, Activity.Other, 1),
                 SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
 
-            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(42));
-
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 3),
+            AssertCorrectedIntervals(
+                TimeSpan.FromSeconds(3),
+                TimeSpan.FromSeconds(42),
+                Interval(_someDateTime, Activity.Other, 3),
                 Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 4));
         }
 
@@ -90,9 +92,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime, Activity.Other, 1),
                 SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
 
-            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(42));
-
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 2),
+            AssertCorrectedIntervals(
+                TimeSpan.FromSeconds(1),
+                TimeSpan.FromSeconds(42),
+                Interval(_someDateTime, Activity.Other, 2),
                 Interval(_someDateTime.AddSeconds(2), Activity.Inactive, 1),
                 Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
         }
@@ -104,9 +107,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime, Activity.Other, 1),
                 SomeEvent(_someDateTime.AddSeconds(5), Activity.Navigation, 1));
 
-            _uut.CorrectIntervalsWithTimeout(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2));
-
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 2),
+            AssertCorrectedIntervals(
+                TimeSpan.FromSeconds(1),
+                TimeSpan.FromSeconds(2),
+                Interval(_someDateTime, Activity.Other, 2),
                 Interval(_someDateTime.AddSeconds(2), Activity.InactiveLong, 3),
                 Interval(_someDateTime.AddSeconds(5), Activity.Navigation, 2));
         }
@@ -118,7 +122,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime, Activity.LeaveIDE, 1),
                 SomeEvent(_someDateTime.AddSeconds(10), Activity.Development, 1));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Away, 10),
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Away, 10),
                 Interval(_someDateTime.AddSeconds(10), Activity.Development, 1));
         }
 
@@ -129,7 +134,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime, Activity.Development, 1),
                 SomeEvent(_someDateTime.AddSeconds(6), Activity.EnterIDE, 1));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Development, 1),
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Development, 1),
                 Interval(_someDateTime.AddSeconds(1), Activity.Away, 5),
                 Interval(_someDateTime.AddSeconds(6), Activity.Other, 1));
         }
@@ -141,7 +147,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime, Activity.LeaveIDE, 1),
                 SomeEvent(_someDateTime.AddSeconds(10), Activity.EnterIDE, 1));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Away, 10),
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Away, 10),
                 Interval(_someDateTime.AddSeconds(10), Activity.Other, 1));
         }
 
@@ -158,6 +165,15 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         private void AssertIntervals(params ActivityIntervalProcessor.Interval[] expecteds)
         {
             var actuals = _uut.Intervals[_someDeveloper];
+            Assert.AreEqual(expecteds, actuals);
+        }
+
+        private void AssertCorrectedIntervals(TimeSpan activityTimeout,
+            TimeSpan shortInactivityTimeout,
+            params ActivityIntervalProcessor.Interval[] expecteds)
+        {
+            var correctedIntervals = _uut.GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout);
+            var actuals = correctedIntervals[_someDeveloper];
             Assert.AreEqual(expecteds, actuals);
         }
 
