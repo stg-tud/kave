@@ -17,8 +17,10 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
+using MongoDB.Bson;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
@@ -217,9 +219,46 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             };
         }
 
-        public string IntervalsToDeveloperDayCSV()
+        public string IntervalsToDeveloperBudgetCsv(TimeSpan activityTimeout, TimeSpan shortInactivityTimeout)
         {
-            return null;
+            var builder = new CsvBuilder();
+            foreach (var developerStream in GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout))
+            {
+                var days = 0;
+                var numberOfShortInactivities = 0;
+                var numberOfLongInactivities = 0;
+                Interval previousInterval = null;
+                IDictionary<Activity, TimeSpan> budget = new Dictionary<Activity, TimeSpan>();
+                foreach (var interval in developerStream.Value)
+                {
+                    if (interval.Start.Date != interval.End.Date ||
+                        (previousInterval != null && previousInterval.End.Date != interval.Start.Date))
+                    {
+                        days++;
+                    }
+                    if (interval.Activity == Activity.Inactive)
+                    {
+                        numberOfShortInactivities++;
+                    }
+                    if (interval.Activity == Activity.InactiveLong)
+                    {
+                        numberOfLongInactivities++;
+                    }
+                    budget[interval.Activity] += interval.End - interval.Start;
+                    previousInterval = interval;
+                }
+                
+                builder["developer"] = developerStream.Key.Id;
+                builder["active days"] = days;
+                builder["# of intervals"] = developerStream.Value.Count;
+                builder["# of short inactivities"] = numberOfShortInactivities;
+                builder["# of long inactivities"] = numberOfLongInactivities;
+                foreach (var activity in budget)
+                {
+                    builder[activity.Key.ToString()] = activity.Value.TotalMilliseconds/days;
+                }
+            }
+            return builder.Build();
         }
     }
 }
