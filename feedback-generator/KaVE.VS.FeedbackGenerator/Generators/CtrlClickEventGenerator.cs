@@ -14,73 +14,92 @@
  * limitations under the License.
  */
 
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Windows.Input;
-using Gma.System.MouseKeyHook;
-using JetBrains.Application;
+using System.Collections.Specialized;
+using System.Linq;
+using JetBrains.DataFlow;
+using JetBrains.Interop.WinApi;
+using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.Util;
+using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 namespace KaVE.VS.FeedbackGenerator.Generators
 {
-    [ShellComponent]
-    internal class CtrlClickEventGenerator : EventGeneratorBase, IDisposable
+    [SolutionComponent]
+    internal class CtrlClickEventGenerator : EventGeneratorBase
     {
-        private readonly ICtrlKeyStateProvider _controlKeyStateProvider;
-
-        private readonly IKeyboardMouseEvents _keyboardMouseHook;
+        private readonly Lifetime _myLifetime;
+        private readonly ITreeNodeProvider _treeNodeProvider;
 
         public CtrlClickEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
-            [NotNull] ICtrlKeyStateProvider ctrlKeyStateProvider) : base(env, messageBus, dateUtils)
+            [NotNull] ITextControlManager textControlManager,
+            [NotNull] ITreeNodeProvider treeNodeProvider,
+            [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils)
         {
-            _controlKeyStateProvider = ctrlKeyStateProvider;
-            _keyboardMouseHook = Hook.AppEvents();
-            _keyboardMouseHook.MouseClick += OnClick;
+            _myLifetime = lifetime;
+            _treeNodeProvider = treeNodeProvider;
+
+            foreach (var textControl in textControlManager.TextControls)
+            {
+                AdviceOnClick(textControl);
+            }
+
+            textControlManager.TextControls.CollectionChanged += AdviceOnNewControls;
         }
 
-        public void OnClick(object sender, MouseEventArgs args)
+        public void OnClick(TextControlMouseEventArgs args)
         {
-            if (args.Button.Equals(MouseButtons.Left) && _controlKeyStateProvider.CtrlIsPressed)
+            if (args.KeysAndButtons == KeyStateMasks.MK_CONTROL)
             {
-                var relativeLocation = new Point(args.X - DTE.ActiveWindow.Left, DTE.ActiveWindow.Top);
-                Fire(args.Location, relativeLocation);
+                var infoEvent = Create<InfoEvent>();
+                var treeNode = _treeNodeProvider.GetTreeNode(args.TextControl);
+                infoEvent.Info = "CtrlClick: " + treeNode.GetText();
+                Fire(infoEvent);
             }
         }
 
-        private void Fire(Point location, Point locationInActiveWindow)
+        private void AdviceOnNewControls(object sender, NotifyCollectionChangedEventArgs args)
         {
-            var clickEvent = Create<InfoEvent>();
-            clickEvent.Info = string.Format(
-                "CtrlClick triggered at {0} ; In the active Window at {1}",
-                location,
-                locationInActiveWindow);
-            Fire(clickEvent);
+            if (args.NewItems != null)
+            {
+                foreach (var newTextControl in args.NewItems.Cast<ITextControl>())
+                {
+                    AdviceOnClick(newTextControl);
+                }
+            }
         }
 
-        public void Dispose()
+        private void AdviceOnClick(ITextControl textControl)
         {
-            _keyboardMouseHook.Dispose();
+            textControl.Window.MouseUp.Advise(_myLifetime, OnClick);
         }
     }
 
-    internal interface ICtrlKeyStateProvider
+    public interface ITreeNodeProvider
     {
-        bool CtrlIsPressed { get; }
+        ITreeNode GetTreeNode(ITextControl textControl);
     }
 
-    [ShellComponent]
-    internal class CtrlKeyStateProvider : ICtrlKeyStateProvider
+    [SolutionComponent]
+    internal class TreeNodeProvider : ITreeNodeProvider
     {
-        public bool CtrlIsPressed
+        private readonly ISolution _solution;
+
+        public TreeNodeProvider([NotNull] ISolution solution)
         {
-            get { return Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl); }
+            _solution = solution;
+        }
+
+        [Pure]
+        public ITreeNode GetTreeNode(ITextControl textControl)
+        {
+            return TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
         }
     }
 }
