@@ -21,10 +21,10 @@ using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
-using KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory;
+using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToUsageHistory
+namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
 {
     internal class IoHelperTest
     {

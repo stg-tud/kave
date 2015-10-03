@@ -19,20 +19,20 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory
+namespace KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits
 {
-    public class CompletionEventToUsageHistoryRunner
+    public class CompletionEventToMicroCommitRunner
     {
-        private readonly ITupleGenerator _tupleGenerator;
+        private readonly IMicroCommitGenerator _microCommitGenerator;
         private readonly IIoHelper _ioHelper;
 
         private int _numTotalEvents;
         private int _numTotalTuples;
         private Dictionary<string, IList<CompletionEvent>> _sortedEvents;
 
-        public CompletionEventToUsageHistoryRunner(ITupleGenerator tupleGenerator, IIoHelper ioHelper)
+        public CompletionEventToMicroCommitRunner(IMicroCommitGenerator microCommitGenerator, IIoHelper ioHelper)
         {
-            _tupleGenerator = tupleGenerator;
+            _microCommitGenerator = microCommitGenerator;
             _ioHelper = ioHelper;
         }
 
@@ -81,7 +81,7 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory
 
             foreach (var @event in _ioHelper.ReadCompletionEvents(exportFile))
             {
-                var key = _tupleGenerator.GetTemporalIndex(@event);
+                var key = _microCommitGenerator.GetTemporalIndex(@event);
                 if ("065cbaef-993a-465a-acce-56c8bc03fc9c_20150617_1965740628".Equals(key))
                 {
                     Console.WriteLine("############################");
@@ -117,9 +117,9 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory
                 return;
             }
 
-            var tuple = _tupleGenerator.FindFirstAndLast(events);
+            var tuple = _microCommitGenerator.FindFirstAndLast(events);
 
-            var queryTuples = _tupleGenerator.GenerateTuples(tuple.Item1, tuple.Item2);
+            var queryTuples = _microCommitGenerator.GenerateTuples(tuple.Item1, tuple.Item2);
             foreach (var qt in queryTuples)
             {
                 _ioHelper.AddTuple(qt);

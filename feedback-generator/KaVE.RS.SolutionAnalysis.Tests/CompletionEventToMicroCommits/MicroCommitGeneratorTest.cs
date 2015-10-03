@@ -24,22 +24,22 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.ObjectUsageExport;
-using KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory;
+using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToUsageHistory
+namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
 {
-    internal class TupleGeneratorTest
+    internal class MicroCommitGeneratorTest
     {
         private IUsageExtractor _usageExtractor;
-        private TupleGenerator _sut;
+        private MicroCommitGenerator _sut;
 
         [SetUp]
         public void Setup()
         {
             _usageExtractor = Mock.Of<IUsageExtractor>();
-            _sut = new TupleGenerator(_usageExtractor);
+            _sut = new MicroCommitGenerator(_usageExtractor);
         }
 
         [Test]

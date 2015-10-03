@@ -163,9 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompletionEventFilterTest.cs" />
-    <Compile Include="CompletionEventToUsageHistory\CompletionEventToUsageHistoryRunnerTest.cs" />
-    <Compile Include="CompletionEventToUsageHistory\IoHelperTest.cs" />
-    <Compile Include="CompletionEventToUsageHistory\TupleGeneratorTest.cs" />
+    <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunnerTest.cs" />
+    <Compile Include="CompletionEventToMicroCommits\IoHelperTest.cs" />
+    <Compile Include="CompletionEventToMicroCommits\MicroCommitGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BulkAnalysisTest.cs" />
     <Compile Include="RelativeEditLocationAnalysisTest.cs" />

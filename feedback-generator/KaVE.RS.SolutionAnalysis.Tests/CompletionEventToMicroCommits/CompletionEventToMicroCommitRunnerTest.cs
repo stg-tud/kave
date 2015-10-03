@@ -19,26 +19,26 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Collections;
-using KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory;
+using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToUsageHistory
+namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
 {
-    internal class CompletionEventToUsageHistoryRunnerTest
+    internal class CompletionEventToMicroCommitRunnerTest
     {
         private IIoHelper _ioHelper;
-        private ITupleGenerator _tupleGenerator;
+        private IMicroCommitGenerator _microCommitGenerator;
 
-        private CompletionEventToUsageHistoryRunner _sut;
+        private CompletionEventToMicroCommitRunner _sut;
 
         [SetUp]
         public void Setup()
         {
-            _tupleGenerator = Mock.Of<ITupleGenerator>();
+            _microCommitGenerator = Mock.Of<IMicroCommitGenerator>();
             _ioHelper = Mock.Of<IIoHelper>();
 
-            _sut = new CompletionEventToUsageHistoryRunner(_tupleGenerator, _ioHelper);
+            _sut = new CompletionEventToMicroCommitRunner(_microCommitGenerator, _ioHelper);
         }
 
         [Test]
@@ -64,25 +64,25 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToUsageHistory
                 .Setup(io => io.ReadCompletionEvents("b"))
                 .Returns(Lists.NewList(ce4));
 
-            Mock.Get(_tupleGenerator).Setup(t => t.GetTemporalIndex(ce1)).Returns("k1");
-            Mock.Get(_tupleGenerator).Setup(t => t.GetTemporalIndex(ce2)).Returns("k1");
-            Mock.Get(_tupleGenerator).Setup(t => t.GetTemporalIndex(ce3)).Returns("k2");
-            Mock.Get(_tupleGenerator).Setup(t => t.GetTemporalIndex(ce4)).Returns("k2");
+            Mock.Get(_microCommitGenerator).Setup(t => t.GetTemporalIndex(ce1)).Returns("k1");
+            Mock.Get(_microCommitGenerator).Setup(t => t.GetTemporalIndex(ce2)).Returns("k1");
+            Mock.Get(_microCommitGenerator).Setup(t => t.GetTemporalIndex(ce3)).Returns("k2");
+            Mock.Get(_microCommitGenerator).Setup(t => t.GetTemporalIndex(ce4)).Returns("k2");
 
-            Mock.Get(_tupleGenerator)
+            Mock.Get(_microCommitGenerator)
                 .Setup(t => t.FindFirstAndLast(Lists.NewList(ce1, ce2)))
                 .Returns(Tuple.Create(ctx1, ctx2));
-            Mock.Get(_tupleGenerator)
+            Mock.Get(_microCommitGenerator)
                 .Setup(t => t.FindFirstAndLast(Lists.NewList(ce3, ce4)))
                 .Returns(Tuple.Create(ctx3, ctx4));
 
             var t1 = CreateTuple("a");
             var t2 = CreateTuple("b");
 
-            Mock.Get(_tupleGenerator)
+            Mock.Get(_microCommitGenerator)
                 .Setup(t => t.GenerateTuples(ctx1, ctx2))
                 .Returns(new List<Tuple<Query, Query>> {t1});
-            Mock.Get(_tupleGenerator)
+            Mock.Get(_microCommitGenerator)
                 .Setup(t => t.GenerateTuples(ctx3, ctx4))
                 .Returns(new List<Tuple<Query, Query>> {t2});
 
@@ -93,16 +93,16 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToUsageHistory
             Mock.Get(_ioHelper).Verify(io => io.ReadCompletionEvents("b"), Times.Once);
             foreach (var ce in new[] {ce1, ce2, ce3, ce4})
             {
-                Mock.Get(_tupleGenerator).Verify(t => t.GetTemporalIndex(ce), Times.Once);
+                Mock.Get(_microCommitGenerator).Verify(t => t.GetTemporalIndex(ce), Times.Once);
             }
 
-            Mock.Get(_tupleGenerator)
+            Mock.Get(_microCommitGenerator)
                 .Verify(t => t.FindFirstAndLast(Lists.NewList(ce1, ce2)), Times.Once());
-            Mock.Get(_tupleGenerator)
+            Mock.Get(_microCommitGenerator)
                 .Verify(t => t.FindFirstAndLast(Lists.NewList(ce3, ce4)), Times.Once());
 
-            Mock.Get(_tupleGenerator).Verify(t => t.GenerateTuples(ctx1, ctx2), Times.Once());
-            Mock.Get(_tupleGenerator).Verify(t => t.GenerateTuples(ctx3, ctx4), Times.Once());
+            Mock.Get(_microCommitGenerator).Verify(t => t.GenerateTuples(ctx1, ctx2), Times.Once());
+            Mock.Get(_microCommitGenerator).Verify(t => t.GenerateTuples(ctx3, ctx4), Times.Once());
 
             Mock.Get(_ioHelper).Verify(io => io.AddTuple(t1));
             Mock.Get(_ioHelper).Verify(io => io.AddTuple(t2));
@@ -127,11 +127,11 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToUsageHistory
                 .Setup(io => io.ReadCompletionEvents("a"))
                 .Returns(Lists.NewList(ce1));
 
-            Mock.Get(_tupleGenerator).Setup(t => t.GetTemporalIndex(ce1)).Returns("k1");
+            Mock.Get(_microCommitGenerator).Setup(t => t.GetTemporalIndex(ce1)).Returns("k1");
 
             _sut.Run();
 
-            Mock.Get(_tupleGenerator).Verify(t => t.FindFirstAndLast(It.IsAny<List<CompletionEvent>>()), Times.Never);
+            Mock.Get(_microCommitGenerator).Verify(t => t.FindFirstAndLast(It.IsAny<List<CompletionEvent>>()), Times.Never);
         }
     }
 }

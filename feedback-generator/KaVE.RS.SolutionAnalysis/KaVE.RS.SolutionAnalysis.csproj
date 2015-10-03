@@ -169,12 +169,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnalysisStatsPrinter.cs" />
     <Compile Include="CommandLineLogger.cs" />
     <Compile Include="CompletionEventFilter.cs" />
-    <Compile Include="CompletionEventToUsageHistory\CompletionEventToUsageHistoryRunner.cs" />
-    <Compile Include="CompletionEventToUsageHistory\IoHelper.cs" />
-    <Compile Include="CompletionEventToUsageHistory\TupleGenerator.cs" />
+    <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunner.cs" />
+    <Compile Include="CompletionEventToMicroCommits\IoHelper.cs" />
+    <Compile Include="CompletionEventToMicroCommits\MicroCommitGenerator.cs" />
     <Compile Include="EditLocationRunner.cs" />
     <Compile Include="Episodes\Event.cs" />
     <Compile Include="Episodes\EventStreamGenerator.cs" />

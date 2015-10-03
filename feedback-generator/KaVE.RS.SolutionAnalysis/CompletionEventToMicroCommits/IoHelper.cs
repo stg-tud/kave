@@ -23,7 +23,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.IO.Archives;
 
-namespace KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory
+namespace KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits
 {
     public interface IIoHelper
     {

@@ -30,11 +30,11 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class BulkAnalysisTest : BaseTestWithExistingSolution
     {
-        private const string Root = @"C:\Users\seb\Desktop\Data\";
+        private const string Root = @"E:\";
         //private const string RepositoryRoot = Root + @"Repositories-Test\";
-        private const string RepositoryRoot = @"C:\Users\seb\versioned_code\AnalysisTestCases\";
-        //private const string RepositoryRoot = Root + @"Repositories\";
-        private const string ContextRoot = Root + @"Contexts\Github\";
+        //private const string RepositoryRoot = @"C:\Users\seb\versioned_code\AnalysisTestCases\";
+        private const string RepositoryRoot = Root + @"Repositories\";
+        private const string ContextRoot = Root + @"Contexts\";
         private const string LogRoot = Root + @"Logs\";
 
         private string _currentSolution;
@@ -49,12 +49,41 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             var all = Directory.GetFiles(RepositoryRoot, "*.sln", SearchOption.AllDirectories);
             var filtered = all.Where(sln => !sln.Contains(@"\test\data\"));
             var shortened = filtered.Select(sln => sln.Substring(RepositoryRoot.Length));
-            return shortened;
+            var notAnalyzed = shortened.Where(s => !IsAlreadyAnalyzed(s));
+            var notMarked = notAnalyzed.Where(s => !IsAlreadyStarted(s));
+            var notCrashed = notMarked.Where(s => !IsCrashed(s));
+            return notCrashed;
+        }
+
+        private static bool IsCrashed(string shortenedSolution)
+        {
+            var marker = GetCrashMarkerName(shortenedSolution);
+            var isCrashed = File.Exists(marker);
+            return isCrashed;
+        }
+
+        // TODO ad hoc fix, write test!
+        private static bool IsAlreadyAnalyzed(string shortenedSolution)
+        {
+            var ctxZipName = GetZipName(shortenedSolution);
+            var isAlreadyAnalyzed = File.Exists(ctxZipName);
+            return isAlreadyAnalyzed;
+        }
+
+        // TODO ad hoc fix, write test!
+        private static bool IsAlreadyStarted(string shortenedSolution)
+        {
+            var ctxZipName = GetMarkerName(shortenedSolution, StartedMarker);
+            var isAlreadyMarked = File.Exists(ctxZipName);
+            return isAlreadyMarked;
         }
 
         private string _logName;
         private string _zipName;
         private TestRunnerLogger _logger;
+        private const string CrashMarker = ".crashed";
+        private const string StartedMarker = ".started";
+        private const string EndMarker = ".ended";
 
         [TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string shortenedSolution)
@@ -62,6 +91,9 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             _currentSolution = shortenedSolution;
             _logName = GetLogName(_currentSolution);
             _zipName = GetZipName(_currentSolution);
+
+            CreateMarker(shortenedSolution, StartedMarker);
+            File.Create(GetCrashMarkerName(shortenedSolution)).Close();
 
             Console.WriteLine("Opening solution: {0}\n", ExistingSolutionFilePath);
             Console.WriteLine("Log: {0}", _logName);
@@ -71,7 +103,15 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
             DoTestSolution(ExistingSolutionFilePath, RunAnalysis);
 
+            CreateMarker(shortenedSolution, EndMarker);
+            File.Delete(GetCrashMarkerName(shortenedSolution));
             _logger.AssertNoError();
+        }
+
+        private static void CreateMarker(string shortenedSolution, string marker)
+        {
+            var name = GetMarkerName(shortenedSolution, marker);
+            File.Create(name).Close();
         }
 
         private void RunAnalysis(Lifetime lifetime, ISolution solution)
@@ -99,6 +139,20 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private static string GetZipName(string relativeSolutionPath)
         {
             var fileName = ContextRoot + relativeSolutionPath + "-contexts.zip";
+            EnsureFolderExists(fileName);
+            return fileName;
+        }
+
+        private static string GetMarkerName(string relativeSolutionPath, string marker)
+        {
+            var fileName = ContextRoot + relativeSolutionPath + marker;
+            EnsureFolderExists(fileName);
+            return fileName;
+        }
+
+        private static string GetCrashMarkerName(string relativeSolutionPath)
+        {
+            var fileName = RepositoryRoot + relativeSolutionPath + CrashMarker;
             EnsureFolderExists(fileName);
             return fileName;
         }

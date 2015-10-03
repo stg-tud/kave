@@ -23,20 +23,20 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.ObjectUsageExport;
 
-namespace KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory
+namespace KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits
 {
-    public interface ITupleGenerator
+    public interface IMicroCommitGenerator
     {
         string GetTemporalIndex(CompletionEvent @event);
         Tuple<Context, Context> FindFirstAndLast(IList<CompletionEvent> es);
         List<Tuple<Query, Query>> GenerateTuples(Context first, Context last);
     }
 
-    public class TupleGenerator : ITupleGenerator
+    public class MicroCommitGenerator : IMicroCommitGenerator
     {
         private readonly IUsageExtractor _usageExtractor;
 
-        public TupleGenerator(IUsageExtractor usageExtractor)
+        public MicroCommitGenerator(IUsageExtractor usageExtractor)
         {
             _usageExtractor = usageExtractor;
         }
