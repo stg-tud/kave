@@ -74,7 +74,8 @@ namespace KaVE.Commons.Utils.Histograms
             sb.Append((long) Math.Round(sum));
             sb.Append(" values)\n");
 
-            return sb.ToString();
+            var res = sb.ToString().Replace(',', '.');
+            return res;
         }
     }
 }
