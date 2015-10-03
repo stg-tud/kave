@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -23,8 +24,10 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
+    [DataContract]
     public class ComposedExpression : IComposedExpression
     {
+        [DataMember]
         public IKaVEList<IVariableReference> References { get; set; }
 
         public IEnumerable<ISSTNode> Children

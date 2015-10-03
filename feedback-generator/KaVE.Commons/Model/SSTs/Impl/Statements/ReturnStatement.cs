@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Statements;
@@ -24,9 +25,13 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
+    [DataContract]
     public class ReturnStatement : IReturnStatement
     {
+        [DataMember]
         public ISimpleExpression Expression { get; set; }
+
+        [DataMember]
         public bool IsVoid { get; set; }
 
         public IEnumerable<ISSTNode> Children

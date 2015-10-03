@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.References;
@@ -24,10 +25,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
+    [DataContract]
     public class CompletionExpression : ICompletionExpression
     {
+        [DataMember]
         public ITypeName TypeReference { get; set; }
+
+        [DataMember]
         public IVariableReference VariableReference { get; set; }
+
+        [DataMember]
         public string Token { get; set; }
 
         public IEnumerable<ISSTNode> Children

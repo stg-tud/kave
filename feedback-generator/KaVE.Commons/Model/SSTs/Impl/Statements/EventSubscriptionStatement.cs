@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -26,10 +27,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
+    [DataContract]
     public class EventSubscriptionStatement : IEventSubscriptionStatement
     {
+        [DataMember]
         public IAssignableReference Reference { get; set; }
+
+        [DataMember]
         public EventSubscriptionOperation Operation { get; set; }
+
+        [DataMember]
         public IAssignableExpression Expression { get; set; }
 
         public IEnumerable<ISSTNode> Children

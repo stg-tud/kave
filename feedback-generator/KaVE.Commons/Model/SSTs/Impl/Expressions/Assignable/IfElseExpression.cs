@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -24,10 +25,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
+    [DataContract]
     public class IfElseExpression : IIfElseExpression
     {
+        [DataMember]
         public ISimpleExpression Condition { get; set; }
+
+        [DataMember]
         public ISimpleExpression ThenExpression { get; set; }
+
+        [DataMember]
         public ISimpleExpression ElseExpression { get; set; }
 
         public IEnumerable<ISSTNode> Children

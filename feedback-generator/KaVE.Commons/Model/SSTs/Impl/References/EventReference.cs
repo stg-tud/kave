@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -23,9 +24,13 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.References
 {
+    [DataContract]
     public class EventReference : IEventReference
     {
+        [DataMember]
         public IVariableReference Reference { get; set; }
+
+        [DataMember]
         public IEventName EventName { get; set; }
 
         public IEnumerable<ISSTNode> Children

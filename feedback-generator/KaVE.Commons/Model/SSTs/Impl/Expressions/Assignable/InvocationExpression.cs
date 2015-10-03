@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -26,10 +27,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
+    [DataContract]
     public class InvocationExpression : IInvocationExpression
     {
+        [DataMember]
         public IVariableReference Reference { get; set; }
+
+        [DataMember]
         public IMethodName MethodName { get; set; }
+
+        [DataMember]
         public IKaVEList<ISimpleExpression> Parameters { get; set; }
 
         public IEnumerable<ISSTNode> Children

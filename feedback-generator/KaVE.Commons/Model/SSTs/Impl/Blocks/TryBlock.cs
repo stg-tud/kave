@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -22,10 +23,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
+    [DataContract]
     public class TryBlock : ITryBlock
     {
+        [DataMember]
         public IKaVEList<IStatement> Body { get; set; }
+
+        [DataMember]
         public IKaVEList<ICatchBlock> CatchBlocks { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Finally { get; set; }
 
         public IEnumerable<ISSTNode> Children

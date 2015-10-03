@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -24,10 +25,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 {
+    [DataContract]
     public class PropertyDeclaration : IPropertyDeclaration
     {
+        [DataMember]
         public IPropertyName Name { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Get { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Set { get; set; }
 
         public IEnumerable<ISSTNode> Children

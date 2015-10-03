@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
@@ -24,10 +25,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
+    [DataContract]
     public class SwitchBlock : ISwitchBlock
     {
+        [DataMember]
         public IVariableReference Reference { get; set; }
+
+        [DataMember]
         public IKaVEList<ICaseBlock> Sections { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> DefaultSection { get; set; }
 
         public IEnumerable<ISSTNode> Children

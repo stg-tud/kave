@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -24,11 +25,19 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
+    [DataContract]
     public class ForLoop : IForLoop
     {
+        [DataMember]
         public IKaVEList<IStatement> Init { get; set; }
+
+        [DataMember]
         public ILoopHeaderExpression Condition { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Step { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Body { get; set; }
 
         public IEnumerable<ISSTNode> Children

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -22,9 +23,13 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
+    [DataContract]
     public class CaseBlock : ICaseBlock
     {
+        [DataMember]
         public ISimpleExpression Label { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Body { get; set; }
 
         public CaseBlock()

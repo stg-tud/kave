@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Blocks;
@@ -22,10 +23,16 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
+    [DataContract]
     public class CatchBlock : ICatchBlock
     {
+        [DataMember]
         public CatchBlockKind Kind { get; set; }
+
+        [DataMember]
         public IParameterName Parameter { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Body { get; set; }
 
         public CatchBlock()

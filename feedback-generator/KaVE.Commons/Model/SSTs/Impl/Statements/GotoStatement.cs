@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -22,8 +23,10 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
+    [DataContract]
     public class GotoStatement : IGotoStatement
     {
+        [DataMember]
         public string Label { get; set; }
 
         public IEnumerable<ISSTNode> Children

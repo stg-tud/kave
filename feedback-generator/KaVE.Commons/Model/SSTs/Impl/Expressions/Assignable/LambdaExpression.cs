@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -24,9 +25,13 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
+    [DataContract]
     public class LambdaExpression : ILambdaExpression
     {
+        [DataMember]
         public ILambdaName Name { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Body { get; set; }
 
         public IEnumerable<ISSTNode> Children

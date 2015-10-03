@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -23,8 +24,10 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Simple
 {
+    [DataContract]
     public class ReferenceExpression : IReferenceExpression
     {
+        [DataMember]
         public IReference Reference { get; set; }
 
         public IEnumerable<ISSTNode> Children

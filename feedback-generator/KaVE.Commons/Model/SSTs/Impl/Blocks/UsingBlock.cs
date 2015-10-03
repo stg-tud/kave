@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
@@ -24,9 +25,13 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
+    [DataContract]
     public class UsingBlock : IUsingBlock
     {
+        [DataMember]
         public IVariableReference Reference { get; set; }
+
+        [DataMember]
         public IKaVEList<IStatement> Body { get; set; }
 
         public IEnumerable<ISSTNode> Children

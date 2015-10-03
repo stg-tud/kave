@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -22,6 +23,7 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
+    [DataContract]
     public class UnsafeBlock : IUnsafeBlock
     {
         public IEnumerable<ISSTNode> Children
