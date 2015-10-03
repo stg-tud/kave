@@ -48,18 +48,18 @@ namespace KaVE.RS.SolutionAnalysis
         {
             Console.WriteLine(@"{0} start", DateTime.Now);
 
-            // data preparation
-            RunUsageExport(DirContexts, DirUsages);
-            RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
-            RunCompletionEventFilter(
-                DirEventsAll,
-                DirEventsCompletion_KeepNoTrigger,
-                CompletionEventFilter.NoTriggerPointOption.Keep);
+            /* data preparation */
+            //RunUsageExport(DirContexts, DirUsages);
+            //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
+            //RunCompletionEventFilter(
+            //   DirEventsAll,
+            //   DirEventsCompletion_KeepNoTrigger,
+            //   CompletionEventFilter.NoTriggerPointOption.Keep);
             RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirHistories);
             RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTriggerInlined, DirHistories_Inlined);
             //RunEventStreamExport(DirContexts, DirEpisodes);
 
-            // evaluations
+            /* evaluations */
             new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
 
 
