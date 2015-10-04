@@ -36,8 +36,13 @@ using KaVE.RS.Commons.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
+    public interface IPBNProposalItemsProvider
+    {
+        void Clear();
+    }
+
     [Language(typeof (CSharpLanguage))]
-    public class PBNProposalItemsProvider : CSharpItemsProviderBasic
+    public class PBNProposalItemsProvider : CSharpItemsProviderBasic, IPBNProposalItemsProvider
     {
         private readonly ILogger _logger;
         private readonly IPBNRecommenderStore _store;
@@ -52,6 +57,11 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             _store = store;
             _queryGen = new QueryExtractor();
             _logger = logger;
+        }
+
+        public void Clear()
+        {
+            _models.Clear();
         }
 
         protected override bool IsAvailable(CSharpCodeCompletionContext csContext)

@@ -47,7 +47,11 @@ limitations under the License.
             <Button Grid.Column="1" Grid.Row="0" Name="ModelStorePathBrowseButton"
                     Click="OnBrowse" Padding="15,3,15,3" Content="Browse ..." />
         </Grid>
-      
+
+        <DockPanel Grid.Column="0" Grid.Row="1" Margin="10,45,10,6">
+            <Button Name="ReloadModelsButton" Padding="15,3,15,3" HorizontalAlignment="Left" Click="OnReloadModels"
+                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
+        </DockPanel>
         <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,45,10,6">
             <Button Name="ResetButton" Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnResetSettings"
                     Content="{x:Static usageModelOptions:UsageModelOptionsMessages.SettingResetButton}" />

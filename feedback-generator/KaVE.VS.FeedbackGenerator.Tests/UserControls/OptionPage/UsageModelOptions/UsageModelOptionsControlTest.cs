@@ -15,6 +15,8 @@
  */
 
 using KaVE.Commons.TestUtils.UserControls;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using Moq;
@@ -26,11 +28,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
     internal class UsageModelOptionsControlTest : BaseOptionPageUserControlTest
     {
         private UsageModelOptionsControl _sut;
+        private Mock<IPBNProposalItemsProvider> _proposalItemProviderMock;
 
         [SetUp]
         public void Setup()
         {
+            _proposalItemProviderMock = new Mock<IPBNProposalItemsProvider>();
+            Registry.RegisterComponent(_proposalItemProviderMock.Object);
+
             _sut = Open();
+        }
+
+        [TearDown]
+        public void ClearRegistry()
+        {
+            Registry.Clear();
         }
 
         private UsageModelOptionsControl Open()
@@ -43,7 +55,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                         MockSettingsStore.Object,
                         MockActionExecutor.Object,
                         TestDataContexts,
-                        MockMessageBoxCreator.Object));
+                        MockMessageBoxCreator.Object
+                        ));
         }
 
         [Test]
@@ -76,6 +89,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         public void IsUsingModelStoreSettingsResetType()
         {
             Assert.AreEqual(ResetTypes.ModelStoreSettings, UsageModelOptionsControl.ResetType);
+        }
+
+        [Test]
+        public void ShouldClearModelsOnReloadModels()
+        {
+            UserControlTestUtils.Click(_sut.ReloadModelsButton);
+
+            _proposalItemProviderMock.Verify(provider => provider.Clear(), Times.Once);
         }
     }
 }
