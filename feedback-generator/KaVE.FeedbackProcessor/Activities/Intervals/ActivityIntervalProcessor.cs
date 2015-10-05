@@ -87,6 +87,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 StartInterval(_currentInterval.End, Activity.Away, @event.GetTriggeredAt());
             }
 
+            if (InConcurrentOtherInterval(@event))
+            {
+                _currentInterval.Activity = GetIntervalActivity(@event);
+            }
+            
             if (EndsCurrentInterval(@event))
             {
                 var previousInterval = _currentInterval;
@@ -148,6 +153,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         private bool EndsAwayButNotInAwayInterval(ActivityEvent @event)
         {
             return @event.Activity == Activity.EnterIDE && _currentInterval.Activity != Activity.Away;
+        }
+
+        private bool InConcurrentOtherInterval(ActivityEvent @event)
+        {
+            return _currentInterval.Activity == Activity.Other && _currentInterval.Start.Equals(@event.GetTriggeredAt());
         }
 
         private bool EndsCurrentInterval(ActivityEvent @event)

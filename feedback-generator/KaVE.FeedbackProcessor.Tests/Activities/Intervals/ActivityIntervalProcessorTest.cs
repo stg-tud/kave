@@ -173,6 +173,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(_someDateTime, Activity.Other, 1));
         }
 
+        [Test]
+        public void IgnoresAnyIfConcurrentToSpecificActivity()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(_someDateTime, Activity.Any),
+                SomeEvent(_someDateTime, Activity.Development, 1));
+
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Development, 1));
+        }
+
         private void WhenStreamIsProcessed(params ActivityEvent[] stream)
         {
             _uut.OnStreamStarts(_someDeveloper);
