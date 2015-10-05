@@ -673,6 +673,49 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             AddIf(block, CompletionCase.EmptyCompletionAfter, body);
         }
 
+        public override void VisitSwitchStatement(ISwitchStatement block, IList<IStatement> body)
+        {
+            AddIf(block, CompletionCase.EmptyCompletionBefore, body);
+
+            var switchBlock = new SwitchBlock {Reference = _exprVisitor.ToVariableRef(block.Condition, body)};
+
+            var currentSection = new KaVEList<IStatement>();
+            foreach (var statement in block.Block.StatementsEnumerable)
+            {
+                var switchLabel = statement as ISwitchLabelStatement;
+                if (switchLabel != null)
+                {
+                    currentSection = new KaVEList<IStatement>();
+
+                    AddIf(switchLabel, CompletionCase.EmptyCompletionAfter, currentSection);
+
+                    if (switchLabel.IsDefault)
+                    {
+                        switchBlock.DefaultSection = currentSection;
+                    }
+                    else
+                    {
+                        switchBlock.Sections.Add(
+                            new CaseBlock {Label = new ConstantValueExpression(), Body = currentSection});
+                    }
+                }
+                else
+                {
+                    statement.Accept(this, currentSection);
+                }
+            }
+
+            body.Add(switchBlock);
+
+            AddIf(block, CompletionCase.EmptyCompletionAfter, body);
+        }
+
+        public override void VisitSwitchLabelStatement(ISwitchLabelStatement switchLabelStatementParam,
+            IList<IStatement> context)
+        {
+            throw new InvalidOperationException("VisitSwitchLabelStatement should never be hit.");
+        }
+
         private void Visit(IBlock block, IKaVEList<IStatement> body)
         {
             if (block == null)
