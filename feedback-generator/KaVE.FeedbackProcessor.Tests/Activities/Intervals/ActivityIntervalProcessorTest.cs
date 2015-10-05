@@ -42,21 +42,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [Test]
         public void Interval()
         {
-            WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Other),
-                SomeEvent(_someDateTime.AddSeconds(3), Activity.Other, 1));
+            WhenStreamIsProcessed(SomeEvent(_someDateTime, Activity.Other, 3));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 4));
+            AssertIntervals(Interval(_someDateTime, Activity.Other, 3));
         }
 
         [Test]
         public void IntervalWithoutEnd()
         {
-            WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Other),
-                SomeEvent(_someDateTime.AddSeconds(3), Activity.Other));
+            WhenStreamIsProcessed(SomeEvent(_someDateTime, Activity.Other));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 3));
+            AssertIntervals(Interval(_someDateTime, Activity.Other, 0));
         }
 
         [Test]
@@ -69,6 +65,26 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             AssertIntervals(
                 Interval(_someDateTime, Activity.Other, 1),
                 Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
+        }
+
+        [Test]
+        public void IntervalsOfSameActivity()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(_someDateTime, Activity.Other, 1),
+                SomeEvent(_someDateTime.AddSeconds(3), Activity.Other, 2));
+
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Other, 1),
+                Interval(_someDateTime.AddSeconds(3), Activity.Other, 2));
+        }
+
+        [Test, ExpectedException]
+        public void ConcurrentIntervals()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(_someDateTime, Activity.Development, 3),
+                SomeEvent(_someDateTime.AddSeconds(1), Activity.Navigation, 1));
         }
 
         [Test]
@@ -160,7 +176,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(_someDateTime.AddSeconds(2), Activity.Any, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Development, 3));
+                Interval(_someDateTime, Activity.Development, 1),
+                Interval(_someDateTime.AddSeconds(2), Activity.Development, 1));
         }
 
         [Test]
@@ -206,14 +223,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(_someDateTime, Activity.Waiting, 3),
                 Interval(_someDateTime.AddSeconds(3), Activity.Development, 1),
                 Interval(_someDateTime.AddSeconds(4), Activity.Waiting, 1));
-        }
-
-        [Test, ExpectedException]
-        public void ThrowsIfConcurrentActivities()
-        {
-            WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Development, 3),
-                SomeEvent(_someDateTime.AddSeconds(1), Activity.Navigation, 1));
         }
 
         private void WhenStreamIsProcessed(params ActivityEvent[] stream)

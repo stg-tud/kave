@@ -100,7 +100,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 StartInterval(@event);
                 StartInterval(_currentInterval.End, Activity.Waiting, waitingEnd);
             }
-            else if (IsNewActivity(@event))
+            else if (RequiresNewInterval(@event))
             {
                 Asserts.That(@event.GetTriggeredAt() >= _currentInterval.End, "concurrent activities");
 
@@ -179,9 +179,9 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return _currentInterval.Activity == Activity.Waiting && @event.Activity != Activity.Waiting && _currentInterval.End > @event.GetTriggeredAt();
         }
 
-        private bool IsNewActivity(ActivityEvent @event)
+        private bool RequiresNewInterval(ActivityEvent @event)
         {
-            return _currentInterval.Activity != GetIntervalActivity(@event);
+            return _currentInterval.Activity != GetIntervalActivity(@event) || @event.GetTriggeredAt() > _currentInterval.End;
         }
 
         public IDictionary<Developer, IList<Interval>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout,
