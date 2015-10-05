@@ -42,187 +42,187 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [Test]
         public void Interval()
         {
-            WhenStreamIsProcessed(SomeEvent(_someDateTime, Activity.Other, 3));
+            WhenStreamIsProcessed(SomeEvent(0, Activity.Other, 3));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 3));
+            AssertIntervals(Interval(0, Activity.Other, 3));
         }
 
         [Test]
         public void IntervalWithoutEnd()
         {
-            WhenStreamIsProcessed(SomeEvent(_someDateTime, Activity.Other));
+            WhenStreamIsProcessed(SomeEvent(0, Activity.Other, 0));
 
-            AssertIntervals(Interval(_someDateTime, Activity.Other, 0));
+            AssertIntervals(Interval(0, Activity.Other, 0));
         }
 
         [Test]
         public void Intervals()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Other, 1),
-                SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
+                SomeEvent(0, Activity.Other, 1),
+                SomeEvent(3, Activity.Navigation, 2));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Other, 1),
-                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
+                Interval(0, Activity.Other, 1),
+                Interval(3, Activity.Navigation, 2));
         }
 
         [Test]
         public void IntervalsOfSameActivity()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Other, 1),
-                SomeEvent(_someDateTime.AddSeconds(3), Activity.Other, 2));
+                SomeEvent(0, Activity.Other, 1),
+                SomeEvent(3, Activity.Other, 2));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Other, 1),
-                Interval(_someDateTime.AddSeconds(3), Activity.Other, 2));
+                Interval(0, Activity.Other, 1),
+                Interval(3, Activity.Other, 2));
         }
 
         [Test, ExpectedException]
         public void ConcurrentIntervals()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Development, 3),
-                SomeEvent(_someDateTime.AddSeconds(1), Activity.Navigation, 1));
+                SomeEvent(0, Activity.Development, 3),
+                SomeEvent(1, Activity.Navigation, 1));
         }
 
         [Test]
         public void ClosesIntervalGapsBelowTimeout()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Other, 1),
-                SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+                SomeEvent(0, Activity.Other, 1),
+                SomeEvent(3, Activity.Navigation, 1));
 
             AssertCorrectedIntervals(
                 TimeSpan.FromSeconds(3),
                 TimeSpan.FromSeconds(42),
-                Interval(_someDateTime, Activity.Other, 3),
-                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 4));
+                Interval(0, Activity.Other, 3),
+                Interval(3, Activity.Navigation, 4));
         }
 
         [Test]
         public void InsertsInactivityIfGapExceedsTimeout()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Other, 1),
-                SomeEvent(_someDateTime.AddSeconds(3), Activity.Navigation, 1));
+                SomeEvent(0, Activity.Other, 1),
+                SomeEvent(3, Activity.Navigation, 1));
 
             AssertCorrectedIntervals(
                 TimeSpan.FromSeconds(1),
                 TimeSpan.FromSeconds(42),
-                Interval(_someDateTime, Activity.Other, 2),
-                Interval(_someDateTime.AddSeconds(2), Activity.Inactive, 1),
-                Interval(_someDateTime.AddSeconds(3), Activity.Navigation, 2));
+                Interval(0, Activity.Other, 2),
+                Interval(2, Activity.Inactive, 1),
+                Interval(3, Activity.Navigation, 2));
         }
 
         [Test]
         public void InsertsLongInactivityIfGapExceedsThreshold()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Other, 1),
-                SomeEvent(_someDateTime.AddSeconds(5), Activity.Navigation, 1));
+                SomeEvent(0, Activity.Other, 1),
+                SomeEvent(5, Activity.Navigation, 1));
 
             AssertCorrectedIntervals(
                 TimeSpan.FromSeconds(1),
                 TimeSpan.FromSeconds(2),
-                Interval(_someDateTime, Activity.Other, 2),
-                Interval(_someDateTime.AddSeconds(2), Activity.InactiveLong, 3),
-                Interval(_someDateTime.AddSeconds(5), Activity.Navigation, 2));
+                Interval(0, Activity.Other, 2),
+                Interval(2, Activity.InactiveLong, 3),
+                Interval(5, Activity.Navigation, 2));
         }
 
         [Test]
         public void InsertsAwayFromLeaveIDEToNextActivity()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.LeaveIDE, 1),
-                SomeEvent(_someDateTime.AddSeconds(10), Activity.Development, 1));
+                SomeEvent(0, Activity.LeaveIDE, 1),
+                SomeEvent(10, Activity.Development, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Away, 10),
-                Interval(_someDateTime.AddSeconds(10), Activity.Development, 1));
+                Interval(0, Activity.Away, 10),
+                Interval(10, Activity.Development, 1));
         }
 
         [Test]
         public void InsertsAwayFromLastActivityUntilEnterIDE()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Development, 1),
-                SomeEvent(_someDateTime.AddSeconds(6), Activity.EnterIDE, 1));
+                SomeEvent(0, Activity.Development, 1),
+                SomeEvent(6, Activity.EnterIDE, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Development, 1),
-                Interval(_someDateTime.AddSeconds(1), Activity.Away, 5),
-                Interval(_someDateTime.AddSeconds(6), Activity.Other, 1));
+                Interval(0, Activity.Development, 1),
+                Interval(1, Activity.Away, 5),
+                Interval(6, Activity.Other, 1));
         }
 
         [Test]
         public void InsertsAwayBetweenEnterAndLeaveIDE()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.LeaveIDE, 1),
-                SomeEvent(_someDateTime.AddSeconds(10), Activity.EnterIDE, 1));
+                SomeEvent(0, Activity.LeaveIDE, 1),
+                SomeEvent(10, Activity.EnterIDE, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Away, 10),
-                Interval(_someDateTime.AddSeconds(10), Activity.Other, 1));
+                Interval(0, Activity.Away, 10),
+                Interval(10, Activity.Other, 1));
         }
 
         [Test]
         public void AnyActivityProlongsCurrentInterval()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Development, 1),
-                SomeEvent(_someDateTime.AddSeconds(2), Activity.Any, 1));
+                SomeEvent(0, Activity.Development, 1),
+                SomeEvent(2, Activity.Any, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Development, 1),
-                Interval(_someDateTime.AddSeconds(2), Activity.Development, 1));
+                Interval(0, Activity.Development, 1),
+                Interval(2, Activity.Development, 1));
         }
 
         [Test]
         public void AnyActivityStartsOtherInterval()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Any, 1));
+                SomeEvent(0, Activity.Any, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Other, 1));
+                Interval(0, Activity.Other, 1));
         }
 
         [Test]
         public void AnyDoesNotShortenInterval()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Development, 3),
-                SomeEvent(_someDateTime.AddSeconds(1), Activity.Any));
+                SomeEvent(0, Activity.Development, 3),
+                SomeEvent(1, Activity.Any, 0));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Development, 3));
+                Interval(0, Activity.Development, 3));
         }
 
         [Test]
         public void IgnoresAnyIfConcurrentToSpecificActivity()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Any),
-                SomeEvent(_someDateTime, Activity.Development, 1));
+                SomeEvent(0, Activity.Any, 0),
+                SomeEvent(0, Activity.Development, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Development, 1));
+                Interval(0, Activity.Development, 1));
         }
 
         [Test]
         public void EnsuresSequentialIntervals()
         {
             WhenStreamIsProcessed(
-                SomeEvent(_someDateTime, Activity.Waiting, 5),
-                SomeEvent(_someDateTime.AddSeconds(3), Activity.Development, 1));
+                SomeEvent(0, Activity.Waiting, 5),
+                SomeEvent(3, Activity.Development, 1));
 
             AssertIntervals(
-                Interval(_someDateTime, Activity.Waiting, 3),
-                Interval(_someDateTime.AddSeconds(3), Activity.Development, 1),
-                Interval(_someDateTime.AddSeconds(4), Activity.Waiting, 1));
+                Interval(0, Activity.Waiting, 3),
+                Interval(3, Activity.Development, 1),
+                Interval(4, Activity.Waiting, 1));
         }
 
         private void WhenStreamIsProcessed(params ActivityEvent[] stream)
@@ -250,10 +250,11 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             Assert.AreEqual(expecteds, actuals);
         }
 
-        private static ActivityIntervalProcessor.Interval Interval(DateTime start,
+        private ActivityIntervalProcessor.Interval Interval(int startOffsetInSeconds,
             Activity activity,
             int durationInSeconds)
         {
+            var start = _someDateTime.AddSeconds(startOffsetInSeconds);
             return new ActivityIntervalProcessor.Interval
             {
                 Start = start,
@@ -262,16 +263,11 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             };
         }
 
-        private static ActivityEvent SomeEvent(DateTime triggeredAt, Activity activity)
-        {
-            return new ActivityEvent {TriggeredAt = triggeredAt, Activity = activity};
-        }
-
-        private static ActivityEvent SomeEvent(DateTime triggeredAt, Activity activity, int durationInSeconds)
+        private ActivityEvent SomeEvent(int triggerOffsetInSeconds, Activity activity, int durationInSeconds)
         {
             return new ActivityEvent
             {
-                TriggeredAt = triggeredAt,
+                TriggeredAt = _someDateTime.AddSeconds(triggerOffsetInSeconds),
                 Activity = activity,
                 Duration = TimeSpan.FromSeconds(durationInSeconds)
             };
