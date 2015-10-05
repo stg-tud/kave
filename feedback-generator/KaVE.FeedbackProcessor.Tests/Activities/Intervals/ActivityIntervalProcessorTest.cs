@@ -208,6 +208,14 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(_someDateTime.AddSeconds(4), Activity.Waiting, 1));
         }
 
+        [Test, ExpectedException]
+        public void ThrowsIfConcurrentActivities()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(_someDateTime, Activity.Development, 3),
+                SomeEvent(_someDateTime.AddSeconds(1), Activity.Navigation, 1));
+        }
+
         private void WhenStreamIsProcessed(params ActivityEvent[] stream)
         {
             _uut.OnStreamStarts(_someDeveloper);

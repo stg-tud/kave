@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -99,8 +100,10 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 StartInterval(@event);
                 StartInterval(_currentInterval.End, Activity.Waiting, waitingEnd);
             }
-            else if (EndsCurrentInterval(@event))
+            else if (IsNewActivity(@event))
             {
+                Asserts.That(@event.GetTriggeredAt() >= _currentInterval.End, "concurrent activities");
+
                 var previousInterval = _currentInterval;
 
                 StartInterval(@event);
@@ -176,7 +179,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return _currentInterval.Activity == Activity.Waiting && @event.Activity != Activity.Waiting && _currentInterval.End > @event.GetTriggeredAt();
         }
 
-        private bool EndsCurrentInterval(ActivityEvent @event)
+        private bool IsNewActivity(ActivityEvent @event)
         {
             return _currentInterval.Activity != GetIntervalActivity(@event);
         }
