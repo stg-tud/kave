@@ -47,10 +47,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 Fix.EmptyCompletion);
         }
 
-        // TODO: completion cases
-
-        [Test, Ignore]
-        public void LonelyBreak()
+        [Test]
+        public void LonelyBreak_CompletionBefore()
         {
             // this is a syntax error!
             CompleteInMethod(@"
@@ -61,6 +59,20 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             AssertBody(
                 new BreakStatement(),
                 Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void LonelyBreak_CompletionAfter()
+        {
+            // this is a syntax error!
+            CompleteInMethod(@"
+                $
+                break;
+            ");
+
+            AssertBody(
+                Fix.EmptyCompletion,
+                new BreakStatement());
         }
     }
 }

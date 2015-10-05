@@ -83,7 +83,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public override void VisitBreakStatement(IBreakStatement stmt, IList<IStatement> body)
         {
+            AddIf(stmt, CompletionCase.EmptyCompletionBefore, body);
+
             body.Add(new BreakStatement());
+
+            AddIf(stmt, CompletionCase.EmptyCompletionAfter, body);
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration decl, IList<IStatement> body)
