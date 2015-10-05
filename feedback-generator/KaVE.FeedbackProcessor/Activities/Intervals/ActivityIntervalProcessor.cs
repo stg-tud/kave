@@ -20,7 +20,6 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
-using MongoDB.Bson;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
@@ -129,7 +128,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 case Activity.EnterIDE:
                     return Activity.Other;
                 case Activity.Any:
-                    return _currentInterval.Activity;
+                    return _currentInterval != null ? _currentInterval.Activity : Activity.Other;
                 default:
                     return @event.Activity;
             }
@@ -156,7 +155,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return _currentInterval.Activity != GetIntervalActivity(@event);
         }
 
-        public IDictionary<Developer, IList<Interval>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout, TimeSpan shortInactivityTimeout)
+        public IDictionary<Developer, IList<Interval>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout,
+            TimeSpan shortInactivityTimeout)
         {
             IDictionary<Developer, IList<Interval>> correctedIntervals = CloneIntervals();
             foreach (var intervalStream in correctedIntervals.Values)
@@ -199,12 +199,13 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 intervals[developerStream.Key] = new List<Interval>();
                 foreach (var interval in developerStream.Value)
                 {
-                    intervals[developerStream.Key].Add(new Interval
-                    {
-                        Start = interval.Start,
-                        Activity = interval.Activity,
-                        End = interval.End
-                    });
+                    intervals[developerStream.Key].Add(
+                        new Interval
+                        {
+                            Start = interval.Start,
+                            Activity = interval.Activity,
+                            End = interval.End
+                        });
                 }
             }
             return intervals;
@@ -249,7 +250,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     budget[interval.Activity] += interval.End - interval.Start;
                     previousInterval = interval;
                 }
-                
+
                 builder["developer"] = developerStream.Key.Id;
                 builder["active days"] = days;
                 builder["# of intervals"] = developerStream.Value.Count;
