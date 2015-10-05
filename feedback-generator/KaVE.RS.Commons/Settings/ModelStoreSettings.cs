@@ -26,6 +26,9 @@ namespace KaVE.RS.Commons.Settings
         {
             [SettingsEntry(@"c:\kave-models\", "Path to KaVE models")]
             public string ModelStorePath;
+
+            [SettingsEntry("", "Remote KaVE models")]
+            public string ModelStoreUrl;
         }
     }
 }

@@ -270,4 +270,7 @@
   <data name="Desc_AnonymizationDisclaimer" xml:space="preserve">
     <value>Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext.</value>
   </data>
+  <data name="Options_ModelUrl" xml:space="preserve">
+    <value>Remote Usage Models</value>
+  </data>
 </root>

@@ -358,6 +358,15 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remote Usage Models.
+        /// </summary>
+        public static string Options_ModelUrl {
+            get {
+                return ResourceManager.GetString("Options_ModelUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KaVE Feedback.
         /// </summary>
         public static string Options_Title {

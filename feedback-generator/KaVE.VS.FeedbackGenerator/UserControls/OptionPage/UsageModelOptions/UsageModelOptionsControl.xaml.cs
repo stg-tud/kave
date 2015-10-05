@@ -79,6 +79,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     (ModelStoreSettings s) => s.ModelStorePath,
                     ModelStorePathTextBox,
                     TextBox.TextProperty);
+                
+                // Binding to ModelStoreUrl
+                ctx.SetBinding(
+                    lifetime,
+                    (ModelStoreSettings s) => s.ModelStoreUrl,
+                    ModelStoreUrlTextBox,
+                    TextBox.TextProperty);
             }
         }
 
