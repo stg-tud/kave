@@ -195,6 +195,19 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(_someDateTime, Activity.Development, 1));
         }
 
+        [Test]
+        public void EnsuresSequentialIntervals()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(_someDateTime, Activity.Waiting, 5),
+                SomeEvent(_someDateTime.AddSeconds(3), Activity.Development, 1));
+
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Waiting, 3),
+                Interval(_someDateTime.AddSeconds(3), Activity.Development, 1),
+                Interval(_someDateTime.AddSeconds(4), Activity.Waiting, 1));
+        }
+
         private void WhenStreamIsProcessed(params ActivityEvent[] stream)
         {
             _uut.OnStreamStarts(_someDeveloper);
