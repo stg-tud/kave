@@ -176,12 +176,14 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         private bool InConcurrentWaitingInterval(ActivityEvent @event)
         {
-            return _currentInterval.Activity == Activity.Waiting && @event.Activity != Activity.Waiting && _currentInterval.End > @event.GetTriggeredAt();
+            return _currentInterval.Activity == Activity.Waiting && @event.Activity != Activity.Waiting &&
+                   _currentInterval.End > @event.GetTriggeredAt();
         }
 
         private bool RequiresNewInterval(ActivityEvent @event)
         {
-            return _currentInterval.Activity != GetIntervalActivity(@event) || @event.GetTriggeredAt() > _currentInterval.End;
+            return _currentInterval.Activity != GetIntervalActivity(@event) ||
+                   @event.GetTriggeredAt() > _currentInterval.End;
         }
 
         public IDictionary<Developer, IList<Interval>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout,
@@ -199,7 +201,17 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                         var gapDuration = interval.Start - previousInterval.End;
                         if (gapDuration <= activityTimeout)
                         {
-                            previousInterval.End = interval.Start;
+                            if (interval.Activity == previousInterval.Activity)
+                            {
+                                previousInterval.End = interval.End;
+                                intervalStream.RemoveAt(i);
+                                i--;
+                                interval = previousInterval;
+                            }
+                            else
+                            {
+                                previousInterval.End = interval.Start;
+                            }
                         }
                         else
                         {

@@ -102,6 +102,21 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
+        public void MergesSameActivityIntervalsWithGapBelowInterval()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.Development, 1),
+                SomeEvent(2, Activity.Development, 1),
+                SomeEvent(4, Activity.Navigation, 1));
+
+            AssertCorrectedIntervals(
+                TimeSpan.FromSeconds(2), 
+                TimeSpan.FromSeconds(42),
+                Interval(0, Activity.Development, 4),
+                Interval(4, Activity.Navigation, 3));
+        }
+
+        [Test]
         public void InsertsInactivityIfGapExceedsTimeout()
         {
             WhenStreamIsProcessed(
