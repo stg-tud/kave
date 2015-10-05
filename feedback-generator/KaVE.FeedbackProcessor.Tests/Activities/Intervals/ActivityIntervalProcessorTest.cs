@@ -152,6 +152,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(_someDateTime.AddSeconds(10), Activity.Other, 1));
         }
 
+        [Test]
+        public void AnyActivityProlongsCurrentInterval()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(_someDateTime, Activity.Development, 1),
+                SomeEvent(_someDateTime.AddSeconds(2), Activity.Any, 1));
+
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Development, 3));
+        }
+
         private void WhenStreamIsProcessed(params ActivityEvent[] stream)
         {
             _uut.OnStreamStarts(_someDeveloper);

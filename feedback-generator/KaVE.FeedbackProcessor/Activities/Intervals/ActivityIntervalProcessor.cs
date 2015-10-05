@@ -120,7 +120,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return @event.TerminatedAt ?? @event.GetTriggeredAt();
         }
 
-        private static Activity GetIntervalActivity(ActivityEvent @event)
+        private Activity GetIntervalActivity(ActivityEvent @event)
         {
             switch (@event.Activity)
             {
@@ -128,6 +128,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     return Activity.Away;
                 case Activity.EnterIDE:
                     return Activity.Other;
+                case Activity.Any:
+                    return _currentInterval.Activity;
                 default:
                     return @event.Activity;
             }
