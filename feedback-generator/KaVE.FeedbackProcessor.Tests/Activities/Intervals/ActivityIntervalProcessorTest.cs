@@ -174,6 +174,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
+        public void AnyDoesNotShortenInterval()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(_someDateTime, Activity.Development, 3),
+                SomeEvent(_someDateTime.AddSeconds(1), Activity.Any));
+
+            AssertIntervals(
+                Interval(_someDateTime, Activity.Development, 3));
+        }
+
+        [Test]
         public void IgnoresAnyIfConcurrentToSpecificActivity()
         {
             WhenStreamIsProcessed(

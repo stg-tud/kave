@@ -91,7 +91,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             {
                 _currentInterval.Activity = GetIntervalActivity(@event);
             }
-            
+
             if (EndsCurrentInterval(@event))
             {
                 var previousInterval = _currentInterval;
@@ -105,7 +105,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             }
             else
             {
-                _currentInterval.End = GetEnd(@event);
+                var endTime = GetEnd(@event);
+                if (_currentInterval.End < endTime)
+                {
+                    _currentInterval.End = endTime;
+                }
             }
         }
 
