@@ -69,19 +69,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 Fix.EmptyCompletion);
         }
 
-        [Test]
-        public void TernaryExpression()
-        {
-            CompleteInMethod(@"
-                var i = 1 == 2 ? 3 : 4;
-                $");
-
-            AssertBody(
-                VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
-                Fix.EmptyCompletion);
-        }
-
         [Test, Ignore]
         public void Assignment()
         {

@@ -84,14 +84,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             expr.Op.Accept(this, context);
         }
 
-        public override void VisitConditionalTernaryExpression(IConditionalTernaryExpression expr,
-            IList<IStatement> context)
-        {
-            expr.ConditionOperand.Accept(this, context);
-            expr.ThenResult.Accept(this, context);
-            expr.ElseResult.Accept(this, context);
-        }
-
         public override void VisitConditionalAndExpression(IConditionalAndExpression expr,
             IList<IStatement> context)
         {

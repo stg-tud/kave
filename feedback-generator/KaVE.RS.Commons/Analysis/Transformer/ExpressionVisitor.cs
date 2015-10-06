@@ -458,6 +458,21 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
         }
 
+        public override IAssignableExpression VisitConditionalTernaryExpression(IConditionalTernaryExpression expr,
+            IList<IStatement> body)
+        {
+            var condition = ToSimpleExpression(expr.ConditionOperand, body);
+            var thenExpression = ToSimpleExpression(expr.ThenResult, body);
+            var elseExpression = ToSimpleExpression(expr.ElseResult, body);
+
+            return new IfElseExpression
+            {
+                Condition = condition,
+                ThenExpression = thenExpression,
+                ElseExpression = elseExpression
+            };
+        }
+
         #region ComposedExpressionCreator entry points
         public override IAssignableExpression VisitAdditiveExpression(IAdditiveExpression expr,
             IList<IStatement> context)
@@ -477,12 +492,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         }
 
         public override IAssignableExpression VisitCastExpression(ICastExpression expr, IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitConditionalTernaryExpression(IConditionalTernaryExpression expr,
-            IList<IStatement> context)
         {
             return ComposedExpressionCreator.Create(this, expr, context);
         }
