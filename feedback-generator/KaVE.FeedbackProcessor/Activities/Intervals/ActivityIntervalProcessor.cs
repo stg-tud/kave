@@ -62,6 +62,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         public IDictionary<Developer, IList<Interval>> Intervals;
         private Developer _currentDeveloper;
         private Interval _currentInterval;
+        private ActivityEvent _lastEvent;
 
         public ActivityIntervalProcessor()
         {
@@ -110,7 +111,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             }
             else if (RequiresNewInterval(@event))
             {
-                Asserts.That(@event.GetTriggeredAt() >= _currentInterval.End, "concurrent activities");
+                Asserts.That(
+                    @event.GetTriggeredAt() >= _currentInterval.End,
+                    "concurrent activities: \n{0}\n{1}",
+                    _lastEvent,
+                    @event);
 
                 var previousInterval = _currentInterval;
 
@@ -121,6 +126,15 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     previousInterval.End = _currentInterval.Start;
                 }
             }
+            else
+            {
+                var newEnd = GetEnd(@event);
+                if (newEnd > _currentInterval.End)
+                {
+                    _currentInterval.End = newEnd;
+                }
+            }
+            _lastEvent = @event;
         }
 
         private bool HasNoOpenInterval()
@@ -147,7 +161,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 case Activity.EnterIDE:
                     return Activity.Other;
                 case Activity.Any:
-                    return _currentInterval != null ? _currentInterval.Activity : Activity.Other;
+                    return Activity.Other;
                 default:
                     return @event.Activity;
             }
@@ -182,7 +196,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         private bool RequiresNewInterval(ActivityEvent @event)
         {
-            return _currentInterval.Activity != GetIntervalActivity(@event) ||
+            return (_currentInterval.Activity != GetIntervalActivity(@event) && @event.Activity != Activity.Any) ||
                    @event.GetTriggeredAt() > _currentInterval.End;
         }
 

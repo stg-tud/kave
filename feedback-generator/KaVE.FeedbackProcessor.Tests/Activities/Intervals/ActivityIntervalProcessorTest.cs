@@ -68,6 +68,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
+        public void ProlongsInterval()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.Development, 1),
+                SomeEvent(1, Activity.Development, 1));
+
+            AssertIntervals(
+                Interval(0, Activity.Development, 2));
+        }
+
+        [Test]
         public void IntervalsOfSameActivity()
         {
             WhenStreamIsProcessed(
@@ -184,7 +195,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
-        public void AnyActivityProlongsCurrentInterval()
+        public void AnyActivityIsMappedToOther()
         {
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.Development, 1),
@@ -192,7 +203,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 
             AssertIntervals(
                 Interval(0, Activity.Development, 1),
-                Interval(2, Activity.Development, 1));
+                Interval(2, Activity.Other, 1));
         }
 
         [Test]
@@ -210,7 +221,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         {
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.Development, 3),
-                SomeEvent(1, Activity.Any, 0));
+                SomeEvent(0, Activity.Any, 0));
 
             AssertIntervals(
                 Interval(0, Activity.Development, 3));
@@ -228,7 +239,20 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
-        public void EnsuresSequentialIntervals()
+        public void IgnoresAnyIfConcurrentToSpecificActivityAfterActivity()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.Navigation, 1),
+                SomeEvent(2, Activity.Any, 1),
+                SomeEvent(2, Activity.Development, 1));
+
+            AssertIntervals(
+                Interval(0, Activity.Navigation, 1),
+                Interval(2, Activity.Development, 1));
+        }
+
+        [Test]
+        public void EnsuresSequentialIntervalsWhileWaiting()
         {
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.Waiting, 5),
