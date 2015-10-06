@@ -190,18 +190,14 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             var builder = new CsvBuilder();
             foreach (var developerStream in GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout))
             {
-                var days = 0;
+                var days = new HashSet<DateTime>();
                 var numberOfShortInactivities = 0;
                 var numberOfLongInactivities = 0;
-                Interval<Activity> previousInterval = null;
                 IDictionary<Activity, TimeSpan> budget = new Dictionary<Activity, TimeSpan>();
                 foreach (var interval in developerStream.Value)
                 {
-                    if (interval.Start.Date != interval.End.Date ||
-                        (previousInterval != null && previousInterval.End.Date != interval.Start.Date))
-                    {
-                        days++;
-                    }
+                    days.Add(interval.Start.Date);
+
                     if (interval.Id == Activity.Inactive)
                     {
                         numberOfShortInactivities++;
@@ -216,19 +212,66 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                         budget[interval.Id] = TimeSpan.Zero;
                     }
                     budget[interval.Id] += interval.Duration;
-                    previousInterval = interval;
                 }
 
                 builder.StartRow();
                 builder["developer"] = developerStream.Key.Id;
-                builder["active days"] = days;
+                builder["active days"] = days.Count;
                 builder["# of intervals"] = developerStream.Value.Count;
                 builder["# of short inactivities"] = numberOfShortInactivities;
                 builder["# of long inactivities"] = numberOfLongInactivities;
                 foreach (var activity in budget)
                 {
-                    builder[activity.Key.ToString()] = activity.Value.TotalMilliseconds/days;
+                    builder[activity.Key.ToString()] = (int) Math.Round(activity.Value.TotalSeconds);
                 }
+            }
+            return builder.Build();
+        }
+
+        public string InactivityStatisticToCsv(TimeSpan activityTimeout, params TimeSpan[] shortInactivityTimeouts)
+        {
+            var builder = new CsvBuilder();
+            foreach (var shortInactivityTimeout in shortInactivityTimeouts)
+            {
+                var inactivity = TimeSpan.Zero;
+                var numberOfInactivityPeriods = 0;
+                var longInactivity = TimeSpan.Zero;
+                var numberOfLongInactivityPeriods = 0;
+                var numberOfActivitySprees = 0;
+                var days = new HashSet<DateTime>();
+                foreach (var intervalStream in GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout))
+                {
+                    var lastWasInactivity = false;
+                    foreach (var interval in intervalStream.Value)
+                    {
+                        days.Add(interval.Start.Date);
+
+                        if (interval.Id == Activity.Inactive)
+                        {
+                            numberOfInactivityPeriods++;
+                            inactivity += interval.Duration;
+                            lastWasInactivity = true;
+                        }
+                        else if (interval.Id == Activity.InactiveLong)
+                        {
+                            numberOfLongInactivityPeriods++;
+                            longInactivity += interval.Duration;
+                            lastWasInactivity = true;
+                        }
+                        else if (lastWasInactivity)
+                        {
+                            numberOfActivitySprees++;
+                        }
+                    }
+                }
+                builder.StartRow();
+                builder["Threshold (ms)"] = (int) Math.Round(shortInactivityTimeout.TotalSeconds);
+                builder["Inactivity (ms)"] = (int) Math.Round(inactivity.TotalSeconds);
+                builder["# of Inactivities"] = numberOfInactivityPeriods;
+                builder["Long Inactivity (ms)"] = (int) Math.Round(longInactivity.TotalSeconds);
+                builder["# of Long Inactivities"] = numberOfLongInactivityPeriods;
+                builder["# of activity sprees"] = numberOfActivitySprees;
+                builder["Days"] = days.Count;
             }
             return builder.Build();
         }
