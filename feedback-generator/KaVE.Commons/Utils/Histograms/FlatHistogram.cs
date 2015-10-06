@@ -33,7 +33,6 @@ namespace KaVE.Commons.Utils.Histograms
         // bin is zero based, maxBin is arraysize
         public void Add(int binOneBased, int maxBin)
         {
-            Console.WriteLine("adding {0}/{1}", binOneBased, maxBin);
             Asserts.That(binOneBased > 0);
             Asserts.That(binOneBased <= maxBin);
 
