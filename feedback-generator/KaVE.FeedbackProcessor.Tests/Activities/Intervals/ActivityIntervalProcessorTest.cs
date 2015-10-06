@@ -24,19 +24,58 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 {
-    [TestFixture]
-    internal class ActivityIntervalProcessorTest
+    internal abstract class IntervalProcessorTest<TProcessor, TIntervalId> where TProcessor: IntervalProcessor<TIntervalId>
     {
-        private ActivityIntervalProcessor _uut;
-        private DateTime _someDateTime;
-        private Developer _someDeveloper;
+        protected DateTime SomeDateTime { get; private set; }
+        protected Developer SomeDeveloper { get; private set; }
+        protected TProcessor Uut { get; private set; }
 
         [SetUp]
         public void SetUp()
         {
-            _uut = new ActivityIntervalProcessor();
-            _someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            _someDeveloper = TestFactory.SomeDeveloper();
+            Uut = CreateProcessor();
+            SomeDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
+            SomeDeveloper = TestFactory.SomeDeveloper();
+        }
+
+        protected abstract TProcessor CreateProcessor();
+
+        protected void WhenStreamIsProcessed(params ActivityEvent[] stream)
+        {
+            Uut.OnStreamStarts(SomeDeveloper);
+            foreach (var @event in stream)
+            {
+                Uut.OnEvent(@event);
+            }
+            Uut.OnStreamEnds();
+        }
+
+        protected void AssertIntervals<T>(params Interval<T>[] expecteds)
+        {
+            var actuals = Uut.Intervals[SomeDeveloper];
+            Assert.AreEqual(expecteds, actuals);
+        }
+
+        protected Interval<T> Interval<T>(int startOffsetInSeconds,
+            T activity,
+            int durationInSeconds)
+        {
+            var start = SomeDateTime.AddSeconds(startOffsetInSeconds);
+            return new Interval<T>
+            {
+                Start = start,
+                Id = activity,
+                End = start + TimeSpan.FromSeconds(durationInSeconds)
+            };
+        }
+    }
+
+    [TestFixture]
+    internal class ActivityIntervalProcessorTest : IntervalProcessorTest<ActivityIntervalProcessor, Activity>
+    {
+        protected override ActivityIntervalProcessor CreateProcessor()
+        {
+            return new ActivityIntervalProcessor();
         }
 
         [Test]
@@ -280,49 +319,20 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(4, Activity.Waiting, 1));
         }
 
-        private void WhenStreamIsProcessed(params ActivityEvent[] stream)
-        {
-            _uut.OnStreamStarts(_someDeveloper);
-            foreach (var @event in stream)
-            {
-                _uut.OnEvent(@event);
-            }
-            _uut.OnStreamEnds();
-        }
-
-        private void AssertIntervals(params Interval<Activity>[] expecteds)
-        {
-            var actuals = _uut.Intervals[_someDeveloper];
-            Assert.AreEqual(expecteds, actuals);
-        }
-
-        private void AssertCorrectedIntervals(TimeSpan activityTimeout,
+        protected void AssertCorrectedIntervals<T>(TimeSpan activityTimeout,
             TimeSpan shortInactivityTimeout,
-            params Interval<Activity>[] expecteds)
+            params Interval<T>[] expecteds)
         {
-            var correctedIntervals = _uut.GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout);
-            var actuals = correctedIntervals[_someDeveloper];
+            var correctedIntervals = Uut.GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout);
+            var actuals = correctedIntervals[SomeDeveloper];
             Assert.AreEqual(expecteds, actuals);
-        }
-
-        private Interval<Activity> Interval(int startOffsetInSeconds,
-            Activity activity,
-            int durationInSeconds)
-        {
-            var start = _someDateTime.AddSeconds(startOffsetInSeconds);
-            return new Interval<Activity>
-            {
-                Start = start,
-                Id = activity,
-                End = start + TimeSpan.FromSeconds(durationInSeconds)
-            };
         }
 
         private ActivityEvent SomeEvent(int triggerOffsetInSeconds, Activity activity, int durationInSeconds)
         {
             return new ActivityEvent
             {
-                TriggeredAt = _someDateTime.AddSeconds(triggerOffsetInSeconds),
+                TriggeredAt = SomeDateTime.AddSeconds(triggerOffsetInSeconds),
                 Activity = activity,
                 Duration = TimeSpan.FromSeconds(durationInSeconds)
             };

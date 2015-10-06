@@ -22,15 +22,17 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
-    internal class ActivityIntervalProcessor : BaseEventProcessor
+    internal class IntervalProcessor<T> : BaseEventProcessor {
+        public IDictionary<Developer, IList<Interval<T>>> Intervals = new Dictionary<Developer, IList<Interval<T>>>();
+    }
+
+    internal class ActivityIntervalProcessor : IntervalProcessor<Activity>
     {
-        public IDictionary<Developer, IList<Interval<Activity>>> Intervals;
         private Developer _currentDeveloper;
         private Interval<Activity> _currentInterval;
 
         public ActivityIntervalProcessor()
         {
-            Intervals = new Dictionary<Developer, IList<Interval<Activity>>>();
             RegisterFor<ActivityEvent>(Handle);
         }
 
