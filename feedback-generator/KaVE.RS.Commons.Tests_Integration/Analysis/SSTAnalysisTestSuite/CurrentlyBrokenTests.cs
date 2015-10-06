@@ -18,6 +18,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -240,6 +241,34 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 VarDecl("$0", Fix.String),
                 VarAssign("$0", RefExpr(FieldRef(Fix.Field(Fix.String, Type("C"), "Str"), VarRef("this")))),
                 ExprStmt(Fix.CompletionOnVar(VarRef("$0"), "")));
+        }
+
+        [Test]
+        public void TriggerInside_WithToken()
+        {
+            // Exception => ReferenceExpression:e
+            // Affected Node => ReferenceExpression:e
+            // Case => Undefined
+            CompleteInMethod(@"throw e$");
+
+            AssertBody(
+                VarDecl("$0", Fix.Exception),
+                VarAssign("$0", new CompletionExpression { Token = "e" }),
+                new ThrowStatement { Reference = VarRef("$0") });
+        }
+
+        [Test]
+        public void TriggerInside_WithNewObject()
+        {
+            // Exception => IObjectCreationExpression 
+            // Affected Node => ReferenceName:Ex
+            // Case => Undefined
+            CompleteInMethod(@"throw new Ex$");
+
+            AssertBody(
+                VarDecl("$0", Fix.Exception),
+                VarAssign("$0", new CompletionExpression()), // not sure how this completion would look
+                new ThrowStatement { Reference = VarRef("$0") });
         }
     }
 }
