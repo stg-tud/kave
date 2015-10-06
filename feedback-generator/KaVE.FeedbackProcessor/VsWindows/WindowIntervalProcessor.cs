@@ -21,14 +21,14 @@ namespace KaVE.FeedbackProcessor.VsWindows
 {
     internal class WindowIntervalProcessor : IntervalProcessor<string>
     {
+        protected override void HandleWithInterval(ActivityEvent @event)
+        {
+            StartInterval(@event);
+        }
+
         protected override string GetIntervalId(ActivityEvent @event)
         {
             return @event.ActiveWindow.Identifier;
-        }
-
-        protected override void HandleWithInterval(ActivityEvent @event)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

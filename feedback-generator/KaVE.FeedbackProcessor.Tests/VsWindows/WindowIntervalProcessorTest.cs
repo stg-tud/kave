@@ -35,10 +35,22 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
         public void Interval()
         {
             WhenStreamIsProcessed(
-                SomeEvent(0, ":type: :title:", 1));
+                SomeEvent(0, ":some window:", 1));
 
             AssertIntervals(
-                Interval(0, ":type: :title:", 1));
+                Interval(0, ":some window:", 1));
+        }
+
+        [Test]
+        public void Intervals()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, ":one window:", 1),
+                SomeEvent(1, ":other window:", 1));
+
+            AssertIntervals(
+                Interval(0, ":one window:", 1),
+                Interval(1, ":other window:", 1));
         }
 
         private ActivityEvent SomeEvent(int triggerTimeOffset, string windowTitle, int eventDuration)
