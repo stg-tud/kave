@@ -219,6 +219,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     previousInterval = interval;
                 }
 
+                builder.StartRow();
                 builder["developer"] = developerStream.Key.Id;
                 builder["active days"] = days;
                 builder["# of intervals"] = developerStream.Value.Count;
