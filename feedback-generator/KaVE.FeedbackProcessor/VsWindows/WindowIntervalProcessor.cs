@@ -24,7 +24,7 @@ namespace KaVE.FeedbackProcessor.VsWindows
     {
         public const string OutsideIDEIntervalId = ":outside of ide:";
 
-        protected override void HandleWithInterval(ActivityEvent @event)
+        protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
             if (@event.Activity == Activity.EnterIDE)
             {
@@ -53,11 +53,7 @@ namespace KaVE.FeedbackProcessor.VsWindows
 
         protected override string GetIntervalId(ActivityEvent @event)
         {
-            if (@event.Activity == Activity.LeaveIDE)
-            {
-                return OutsideIDEIntervalId;
-            }
-            return @event.ActiveWindow.Identifier;
+            return @event.Activity == Activity.LeaveIDE ? OutsideIDEIntervalId : @event.ActiveWindow.Identifier;
         }
     }
 }

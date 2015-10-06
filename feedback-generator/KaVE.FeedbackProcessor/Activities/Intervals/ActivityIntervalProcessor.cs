@@ -22,70 +22,9 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
-    internal abstract class IntervalProcessor<T> : BaseEventProcessor {
-
-        public IDictionary<Developer, IList<Interval<T>>> Intervals = new Dictionary<Developer, IList<Interval<T>>>();
-        private Developer _currentDeveloper;
-        protected Interval<T> CurrentInterval;
-
-        protected IntervalProcessor()
-        {
-            RegisterFor<ActivityEvent>(Handle);
-        }
-
-        public override void OnStreamStarts(Developer developer)
-        {
-            _currentDeveloper = developer;
-            Intervals[developer] = new List<Interval<T>>();
-            CurrentInterval = null;
-        }
-
-        private void Handle(ActivityEvent @event)
-        {
-            if (HasNoOpenInterval())
-            {
-                StartInterval(@event);
-            }
-            else
-            {
-                HandleWithInterval(@event);
-            }
-        }
-
-        private bool HasNoOpenInterval()
-        {
-            return CurrentInterval == null;
-        }
-
-        protected void StartInterval(ActivityEvent @event)
-        {
-            StartInterval(@event.GetTriggeredAt(), GetIntervalId(@event), GetEnd(@event));
-        }
-
-        protected void StartInterval(DateTime start, T activity, DateTime end)
-        {
-            CurrentInterval = new Interval<T>
-            {
-                Start = start,
-                Id = activity,
-                End = end
-            };
-            Intervals[_currentDeveloper].Add(CurrentInterval);
-        }
-
-        protected abstract T GetIntervalId(ActivityEvent @event);
-
-        protected static DateTime GetEnd(ActivityEvent @event)
-        {
-            return @event.TerminatedAt ?? @event.GetTriggeredAt();
-        }
-
-        protected abstract void HandleWithInterval(ActivityEvent @event);
-    }
-
     internal class ActivityIntervalProcessor : IntervalProcessor<Activity>
     {
-        protected override void HandleWithInterval(ActivityEvent @event)
+        protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
             if (EndsAwayButNotInAwayInterval(@event))
             {
