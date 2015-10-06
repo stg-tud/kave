@@ -53,6 +53,18 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 Interval(1, ":other window:", 1));
         }
 
+        [Test]
+        public void IntervalsWithGap()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, ":one window:", 1),
+                SomeEvent(2, ":other window:", 1));
+
+            AssertIntervals(
+                Interval(0, ":one window:", 2),
+                Interval(2, ":other window:", 1));
+        }
+
         private ActivityEvent SomeEvent(int triggerTimeOffset, string windowTitle, int eventDuration)
         {
             return new ActivityEvent

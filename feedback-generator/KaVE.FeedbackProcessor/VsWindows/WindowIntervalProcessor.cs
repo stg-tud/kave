@@ -23,7 +23,9 @@ namespace KaVE.FeedbackProcessor.VsWindows
     {
         protected override void HandleWithInterval(ActivityEvent @event)
         {
+            var previousInterval = CurrentInterval;
             StartInterval(@event);
+            previousInterval.End = CurrentInterval.Start;
         }
 
         protected override string GetIntervalId(ActivityEvent @event)
