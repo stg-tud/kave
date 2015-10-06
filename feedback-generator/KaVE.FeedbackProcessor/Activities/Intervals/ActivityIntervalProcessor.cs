@@ -107,7 +107,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                    @event.GetTriggeredAt() > CurrentInterval.End;
         }
 
-        public IDictionary<Developer, IList<Interval<Activity>>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout,
+        public IDictionary<Developer, IList<Interval<Activity>>> GetIntervalsWithCorrectTimeouts(
+            TimeSpan activityTimeout,
             TimeSpan shortInactivityTimeout)
         {
             IDictionary<Developer, IList<Interval<Activity>>> correctedIntervals = CloneIntervals();
@@ -208,6 +209,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     if (interval.Id == Activity.InactiveLong)
                     {
                         numberOfLongInactivities++;
+                    }
+
+                    if (!budget.ContainsKey(interval.Id))
+                    {
+                        budget[interval.Id] = TimeSpan.Zero;
                     }
                     budget[interval.Id] += interval.End - interval.Start;
                     previousInterval = interval;
