@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -54,6 +57,31 @@ namespace KaVE.FeedbackProcessor.VsWindows
         protected override string GetIntervalId(ActivityEvent @event)
         {
             return @event.Activity == Activity.LeaveIDE ? OutsideIDEIntervalId : @event.ActiveWindow.Identifier;
+        }
+
+        public string IntervalsToVsWindowUsageStatisticCsv()
+        {
+            var builder = new CsvBuilder();
+            foreach (var intervalStream in Intervals)
+            {
+                var usage = new Dictionary<string, TimeSpan>();
+                foreach (var interval in intervalStream.Value)
+                {
+                    if (!usage.ContainsKey(interval.Id))
+                    {
+                        usage[interval.Id] = TimeSpan.Zero;
+                    }
+                    usage[interval.Id] += interval.Duration;
+                }
+
+                builder.StartRow();
+                builder["developer"] = intervalStream.Key.Id;
+                foreach (var windowUsage in usage)
+                {
+                    builder[windowUsage.Key] = windowUsage.Value;
+                }
+            }
+            return builder.Build();
         }
     }
 }
