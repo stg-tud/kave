@@ -75,6 +75,7 @@
     <Compile Include="Activities\FindEventToActivityMapper.cs" />
     <Compile Include="Activities\InstallEventToActivityMapper.cs" />
     <Compile Include="Activities\Intervals\ActivityIntervalProcessor.cs" />
+    <Compile Include="Activities\Intervals\Interval.cs" />
     <Compile Include="Activities\Model\Activity.cs" />
     <Compile Include="Activities\Model\ActivityEvent.cs" />
     <Compile Include="Activities\SlidingWindow\ActivityStream.cs" />

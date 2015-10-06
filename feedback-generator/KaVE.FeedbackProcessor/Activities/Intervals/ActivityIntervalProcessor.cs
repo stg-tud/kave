@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -25,39 +24,6 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
     internal class ActivityIntervalProcessor : BaseEventProcessor
     {
-        public class Interval<T>
-        {
-            public T Id { get; internal set; }
-            public DateTime Start { get; internal set; }
-            public DateTime End { get; internal set; }
-
-            protected bool Equals(Interval<T> other)
-            {
-                return Id.Equals(other.Id) && Start.Equals(other.Start) && End.Equals(other.End);
-            }
-
-            public override bool Equals(object obj)
-            {
-                return this.Equals(obj, Equals);
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    var hashCode = Id.GetHashCode();
-                    hashCode = (hashCode*397) ^ Start.GetHashCode();
-                    hashCode = (hashCode*397) ^ End.GetHashCode();
-                    return hashCode;
-                }
-            }
-
-            public override string ToString()
-            {
-                return string.Format("Start: {1}, Id: {0}, End: {2}", Id, Start, End);
-            }
-        }
-
         public IDictionary<Developer, IList<Interval<Activity>>> Intervals;
         private Developer _currentDeveloper;
         private Interval<Activity> _currentInterval;
