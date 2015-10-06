@@ -65,6 +65,17 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 Interval(2, ":other window:", 1));
         }
 
+        [Test]
+        public void StayInWindow()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, ":a window:", 1),
+                SomeEvent(2, ":a window:", 1));
+
+            AssertIntervals(
+                Interval(0, ":a window:", 3));
+        }
+
         private ActivityEvent SomeEvent(int triggerTimeOffset, string windowTitle, int eventDuration)
         {
             return new ActivityEvent
