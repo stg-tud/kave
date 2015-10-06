@@ -111,6 +111,18 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 Interval(5, ":any window:", 1));
         }
 
+        [Test]
+        public void LeaveAndEnterIDE()
+        {
+            WhenStreamIsProcessed(
+                LeaveEvent(0, ":some window:", 1),
+                EnterEvent(6, ":other window:", 1));
+
+            AssertIntervals(
+                Interval(0, WindowIntervalProcessor.OutsideIDEIntervalId, 6),
+                Interval(6, ":other window:", 1));
+        }
+
         private ActivityEvent LeaveEvent(int triggerTimeOffset, string windowTitle, int eventDuration)
         {
             var someEvent = SomeEvent(triggerTimeOffset, windowTitle, eventDuration);

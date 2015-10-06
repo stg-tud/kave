@@ -28,7 +28,14 @@ namespace KaVE.FeedbackProcessor.VsWindows
         {
             if (@event.Activity == Activity.EnterIDE)
             {
-                StartInterval(CurrentInterval.End, OutsideIDEIntervalId, @event.GetTriggeredAt());
+                if (CurrentInterval.Id.Equals(OutsideIDEIntervalId))
+                {
+                    CurrentInterval.End = @event.GetTriggeredAt();
+                }
+                else
+                {
+                    StartInterval(CurrentInterval.End, OutsideIDEIntervalId, @event.GetTriggeredAt());
+                }
             }
 
             var previousInterval = CurrentInterval;
