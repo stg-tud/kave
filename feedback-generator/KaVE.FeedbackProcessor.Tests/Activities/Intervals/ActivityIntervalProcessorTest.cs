@@ -17,59 +17,10 @@
 using System;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Model;
-using KaVE.FeedbackProcessor.Tests.Model;
-using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 {
-    internal abstract class IntervalProcessorTest<TProcessor, TIntervalId> where TProcessor: IntervalProcessor<TIntervalId>
-    {
-        protected DateTime SomeDateTime { get; private set; }
-        protected Developer SomeDeveloper { get; private set; }
-        protected TProcessor Uut { get; private set; }
-
-        [SetUp]
-        public void SetUp()
-        {
-            Uut = CreateProcessor();
-            SomeDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            SomeDeveloper = TestFactory.SomeDeveloper();
-        }
-
-        protected abstract TProcessor CreateProcessor();
-
-        protected void WhenStreamIsProcessed(params ActivityEvent[] stream)
-        {
-            Uut.OnStreamStarts(SomeDeveloper);
-            foreach (var @event in stream)
-            {
-                Uut.OnEvent(@event);
-            }
-            Uut.OnStreamEnds();
-        }
-
-        protected void AssertIntervals<T>(params Interval<T>[] expecteds)
-        {
-            var actuals = Uut.Intervals[SomeDeveloper];
-            Assert.AreEqual(expecteds, actuals);
-        }
-
-        protected Interval<T> Interval<T>(int startOffsetInSeconds,
-            T activity,
-            int durationInSeconds)
-        {
-            var start = SomeDateTime.AddSeconds(startOffsetInSeconds);
-            return new Interval<T>
-            {
-                Start = start,
-                Id = activity,
-                End = start + TimeSpan.FromSeconds(durationInSeconds)
-            };
-        }
-    }
-
     [TestFixture]
     internal class ActivityIntervalProcessorTest : IntervalProcessorTest<ActivityIntervalProcessor, Activity>
     {
