@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -62,7 +61,6 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         public IDictionary<Developer, IList<Interval>> Intervals;
         private Developer _currentDeveloper;
         private Interval _currentInterval;
-        private ActivityEvent _lastEvent;
 
         public ActivityIntervalProcessor()
         {
@@ -117,6 +115,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
                 if (previousInterval.Activity == Activity.Away || previousInterval.End > _currentInterval.Start)
                 {
+                    var diff = (previousInterval.End - _currentInterval.Start).TotalMilliseconds;
+                    if (diff > 1000)
+                    {
+                        Console.WriteLine(@"WARNING: Ignoring {0}ms of event duration.", diff);
+                    }
                     previousInterval.End = _currentInterval.Start;
                 }
             }
@@ -128,7 +131,6 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     _currentInterval.End = newEnd;
                 }
             }
-            _lastEvent = @event;
         }
 
         private bool HasNoOpenInterval()
