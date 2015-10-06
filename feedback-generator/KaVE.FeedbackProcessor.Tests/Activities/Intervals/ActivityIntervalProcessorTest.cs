@@ -90,12 +90,16 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(3, Activity.Other, 2));
         }
 
-        [Test, ExpectedException]
+        [Test(Description = "We decided to ignore the event duration, if another activity occurs concurrently.")]
         public void ConcurrentIntervals()
         {
             WhenStreamIsProcessed(
-                SomeEvent(0, Activity.Development, 3),
-                SomeEvent(1, Activity.Navigation, 1));
+                SomeEvent(0, Activity.LocalConfiguration, 2),
+                SomeEvent(1, Activity.LeaveIDE, 2));
+
+            AssertIntervals(
+                Interval(0, Activity.LocalConfiguration, 1),
+                Interval(1, Activity.Away, 2));
         }
 
         [Test]

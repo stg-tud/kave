@@ -111,17 +111,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             }
             else if (RequiresNewInterval(@event))
             {
-                Asserts.That(
-                    @event.GetTriggeredAt() >= _currentInterval.End,
-                    "concurrent activities: \n{0}\n{1}",
-                    _lastEvent,
-                    @event);
-
                 var previousInterval = _currentInterval;
 
                 StartInterval(@event);
 
-                if (previousInterval.Activity == Activity.Away)
+                if (previousInterval.Activity == Activity.Away || previousInterval.End > _currentInterval.Start)
                 {
                     previousInterval.End = _currentInterval.Start;
                 }
