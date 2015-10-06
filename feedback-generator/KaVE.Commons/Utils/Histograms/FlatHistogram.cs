@@ -33,6 +33,7 @@ namespace KaVE.Commons.Utils.Histograms
         // bin is zero based, maxBin is arraysize
         public void Add(int binOneBased, int maxBin)
         {
+            Console.WriteLine("adding {0}/{1}", binOneBased, maxBin);
             Asserts.That(binOneBased > 0);
             Asserts.That(binOneBased <= maxBin);
 
@@ -55,15 +56,18 @@ namespace KaVE.Commons.Utils.Histograms
                     {
                         var maxStart = Math.Max(start, curStart);
                         var maxEnd = Math.Min(end, curEnd);
-                        var absoluteOverlap = maxEnd - maxStart;
-                        Asserts.That(absoluteOverlap >= 0);
-                        var overlapRatio = absoluteOverlap/curLength;
-
-                        // max amount a single bin is assigned
-                        var binValue = curLength/length;
-                        var curValue = binValue*overlapRatio;
-
-                        _bins[curBin] += curValue;
+                        var overlap = maxEnd - maxStart;
+                        var overlapRatio = overlap/length;
+                        _bins[curBin] += overlapRatio;
+                    }
+                    else
+                    {
+                        var isSpanningOver = start <= curStart && end >= curEnd;
+                        if (isSpanningOver)
+                        {
+                            var overlapRatio = curLength/length;
+                            _bins[curBin] += overlapRatio;
+                        }
                     }
                 }
             }
@@ -92,6 +96,11 @@ namespace KaVE.Commons.Utils.Histograms
 
             var res = sb.ToString().Replace(',', '.');
             return res;
+        }
+
+        public int GetSize()
+        {
+            return (int) Math.Round(_bins.Sum());
         }
     }
 }

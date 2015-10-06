@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Histograms;
 using NUnit.Framework;
 
@@ -30,28 +32,28 @@ namespace KaVE.Commons.Tests.Utils.Histograms
         }
 
         [Test]
-        public void a()
+        public void A()
         {
             _sut.Add(1, 3);
             AssertBins(1.0, 0.0, 0.0);
         }
 
         [Test]
-        public void b()
+        public void B()
         {
             _sut.Add(2, 3);
             AssertBins(0.0, 1.0, 0.0);
         }
 
         [Test]
-        public void c()
+        public void C()
         {
             _sut.Add(1, 2);
             AssertBins(0.666, 0.333, 0.0);
         }
 
         [Test]
-        public void c2()
+        public void C2()
         {
             _sut.Add(1, 2);
             _sut.Add(2, 3);
@@ -59,10 +61,84 @@ namespace KaVE.Commons.Tests.Utils.Histograms
         }
 
         [Test]
-        public void d()
+        public void C3()
+        {
+            _sut.Add(1, 1);
+            AssertBins(0.333, 0.333, 0.333);
+        }
+
+        [Test]
+        public void C4()
+        {
+            _sut = new FlatHistogram(5);
+            _sut.Add(1, 2);
+            AssertBins(0.4, 0.4, 0.2, 0.0, 0.0);
+        }
+
+        [Test]
+        public void D()
+        {
+            _sut.Add(1, 4);
+            AssertBins(1.0, 0.0, 0.0);
+        }
+
+        [Test]
+        public void E()
         {
             _sut.Add(2, 4);
             AssertBins(0.333, 0.666, 0.0);
+        }
+
+        [Test]
+        public void F()
+        {
+            _sut.Add(4, 4);
+            AssertBins(0.0, 0.0, 1.0);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void BinTooSmall()
+        {
+            _sut.Add(0, 4);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void BinTooLarge()
+        {
+            _sut.Add(5, 4);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void SizeTooSmall()
+        {
+            _sut.Add(5, 0);
+        }
+
+        [Test]
+        public void GetSize()
+        {
+            Assert.AreEqual(0, _sut.GetSize());
+            _sut.Add(1, 2);
+            Assert.AreEqual(1, _sut.GetSize());
+            _sut.Add(3, 5);
+            Assert.AreEqual(2, _sut.GetSize());
+            _sut.Add(4, 4);
+            Assert.AreEqual(3, _sut.GetSize());
+        }
+
+        [Test]
+        public void GetSizeLarge()
+        {
+            _sut = new FlatHistogram(10);
+            var r = new Random();
+            for (var i = 0; i < 1000; i++)
+            {
+                var methodSize = r.Next(30);
+                var bin = r.Next(methodSize);
+                // implementation is one-based
+                _sut.Add(bin + 1, methodSize + 1);
+            }
+            Assert.AreEqual(1000, _sut.GetSize());
         }
 
         [Test]
