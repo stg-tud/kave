@@ -215,7 +215,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     {
                         budget[interval.Id] = TimeSpan.Zero;
                     }
-                    budget[interval.Id] += interval.End - interval.Start;
+                    budget[interval.Id] += interval.Duration;
                     previousInterval = interval;
                 }
 

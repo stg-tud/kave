@@ -25,6 +25,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         public DateTime Start { get; internal set; }
         public DateTime End { get; internal set; }
 
+        public TimeSpan Duration
+        {
+            get { return End - Start; }
+        }
+
         protected bool Equals(Interval<T> other)
         {
             return Id.Equals(other.Id) && Start.Equals(other.Start) && End.Equals(other.End);
