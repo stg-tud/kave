@@ -98,10 +98,30 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 Interval(0, WindowIntervalProcessor.OutsideIDEIntervalId, 1));
         }
 
+        [Test]
+        public void EnterIDE()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, ":some window:", 2),
+                EnterEvent(5, ":any window:", 1));
+
+            AssertIntervals(
+                Interval(0, ":some window:", 2),
+                Interval(2, WindowIntervalProcessor.OutsideIDEIntervalId, 3),
+                Interval(5, ":any window:", 1));
+        }
+
         private ActivityEvent LeaveEvent(int triggerTimeOffset, string windowTitle, int eventDuration)
         {
             var someEvent = SomeEvent(triggerTimeOffset, windowTitle, eventDuration);
             someEvent.Activity = Activity.LeaveIDE;
+            return someEvent;
+        }
+
+        private ActivityEvent EnterEvent(int triggerTimeOffset, string windowTitle, int eventDuration)
+        {
+            var someEvent = SomeEvent(triggerTimeOffset, windowTitle, eventDuration);
+            someEvent.Activity = Activity.EnterIDE;
             return someEvent;
         }
 

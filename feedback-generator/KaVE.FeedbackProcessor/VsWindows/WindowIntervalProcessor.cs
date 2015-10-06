@@ -16,6 +16,7 @@
 
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.VsWindows
 {
@@ -25,7 +26,13 @@ namespace KaVE.FeedbackProcessor.VsWindows
 
         protected override void HandleWithInterval(ActivityEvent @event)
         {
+            if (@event.Activity == Activity.EnterIDE)
+            {
+                StartInterval(CurrentInterval.End, OutsideIDEIntervalId, @event.GetTriggeredAt());
+            }
+
             var previousInterval = CurrentInterval;
+
             if (!previousInterval.Id.Equals(GetIntervalId(@event)))
             {
                 StartInterval(@event);
