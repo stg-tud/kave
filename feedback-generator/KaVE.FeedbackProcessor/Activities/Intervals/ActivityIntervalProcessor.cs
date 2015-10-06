@@ -22,16 +22,13 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
-    internal class IntervalProcessor<T> : BaseEventProcessor {
+    internal abstract class IntervalProcessor<T> : BaseEventProcessor {
+
         public IDictionary<Developer, IList<Interval<T>>> Intervals = new Dictionary<Developer, IList<Interval<T>>>();
-    }
-
-    internal class ActivityIntervalProcessor : IntervalProcessor<Activity>
-    {
         private Developer _currentDeveloper;
-        private Interval<Activity> _currentInterval;
+        protected Interval<T> CurrentInterval;
 
-        public ActivityIntervalProcessor()
+        protected IntervalProcessor()
         {
             RegisterFor<ActivityEvent>(Handle);
         }
@@ -39,8 +36,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         public override void OnStreamStarts(Developer developer)
         {
             _currentDeveloper = developer;
-            Intervals[developer] = new List<Interval<Activity>>();
-            _currentInterval = null;
+            Intervals[developer] = new List<Interval<T>>();
+            CurrentInterval = null;
         }
 
         private void Handle(ActivityEvent @event)
@@ -55,68 +52,86 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             }
         }
 
-        private void HandleWithInterval(ActivityEvent @event)
+        private bool HasNoOpenInterval()
+        {
+            return CurrentInterval == null;
+        }
+
+        protected void StartInterval(ActivityEvent @event)
+        {
+            StartInterval(@event.GetTriggeredAt(), GetIntervalId(@event), GetEnd(@event));
+        }
+
+        protected void StartInterval(DateTime start, T activity, DateTime end)
+        {
+            CurrentInterval = new Interval<T>
+            {
+                Start = start,
+                Id = activity,
+                End = end
+            };
+            Intervals[_currentDeveloper].Add(CurrentInterval);
+        }
+
+        protected abstract T GetIntervalId(ActivityEvent @event);
+
+        protected static DateTime GetEnd(ActivityEvent @event)
+        {
+            return @event.TerminatedAt ?? @event.GetTriggeredAt();
+        }
+
+        protected abstract void HandleWithInterval(ActivityEvent @event);
+    }
+
+    internal class ActivityIntervalProcessor : IntervalProcessor<Activity>
+    {
+        protected override void HandleWithInterval(ActivityEvent @event)
         {
             if (EndsAwayButNotInAwayInterval(@event))
             {
-                StartInterval(_currentInterval.End, Activity.Away, @event.GetTriggeredAt());
+                StartInterval(CurrentInterval.End, Activity.Away, @event.GetTriggeredAt());
             }
 
             if (InConcurrentOtherInterval(@event))
             {
-                _currentInterval.Id = GetIntervalActivity(@event);
-                _currentInterval.End = GetEnd(@event);
+                CurrentInterval.Id = GetIntervalId(@event);
+                CurrentInterval.End = GetEnd(@event);
             }
 
             if (InConcurrentWaitingInterval(@event))
             {
-                var waitingEnd = _currentInterval.End;
-                _currentInterval.End = @event.GetTriggeredAt();
+                var waitingEnd = CurrentInterval.End;
+                CurrentInterval.End = @event.GetTriggeredAt();
                 StartInterval(@event);
-                StartInterval(_currentInterval.End, Activity.Waiting, waitingEnd);
+                StartInterval(CurrentInterval.End, Activity.Waiting, waitingEnd);
             }
             else if (RequiresNewInterval(@event))
             {
-                var previousInterval = _currentInterval;
+                var previousInterval = CurrentInterval;
 
                 StartInterval(@event);
 
-                if (previousInterval.Id == Activity.Away || previousInterval.End > _currentInterval.Start)
+                if (previousInterval.Id == Activity.Away || previousInterval.End > CurrentInterval.Start)
                 {
-                    var diff = (previousInterval.End - _currentInterval.Start).TotalMilliseconds;
+                    var diff = (previousInterval.End - CurrentInterval.Start).TotalMilliseconds;
                     if (diff > 1000)
                     {
                         Console.WriteLine(@"WARNING: Ignoring {0}ms of event duration.", diff);
                     }
-                    previousInterval.End = _currentInterval.Start;
+                    previousInterval.End = CurrentInterval.Start;
                 }
             }
             else
             {
                 var newEnd = GetEnd(@event);
-                if (newEnd > _currentInterval.End)
+                if (newEnd > CurrentInterval.End)
                 {
-                    _currentInterval.End = newEnd;
+                    CurrentInterval.End = newEnd;
                 }
             }
         }
 
-        private bool HasNoOpenInterval()
-        {
-            return _currentInterval == null;
-        }
-
-        private void StartInterval(ActivityEvent @event)
-        {
-            StartInterval(@event.GetTriggeredAt(), GetIntervalActivity(@event), GetEnd(@event));
-        }
-
-        private static DateTime GetEnd(ActivityEvent @event)
-        {
-            return @event.TerminatedAt ?? @event.GetTriggeredAt();
-        }
-
-        private Activity GetIntervalActivity(ActivityEvent @event)
+        protected override Activity GetIntervalId(ActivityEvent @event)
         {
             switch (@event.Activity)
             {
@@ -131,37 +146,26 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             }
         }
 
-        private void StartInterval(DateTime start, Activity activity, DateTime end)
-        {
-            _currentInterval = new Interval<Activity>
-            {
-                Start = start,
-                Id = activity,
-                End = end
-            };
-            Intervals[_currentDeveloper].Add(_currentInterval);
-        }
-
         private bool EndsAwayButNotInAwayInterval(ActivityEvent @event)
         {
-            return @event.Activity == Activity.EnterIDE && _currentInterval.Id != Activity.Away;
+            return @event.Activity == Activity.EnterIDE && CurrentInterval.Id != Activity.Away;
         }
 
         private bool InConcurrentOtherInterval(ActivityEvent @event)
         {
-            return _currentInterval.Id == Activity.Other && _currentInterval.Start.Equals(@event.GetTriggeredAt());
+            return CurrentInterval.Id == Activity.Other && CurrentInterval.Start.Equals(@event.GetTriggeredAt());
         }
 
         private bool InConcurrentWaitingInterval(ActivityEvent @event)
         {
-            return _currentInterval.Id == Activity.Waiting && @event.Activity != Activity.Waiting &&
-                   _currentInterval.End > @event.GetTriggeredAt();
+            return CurrentInterval.Id == Activity.Waiting && @event.Activity != Activity.Waiting &&
+                   CurrentInterval.End > @event.GetTriggeredAt();
         }
 
         private bool RequiresNewInterval(ActivityEvent @event)
         {
-            return (_currentInterval.Id != GetIntervalActivity(@event) && @event.Activity != Activity.Any) ||
-                   @event.GetTriggeredAt() > _currentInterval.End;
+            return (CurrentInterval.Id != GetIntervalId(@event) && @event.Activity != Activity.Any) ||
+                   @event.GetTriggeredAt() > CurrentInterval.End;
         }
 
         public IDictionary<Developer, IList<Interval<Activity>>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout,

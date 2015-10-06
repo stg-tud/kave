@@ -126,6 +126,7 @@
     <Compile Include="Utils\FixedSizeQueueTest.cs" />
     <Compile Include="Utils\PairTest.cs" />
     <Compile Include="Utils\SortedCommandPairTest.cs" />
+    <Compile Include="VsWindows\WindowIntervalProcessorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
