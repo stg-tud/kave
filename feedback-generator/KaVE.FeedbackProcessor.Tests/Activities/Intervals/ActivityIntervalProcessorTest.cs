@@ -290,7 +290,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             _uut.OnStreamEnds();
         }
 
-        private void AssertIntervals(params ActivityIntervalProcessor.Interval[] expecteds)
+        private void AssertIntervals(params ActivityIntervalProcessor.Interval<Activity>[] expecteds)
         {
             var actuals = _uut.Intervals[_someDeveloper];
             Assert.AreEqual(expecteds, actuals);
@@ -298,22 +298,22 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 
         private void AssertCorrectedIntervals(TimeSpan activityTimeout,
             TimeSpan shortInactivityTimeout,
-            params ActivityIntervalProcessor.Interval[] expecteds)
+            params ActivityIntervalProcessor.Interval<Activity>[] expecteds)
         {
             var correctedIntervals = _uut.GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout);
             var actuals = correctedIntervals[_someDeveloper];
             Assert.AreEqual(expecteds, actuals);
         }
 
-        private ActivityIntervalProcessor.Interval Interval(int startOffsetInSeconds,
+        private ActivityIntervalProcessor.Interval<Activity> Interval(int startOffsetInSeconds,
             Activity activity,
             int durationInSeconds)
         {
             var start = _someDateTime.AddSeconds(startOffsetInSeconds);
-            return new ActivityIntervalProcessor.Interval
+            return new ActivityIntervalProcessor.Interval<Activity>
             {
                 Start = start,
-                Activity = activity,
+                Id = activity,
                 End = start + TimeSpan.FromSeconds(durationInSeconds)
             };
         }

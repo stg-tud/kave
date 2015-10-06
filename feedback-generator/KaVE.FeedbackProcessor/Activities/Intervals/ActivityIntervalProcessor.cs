@@ -25,15 +25,15 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
     internal class ActivityIntervalProcessor : BaseEventProcessor
     {
-        public class Interval
+        public class Interval<T>
         {
-            public Activity Activity { get; internal set; }
+            public T Id { get; internal set; }
             public DateTime Start { get; internal set; }
             public DateTime End { get; internal set; }
 
-            protected bool Equals(Interval other)
+            protected bool Equals(Interval<T> other)
             {
-                return Activity == other.Activity && Start.Equals(other.Start) && End.Equals(other.End);
+                return Id.Equals(other.Id) && Start.Equals(other.Start) && End.Equals(other.End);
             }
 
             public override bool Equals(object obj)
@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             {
                 unchecked
                 {
-                    var hashCode = (int) Activity;
+                    var hashCode = Id.GetHashCode();
                     hashCode = (hashCode*397) ^ Start.GetHashCode();
                     hashCode = (hashCode*397) ^ End.GetHashCode();
                     return hashCode;
@@ -54,24 +54,24 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
             public override string ToString()
             {
-                return string.Format("Start: {1}, Activity: {0}, End: {2}", Activity, Start, End);
+                return string.Format("Start: {1}, Id: {0}, End: {2}", Id, Start, End);
             }
         }
 
-        public IDictionary<Developer, IList<Interval>> Intervals;
+        public IDictionary<Developer, IList<Interval<Activity>>> Intervals;
         private Developer _currentDeveloper;
-        private Interval _currentInterval;
+        private Interval<Activity> _currentInterval;
 
         public ActivityIntervalProcessor()
         {
-            Intervals = new Dictionary<Developer, IList<Interval>>();
+            Intervals = new Dictionary<Developer, IList<Interval<Activity>>>();
             RegisterFor<ActivityEvent>(Handle);
         }
 
         public override void OnStreamStarts(Developer developer)
         {
             _currentDeveloper = developer;
-            Intervals[developer] = new List<Interval>();
+            Intervals[developer] = new List<Interval<Activity>>();
             _currentInterval = null;
         }
 
@@ -96,7 +96,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
             if (InConcurrentOtherInterval(@event))
             {
-                _currentInterval.Activity = GetIntervalActivity(@event);
+                _currentInterval.Id = GetIntervalActivity(@event);
                 _currentInterval.End = GetEnd(@event);
             }
 
@@ -113,7 +113,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
                 StartInterval(@event);
 
-                if (previousInterval.Activity == Activity.Away || previousInterval.End > _currentInterval.Start)
+                if (previousInterval.Id == Activity.Away || previousInterval.End > _currentInterval.Start)
                 {
                     var diff = (previousInterval.End - _currentInterval.Start).TotalMilliseconds;
                     if (diff > 1000)
@@ -165,10 +165,10 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         private void StartInterval(DateTime start, Activity activity, DateTime end)
         {
-            _currentInterval = new Interval
+            _currentInterval = new Interval<Activity>
             {
                 Start = start,
-                Activity = activity,
+                Id = activity,
                 End = end
             };
             Intervals[_currentDeveloper].Add(_currentInterval);
@@ -176,33 +176,33 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         private bool EndsAwayButNotInAwayInterval(ActivityEvent @event)
         {
-            return @event.Activity == Activity.EnterIDE && _currentInterval.Activity != Activity.Away;
+            return @event.Activity == Activity.EnterIDE && _currentInterval.Id != Activity.Away;
         }
 
         private bool InConcurrentOtherInterval(ActivityEvent @event)
         {
-            return _currentInterval.Activity == Activity.Other && _currentInterval.Start.Equals(@event.GetTriggeredAt());
+            return _currentInterval.Id == Activity.Other && _currentInterval.Start.Equals(@event.GetTriggeredAt());
         }
 
         private bool InConcurrentWaitingInterval(ActivityEvent @event)
         {
-            return _currentInterval.Activity == Activity.Waiting && @event.Activity != Activity.Waiting &&
+            return _currentInterval.Id == Activity.Waiting && @event.Activity != Activity.Waiting &&
                    _currentInterval.End > @event.GetTriggeredAt();
         }
 
         private bool RequiresNewInterval(ActivityEvent @event)
         {
-            return (_currentInterval.Activity != GetIntervalActivity(@event) && @event.Activity != Activity.Any) ||
+            return (_currentInterval.Id != GetIntervalActivity(@event) && @event.Activity != Activity.Any) ||
                    @event.GetTriggeredAt() > _currentInterval.End;
         }
 
-        public IDictionary<Developer, IList<Interval>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout,
+        public IDictionary<Developer, IList<Interval<Activity>>> GetIntervalsWithCorrectTimeouts(TimeSpan activityTimeout,
             TimeSpan shortInactivityTimeout)
         {
-            IDictionary<Developer, IList<Interval>> correctedIntervals = CloneIntervals();
+            IDictionary<Developer, IList<Interval<Activity>>> correctedIntervals = CloneIntervals();
             foreach (var intervalStream in correctedIntervals.Values)
             {
-                Interval previousInterval = null;
+                Interval<Activity> previousInterval = null;
                 for (var i = 0; i < intervalStream.Count; i++)
                 {
                     var interval = intervalStream[i];
@@ -211,7 +211,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                         var gapDuration = interval.Start - previousInterval.End;
                         if (gapDuration <= activityTimeout)
                         {
-                            if (interval.Activity == previousInterval.Activity)
+                            if (interval.Id == previousInterval.Id)
                             {
                                 previousInterval.End = interval.End;
                                 intervalStream.RemoveAt(i);
@@ -242,19 +242,19 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return correctedIntervals;
         }
 
-        private Dictionary<Developer, IList<Interval>> CloneIntervals()
+        private Dictionary<Developer, IList<Interval<Activity>>> CloneIntervals()
         {
-            var intervals = new Dictionary<Developer, IList<Interval>>();
+            var intervals = new Dictionary<Developer, IList<Interval<Activity>>>();
             foreach (var developerStream in Intervals)
             {
-                intervals[developerStream.Key] = new List<Interval>();
+                intervals[developerStream.Key] = new List<Interval<Activity>>();
                 foreach (var interval in developerStream.Value)
                 {
                     intervals[developerStream.Key].Add(
-                        new Interval
+                        new Interval<Activity>
                         {
                             Start = interval.Start,
-                            Activity = interval.Activity,
+                            Id = interval.Id,
                             End = interval.End
                         });
                 }
@@ -262,13 +262,13 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return intervals;
         }
 
-        private static Interval CreateInactivity(DateTime start, DateTime end, TimeSpan shortInactivityTimeout)
+        private static Interval<Activity> CreateInactivity(DateTime start, DateTime end, TimeSpan shortInactivityTimeout)
         {
             var gapDuration = end - start;
-            return new Interval
+            return new Interval<Activity>
             {
                 Start = start,
-                Activity = gapDuration <= shortInactivityTimeout ? Activity.Inactive : Activity.InactiveLong,
+                Id = gapDuration <= shortInactivityTimeout ? Activity.Inactive : Activity.InactiveLong,
                 End = end
             };
         }
@@ -281,7 +281,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 var days = 0;
                 var numberOfShortInactivities = 0;
                 var numberOfLongInactivities = 0;
-                Interval previousInterval = null;
+                Interval<Activity> previousInterval = null;
                 IDictionary<Activity, TimeSpan> budget = new Dictionary<Activity, TimeSpan>();
                 foreach (var interval in developerStream.Value)
                 {
@@ -290,15 +290,15 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     {
                         days++;
                     }
-                    if (interval.Activity == Activity.Inactive)
+                    if (interval.Id == Activity.Inactive)
                     {
                         numberOfShortInactivities++;
                     }
-                    if (interval.Activity == Activity.InactiveLong)
+                    if (interval.Id == Activity.InactiveLong)
                     {
                         numberOfLongInactivities++;
                     }
-                    budget[interval.Activity] += interval.End - interval.Start;
+                    budget[interval.Id] += interval.End - interval.Start;
                     previousInterval = interval;
                 }
 
