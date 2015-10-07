@@ -15,8 +15,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.StatisticListing;
@@ -28,20 +28,16 @@ using NUnit.Framework;
 
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
-    public abstract class CalculatorTest
+    public abstract class StatisticCalculatorTestBase<TCalculator> where TCalculator : IStatisticCalculator
     {
-        protected Type CalculatorType;
         protected Mock<IErrorHandler> ErrorHandlerMock;
-        protected IDEEvent EventForUpdateTest;
         protected Mock<IStatisticListing> ListingMock;
         protected Mock<IMessageBus> MessageBus;
-        protected StatisticCalculator StatisticCalculator;
-        protected Type StatisticType;
+        protected IDEEvent EventForUpdateTest;
+        protected TCalculator Sut;
 
-        protected CalculatorTest(Type calculatorType, Type statisticType, IDEEvent eventForUpdateTest)
+        protected StatisticCalculatorTestBase(IDEEvent eventForUpdateTest)
         {
-            CalculatorType = calculatorType;
-            StatisticType = statisticType;
             EventForUpdateTest = eventForUpdateTest;
         }
 
@@ -52,68 +48,67 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             ErrorHandlerMock = new Mock<IErrorHandler>();
             ListingMock = new Mock<IStatisticListing>();
 
-            var initializedStatistic = (IStatistic) Activator.CreateInstance(StatisticType);
-            ListingMock.Setup(l => l.GetStatistic(StatisticType)).Returns(initializedStatistic);
-
             var args = new object[] {ListingMock.Object, MessageBus.Object, ErrorHandlerMock.Object};
-            StatisticCalculator = (StatisticCalculator) Activator.CreateInstance(CalculatorType, args);
+            Sut = (TCalculator) Activator.CreateInstance(typeof (TCalculator), args);
+
+            var initializedStatistic = (IStatistic) Activator.CreateInstance(Sut.StatisticType);
+            ListingMock.Setup(l => l.GetStatistic(Sut.StatisticType)).Returns(initializedStatistic);
+
+            ListingMock.ResetCalls();
         }
 
         [Test]
         public void SubscribeTest()
         {
             var messageBus = new TestMessageBus();
-
-            Activator.CreateInstance(CalculatorType, ListingMock.Object, messageBus, ErrorHandlerMock.Object);
-
+            Activator.CreateInstance(typeof (TCalculator), ListingMock.Object, messageBus, ErrorHandlerMock.Object);
             messageBus.Publish(EventForUpdateTest);
-
             ListingMock.Verify(l => l.Update(It.IsAny<IStatistic>()), Times.Once);
         }
 
         [Test]
         public void UpdatesListingOnEventTest()
         {
-            ListingMock.Object.GetStatistic(StatisticType);
-
+            ListingMock.Object.GetStatistic(Sut.StatisticType);
             Publish(EventForUpdateTest);
-
-            ListingMock.Verify(l => l.Update(It.Is<IStatistic>(statistic => statistic.GetType() == StatisticType)));
+            ListingMock.Verify(l => l.Update(It.Is<IStatistic>(statistic => statistic.GetType() == Sut.StatisticType)));
         }
 
         [Test]
         public void InitializeStatisticTest()
         {
-            StatisticCalculator.InitializeStatistic();
+            Sut.InitializeStatistic();
 
             ListingMock.Verify(l => l.Update(It.Is<IStatistic>(statistic => IsNewStatistic(statistic))));
+        }
+
+        [Test]
+        public void ShouldIgnoreFilteredEvents()
+        {
+            Sut.Event(null);
+            ListingMock.Verify(l => l.Update(It.IsAny<IStatistic>()), Times.Never);
         }
 
         [Test]
         public void InitializeTestOnGetStatisticsReturnNullTest()
         {
             ListingMock = new Mock<IStatisticListing>();
-            ListingMock.Setup(l => l.GetStatistic(StatisticType)).Returns((IStatistic) null);
+            ListingMock.Setup(l => l.GetStatistic(Sut.StatisticType)).Returns((IStatistic) null);
 
             var args = new object[] {ListingMock.Object, MessageBus.Object, ErrorHandlerMock.Object};
-            StatisticCalculator = (StatisticCalculator) Activator.CreateInstance(CalculatorType, args);
+            Sut = (TCalculator) Activator.CreateInstance(typeof (TCalculator), args);
 
             ListingMock.Verify(l => l.Update(It.Is<IStatistic>(statistic => IsNewStatistic(statistic))));
         }
 
         protected abstract bool IsNewStatistic(IStatistic statistic);
 
-        protected void Publish(IEnumerable<IDEEvent> events)
+        protected void Publish(params IDEEvent[] events)
         {
             foreach (var @event in events)
             {
-                StatisticCalculator.Event(@event);
+                Sut.Event(@event);
             }
-        }
-
-        protected void Publish(IDEEvent @event)
-        {
-            StatisticCalculator.Event(@event);
         }
     }
 }

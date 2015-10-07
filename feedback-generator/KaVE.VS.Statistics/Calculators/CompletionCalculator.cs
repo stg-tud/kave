@@ -32,12 +32,12 @@ using KaVE.VS.Statistics.Utils;
 namespace KaVE.VS.Statistics.Calculators
 {
     [ShellComponent]
-    public class CompletionCalculator : StatisticCalculator
+    public class CompletionCalculator : StatisticCalculator<CompletionStatistic>
     {
         public CompletionCalculator(IStatisticListing statisticListing,
             IMessageBus messageBus,
             IErrorHandler errorHandler)
-            : base(statisticListing, messageBus, errorHandler, typeof (CompletionStatistic), new CompletionFilter()) {}
+            : base(statisticListing, messageBus, errorHandler, new CompletionFilter()) {}
 
         protected override IStatistic Process(IDEEvent @event)
         {

@@ -22,7 +22,6 @@ using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.StatisticListing;
-using KaVE.VS.Statistics.UI;
 using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.LogCollector
@@ -34,7 +33,7 @@ namespace KaVE.VS.Statistics.LogCollector
     public class LogReplay
     {
         public static bool LogReplayRunning;
-        private readonly IEnumerable<StatisticCalculator> _calculatorList;
+        private readonly IEnumerable<IStatisticCalculator> _calculatorList;
 
         private readonly IEnumerable<ILog> _logs;
         private readonly IStatisticListing _statisticListing;
@@ -42,7 +41,7 @@ namespace KaVE.VS.Statistics.LogCollector
         public LogReplay(ILogManager logManager, IStatisticListing statisticListing)
         {
             _statisticListing = statisticListing;
-            _calculatorList = Registry.GetComponents<StatisticCalculator>();
+            _calculatorList = Registry.GetComponents<IStatisticCalculator>();
             _logs = logManager.Logs;
         }
 

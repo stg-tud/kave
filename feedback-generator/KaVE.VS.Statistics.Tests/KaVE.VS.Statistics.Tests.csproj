@@ -186,12 +186,11 @@
     <Compile Include="LogCollector\LogReplayTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Calculators\BuildCalculatorTest.cs" />
-    <Compile Include="Calculators\CalculatorTest.cs" />
+    <Compile Include="Calculators\StatisticCalculatorTestBase.cs" />
     <Compile Include="Calculators\CommandCalculatorTest.cs" />
     <Compile Include="Calculators\CompletionCalculatorTest.cs" />
     <Compile Include="Calculators\GlobalCalculatorTest.cs" />
     <Compile Include="Calculators\SolutionCalculatorTest.cs" />
-    <Compile Include="Calculators\StatisticCalculatorTest.cs" />
     <Compile Include="Filters\CommandFilterTest.cs" />
     <Compile Include="Filters\CompletionFilterTest.cs" />
     <Compile Include="Filters\SolutionFilterTest.cs" />
@@ -222,10 +221,6 @@
       <Project>{126607db-1f9f-4e2c-a39e-7b707874eafc}</Project>
       <Name>KaVE.Commons.TestUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.VS.Statistics\KaVE.VS.Statistics.csproj">
-      <Project>{77f8f9c7-17d7-46a2-a91a-d18d034e0607}</Project>
-      <Name>KaVE.VS.Statistics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
@@ -233,6 +228,10 @@
     <ProjectReference Include="..\KaVE.VS.FeedbackGenerator\KaVE.VS.FeedbackGenerator.csproj">
       <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
       <Name>KaVE.VS.FeedbackGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.VS.Statistics\KaVE.VS.Statistics.csproj">
+      <Project>{56cbbae9-59eb-4e9c-bde6-5a214ab64ce5}</Project>
+      <Name>KaVE.VS.Statistics</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

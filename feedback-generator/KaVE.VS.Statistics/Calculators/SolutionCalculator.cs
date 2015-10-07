@@ -29,12 +29,12 @@ using KaVE.VS.Statistics.Utils;
 namespace KaVE.VS.Statistics.Calculators
 {
     [ShellComponent]
-    public class SolutionCalculator : StatisticCalculator
+    public class SolutionCalculator : StatisticCalculator<SolutionStatistic>
     {
         private static readonly string[] FileExtensionsOfSourceCodeItems = {".cs", ".cpp", ".c"};
 
         public SolutionCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
-            : base(statisticListing, messageBus, errorHandler, typeof (SolutionStatistic), new SolutionFilter()) {}
+            : base(statisticListing, messageBus, errorHandler, new SolutionFilter()) {}
 
         protected override IStatistic Process(IDEEvent @event)
         {

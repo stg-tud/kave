@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using JetBrains.Reflection;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
@@ -31,10 +30,9 @@ using NUnit.Framework;
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    internal class SolutionCalculatorTest : CalculatorTest
+    internal class SolutionCalculatorTest : StatisticCalculatorTestBase<SolutionCalculator>
     {
-        public SolutionCalculatorTest()
-            : base(typeof (SolutionCalculatorTestImplementation), typeof (SolutionStatistic), new SolutionEvent()) {}
+        public SolutionCalculatorTest() : base(new SolutionEvent()) {}
 
         protected override bool IsNewStatistic(IStatistic statistic)
         {
@@ -102,7 +100,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void ComputesAddedTestClassesEventCorrectly()
         {
-            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var previousCreatedTestClasses = actualStatistic.TestClassesCreated;
 
             var testClassCreatedEvent = new SolutionEvent
@@ -125,7 +123,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void ComputesRemovedTestClassesEventCorrectly()
         {
-            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var previousCreatedTestClasses = actualStatistic.TestClassesCreated;
 
             var testClassCreatedEvent = new SolutionEvent
@@ -146,9 +144,9 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         }
 
         [Test, TestCaseSource("ComputesStatisticsCorrectlySource")]
-        public void ComputesStatisticsCorrectly(SolutionEvent.SolutionAction action, String testedStatistic)
+        public void ComputesStatisticsCorrectly(SolutionEvent.SolutionAction action, string testedStatistic)
         {
-            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var previousValue = (int) actualStatistic.GetFieldOrPropertyValue(testedStatistic);
 
             var testClassCreatedEvent = new SolutionEvent {Action = action};

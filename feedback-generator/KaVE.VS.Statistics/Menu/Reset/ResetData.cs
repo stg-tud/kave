@@ -69,7 +69,7 @@ namespace KaVE.VS.Statistics.Menu.Reset
 
                 listing.DeleteData();
 
-                Registry.GetComponents<StatisticCalculator>().ForEach(calculator => calculator.InitializeStatistic());
+                Registry.GetComponents<IStatisticCalculator>().ForEach(calculator => calculator.InitializeStatistic());
 
                 Registry.GetComponent<StatisticViewModel>().ResetCollections();
 

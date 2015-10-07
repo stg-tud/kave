@@ -26,10 +26,10 @@ using KaVE.VS.Statistics.Utils;
 namespace KaVE.VS.Statistics.Calculators
 {
     [ShellComponent]
-    public class CommandCalculator : StatisticCalculator
+    public class CommandCalculator : StatisticCalculator<CommandStatistic>
     {
         public CommandCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
-            : base(statisticListing, messageBus, errorHandler, typeof (CommandStatistic), new CommandFilter()) {}
+            : base(statisticListing, messageBus, errorHandler, new CommandFilter()) {}
 
         protected override IStatistic Process(IDEEvent @event)
         {

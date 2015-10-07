@@ -19,21 +19,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Resources;
 using KaVE.Commons.Utils.Reflection;
-using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Properties;
 using KaVE.VS.Statistics.UI;
 
 namespace KaVE.VS.Statistics.Statistics
 {
-    /// <summary>
-    ///     Interface for data structures of Statistics
-    ///     Must be computed by <see cref="StatisticCalculator" />
-    /// </summary>
     public abstract class Statistic<T> : IStatistic
     {
-        /// <summary>
-        ///     Used for acquiring the property names of statistics when creating StatisticElements
-        /// </summary>
         protected ResourceManager PropertyNameManager = StatisticPropertyNames.ResourceManager;
 
         /// <summary>
@@ -41,9 +33,6 @@ namespace KaVE.VS.Statistics.Statistics
         /// </summary>
         public abstract List<StatisticElement> GetCollection();
 
-        /// <summary>
-        ///     Creates a new StatisticElement containg the property name and its value
-        /// </summary>
         protected StatisticElement NewElement<TProperty>(Expression<Func<T, TProperty>> expression, string value)
         {
             var propertyName = TypeExtensions<T>.GetPropertyName(expression);
@@ -53,5 +42,13 @@ namespace KaVE.VS.Statistics.Statistics
                 Value = value
             };
         }
+    }
+
+    public static class Statistic
+    {
+        public static IStatistic Create<TStatistic>() where TStatistic : IStatistic, new()
+        {
+            return new TStatistic();
+        } 
     }
 }

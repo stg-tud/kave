@@ -15,19 +15,18 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.Statistics.Calculators;
 using KaVE.VS.Statistics.Statistics;
-using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    internal class BuildCalculatorTest : CalculatorTest
+    internal class BuildCalculatorTest : StatisticCalculatorTestBase<BuildCalculator>
     {
-        public BuildCalculatorTest() : base(typeof (BuildCalculator), typeof (BuildStatistic), new BuildEvent()) {}
+        public BuildCalculatorTest() : base(new BuildEvent()) {}
 
         protected override bool IsNewStatistic(IStatistic statistic)
         {
@@ -63,26 +62,18 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         };
 
         [Test, TestCaseSource("BuildEvents")]
-        public void CalculatingFromEventsTest(BuildEvent[] buildEvents,
+        public void CalculatingFromEventsTest(IDEEvent[] buildEvents,
             int expectedSuccessfulBuilds,
             int expectedFailedBuilds)
         {
             var expectedTotalBuilds = expectedSuccessfulBuilds + expectedFailedBuilds;
-            var actualStatistic = (BuildStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (BuildStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
 
             Publish(buildEvents);
 
             Assert.AreEqual(expectedSuccessfulBuilds, actualStatistic.SuccessfulBuilds);
             Assert.AreEqual(expectedFailedBuilds, actualStatistic.FailedBuilds);
             Assert.AreEqual(expectedTotalBuilds, actualStatistic.TotalBuilds);
-        }
-
-        [Test]
-        public void EventCallWithWrongEventTypeExceptionHandlingTest()
-        {
-            Publish(new TestIDEEvent());
-
-            ListingMock.Verify(l => l.Update(It.IsAny<IStatistic>()), Times.Never);
         }
     }
 }

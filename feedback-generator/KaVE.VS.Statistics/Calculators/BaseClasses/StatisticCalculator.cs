@@ -15,7 +15,6 @@
  */
 
 using System;
-using JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Filters;
@@ -25,79 +24,49 @@ using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.Calculators.BaseClasses
 {
-    public abstract class StatisticCalculator
+    public interface IStatisticCalculator
     {
-        protected readonly IErrorHandler ErrorHandler;
+        Type StatisticType { get; }
+        void InitializeStatistic();
+        void Event(IDEEvent @event);
+    }
 
+    public abstract class StatisticCalculator<TStatistic> : IStatisticCalculator where TStatistic : IStatistic, new()
+    {
+        public Type StatisticType
+        {
+            get { return typeof (TStatistic); }
+        }
+
+        protected readonly IErrorHandler ErrorHandler;
         protected readonly IEventFilter EventFilter;
         protected readonly IStatisticListing StatisticListing;
-        protected readonly Type StatisticType;
-
-        protected bool BlockAllEvents;
 
         protected StatisticCalculator(IStatisticListing statisticListing,
             IMessageBus messageBus,
             IErrorHandler errorHandler,
-            Type statisticType,
             IEventFilter eventFilter = null)
         {
             StatisticListing = statisticListing;
-            StatisticType = statisticType;
             ErrorHandler = errorHandler;
-            EventFilter = eventFilter;
+
+            EventFilter = eventFilter ?? new NoFilter();
 
             messageBus.Subscribe<IDEEvent>(Event);
 
             if (StatisticListing.GetStatistic(StatisticType) == null)
             {
-                Initialize();
+                StatisticListing.Update(new TStatistic());
             }
         }
 
         public void InitializeStatistic()
         {
-            Initialize();
+            StatisticListing.Update(new TStatistic());
         }
 
-        protected void Initialize()
-        {
-            var initializedStatistic = GetInitializedStatistic();
-            if (initializedStatistic != null)
-            {
-                StatisticListing.Update(initializedStatistic);
-            }
-        }
-
-        [Pure]
-        protected IStatistic GetInitializedStatistic()
-        {
-            try
-            {
-                var newStatistic = (IStatistic) Activator.CreateInstance(StatisticType);
-                return newStatistic;
-            }
-            catch (Exception e)
-            {
-                BlockAllEvents = true;
-                ErrorHandler.SendErrorMessageToLogger(
-                    e,
-                    string.Format(
-                        "Statistic of type {0} must implement a constructor without parameters",
-                        StatisticType.Name));
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Sends no update if <see cref="@event" /> is null (e.g. when filtered)
-        /// </summary>
         public void Event(IDEEvent @event)
         {
-            if (BlockAllEvents)
-            {
-                return;
-            }
-
             var postFilterEvent = FilterEvent(@event);
             if (postFilterEvent == null)
             {
@@ -111,12 +80,9 @@ namespace KaVE.VS.Statistics.Calculators.BaseClasses
             }
         }
 
-        /// <summary>
-        ///     Gets called before Process and returns null if the Event is filtered
-        /// </summary>
         protected virtual IDEEvent FilterEvent(IDEEvent @event)
         {
-            return (EventFilter == null) ? @event : EventFilter.Process(@event);
+            return EventFilter.Process(@event);
         }
 
         /// <summary>
@@ -124,5 +90,13 @@ namespace KaVE.VS.Statistics.Calculators.BaseClasses
         ///     <para>Implement any calculation logic here</para>
         /// </summary>
         protected abstract IStatistic Process(IDEEvent @event);
+
+        private class NoFilter : IEventFilter
+        {
+            public IDEEvent Process(IDEEvent @event)
+            {
+                return @event;
+            }
+        }
     }
 }

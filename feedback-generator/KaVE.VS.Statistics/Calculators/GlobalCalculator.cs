@@ -27,7 +27,7 @@ using KaVE.VS.Statistics.Utils;
 namespace KaVE.VS.Statistics.Calculators
 {
     [ShellComponent]
-    public class GlobalCalculator : StatisticCalculator
+    public class GlobalCalculator : StatisticCalculator<GlobalStatistic>
     {
         public static readonly TimeSpan SessionTimeOut = new TimeSpan(0, 2, 0);
 
@@ -36,7 +36,7 @@ namespace KaVE.VS.Statistics.Calculators
         private DateTime? _lastEventTime;
 
         public GlobalCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
-            : base(statisticListing, messageBus, errorHandler, typeof (GlobalStatistic)) {}
+            : base(statisticListing, messageBus, errorHandler) {}
 
         protected override IStatistic Process(IDEEvent @event)
         {

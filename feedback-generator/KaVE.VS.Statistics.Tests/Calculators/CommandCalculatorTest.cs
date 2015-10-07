@@ -28,13 +28,10 @@ using NUnit.Framework;
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    public class CommandCalculatorTest : CalculatorTest
+    public class CommandCalculatorTest : StatisticCalculatorTestBase<CommandCalculator>
     {
         public CommandCalculatorTest()
-            : base(
-                typeof (CommandCalculatorTestImplementation),
-                typeof (CommandStatistic),
-                new CommandEvent {CommandId = ""}) {}
+            : base(new CommandEvent {CommandId = "Test Id"}) {}
 
         protected override bool IsNewStatistic(IStatistic statistic)
         {
@@ -83,7 +80,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test, TestCaseSource("CommandEvents")]
         public void AddsNewCommandEventsCorrectly(CommandEvent commandEvent)
         {
-            var actualStatistic = (CommandStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (CommandStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
 
             Publish(commandEvent);
 
@@ -93,7 +90,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void CalculateExistingCommandEvent()
         {
-            var actualStatistic = (CommandStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (CommandStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var commandEvent = new CommandEvent {CommandId = "Rename"};
 
             Publish(commandEvent);

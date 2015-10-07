@@ -26,9 +26,9 @@ using NUnit.Framework;
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    internal class GlobalCalculatorTest : CalculatorTest
+    internal class GlobalCalculatorTest : StatisticCalculatorTestBase<GlobalCalculator>
     {
-        public GlobalCalculatorTest() : base(typeof (GlobalCalculator), typeof (GlobalStatistic), new GlobalEvent()) {}
+        public GlobalCalculatorTest() : base(new GlobalEvent()) {}
 
         protected override bool IsNewStatistic(IStatistic statistic)
         {
@@ -303,7 +303,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         {
             Publish(events);
 
-            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var actualValue = actualStatistic.MaxNumberOfEditsBetweenCommits;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -311,7 +311,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test, TestCaseSource("EditsBetweenCommitsTestSources")]
         public void NumberOfEditsBetweenCommitsTest(IDEEvent[] events, int expectedValue)
         {
-            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
 
             Publish(events);
 
@@ -324,7 +324,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         {
             Publish(events);
 
-            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var actualValue = actualStatistic.TimeInDebugSession;
             Assert.AreEqual(actualValue, expectedValue);
         }
@@ -332,7 +332,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test, TestCaseSource("TotalEventsTestSources")]
         public void TotalEventsTest(IDEEvent[] events)
         {
-            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var previousValue = actualStatistic.TotalEvents;
             var expectedValue = previousValue + events.Length;
 
@@ -345,7 +345,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test, TestCaseSource("EditEvents")]
         public void TotalNumberOfEditsTest(EditEvent[] editEvents)
         {
-            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var previousValue = actualStatistic.TotalNumberOfEdits;
 
             var sumOfEdits = editEvents.Sum(ideEvent => ideEvent.NumberOfChanges);
@@ -362,7 +362,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         {
             Publish(events);
 
-            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             var actualValue = actualStatistic.TotalWorkTime;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -370,7 +370,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void EventTimeTest()
         {
-            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (GlobalStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
             actualStatistic.EarliestEventTime = new DateTime(2015, 1, 1, 15, 0, 0);
             actualStatistic.LatestEventTime = new DateTime(2015, 1, 1, 9, 0, 0);
             var expectedValue = new DateTime(2015, 1, 1, 12, 0, 0);

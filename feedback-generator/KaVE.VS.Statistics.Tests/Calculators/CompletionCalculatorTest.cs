@@ -31,7 +31,7 @@ using NUnit.Framework;
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    public class CompletionCalculatorTest : CalculatorTest
+    public class CompletionCalculatorTest : StatisticCalculatorTestBase<CompletionCalculator>
     {
         private static readonly CompletionEvent AppliedCompletion = new CompletionEvent
         {
@@ -45,8 +45,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             Duration = new TimeSpan(0, 1, 30)
         };
 
-        public CompletionCalculatorTest()
-            : base(typeof (CompletionCalculatorTestImplementation), typeof (CompletionStatistic), new CompletionEvent()) {}
+        public CompletionCalculatorTest() : base(new CompletionEvent()) {}
 
         protected override bool IsNewStatistic(IStatistic statistic)
         {
@@ -81,7 +80,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             const int expectedTotal = 3;
             var expectedTime = new TimeSpan(0, 8, 30);
 
-            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
 
             Publish(events);
 
@@ -104,7 +103,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             const int expectedTotalCompleted = 2;
             var expectedTotalTimeCompleted = new TimeSpan(0, 7, 00);
 
-            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
 
             Publish(events);
 
@@ -127,7 +126,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             const int expectedTotalCancelled = 2;
             var expectedTotalTimeCancelled = new TimeSpan(0, 3, 00);
 
-            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
 
             Publish(events);
 
@@ -162,7 +161,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
                 Context2 = new Context() // TODO: add trigger point with prefix to Context2.SST
             };
 
-            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(StatisticType);
+            var actualStatistic = (CompletionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
 
             Publish(testEvent);
 

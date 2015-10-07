@@ -51,7 +51,7 @@ namespace KaVE.VS.Statistics.Tests.LogCollector
             SetupStatisticListingMock();
 
             // Initialize Calculators
-            _calculatorList = new List<StatisticCalculator>
+            _calculatorList = new List<IStatisticCalculator>
             {
                 new BuildCalculator(_statisticListingMock.Object, messageBusMock.Object, errorHandlerMock.Object),
                 new GlobalCalculator(_statisticListingMock.Object, messageBusMock.Object, errorHandlerMock.Object),
@@ -73,7 +73,7 @@ namespace KaVE.VS.Statistics.Tests.LogCollector
         private Mock<IStatisticListing> _statisticListingMock;
         private Mock<ILogManager> _logManagerMock;
 
-        private List<StatisticCalculator> _calculatorList;
+        private List<IStatisticCalculator> _calculatorList;
 
         private BuildStatistic _buildStatistic;
         private CommandStatistic _commandStatistic;
