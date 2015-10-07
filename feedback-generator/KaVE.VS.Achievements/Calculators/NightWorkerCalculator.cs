@@ -41,8 +41,10 @@ namespace KaVE.VS.Achievements.Calculators
                 return false;
             }
 
-            if (globalStatistic.LatestEventTime.TimeOfDay.TotalHours < 22 &&
-                globalStatistic.EarliestEventTime.TimeOfDay.TotalHours > 4)
+            if ((globalStatistic.EarliestEventTime != null &&
+                 globalStatistic.EarliestEventTime.Value.TimeOfDay.TotalHours > 4) ||
+                (globalStatistic.LatestEventTime != null &&
+                 globalStatistic.LatestEventTime.Value.TimeOfDay.TotalHours < 22))
             {
                 return false;
             }

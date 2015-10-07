@@ -27,22 +27,35 @@ namespace KaVE.VS.Statistics.Tests.Statistics
     [TestFixture]
     public class GlobalStatisticTest
     {
-        private readonly GlobalStatistic _uut = new GlobalStatistic
+        [Test]
+        public void DefaultValues()
         {
-            CurrentNumberOfEditsBetweenCommits = 1,
-            MaxNumberOfEditsBetweenCommits = 1000,
-            TimeInDebugSession = new TimeSpan(0, 0, 0, 10),
-            TotalEvents = BigInteger.Parse("10000"),
-            TotalNumberOfEdits = 100,
-            TotalWorkTime = new TimeSpan(0, 0, 0, 0, 10),
-            EarliestEventTime = new DateTime(1984, 1, 1, 12, 0, 0),
-            LatestEventTime = new DateTime(1984, 1, 1, 12, 0, 0)
-        };
+            var uut = new GlobalStatistic();
+
+            Assert.AreEqual(BigInteger.Zero, uut.TotalEvents);
+            Assert.AreEqual(0, uut.TotalNumberOfEdits);
+            Assert.AreEqual(0, uut.CurrentNumberOfEditsBetweenCommits);
+            Assert.AreEqual(0, uut.MaxNumberOfEditsBetweenCommits);
+            Assert.AreEqual(TimeSpan.Zero, uut.TimeInDebugSession);
+            Assert.AreEqual(TimeSpan.Zero, uut.TotalWorkTime);
+            Assert.IsNull(uut.LatestEventTime);
+            Assert.IsNull(uut.EarliestEventTime);
+        }
 
         [Test]
         public void GetCollectionTest()
         {
-            var actualCollection = _uut.GetCollection();
+            var actualCollection = new GlobalStatistic
+            {
+                CurrentNumberOfEditsBetweenCommits = 1,
+                MaxNumberOfEditsBetweenCommits = 1000,
+                TimeInDebugSession = new TimeSpan(0, 0, 0, 10),
+                TotalEvents = BigInteger.Parse("10000"),
+                TotalNumberOfEdits = 100,
+                TotalWorkTime = new TimeSpan(0, 0, 0, 0, 10),
+                EarliestEventTime = new DateTime(1984, 1, 1, 12, 0, 0),
+                LatestEventTime = new DateTime(1984, 1, 1, 12, 0, 0)
+            }.GetCollection();
 
             var expectedCollection = new List<StatisticElement>
             {

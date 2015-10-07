@@ -25,27 +25,45 @@ namespace KaVE.VS.Statistics.Tests.Statistics
     [TestFixture]
     public class SolutionStatisticTest
     {
-        private readonly SolutionStatistic _uut = new SolutionStatistic
+        [Test]
+        public void DefaultValues()
         {
-            ProjectItemsAdded = 1,
-            ProjectItemsRemoved = 10,
-            ProjectItemsRenamed = 100,
-            ProjectsAdded = 1000,
-            ProjectsRemoved = 1000000,
-            ProjectsRenamed = 100000,
-            SolutionItemsAdded = 2,
-            SolutionItemsRemoved = 20,
-            SolutionItemsRenamed = 200,
-            SolutionsClosed = 2000,
-            SolutionsOpened = 20000,
-            SolutionsRenamed = 200000,
-            TestClassesCreated = 9999
-        };
+            var uut = new SolutionStatistic();
+
+            Assert.AreEqual(0, uut.SolutionsOpened);
+            Assert.AreEqual(0, uut.SolutionsRenamed);
+            Assert.AreEqual(0, uut.SolutionsClosed);
+            Assert.AreEqual(0, uut.SolutionItemsAdded);
+            Assert.AreEqual(0, uut.SolutionItemsRenamed);
+            Assert.AreEqual(0, uut.SolutionItemsRemoved);
+            Assert.AreEqual(0, uut.ProjectsAdded);
+            Assert.AreEqual(0, uut.ProjectsRenamed);
+            Assert.AreEqual(0, uut.ProjectsRemoved);
+            Assert.AreEqual(0, uut.ProjectItemsAdded);
+            Assert.AreEqual(0, uut.ProjectItemsRenamed);
+            Assert.AreEqual(0, uut.ProjectItemsRemoved);
+            Assert.AreEqual(0, uut.TestClassesCreated);
+        }
 
         [Test]
         public void GetCollection()
         {
-            var actualCollection = _uut.GetCollection();
+            var actualCollection = new SolutionStatistic
+            {
+                ProjectItemsAdded = 1,
+                ProjectItemsRemoved = 10,
+                ProjectItemsRenamed = 100,
+                ProjectsAdded = 1000,
+                ProjectsRemoved = 1000000,
+                ProjectsRenamed = 100000,
+                SolutionItemsAdded = 2,
+                SolutionItemsRemoved = 20,
+                SolutionItemsRenamed = 200,
+                SolutionsClosed = 2000,
+                SolutionsOpened = 20000,
+                SolutionsRenamed = 200000,
+                TestClassesCreated = 9999
+            }.GetCollection();
 
             var expectedCollection = new List<StatisticElement>
             {

@@ -24,15 +24,22 @@ namespace KaVE.VS.Statistics.Tests.Statistics
     [TestFixture]
     public class CommandStatisticTest
     {
-        private readonly CommandStatistic _uut = new CommandStatistic();
+        [Test]
+        public void DefaultValues()
+        {
+            var uut = new CommandStatistic();
+
+            CollectionAssert.IsEmpty(uut.CommandTypeValues);
+        }
 
         [Test]
         public void GetCollectionTest()
         {
-            _uut.CommandTypeValues.Add("ShowOptions", 10);
-            _uut.CommandTypeValues.Add("{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8289:", 1000);
-            _uut.CommandTypeValues.Add("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste", 10000000);
-            _uut.CommandTypeValues.Add("TextControl.Backspace", 1);
+            var uut = new CommandStatistic();
+            uut.CommandTypeValues.Add("ShowOptions", 10);
+            uut.CommandTypeValues.Add("{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8289:", 1000);
+            uut.CommandTypeValues.Add("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste", 10000000);
+            uut.CommandTypeValues.Add("TextControl.Backspace", 1);
 
             var expectedCollection = new List<StatisticElement>
             {
@@ -53,7 +60,7 @@ namespace KaVE.VS.Statistics.Tests.Statistics
                 }
             };
 
-            var actualCollection = _uut.GetCollection();
+            var actualCollection = uut.GetCollection();
 
             CollectionAssert.AreEqual(expectedCollection, actualCollection);
         }

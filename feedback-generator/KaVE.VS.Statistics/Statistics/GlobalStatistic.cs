@@ -27,12 +27,6 @@ namespace KaVE.VS.Statistics.Statistics
     /// </summary>
     public class GlobalStatistic : Statistic<GlobalStatistic>
     {
-        public GlobalStatistic()
-        {
-            LatestEventTime = DateTime.Now;
-            EarliestEventTime = DateTime.Now;
-        }
-
         public BigInteger TotalEvents { get; set; }
 
         public int TotalNumberOfEdits { get; set; }
@@ -45,9 +39,9 @@ namespace KaVE.VS.Statistics.Statistics
 
         public TimeSpan TotalWorkTime { get; set; }
 
-        public DateTime LatestEventTime { get; set; }
+        public DateTime? LatestEventTime { get; set; }
 
-        public DateTime EarliestEventTime { get; set; }
+        public DateTime? EarliestEventTime { get; set; }
 
         /// <summary>
         ///     Gets a List of StatisticElements containing each statistic of this data structure
@@ -66,8 +60,12 @@ namespace KaVE.VS.Statistics.Statistics
                     MaxNumberOfEditsBetweenCommits.Format()),
                 NewElement(self => self.TimeInDebugSession, TimeInDebugSession.Format()),
                 NewElement(self => self.TotalWorkTime, TotalWorkTime.Format()),
-                NewElement(self => self.EarliestEventTime, EarliestEventTime.ToShortTimeString()),
-                NewElement(self => self.LatestEventTime, LatestEventTime.ToShortTimeString())
+                NewElement(
+                    self => self.EarliestEventTime,
+                    EarliestEventTime != null ? EarliestEventTime.Value.ToShortTimeString() : string.Empty),
+                NewElement(
+                    self => self.LatestEventTime,
+                    LatestEventTime != null ? LatestEventTime.Value.ToShortTimeString() : string.Empty)
             };
         }
     }

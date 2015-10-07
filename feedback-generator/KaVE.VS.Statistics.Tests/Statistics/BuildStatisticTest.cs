@@ -25,16 +25,23 @@ namespace KaVE.VS.Statistics.Tests.Statistics
     [TestFixture]
     public class BuildStatisticTest
     {
-        private readonly BuildStatistic _uut = new BuildStatistic
+        [Test]
+        public void DefaultValues()
         {
-            FailedBuilds = 10000,
-            SuccessfulBuilds = 10
-        };
+            var uut = new BuildStatistic();
+            Assert.AreEqual(0, uut.FailedBuilds);
+            Assert.AreEqual(0, uut.SuccessfulBuilds);
+            Assert.AreEqual(0, uut.TotalBuilds);
+        }
 
         [Test]
         public void GetCollectionTest()
         {
-            var actualCollection = _uut.GetCollection();
+            var actualCollection = new BuildStatistic
+            {
+                FailedBuilds = 10000,
+                SuccessfulBuilds = 10
+            }.GetCollection();
 
             var expectedCollection = new List<StatisticElement>
             {

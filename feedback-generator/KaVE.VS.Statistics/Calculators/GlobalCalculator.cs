@@ -44,16 +44,18 @@ namespace KaVE.VS.Statistics.Calculators
 
             globalStatistic.TotalEvents++;
 
-            if (@event.TriggeredAt != null &&
-                @event.TriggeredAt.Value.TimeOfDay < globalStatistic.EarliestEventTime.TimeOfDay)
+            if (globalStatistic.EarliestEventTime == null ||
+                (@event.TriggeredAt != null &&
+                 @event.TriggeredAt.Value.TimeOfDay < globalStatistic.EarliestEventTime.Value.TimeOfDay))
             {
-                globalStatistic.EarliestEventTime = @event.TriggeredAt.Value;
+                globalStatistic.EarliestEventTime = @event.TriggeredAt;
             }
 
-            if (@event.TriggeredAt != null &&
-                @event.TriggeredAt.Value.TimeOfDay > globalStatistic.LatestEventTime.TimeOfDay)
+            if (globalStatistic.LatestEventTime == null ||
+                (@event.TriggeredAt != null &&
+                 @event.TriggeredAt.Value.TimeOfDay > globalStatistic.LatestEventTime.Value.TimeOfDay))
             {
-                globalStatistic.LatestEventTime = @event.TriggeredAt.Value;
+                globalStatistic.LatestEventTime = @event.TriggeredAt;
             }
 
             CalculateTotalWorkTime(@event, globalStatistic);

@@ -27,22 +27,38 @@ namespace KaVE.VS.Statistics.Tests.Statistics
     [TestFixture]
     public class CompletionStatisticTest
     {
-        private readonly CompletionStatistic _uut = new CompletionStatistic
+        [Test]
+        public void DefaultValues()
         {
-            SavedKeystrokes = 10000,
-            TotalCompletions = 1100,
-            TotalCancelled = 100,
-            TotalCompleted = 1000,
-            TotalProposals = BigInteger.Parse("100000000000"),
-            TotalTime = TimeSpan.FromDays(100) + TimeSpan.FromHours(12),
-            TotalTimeCancelled = TimeSpan.FromHours(12),
-            TotalTimeCompleted = TimeSpan.FromDays(100)
-        };
+            var uut = new CompletionStatistic();
+
+            Assert.AreEqual(0, uut.TotalCompletions);
+            Assert.AreEqual(0, uut.TotalCompleted);
+            Assert.AreEqual(0, uut.TotalCancelled);
+            Assert.AreEqual(TimeSpan.Zero, uut.TotalTime);
+            Assert.AreEqual(TimeSpan.Zero, uut.TotalTimeCompleted);
+            Assert.AreEqual(TimeSpan.Zero, uut.AverageTimeCompleted);
+            Assert.AreEqual(TimeSpan.Zero, uut.TotalTimeCancelled);
+            Assert.AreEqual(TimeSpan.Zero, uut.AverageTimeCancelled);
+            Assert.AreEqual(0, uut.SavedKeystrokes);
+            Assert.AreEqual(0, uut.AverageSavedKeystrokes);
+            Assert.AreEqual(BigInteger.Zero, uut.TotalProposals);
+        }
 
         [Test]
         public void GetCollectionTest()
         {
-            var actualCollection = _uut.GetCollection();
+            var actualCollection = new CompletionStatistic
+            {
+                SavedKeystrokes = 10000,
+                TotalCompletions = 1100,
+                TotalCancelled = 100,
+                TotalCompleted = 1000,
+                TotalProposals = BigInteger.Parse("100000000000"),
+                TotalTime = TimeSpan.FromDays(100) + TimeSpan.FromHours(12),
+                TotalTimeCancelled = TimeSpan.FromHours(12),
+                TotalTimeCompleted = TimeSpan.FromDays(100)
+            }.GetCollection();
 
             var expectedCollection = new List<StatisticElement>
             {
