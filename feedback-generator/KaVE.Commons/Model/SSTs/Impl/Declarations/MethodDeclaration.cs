@@ -17,8 +17,9 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -42,9 +43,36 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
             get { return Lists.NewList<ISSTNode>(); }
         }
 
+        public ITypeReference ReturnType
+        {
+            get { return new TypeReference {TypeName = Name.ReturnType}; }
+        }
+
+        public ISimpleName MethodName { get { return new SimpleName {Name = Name.Name}; }  }
+        
+        public ITypeReference DeclaringType { get { return new TypeReference {TypeName = Name.DeclaringType}; }  }
+
+        public IEnumerable<IParameterDeclaration> Parameters
+        {
+            get
+            {
+                var parameters = Lists.NewList<ParameterDeclaration>();
+                foreach (var parameterName in Name.Parameters)
+                {
+                    parameters.Add(new ParameterDeclaration
+                    {
+                        Name = new SimpleName { Name = parameterName.Name},
+                        Type = new TypeReference { TypeName = parameterName.ValueType}
+                    });
+                }
+                return parameters;
+            }
+        }
+
+
         public MethodDeclaration()
         {
-            Name = MethodName.UnknownName;
+            Name = Names.CSharp.MethodName.UnknownName;
             Body = Lists.NewList<IStatement>();
         }
 

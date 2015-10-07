@@ -17,7 +17,9 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
@@ -54,6 +56,72 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
             Assert.AreEqual(_mA, sut.Name);
             Assert.True(sut.IsEntryPoint);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
+        }
+
+        [Test]
+        public void ReturnTypeIdentity()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            Assert.AreEqual(new TypeReference{TypeName = _mA.ReturnType}, sut.ReturnType );
+        }
+
+        [Test]
+        public void DeclaringTypeIdentity()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            Assert.AreEqual(new TypeReference { TypeName = _mA.DeclaringType }, sut.DeclaringType);
+        }
+
+        [Test]
+        public void MethodNameIdentity()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            Assert.AreEqual(new SimpleName { Name = _mA.Name }, sut.MethodName);
+        }
+
+        [Test]
+        public void ParametersIdentity()
+        {
+            const string declaringTypeIdentifier = "A, B, 9.9.9.9";
+            const string returnTypeIdentifier = "R, C, 7.6.5.4";
+            const string param1Identifier = "[P, D, 3.4.3.2] n";
+            const string param2Identifier = "[Q, E, 9.1.8.2] o";
+            const string param3Identifier = "[R, F, 6.5.7.4] p";
+
+            var methodName =
+                MethodName.Get(
+                    "[" + returnTypeIdentifier + "] [" + declaringTypeIdentifier + "].DoIt(" + param1Identifier + ", " +
+                    param2Identifier + ", " + param3Identifier + ")");
+
+            var sut = new MethodDeclaration()
+            {
+                Name = methodName
+            };
+
+            var expectedParameterList = Lists.NewList<ParameterDeclaration>();
+
+            foreach (var parameterName in methodName.Parameters)
+            {
+                expectedParameterList.Add(new ParameterDeclaration
+                {
+                    Name = new SimpleName{Name = parameterName.Name},
+                    Type = new TypeReference { TypeName = parameterName.ValueType}
+                });
+            }
+
+            Assert.AreEqual(expectedParameterList, sut.Parameters);
         }
 
         [Test]

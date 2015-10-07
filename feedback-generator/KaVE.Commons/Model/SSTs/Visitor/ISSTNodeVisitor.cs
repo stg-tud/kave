@@ -19,6 +19,7 @@ using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 
@@ -33,6 +34,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(IEventDeclaration decl, TContext context);
         void Visit(IFieldDeclaration decl, TContext context);
         void Visit(IMethodDeclaration decl, TContext context);
+        void Visit(IParameterDeclaration decl, TContext context);
         void Visit(IPropertyDeclaration decl, TContext context);
         void Visit(IVariableDeclaration decl, TContext context);
 
@@ -81,8 +83,11 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(IFieldReference fieldRef, TContext context);
         void Visit(IMethodReference methodRef, TContext context);
         void Visit(IPropertyReference propertyRef, TContext context);
+        void Visit(ITypeReference typeReference, TContext context);
         void Visit(IVariableReference varRef, TContext context);
         void Visit(IIndexAccessReference indexAccessRef, TContext context);
+
+        void Visit(ISimpleName simpleName, TContext context);
 
         // unknowns
         void Visit(IUnknownReference unknownRef, TContext context);
@@ -99,6 +104,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(IEventDeclaration decl, TContext context);
         TReturn Visit(IFieldDeclaration decl, TContext context);
         TReturn Visit(IMethodDeclaration decl, TContext context);
+        TReturn Visit(IParameterDeclaration decl, TContext context);
         TReturn Visit(IPropertyDeclaration decl, TContext context);
         TReturn Visit(IVariableDeclaration decl, TContext context);
 
@@ -147,8 +153,11 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(IFieldReference fieldRef, TContext context);
         TReturn Visit(IMethodReference methodRef, TContext context);
         TReturn Visit(IPropertyReference propertyRef, TContext context);
+        TReturn Visit(ITypeReference typeReference, TContext context);
         TReturn Visit(IVariableReference varRef, TContext context);
         TReturn Visit(IIndexAccessReference indexAccessRef, TContext context);
+
+        TReturn Visit(ISimpleName simpleName, TContext context);
 
         // unknowns
         TReturn Visit(IUnknownReference unknownRef, TContext context);

@@ -71,6 +71,12 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
             Visit(stmt.Body, context);
         }
 
+        public virtual void Visit(IParameterDeclaration decl, TContext context)
+        {
+            Visit(decl.Name, context);
+            Visit(decl.Type, context);
+        }
+
         public virtual void Visit(IPropertyDeclaration stmt, TContext context)
         {
             Visit(stmt.Get, context);
@@ -282,7 +288,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
             propertyRef.Reference.Accept(this, context);
         }
 
+        public virtual void Visit(ITypeReference typeReference, TContext context) {}
+
         public virtual void Visit(IVariableReference varRef, TContext context) {}
+        
+        public virtual void Visit(ISimpleName simpleName, TContext context) {}
 
         public virtual void Visit(IIndexAccessReference indexAccessRef, TContext context)
         {
@@ -349,6 +359,13 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
         public virtual TReturn Visit(IMethodDeclaration stmt, TContext context)
         {
             Visit(stmt.Body, context);
+            return default(TReturn);
+        }
+
+        public virtual TReturn Visit(IParameterDeclaration decl, TContext context)
+        {
+            Visit(decl.Name, context);
+            Visit(decl.Type, context);
             return default(TReturn);
         }
 
@@ -619,7 +636,17 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
             return default(TReturn);
         }
 
+        public virtual TReturn Visit(ITypeReference typeReference, TContext context)
+        {
+            return default(TReturn);
+        }
+
         public virtual TReturn Visit(IVariableReference varRef, TContext context)
+        {
+            return default(TReturn);
+        }
+
+        public virtual TReturn Visit(ISimpleName simpleName, TContext context)
         {
             return default(TReturn);
         }

@@ -73,11 +73,15 @@
     <Compile Include="Model\Names\IDelegateTypeName.cs" />
     <Compile Include="Model\Names\ILambdaName.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IBinaryExpression.cs" />
+    <Compile Include="Model\SSTs\Declarations\IParameterDeclaration.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\ICastExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IIndexAccessExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\ITypeCheckExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IUnaryExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\BinaryExpression.cs" />
+    <Compile Include="Model\SSTs\Impl\Declarations\ParameterDeclaration.cs" />
+    <Compile Include="Model\SSTs\Impl\References\TypeReference.cs" />
+    <Compile Include="Model\SSTs\Impl\SimpleName.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\CastExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\IndexAccessExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\TypeCheckExpression.cs" />
@@ -87,6 +91,8 @@
     <Compile Include="Model\SSTs\Impl\Statements\EventSubscriptionStatement.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\HasCompletionExpressionVisitor.cs" />
     <Compile Include="Model\SSTs\References\IIndexAccessReference.cs" />
+    <Compile Include="Model\SSTs\ISimpleName.cs" />
+    <Compile Include="Model\SSTs\References\ITypeReference.cs" />
     <Compile Include="Model\SSTs\Statements\IEventSubscriptionStatement.cs" />
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommender.cs" />

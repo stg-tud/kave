@@ -164,6 +164,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.StatementBlock(stmt.Body, this);
         }
 
+        public void Visit(IParameterDeclaration decl, SSTPrintingContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Visit(IPropertyDeclaration stmt, SSTPrintingContext c)
         {
             c.Indentation().Type(stmt.Name.ValueType).Space().Text(stmt.Name.Name);
@@ -677,9 +682,19 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.Text(".").Text(propertyRef.PropertyName.Name);
         }
 
+        public void Visit(ITypeReference typeReference, SSTPrintingContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Visit(IVariableReference varRef, SSTPrintingContext c)
         {
             c.Text(varRef.Identifier);
+        }
+
+        public void Visit(ISimpleName simpleName, SSTPrintingContext context)
+        {
+            throw new NotImplementedException();
         }
 
         public void Visit(IIndexAccessReference indexAccessRef, SSTPrintingContext context)

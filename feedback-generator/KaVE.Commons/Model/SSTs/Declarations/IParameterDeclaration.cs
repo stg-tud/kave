@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,14 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.References;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.SSTs.Declarations
 {
-    public interface IMethodDeclaration : IMemberDeclaration
+    public interface IParameterDeclaration : IMemberDeclaration
     {
-        [NotNull]
-        IMethodName Name { get; }
+        ITypeReference Type { get; }
 
-        bool IsEntryPoint { get; }
-
-        [NotNull]
-        IKaVEList<IStatement> Body { get; }
-
-        ITypeReference ReturnType { get; }
-
-        ISimpleName MethodName { get; }
-
-        ITypeReference DeclaringType { get; }
-
-        IEnumerable<IParameterDeclaration> Parameters { get; } 
-
+        ISimpleName Name { get; }
     }
 }
