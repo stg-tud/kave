@@ -73,8 +73,8 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual void Visit(IParameterDeclaration decl, TContext context)
         {
-            Visit(decl.Name, context);
-            Visit(decl.Type, context);
+            decl.Name.Accept(this, context);
+            decl.Type.Accept(this, context);
         }
 
         public virtual void Visit(IPropertyDeclaration stmt, TContext context)
@@ -364,8 +364,8 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual TReturn Visit(IParameterDeclaration decl, TContext context)
         {
-            Visit(decl.Name, context);
-            Visit(decl.Type, context);
+            decl.Name.Accept(this, context);
+            decl.Type.Accept(this, context);
             return default(TReturn);
         }
 

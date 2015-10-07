@@ -136,6 +136,21 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
         }
 
         [Test]
+        public void ParameterDeclaration()
+        {
+            var simpleName = Mock.Of<ISimpleName>(); 
+            var typeReference = Mock.Of<ITypeReference>(); 
+            Visit(new ParameterDeclaration
+            {
+                Name = simpleName,
+                Type = typeReference
+            });
+
+            AssertAccept(simpleName);
+            AssertAccept(typeReference);
+        }
+
+        [Test]
         public void PropertyDeclaration()
         {
             Visit(
@@ -618,6 +633,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
         }
 
         [Test]
+        public void TypeReference()
+        {
+            Visit(new TypeReference());
+        }
+
+        [Test]
         public void VariableReference()
         {
             Visit(new VariableReference());
@@ -634,6 +655,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
         }
 
         #endregion
+
+        [Test]
+        public void SimpleName()
+        {
+            Visit(new SimpleName());
+        }
 
         #region unknowns
 
