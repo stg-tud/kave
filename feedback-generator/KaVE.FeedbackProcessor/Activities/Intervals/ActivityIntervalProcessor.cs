@@ -34,6 +34,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         }
 
         public IDictionary<Activity, LostTime> LostTimeStatistics = new Dictionary<Activity, LostTime>();
+        public ISet<Pair<Activity>> OverlappingActivities = new HashSet<Pair<Activity>>(); 
 
         public ActivityIntervalProcessor()
         {
@@ -75,6 +76,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 if (previousInterval.Id == Activity.Away || previousInterval.End > CurrentInterval.Start)
                 {
                     var diff = previousInterval.End - CurrentInterval.Start;
+                    OverlappingActivities.Add(new Pair<Activity>(previousInterval.Id, CurrentInterval.Id));
                     LostTimeStatistics[CurrentInterval.Id].Frequency++;
                     LostTimeStatistics[CurrentInterval.Id].Time += diff;
                     previousInterval.End = CurrentInterval.Start;
