@@ -24,5 +24,10 @@ namespace KaVE.Commons.Utils.DateTime
         {
             return TimeSpan.FromTicks((long) (factor*span.Ticks));
         }
+
+        public static int RoundedTotalSeconds(this TimeSpan span)
+        {
+            return (int) Math.Round(span.TotalSeconds);
+        }
     }
 }

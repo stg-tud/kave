@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Utils.Csv;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -78,7 +79,7 @@ namespace KaVE.FeedbackProcessor.VsWindows
                 builder["developer"] = intervalStream.Key.Id;
                 foreach (var windowUsage in usage)
                 {
-                    builder[windowUsage.Key] = windowUsage.Value;
+                    builder[windowUsage.Key] = windowUsage.Value.RoundedTotalSeconds();
                 }
             }
             return builder.Build();

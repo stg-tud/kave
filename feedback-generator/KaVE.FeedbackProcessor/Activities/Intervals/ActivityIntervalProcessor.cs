@@ -268,10 +268,10 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                     }
                 }
                 builder.StartRow();
-                builder["Threshold (ms)"] = (int) Math.Round(shortInactivityTimeout.TotalSeconds);
-                builder["Inactivity (ms)"] = (int) Math.Round(inactivity.TotalSeconds);
+                builder["Threshold (s)"] = shortInactivityTimeout.RoundedTotalSeconds();
+                builder["Inactivity (s)"] = inactivity.RoundedTotalSeconds();
                 builder["# of Inactivities"] = numberOfInactivityPeriods;
-                builder["Long Inactivity (ms)"] = (int) Math.Round(longInactivity.TotalSeconds);
+                builder["Long Inactivity (s)"] = longInactivity.RoundedTotalSeconds();
                 builder["# of Long Inactivities"] = numberOfLongInactivityPeriods;
                 builder["# of activity sprees"] = numberOfActivitySprees;
                 builder["Days"] = days.Count;
