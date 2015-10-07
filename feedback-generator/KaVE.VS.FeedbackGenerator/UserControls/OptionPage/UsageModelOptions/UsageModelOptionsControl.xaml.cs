@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using Avalon.Windows.Dialogs;
@@ -50,6 +51,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         private readonly ModelStoreSettings _modelStoreSettings;
         private readonly IMessageBoxCreator _messageBoxCreator;
 
+        public readonly List<Tuple<string, string, string>> UsageModels;
+
         public UsageModelOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             KaVEISettingsStore settingsStore,
@@ -79,7 +82,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     (ModelStoreSettings s) => s.ModelStorePath,
                     ModelStorePathTextBox,
                     TextBox.TextProperty);
-                
+
                 // Binding to ModelStoreUrl
                 ctx.SetBinding(
                     lifetime,
@@ -87,6 +90,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     ModelStoreUrlTextBox,
                     TextBox.TextProperty);
             }
+
+            UsageModels = new List<Tuple<string, string, string>>
+            {
+                new Tuple<string, string, string>("Button", "1.0", "2.1"),
+                new Tuple<string, string, string>("Window", "-", "3.0.1"),
+                new Tuple<string, string, string>("Box", "1.0.0.0", "2.0.1.0"),
+                new Tuple<string, string, string>("StringBuilder", "1.0.0.0", "2.0.1.0"),
+                new Tuple<string, string, string>("PBNProposalItemsProvider", "1.0.0.0", "2.0.1.0"),
+                new Tuple<string, string, string>("KaVE.RS.Commons.Settings.ISettingsStore", "1.0.0.0", "2.0.1.0"),
+            };
+
+            UsageModelsTable.DataContext = UsageModels;
         }
 
         private void OnBrowse(object sender, RoutedEventArgs e)
@@ -122,9 +137,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
             }
-            catch (InvalidOperationException)
-            {
-            }
+            catch (InvalidOperationException) {}
         }
 
         public bool OnOk()
