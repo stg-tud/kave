@@ -16,14 +16,33 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Utils.Csv;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
     internal class ActivityIntervalProcessor : IntervalProcessor<Activity>
     {
+        public class LostTime
+        {
+            public int Frequency;
+            public TimeSpan Time;
+        }
+
+        public IDictionary<Activity, LostTime> LostTimeStatistics = new Dictionary<Activity, LostTime>();
+
+        public ActivityIntervalProcessor()
+        {
+            foreach (var activity in Enum.GetValues(typeof(Activity)).Cast<Activity>())
+            {
+                LostTimeStatistics[activity] = new LostTime {Frequency = 0, Time = TimeSpan.Zero};
+            }
+        }
+
         protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
             if (EndsAwayButNotInAwayInterval(@event))
@@ -55,11 +74,9 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
                 if (previousInterval.Id == Activity.Away || previousInterval.End > CurrentInterval.Start)
                 {
-                    var diff = (previousInterval.End - CurrentInterval.Start).TotalMilliseconds;
-                    if (diff > 1000)
-                    {
-                        Console.WriteLine(@"WARNING: Ignoring {0}ms of event duration.", diff);
-                    }
+                    var diff = previousInterval.End - CurrentInterval.Start;
+                    LostTimeStatistics[CurrentInterval.Id].Frequency++;
+                    LostTimeStatistics[CurrentInterval.Id].Time += diff;
                     previousInterval.End = CurrentInterval.Start;
                 }
             }
