@@ -42,7 +42,10 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 var waitingEnd = CurrentInterval.End;
                 CurrentInterval.End = @event.GetTriggeredAt();
                 StartInterval(@event);
-                StartInterval(CurrentInterval.End, Activity.Waiting, waitingEnd);
+                if (CurrentInterval.End < waitingEnd)
+                {
+                    StartInterval(CurrentInterval.End, Activity.Waiting, waitingEnd);
+                }
             }
             else if (RequiresNewInterval(@event))
             {
@@ -238,13 +241,13 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 var longInactivity = TimeSpan.Zero;
                 var numberOfLongInactivityPeriods = 0;
                 var numberOfActivitySprees = 0;
-                var days = new HashSet<DateTime>();
+                var days = new HashSet<string>();
                 foreach (var intervalStream in GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout))
                 {
                     var lastWasInactivity = false;
                     foreach (var interval in intervalStream.Value)
                     {
-                        days.Add(interval.Start.Date);
+                        days.Add(string.Format("{0}-{1}", intervalStream.Key.Id, interval.Start.Date));
 
                         if (interval.Id == Activity.Inactive)
                         {
