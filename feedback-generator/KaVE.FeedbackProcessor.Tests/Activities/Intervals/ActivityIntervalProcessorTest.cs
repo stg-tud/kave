@@ -287,6 +287,18 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
+        public void DoesNotInsertNegativeAwayInterval()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.Development, 2),
+                SomeEvent(1, Activity.EnterIDE, 1));
+
+            AssertIntervals(
+                Interval(0, Activity.Development, 1),
+                Interval(1, Activity.Other, 1));
+        }
+
+        [Test]
         public void AnyActivityIsMappedToOther()
         {
             WhenStreamIsProcessed(

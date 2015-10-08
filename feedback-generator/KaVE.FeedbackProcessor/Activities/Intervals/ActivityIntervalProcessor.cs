@@ -47,7 +47,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
-            if (EndsAwayButNotInAwayInterval(@event))
+            if (EndsAwayButNotInAwayInterval(@event) && (CurrentInterval.End < @event.GetTriggeredAt()))
             {
                 StartInterval(CurrentInterval.End, Activity.Away, @event.GetTriggeredAt());
             }
