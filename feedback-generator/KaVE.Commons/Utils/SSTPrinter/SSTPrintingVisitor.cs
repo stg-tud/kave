@@ -586,6 +586,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
             expr.Reference.Accept(this, c);
         }
 
+        public void Visit(ICastExpression expr, SSTPrintingContext c)
+        {
+            c.Text("(").Type(expr.TargetType).Text(")").Space();
+            expr.VariableReference.Accept(this, c);
+        }
+
         public void Visit(IEventReference eventRef, SSTPrintingContext c)
         {
             c.Text(eventRef.Reference.Identifier).Text(".").Text(eventRef.EventName.Name);

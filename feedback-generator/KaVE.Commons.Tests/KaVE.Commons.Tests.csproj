@@ -132,6 +132,7 @@
     <Compile Include="Model\SSTs\Impl\Declarations\FieldDeclarationTest.cs" />
     <Compile Include="Model\SSTs\Impl\Declarations\MethodDeclarationTest.cs" />
     <Compile Include="Model\SSTs\Impl\Declarations\PropertyDeclarationTest.cs" />
+    <Compile Include="Model\SSTs\Impl\Expressions\Assignable\CastExpressionTest.cs" />
     <Compile Include="Model\SSTs\Impl\Statements\EventSubscriptionStatementTest.cs" />
     <Compile Include="Model\SSTs\Impl\Statements\VariableDeclarationTest.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\CompletionExpressionTest.cs" />

@@ -119,7 +119,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void InvocationExpression_Constructor()
         {
-            var sst = new InvocationExpression()
+            var sst = new InvocationExpression
             {
                 Reference = VarRef("should be ignored anyways"),
                 MethodName = MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [C,P]..ctor()"),
@@ -173,7 +173,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 Body =
                 {
                     new ContinueStatement(),
-                    new BreakStatement(),
+                    new BreakStatement()
                 }
             };
 
@@ -212,7 +212,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new CompletionExpression
             {
-                VariableReference = VarRef("o"),
+                VariableReference = VarRef("o")
             };
             AssertPrint(sst, "o.$");
         }
@@ -300,6 +300,20 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             AssertPrint(
                 sst,
                 "() => { }");
+        }
+
+        [Test]
+        public void CastExpression()
+        {
+            var sst = new CastExpression
+            {
+                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                VariableReference = VarRef("i")
+            };
+
+            AssertPrint(
+                sst,
+                "(Int32) i");
         }
 
         private static INullExpression Null()
