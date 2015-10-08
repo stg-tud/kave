@@ -25,6 +25,7 @@ using KaVE.VS.Statistics.Properties;
 using KaVE.VS.Statistics.UI;
 using KaVE.VS.Statistics.UI.Utils;
 using KaVE.VS.Statistics.Utils;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace KaVE.VS.Statistics.Menu.Reset
@@ -64,7 +65,7 @@ namespace KaVE.VS.Statistics.Menu.Reset
 
                 var listing = Registry.GetComponent<IStatisticListing>();
 
-                listing.BlockUpdateToObservers = true;
+                listing.BlockUpdate = true;
 
                 listing.DeleteData();
 
@@ -77,13 +78,13 @@ namespace KaVE.VS.Statistics.Menu.Reset
                     uiDelegator.StatisticUserControl.ResetView();
                 }
 
-                listing.BlockUpdateToObservers = false;
+                listing.BlockUpdate = false;
 
-                listing.SendUpdateToObserversWithAllStatistics();
+                listing.SendUpdateWithAllStatistics();
             }
             catch (Exception e)
             {
-                Registry.GetComponent<IErrorHandler>().SendExceptionToLogger(e);
+                Registry.GetComponent<ILogger>().Error(e);
             }
         }
     }

@@ -24,7 +24,7 @@ using NUnit.Framework;
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    internal class BuildCalculatorTest : StatisticCalculatorTestBase<BuildCalculator>
+    internal class BuildCalculatorTest : StatisticCalculatorTestBase<BuildCalculator, BuildStatistic>
     {
         public BuildCalculatorTest() : base(new BuildEvent()) {}
 
@@ -67,7 +67,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             int expectedFailedBuilds)
         {
             var expectedTotalBuilds = expectedSuccessfulBuilds + expectedFailedBuilds;
-            var actualStatistic = (BuildStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
+            var actualStatistic = GetStatistic();
 
             Publish(buildEvents);
 

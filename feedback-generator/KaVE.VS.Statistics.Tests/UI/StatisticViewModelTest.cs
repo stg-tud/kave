@@ -16,13 +16,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Tests.TestUtils;
 using KaVE.VS.Statistics.UI;
 using KaVE.VS.Statistics.UI.Utils;
-using KaVE.VS.Statistics.Utils;
 using Moq;
 using NUnit.Framework;
 
@@ -31,38 +30,6 @@ namespace KaVE.VS.Statistics.Tests.UI
     [TestFixture]
     public class StatisticViewModelTest
     {
-        [SetUp]
-        public void Init()
-        {
-            StatisticViewModel.CollectionsChanged += delegate { _eventRaised = true; };
-
-            _eventRaised = false;
-
-            InitializeCommandStatistic();
-
-            _statisticDictionary = new Dictionary<Type, IStatistic>
-            {
-                {typeof (BuildStatistic), new BuildStatistic()},
-                {typeof (CommandStatistic), _commandStatistic},
-                {typeof (CompletionStatistic), new CompletionStatistic()},
-                {typeof (GlobalStatistic), new GlobalStatistic()},
-                {typeof (SolutionStatistic), new SolutionStatistic()}
-            };
-
-            _listingMock = new Mock<IStatisticListing>();
-            _listingMock.Setup(listing => listing.StatisticDictionary).Returns(_statisticDictionary);
-
-            _observableMock = new Mock<IObservable<IStatistic>>();
-            _uiDelegatorMock = new Mock<IStatisticsUiDelegator>();
-            _errorHandlerMock = new Mock<IErrorHandler>();
-
-            _uut = new StatisticViewModel(
-                _listingMock.Object,
-                _observableMock.Object,
-                _uiDelegatorMock.Object,
-                _errorHandlerMock.Object);
-        }
-
         private StatisticViewModel _uut;
 
         private Mock<IStatisticListing> _listingMock;
@@ -71,9 +38,9 @@ namespace KaVE.VS.Statistics.Tests.UI
 
         private Mock<IStatisticsUiDelegator> _uiDelegatorMock;
 
-        private Mock<IErrorHandler> _errorHandlerMock;
+        private Mock<ILogger> _errorHandlerMock;
 
-        private Dictionary<Type, IStatistic> _statisticDictionary;
+        private Dictionary<Type, IStatistic> _testDictionary;
 
         private CommandStatistic _commandStatistic;
 
@@ -109,65 +76,65 @@ namespace KaVE.VS.Statistics.Tests.UI
             }
         };
 
+        [SetUp]
+        public void Init()
+        {
+            StatisticViewModel.CollectionsChanged += delegate { _eventRaised = true; };
+
+            _eventRaised = false;
+
+            InitializeCommandStatistic();
+
+            _testDictionary = new Dictionary<Type, IStatistic>
+            {
+                {typeof (BuildStatistic), new BuildStatistic()},
+                {typeof (CommandStatistic), _commandStatistic},
+                {typeof (CompletionStatistic), new CompletionStatistic()},
+                {typeof (GlobalStatistic), new GlobalStatistic()},
+                {typeof (SolutionStatistic), new SolutionStatistic()}
+            };
+
+            _listingMock = new Mock<IStatisticListing>();
+            _listingMock.Setup(listing => listing.StatisticDictionary).Returns(_testDictionary);
+
+            _observableMock = new Mock<IObservable<IStatistic>>();
+            _uiDelegatorMock = new Mock<IStatisticsUiDelegator>();
+            _errorHandlerMock = new Mock<ILogger>();
+
+            _uut = new StatisticViewModel(
+                _listingMock.Object,
+                _observableMock.Object,
+                _uiDelegatorMock.Object,
+                _errorHandlerMock.Object);
+        }
+
+
         [TestCaseSource("Statistics")]
         public void UpdateCollectionsCorrectly(Type statisticType, IStatistic statistic)
         {
             _uut.OnNext(statistic);
 
-            _statisticDictionary[statisticType] = statistic;
+            _testDictionary[statisticType] = statistic;
 
             _uiDelegatorMock.Verify(uiDeleg => uiDeleg.DelegateToStatisticUi(It.IsAny<Action>()));
 
             _uut.RefreshElementsForStatistic(statistic, _uut.CollectionDictionary[statisticType]);
 
-            var expectedCollectionList = _statisticDictionary.Values;
+            var expectedCollectionList = _testDictionary.Values.Select(value => value.GetCollection());
             var actualCollectionList = _uut.CollectionDictionary.Values;
 
-            AssertStatisticElementCollectionsAreEqual(expectedCollectionList, actualCollectionList);
+            CollectionAssert.AreEquivalent(expectedCollectionList, actualCollectionList);
 
             Assert.True(_eventRaised);
-        }
-
-        private static void AssertStatisticElementCollectionsAreEqual(IEnumerable<IStatistic> expected,
-            IEnumerable<ObservableCollection<StatisticElement>> actual)
-        {
-            var expectedStatisticList = expected.ToList();
-            var actualCollectionList = actual.ToList();
-
-            for (var i = 0; i < expectedStatisticList.Count; i++)
-            {
-                var expectedStatisticCollection = expectedStatisticList[i].GetCollection();
-                var actualStatisticCollection = actualCollectionList[i];
-
-                CompareStatisticCollections(expectedStatisticCollection, actualStatisticCollection);
-            }
-        }
-
-        private static void CompareStatisticCollections(IList<StatisticElement> expectedStatisticCollection,
-            IList<StatisticElement> actualCollectionList)
-        {
-            for (var i = 0; i < expectedStatisticCollection.Count(); i++)
-            {
-                Assert.AreEqual(expectedStatisticCollection[i], actualCollectionList[i]);
-            }
-        }
-
-        private void InitializeCommandStatistic()
-        {
-            _commandStatistic = new CommandStatistic();
-            _commandStatistic.CommandTypeValues.Add("ShowOptions", 10);
-            _commandStatistic.CommandTypeValues.Add("{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8289:", 1000);
-            _commandStatistic.CommandTypeValues.Add("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste", 10000000);
-            _commandStatistic.CommandTypeValues.Add("TextControl.Backspace", 1);
         }
 
         [Test]
         public void InitializeCollectionsCorrectly()
         {
-            var expectedCollectionList = _statisticDictionary.Values;
+            var expectedCollectionList = _testDictionary.Values.Select(value => value.GetCollection());
             var actualCollectionList = _uut.CollectionDictionary.Values;
 
-            AssertStatisticElementCollectionsAreEqual(expectedCollectionList, actualCollectionList);
+            CollectionAssert.AreEquivalent(expectedCollectionList, actualCollectionList);
 
             Assert.True(_eventRaised);
         }
@@ -186,7 +153,7 @@ namespace KaVE.VS.Statistics.Tests.UI
 
             _errorHandlerMock.Verify(
                 errorHandler =>
-                    errorHandler.SendErrorMessageToLogger(It.IsAny<KeyNotFoundException>(), It.IsAny<string>()));
+                    errorHandler.Error(It.IsAny<KeyNotFoundException>(), It.IsAny<string>()));
 
             _uiDelegatorMock.Verify(uiDeleg => uiDeleg.DelegateToStatisticUi(It.IsAny<Action>()), Times.Never);
         }
@@ -208,18 +175,27 @@ namespace KaVE.VS.Statistics.Tests.UI
 
             _uut.OnNext(_commandStatistic);
 
-            _statisticDictionary[typeof (CommandStatistic)] = _commandStatistic;
+            _testDictionary[typeof (CommandStatistic)] = _commandStatistic;
 
             _uiDelegatorMock.Verify(uiDeleg => uiDeleg.DelegateToStatisticUi(It.IsAny<Action>()));
 
             _uut.RefreshElementsForStatistic(_commandStatistic, _uut.CollectionDictionary[typeof (CommandStatistic)]);
 
-            var expectedCollectionList = _statisticDictionary.Values;
+            var expectedCollectionList = _testDictionary.Values.Select(value => value.GetCollection());
             var actualCollectionList = _uut.CollectionDictionary.Values;
 
-            AssertStatisticElementCollectionsAreEqual(expectedCollectionList, actualCollectionList);
+            CollectionAssert.AreEquivalent(expectedCollectionList, actualCollectionList);
 
             Assert.True(_eventRaised);
+        }
+
+        private void InitializeCommandStatistic()
+        {
+            _commandStatistic = new CommandStatistic();
+            _commandStatistic.CommandTypeValues.Add("ShowOptions", 10);
+            _commandStatistic.CommandTypeValues.Add("{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8289:", 1000);
+            _commandStatistic.CommandTypeValues.Add("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste", 10000000);
+            _commandStatistic.CommandTypeValues.Add("TextControl.Backspace", 1);
         }
     }
 }

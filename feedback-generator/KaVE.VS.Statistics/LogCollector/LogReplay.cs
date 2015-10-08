@@ -62,7 +62,7 @@ namespace KaVE.VS.Statistics.LogCollector
         /// <param name="worker">The BackgroundWorker used for showing the current progress of collecting</param>
         public void CollectEventsFromLog(BackgroundWorker worker)
         {
-            _statisticListing.BlockUpdateToObservers = true;
+            _statisticListing.BlockUpdate = true;
             LogReplayRunning = true;
 
             var index = 0;
@@ -75,8 +75,8 @@ namespace KaVE.VS.Statistics.LogCollector
                 index++;
             }
 
-            _statisticListing.BlockUpdateToObservers = false;
-            _statisticListing.SendUpdateToObserversWithAllStatistics();
+            _statisticListing.BlockUpdate = false;
+            _statisticListing.SendUpdateWithAllStatistics();
             LogReplayRunning = false;
         }
 

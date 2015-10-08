@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Concurrency;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
 using Newtonsoft.Json;
 
@@ -25,7 +26,7 @@ namespace KaVE.VS.Statistics.Utils
 {
     public class FileHandler
     {
-        private readonly IErrorHandler _errorHandler;
+        private readonly ILogger _errorHandler;
         private readonly string _filePath;
 
         private readonly IIoUtils _ioUtil;
@@ -35,7 +36,7 @@ namespace KaVE.VS.Statistics.Utils
         {
             _filePath = Path.Combine(directoryPath, fileName);
             _ioUtil = Registry.GetComponent<IIoUtils>();
-            _errorHandler = Registry.GetComponent<IErrorHandler>();
+            _errorHandler = Registry.GetComponent<ILogger>();
 
             if (!_ioUtil.DirectoryExists(directoryPath))
             {
@@ -61,7 +62,7 @@ namespace KaVE.VS.Statistics.Utils
             }
             catch (Exception e)
             {
-                _errorHandler.SendErrorMessageToLogger(
+                _errorHandler.Error(
                     e,
                     "Interval between events is too short or too many events triggered");
             }
@@ -94,7 +95,7 @@ namespace KaVE.VS.Statistics.Utils
                 }
                 catch (Exception e)
                 {
-                    _errorHandler.SendErrorMessageToLogger(e, "Could not write file");
+                    _errorHandler.Error(e, "Could not write file");
                 }
             }
         }

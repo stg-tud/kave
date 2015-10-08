@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Utils;
@@ -30,13 +31,22 @@ namespace KaVE.VS.Statistics.Tests.Utils
     [TestFixture]
     public class FileHandlerTest
     {
+        private FileHandler _uut;
+
+        private Mock<IIoUtils> _ioUtilMock;
+        private Mock<ILogger> _errorHandlerMock;
+
+        private readonly string _filePath = Path.GetTempFileName();
+
+        private string _directoryPath;
+
         [SetUp]
         public void Init()
         {
             _ioUtilMock = new Mock<IIoUtils>();
             Registry.RegisterComponent(_ioUtilMock.Object);
 
-            _errorHandlerMock = new Mock<IErrorHandler>();
+            _errorHandlerMock = new Mock<ILogger>();
             Registry.RegisterComponent(_errorHandlerMock.Object);
 
             _directoryPath = Path.GetTempPath();
@@ -48,15 +58,6 @@ namespace KaVE.VS.Statistics.Tests.Utils
         {
             Registry.Clear();
         }
-
-        private FileHandler _uut;
-
-        private Mock<IIoUtils> _ioUtilMock;
-        private Mock<IErrorHandler> _errorHandlerMock;
-
-        private readonly string _filePath = Path.GetTempFileName();
-
-        private string _directoryPath;
 
         private static void AssertCollectionAreEqual(IList<IStatistic> expected, IList<IStatistic> actual)
         {
@@ -171,7 +172,7 @@ namespace KaVE.VS.Statistics.Tests.Utils
 
             _errorHandlerMock.Verify(
                 handler =>
-                    handler.SendErrorMessageToLogger(It.IsAny<UnauthorizedAccessException>(), "Could not write file"));
+                    handler.Error(It.IsAny<UnauthorizedAccessException>(), "Could not write file"));
         }
 
         [Test]

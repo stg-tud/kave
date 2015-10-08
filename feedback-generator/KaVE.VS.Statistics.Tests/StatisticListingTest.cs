@@ -16,8 +16,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Tests.TestUtils;
@@ -30,14 +30,34 @@ namespace KaVE.VS.Statistics.Tests
     [TestFixture]
     public class StatisticListingTest
     {
+        private Mock<IIoUtils> _ioUtilMock;
+
+        private StatisticListing _statisticListing;
+
+        private Mock<IObserver<IStatistic>> _observer;
+
+        private TestStatistic _testStatistic;
+
+        private Dictionary<Type, IStatistic> _testDictionary;
+
+        private string SerializedTestDictionary
+        {
+            get { return JsonSerialization.JsonSerializeObject(_testDictionary); }
+        }
+
         [SetUp]
         public void Init()
         {
             _ioUtilMock = new Mock<IIoUtils>();
             Registry.RegisterComponent(_ioUtilMock.Object);
-            Registry.RegisterComponent(new Mock<IErrorHandler>().Object);
+            Registry.RegisterComponent(new Mock<ILogger>().Object);
             _statisticListing = new StatisticListing();
-            _statistic = new TestStatistic();
+            _testStatistic = new TestStatistic();
+            _observer = new Mock<IObserver<IStatistic>>();
+            _testDictionary = new Dictionary<Type, IStatistic>
+            {
+                {typeof (TestStatistic), new TestStatistic()}
+            };
         }
 
         [TearDown]
@@ -46,32 +66,12 @@ namespace KaVE.VS.Statistics.Tests
             Registry.Clear();
         }
 
-        private Mock<IIoUtils> _ioUtilMock;
-
-        private StatisticListing _statisticListing;
-
-        private readonly Mock<IObserver<IStatistic>> _observer = new Mock<IObserver<IStatistic>>();
-
-        private IStatistic _statistic;
-
-        private readonly Dictionary<Type, IStatistic> _testDictionary = new Dictionary<Type, IStatistic>
-        {
-            {typeof (TestStatistic), new TestStatistic()}
-        };
-
-        private string SerializedTestDictionary
-        {
-            get { return JsonSerialization.JsonSerializeObject(_testDictionary); }
-        }
-
-
         [Test]
         public void AddNewObjectToDictionaryAndGetStatisticSuccess()
         {
-            _statisticListing.Update(_statistic);
-            var actual = _statisticListing.GetStatistic(_statistic.GetType());
-
-            Assert.AreEqual(_statistic, actual);
+            _statisticListing.Update(_testStatistic);
+            var actual = _statisticListing.GetStatistic<TestStatistic>();
+            Assert.AreEqual(_testStatistic, actual);
         }
 
         [Test]
@@ -93,9 +93,9 @@ namespace KaVE.VS.Statistics.Tests
 
             _statisticListing.DeleteData();
 
-            var actualCommandStatistic = _statisticListing.GetStatistic(commandStatistic.GetType());
+            var actualCommandStatistic = _statisticListing.GetStatistic<CommandStatistic>();
 
-            var actualCompletionStatistic = _statisticListing.GetStatistic(completionStatistic.GetType());
+            var actualCompletionStatistic = _statisticListing.GetStatistic<CompletionStatistic>();
 
             Assert.AreEqual(null, actualCommandStatistic);
 
@@ -109,7 +109,7 @@ namespace KaVE.VS.Statistics.Tests
         {
             var statisticMock = new Mock<IStatistic>();
 
-            _statisticListing.BlockUpdateToObservers = true;
+            _statisticListing.BlockUpdate = true;
 
             _statisticListing.Update(statisticMock.Object);
 
@@ -131,7 +131,7 @@ namespace KaVE.VS.Statistics.Tests
         [Test]
         public void GetStatisticFail()
         {
-            Assert.AreEqual(null, _statisticListing.GetStatistic(typeof (Collection<>)));
+            Assert.AreEqual(null, _statisticListing.GetStatistic<TestStatistic>());
         }
 
         [Test]
@@ -139,9 +139,9 @@ namespace KaVE.VS.Statistics.Tests
         {
             _statisticListing.Subscribe(_observer.Object);
 
-            _statisticListing.Update(_statistic);
+            _statisticListing.Update(_testStatistic);
 
-            _observer.Verify(obs => obs.OnNext(_statistic), Times.Once());
+            _observer.Verify(obs => obs.OnNext(_testStatistic), Times.Once());
         }
 
         [Test]
@@ -152,9 +152,9 @@ namespace KaVE.VS.Statistics.Tests
 
             _statisticListing.Subscribe(_observer.Object);
 
-            _statisticListing.Update(_statistic);
+            _statisticListing.Update(_testStatistic);
 
-            _observer.Verify(obs => obs.OnNext(_statistic), Times.Once());
+            _observer.Verify(obs => obs.OnNext(_testStatistic), Times.Once());
         }
 
         [Test]
@@ -164,9 +164,9 @@ namespace KaVE.VS.Statistics.Tests
 
             unsubscriber.Dispose();
 
-            _statisticListing.Update(_statistic);
+            _statisticListing.Update(_testStatistic);
 
-            _observer.Verify(obs => obs.OnNext(_statistic), Times.Never());
+            _observer.Verify(obs => obs.OnNext(_testStatistic), Times.Never());
         }
 
         [Test]
@@ -177,7 +177,7 @@ namespace KaVE.VS.Statistics.Tests
 
             _statisticListing = new StatisticListing();
 
-            CollectionAssert.AreEquivalent(_testDictionary, _statisticListing.StatisticDictionary);
+            CollectionAssert.AreEquivalent(_testDictionary, _statisticListing);
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace KaVE.VS.Statistics.Tests
 
             _statisticListing.Subscribe(_observer.Object);
 
-            _statisticListing.SendUpdateToObserversWithAllStatistics();
+            _statisticListing.SendUpdateWithAllStatistics();
 
             _observer.Verify(obs => obs.OnNext(commandStatistic));
             _observer.Verify(obs => obs.OnNext(completionStatistic));
@@ -202,7 +202,7 @@ namespace KaVE.VS.Statistics.Tests
         {
             SetFileExists(false);
 
-            _statisticListing.Update(_statistic);
+            _statisticListing.Update(_testStatistic);
 
             _ioUtilMock.Verify(x => x.CreateFile(It.IsAny<string>()));
         }
@@ -212,7 +212,7 @@ namespace KaVE.VS.Statistics.Tests
         {
             _ioUtilMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(true);
 
-            _statisticListing.Update(_statistic);
+            _statisticListing.Update(_testStatistic);
 
             _ioUtilMock.Verify(x => x.OpenFile(It.IsAny<string>(), FileMode.Create, FileAccess.Write));
         }

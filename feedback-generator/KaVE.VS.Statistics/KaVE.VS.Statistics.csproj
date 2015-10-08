@@ -235,7 +235,6 @@
     <Compile Include="Utils\JsonSerialization.cs" />
     <Compile Include="Utils\Listing.cs" />
     <Compile Include="Utils\Registry.cs" />
-    <Compile Include="Utils\ErrorHandler.cs" />
     <Compile Include="UI\Utils\StatisticElementComparer.cs" />
     <Compile Include="UI\SortableListView.cs" />
     <Compile Include="UI\StatisticWindowControl.xaml.cs">

@@ -24,32 +24,27 @@ using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics
 {
-    public interface IStatisticListing
+    public interface IStatisticListing : IListing<Type, IStatistic>
     {
         Dictionary<Type, IStatistic> StatisticDictionary { get; }
+        bool BlockUpdate { get; set; }
 
-        bool BlockUpdateToObservers { get; set; }
+        TStatistic GetStatistic<TStatistic>() where TStatistic : IStatistic;
 
-        IStatistic GetStatistic(Type type);
+        void Update(IStatistic statistic);
 
-        void Update(IStatistic o);
-
-        void SendUpdateToObserversWithAllStatistics();
-
-        void DeleteData();
+        void SendUpdateWithAllStatistics();
     }
 
     [ShellComponent]
     public class StatisticListing : Listing<Type, IStatistic>, IObservable<IStatistic>, IStatisticListing
     {
-        private const string ProjectName = "KaVEAchievements";
-
         private const string FileName = "statistics";
 
         private static readonly string AppDataPath = Environment.GetFolderPath(
             Environment.SpecialFolder.ApplicationData);
+        private static readonly string DirectoryPath = Path.Combine(AppDataPath, "KaVE");
 
-        private static readonly string DirectoryPath = Path.Combine(AppDataPath, ProjectName);
         private readonly List<IObserver<IStatistic>> _observers;
 
         public StatisticListing() : base(FileName, DirectoryPath)
@@ -67,47 +62,46 @@ namespace KaVE.VS.Statistics
             return new Unsubscriber(_observers, observer);
         }
 
-        public bool BlockUpdateToObservers { get; set; }
-
         public Dictionary<Type, IStatistic> StatisticDictionary
         {
             get { return Dictionary; }
         }
+        public bool BlockUpdate { get; set; }
 
         [CanBeNull]
-        public IStatistic GetStatistic(Type type)
+        public TStatistic GetStatistic<TStatistic>() where TStatistic : IStatistic
         {
             try
             {
-                return GetValue(type);
+                return (TStatistic) GetValue(typeof(TStatistic));
             }
             catch (KeyNotFoundException)
             {
-                return null;
+                return default(TStatistic);
             }
         }
 
         /// <summary>
         ///     Implicitly persists the listing
         /// </summary>
-        public void Update(IStatistic o)
+        public void Update(IStatistic statistic)
         {
-            Update(o.GetType(), o);
+            Update(statistic.GetType(), statistic);
 
-            SendUpdateToObservers(o);
+            SendUpdate(statistic);
         }
 
-        public void SendUpdateToObserversWithAllStatistics()
+        public void SendUpdateWithAllStatistics()
         {
-            foreach (var keyValuePair in StatisticDictionary)
+            foreach (var keyValuePair in Dictionary)
             {
-                SendUpdateToObservers(keyValuePair.Value);
+                SendUpdate(keyValuePair.Value);
             }
         }
 
-        private void SendUpdateToObservers(IStatistic statistic)
+        private void SendUpdate(IStatistic statistic)
         {
-            if (BlockUpdateToObservers)
+            if (BlockUpdate)
             {
                 return;
             }

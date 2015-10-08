@@ -37,28 +37,18 @@ namespace KaVE.VS.Achievements
     [ShellComponent]
     public class AchievementListing : Statistics.Utils.Listing<int, BaseAchievement>, IAchievementListing
     {
-        private const string ProjectName = "KaVEAchievements";
-
         private const string FileName = "achievements";
 
         private static readonly string AppDataPath = Environment.GetFolderPath(
             Environment.SpecialFolder.ApplicationData);
-
-        private static readonly string DirectoryPath = Path.Combine(AppDataPath, ProjectName);
+        private static readonly string DirectoryPath = Path.Combine(AppDataPath, "KaVE");
 
         public AchievementListing() : base(FileName, DirectoryPath) {}
 
         [CanBeNull]
         public BaseAchievement GetAchievement(int id)
         {
-            try
-            {
-                return GetValue(id);
-            }
-            catch (KeyNotFoundException)
-            {
-                return null;
-            }
+            return GetValue(id);
         }
 
         /// <summary>

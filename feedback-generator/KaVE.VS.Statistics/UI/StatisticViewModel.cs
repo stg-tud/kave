@@ -19,9 +19,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using JetBrains.Application;
 using JetBrains.Util;
+using KaVE.JetBrains.Annotations;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.UI.Utils;
-using KaVE.VS.Statistics.Utils;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.Statistics.UI
 {
@@ -30,19 +31,20 @@ namespace KaVE.VS.Statistics.UI
     {
         public delegate void CollectionsChangedHandler();
 
-        private readonly IErrorHandler _errorHandler;
+        private readonly ILogger _errorHandler;
 
         private readonly IStatisticListing _statisticListing;
         private readonly IStatisticsUiDelegator _uiDelegator;
         private readonly IDisposable _unsubscriber;
 
+        [NotNull]
         public Dictionary<Type, ObservableCollection<StatisticElement>> CollectionDictionary =
             new Dictionary<Type, ObservableCollection<StatisticElement>>();
 
         public StatisticViewModel(IStatisticListing statisticListing,
             IObservable<IStatistic> observable,
             IStatisticsUiDelegator uiDelegator,
-            IErrorHandler errorHandler)
+            ILogger errorHandler)
         {
             _unsubscriber = observable.Subscribe(this);
             _statisticListing = statisticListing;
@@ -61,7 +63,7 @@ namespace KaVE.VS.Statistics.UI
             }
             catch (KeyNotFoundException e)
             {
-                _errorHandler.SendErrorMessageToLogger(
+                _errorHandler.Error(
                     e,
                     string.Format(
                         "Statistic with Type: {0} not initalized correctly in StatisticViewModel",
@@ -93,11 +95,11 @@ namespace KaVE.VS.Statistics.UI
         private void InitializeCollectionsFromStatisticListing()
         {
             var statisticDictionary = _statisticListing.StatisticDictionary;
-            foreach (var o in statisticDictionary)
+            foreach (var keyValuePair in statisticDictionary)
             {
                 var collection = new ObservableCollection<StatisticElement>();
-                AddElementsToCollection(o.Value, collection);
-                CollectionDictionary.Add(o.Key, collection);
+                AddElementsToCollection(keyValuePair.Value, collection);
+                CollectionDictionary.Add(keyValuePair.Key, collection);
             }
         }
 

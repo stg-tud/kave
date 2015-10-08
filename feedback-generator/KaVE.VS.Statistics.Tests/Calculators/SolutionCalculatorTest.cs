@@ -18,18 +18,18 @@ using JetBrains.Reflection;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators;
 using KaVE.VS.Statistics.Filters;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
 using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    internal class SolutionCalculatorTest : StatisticCalculatorTestBase<SolutionCalculator>
+    internal class SolutionCalculatorTest : StatisticCalculatorTestBase<SolutionCalculator, SolutionStatistic>
     {
         public SolutionCalculatorTest() : base(new SolutionEvent()) {}
 
@@ -85,7 +85,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         {
             public SolutionCalculatorTestImplementation(IStatisticListing statisticListing,
                 IMessageBus messageBus,
-                IErrorHandler errorHandler) : base(statisticListing, messageBus, errorHandler) {}
+                ILogger errorHandler) : base(statisticListing, messageBus, errorHandler) {}
 
             /// <summary>
             ///     Use no filter logic
@@ -99,7 +99,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void ComputesAddedTestClassesEventCorrectly()
         {
-            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
+            var actualStatistic = GetStatistic();
             var previousCreatedTestClasses = actualStatistic.TestClassesCreated;
 
             var testClassCreatedEvent = new SolutionEvent
@@ -122,7 +122,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void ComputesRemovedTestClassesEventCorrectly()
         {
-            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
+            var actualStatistic = GetStatistic();
             var previousCreatedTestClasses = actualStatistic.TestClassesCreated;
 
             var testClassCreatedEvent = new SolutionEvent
@@ -145,7 +145,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test, TestCaseSource("ComputesStatisticsCorrectlySource")]
         public void ComputesStatisticsCorrectly(SolutionEvent.SolutionAction action, string testedStatistic)
         {
-            var actualStatistic = (SolutionStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
+            var actualStatistic = GetStatistic();
             var previousValue = (int) actualStatistic.GetFieldOrPropertyValue(testedStatistic);
 
             var testClassCreatedEvent = new SolutionEvent {Action = action};

@@ -16,10 +16,10 @@
 
 using System;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Filters;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.Calculators.BaseClasses
 {
@@ -37,13 +37,13 @@ namespace KaVE.VS.Statistics.Calculators.BaseClasses
             get { return typeof (TStatistic); }
         }
 
-        protected readonly IErrorHandler ErrorHandler;
+        protected readonly ILogger ErrorHandler;
         protected readonly IEventFilter EventFilter;
         protected readonly IStatisticListing StatisticListing;
 
         protected StatisticCalculator(IStatisticListing statisticListing,
             IMessageBus messageBus,
-            IErrorHandler errorHandler,
+            ILogger errorHandler,
             IEventFilter eventFilter = null)
         {
             StatisticListing = statisticListing;
@@ -53,7 +53,7 @@ namespace KaVE.VS.Statistics.Calculators.BaseClasses
 
             messageBus.Subscribe<IDEEvent>(Event);
 
-            if (StatisticListing.GetStatistic(StatisticType) == null)
+            if (Equals(StatisticListing.GetStatistic<TStatistic>(), default(TStatistic)))
             {
                 StatisticListing.Update(new TStatistic());
             }

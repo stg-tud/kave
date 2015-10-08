@@ -21,6 +21,7 @@ using System.Text.RegularExpressions;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
@@ -35,7 +36,7 @@ namespace KaVE.VS.Statistics.Calculators
     {
         public CompletionCalculator(IStatisticListing statisticListing,
             IMessageBus messageBus,
-            IErrorHandler errorHandler)
+            ILogger errorHandler)
             : base(statisticListing, messageBus, errorHandler, new CompletionFilter()) {}
 
         protected override IStatistic Process(IDEEvent @event)
@@ -46,7 +47,7 @@ namespace KaVE.VS.Statistics.Calculators
                 return null;
             }
 
-            var completionStatistic = (CompletionStatistic) StatisticListing.GetStatistic(StatisticType);
+            var completionStatistic = StatisticListing.GetStatistic<CompletionStatistic>();
 
             completionStatistic.TotalCompletions++;
 

@@ -18,17 +18,17 @@ using System.Linq;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.Calculators
 {
     [ShellComponent]
     public class BuildCalculator : StatisticCalculator<BuildStatistic>
     {
-        public BuildCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
+        public BuildCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
             : base(statisticListing, messageBus, errorHandler) {}
 
         protected override IStatistic Process(IDEEvent @event)
@@ -39,7 +39,7 @@ namespace KaVE.VS.Statistics.Calculators
                 return null;
             }
 
-            var buildStatistic = (BuildStatistic) StatisticListing.GetStatistic(StatisticType);
+            var buildStatistic = StatisticListing.GetStatistic<BuildStatistic>();
 
             if (buildEvent.Targets.All(target => target.Successful))
             {

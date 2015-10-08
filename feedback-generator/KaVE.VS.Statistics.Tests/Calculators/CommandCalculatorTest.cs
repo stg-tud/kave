@@ -20,14 +20,14 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
 using Moq;
 using NUnit.Framework;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
     [TestFixture]
-    public class CommandCalculatorTest : StatisticCalculatorTestBase<CommandCalculator>
+    public class CommandCalculatorTest : StatisticCalculatorTestBase<CommandCalculator, CommandStatistic>
     {
         public CommandCalculatorTest()
             : base(new CommandEvent {CommandId = "Test Id"}) {}
@@ -68,7 +68,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         {
             public CommandCalculatorTestImplementation(IStatisticListing statisticListing,
                 IMessageBus messageBus,
-                IErrorHandler errorHandler) : base(statisticListing, messageBus, errorHandler) {}
+                ILogger errorHandler) : base(statisticListing, messageBus, errorHandler) {}
 
             protected override IDEEvent FilterEvent(IDEEvent @event)
             {
@@ -79,7 +79,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test, TestCaseSource("CommandEvents")]
         public void AddsNewCommandEventsCorrectly(CommandEvent commandEvent)
         {
-            var actualStatistic = (CommandStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
+            var actualStatistic = GetStatistic();
 
             Publish(commandEvent);
 
@@ -89,7 +89,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void CalculateExistingCommandEvent()
         {
-            var actualStatistic = (CommandStatistic) ListingMock.Object.GetStatistic(Sut.StatisticType);
+            var actualStatistic = GetStatistic();
             var commandEvent = new CommandEvent {CommandId = "Rename"};
 
             Publish(commandEvent);

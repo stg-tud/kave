@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Statistics;
@@ -27,9 +27,11 @@ using NUnit.Framework;
 
 namespace KaVE.VS.Statistics.Tests.Calculators
 {
-    public abstract class StatisticCalculatorTestBase<TCalculator> where TCalculator : IStatisticCalculator
+    public abstract class StatisticCalculatorTestBase<TCalculator, TStatistic>
+        where TCalculator : IStatisticCalculator
+        where TStatistic : IStatistic, new()
     {
-        protected Mock<IErrorHandler> ErrorHandlerMock;
+        protected Mock<ILogger> ErrorHandlerMock;
         protected Mock<IStatisticListing> ListingMock;
         protected Mock<IMessageBus> MessageBus;
         protected IDEEvent EventForUpdateTest;
@@ -44,15 +46,13 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         public void Init()
         {
             MessageBus = new Mock<IMessageBus>();
-            ErrorHandlerMock = new Mock<IErrorHandler>();
+            ErrorHandlerMock = new Mock<ILogger>();
             ListingMock = new Mock<IStatisticListing>();
 
             var args = new object[] {ListingMock.Object, MessageBus.Object, ErrorHandlerMock.Object};
             Sut = (TCalculator) Activator.CreateInstance(typeof (TCalculator), args);
 
-            var initializedStatistic = (IStatistic) Activator.CreateInstance(Sut.StatisticType);
-            ListingMock.Setup(l => l.GetStatistic(Sut.StatisticType)).Returns(initializedStatistic);
-
+            ListingMock.Setup(l => l.GetStatistic<TStatistic>()).Returns(new TStatistic());
             ListingMock.ResetCalls();
         }
 
@@ -68,7 +68,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         [Test]
         public void UpdatesListingOnEventTest()
         {
-            ListingMock.Object.GetStatistic(Sut.StatisticType);
+            ListingMock.Object.GetStatistic<TStatistic>();
             Publish(EventForUpdateTest);
             ListingMock.Verify(l => l.Update(It.Is<IStatistic>(statistic => statistic.GetType() == Sut.StatisticType)));
         }
@@ -92,7 +92,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
         public void InitializeTestOnGetStatisticsReturnNullTest()
         {
             ListingMock = new Mock<IStatisticListing>();
-            ListingMock.Setup(l => l.GetStatistic(Sut.StatisticType)).Returns((IStatistic) null);
+            ListingMock.Setup(l => l.GetStatistic<TStatistic>()).Returns(default(TStatistic));
 
             var args = new object[] {ListingMock.Object, MessageBus.Object, ErrorHandlerMock.Object};
             Sut = (TCalculator) Activator.CreateInstance(typeof (TCalculator), args);
@@ -108,6 +108,11 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             {
                 Sut.Event(@event);
             }
+        }
+
+        protected TStatistic GetStatistic()
+        {
+            return ListingMock.Object.GetStatistic<TStatistic>();
         }
     }
 }

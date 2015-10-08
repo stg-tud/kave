@@ -24,6 +24,7 @@ using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Filters;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Utils;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.Statistics.Calculators
 {
@@ -32,7 +33,7 @@ namespace KaVE.VS.Statistics.Calculators
     {
         private static readonly string[] FileExtensionsOfSourceCodeItems = {".cs", ".cpp", ".c"};
 
-        public SolutionCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
+        public SolutionCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
             : base(statisticListing, messageBus, errorHandler, new SolutionFilter()) {}
 
         protected override IStatistic Process(IDEEvent @event)
@@ -43,7 +44,7 @@ namespace KaVE.VS.Statistics.Calculators
                 return null;
             }
 
-            var solutionStatistic = (SolutionStatistic) StatisticListing.GetStatistic(StatisticType);
+            var solutionStatistic = StatisticListing.GetStatistic<SolutionStatistic>();
 
             var targetIdentifier = solutionEvent.Target == null ? "" : solutionEvent.Target.Identifier;
 

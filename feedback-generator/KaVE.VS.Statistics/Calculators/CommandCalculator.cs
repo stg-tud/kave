@@ -16,6 +16,7 @@
 
 using JetBrains.Application;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Filters;
@@ -27,7 +28,7 @@ namespace KaVE.VS.Statistics.Calculators
     [ShellComponent]
     public class CommandCalculator : StatisticCalculator<CommandStatistic>
     {
-        public CommandCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
+        public CommandCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
             : base(statisticListing, messageBus, errorHandler, new CommandFilter()) {}
 
         protected override IStatistic Process(IDEEvent @event)
@@ -38,7 +39,7 @@ namespace KaVE.VS.Statistics.Calculators
                 return null;
             }
 
-            var commandStatistic = (CommandStatistic) StatisticListing.GetStatistic(StatisticType);
+            var commandStatistic = StatisticListing.GetStatistic<CommandStatistic>();
 
             var eventCommandType = commandEvent.CommandId;
 

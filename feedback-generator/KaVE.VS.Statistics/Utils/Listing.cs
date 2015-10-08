@@ -15,16 +15,26 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.Statistics.Utils
 {
+    public interface IListing<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
+    {
+        /// <summary>
+        ///     Deletes persisted data too
+        /// </summary>
+        void DeleteData();
+    }
+
     /// <summary>
-    ///     Contains a <see cref="Dictionary" /> that is loaded upon construction and saved when updated
+    ///     Contains a Dictionary that is loaded upon construction and saved when updated
     /// </summary>
     /// <typeparam name="TKey">Type of Keys used by the containing <see cref="Dictionary" /></typeparam>
     /// <typeparam name="TValue">Type of Values used by the containing <see cref="Dictionary" /></typeparam>
-    public abstract class Listing<TKey, TValue>
+    public abstract class Listing<TKey, TValue> : IListing<TKey, TValue>
     {
         protected readonly FileHandler FileHandler;
 
@@ -37,7 +47,8 @@ namespace KaVE.VS.Statistics.Utils
             ReadDictionary();
         }
 
-        public Dictionary<TKey, TValue> Dictionary { get; private set; }
+        [NotNull]
+        protected Dictionary<TKey, TValue> Dictionary { get; private set; }
 
         /// <summary>
         ///     Implicitly persists the dictionary
@@ -52,9 +63,20 @@ namespace KaVE.VS.Statistics.Utils
             WriteDictionary();
         }
 
+        /// <summary>
+        ///     Returns default if the key is not found
+        /// </summary>
+        [CanBeNull]
         protected TValue GetValue(TKey key)
         {
-            return Dictionary[key];
+            try
+            {
+                return Dictionary[key];
+            }
+            catch (KeyNotFoundException)
+            {
+                return default(TValue);
+            }
         }
 
         /// <summary>
@@ -79,16 +101,23 @@ namespace KaVE.VS.Statistics.Utils
             try
             {
                 var dictionary = FileHandler.ReadContentFromFile<Dictionary<TKey, TValue>>();
-                if (dictionary != null)
-                {
-                    Dictionary = dictionary;
-                }
+                Dictionary = dictionary ?? Dictionary;
             }
             catch (Exception)
             {
                 // if an Exception occured the file is corrupted and needs to be recreated
                 FileHandler.ResetFile();
             }
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return Dictionary.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

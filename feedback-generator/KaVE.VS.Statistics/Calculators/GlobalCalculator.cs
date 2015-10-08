@@ -18,6 +18,7 @@ using System;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Statistics;
@@ -34,12 +35,12 @@ namespace KaVE.VS.Statistics.Calculators
 
         private DateTime? _lastEventTime;
 
-        public GlobalCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
+        public GlobalCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
             : base(statisticListing, messageBus, errorHandler) {}
 
         protected override IStatistic Process(IDEEvent @event)
         {
-            var globalStatistic = (GlobalStatistic) StatisticListing.GetStatistic(StatisticType);
+            var globalStatistic = StatisticListing.GetStatistic<GlobalStatistic>();
 
             globalStatistic.TotalEvents++;
 

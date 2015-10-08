@@ -16,6 +16,7 @@
 
 using System;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Achievements.BaseClasses.AchievementTypes;
 using KaVE.VS.Achievements.Utils;
@@ -54,7 +55,7 @@ namespace KaVE.VS.Achievements.Tests.AchievementCalculators
 
             var ioUtilMock = new Mock<IIoUtils>();
             Registry.RegisterComponent(ioUtilMock.Object);
-            Registry.RegisterComponent(new Mock<IErrorHandler>().Object);
+            Registry.RegisterComponent(new Mock<ILogger>().Object);
 
             ObservableMock.Setup(obs => obs.Subscribe(It.IsAny<IObserver<IStatistic>>()))
                           .Returns(UnsubscriberMock.Object);

@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Achievements.BaseClasses.AchievementTypes;
 using KaVE.VS.Achievements.Utils;
@@ -43,7 +44,7 @@ namespace KaVE.VS.Achievements.Tests
             _ioUtilMock = new Mock<IIoUtils>();
             Registry.RegisterComponent(_ioUtilMock.Object);
 
-            Registry.RegisterComponent(new Mock<IErrorHandler>().Object);
+            Registry.RegisterComponent(new Mock<ILogger>().Object);
 
             var clockMock = new Mock<IDateUtils>();
             Registry.RegisterComponent(clockMock.Object);

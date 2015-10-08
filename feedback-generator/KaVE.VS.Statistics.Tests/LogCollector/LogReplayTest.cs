@@ -19,13 +19,13 @@ using System.ComponentModel;
 using System.Numerics;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using KaVE.VS.Statistics.Calculators;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.LogCollector;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.UI;
 using KaVE.VS.Statistics.UI.Utils;
 using KaVE.VS.Statistics.Utils;
 using Moq;
@@ -41,7 +41,7 @@ namespace KaVE.VS.Statistics.Tests.LogCollector
         {
             // Initialize Mocks
             var messageBusMock = new Mock<IMessageBus>();
-            var errorHandlerMock = new Mock<IErrorHandler>();
+            var errorHandlerMock = new Mock<ILogger>();
             _statisticListingMock = new Mock<IStatisticListing>();
             _logManagerMock = new Mock<ILogManager>();
             var uiDelegatorMock = new Mock<IStatisticsUiDelegator>();
@@ -84,11 +84,11 @@ namespace KaVE.VS.Statistics.Tests.LogCollector
             _commandStatistic = new CommandStatistic();
             _globalStatistic = new GlobalStatistic();
 
-            _statisticListingMock.Setup(listing => listing.GetStatistic(typeof (BuildStatistic)))
+            _statisticListingMock.Setup(listing => listing.GetStatistic<BuildStatistic>())
                                  .Returns(_buildStatistic);
-            _statisticListingMock.Setup(listing => listing.GetStatistic(typeof (CommandStatistic)))
+            _statisticListingMock.Setup(listing => listing.GetStatistic<CommandStatistic>())
                                  .Returns(_commandStatistic);
-            _statisticListingMock.Setup(listing => listing.GetStatistic(typeof (GlobalStatistic)))
+            _statisticListingMock.Setup(listing => listing.GetStatistic<GlobalStatistic>())
                                  .Returns(_globalStatistic);
         }
 
@@ -213,9 +213,9 @@ namespace KaVE.VS.Statistics.Tests.LogCollector
 
             VerifyThatCalculatorsProcessedCorrectly();
 
-            _statisticListingMock.VerifySet(listing => listing.BlockUpdateToObservers = true);
-            _statisticListingMock.VerifySet(listing => listing.BlockUpdateToObservers = false);
-            _statisticListingMock.Verify(listing => listing.SendUpdateToObserversWithAllStatistics());
+            _statisticListingMock.VerifySet(listing => listing.BlockUpdate = true);
+            _statisticListingMock.VerifySet(listing => listing.BlockUpdate = false);
+            _statisticListingMock.Verify(listing => listing.SendUpdateWithAllStatistics());
         }
     }
 }
