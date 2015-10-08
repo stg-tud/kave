@@ -43,12 +43,4 @@ namespace KaVE.VS.Statistics.Statistics
             };
         }
     }
-
-    public static class Statistic
-    {
-        public static IStatistic Create<TStatistic>() where TStatistic : IStatistic, new()
-        {
-            return new TStatistic();
-        } 
-    }
 }
