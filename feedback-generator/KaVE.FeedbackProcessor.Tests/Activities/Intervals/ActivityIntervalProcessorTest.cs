@@ -24,6 +24,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
     [TestFixture]
     internal class ActivityIntervalProcessorTest : IntervalProcessorTest<ActivityIntervalProcessor, Activity>
     {
+        private const int OneDay = 24 * 60 * 60;
+
         protected override ActivityIntervalProcessor CreateProcessor()
         {
             return new ActivityIntervalProcessor();
@@ -186,11 +188,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [Test]
         public void ExcludingDayAlwaysLeadsToLongInactivity()
         {
-            const int oneDay = 24 * 60 * 60;
-
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.Development, 1),
-                SomeEvent(2 * oneDay, Activity.Development, 1));
+                SomeEvent(2 * OneDay, Activity.Development, 1));
 
             var nextDayMidnight = SomeDateTime.AddDays(1).Date;
             var secondDayMidnight = SomeDateTime.AddDays(2).Date;
@@ -200,7 +200,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 Interval(0, Activity.Development, 1),
                 Interval(SomeDateTime.AddSeconds(1), Activity.InactiveLong, nextDayMidnight),
                 Interval(secondDayMidnight, Activity.InactiveLong, SomeDateTime.AddDays(2)),
-                Interval(2 * oneDay, Activity.Development, 1));
+                Interval(2 * OneDay, Activity.Development, 1));
         }
 
         [Test]
@@ -213,6 +213,21 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             AssertIntervals(
                 Interval(0, Activity.Away, 10),
                 Interval(10, Activity.Development, 1));
+        }
+
+        [Test]
+        public void ExcludesInactiveDayBetweenLeaveIDEAndNextActivity()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.LeaveIDE, 1),
+                SomeEvent(2 * OneDay, Activity.Development, 1));
+
+            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
+            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
+            AssertIntervals(
+                Interval(SomeDateTime, Activity.Away, nextDayMidnight),
+                Interval(secondDayMidnight, Activity.Away, SomeDateTime.AddDays(2)),
+                Interval(2 * OneDay, Activity.Development, 1));
         }
 
         [Test]

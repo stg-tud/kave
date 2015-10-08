@@ -70,11 +70,22 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             }
             else if (RequiresNewInterval(@event))
             {
+                if (CurrentInterval.Id == Activity.Away)
+                {
+                    CurrentInterval.End = @event.GetTriggeredAt();
+                    if (CurrentInterval.Duration > TimeSpan.FromDays(1))
+                    {
+                        var end = CurrentInterval.End;
+                        CurrentInterval.End = CurrentInterval.Start.AddDays(1).Date;
+                        StartInterval(end.Date, Activity.Away, end);
+                    }
+                }
+
                 var previousInterval = CurrentInterval;
 
                 StartInterval(@event);
 
-                if (previousInterval.Id == Activity.Away || previousInterval.End > CurrentInterval.Start)
+                if (previousInterval.End > CurrentInterval.Start)
                 {
                     var diff = previousInterval.End - CurrentInterval.Start;
                     OverlappingActivities.Add(new Pair<Activity>(previousInterval.Id, CurrentInterval.Id));
@@ -202,7 +213,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 previousInterval,
                 now.Ticks,
                 interval);
-            Asserts.That(interval.Start < interval.End, "negative interval ({0})", interval);
+            Asserts.That(interval.Start <= interval.End, "negative interval ({0})", interval);
         }
 
         private Dictionary<Developer, IList<Interval<Activity>>> CloneIntervals()
