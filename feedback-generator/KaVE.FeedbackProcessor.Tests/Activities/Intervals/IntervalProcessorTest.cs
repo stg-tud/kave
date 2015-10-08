@@ -68,5 +68,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 End = start + TimeSpan.FromSeconds(durationInSeconds)
             };
         }
+
+        protected Interval<T> Interval<T>(DateTime start,
+            T activity,
+            DateTime end)
+        {
+            return new Interval<T>
+            {
+                Start = start,
+                Id = activity,
+                End = end
+            };
+        }
     }
 }

@@ -161,6 +161,14 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                         {
                             previousInterval.End += activityTimeout;
                             interval = CreateInactivity(previousInterval.End, interval.Start, shortInactivityTimeout);
+                            if (interval.Duration > TimeSpan.FromDays(1))
+                            {
+                                var end = interval.End;
+                                interval.End = interval.Start.AddDays(1).Date;
+                                intervalStream.Insert(i, interval);
+                                i++;
+                                interval = CreateInactivity(end.Date, end, TimeSpan.Zero);
+                            }
                             intervalStream.Insert(i, interval);
                         }
                     }
