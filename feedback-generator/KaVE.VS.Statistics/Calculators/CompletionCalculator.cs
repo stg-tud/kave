@@ -25,7 +25,6 @@ using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Filters;
-using KaVE.VS.Statistics.StatisticListing;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Utils;
 

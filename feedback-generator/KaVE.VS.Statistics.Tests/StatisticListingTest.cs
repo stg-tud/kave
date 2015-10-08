@@ -36,7 +36,7 @@ namespace KaVE.VS.Statistics.Tests
             _ioUtilMock = new Mock<IIoUtils>();
             Registry.RegisterComponent(_ioUtilMock.Object);
             Registry.RegisterComponent(new Mock<IErrorHandler>().Object);
-            _statisticListing = new VS.Statistics.StatisticListing.StatisticListing();
+            _statisticListing = new StatisticListing();
             _statistic = new TestStatistic();
         }
 
@@ -48,7 +48,7 @@ namespace KaVE.VS.Statistics.Tests
 
         private Mock<IIoUtils> _ioUtilMock;
 
-        private VS.Statistics.StatisticListing.StatisticListing _statisticListing;
+        private StatisticListing _statisticListing;
 
         private readonly Mock<IObserver<IStatistic>> _observer = new Mock<IObserver<IStatistic>>();
 
@@ -122,7 +122,7 @@ namespace KaVE.VS.Statistics.Tests
             SetFileExists(true);
             _ioUtilMock.Setup(x => x.ReadFile(It.IsAny<string>())).Throws<Exception>();
 
-            _statisticListing = new VS.Statistics.StatisticListing.StatisticListing();
+            _statisticListing = new StatisticListing();
 
             _ioUtilMock.Verify(x => x.DeleteFile(It.IsAny<string>()));
             _ioUtilMock.Verify(x => x.CreateFile(It.IsAny<string>()));
@@ -175,7 +175,7 @@ namespace KaVE.VS.Statistics.Tests
             SetFileExists(true);
             _ioUtilMock.Setup(x => x.ReadFile(It.IsAny<string>())).Returns(SerializedTestDictionary);
 
-            _statisticListing = new VS.Statistics.StatisticListing.StatisticListing();
+            _statisticListing = new StatisticListing();
 
             CollectionAssert.AreEquivalent(_testDictionary, _statisticListing.StatisticDictionary);
         }

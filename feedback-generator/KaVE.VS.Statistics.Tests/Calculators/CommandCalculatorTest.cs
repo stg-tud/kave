@@ -19,7 +19,6 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators;
-using KaVE.VS.Statistics.StatisticListing;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Utils;
 using Moq;

@@ -22,7 +22,6 @@ using JetBrains.UI.ActionsRevised;
 using JetBrains.Util;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Properties;
-using KaVE.VS.Statistics.StatisticListing;
 using KaVE.VS.Statistics.UI;
 using KaVE.VS.Statistics.UI.Utils;
 using KaVE.VS.Statistics.Utils;

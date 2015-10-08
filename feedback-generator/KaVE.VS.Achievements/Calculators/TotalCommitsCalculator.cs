@@ -19,7 +19,7 @@ using System.Linq;
 using JetBrains.Application;
 using KaVE.VS.Achievements.BaseClasses.AchievementTypes;
 using KaVE.VS.Achievements.BaseClasses.CalculatorTypes;
-using KaVE.VS.Statistics.StatisticListing;
+using KaVE.VS.Statistics;
 using KaVE.VS.Statistics.Statistics;
 
 namespace KaVE.VS.Achievements.Calculators

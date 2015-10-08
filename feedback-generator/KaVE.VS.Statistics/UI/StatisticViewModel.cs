@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using JetBrains.Application;
 using JetBrains.Util;
-using KaVE.VS.Statistics.StatisticListing;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.UI.Utils;
 using KaVE.VS.Statistics.Utils;

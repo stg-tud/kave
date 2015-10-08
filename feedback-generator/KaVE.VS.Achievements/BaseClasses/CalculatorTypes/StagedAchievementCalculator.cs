@@ -17,7 +17,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using KaVE.VS.Achievements.BaseClasses.AchievementTypes;
-using KaVE.VS.Statistics.StatisticListing;
+using KaVE.VS.Statistics;
 using KaVE.VS.Statistics.Statistics;
 
 namespace KaVE.VS.Achievements.BaseClasses.CalculatorTypes

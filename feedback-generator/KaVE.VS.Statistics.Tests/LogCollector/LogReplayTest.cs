@@ -24,7 +24,6 @@ using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using KaVE.VS.Statistics.Calculators;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.LogCollector;
-using KaVE.VS.Statistics.StatisticListing;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.UI;
 using KaVE.VS.Statistics.UI.Utils;

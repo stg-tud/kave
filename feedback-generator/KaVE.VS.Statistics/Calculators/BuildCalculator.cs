@@ -16,12 +16,10 @@
 
 using System.Linq;
 using JetBrains.Application;
-using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
-using KaVE.VS.Statistics.StatisticListing;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Utils;
 
@@ -43,9 +41,7 @@ namespace KaVE.VS.Statistics.Calculators
 
             var buildStatistic = (BuildStatistic) StatisticListing.GetStatistic(StatisticType);
 
-            var buildSuccessful = buildEvent.Targets.Where(buildTarget => !buildTarget.Successful).IsEmpty();
-
-            if (buildSuccessful)
+            if (buildEvent.Targets.All(target => target.Successful))
             {
                 buildStatistic.SuccessfulBuilds++;
             }

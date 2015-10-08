@@ -19,7 +19,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Achievements.BaseClasses.AchievementTypes;
 using KaVE.VS.Achievements.Utils;
-using KaVE.VS.Statistics.StatisticListing;
+using KaVE.VS.Statistics;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Utils;
 using Moq;

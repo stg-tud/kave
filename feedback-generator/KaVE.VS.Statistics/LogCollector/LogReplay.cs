@@ -21,7 +21,6 @@ using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
-using KaVE.VS.Statistics.StatisticListing;
 using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.LogCollector

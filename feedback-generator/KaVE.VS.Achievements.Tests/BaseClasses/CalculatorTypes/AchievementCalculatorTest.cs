@@ -19,7 +19,7 @@ using KaVE.VS.Achievements.BaseClasses.AchievementTypes;
 using KaVE.VS.Achievements.BaseClasses.CalculatorTypes;
 using KaVE.VS.Achievements.Tests.AchievementCalculators;
 using KaVE.VS.Achievements.Tests.TestUtils;
-using KaVE.VS.Statistics.StatisticListing;
+using KaVE.VS.Statistics;
 using KaVE.VS.Statistics.Statistics;
 using Moq;
 using NUnit.Framework;

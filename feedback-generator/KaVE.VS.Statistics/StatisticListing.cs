@@ -22,7 +22,7 @@ using KaVE.JetBrains.Annotations;
 using KaVE.VS.Statistics.Statistics;
 using KaVE.VS.Statistics.Utils;
 
-namespace KaVE.VS.Statistics.StatisticListing
+namespace KaVE.VS.Statistics
 {
     public interface IStatisticListing
     {
