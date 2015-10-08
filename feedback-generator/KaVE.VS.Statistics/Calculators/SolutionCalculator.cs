@@ -16,15 +16,13 @@
 
 using System.Linq;
 using JetBrains.Application;
-using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Filters;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
-using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.Statistics.Calculators
 {
@@ -34,77 +32,72 @@ namespace KaVE.VS.Statistics.Calculators
         private static readonly string[] FileExtensionsOfSourceCodeItems = {".cs", ".cpp", ".c"};
 
         public SolutionCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
-            : base(statisticListing, messageBus, errorHandler, new SolutionFilter()) {}
+            : base(statisticListing, messageBus, errorHandler, new SolutionPreprocessor()) {}
 
-        protected override IStatistic Process(IDEEvent @event)
+        protected override void Calculate(SolutionStatistic statistic, IDEEvent @event)
         {
             var solutionEvent = @event as SolutionEvent;
             if (solutionEvent == null)
             {
-                return null;
+                return;
             }
-
-            var solutionStatistic = StatisticListing.GetStatistic<SolutionStatistic>();
 
             var targetIdentifier = solutionEvent.Target == null ? "" : solutionEvent.Target.Identifier;
 
             switch (solutionEvent.Action)
             {
                 case SolutionEvent.SolutionAction.OpenSolution:
-                    solutionStatistic.SolutionsOpened++;
+                    statistic.SolutionsOpened++;
                     break;
                 case SolutionEvent.SolutionAction.RenameSolution:
-                    solutionStatistic.SolutionsRenamed++;
+                    statistic.SolutionsRenamed++;
                     break;
                 case SolutionEvent.SolutionAction.CloseSolution:
-                    solutionStatistic.SolutionsClosed++;
+                    statistic.SolutionsClosed++;
                     break;
                 case SolutionEvent.SolutionAction.AddSolutionItem:
-                    solutionStatistic.SolutionItemsAdded++;
+                    statistic.SolutionItemsAdded++;
                     break;
                 case SolutionEvent.SolutionAction.RenameSolutionItem:
-                    solutionStatistic.SolutionItemsRenamed++;
+                    statistic.SolutionItemsRenamed++;
                     break;
                 case SolutionEvent.SolutionAction.RemoveSolutionItem:
-                    solutionStatistic.SolutionItemsRemoved++;
+                    statistic.SolutionItemsRemoved++;
                     break;
                 case SolutionEvent.SolutionAction.AddProject:
-                    solutionStatistic.ProjectsAdded++;
+                    statistic.ProjectsAdded++;
                     break;
                 case SolutionEvent.SolutionAction.RenameProject:
-                    solutionStatistic.ProjectsRenamed++;
+                    statistic.ProjectsRenamed++;
                     break;
                 case SolutionEvent.SolutionAction.RemoveProject:
-                    solutionStatistic.ProjectsRemoved++;
+                    statistic.ProjectsRemoved++;
                     break;
                 case SolutionEvent.SolutionAction.AddProjectItem:
-                    solutionStatistic.ProjectItemsAdded++;
+                    statistic.ProjectItemsAdded++;
                     if (IsTestItem(targetIdentifier))
                     {
-                        solutionStatistic.TestClassesCreated++;
+                        statistic.TestClassesCreated++;
                     }
                     break;
                 case SolutionEvent.SolutionAction.RenameProjectItem:
-                    solutionStatistic.ProjectItemsRenamed++;
+                    statistic.ProjectItemsRenamed++;
                     break;
                 case SolutionEvent.SolutionAction.RemoveProjectItem:
-                    solutionStatistic.ProjectItemsRemoved++;
+                    statistic.ProjectItemsRemoved++;
                     if (IsTestItem(targetIdentifier))
                     {
-                        solutionStatistic.TestClassesCreated--;
+                        statistic.TestClassesCreated--;
                     }
                     break;
             }
-
-            return solutionStatistic;
         }
 
         public static bool IsTestItem(string targetIdentifier)
         {
             return
-                !FileExtensionsOfSourceCodeItems.Where(
-                    fileExtensionOfSourceCodeItems => targetIdentifier.EndsWith("Test" + fileExtensionOfSourceCodeItems))
-                                                .IsEmpty();
+                FileExtensionsOfSourceCodeItems.Any(
+                    fileExtensionOfSourceCodeItems => targetIdentifier.EndsWith("Test" + fileExtensionOfSourceCodeItems));
         }
     }
 }

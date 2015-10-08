@@ -25,12 +25,12 @@ namespace KaVE.VS.Statistics.Filters
     ///         implement filter, merging or replacement logic for their events
     ///     </para>
     /// </summary>
-    public interface IEventFilter
+    public interface IEventPreprocessor
     {
         /// <summary>
         ///     Processes <see cref="@event" />;
         ///     <para>Returns the processed event or null if event is filtered</para>
         /// </summary>
-        IDEEvent Process(IDEEvent @event);
+        IDEEvent Preprocess(IDEEvent @event);
     }
 }

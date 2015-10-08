@@ -31,26 +31,22 @@ namespace KaVE.VS.Statistics.Calculators
         public BuildCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
             : base(statisticListing, messageBus, errorHandler) {}
 
-        protected override IStatistic Process(IDEEvent @event)
+        protected override void Calculate(BuildStatistic statistic, IDEEvent @event)
         {
             var buildEvent = @event as BuildEvent;
             if (buildEvent == null)
             {
-                return null;
+                return;
             }
-
-            var buildStatistic = StatisticListing.GetStatistic<BuildStatistic>();
 
             if (buildEvent.Targets.All(target => target.Successful))
             {
-                buildStatistic.SuccessfulBuilds++;
+                statistic.SuccessfulBuilds++;
             }
             else
             {
-                buildStatistic.FailedBuilds++;
+                statistic.FailedBuilds++;
             }
-
-            return buildStatistic;
         }
     }
 }

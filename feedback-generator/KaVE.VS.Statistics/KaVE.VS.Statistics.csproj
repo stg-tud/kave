@@ -209,10 +209,10 @@
     <Compile Include="Calculators\GlobalCalculator.cs" />
     <Compile Include="Calculators\SolutionCalculator.cs" />
     <Compile Include="Calculators\BaseClasses\StatisticCalculator.cs" />
-    <Compile Include="Filters\CommandFilter.cs" />
-    <Compile Include="Filters\CompletionFilter.cs" />
-    <Compile Include="Filters\IEventFilter.cs" />
-    <Compile Include="Filters\SolutionFilter.cs" />
+    <Compile Include="Filters\CommandPreprocessor.cs" />
+    <Compile Include="Filters\CompletionPreprocessor.cs" />
+    <Compile Include="Filters\IEventPreprocessor.cs" />
+    <Compile Include="Filters\SolutionPreprocessor.cs" />
     <Compile Include="StatisticListing.cs" />
     <Compile Include="Statistics\BuildStatistic.cs" />
     <Compile Include="Statistics\CommandStatistic.cs" />

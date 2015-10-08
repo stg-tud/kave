@@ -21,7 +21,6 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Filters;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.Calculators
 {
@@ -29,33 +28,29 @@ namespace KaVE.VS.Statistics.Calculators
     public class CommandCalculator : StatisticCalculator<CommandStatistic>
     {
         public CommandCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
-            : base(statisticListing, messageBus, errorHandler, new CommandFilter()) {}
+            : base(statisticListing, messageBus, errorHandler, new CommandPreprocessor()) {}
 
-        protected override IStatistic Process(IDEEvent @event)
+        protected override void Calculate(CommandStatistic statistic, IDEEvent @event)
         {
             var commandEvent = @event as CommandEvent;
             if (commandEvent == null)
             {
-                return null;
+                return;
             }
-
-            var commandStatistic = StatisticListing.GetStatistic<CommandStatistic>();
 
             var eventCommandType = commandEvent.CommandId;
 
-            if (commandStatistic.CommandTypeValues.ContainsKey(eventCommandType))
+            if (statistic.CommandTypeValues.ContainsKey(eventCommandType))
             {
-                if (commandStatistic.CommandTypeValues[eventCommandType] != int.MaxValue)
+                if (statistic.CommandTypeValues[eventCommandType] != int.MaxValue)
                 {
-                    commandStatistic.CommandTypeValues[eventCommandType]++;
+                    statistic.CommandTypeValues[eventCommandType]++;
                 }
             }
             else
             {
-                commandStatistic.CommandTypeValues.Add(eventCommandType, 1);
+                statistic.CommandTypeValues.Add(eventCommandType, 1);
             }
-
-            return commandStatistic;
         }
     }
 }

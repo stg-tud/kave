@@ -90,7 +90,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             /// <summary>
             ///     Use no filter logic
             /// </summary>
-            protected override IDEEvent FilterEvent(IDEEvent @event)
+            protected override IDEEvent Preprocess(IDEEvent @event)
             {
                 return @event;
             }
@@ -105,12 +105,12 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             var testClassCreatedEvent = new SolutionEvent
             {
                 Action = SolutionEvent.SolutionAction.AddProjectItem,
-                Target = new SolutionFilter.ComponentName("Test.cs")
+                Target = new SolutionPreprocessor.ComponentName("Test.cs")
             };
             var someOtherClassCreatedEvent = new SolutionEvent
             {
                 Action = SolutionEvent.SolutionAction.AddProjectItem,
-                Target = new SolutionFilter.ComponentName("Class1.cs")
+                Target = new SolutionPreprocessor.ComponentName("Class1.cs")
             };
 
             Publish(testClassCreatedEvent);
@@ -128,12 +128,12 @@ namespace KaVE.VS.Statistics.Tests.Calculators
             var testClassCreatedEvent = new SolutionEvent
             {
                 Action = SolutionEvent.SolutionAction.RemoveProjectItem,
-                Target = new SolutionFilter.ComponentName("Test.cs")
+                Target = new SolutionPreprocessor.ComponentName("Test.cs")
             };
             var someOtherClassCreatedEvent = new SolutionEvent
             {
                 Action = SolutionEvent.SolutionAction.RemoveProjectItem,
-                Target = new SolutionFilter.ComponentName("Class1.cs")
+                Target = new SolutionPreprocessor.ComponentName("Class1.cs")
             };
 
             Publish(testClassCreatedEvent);

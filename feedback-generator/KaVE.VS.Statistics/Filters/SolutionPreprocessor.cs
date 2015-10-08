@@ -24,7 +24,7 @@ namespace KaVE.VS.Statistics.Filters
     ///     Filter, merge and replacement logic for SolutionEvents
     ///     (Currently only implements the workaround/replacement for AddProjectItem SolutionEvents)
     /// </summary>
-    public class SolutionFilter : IEventFilter
+    public class SolutionPreprocessor : IEventPreprocessor
     {
         // -------------------------------
         // Workaround for TestClassesAdded
@@ -32,7 +32,7 @@ namespace KaVE.VS.Statistics.Filters
 
         private string _newItemFileName;
 
-        public IDEEvent Process(IDEEvent @event)
+        public IDEEvent Preprocess(IDEEvent @event)
         {
             var commandEvent = @event as CommandEvent;
             if (commandEvent != null)

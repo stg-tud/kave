@@ -209,7 +209,7 @@ namespace KaVE.VS.Statistics.Tests.Calculators
                 IMessageBus messageBus,
                 ILogger errorHandler) : base(statisticListing, messageBus, errorHandler) {}
 
-            protected override IDEEvent FilterEvent(IDEEvent @event)
+            protected override IDEEvent Preprocess(IDEEvent @event)
             {
                 return @event;
             }

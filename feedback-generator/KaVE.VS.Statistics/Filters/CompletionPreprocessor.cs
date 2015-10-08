@@ -23,11 +23,11 @@ namespace KaVE.VS.Statistics.Filters
     /// <summary>
     ///     Filter, merge and replacement logic for CompletionEvents
     /// </summary>
-    public class CompletionFilter : IEventFilter
+    public class CompletionPreprocessor : IEventPreprocessor
     {
         private TimeSpan? _aggregatedTimeSpan = TimeSpan.Zero;
 
-        public IDEEvent Process(IDEEvent @event)
+        public IDEEvent Preprocess(IDEEvent @event)
         {
             var completionEvent = @event as CompletionEvent;
             if (completionEvent == null)

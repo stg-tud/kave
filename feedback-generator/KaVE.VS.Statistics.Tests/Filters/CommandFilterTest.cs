@@ -27,10 +27,10 @@ namespace KaVE.VS.Statistics.Tests.Filters
         [SetUp]
         public void Init()
         {
-            _commandFilter = new CommandFilter();
+            _commandPreprocessor = new CommandPreprocessor();
         }
 
-        private CommandFilter _commandFilter;
+        private CommandPreprocessor _commandPreprocessor;
 
         private static readonly IDEEvent[][] CloseEvents =
         {
@@ -45,21 +45,21 @@ namespace KaVE.VS.Statistics.Tests.Filters
         public void DoesntFilterCommitClickEvents()
         {
             var commitClickEvent = new CommandEvent {TriggeredBy = IDEEvent.Trigger.Click, CommandId = "Comm_it"};
-            Assert.AreEqual(commitClickEvent, _commandFilter.Process(commitClickEvent));
+            Assert.AreEqual(commitClickEvent, _commandPreprocessor.Preprocess(commitClickEvent));
         }
 
         [Test]
         public void FiltersClickEventsTest()
         {
             var clickEvent = new CommandEvent {TriggeredBy = IDEEvent.Trigger.Click, CommandId = "ClickEvent"};
-            Assert.IsNull(_commandFilter.Process(clickEvent));
+            Assert.IsNull(_commandPreprocessor.Preprocess(clickEvent));
         }
 
         [Test]
         public void FiltersEventsWithoutCommandId()
         {
             var clickEvent = new CommandEvent();
-            Assert.IsNull(_commandFilter.Process(clickEvent));
+            Assert.IsNull(_commandPreprocessor.Preprocess(clickEvent));
         }
 
         [Test, TestCaseSource("CloseEvents")]
@@ -67,7 +67,7 @@ namespace KaVE.VS.Statistics.Tests.Filters
         {
             foreach (var @event in @events)
             {
-                Assert.IsNull(_commandFilter.Process(@event));
+                Assert.IsNull(_commandPreprocessor.Preprocess(@event));
             }
         }
 
@@ -76,14 +76,14 @@ namespace KaVE.VS.Statistics.Tests.Filters
         {
             var nonClosingEvent = new DocumentEvent();
 
-            Assert.IsNull(_commandFilter.Process(nonClosingEvent));
+            Assert.IsNull(_commandPreprocessor.Preprocess(nonClosingEvent));
         }
 
         [Test]
         public void ProcessesCommandEventsCorrectly()
         {
             var publishedEvent = new CommandEvent {CommandId = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start"};
-            Assert.AreEqual(publishedEvent, _commandFilter.Process(publishedEvent));
+            Assert.AreEqual(publishedEvent, _commandPreprocessor.Preprocess(publishedEvent));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace KaVE.VS.Statistics.Tests.Filters
         {
             var closingEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
 
-            var actualEvent = (CommandEvent) _commandFilter.Process(closingEvent);
+            var actualEvent = (CommandEvent) _commandPreprocessor.Preprocess(closingEvent);
 
             const string expectedId = "Close";
             Assert.AreEqual(expectedId, actualEvent.CommandId);

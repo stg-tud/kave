@@ -22,9 +22,9 @@ namespace KaVE.VS.Statistics.Filters
     /// <summary>
     ///     Filter, merge and replacement logic for CommandEvents
     /// </summary>
-    public class CommandFilter : IEventFilter
+    public class CommandPreprocessor : IEventPreprocessor
     {
-        public IDEEvent Process(IDEEvent @event)
+        public IDEEvent Preprocess(IDEEvent @event)
         {
             var documentEvent = @event as DocumentEvent;
             if (documentEvent != null)

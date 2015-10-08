@@ -15,12 +15,13 @@
  */
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace KaVE.VS.Statistics.UI
 {
-    // data structure to display Statistics in the UI - implements INotifyPropertyChanged to propegate changes to the UI
+    /// <summary>
+    ///     Data structure to display Statistics in the UI
+    /// </summary>
     public class StatisticElement : INotifyPropertyChanged
     {
         private string _value;
@@ -51,19 +52,8 @@ namespace KaVE.VS.Statistics.UI
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((StatisticElement) obj);
+            var other = obj as StatisticElement;
+            return other != null && Equals(other);
         }
 
         protected bool Equals(StatisticElement other)
@@ -75,7 +65,7 @@ namespace KaVE.VS.Statistics.UI
         {
             unchecked
             {
-                return ((Value != null ? Value.GetHashCode() : 0)*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                return ((Value != null ? Value.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
             }
         }
 

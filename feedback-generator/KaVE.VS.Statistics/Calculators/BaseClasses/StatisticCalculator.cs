@@ -38,18 +38,18 @@ namespace KaVE.VS.Statistics.Calculators.BaseClasses
         }
 
         protected readonly ILogger ErrorHandler;
-        protected readonly IEventFilter EventFilter;
+        protected readonly IEventPreprocessor EventPreprocessor;
         protected readonly IStatisticListing StatisticListing;
 
         protected StatisticCalculator(IStatisticListing statisticListing,
             IMessageBus messageBus,
             ILogger errorHandler,
-            IEventFilter eventFilter = null)
+            IEventPreprocessor preprocessor = null)
         {
             StatisticListing = statisticListing;
             ErrorHandler = errorHandler;
 
-            EventFilter = eventFilter ?? new NoFilter();
+            EventPreprocessor = preprocessor ?? new NoPreprocessing();
 
             messageBus.Subscribe<IDEEvent>(Event);
 
@@ -66,33 +66,36 @@ namespace KaVE.VS.Statistics.Calculators.BaseClasses
 
         public void Event(IDEEvent @event)
         {
-            var postFilterEvent = FilterEvent(@event);
-            if (postFilterEvent == null)
+            var postPreprocessingEvent = Preprocess(@event);
+            if (postPreprocessingEvent == null)
             {
                 return;
             }
-            var processedStatistic = Process(postFilterEvent);
 
-            if (processedStatistic != null)
+            var calculatedStatistic = StatisticListing.GetStatistic<TStatistic>();
+            if (calculatedStatistic == null)
             {
-                StatisticListing.Update(processedStatistic);
+                ErrorHandler.Error("Statistic of type {0} was not initialized in StatisticListing", typeof(TStatistic));
             }
+
+            Calculate(calculatedStatistic, postPreprocessingEvent);
+            StatisticListing.Update(calculatedStatistic);
         }
 
-        protected virtual IDEEvent FilterEvent(IDEEvent @event)
+        protected virtual IDEEvent Preprocess(IDEEvent @event)
         {
-            return EventFilter.Process(@event);
+            return EventPreprocessor.Preprocess(@event);
         }
 
         /// <summary>
         ///     Returns the statistic after processing <see cref="@event" />;
         ///     <para>Implement any calculation logic here</para>
         /// </summary>
-        protected abstract IStatistic Process(IDEEvent @event);
+        protected abstract void Calculate(TStatistic statistic, IDEEvent @event);
 
-        private class NoFilter : IEventFilter
+        private class NoPreprocessing : IEventPreprocessor
         {
-            public IDEEvent Process(IDEEvent @event)
+            public IDEEvent Preprocess(IDEEvent @event)
             {
                 return @event;
             }

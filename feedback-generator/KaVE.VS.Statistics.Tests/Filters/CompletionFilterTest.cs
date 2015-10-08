@@ -29,10 +29,10 @@ namespace KaVE.VS.Statistics.Tests.Filters
         [SetUp]
         public void Init()
         {
-            _completionFilter = new CompletionFilter();
+            _completionPreprocessor = new CompletionPreprocessor();
         }
 
-        private CompletionFilter _completionFilter;
+        private CompletionPreprocessor _completionPreprocessor;
 
         private static readonly CompletionEvent AppliedCompletionEvent = new CompletionEvent
         {
@@ -82,8 +82,8 @@ namespace KaVE.VS.Statistics.Tests.Filters
                 Duration = new TimeSpan(0, 0, 10)
             };
 
-            _completionFilter.Process(filteredCompletionEvent);
-            var actualEvent = _completionFilter.Process(cancelledCompletionEvent);
+            _completionPreprocessor.Preprocess(filteredCompletionEvent);
+            var actualEvent = _completionPreprocessor.Preprocess(cancelledCompletionEvent);
 
             var expectedDuration = new TimeSpan(0, 0, 20);
             Assert.AreEqual(expectedDuration, actualEvent.Duration);
@@ -92,7 +92,7 @@ namespace KaVE.VS.Statistics.Tests.Filters
         [Test, TestCaseSource("FiltersFilteredCompletionEventsTestCases")]
         public void FiltersFilteredCompletionEventsTest(CompletionEvent completionEvent, bool isFilteredEvent)
         {
-            var actualEvent = (CompletionEvent) _completionFilter.Process(completionEvent);
+            var actualEvent = (CompletionEvent) _completionPreprocessor.Preprocess(completionEvent);
 
             if (isFilteredEvent)
             {
@@ -107,13 +107,13 @@ namespace KaVE.VS.Statistics.Tests.Filters
         [Test]
         public void FiltersOtherEvents()
         {
-            Assert.Null(_completionFilter.Process(new CommandEvent()));
-            Assert.Null(_completionFilter.Process(new SolutionEvent()));
-            Assert.Null(_completionFilter.Process(new EditEvent()));
-            Assert.Null(_completionFilter.Process(new DebuggerEvent()));
-            Assert.Null(_completionFilter.Process(new BuildEvent()));
-            Assert.Null(_completionFilter.Process(new WindowEvent()));
-            Assert.Null(_completionFilter.Process(new DocumentEvent()));
+            Assert.Null(_completionPreprocessor.Preprocess(new CommandEvent()));
+            Assert.Null(_completionPreprocessor.Preprocess(new SolutionEvent()));
+            Assert.Null(_completionPreprocessor.Preprocess(new EditEvent()));
+            Assert.Null(_completionPreprocessor.Preprocess(new DebuggerEvent()));
+            Assert.Null(_completionPreprocessor.Preprocess(new BuildEvent()));
+            Assert.Null(_completionPreprocessor.Preprocess(new WindowEvent()));
+            Assert.Null(_completionPreprocessor.Preprocess(new DocumentEvent()));
         }
     }
 }

@@ -28,10 +28,10 @@ namespace KaVE.VS.Statistics.Tests.Filters
         [SetUp]
         public void Init()
         {
-            _solutionFilter = new SolutionFilter();
+            _solutionPreprocessor = new SolutionPreprocessor();
         }
 
-        private SolutionFilter _solutionFilter;
+        private SolutionPreprocessor _solutionPreprocessor;
 
         private static readonly SolutionEvent AddProjectEvent = new SolutionEvent
         {
@@ -134,7 +134,7 @@ namespace KaVE.VS.Statistics.Tests.Filters
         [Test, TestCaseSource("NonSolutionEvents")]
         public void FiltersEventsCorrectly(IDEEvent @event)
         {
-            Assert.IsNull(_solutionFilter.Process(@event));
+            Assert.IsNull(_solutionPreprocessor.Preprocess(@event));
         }
 
         [Test, TestCaseSource("AddedTestClassTestSources")]
@@ -142,8 +142,8 @@ namespace KaVE.VS.Statistics.Tests.Filters
             CommandEvent commandEvent,
             string expectedIdentifier)
         {
-            _solutionFilter.Process(documentEvent);
-            var actualEvent = (SolutionEvent) _solutionFilter.Process(commandEvent);
+            _solutionPreprocessor.Preprocess(documentEvent);
+            var actualEvent = (SolutionEvent) _solutionPreprocessor.Preprocess(commandEvent);
 
             const SolutionEvent.SolutionAction expectedAction = SolutionEvent.SolutionAction.AddProjectItem;
             Assert.AreEqual(expectedAction, actualEvent.Action);
@@ -152,7 +152,7 @@ namespace KaVE.VS.Statistics.Tests.Filters
         [Test, TestCaseSource("SolutionEvents")]
         public void ProcessesSolutionEventsCorrectly(IDEEvent publishedEvent, IDEEvent expectedEvent)
         {
-            var actualEvent = _solutionFilter.Process(publishedEvent);
+            var actualEvent = _solutionPreprocessor.Preprocess(publishedEvent);
 
             Assert.AreEqual(expectedEvent, actualEvent);
         }

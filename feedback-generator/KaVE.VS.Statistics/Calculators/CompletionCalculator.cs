@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using JetBrains.Application;
@@ -27,7 +26,6 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Filters;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.Calculators
 {
@@ -37,40 +35,36 @@ namespace KaVE.VS.Statistics.Calculators
         public CompletionCalculator(IStatisticListing statisticListing,
             IMessageBus messageBus,
             ILogger errorHandler)
-            : base(statisticListing, messageBus, errorHandler, new CompletionFilter()) {}
+            : base(statisticListing, messageBus, errorHandler, new CompletionPreprocessor()) {}
 
-        protected override IStatistic Process(IDEEvent @event)
+        protected override void Calculate(CompletionStatistic statistic, IDEEvent @event)
         {
             var completionEvent = @event as CompletionEvent;
             if (completionEvent == null)
             {
-                return null;
+                return;
             }
 
-            var completionStatistic = StatisticListing.GetStatistic<CompletionStatistic>();
-
-            completionStatistic.TotalCompletions++;
+            statistic.TotalCompletions++;
 
             if (completionEvent.Duration != null)
             {
-                completionStatistic.TotalTime += completionEvent.Duration.Value;
+                statistic.TotalTime += completionEvent.Duration.Value;
             }
 
             if (IsCompleted(completionEvent))
             {
-                SetTotalCompleted(completionStatistic);
-                SetTotalTimeCompleted(completionStatistic, GetEventDuration(completionEvent));
-                SetSavedKeystrokes(completionStatistic, GetSavedKeystrokes(completionEvent));
+                SetTotalCompleted(statistic);
+                SetTotalTimeCompleted(statistic, GetEventDuration(completionEvent));
+                SetSavedKeystrokes(statistic, GetSavedKeystrokes(completionEvent));
             }
             if (IsCancelled(completionEvent))
             {
-                SetTotalCancelled(completionStatistic);
-                SetTotalTimeCancelled(completionStatistic, GetEventDuration(completionEvent));
+                SetTotalCancelled(statistic);
+                SetTotalTimeCancelled(statistic, GetEventDuration(completionEvent));
             }
 
-            SetTotalProposals(completionStatistic, GetNumberOfProposals(completionEvent));
-
-            return completionStatistic;
+            SetTotalProposals(statistic, GetNumberOfProposals(completionEvent));
         }
 
         private static bool IsCompleted(ICompletionEvent completionEvent)

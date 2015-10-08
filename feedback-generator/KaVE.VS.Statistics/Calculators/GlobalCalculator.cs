@@ -22,7 +22,6 @@ using KaVE.Commons.Utils.Exceptions;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Statistics.Statistics;
-using KaVE.VS.Statistics.Utils;
 
 namespace KaVE.VS.Statistics.Calculators
 {
@@ -38,49 +37,45 @@ namespace KaVE.VS.Statistics.Calculators
         public GlobalCalculator(IStatisticListing statisticListing, IMessageBus messageBus, ILogger errorHandler)
             : base(statisticListing, messageBus, errorHandler) {}
 
-        protected override IStatistic Process(IDEEvent @event)
+        protected override void Calculate(GlobalStatistic statistic, IDEEvent @event)
         {
-            var globalStatistic = StatisticListing.GetStatistic<GlobalStatistic>();
+            statistic.TotalEvents++;
 
-            globalStatistic.TotalEvents++;
-
-            if (globalStatistic.EarliestEventTime == null ||
+            if (statistic.EarliestEventTime == null ||
                 (@event.TriggeredAt != null &&
-                 @event.TriggeredAt.Value.TimeOfDay < globalStatistic.EarliestEventTime.Value.TimeOfDay))
+                 @event.TriggeredAt.Value.TimeOfDay < statistic.EarliestEventTime.Value.TimeOfDay))
             {
-                globalStatistic.EarliestEventTime = @event.TriggeredAt;
+                statistic.EarliestEventTime = @event.TriggeredAt;
             }
 
-            if (globalStatistic.LatestEventTime == null ||
+            if (statistic.LatestEventTime == null ||
                 (@event.TriggeredAt != null &&
-                 @event.TriggeredAt.Value.TimeOfDay > globalStatistic.LatestEventTime.Value.TimeOfDay))
+                 @event.TriggeredAt.Value.TimeOfDay > statistic.LatestEventTime.Value.TimeOfDay))
             {
-                globalStatistic.LatestEventTime = @event.TriggeredAt;
+                statistic.LatestEventTime = @event.TriggeredAt;
             }
 
-            CalculateTotalWorkTime(@event, globalStatistic);
+            CalculateTotalWorkTime(@event, statistic);
 
             var editEvent = @event as EditEvent;
             if (editEvent != null)
             {
-                Process(editEvent, globalStatistic);
+                Process(editEvent, statistic);
             }
 
             var commandEvent = @event as CommandEvent;
             if (commandEvent != null)
             {
-                Process(commandEvent, globalStatistic);
+                Process(commandEvent, statistic);
             }
 
             var debuggerEvent = @event as DebuggerEvent;
             if (debuggerEvent != null)
             {
-                Process(debuggerEvent, globalStatistic);
+                Process(debuggerEvent, statistic);
             }
 
             _lastEventTime = @event.TriggeredAt;
-
-            return globalStatistic;
         }
 
         private void CalculateTotalWorkTime(IDEEvent @event, GlobalStatistic globalStatistic)
