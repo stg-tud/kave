@@ -184,6 +184,26 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
+        public void ExcludingDayAlwaysLeadsToLongInactivity()
+        {
+            const int oneDay = 24 * 60 * 60;
+
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.Development, 1),
+                SomeEvent(2 * oneDay, Activity.Development, 1));
+
+            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
+            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
+            AssertCorrectedIntervals(
+                TimeSpan.FromSeconds(0),
+                TimeSpan.FromDays(1),
+                Interval(0, Activity.Development, 1),
+                Interval(SomeDateTime.AddSeconds(1), Activity.InactiveLong, nextDayMidnight),
+                Interval(secondDayMidnight, Activity.InactiveLong, SomeDateTime.AddDays(2)),
+                Interval(2 * oneDay, Activity.Development, 1));
+        }
+
+        [Test]
         public void InsertsAwayFromLeaveIDEToNextActivity()
         {
             WhenStreamIsProcessed(
