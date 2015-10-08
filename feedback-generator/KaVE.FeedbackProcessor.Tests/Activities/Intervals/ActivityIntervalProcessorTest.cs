@@ -244,6 +244,22 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
+        public void ExcludesInactiveDayBetweenLastActivityAndEnterIDE()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.Development, 1),
+                SomeEvent(2 * OneDay, Activity.EnterIDE, 1));
+
+            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
+            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
+            AssertIntervals(
+                Interval(0, Activity.Development, 1),
+                Interval(SomeDateTime.AddSeconds(1), Activity.Away, nextDayMidnight),
+                Interval(secondDayMidnight, Activity.Away, SomeDateTime.AddDays(2)),
+                Interval(2 * OneDay, Activity.Other, 1));
+        }
+
+        [Test]
         public void InsertsAwayBetweenEnterAndLeaveIDE()
         {
             WhenStreamIsProcessed(
