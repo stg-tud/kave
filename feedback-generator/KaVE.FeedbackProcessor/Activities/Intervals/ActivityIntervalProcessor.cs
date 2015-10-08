@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Csv;
 using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Model;
@@ -136,10 +137,14 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             IDictionary<Developer, IList<Interval<Activity>>> correctedIntervals = CloneIntervals();
             foreach (var intervalStream in correctedIntervals.Values)
             {
+                var now = new DateTime();
                 Interval<Activity> previousInterval = null;
                 for (var i = 0; i < intervalStream.Count; i++)
                 {
                     var interval = intervalStream[i];
+
+                    SanitizeInterval(now, interval, previousInterval);
+
                     if (previousInterval != null)
                     {
                         var gapDuration = interval.Start - previousInterval.End;
@@ -151,6 +156,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                                 intervalStream.RemoveAt(i);
                                 i--;
                                 interval = previousInterval;
+                                now = previousInterval.Start;
                             }
                             else
                             {
@@ -165,7 +171,9 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                             {
                                 var end = interval.End;
                                 interval.End = interval.Start.AddDays(1).Date;
+                                SanitizeInterval(now, interval, previousInterval);
                                 intervalStream.Insert(i, interval);
+                                previousInterval = interval;
                                 i++;
                                 interval = CreateInactivity(end.Date, end, TimeSpan.Zero);
                             }
@@ -173,6 +181,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                         }
                     }
 
+                    SanitizeInterval(now, interval, previousInterval);
+                    now = interval.End;
                     previousInterval = interval;
                 }
 
@@ -182,6 +192,17 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 }
             }
             return correctedIntervals;
+        }
+
+        private static void SanitizeInterval(DateTime now, Interval<Activity> interval, Interval<Activity> previousInterval)
+        {
+            Asserts.That(
+                now <= interval.Start,
+                "overlapping intervals (previous={0}, now={1}, next={2})",
+                previousInterval,
+                now.Ticks,
+                interval);
+            Asserts.That(interval.Start < interval.End, "negative interval ({0})", interval);
         }
 
         private Dictionary<Developer, IList<Interval<Activity>>> CloneIntervals()
