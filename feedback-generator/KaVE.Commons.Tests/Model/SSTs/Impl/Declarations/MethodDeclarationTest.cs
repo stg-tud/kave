@@ -59,17 +59,6 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         }
 
         [Test]
-        public void ReturnTypeIdentity()
-        {
-            var sut = new MethodDeclaration()
-            {
-                Name = _mA
-            };
-
-            Assert.AreEqual(new TypeReference{TypeName = _mA.ReturnType}, sut.ReturnType );
-        }
-
-        [Test]
         public void DeclaringTypeIdentity()
         {
             var sut = new MethodDeclaration()
@@ -122,6 +111,69 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
             }
 
             Assert.AreEqual(expectedParameterList, sut.Parameters);
+        }
+
+        [Test]
+        public void ReturnTypeIdentity()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            Assert.AreEqual(new TypeReference{TypeName = _mA.ReturnType}, sut.ReturnType );
+        }
+
+        [Test]
+        public void DeclaringTypeIsCached()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            var methodName = sut.DeclaringType;
+
+            Assert.True(ReferenceEquals(methodName, sut.DeclaringType));
+        }
+
+        [Test]
+        public void MethodNameIsCached()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            var methodName = sut.MethodName;
+
+            Assert.True(ReferenceEquals(methodName,sut.MethodName));
+        }
+
+        [Test]
+        public void ParametersIsCached()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            var methodName = sut.Parameters;
+
+            Assert.True(ReferenceEquals(methodName, sut.Parameters));
+        }
+
+        [Test]
+        public void ReturnTypeIsCached()
+        {
+            var sut = new MethodDeclaration()
+            {
+                Name = _mA
+            };
+
+            var methodName = sut.ReturnType;
+
+            Assert.True(ReferenceEquals(methodName, sut.ReturnType));
         }
 
         [Test]

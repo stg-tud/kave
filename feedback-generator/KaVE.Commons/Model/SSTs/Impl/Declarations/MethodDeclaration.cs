@@ -29,8 +29,22 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
     [DataContract]
     public class MethodDeclaration : IMethodDeclaration
     {
+        private IMethodName _name;
+
         [DataMember]
-        public IMethodName Name { get; set; }
+        public IMethodName Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+
+                MethodName = new SimpleName { Name = _name.Name };
+                ReturnType = new TypeReference { TypeName = Name.ReturnType };
+                DeclaringType = new TypeReference { TypeName = Name.DeclaringType };
+                Parameters = CreateParameterDeclarationList(Name.Parameters);
+            }
+        }
 
         [DataMember]
         public bool IsEntryPoint { get; set; }
@@ -43,37 +57,33 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
             get { return Lists.NewList<ISSTNode>(); }
         }
 
-        public ITypeReference ReturnType
-        {
-            get { return new TypeReference {TypeName = Name.ReturnType}; }
-        }
+        public ITypeReference ReturnType { get; private set; }
 
-        public ISimpleName MethodName { get { return new SimpleName {Name = Name.Name}; }  }
-        
-        public ITypeReference DeclaringType { get { return new TypeReference {TypeName = Name.DeclaringType}; }  }
+        public ISimpleName MethodName { get; private set; }
 
-        public IEnumerable<IParameterDeclaration> Parameters
-        {
-            get
-            {
-                var parameters = Lists.NewList<ParameterDeclaration>();
-                foreach (var parameterName in Name.Parameters)
-                {
-                    parameters.Add(new ParameterDeclaration
-                    {
-                        Name = new SimpleName { Name = parameterName.Name},
-                        Type = new TypeReference { TypeName = parameterName.ValueType}
-                    });
-                }
-                return parameters;
-            }
-        }
+        public ITypeReference DeclaringType { get; private set; }
 
+        public IEnumerable<IParameterDeclaration> Parameters { get; private set; }
 
         public MethodDeclaration()
         {
             Name = Names.CSharp.MethodName.UnknownName;
             Body = Lists.NewList<IStatement>();
+        }
+
+        private static IEnumerable<IParameterDeclaration> CreateParameterDeclarationList(IEnumerable<IParameterName> parameterNames)
+        {
+            var parameters = Lists.NewList<ParameterDeclaration>();
+            foreach (var parameterName in parameterNames)
+            {
+                parameters.Add(
+                    new ParameterDeclaration
+                    {
+                        Name = new SimpleName {Name = parameterName.Name},
+                        Type = new TypeReference {TypeName = parameterName.ValueType}
+                    });
+            }
+            return parameters;
         }
 
         public override bool Equals(object obj)
