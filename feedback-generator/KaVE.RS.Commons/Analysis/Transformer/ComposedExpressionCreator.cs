@@ -79,11 +79,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             expr.Expression.Accept(this, context);
         }
 
-        public override void VisitCastExpression(ICastExpression expr, IList<IStatement> context)
-        {
-            expr.Op.Accept(this, context);
-        }
-
         public override void VisitConditionalAndExpression(IConditionalAndExpression expr,
             IList<IStatement> context)
         {

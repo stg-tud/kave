@@ -24,39 +24,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
     internal class BasicTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void Casts()
-        {
-            CompleteInMethod(@"
-                var i = (float)1;
-                $");
-
-            AssertBody(
-                VarDecl("i", Fix.Float),
-                VarAssign("i", new ConstantValueExpression()),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void CastingMethodResult()
-        {
-            CompleteInClass(@"
-                public int GetInt() { return 1; }
-                public void M() 
-                {
-                    var i = (float)GetInt();
-                    $
-                }");
-
-            AssertBody(
-                "M",
-                VarDecl("i", Fix.Float),
-                VarDecl("$0", Fix.Int),
-                VarAssign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                VarAssign("i", ComposedExpr("$0")),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
         public void TopLevelParentheses()
         {
             CompleteInMethod(@"
