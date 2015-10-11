@@ -22,9 +22,11 @@ using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
@@ -131,6 +133,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         // ReSharper disable once InconsistentNaming
         public static readonly IMethodName TestClass_Init =
             MethodName.Get(string.Format("[{0}] [{1}]..ctor()", Void, TestClass));
+
+        public static readonly IReturnStatement Return =
+            new ReturnStatement {IsVoid = true};
 
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {
@@ -269,6 +274,15 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         {
             var parameters = string.Join<IParameterName>(",", parameterNames);
             return MethodName.Get(string.Format("[{0}] [{1}]..ctor({2})", Void, type, parameters));
+        }
+
+        public static IReturnStatement ReturnVar(string varName)
+        {
+            return new ReturnStatement
+            {
+                IsVoid = false,
+                Expression = new ReferenceExpression {Reference = new VariableReference {Identifier = varName}}
+            };
         }
     }
 }

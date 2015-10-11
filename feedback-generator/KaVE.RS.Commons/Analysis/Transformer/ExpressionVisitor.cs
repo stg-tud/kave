@@ -23,6 +23,8 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -34,6 +36,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
+using IReferenceExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IReferenceExpression;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
 {
@@ -489,6 +492,42 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 VariableReference = ToVariableRef(expr.Operand, body),
                 TargetType = expr.Type().GetName()
             };
+        }
+
+        public override IAssignableExpression VisitUncheckedExpression(IUncheckedExpression expr, IList<IStatement> body)
+        {
+            var uncheckedBlock = new UncheckedBlock();
+
+            var assignable = expr.Operand.Accept(this, uncheckedBlock.Body);
+            if (assignable == null)
+            {
+                return new UnknownExpression();
+            }
+
+            if (assignable is IConstantValueExpression)
+            {
+                return assignable;
+            }
+
+            var newRef = new VariableReference { Identifier = _nameGen.GetNextVariableName() };
+
+            body.Add(
+                new VariableDeclaration
+                {
+                    Reference = newRef,
+                    Type = expr.Type().GetName()
+                });
+
+            uncheckedBlock.Body.Add(
+                new Assignment
+                {
+                    Reference = newRef,
+                    Expression = assignable
+                });
+
+            body.Add(uncheckedBlock);
+
+            return new ReferenceExpression {Reference = newRef};
         }
 
         #region ComposedExpressionCreator entry points

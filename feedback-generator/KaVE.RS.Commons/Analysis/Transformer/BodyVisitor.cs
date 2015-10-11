@@ -715,6 +715,18 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             throw new InvalidOperationException("VisitSwitchLabelStatement should never be hit.");
         }
+        
+        public override void VisitUncheckedStatement(IUncheckedStatement block, IList<IStatement> body)
+        {
+            AddIf(block, CompletionCase.EmptyCompletionBefore, body);
+
+            var uncheckedBlock = new UncheckedBlock();
+            AddIf(block, CompletionCase.InBody, uncheckedBlock.Body);
+            block.Body.Accept(this, uncheckedBlock.Body);
+            body.Add(uncheckedBlock);
+
+            AddIf(block, CompletionCase.EmptyCompletionAfter, body);
+        }
 
         private void Visit(IBlock block, IKaVEList<IStatement> body)
         {
