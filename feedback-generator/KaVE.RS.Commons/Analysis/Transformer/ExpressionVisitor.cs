@@ -482,6 +482,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
         }
 
+        public override IAssignableExpression VisitAsExpression(IAsExpression expr, IList<IStatement> body)
+        {
+            return new CastExpression
+            {
+                VariableReference = ToVariableRef(expr.Operand, body),
+                TargetType = expr.Type().GetName()
+            };
+        }
+
         #region ComposedExpressionCreator entry points
         public override IAssignableExpression VisitAdditiveExpression(IAdditiveExpression expr,
             IList<IStatement> context)
