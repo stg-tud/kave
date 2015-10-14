@@ -26,6 +26,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
+using JetBrains.Threading;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.JetBrains.Annotations;
@@ -77,11 +78,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             var document = GetDocument(filePath);
             if (document != null)
             {
-                var node = FindEntryNode(document);
-                if (node != null)
-                {
-                    RunAnalysis(node);
-                }
+                FindEntryNode(document, RunAnalysis);
             }
 
             return CurrentContext;
@@ -101,25 +98,34 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             return null;
         }
 
-        private ITreeNode FindEntryNode(IDocument document)
+        private void FindEntryNode(IDocument document, Action<ITreeNode> process)
         {
-            ITreeNode node = null;
-            ReadLockCookie.Execute(
+            ReentrancyGuard.Current.ExecuteOrQueue(
+                "context-generator",
                 () =>
                 {
-                    node = FindCurrentTreeNode(document);
+                    ReadLockCookie.Execute(
+                        () =>
+                        {
+                            var
+                                node = FindCurrentTreeNode(document);
 
-                    if (node == null)
-                    {
-                        return;
-                    }
+                            if (node == null)
+                            {
+                                return;
+                            }
 
-                    if (!HasSourroundingMethod(node))
-                    {
-                        node = FindSourroundingClassDeclaration(node);
-                    }
+                            if (!HasSourroundingMethod(node))
+                            {
+                                node = FindSourroundingClassDeclaration(node);
+                            }
+
+                            if (node != null)
+                            {
+                                process(node);
+                            }
+                        });
                 });
-            return node;
         }
 
         private ITreeNode FindCurrentTreeNode(IDocument document)
