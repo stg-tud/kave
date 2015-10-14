@@ -19,14 +19,13 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Intervals;
-using KaVE.FeedbackProcessor.Tests.Model;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 {
     [TestFixture]
-    class SplitIntervalStreamByDaysTest
+    internal class SplitIntervalStreamByDaysTest
     {
         protected DateTime SomeDate { get; private set; }
         private readonly int _dayInSeconds = TimeSpan.FromDays(1).RoundedTotalSeconds();
@@ -44,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 
             var streams = uut.SplitByDay().ToList();
 
-            Assert.AreEqual(new[]{uut}, streams);
+            Assert.AreEqual(new[] {uut}, streams);
             Assert.AreNotSame(uut, streams[0]);
         }
 
@@ -55,11 +54,33 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 
             var streams = uut.SplitByDay();
 
-            Assert.AreEqual(new[]
-            {
+            AssertStreams(
+                streams,
                 Stream(uut[0]),
-                Stream(uut[1])
-            }, streams);
+                Stream(uut[1]));
+        }
+
+        [Test]
+        public void SplitsOnDaybreakWithOffset()
+        {
+            var uut = Stream(
+                Interval(new DateTime(2015, 1, 1, 23, 59, 50), "A", new DateTime(2015, 1, 1, 23, 59, 59)),
+                Interval(new DateTime(2015, 1, 2, 00, 00, 00), "B", new DateTime(2015, 1, 2, 00, 00, 01)),
+                Interval(new DateTime(2015, 1, 2, 01, 00, 01), "C", new DateTime(2015, 1, 2, 01, 00, 02))
+                );
+
+            var streams = uut.SplitByDay(TimeSpan.FromHours(1));
+
+            AssertStreams(
+                streams,
+                Stream(uut[0], uut[1]),
+                Stream(uut[2]));
+        }
+
+        private void AssertStreams(IEnumerable<IntervalStream<string>> streams,
+            params IntervalStream<string>[] expecteds)
+        {
+            Assert.AreEqual(expecteds, streams);
         }
 
         private static IntervalStream<string> Stream(params Interval<string>[] intervals)
