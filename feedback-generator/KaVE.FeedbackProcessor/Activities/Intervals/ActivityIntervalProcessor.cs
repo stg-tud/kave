@@ -119,23 +119,17 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return CurrentInterval.Id == Activity.Other && CurrentInterval.Start.Equals(@event.GetTriggeredAt());
         }
 
-        private bool InConcurrentWaitingInterval(ActivityEvent @event)
-        {
-            return CurrentInterval.Id == Activity.Waiting && @event.Activity != Activity.Waiting &&
-                   CurrentInterval.End > @event.GetTriggeredAt();
-        }
-
         private bool RequiresNewInterval(ActivityEvent @event)
         {
             return (CurrentInterval.Id != GetIntervalId(@event) && @event.Activity != Activity.Any) ||
                    @event.GetTriggeredAt() > CurrentInterval.End;
         }
 
-        public IDictionary<Developer, IList<Interval<Activity>>> GetIntervalsWithCorrectTimeouts(
+        public IDictionary<Developer, Intervals<Activity>> GetIntervalsWithCorrectTimeouts(
             TimeSpan activityTimeout,
             TimeSpan shortInactivityTimeout)
         {
-            IDictionary<Developer, IList<Interval<Activity>>> correctedIntervals = CloneIntervals();
+            IDictionary<Developer, Intervals<Activity>> correctedIntervals = CloneIntervals();
             foreach (var developerStream in correctedIntervals)
             {
                 var now = new DateTime();
@@ -208,12 +202,16 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             Asserts.That(interval.Start <= interval.End, "negative interval ({0}) ({1})", interval, developer.Id);
         }
 
-        private Dictionary<Developer, IList<Interval<Activity>>> CloneIntervals()
+        private Dictionary<Developer, Intervals<Activity>> CloneIntervals()
         {
-            var intervals = new Dictionary<Developer, IList<Interval<Activity>>>();
+            var intervals = new Dictionary<Developer, Intervals<Activity>>();
             foreach (var developerStream in Intervals)
             {
-                intervals[developerStream.Key] = new List<Interval<Activity>>();
+                intervals[developerStream.Key] = new Intervals<Activity>
+                {
+                    TotalNumberOfActivities = developerStream.Value.TotalNumberOfActivities,
+                    NumberOfAnyActivities = developerStream.Value.NumberOfAnyActivities
+                };
                 foreach (var interval in developerStream.Value)
                 {
                     intervals[developerStream.Key].Add(
@@ -278,6 +276,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 {
                     builder[activity.Key.ToString()] = (int) Math.Round(activity.Value.TotalSeconds);
                 }
+                builder["# of Any events"] = developerStream.Value.NumberOfAnyActivities;
+                builder["# of events"] = developerStream.Value.TotalNumberOfActivities;
             }
             return builder.Build();
         }
