@@ -24,7 +24,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
     internal abstract class IntervalProcessor<T> : BaseEventProcessor
     {
-        public IDictionary<Developer, Intervals<T>> Intervals = new Dictionary<Developer, Intervals<T>>();
+        public IDictionary<Developer, IntervalStream<T>> Intervals = new Dictionary<Developer, IntervalStream<T>>();
         private Developer _currentDeveloper;
         protected Interval<T> CurrentInterval { get; private set; }
 
@@ -36,7 +36,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         public override void OnStreamStarts(Developer developer)
         {
             _currentDeveloper = developer;
-            Intervals[developer] = new Intervals<T>();
+            Intervals[developer] = new IntervalStream<T>();
             CurrentInterval = null;
         }
 
@@ -86,7 +86,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 Id = activity,
                 End = end
             };
-            Intervals[_currentDeveloper].Add(CurrentInterval);
+            Intervals[_currentDeveloper].Append(CurrentInterval);
         }
 
         protected abstract T GetIntervalId(ActivityEvent @event);

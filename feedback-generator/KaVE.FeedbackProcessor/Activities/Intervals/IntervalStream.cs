@@ -19,19 +19,19 @@ using System.Collections.Generic;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
-    internal class Intervals<T> : IEnumerable<Interval<T>>
+    internal class IntervalStream<T> : IEnumerable<Interval<T>>
     {
         public int NumberOfAnyActivities;
         public int TotalNumberOfActivities;
 
         private readonly IList<Interval<T>> _intervals = new List<Interval<T>>();
 
-        public void Add(Interval<T> interval)
+        public void Append(Interval<T> interval)
         {
             _intervals.Add(interval);
         }
 
-        public int Count { get { return _intervals.Count; } }
+        public int Length { get { return _intervals.Count; } }
 
         public Interval<T> this[int index] { get { return _intervals[index]; } }
 
@@ -47,6 +47,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public IEnumerable<IntervalStream<T>> SplitByDay()
+        {
+            yield return this;
         }
     }
 }

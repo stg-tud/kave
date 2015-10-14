@@ -77,7 +77,7 @@
     <Compile Include="Activities\Intervals\ActivityIntervalProcessor.cs" />
     <Compile Include="Activities\Intervals\Interval.cs" />
     <Compile Include="Activities\Intervals\IntervalProcessor.cs" />
-    <Compile Include="Activities\Intervals\Intervals.cs" />
+    <Compile Include="Activities\Intervals\IntervalStream.cs" />
     <Compile Include="Activities\Model\Activity.cs" />
     <Compile Include="Activities\Model\ActivityEvent.cs" />
     <Compile Include="Activities\SlidingWindow\ActivityStream.cs" />
