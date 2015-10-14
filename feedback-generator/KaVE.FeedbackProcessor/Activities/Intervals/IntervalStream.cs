@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using KaVE.Commons.Utils;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
@@ -26,18 +28,40 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         private readonly IList<Interval<T>> _intervals = new List<Interval<T>>();
 
+        public IntervalStream() {}
+
+        public IntervalStream(IEnumerable<Interval<T>> intervals)
+        {
+            foreach (var interval in intervals)
+            {
+                _intervals.Add(interval);
+            }
+        }
+
         public void Append(Interval<T> interval)
         {
             _intervals.Add(interval);
         }
 
-        public int Length { get { return _intervals.Count; } }
+        public int Length
+        {
+            get { return _intervals.Count; }
+        }
 
-        public Interval<T> this[int index] { get { return _intervals[index]; } }
+        public Interval<T> this[int index]
+        {
+            get { return _intervals[index]; }
+        }
 
-        public void RemoveAt(int index) { _intervals.RemoveAt(index);}
+        public void RemoveAt(int index)
+        {
+            _intervals.RemoveAt(index);
+        }
 
-        public void Insert(int index, Interval<T> interval) { _intervals.Insert(index, interval);}
+        public void Insert(int index, Interval<T> interval)
+        {
+            _intervals.Insert(index, interval);
+        }
 
         public IEnumerator<Interval<T>> GetEnumerator()
         {
@@ -51,13 +75,42 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         public IEnumerable<IntervalStream<T>> SplitByDay()
         {
-            var clone = new IntervalStream<T>();
+            var lastIntervalStartDate = _intervals[0].Start.Date;
+            var currentStream = new IntervalStream<T>();
             foreach (var interval in _intervals)
             {
-                clone._intervals.Add(interval);
+                if (interval.Start.Date != lastIntervalStartDate)
+                {
+                    yield return currentStream;
+                    currentStream = new IntervalStream<T>();
+                }
+                currentStream.Append(interval);
             }
+            yield return currentStream;
+        }
 
-            yield return clone;
+        protected bool Equals(IntervalStream<T> other)
+        {
+            return Equals(_intervals, other._intervals);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_intervals != null ? _intervals.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "NumberOfAnyActivities: {0}, TotalNumberOfActivities: {1}, Intervals: {2}",
+                NumberOfAnyActivities,
+                TotalNumberOfActivities,
+                _intervals);
         }
     }
 }

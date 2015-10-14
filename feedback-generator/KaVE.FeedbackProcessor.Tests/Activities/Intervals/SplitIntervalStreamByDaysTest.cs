@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Tests.Model;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
@@ -27,12 +28,13 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
     [TestFixture]
     class SplitIntervalStreamByDaysTest
     {
-        protected DateTime SomeDateTime { get; private set; }
+        protected DateTime SomeDate { get; private set; }
+        private readonly int _dayInSeconds = TimeSpan.FromDays(1).RoundedTotalSeconds();
 
         [SetUp]
         public void SetUp()
         {
-            SomeDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
+            SomeDate = DateTimeFactory.SomeWorkingHoursDateTime();
         }
 
         [Test]
@@ -48,11 +50,32 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             Assert.AreNotSame(uut, streams[0]);
         }
 
+        [Test]
+        public void SplitsOnDaybreak()
+        {
+            var uut = new IntervalStream<string>();
+            uut.Append(Interval(0, "A", 10));
+            uut.Append(Interval(_dayInSeconds, "B", 1));
+
+            var streams = uut.SplitByDay();
+
+            Assert.AreEqual(new[]
+            {
+                Stream(uut[0]),
+                Stream(uut[1])
+            }, streams);
+        }
+
+        private IntervalStream<string> Stream(params Interval<string>[] intervals)
+        {
+            return new IntervalStream<string>(intervals);
+        }
+
         protected Interval<string> Interval(int startOffsetInSeconds,
             string id,
             int endOffsetInSeconds)
         {
-            var start = SomeDateTime.AddSeconds(startOffsetInSeconds);
+            var start = SomeDate.AddSeconds(startOffsetInSeconds);
             var durationInSeconds = endOffsetInSeconds - startOffsetInSeconds;
             var duration = TimeSpan.FromSeconds(durationInSeconds);
             return new Interval<string>
