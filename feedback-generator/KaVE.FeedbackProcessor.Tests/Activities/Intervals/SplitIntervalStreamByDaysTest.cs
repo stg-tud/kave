@@ -50,14 +50,18 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [Test]
         public void SplitsOnDaybreak()
         {
-            var uut = Stream(Interval(0, "A", 10), Interval(_dayInSeconds, "B", 1));
+            var uut = Stream(
+                Interval(new DateTime(2015, 1, 1, 23, 59, 50), "A", new DateTime(2015, 1, 1, 23, 59, 59)),
+                Interval(new DateTime(2015, 1, 2, 00, 00, 00), "B", new DateTime(2015, 1, 2, 00, 00, 01)),
+                Interval(new DateTime(2015, 1, 2, 01, 00, 01), "C", new DateTime(2015, 1, 2, 01, 00, 02))
+                );
 
             var streams = uut.SplitByDay();
 
             AssertStreams(
                 streams,
                 Stream(uut[0]),
-                Stream(uut[1]));
+                Stream(uut[1], uut[2]));
         }
 
         [Test]
