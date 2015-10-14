@@ -40,9 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [Test]
         public void KeepsIntervalsOnDayTogether()
         {
-            var uut = new IntervalStream<string>();
-            uut.Append(Interval(0, "A", 10));
-            uut.Append(Interval(20, "B", 1));
+            var uut = Stream(Interval(0, "A", 10), Interval(20, "B", 1));
 
             var streams = uut.SplitByDay().ToList();
 
@@ -53,9 +51,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [Test]
         public void SplitsOnDaybreak()
         {
-            var uut = new IntervalStream<string>();
-            uut.Append(Interval(0, "A", 10));
-            uut.Append(Interval(_dayInSeconds, "B", 1));
+            var uut = Stream(Interval(0, "A", 10), Interval(_dayInSeconds, "B", 1));
 
             var streams = uut.SplitByDay();
 
@@ -66,7 +62,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             }, streams);
         }
 
-        private IntervalStream<string> Stream(params Interval<string>[] intervals)
+        private static IntervalStream<string> Stream(params Interval<string>[] intervals)
         {
             return new IntervalStream<string>(intervals);
         }
