@@ -17,9 +17,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using KaVE.Commons.Utils.Csv;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
+using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Database;
@@ -27,6 +30,7 @@ using KaVE.FeedbackProcessor.Import;
 using KaVE.FeedbackProcessor.Properties;
 using KaVE.FeedbackProcessor.Statistics;
 using KaVE.FeedbackProcessor.Utils;
+using KaVE.FeedbackProcessor.VsWindows;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -41,33 +45,59 @@ namespace KaVE.FeedbackProcessor
 
         public void Run()
         {
-            const string importDatabase = "_import";
-            const string filteredDatabase = "_filtered";
-            const string cleanDatabase = "_clean";
-            const string activityDatabase = "_activities";
-            const string concurrentEventDatabase = "_concurrent";
-            const string commandFollowupsDatabase = "_commandFollowups";
+            RunWithErrorLogging(
+                () =>
+                {
+                    const string importDatabase = "_import";
+                    const string filteredDatabase = "_filtered";
+                    const string cleanDatabase = "_clean";
+                    const string activityDatabase = "_activities";
+                    const string concurrentEventDatabase = "_concurrent";
+                    const string commandFollowupsDatabase = "_commandFollowups";
 
-            ImportFeedback(OpenDatabase(importDatabase));
+                    //ImportFeedback(OpenDatabase(importDatabase));
 
-            CleanupFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
+                    // cleanup as used for ICSME paper version
+                    //CleanupFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
-            SelectConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
-            ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase), "concurrenteventstatistic.csv");
-            SelectCommandFollowupPairs(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
-            ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase), "commandfollowupsstatistic.csv");
+                    // statistics computed to explore dataset, not used in papers
+                    //SelectConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
+                    //ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase), "concurrenteventstatistic.csv");
+                    //SelectCommandFollowupPairs(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
+                    //ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase), "commandfollowupsstatistic.csv");
 
-            LogAnonymizationStatistics(OpenDatabase(importDatabase));
-            LogDeveloperStatistics(OpenDatabase(importDatabase));
-            LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
-            LogIDEActivationEvents(OpenDatabase(importDatabase));
-            LogOccuringNames(OpenDatabase(cleanDatabase));
-            LogCompletionStatistics(OpenDatabase(importDatabase));
-            LogDevelopersPerDay(OpenDatabase(importDatabase));
-            LogAverageBreakAfterEventsStatistic(OpenDatabase(cleanDatabase), "averageBreakAfterEvents.csv");
+                    //LogAnonymizationStatistics(OpenDatabase(importDatabase));
+                    //LogDeveloperStatistics(OpenDatabase(importDatabase));
+                    //LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
+                    //LogIDEActivationEvents(OpenDatabase(importDatabase));
+                    //LogOccuringNames(OpenDatabase(cleanDatabase));
+                    //LogCompletionStatistics(OpenDatabase(importDatabase));
+                    //LogDevelopersPerDay(OpenDatabase(importDatabase));
+                    //LogAverageBreakAfterEventsStatistic(OpenDatabase(cleanDatabase), "averageBreakAfterEvents.csv");
 
-            MapToActivities(OpenDatabase(cleanDatabase), OpenDatabase(activityDatabase));
-            LogActivityStatistics(OpenDatabase(activityDatabase));
+                    RunActivityAnalysis(OpenDatabase(cleanDatabase), OpenDatabase(activityDatabase));
+                    //RunWindowUsageAnalysis(OpenDatabase(activityDatabase));
+                });
+        }
+
+        private void RunActivityAnalysis(IFeedbackDatabase cleanDatabase, IFeedbackDatabase activityDatabase)
+        {
+            //MapToActivities(cleanDatabase, activityDatabase);
+            //LogActivityWindowStatistics(activityDatabase);
+            LogActivityIntervalStatistics(activityDatabase);
+        }
+
+        private void RunWindowUsageAnalysis(IFeedbackDatabase activityDatabase)
+        {
+            var windowIntervalProcessor = new WindowIntervalProcessor();
+
+            var processor = new FeedbackProcessor(activityDatabase, _logger);
+            processor.Register(windowIntervalProcessor);
+            processor.ProcessFeedback();
+
+            Output(
+                    "window-budget-per-developer-(intervals).csv",
+                    windowIntervalProcessor.IntervalsToVsWindowUsageStatisticCsv());
         }
 
         # region Cleanup Feedback
@@ -134,13 +164,19 @@ namespace KaVE.FeedbackProcessor
 
             _logger.Info("Found {0} completion invocations.", invocations.CompletionInvocations);
             Output("completion-durations.csv", durations.StatisticAsCsv());
-            _logger.Info("Found {0} developer days with completion usage.", durations.NumberOfDeveloperDaysWithCompletionUsage);
+            _logger.Info(
+                "Found {0} developer days with completion usage.",
+                durations.NumberOfDeveloperDaysWithCompletionUsage);
 
-            _logger.Info("Found {0} milliseconds of manual completion usage.", manualDurations.DurationInManualCompletion.TotalMilliseconds);
+            _logger.Info(
+                "Found {0} milliseconds of manual completion usage.",
+                manualDurations.DurationInManualCompletion.TotalMilliseconds);
             _logger.Info("Found {0} manual completion usages.", manualDurations.NumberOfManualCompletions);
             _logger.Info("Found {0} applied manual completion usages.", manualDurations.NumberOfAppliedCompletions);
             _logger.Info("Found {0} cancelled manual completion usages.", manualDurations.NumberOfCancelledCompletions);
-            _logger.Info("Found manual completion usages on {0} developer days.", manualDurations.NumberOfDeveloperDaysWithManualCompletionUsage);
+            _logger.Info(
+                "Found manual completion usages on {0} developer days.",
+                manualDurations.NumberOfDeveloperDaysWithManualCompletionUsage);
         }
 
         private void LogDevelopersPerDay(IFeedbackDatabase database)
@@ -153,6 +189,8 @@ namespace KaVE.FeedbackProcessor
 
             Output("developers-per-day.csv", calculator.GetStatisticAsCsv());
         }
+
+        #region Helper
 
         private IFeedbackDatabase OpenDatabase(string databaseSuffix)
         {
@@ -173,6 +211,8 @@ namespace KaVE.FeedbackProcessor
         {
             return Path.Combine(Configuration.StatisticsOutputPath, developerdaystatsCsv);
         }
+        
+        #endregion
 
         private void ImportFeedback(IFeedbackDatabase importDatabase)
         {
@@ -244,16 +284,7 @@ namespace KaVE.FeedbackProcessor
             Output("window-de-activation.log", calculator.Statistic);
         }
 
-        private void ConcurrentEventsStatistic(IFeedbackDatabase database, string fileName)
-        {
-            var calculator = new ConcurrentSetsCalculator();
-
-            var walker = new FeedbackProcessor(database, _logger);
-            walker.Register(calculator);
-            walker.ProcessFeedback();
-
-            Output(fileName, calculator.StatisticAsCsv());
-        }
+        #region Activities
 
         private void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)
         {
@@ -275,7 +306,7 @@ namespace KaVE.FeedbackProcessor
             activityMapper.MapFeedback();
         }
 
-        private void LogActivityStatistics(IFeedbackDatabase activityDatabase)
+        private void LogActivityWindowStatistics(IFeedbackDatabase activityDatabase)
         {
             var activityWindowProcessor1 = new ActivityWindowProcessor(
                 new FrequencyActivityMergeStrategy(),
@@ -285,54 +316,69 @@ namespace KaVE.FeedbackProcessor
             processor.Register(activityWindowProcessor1);
             processor.ProcessFeedback();
 
-            Output("developer-activities-1-B5-S15.csv", activityWindowProcessor1.ActivityStreamsToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
-            Output("devday-activities-1-B5-S15.csv", activityWindowProcessor1.DeveloperDayStatisticToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
-
+            Output(
+                "developer-activities-1-B5-S15.csv",
+                activityWindowProcessor1.ActivityStreamsToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
+            Output(
+                "devday-activities-1-B5-S15.csv",
+                activityWindowProcessor1.DeveloperDayStatisticToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
+            
             Output(
                 "inactivity-separation-1000-0.csv",
                 activityWindowProcessor1.InactivityStatisticToCsv(
                     TimeSpan.Zero,
-                    TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(2),
-                    TimeSpan.FromSeconds(3),
-                    TimeSpan.FromSeconds(4),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(6),
-                    TimeSpan.FromSeconds(7),
-                    TimeSpan.FromSeconds(8),
-                    TimeSpan.FromSeconds(9),
-                    TimeSpan.FromSeconds(10),
-                    TimeSpan.FromSeconds(11),
-                    TimeSpan.FromSeconds(12),
-                    TimeSpan.FromSeconds(13),
-                    TimeSpan.FromSeconds(14),
-                    TimeSpan.FromSeconds(15),
-                    TimeSpan.FromSeconds(16),
-                    TimeSpan.FromSeconds(17),
-                    TimeSpan.FromSeconds(18),
-                    TimeSpan.FromSeconds(19),
-                    TimeSpan.FromSeconds(20)));
+                    Enumerable.Range(1, 20).Select(i => TimeSpan.FromSeconds(i)).ToArray()));
 
             Output(
                 "inactivity-separation-1000-15.csv",
                 activityWindowProcessor1.InactivityStatisticToCsv(
                     TimeSpan.FromSeconds(15),
-                    TimeSpan.FromMinutes(1),
-                    TimeSpan.FromMinutes(2),
-                    TimeSpan.FromMinutes(3),
-                    TimeSpan.FromMinutes(4),
-                    TimeSpan.FromMinutes(5),
-                    TimeSpan.FromMinutes(6),
-                    TimeSpan.FromMinutes(7),
-                    TimeSpan.FromMinutes(8),
-                    TimeSpan.FromMinutes(9),
-                    TimeSpan.FromMinutes(10),
-                    TimeSpan.FromMinutes(11),
-                    TimeSpan.FromMinutes(13),
-                    TimeSpan.FromMinutes(15),
-                    TimeSpan.FromMinutes(17),
-                    TimeSpan.FromMinutes(19)));
+                    Enumerable.Range(1, 20).Select(i => TimeSpan.FromMinutes(i)).ToArray()));
         }
+
+        private void LogActivityIntervalStatistics(IFeedbackDatabase activityDatabase)
+        {
+            var activityIntervalProcessor = new ActivityIntervalProcessor();
+
+            var processor = new FeedbackProcessor(activityDatabase, _logger);
+            processor.Register(activityIntervalProcessor);
+            processor.ProcessFeedback();
+            
+            Output(
+                    "activity-budget-per-developer-(intervals)-15-05.csv",
+                    activityIntervalProcessor.IntervalsToDeveloperBudgetCsv(
+                        TimeSpan.FromSeconds(15),
+                        TimeSpan.FromMinutes(5)));
+
+            /*Output(
+                "inactivity-separation-1-n.csv",
+                activityIntervalProcessor.InactivityStatisticToCsv(
+                    TimeSpan.FromSeconds(1),
+                    Enumerable.Range(2, 20).Select(i => TimeSpan.FromSeconds(i)).ToArray()));
+
+            Output(
+                "inactivity-seperation-15-n.csv",
+                activityIntervalProcessor.InactivityStatisticToCsv(
+                    TimeSpan.FromSeconds(15),
+                    Enumerable.Range(1, 20).Select(i => TimeSpan.FromMinutes(i)).ToArray()));
+
+            foreach (var lostTime in activityIntervalProcessor.LostTimeStatistics)
+            {
+                _logger.Info(
+                    "For activity '{0}' we lost {1}s on {2} events ({3}s on average).",
+                    lostTime.Key,
+                    lostTime.Value.Time.RoundedTotalSeconds(),
+                    lostTime.Value.Frequency,
+                    (lostTime.Value.Time.TotalSeconds / lostTime.Value.Frequency));
+            }
+
+            foreach (var overlappingActivity in activityIntervalProcessor.OverlappingActivities)
+            {
+                _logger.Info("Activity '{0}' was overlapped by '{1}'.", overlappingActivity.Item1, overlappingActivity.Item2);
+            }*/
+        }
+
+        #endregion
 
         private void LogAverageBreakAfterEventsStatistic(IFeedbackDatabase database, string fileName)
         {
@@ -345,6 +391,8 @@ namespace KaVE.FeedbackProcessor
             Output(fileName, calculator.StatisticAsCsv());
         }
 
+        #region Concurrent Events
+
         private void SelectConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase, _logger);
@@ -353,12 +401,37 @@ namespace KaVE.FeedbackProcessor
             filter.MapFeedback();
         }
 
+        private void ConcurrentEventsStatistic(IFeedbackDatabase database, string fileName)
+        {
+            var calculator = new ConcurrentSetsCalculator();
+
+            var walker = new FeedbackProcessor(database, _logger);
+            walker.Register(calculator);
+            walker.ProcessFeedback();
+
+            Output(fileName, calculator.StatisticAsCsv());
+        }
+
         private void SelectCommandFollowupPairs(IFeedbackDatabase sourceDatabase,
             IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase, _logger);
             filter.RegisterMapper(new CommandFollowupProcessor());
             filter.MapFeedback();
+        }
+
+        #endregion
+
+        private void RunWithErrorLogging(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                Output("error.log", e.Message + "\n" + e.StackTrace);
+            }
         }
     }
 }

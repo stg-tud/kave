@@ -24,10 +24,10 @@ namespace KaVE.FeedbackProcessor
 
         public static void Main()
         {
-            new SanityCheckApp().Run();
+            //new SanityCheckApp().Run();
 
             new TimeBudgetEvaluationApp(Logger).Run();
-            new SSTSequenceExtractor(Logger).Run();
+            //new SSTSequenceExtractor(Logger).Run();
         }
     }
 }
