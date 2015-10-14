@@ -51,7 +51,13 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         public IEnumerable<IntervalStream<T>> SplitByDay()
         {
-            yield return this;
+            var clone = new IntervalStream<T>();
+            foreach (var interval in _intervals)
+            {
+                clone._intervals.Add(interval);
+            }
+
+            yield return clone;
         }
     }
 }

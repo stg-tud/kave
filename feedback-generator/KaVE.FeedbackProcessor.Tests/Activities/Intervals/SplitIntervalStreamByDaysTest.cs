@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Tests.Model;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
@@ -41,9 +42,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             uut.Append(Interval(0, "A", 10));
             uut.Append(Interval(20, "B", 1));
 
-            var streams = uut.SplitByDay();
+            var streams = uut.SplitByDay().ToList();
 
-            CollectionAssert.AreEqual(new[]{uut}, streams);
+            Assert.AreEqual(new[]{uut}, streams);
+            Assert.AreNotSame(uut, streams[0]);
         }
 
         protected Interval<string> Interval(int startOffsetInSeconds,
