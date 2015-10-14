@@ -58,17 +58,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 CurrentInterval.End = GetEnd(@event);
             }
 
-            if (InConcurrentWaitingInterval(@event))
-            {
-                var waitingEnd = CurrentInterval.End;
-                CurrentInterval.End = @event.GetTriggeredAt();
-                StartInterval(@event);
-                if (CurrentInterval.End < waitingEnd)
-                {
-                    StartInterval(CurrentInterval.End, Activity.Waiting, waitingEnd);
-                }
-            }
-            else if (RequiresNewInterval(@event))
+            if (RequiresNewInterval(@event))
             {
                 if (CurrentInterval.Id == Activity.Away)
                 {
@@ -146,15 +136,17 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             TimeSpan shortInactivityTimeout)
         {
             IDictionary<Developer, IList<Interval<Activity>>> correctedIntervals = CloneIntervals();
-            foreach (var intervalStream in correctedIntervals.Values)
+            foreach (var developerStream in correctedIntervals)
             {
                 var now = new DateTime();
                 Interval<Activity> previousInterval = null;
+                var developer = developerStream.Key;
+                var intervalStream = developerStream.Value;
                 for (var i = 0; i < intervalStream.Count; i++)
                 {
                     var interval = intervalStream[i];
 
-                    SanitizeInterval(now, interval, previousInterval);
+                    SanitizeInterval(developer, now, interval, previousInterval);
 
                     if (previousInterval != null)
                     {
@@ -182,7 +174,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                             {
                                 var end = interval.End;
                                 interval.End = interval.Start.AddDays(1).Date;
-                                SanitizeInterval(now, interval, previousInterval);
+                                SanitizeInterval(developer, now, interval, previousInterval);
                                 intervalStream.Insert(i, interval);
                                 previousInterval = interval;
                                 i++;
@@ -192,7 +184,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                         }
                     }
 
-                    SanitizeInterval(now, interval, previousInterval);
+                    SanitizeInterval(developer, now, interval, previousInterval);
                     now = interval.End;
                     previousInterval = interval;
                 }
@@ -205,15 +197,15 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return correctedIntervals;
         }
 
-        private static void SanitizeInterval(DateTime now, Interval<Activity> interval, Interval<Activity> previousInterval)
+        private static void SanitizeInterval(Developer developer, DateTime now, Interval<Activity> interval, Interval<Activity> previousInterval)
         {
             Asserts.That(
                 now <= interval.Start,
-                "overlapping intervals (previous={0}, now={1}, next={2})",
+                "overlapping intervals (previous={0}, now={1}, next={2}) ({3})",
                 previousInterval,
                 now.Ticks,
-                interval);
-            Asserts.That(interval.Start <= interval.End, "negative interval ({0})", interval);
+                interval, developer.Id);
+            Asserts.That(interval.Start <= interval.End, "negative interval ({0}) ({1})", interval, developer.Id);
         }
 
         private Dictionary<Developer, IList<Interval<Activity>>> CloneIntervals()

@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
 
@@ -63,6 +64,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         protected void StartInterval(DateTime start, T activity, DateTime end)
         {
+            Asserts.That(start <= end, "interval ends before it starts");
             CurrentInterval = new Interval<T>
             {
                 Start = start,
@@ -76,7 +78,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         protected static DateTime GetEnd(ActivityEvent @event)
         {
-            return @event.TerminatedAt ?? @event.GetTriggeredAt();
+            if (@event.TerminatedAt != null && @event.Duration > TimeSpan.Zero)
+            {
+                return (DateTime) @event.TerminatedAt;
+            }
+            return @event.GetTriggeredAt();
         }
 
         protected abstract void HandleWithCurrentInterval(ActivityEvent @event);

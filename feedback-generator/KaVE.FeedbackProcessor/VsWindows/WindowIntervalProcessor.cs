@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Csv;
 using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Intervals;
@@ -30,6 +31,11 @@ namespace KaVE.FeedbackProcessor.VsWindows
 
         protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
+            if (CurrentInterval.End > @event.GetTriggeredAt())
+            {
+                return;
+            }
+
             if (@event.Activity == Activity.EnterIDE)
             {
                 if (CurrentInterval.Id.Equals(OutsideIDEIntervalId))

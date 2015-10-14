@@ -364,10 +364,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 
             AssertIntervals(
                 Interval(0, Activity.Waiting, 3),
-                Interval(3, Activity.Development, 1),
-                Interval(4, Activity.Waiting, 1));
+                Interval(3, Activity.Development, 1));
         }
-
+        
         [Test]
         public void EnsuresSequentialIntervalsWhileWaiting_2()
         {
@@ -378,6 +377,19 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             AssertIntervals(
                 Interval(0, Activity.Waiting, 3),
                 Interval(3, Activity.Development, 6));
+        }
+
+        [Test]
+        public void AnyAndSpecificActivityWhileWaiting()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, Activity.Waiting, 3),
+                SomeEvent(1, Activity.Any, 1),
+                SomeEvent(1, Activity.Development, 1));
+
+            AssertIntervals(
+                Interval(0, Activity.Waiting, 1),
+                Interval(1, Activity.Development, 1));
         }
 
         protected void AssertCorrectedIntervals<T>(TimeSpan activityTimeout,
