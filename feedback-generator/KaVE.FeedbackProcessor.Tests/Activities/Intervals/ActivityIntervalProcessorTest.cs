@@ -397,7 +397,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             params Interval<T>[] expecteds)
         {
             var correctedIntervals = Uut.GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout);
-            var actuals = correctedIntervals[SomeDeveloper];
+            var actuals = correctedIntervals[new DeveloperDay(SomeDeveloper, new DateTime())];
             Assert.AreEqual(expecteds, actuals);
         }
 

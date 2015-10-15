@@ -80,6 +80,7 @@
     <Compile Include="Activities\Intervals\IntervalStream.cs" />
     <Compile Include="Activities\Model\Activity.cs" />
     <Compile Include="Activities\Model\ActivityEvent.cs" />
+    <Compile Include="Activities\Model\DeveloperDay.cs" />
     <Compile Include="Activities\SlidingWindow\ActivityStream.cs" />
     <Compile Include="Activities\SlidingWindow\ActivityWindowProcessor.cs" />
     <Compile Include="Activities\SlidingWindow\DurationActivityMergingStrategy.cs" />

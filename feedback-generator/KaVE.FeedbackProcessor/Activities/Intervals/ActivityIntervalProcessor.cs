@@ -125,11 +125,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                    @event.GetTriggeredAt() > CurrentInterval.End;
         }
 
-        public IDictionary<Developer, IntervalStream<Activity>> GetIntervalsWithCorrectTimeouts(
+        public IDictionary<DeveloperDay, IntervalStream<Activity>> GetIntervalsWithCorrectTimeouts(
             TimeSpan activityTimeout,
             TimeSpan shortInactivityTimeout)
         {
-            IDictionary<Developer, IntervalStream<Activity>> correctedIntervals = CloneIntervals();
+            IDictionary<DeveloperDay, IntervalStream<Activity>> correctedIntervals = CloneIntervals();
             foreach (var developerStream in correctedIntervals)
             {
                 var now = new DateTime();
@@ -191,7 +191,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return correctedIntervals;
         }
 
-        private static void SanitizeInterval(Developer developer,
+        private static void SanitizeInterval(DeveloperDay developerDay,
             DateTime now,
             Interval<Activity> interval,
             Interval<Activity> previousInterval)
@@ -202,13 +202,13 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 previousInterval,
                 now.Ticks,
                 interval,
-                developer.Id);
-            Asserts.That(interval.Start <= interval.End, "negative interval ({0}) ({1})", interval, developer.Id);
+                developerDay.Developer.Id);
+            Asserts.That(interval.Start <= interval.End, "negative interval ({0}) ({1})", interval, developerDay.Developer.Id);
         }
 
-        private Dictionary<Developer, IntervalStream<Activity>> CloneIntervals()
+        private Dictionary<DeveloperDay, IntervalStream<Activity>> CloneIntervals()
         {
-            var intervals = new Dictionary<Developer, IntervalStream<Activity>>();
+            var intervals = new Dictionary<DeveloperDay, IntervalStream<Activity>>();
             foreach (var developerStream in Intervals)
             {
                 intervals[developerStream.Key] = new IntervalStream<Activity>
