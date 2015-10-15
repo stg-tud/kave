@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Csv;
 using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Intervals;
@@ -24,15 +25,15 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.VsWindows
 {
-    internal class WindowIntervalProcessor : IntervalProcessor<string>
+    internal class WindowIntervalProcessor : IntervalProcessor<WindowName>
     {
-        public const string OutsideIDEIntervalId = ":outside of ide:";
+        public static readonly WindowName OutsideIDEIntervalId = WindowName.Get(":outside of ide:");
 
         protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
             if (@event.Activity == Activity.EnterIDE)
             {
-                if (CurrentInterval.Id.Equals(OutsideIDEIntervalId))
+                if (CurrentInterval.Id == OutsideIDEIntervalId)
                 {
                     CurrentInterval.End = @event.GetTriggeredAt();
                 }
@@ -44,7 +45,7 @@ namespace KaVE.FeedbackProcessor.VsWindows
 
             var previousInterval = CurrentInterval;
 
-            if (previousInterval.Id.Equals(GetIntervalId(@event)))
+            if (previousInterval.Id == GetIntervalId(@event))
             {
                 previousInterval.End = GetEnd(@event);
             }
@@ -55,9 +56,9 @@ namespace KaVE.FeedbackProcessor.VsWindows
             }
         }
 
-        protected override string GetIntervalId(ActivityEvent @event)
+        protected override WindowName GetIntervalId(ActivityEvent @event)
         {
-            return @event.Activity == Activity.LeaveIDE ? OutsideIDEIntervalId : @event.ActiveWindow.Identifier;
+            return @event.Activity == Activity.LeaveIDE ? OutsideIDEIntervalId : @event.ActiveWindow;
         }
 
         public string IntervalsToVsWindowUsageStatisticCsv()
@@ -65,7 +66,7 @@ namespace KaVE.FeedbackProcessor.VsWindows
             var builder = new CsvBuilder();
             foreach (var intervalStream in Intervals)
             {
-                var usage = new Dictionary<string, TimeSpan>();
+                var usage = new Dictionary<WindowName, TimeSpan>();
                 foreach (var interval in intervalStream.Value)
                 {
                     if (!usage.ContainsKey(interval.Id))
@@ -79,7 +80,7 @@ namespace KaVE.FeedbackProcessor.VsWindows
                 builder["developer"] = intervalStream.Key.Id;
                 foreach (var windowUsage in usage)
                 {
-                    builder[windowUsage.Key] = windowUsage.Value.RoundedTotalSeconds();
+                    builder[windowUsage.Key.Identifier] = windowUsage.Value.RoundedTotalSeconds();
                 }
             }
             return builder.Build();
