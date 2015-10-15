@@ -50,9 +50,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             Uut.OnStreamEnds();
         }
 
-        protected void AssertIntervals<T>(params Interval<T>[] expecteds)
+        protected void AssertIntervals<T>(DateTime day, params Interval<T>[] expecteds)
         {
-            var actuals = Uut.Intervals[new DeveloperDay(SomeDeveloper, new DateTime())];
+            var actuals = Uut.Intervals[new DeveloperDay(SomeDeveloper, day)];
             Assert.AreEqual(expecteds, actuals);
         }
 
