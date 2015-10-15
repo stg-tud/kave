@@ -203,7 +203,11 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 now.Ticks,
                 interval,
                 developerDay.Developer.Id);
-            Asserts.That(interval.Start <= interval.End, "negative interval ({0}) ({1})", interval, developerDay.Developer.Id);
+            Asserts.That(
+                interval.Start <= interval.End,
+                "negative interval ({0}) ({1})",
+                interval,
+                developerDay.Developer.Id);
         }
 
         private Dictionary<DeveloperDay, IntervalStream<Activity>> CloneIntervals()
@@ -246,45 +250,42 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             var builder = new CsvBuilder();
             foreach (var developerStream in GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout))
             {
-                foreach (var stream in developerStream.Value.SplitByDay(TimeSpan.FromHours(4)))
+                var days = new HashSet<DateTime>();
+                var numberOfShortInactivities = 0;
+                var numberOfLongInactivities = 0;
+                IDictionary<Activity, TimeSpan> budget = new Dictionary<Activity, TimeSpan>();
+                foreach (var interval in developerStream.Value)
                 {
-                    var days = new HashSet<DateTime>();
-                    var numberOfShortInactivities = 0;
-                    var numberOfLongInactivities = 0;
-                    IDictionary<Activity, TimeSpan> budget = new Dictionary<Activity, TimeSpan>();
-                    foreach (var interval in stream)
+                    days.Add(interval.Start.Date);
+
+                    if (interval.Id == Activity.Inactive)
                     {
-                        days.Add(interval.Start.Date);
-
-                        if (interval.Id == Activity.Inactive)
-                        {
-                            numberOfShortInactivities++;
-                        }
-                        if (interval.Id == Activity.InactiveLong)
-                        {
-                            numberOfLongInactivities++;
-                        }
-
-                        if (!budget.ContainsKey(interval.Id))
-                        {
-                            budget[interval.Id] = TimeSpan.Zero;
-                        }
-                        budget[interval.Id] += interval.Duration;
+                        numberOfShortInactivities++;
+                    }
+                    if (interval.Id == Activity.InactiveLong)
+                    {
+                        numberOfLongInactivities++;
                     }
 
-                    builder.StartRow();
-                    builder["day"] = developerStream.Value.Start.Date.ToString("yyyy-MM-dd") + "_" + developerStream.Key.Id;
-                    builder["active days"] = days.Count;
-                    builder["# of intervals"] = developerStream.Value.Length;
-                    builder["# of short inactivities"] = numberOfShortInactivities;
-                    builder["# of long inactivities"] = numberOfLongInactivities;
-                    foreach (var activity in budget)
+                    if (!budget.ContainsKey(interval.Id))
                     {
-                        builder[activity.Key.ToString()] = activity.Value.RoundedTotalSeconds();
+                        budget[interval.Id] = TimeSpan.Zero;
                     }
-                    builder["# of Any events"] = developerStream.Value.NumberOfAnyActivities;
-                    builder["# of events"] = developerStream.Value.TotalNumberOfActivities;
+                    budget[interval.Id] += interval.Duration;
                 }
+
+                builder.StartRow();
+                builder["developer day"] = developerStream.Key.Id;
+                builder["actual days"] = days.Count;
+                builder["# of intervals"] = developerStream.Value.Length;
+                builder["# of short inactivities"] = numberOfShortInactivities;
+                builder["# of long inactivities"] = numberOfLongInactivities;
+                foreach (var activity in budget)
+                {
+                    builder[activity.Key.ToString()] = activity.Value.RoundedTotalSeconds();
+                }
+                builder["# of Any events"] = developerStream.Value.NumberOfAnyActivities;
+                builder["# of events"] = developerStream.Value.TotalNumberOfActivities;
             }
             return builder.Build();
         }

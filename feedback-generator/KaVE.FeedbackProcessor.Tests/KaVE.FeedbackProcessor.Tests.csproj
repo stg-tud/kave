@@ -68,7 +68,6 @@
     <Compile Include="Activities\InstallEventMapperTest.cs" />
     <Compile Include="Activities\Intervals\ActivityIntervalProcessorTest.cs" />
     <Compile Include="Activities\Intervals\IntervalProcessorTest.cs" />
-    <Compile Include="Activities\Intervals\SplitIntervalStreamByDaysTest.cs" />
     <Compile Include="Activities\SlidingWindow\WeightedActivityMergeStrategyContract.cs" />
     <Compile Include="Activities\SlidingWindow\CreateActivityStreamTest.cs" />
     <Compile Include="Activities\SlidingWindow\DurationActivityMergeStrategyTest.cs" />

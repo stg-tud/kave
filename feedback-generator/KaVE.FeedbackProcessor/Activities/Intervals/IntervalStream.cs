@@ -78,41 +78,6 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
             return GetEnumerator();
         }
 
-        public IEnumerable<IntervalStream<T>> SplitByDay()
-        {
-            return SplitByDay(TimeSpan.Zero);
-        } 
-
-        public IEnumerable<IntervalStream<T>> SplitByDay(TimeSpan offset)
-        {
-            var lastStreamDate = GetStreamDate(Start, offset);
-            var currentStream = new IntervalStream<T>();
-            foreach (var interval in _intervals)
-            {
-                var newStreamDate = GetStreamDate(interval.Start, offset);
-                if (newStreamDate != lastStreamDate)
-                {
-                    yield return currentStream;
-                    currentStream = new IntervalStream<T>();
-                    lastStreamDate = newStreamDate;
-                }
-                currentStream.Append(interval);
-            }
-            yield return currentStream;
-        }
-
-        private static DateTime GetStreamDate(DateTime dateTime, TimeSpan offset)
-        {
-            try
-            {
-                return (dateTime - offset).Date;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return dateTime.Date;
-            }
-        }
-
         protected bool Equals(IntervalStream<T> other)
         {
             return Equals(_intervals, other._intervals);
