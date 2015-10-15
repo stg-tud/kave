@@ -30,11 +30,6 @@ namespace KaVE.FeedbackProcessor.VsWindows
 
         protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
-            if (CurrentInterval.End > @event.GetTriggeredAt())
-            {
-                return;
-            }
-
             if (@event.Activity == Activity.EnterIDE)
             {
                 if (CurrentInterval.Id.Equals(OutsideIDEIntervalId))
@@ -49,14 +44,14 @@ namespace KaVE.FeedbackProcessor.VsWindows
 
             var previousInterval = CurrentInterval;
 
-            if (!previousInterval.Id.Equals(GetIntervalId(@event)))
+            if (previousInterval.Id.Equals(GetIntervalId(@event)))
             {
-                StartInterval(@event);
-                previousInterval.End = CurrentInterval.Start;
+                previousInterval.End = GetEnd(@event);
             }
             else
             {
-                previousInterval.End = GetEnd(@event);
+                StartInterval(@event);
+                previousInterval.End = CurrentInterval.Start;
             }
         }
 

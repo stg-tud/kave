@@ -53,7 +53,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         public override string ToString()
         {
-            return String.Format("Start: {1}, Id: {0}, End: {2}", Id, Start, End);
+            return string.Format("Start: {1}, Id: {0}, End: {2}", Id, Start, End);
         }
     }
 }

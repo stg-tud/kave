@@ -17,7 +17,6 @@
 using System;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
@@ -25,18 +24,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
     [TestFixture]
     internal class ActivityIntervalProcessorTest : IntervalProcessorTest<ActivityIntervalProcessor, Activity>
     {
-        private DateTime _someDay = DateTimeFactory.SomeWorkingHoursDateTime();
-        private TimeSpan _someTime;
-        private const int OneDay = 24 * 60 * 60;
-
-        [SetUp]
-        public void SetupDates()
-        {
-            var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            _someDay = someDateTime.Date;
-            _someTime = someDateTime - _someDay;
-        }
-
         protected override ActivityIntervalProcessor CreateProcessor()
         {
             return new ActivityIntervalProcessor();
@@ -45,9 +32,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [Test]
         public void Interval()
         {
-            WhenStreamIsProcessed(SomeEvent(_someTime, Activity.Other, 3));
+            WhenStreamIsProcessed(SomeEvent(0, Activity.Other, 3));
 
-            AssertIntervals(new DateTime(), Interval(_someTime, Activity.Other, 3));
+            AssertStream(SomeDay, Interval(0, Activity.Other, 3));
         }
 
         [Test]
@@ -55,7 +42,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         {
             WhenStreamIsProcessed(SomeEvent(0, Activity.Other, 0));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Other, 0));
+            AssertStream(SomeDay, Interval(0, Activity.Other, 0));
         }
 
         [Test]
@@ -65,7 +52,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Other, 1),
                 SomeEvent(3, Activity.Navigation, 2));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Other, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Other, 1),
                 Interval(3, Activity.Navigation, 2));
         }
 
@@ -76,7 +65,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Development, 1),
                 SomeEvent(1, Activity.Development, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Development, 2));
+            AssertStream(SomeDay, Interval(0, Activity.Development, 2));
         }
 
         [Test]
@@ -86,7 +75,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Other, 1),
                 SomeEvent(3, Activity.Other, 2));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Other, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Other, 1),
                 Interval(3, Activity.Other, 2));
         }
 
@@ -97,7 +88,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.LocalConfiguration, 2),
                 SomeEvent(1, Activity.LeaveIDE, 2));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.LocalConfiguration, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.LocalConfiguration, 1),
                 Interval(1, Activity.Away, 2));
         }
 
@@ -108,7 +101,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.LocalConfiguration, 2),
                 SomeEvent(1, Activity.LeaveIDE, 2));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.LocalConfiguration, 2),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.LocalConfiguration, 2),
                 Interval(2, Activity.Away, 1));
         }
 
@@ -135,7 +130,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(4, Activity.Navigation, 1));
 
             AssertCorrectedIntervals(
-                TimeSpan.FromSeconds(2), 
+                TimeSpan.FromSeconds(2),
                 TimeSpan.FromSeconds(42),
                 Interval(0, Activity.Development, 4),
                 Interval(4, Activity.Navigation, 3));
@@ -172,41 +167,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         }
 
         [Test]
-        public void ExcludesInactiveDaysFromLongInactivity()
+        public void InsertsNothingIfInactivityUntilAnotherDay()
         {
-            const int oneDay = 24*60*60;
-
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.Development, 1),
-                SomeEvent(2 * oneDay, Activity.Development, 1));
+                SomeEvent(OneDay, Activity.Development, 1));
 
-            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
-            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
-            AssertCorrectedIntervals(
+            AssertCorrectedStreams(
                 TimeSpan.FromSeconds(0),
                 TimeSpan.FromSeconds(2),
-                Interval(0, Activity.Development, 1),
-                Interval(SomeDateTime.AddSeconds(1), Activity.InactiveLong, nextDayMidnight),
-                Interval(secondDayMidnight, Activity.InactiveLong, SomeDateTime.AddDays(2)),
-                Interval(2 * oneDay, Activity.Development, 1));
-        }
-
-        [Test]
-        public void ExcludingDayAlwaysLeadsToLongInactivity()
-        {
-            WhenStreamIsProcessed(
-                SomeEvent(0, Activity.Development, 1),
-                SomeEvent(2 * OneDay, Activity.Development, 1));
-
-            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
-            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
-            AssertCorrectedIntervals(
-                TimeSpan.FromSeconds(0),
-                TimeSpan.FromDays(1),
-                Interval(0, Activity.Development, 1),
-                Interval(SomeDateTime.AddSeconds(1), Activity.InactiveLong, nextDayMidnight),
-                Interval(secondDayMidnight, Activity.InactiveLong, SomeDateTime.AddDays(2)),
-                Interval(2 * OneDay, Activity.Development, 1));
+                Stream(SomeDay, Interval(0, Activity.Development, 1)),
+                Stream(SomeDay.AddDays(1), Interval(OneDay, Activity.Development, 1)));
         }
 
         [Test]
@@ -216,22 +187,22 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.LeaveIDE, 1),
                 SomeEvent(10, Activity.Development, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Away, 10),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Away, 10),
                 Interval(10, Activity.Development, 1));
         }
 
         [Test]
-        public void ExcludesInactiveDayBetweenLeaveIDEAndNextActivity()
+        public void InsertsNothingAfterLeaveIDEIfNextActivityIsOnAnotherDay()
         {
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.LeaveIDE, 1),
-                SomeEvent(2 * OneDay, Activity.Development, 1));
+                SomeEvent(OneDay, Activity.Development, 1));
 
-            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
-            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
-            AssertIntervals(new DateTime(), Interval(SomeDateTime, Activity.Away, nextDayMidnight),
-                Interval(secondDayMidnight, Activity.Away, SomeDateTime.AddDays(2)),
-                Interval(2 * OneDay, Activity.Development, 1));
+            AssertStreams(
+                Stream(SomeDay, Interval(0, Activity.Away, 1)),
+                Stream(SomeDay.AddDays(1), Interval(OneDay, Activity.Development, 1)));
         }
 
         [Test]
@@ -241,24 +212,23 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Development, 1),
                 SomeEvent(6, Activity.EnterIDE, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Development, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Development, 1),
                 Interval(1, Activity.Away, 5),
                 Interval(6, Activity.Other, 1));
         }
 
         [Test]
-        public void ExcludesInactiveDayBetweenLastActivityAndEnterIDE()
+        public void InsertsNothingIfEnterIDEIsOnDifferentDayThanLastActivity()
         {
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.Development, 1),
-                SomeEvent(2 * OneDay, Activity.EnterIDE, 1));
+                SomeEvent(OneDay, Activity.EnterIDE, 1));
 
-            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
-            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
-            AssertIntervals(new DateTime(), Interval(0, Activity.Development, 1),
-                Interval(SomeDateTime.AddSeconds(1), Activity.Away, nextDayMidnight),
-                Interval(secondDayMidnight, Activity.Away, SomeDateTime.AddDays(2)),
-                Interval(2 * OneDay, Activity.Other, 1));
+            AssertStreams(
+                Stream(SomeDay, Interval(0, Activity.Development, 1)),
+                Stream(SomeDay.AddDays(1), Interval(OneDay, Activity.Other, 1)));
         }
 
         [Test]
@@ -268,22 +238,22 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.LeaveIDE, 1),
                 SomeEvent(10, Activity.EnterIDE, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Away, 10),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Away, 10),
                 Interval(10, Activity.Other, 1));
         }
 
         [Test]
-        public void ExcludesInactiveDayBetweenLeaveIDEAndEnterIDE()
+        public void InsertsNothingIfEnterAndLeaveIDEAreOnDifferentDays()
         {
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.LeaveIDE, 1),
-                SomeEvent(2 * OneDay, Activity.EnterIDE, 1));
+                SomeEvent(OneDay, Activity.EnterIDE, 1));
 
-            var nextDayMidnight = SomeDateTime.AddDays(1).Date;
-            var secondDayMidnight = SomeDateTime.AddDays(2).Date;
-            AssertIntervals(new DateTime(), Interval(SomeDateTime, Activity.Away, nextDayMidnight),
-                Interval(secondDayMidnight, Activity.Away, SomeDateTime.AddDays(2)),
-                Interval(2 * OneDay, Activity.Other, 1));
+            AssertStreams(
+                Stream(SomeDay, Interval(0, Activity.Away, 1)),
+                Stream(SomeDay.AddDays(1), Interval(OneDay, Activity.Other, 1)));
         }
 
         [Test]
@@ -293,7 +263,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Development, 2),
                 SomeEvent(1, Activity.EnterIDE, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Development, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Development, 1),
                 Interval(1, Activity.Other, 1));
         }
 
@@ -304,7 +276,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Development, 1),
                 SomeEvent(2, Activity.Any, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Development, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Development, 1),
                 Interval(2, Activity.Other, 1));
         }
 
@@ -314,7 +288,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             WhenStreamIsProcessed(
                 SomeEvent(0, Activity.Any, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Other, 1));
+            AssertStream(SomeDay, Interval(0, Activity.Other, 1));
         }
 
         [Test]
@@ -324,7 +298,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Development, 3),
                 SomeEvent(0, Activity.Any, 0));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Development, 3));
+            AssertStream(SomeDay, Interval(0, Activity.Development, 3));
         }
 
         [Test]
@@ -334,7 +308,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Any, 0),
                 SomeEvent(0, Activity.Development, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Development, 1));
+            AssertStream(SomeDay, Interval(0, Activity.Development, 1));
         }
 
         [Test]
@@ -345,7 +319,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(2, Activity.Any, 1),
                 SomeEvent(2, Activity.Development, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Navigation, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Navigation, 1),
                 Interval(2, Activity.Development, 1));
         }
 
@@ -356,10 +332,12 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Waiting, 5),
                 SomeEvent(3, Activity.Development, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Waiting, 3),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Waiting, 3),
                 Interval(3, Activity.Development, 1));
         }
-        
+
         [Test]
         public void EnsuresSequentialIntervalsWhileWaiting_2()
         {
@@ -367,7 +345,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(0, Activity.Waiting, 5),
                 SomeEvent(3, Activity.Development, 6));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Waiting, 3),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Waiting, 3),
                 Interval(3, Activity.Development, 6));
         }
 
@@ -379,52 +359,33 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
                 SomeEvent(1, Activity.Any, 1),
                 SomeEvent(1, Activity.Development, 1));
 
-            AssertIntervals(new DateTime(), Interval(0, Activity.Waiting, 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, Activity.Waiting, 1),
                 Interval(1, Activity.Development, 1));
         }
 
-        protected void AssertCorrectedIntervals<T>(TimeSpan activityTimeout,
+        private ActivityEvent SomeEvent(int offsetInSeconds, Activity activity, int durationInSeconds)
+        {
+            var activityEvent = SomeEvent(offsetInSeconds, durationInSeconds);
+            activityEvent.Activity = activity;
+            return activityEvent;
+        }
+
+        private void AssertCorrectedIntervals<T>(TimeSpan activityTimeout,
             TimeSpan shortInactivityTimeout,
             params Interval<T>[] expecteds)
         {
             var correctedIntervals = Uut.GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout);
-            var actuals = correctedIntervals[new DeveloperDay(SomeDeveloper, new DateTime())];
+            var actuals = correctedIntervals[new DeveloperDay(SomeDeveloper, SomeDay)];
             Assert.AreEqual(expecteds, actuals);
         }
 
-        private ActivityEvent SomeEvent(TimeSpan time, Activity activity, int durationInSeconds)
+        private void AssertCorrectedStreams(TimeSpan activityTimeout,
+            TimeSpan shortInactivityTimeout,
+            params Tuple<DateTime, IntervalStream<Activity>>[] streams)
         {
-            return new ActivityEvent
-            {
-                TriggeredAt = _someDay + time,
-                Activity = activity,
-                Duration = TimeSpan.FromSeconds(durationInSeconds)
-            };
-        }
-
-        private ActivityEvent SomeEvent(int triggerOffsetInSeconds, Activity activity, int durationInSeconds)
-        {
-            return new ActivityEvent
-            {
-                TriggeredAt = SomeDateTime.AddSeconds(triggerOffsetInSeconds),
-                Activity = activity,
-                Duration = TimeSpan.FromSeconds(durationInSeconds)
-            };
-        }
-
-
-
-        protected Interval<T> Interval<T>(TimeSpan time,
-            T activity,
-            int durationInSeconds)
-        {
-            var start = _someDay + time;
-            return new Interval<T>
-            {
-                Start = start,
-                Id = activity,
-                End = start + TimeSpan.FromSeconds(durationInSeconds)
-            };
+            AssertStreams(streams, Uut.GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout));
         }
     }
 }

@@ -48,7 +48,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         private IntervalStream<T> GetOrCreateStream(ActivityEvent @event)
         {
-            var developerDay = new DeveloperDay(_currentDeveloper, new DateTime());
+            var developerDay = new DeveloperDay(_currentDeveloper, @event.GetTriggerDate());
             if (!Intervals.ContainsKey(developerDay))
             {
                 Intervals[developerDay] = new IntervalStream<T>();

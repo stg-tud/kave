@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
             WhenStreamIsProcessed(
                 SomeEvent(0, ":some window:", 1));
 
-            AssertIntervals(new DateTime(), Interval(0, ":some window:", 1));
+            AssertStream(SomeDay, Interval(0, ":some window:", 1));
         }
 
         [Test]
@@ -47,7 +47,9 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 SomeEvent(0, ":one window:", 1),
                 SomeEvent(1, ":other window:", 1));
 
-            AssertIntervals(new DateTime(), Interval(0, ":one window:", 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, ":one window:", 1),
                 Interval(1, ":other window:", 1));
         }
 
@@ -58,7 +60,9 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 SomeEvent(0, ":one window:", 1),
                 SomeEvent(2, ":other window:", 1));
 
-            AssertIntervals(new DateTime(), Interval(0, ":one window:", 2),
+            AssertStream(
+                SomeDay,
+                Interval(0, ":one window:", 2),
                 Interval(2, ":other window:", 1));
         }
 
@@ -69,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 SomeEvent(0, ":a window:", 1),
                 SomeEvent(2, ":a window:", 1));
 
-            AssertIntervals(new DateTime(), Interval(0, ":a window:", 3));
+            AssertStream(SomeDay, Interval(0, ":a window:", 3));
         }
 
         [Test]
@@ -79,7 +83,9 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 SomeEvent(0, ":one window:", 2),
                 SomeEvent(1, ":another window:", 2));
 
-            AssertIntervals(new DateTime(), Interval(0, ":one window:", 1),
+            AssertStream(
+                SomeDay,
+                Interval(0, ":one window:", 1),
                 Interval(1, ":another window:", 2));
         }
 
@@ -89,7 +95,7 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
             WhenStreamIsProcessed(
                 LeaveEvent(0, ":any window:", 1));
 
-            AssertIntervals(new DateTime(), Interval(0, WindowIntervalProcessor.OutsideIDEIntervalId, 1));
+            AssertStream(SomeDay, Interval(0, WindowIntervalProcessor.OutsideIDEIntervalId, 1));
         }
 
         [Test]
@@ -99,7 +105,9 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 SomeEvent(0, ":some window:", 2),
                 EnterEvent(5, ":any window:", 1));
 
-            AssertIntervals(new DateTime(), Interval(0, ":some window:", 2),
+            AssertStream(
+                SomeDay,
+                Interval(0, ":some window:", 2),
                 Interval(2, WindowIntervalProcessor.OutsideIDEIntervalId, 3),
                 Interval(5, ":any window:", 1));
         }
@@ -111,7 +119,9 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
                 LeaveEvent(0, ":some window:", 1),
                 EnterEvent(6, ":other window:", 1));
 
-            AssertIntervals(new DateTime(), Interval(0, WindowIntervalProcessor.OutsideIDEIntervalId, 6),
+            AssertStream(
+                SomeDay,
+                Interval(0, WindowIntervalProcessor.OutsideIDEIntervalId, 6),
                 Interval(6, ":other window:", 1));
         }
 
@@ -129,14 +139,11 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
             return someEvent;
         }
 
-        private ActivityEvent SomeEvent(int triggerTimeOffset, string windowTitle, int eventDuration)
+        private ActivityEvent SomeEvent(int offsetInSeconds, string windowTitle, int durationInSeconds)
         {
-            return new ActivityEvent
-            {
-                TriggeredAt = SomeDateTime.AddSeconds(triggerTimeOffset),
-                ActiveWindow = WindowName.Get(windowTitle),
-                Duration = TimeSpan.FromSeconds(eventDuration)
-            };
+            var activityEvent = SomeEvent(offsetInSeconds, durationInSeconds);
+            activityEvent.ActiveWindow = WindowName.Get(windowTitle);
+            return activityEvent;
         }
     }
 }

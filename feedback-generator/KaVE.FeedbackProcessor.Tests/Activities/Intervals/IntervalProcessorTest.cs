@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -24,9 +25,15 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
 {
-    internal abstract class IntervalProcessorTest<TProcessor, TIntervalId> where TProcessor: IntervalProcessor<TIntervalId>
+    internal abstract class IntervalProcessorTest<TProcessor, TIntervalId>
+        where TProcessor : IntervalProcessor<TIntervalId>
     {
+        protected DateTime SomeDay { get { return SomeDateTime.Date; } }
+        protected TimeSpan SomeTime { get { return SomeDateTime - SomeDay;  } }
         protected DateTime SomeDateTime { get; private set; }
+
+        protected const int OneDay = 24*60*60;
+
         protected Developer SomeDeveloper { get; private set; }
         protected TProcessor Uut { get; private set; }
 
@@ -34,8 +41,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         public void SetUp()
         {
             Uut = CreateProcessor();
-            SomeDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
             SomeDeveloper = TestFactory.SomeDeveloper();
+            SomeDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
         }
 
         protected abstract TProcessor CreateProcessor();
@@ -50,35 +57,54 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
             Uut.OnStreamEnds();
         }
 
-        protected void AssertIntervals<T>(DateTime day, params Interval<T>[] expecteds)
+        protected ActivityEvent SomeEvent(int offsetInSeconds, int durationInSeconds)
+        {
+            return new ActivityEvent
+            {
+                TriggeredAt = SomeDateTime.AddSeconds(offsetInSeconds),
+                Duration = TimeSpan.FromSeconds(durationInSeconds)
+            };
+        }
+
+        protected Interval<TIntervalId> Interval(int startOffsetInSeconds,
+            TIntervalId id,
+            int durationInSeconds)
+        {
+            var start = SomeDateTime.AddSeconds(startOffsetInSeconds);
+            return new Interval<TIntervalId>
+            {
+                Start = start,
+                Id = id,
+                End = start + TimeSpan.FromSeconds(durationInSeconds)
+            };
+        }
+
+        protected static Tuple<DateTime, IntervalStream<TIntervalId>> Stream(DateTime day,
+            params Interval<TIntervalId>[] intervals)
+        {
+            return Tuple.Create(day, new IntervalStream<TIntervalId>(intervals));
+        }
+
+        protected void AssertStream(DateTime day, params Interval<TIntervalId>[] expecteds)
         {
             var actuals = Uut.Intervals[new DeveloperDay(SomeDeveloper, day)];
             Assert.AreEqual(expecteds, actuals);
         }
 
-        protected Interval<T> Interval<T>(int startOffsetInSeconds,
-            T activity,
-            int durationInSeconds)
+        protected void AssertStreams(params Tuple<DateTime, IntervalStream<TIntervalId>>[] streams)
         {
-            var start = SomeDateTime.AddSeconds(startOffsetInSeconds);
-            return new Interval<T>
-            {
-                Start = start,
-                Id = activity,
-                End = start + TimeSpan.FromSeconds(durationInSeconds)
-            };
+            AssertStreams(streams, Uut.Intervals);
         }
 
-        protected Interval<T> Interval<T>(DateTime start,
-            T activity,
-            DateTime end)
+        protected void AssertStreams(IEnumerable<Tuple<DateTime, IntervalStream<TIntervalId>>> streams,
+            IDictionary<DeveloperDay, IntervalStream<TIntervalId>> actuals)
         {
-            return new Interval<T>
+            var expecteds = new Dictionary<DeveloperDay, IntervalStream<TIntervalId>>();
+            foreach (var stream in streams)
             {
-                Start = start,
-                Id = activity,
-                End = end
-            };
+                expecteds[new DeveloperDay(SomeDeveloper, stream.Item1)] = stream.Item2;
+            }
+            Assert.AreEqual(expecteds, actuals);
         }
     }
 }
