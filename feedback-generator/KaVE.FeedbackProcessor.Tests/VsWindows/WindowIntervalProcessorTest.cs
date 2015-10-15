@@ -16,6 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Tests.Activities.Intervals;
 using KaVE.FeedbackProcessor.VsWindows;
@@ -24,11 +25,11 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.VsWindows
 {
     [TestFixture]
-    internal class WindowIntervalProcessorTest : IntervalProcessorTest<WindowIntervalProcessor, string>
+    internal class WindowIntervalProcessorTest : IntervalProcessorTest<WindowIntervalProcessor, WindowName>
     {
-        protected override WindowIntervalProcessor CreateProcessor()
+        protected override WindowIntervalProcessor CreateProcessor(TimeSpan developerDayOffset)
         {
-            return new WindowIntervalProcessor();
+            return new WindowIntervalProcessor(developerDayOffset);
         }
 
         [Test]
@@ -144,6 +145,11 @@ namespace KaVE.FeedbackProcessor.Tests.VsWindows
             var activityEvent = SomeEvent(offsetInSeconds, durationInSeconds);
             activityEvent.ActiveWindow = WindowName.Get(windowTitle);
             return activityEvent;
+        }
+
+        private Interval<WindowName> Interval(int offsetInSeconds, string windowTitle, int durationInSeconds)
+        {
+            return Interval(offsetInSeconds, WindowName.Get(windowTitle), durationInSeconds);
         }
     }
 }

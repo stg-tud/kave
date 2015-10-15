@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Intervals;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -40,13 +41,51 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
         [SetUp]
         public void SetUp()
         {
-            Uut = CreateProcessor();
+            Uut = CreateProcessor(TimeSpan.Zero);
             SomeDeveloper = TestFactory.SomeDeveloper();
             SomeDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
         }
 
-        protected abstract TProcessor CreateProcessor();
+        protected abstract TProcessor CreateProcessor(TimeSpan developerDayOffset);
 
+        [Test]
+        public void SplitsStreamByDay()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, 1),
+                SomeEvent(OneDay, 1));
+
+            Assert.AreEqual(2, Uut.Intervals.Count);
+            Assert.IsTrue(Uut.Intervals.ContainsKey(new DeveloperDay(SomeDeveloper, SomeDay)));
+            Assert.IsTrue(Uut.Intervals.ContainsKey(new DeveloperDay(SomeDeveloper, SomeDay.AddDays(1))));
+        }
+
+        [Test]
+        public void KeepsSameDayInOneStream()
+        {
+            WhenStreamIsProcessed(
+                SomeEvent(0, 3),
+                SomeEvent(42, 6),
+                SomeEvent(69, 23));
+
+            Assert.AreEqual(1, Uut.Intervals.Count);
+            Assert.IsTrue(Uut.Intervals.ContainsKey(new DeveloperDay(SomeDeveloper, SomeDay)));
+        }
+
+        [Test]
+        public void CountsEventsWithinOffsetForSameDay()
+        {
+            Uut = CreateProcessor(TimeSpan.FromHours(1));
+
+            const int oneHour = 60 * 60;
+            var nextDayMidnight = (SomeDay.AddDays(1) - SomeDateTime).RoundedTotalSeconds();
+            WhenStreamIsProcessed(
+                SomeEvent(0, 5),
+                SomeEvent(nextDayMidnight + oneHour - 1, 10));
+
+            Assert.AreEqual(1, Uut.Intervals.Count);
+        }
+        
         protected void WhenStreamIsProcessed(params ActivityEvent[] stream)
         {
             Uut.OnStreamStarts(SomeDeveloper);

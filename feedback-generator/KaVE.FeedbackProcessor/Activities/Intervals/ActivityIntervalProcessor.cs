@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         public IDictionary<Activity, LostTime> LostTimeStatistics = new Dictionary<Activity, LostTime>();
         public ISet<Pair<Activity>> OverlappingActivities = new HashSet<Pair<Activity>>();
 
-        public ActivityIntervalProcessor()
+        public ActivityIntervalProcessor(TimeSpan developerDayOffset) : base(developerDayOffset)
         {
             foreach (var activity in Enum.GetValues(typeof (Activity)).Cast<Activity>())
             {

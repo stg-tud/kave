@@ -24,9 +24,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.Intervals
     [TestFixture]
     internal class ActivityIntervalProcessorTest : IntervalProcessorTest<ActivityIntervalProcessor, Activity>
     {
-        protected override ActivityIntervalProcessor CreateProcessor()
+        protected override ActivityIntervalProcessor CreateProcessor(TimeSpan developerDayOffset)
         {
-            return new ActivityIntervalProcessor();
+            return new ActivityIntervalProcessor(developerDayOffset);
         }
 
         [Test]

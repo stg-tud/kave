@@ -89,7 +89,7 @@ namespace KaVE.FeedbackProcessor
 
         private void RunWindowUsageAnalysis(IFeedbackDatabase activityDatabase)
         {
-            var windowIntervalProcessor = new WindowIntervalProcessor();
+            var windowIntervalProcessor = new WindowIntervalProcessor(TimeSpan.FromHours(4));
 
             var processor = new FeedbackProcessor(activityDatabase, _logger);
             processor.Register(windowIntervalProcessor);
@@ -338,7 +338,7 @@ namespace KaVE.FeedbackProcessor
 
         private void LogActivityIntervalStatistics(IFeedbackDatabase activityDatabase)
         {
-            var activityIntervalProcessor = new ActivityIntervalProcessor();
+            var activityIntervalProcessor = new ActivityIntervalProcessor(TimeSpan.FromHours(4));
 
             var processor = new FeedbackProcessor(activityDatabase, _logger);
             processor.Register(activityIntervalProcessor);

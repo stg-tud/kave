@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
@@ -24,13 +25,15 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 {
     internal abstract class IntervalProcessor<T> : BaseEventProcessor
     {
+        private readonly TimeSpan _developerDayOffset;
         public IDictionary<DeveloperDay, IntervalStream<T>> Intervals = new Dictionary<DeveloperDay, IntervalStream<T>>();
         private Developer _currentDeveloper;
         private IntervalStream<T> _currentStream;
         protected Interval<T> CurrentInterval { get; private set; }
 
-        protected IntervalProcessor()
+        protected IntervalProcessor(TimeSpan developerDayOffset)
         {
+            _developerDayOffset = developerDayOffset;
             RegisterFor<ActivityEvent>(Handle);
         }
 
@@ -48,13 +51,25 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         private IntervalStream<T> GetOrCreateStream(ActivityEvent @event)
         {
-            var developerDay = new DeveloperDay(_currentDeveloper, @event.GetTriggerDate());
+            var developerDay = new DeveloperDay(_currentDeveloper, GetDeveloperDay(@event));
             if (!Intervals.ContainsKey(developerDay))
             {
                 Intervals[developerDay] = new IntervalStream<T>();
                 CurrentInterval = null;
             }
             return Intervals[developerDay];
+        }
+
+        private DateTime GetDeveloperDay(IDEEvent @event)
+        {
+            try
+            {
+                return (@event.GetTriggeredAt() - _developerDayOffset).Date;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return @event.GetTriggerDate();
+            }
         }
 
         private void CountEvent(ActivityEvent @event)

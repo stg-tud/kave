@@ -29,6 +29,8 @@ namespace KaVE.FeedbackProcessor.VsWindows
     {
         public static readonly WindowName OutsideIDEIntervalId = WindowName.Get(":outside of ide:");
 
+        public WindowIntervalProcessor(TimeSpan developerDayOffset) : base(developerDayOffset) {}
+
         protected override void HandleWithCurrentInterval(ActivityEvent @event)
         {
             if (@event.Activity == Activity.EnterIDE)
