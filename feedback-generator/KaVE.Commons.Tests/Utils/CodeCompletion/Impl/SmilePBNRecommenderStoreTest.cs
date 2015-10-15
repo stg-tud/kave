@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.IO;
 using Moq;
@@ -32,18 +34,17 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         private string _basePath;
         private string _tmpPath;
 
-        private bool _shouldZipBeFound;
-        private bool _shouldXdslBeFound;
-
-
+        private static bool _shouldZipBeFound;
+        private static bool _shouldXdslBeFound;
+        
         [SetUp]
         public void SetUp()
         {
             _basePath = "some path -- the value irrelevant, it is only used for mocking";
             _tmpPath = Path.Combine(Path.GetTempPath(), "Test_SmilePBNNetworkStoreTest_TmpPath");
 
-            var fullZipFileName = Path.Combine(_basePath, ZipFileForSomeType());
-            var fullXdslFileName = Path.Combine(_tmpPath, XdslFileForSomeType());
+            var fullZipFileName = Path.Combine(_basePath, ZipFileForSomeType);
+            var fullXdslFileName = Path.Combine(_tmpPath, XdslFileForSomeType);
             Directory.CreateDirectory(_tmpPath);
             File.WriteAllText(fullXdslFileName, Fix.CreateNetworkAsString());
 
@@ -52,9 +53,9 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
 
             _io = Mock.Of<IIoUtils>();
             Mock.Get(_io).Setup(io => io.DirectoryExists(_basePath)).Returns(true);
-            Mock.Get(_io).Setup(io => io.FileExists(fullZipFileName)).Returns(() => _shouldZipBeFound);
             Mock.Get(_io).Setup(io => io.UnzipToTempFolder(fullZipFileName)).Returns(_tmpPath);
             Mock.Get(_io).Setup(io => io.FileExists(fullXdslFileName)).Returns(() => _shouldXdslBeFound);
+            Mock.Get(_io).Setup(io => io.GetFilesRecursive(_basePath, "*.zip")).Returns(() => TypeFiles);
 
             _sut = new SmilePBNRecommenderStore(_basePath, _io, new TypePathUtil());
         }
@@ -68,14 +69,14 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         [Test]
         public void IsAvailable_HappyPath()
         {
-            Assert.True(_sut.IsAvailable(SomeType()));
+            Assert.True(_sut.IsAvailable(SomeType));
         }
 
         [Test]
         public void IsAvailable_NoRootFolder()
         {
             _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil());
-            Assert.False(_sut.IsAvailable(SomeType()));
+            Assert.False(_sut.IsAvailable(SomeType));
             // verify non unzip
         }
 
@@ -83,7 +84,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         public void IsAvailable_NoZipExists()
         {
             _shouldZipBeFound = false;
-            Assert.False(_sut.IsAvailable(SomeType()));
+            Assert.False(_sut.IsAvailable(SomeType));
             // verify non unzip
         }
 
@@ -94,8 +95,8 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             var b = Fix.CreateNetwork();
             Assert.AreEqual(a, b);
 
-            var actual = _sut.Load(SomeType());
-            var expected = new SmilePBNRecommender(SomeType(), Fix.CreateNetwork());
+            var actual = _sut.Load(SomeType);
+            var expected = new SmilePBNRecommender(SomeType, Fix.CreateNetwork());
             Assert.AreEqual(expected, actual);
         }
 
@@ -103,47 +104,102 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         public void Load_NoRootFolder()
         {
             _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil());
-            _sut.Load(SomeType());
+            _sut.Load(SomeType);
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void Load_NoZipExists()
         {
             _shouldZipBeFound = false;
-            _sut.Load(SomeType());
+            _sut.Load(SomeType);
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void Load_XdslFileNotFound()
         {
             _shouldXdslBeFound = false;
-            _sut.Load(SomeType());
+            _sut.Load(SomeType);
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void Load_ExceptionWhileInstantiating()
         {
-            var fullXdslFileName = Path.Combine(_tmpPath, XdslFileForSomeType());
+            var fullXdslFileName = Path.Combine(_tmpPath, XdslFileForSomeType);
             File.Delete(fullXdslFileName);
             File.WriteAllText(fullXdslFileName, "this cannot be parsed by smile");
-            _sut.Load(SomeType());
+            _sut.Load(SomeType);
+        }
+
+        [Test]
+        public void ShouldProvideAvailableModels()
+        {
+            var expected = new List<UsageModelDescriptor>
+            {
+                new UsageModelDescriptor(SomeType, 1),
+                new UsageModelDescriptor(SomeOtherType, 2)
+            };
+            CollectionAssert.AreEquivalent(expected, _sut.GetAvailableModels());
+        }
+
+        [Test]
+        public void ShouldOnlyProvideNewestAvailableModels()
+        {
+            Mock.Get(_io).Setup(io => io.GetFilesRecursive(_basePath, "*.zip")).Returns(TypeFilesWithDuplicateType);
+            var expected = new List<UsageModelDescriptor>
+            {
+                new UsageModelDescriptor(SomeType, 5)
+            };
+            CollectionAssert.AreEquivalent(expected, _sut.GetAvailableModels());
         }
 
         #region helper
 
-        private CoReTypeName SomeType()
+        private static string[] TypeFiles
         {
-            return new CoReTypeName("LSomePackage/SomeType");
+            get
+            {
+                return _shouldZipBeFound
+                    ? new[]
+                    {
+                        ZipFileForSomeType,
+                        "LSomePackage/SomeOtherType.2.zip"
+                    }
+                    : new string[0];
+            }
         }
 
-        private string ZipFileForSomeType()
+        private static string[] TypeFilesWithDuplicateType
         {
-            return "LSomePackage/SomeType.zip";
+            get
+            {
+                return _shouldZipBeFound
+                    ? new[]
+                    {
+                        ZipFileForSomeType,
+                        "LSomePackage/SomeType.5.zip"
+                    }
+                    : new string[0];
+            }
         }
 
-        private string XdslFileForSomeType()
+        private static CoReTypeName SomeType
         {
-            return "LSomePackage_SomeType.xdsl";
+            get { return new CoReTypeName("LSomePackage/SomeType"); }
+        }
+
+        private static CoReTypeName SomeOtherType
+        {
+            get { return new CoReTypeName("LSomePackage/SomeOtherType"); }
+        }
+
+        private static string ZipFileForSomeType
+        {
+            get { return "LSomePackage/SomeType.1.zip"; }
+        }
+
+        private static string XdslFileForSomeType
+        {
+            get { return "LSomePackage_SomeType.xdsl"; }
         }
 
         #endregion

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.ObjectUsage;
 
 namespace KaVE.Commons.Utils.CodeCompletion
@@ -22,5 +23,6 @@ namespace KaVE.Commons.Utils.CodeCompletion
     {
         bool IsAvailable(CoReTypeName typeName);
         IPBNRecommender Load(CoReTypeName typeName);
+        IEnumerable<UsageModelDescriptor> GetAvailableModels();
     }
 }

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
@@ -37,18 +39,19 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         public bool IsAvailable(CoReTypeName type)
         {
-            var fileName = GetNestedFileName(BasePath, type, "zip");
-            return _io.FileExists(fileName);
+            return GetAvailableModels().Any(model => model.TypeName.Equals(type));
         }
 
         public IPBNRecommender Load(CoReTypeName type)
         {
-            var zipFileName = GetNestedFileName(BasePath, type, "zip");
-            Asserts.That(_io.FileExists(zipFileName));
+            var availableModel = GetAvailableModels().FirstOrDefault(model => model.TypeName.Equals(type));
+            Asserts.NotNull(availableModel, "Coudn't find zip file for {0}", type);
+
+            var zipFileName = GetNestedFileName(BasePath, type, availableModel.Version, "zip");
 
             var tmpFolder = _io.UnzipToTempFolder(zipFileName);
             var xdslFileName = GetFlatFileName(tmpFolder, type, "xdsl");
-            Asserts.That(_io.FileExists(xdslFileName));
+            Asserts.That(_io.FileExists(xdslFileName), "Couldn't find xdsl file for {0}", type);
 
             var network = ReadNetwork(xdslFileName);
             return new SmilePBNRecommender(type, network);
@@ -68,10 +71,10 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             }
         }
 
-        private string GetNestedFileName(string basePath, CoReTypeName typeName, string extension)
+        private string GetNestedFileName(string basePath, CoReTypeName typeName, int version, string extension)
         {
             var typePart = _typePath.ToNestedPath(typeName);
-            var fileName = Path.Combine(basePath, typePart + '.' + extension);
+            var fileName = Path.Combine(basePath, typePart + '.' + version + '.' + extension);
             return fileName;
         }
 
@@ -80,6 +83,46 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             var typePart = _typePath.ToFlatPath(typeName);
             var fileName = Path.Combine(basePath, typePart + '.' + extension);
             return fileName;
+        }
+
+        public IEnumerable<UsageModelDescriptor> GetAvailableModels()
+        {
+            var availableModels = new Dictionary<CoReTypeName, UsageModelDescriptor>();
+
+            foreach (var newModel in _io.GetFilesRecursive(BasePath, "*.zip")
+                                        .Select(
+                                            modelFilePath =>
+                                                new UsageModelDescriptor(
+                                                    GetTypeNameString(modelFilePath),
+                                                    GetVersionNumber(modelFilePath)))
+                                        .Where(
+                                            newModel =>
+                                                !availableModels.ContainsKey(newModel.TypeName) ||
+                                                newModel.Version > availableModels[newModel.TypeName].Version))
+            {
+                availableModels[newModel.TypeName] = newModel;
+            }
+
+            return availableModels.Values;
+        }
+
+        private static int GetVersionNumber(string modelFilePath)
+        {
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modelFilePath);
+            Asserts.NotNull(fileNameWithoutExtension);
+            var versionSubstring =
+                fileNameWithoutExtension.Substring(fileNameWithoutExtension.LastIndexOf('.') + 1);
+            return int.Parse(versionSubstring);
+        }
+
+        private static CoReTypeName GetTypeNameString(string modelFilePath)
+        {
+            var filePathWithoutExtension = modelFilePath.Substring(0, modelFilePath.LastIndexOf('.'));
+            Asserts.NotNull(filePathWithoutExtension);
+            var typeNameSubstring = filePathWithoutExtension.Substring(
+                0,
+                filePathWithoutExtension.LastIndexOf('.'));
+            return new CoReTypeName(typeNameSubstring);
         }
     }
 }

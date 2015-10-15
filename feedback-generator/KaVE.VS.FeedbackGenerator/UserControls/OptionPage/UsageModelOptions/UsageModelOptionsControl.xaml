@@ -72,7 +72,7 @@ limitations under the License.
                 <DataGridTextColumn Header="Model Name" Binding="{Binding Item1}" />
                 <DataGridTextColumn Header="Current Version" Binding="{Binding Item2}" />
                 <DataGridTextColumn Header="Newest Version" Binding="{Binding Item3}" />
-                <DataGridTemplateColumn Header="Options" Width="*">
+                <DataGridTemplateColumn Header="Options" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
