@@ -25,7 +25,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
     internal abstract class IntervalProcessor<T> : BaseEventProcessor
     {
         public IDictionary<DeveloperDay, IntervalStream<T>> Intervals = new Dictionary<DeveloperDay, IntervalStream<T>>();
-        private DeveloperDay _currentDeveloperDay;
+        private Developer _currentDeveloper;
+        private IntervalStream<T> _currentStream;
         protected Interval<T> CurrentInterval { get; private set; }
 
         protected IntervalProcessor()
@@ -35,23 +36,33 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
 
         public override void OnStreamStarts(Developer developer)
         {
-            _currentDeveloperDay = new DeveloperDay(developer, new DateTime());
-            Intervals[_currentDeveloperDay] = new IntervalStream<T>();
-            CurrentInterval = null;
+            _currentDeveloper = developer;
         }
 
         private void Handle(ActivityEvent @event)
         {
+            _currentStream = GetOrCreateStream(@event);
             CountEvent(@event);
             UpdateIntervals(@event);
         }
 
+        private IntervalStream<T> GetOrCreateStream(ActivityEvent @event)
+        {
+            var developerDay = new DeveloperDay(_currentDeveloper, new DateTime());
+            if (!Intervals.ContainsKey(developerDay))
+            {
+                Intervals[developerDay] = new IntervalStream<T>();
+                CurrentInterval = null;
+            }
+            return Intervals[developerDay];
+        }
+
         private void CountEvent(ActivityEvent @event)
         {
-            Intervals[_currentDeveloperDay].TotalNumberOfActivities++;
+            _currentStream.TotalNumberOfActivities++;
             if (@event.Activity == Activity.Any)
             {
-                Intervals[_currentDeveloperDay].NumberOfAnyActivities++;
+                _currentStream.NumberOfAnyActivities++;
             }
         }
 
@@ -86,7 +97,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 Id = activity,
                 End = end
             };
-            Intervals[_currentDeveloperDay].Append(CurrentInterval);
+            _currentStream.Append(CurrentInterval);
         }
 
         protected abstract T GetIntervalId(ActivityEvent @event);
