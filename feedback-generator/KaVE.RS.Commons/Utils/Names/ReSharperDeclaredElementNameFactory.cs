@@ -24,6 +24,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
@@ -331,6 +332,18 @@ namespace KaVE.RS.Commons.Utils.Names
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             return AliasName.Get(alias.ShortName);
+        }
+
+        [NotNull]
+        public static ILambdaName GetName([NotNull] this ILambdaExpression lambdaExpression)
+        {
+            var seen = new Dictionary<DeclaredElementInstance, IName>();
+
+            var identifier = new StringBuilder();
+            identifier.AppendType(lambdaExpression.ReturnType, seen);
+            identifier.Append(' ');
+            identifier.AppendParameters(lambdaExpression.DeclaredParametersOwner, EmptySubstitution.INSTANCE, seen);
+            return LambdaName.Get(identifier.ToString());
         }
 
         private static void AppendMemberBase(this StringBuilder identifier,

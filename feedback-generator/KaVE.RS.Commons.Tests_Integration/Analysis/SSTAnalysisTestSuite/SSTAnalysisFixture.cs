@@ -82,6 +82,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             TypeName.Get(
                 "d:[System.Void, mscorlib, 4.0.0.0] [System.Action`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] obj)");
 
+        internal static readonly ITypeName FuncOfIntAndInt =
+            TypeName.Get(
+                "d:[TResult] [System.Func`2[[T -> System.Int32, mscorlib, 4.0.0.0],[TResult -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] arg)");
+
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetHashCode =
             MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");

@@ -193,6 +193,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ComposedExpressionAnalysisTestSuite\BooleanExpressionTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\IfElseExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\InvocationExpressionAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\LambdaExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\LoopHeaderExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\SeveralNestedExpressionsAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ContinueStatementAnalysisTest.cs" />

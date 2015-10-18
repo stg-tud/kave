@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Impl.Resolve;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
@@ -33,6 +35,7 @@ using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
@@ -459,6 +462,51 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     FieldName = FieldName.Get(string.Format("[{0}] [{0}].{1}", TypeName.UnknownName, name))
                 }
             };
+        }
+
+        public override IAssignableExpression VisitLambdaExpression(ILambdaExpression expr, IList<IStatement> body)
+        {
+            if (expr.DeclaredElement == null)
+            {
+                return new UnknownExpression();
+            }
+
+            var lambdaName = expr.GetName();
+            var lambdaBody = new KaVEList<IStatement>();
+            var bodyVisitor = new BodyVisitor(_nameGen, _marker);
+
+            if (expr.BodyBlock != null)
+            {
+                if (expr.BodyBlock == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
+                {
+                    lambdaBody.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                }
+
+                expr.BodyBlock.Accept(bodyVisitor, lambdaBody);
+            }
+            else if (expr.BodyExpression != null)
+            {
+                var varRef = ToVariableRef(expr.BodyExpression, lambdaBody);
+                lambdaBody.Add(
+                    new ReturnStatement {IsVoid = false, Expression = new ReferenceExpression {Reference = varRef}});
+            }
+
+            return new LambdaExpression
+            {
+                Name = lambdaName,
+                Body = lambdaBody
+            };
+        }
+
+        public override IAssignableExpression VisitLambdaParameterDeclaration(ILambdaParameterDeclaration expr,
+            IList<IStatement> body)
+        {
+            throw new InvalidOperationException("VisitLambdaParameterDeclaration should never be hit.");
+        }
+
+        public override IAssignableExpression VisitLambdaSignature(ILambdaSignature expr, IList<IStatement> body)
+        {
+            throw new InvalidOperationException("VisitLambdaSignature should never be hit.");
         }
 
         public override IAssignableExpression VisitConditionalTernaryExpression(IConditionalTernaryExpression expr,
