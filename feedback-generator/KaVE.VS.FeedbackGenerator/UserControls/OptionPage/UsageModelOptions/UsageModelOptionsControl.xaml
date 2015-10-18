@@ -22,6 +22,7 @@ limitations under the License.
              xmlns:usageModelOptions="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+
     <Grid Margin="5,5,5,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -67,25 +68,13 @@ limitations under the License.
         <!--usage models table-->
         <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Name="UsageModelsTable" ColumnWidth="*"
                   CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                  IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Mode=OneWay}">
+                  IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Model Name" Binding="{Binding Item1}" />
-                <DataGridTextColumn Header="Current Version" Binding="{Binding Item2}" />
-                <DataGridTextColumn Header="Newest Version" Binding="{Binding Item3}" />
-                <DataGridTemplateColumn Header="Options" CanUserSort="False">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Name="Update" Padding="15,3,15,3" Content="Update" />
-                                <Button Grid.Column="1" Name="Remove" Padding="15,3,15,3" Content="Remove" />
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" />
+                <DataGridTextColumn Header="Current Version" Binding="{Binding LoadedVersion}" />
+                <DataGridTextColumn Header="Newest Version" Binding="{Binding NewestAvailableVersion}" />
+                <usageModelOptions:UsageModelsTableOptionsColumn Header="Options" Binding="{Binding}" Width="Auto"
+                                                                 CanUserSort="False" />
             </DataGrid.Columns>
         </DataGrid>
 

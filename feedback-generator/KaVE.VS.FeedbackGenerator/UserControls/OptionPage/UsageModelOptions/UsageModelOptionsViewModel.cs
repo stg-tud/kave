@@ -15,6 +15,7 @@
  */
 
 using System.IO;
+using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
@@ -57,10 +58,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
+        public IKaVEList<UsageModelsTableRow> UsageModelsTableContent
+        {
+            get
+            {
+                return new KaVEList<UsageModelsTableRow>
+                {
+                    new UsageModelsTableRow(new Commons.Model.ObjectUsage.CoReTypeName("LSomeType"), 5, 10),
+                    new UsageModelsTableRow(new Commons.Model.ObjectUsage.CoReTypeName("LSomeOtherType"), null, 10)
+                };
+            }
+        }
+
         public UsageModelOptionsViewModel()
         {
             _errorNotificationRequest = new InteractionRequest<Notification>();
-
         }
 
         public ModelStoreValidation ValidateModelStoreInformation(string path)
@@ -74,7 +86,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
             return new ModelStoreValidation(pathIsValid);
         }
-        
+
         private void ShowInformationInvalidMessage(string message)
         {
             _errorNotificationRequest.Raise(

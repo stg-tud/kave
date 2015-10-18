@@ -197,6 +197,7 @@
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsControlTest.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsControlTest.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsViewModelTest.cs" />
+    <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelsTableRowTest.cs" />
     <Compile Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsControlTest.cs" />
     <Compile Include="UserControls\UploadWizard\Anonymization\AnonymizationWindowTest.cs" />
     <Compile Include="UserControls\UploadWizard\ExporterTest.cs" />
