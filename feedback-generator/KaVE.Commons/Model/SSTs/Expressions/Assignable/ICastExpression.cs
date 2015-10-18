@@ -26,6 +26,6 @@ namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
         ITypeName TargetType { get; }
 
         [NotNull]
-        IVariableReference VariableReference { get; }
+        IVariableReference Reference { get; }
     }
 }

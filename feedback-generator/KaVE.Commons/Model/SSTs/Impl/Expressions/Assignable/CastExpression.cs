@@ -34,7 +34,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public ITypeName TargetType { get; set; }
 
         [DataMember]
-        public IVariableReference VariableReference { get; set; }
+        public IVariableReference Reference { get; set; }
 
         public IEnumerable<ISSTNode> Children
         {
@@ -44,12 +44,12 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public CastExpression()
         {
             TargetType = TypeName.UnknownName;
-            VariableReference = new VariableReference();
+            Reference = new VariableReference();
         }
 
         protected bool Equals(CastExpression other)
         {
-            return TargetType.Equals(other.TargetType) && VariableReference.Equals(other.VariableReference);
+            return TargetType.Equals(other.TargetType) && Reference.Equals(other.Reference);
         }
 
         public override bool Equals(object obj)
@@ -69,7 +69,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         {
             unchecked
             {
-                return (TargetType.GetHashCode()*397) ^ VariableReference.GetHashCode();
+                return (TargetType.GetHashCode()*397) ^ Reference.GetHashCode();
             }
         }
 

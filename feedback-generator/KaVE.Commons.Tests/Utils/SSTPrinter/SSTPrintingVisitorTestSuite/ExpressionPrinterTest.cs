@@ -308,7 +308,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new CastExpression
             {
                 TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                VariableReference = VarRef("i")
+                Reference = VarRef("i")
             };
 
             AssertPrint(

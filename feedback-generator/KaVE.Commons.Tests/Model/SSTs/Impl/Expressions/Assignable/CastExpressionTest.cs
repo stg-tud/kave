@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         public void DefaultValues()
         {
             var sut = new CastExpression();
-            Assert.AreEqual(new VariableReference(), sut.VariableReference);
+            Assert.AreEqual(new VariableReference(), sut.Reference);
             Assert.AreEqual(TypeName.UnknownName, sut.TargetType);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -40,11 +40,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             var sut = new CastExpression
             {
                 TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                VariableReference = SomeVarRef()
+                Reference = SomeVarRef()
             };
 
             Assert.AreEqual(TypeName.Get("System.Int32, mscorlib, 4.0.0.0"), sut.TargetType);
-            Assert.AreEqual(SomeVarRef(), sut.VariableReference);
+            Assert.AreEqual(SomeVarRef(), sut.Reference);
         }
 
         [Test]
@@ -62,13 +62,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             var a = new CastExpression
             {
                 TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                VariableReference = SomeVarRef()
-            }; 
-            
+                Reference = SomeVarRef()
+            };
+
             var b = new CastExpression
             {
                 TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                VariableReference = SomeVarRef()
+                Reference = SomeVarRef()
             };
 
             Assert.AreEqual(a, b);
@@ -81,13 +81,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             var a = new CastExpression
             {
                 TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                VariableReference = SomeVarRef()
+                Reference = SomeVarRef()
             };
-            
+
             var b = new CastExpression
             {
                 TargetType = TypeName.Get("System.String, mscorlib, 4.0.0.0"),
-                VariableReference = SomeVarRef()
+                Reference = SomeVarRef()
             };
 
             Assert.AreNotEqual(a, b);
@@ -100,13 +100,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             var a = new CastExpression
             {
                 TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                VariableReference = SomeVarRef("i")
+                Reference = SomeVarRef("i")
             };
 
             var b = new CastExpression
             {
                 TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                VariableReference = SomeVarRef("j")
+                Reference = SomeVarRef("j")
             };
 
             Assert.AreNotEqual(a, b);

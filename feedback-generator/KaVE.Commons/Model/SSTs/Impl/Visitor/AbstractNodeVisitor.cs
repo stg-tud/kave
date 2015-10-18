@@ -238,7 +238,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual void Visit(ICastExpression expr, TContext context)
         {
-            expr.VariableReference.Accept(this, context);
+            expr.Reference.Accept(this, context);
         }
 
         public virtual void Visit(IEventReference eventRef, TContext context)
@@ -540,7 +540,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual TReturn Visit(ICastExpression expr, TContext context)
         {
-            expr.VariableReference.Accept(this, context);
+            expr.Reference.Accept(this, context);
             return default(TReturn);
         }
 

@@ -435,6 +435,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
         #region expressions
 
         [Test]
+        public void CastExpression()
+        {
+            AssertReturn(new CastExpression());
+        }
+
+        [Test]
         public void CompletionExpression()
         {
             AssertReturn(new CompletionExpression());

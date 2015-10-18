@@ -34,7 +34,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
                 VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression {TargetType = Fix.Float, VariableReference = VarRef("$0")}),
+                VarAssign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
                 SSTAnalysisFixture.EmptyCompletion);
         }
 
@@ -49,7 +49,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
                 VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression { TargetType = Fix.Float, VariableReference = VarRef("$0") }),
+                VarAssign("i", new CastExpression { TargetType = Fix.Float, Reference = VarRef("$0") }),
                 SSTAnalysisFixture.EmptyCompletion);
         }
 
@@ -64,7 +64,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
                 VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression { TargetType = Fix.Float, VariableReference = VarRef("$0") }),
+                VarAssign("i", new CastExpression { TargetType = Fix.Float, Reference = VarRef("$0") }),
                 SSTAnalysisFixture.EmptyCompletion);
         }
 
@@ -84,7 +84,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
                 VarAssign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                VarAssign("i", new CastExpression {TargetType = Fix.Float, VariableReference = VarRef("$0")}),
+                VarAssign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
                 Fix.EmptyCompletion);
         }
 
@@ -99,7 +99,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Object),
                 VarDecl("$0", Fix.Int),
                 VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression { TargetType = Fix.Object, VariableReference = VarRef("$0") }),
+                VarAssign("i", new CastExpression { TargetType = Fix.Object, Reference = VarRef("$0") }),
                 SSTAnalysisFixture.EmptyCompletion);
         }
     }

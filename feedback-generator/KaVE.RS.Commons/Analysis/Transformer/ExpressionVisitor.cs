@@ -480,7 +480,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             return new CastExpression
             {
-                VariableReference = ToVariableRef(expr.Op, body),
+                Reference = ToVariableRef(expr.Op, body),
                 TargetType = expr.Type().GetName()
             };
         }
@@ -489,7 +489,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             return new CastExpression
             {
-                VariableReference = ToVariableRef(expr.Operand, body),
+                Reference = ToVariableRef(expr.Operand, body),
                 TargetType = expr.Type().GetName()
             };
         }

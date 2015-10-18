@@ -589,7 +589,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(ICastExpression expr, SSTPrintingContext c)
         {
             c.Text("(").Type(expr.TargetType).Text(")").Space();
-            expr.VariableReference.Accept(this, c);
+            expr.Reference.Accept(this, c);
         }
 
         public void Visit(IEventReference eventRef, SSTPrintingContext c)
