@@ -18,13 +18,9 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
-using KaVE.Commons.Model.SSTs.Statements;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.RS.SolutionAnalysis.Episodes
 {
@@ -40,84 +36,11 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
             }
         }
 
-        private void AddMethodIf(IList<Event> events)
-        {
-            if (_currentName != null)
-            {
-                events.Add(Events.NewStopEvent());
-                events.Add(Events.NewMethodEvent(_currentName));
-                _currentName = null;
-            }
-        }
-
         public override void Visit(IMethodDeclaration method, IList<Event> events)
         {
             _currentName = method.Name;
-
-            foreach (var stmt in method.Body)
-            {
-                stmt.Accept(this, events);
-            }
+            base.Visit(method, events);
         }
-
-        public override void Visit(IForEachLoop stmt, IList<Event> events)
-        {
-            VisitBody(stmt.Body, events);
-        }
-
-        public override void Visit(IForLoop stmt, IList<Event> events)
-        {
-            VisitBody(stmt.Init, events);
-            stmt.Condition.Accept(this, events);
-            VisitBody(stmt.Step, events);
-            VisitBody(stmt.Body, events);
-        }
-
-        public override void Visit(IIfElseBlock stmt, IList<Event> events)
-        {
-            stmt.Condition.Accept(this, events);
-            VisitBody(stmt.Else, events);
-            VisitBody(stmt.Then, events);
-        }
-
-        public override void Visit(IUsingBlock stmt, IList<Event> events)
-        {
-            VisitBody(stmt.Body, events);
-        }
-
-        public override void Visit(ITryBlock stmt, IList<Event> events)
-        {
-            VisitBody(stmt.Body, events);
-            foreach (var catchBlock in stmt.CatchBlocks)
-            {
-                VisitBody(catchBlock.Body, events);
-            }
-            VisitBody(stmt.Finally, events);
-        }
-
-        private void VisitBody(IKaVEList<IStatement> body, IList<Event> events)
-        {
-            foreach (var stmt in body)
-            {
-                stmt.Accept(this, events);
-            }
-        }
-
-        #region stmt
-
-        public override void Visit(IAssignment stmt, IList<Event> events)
-        {
-            stmt.Expression.Accept(this, events);
-        }
-
-        public override void Visit(IExpressionStatement stmt, IList<Event> events)
-        {
-            stmt.Expression.Accept(this, events);
-        }
-
-        #endregion
-
-        #region expr
 
         public override void Visit(IInvocationExpression inv, IList<Event> events)
         {
@@ -125,12 +48,15 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
             events.Add(Events.NewInvocation(inv.MethodName));
         }
 
-        public override void Visit(ILoopHeaderBlockExpression expr, IList<Event> events)
+        private void AddMethodIf(IList<Event> events)
         {
-            VisitBody(expr.Body, events);
+            if (_currentName != null)
+            {
+                //events.Add(Events.NewStopEvent());
+                events.Add(Events.NewMethodEvent(_currentName));
+                _currentName = null;
+            }
         }
-
-        #endregion
     }
 
     internal class Events

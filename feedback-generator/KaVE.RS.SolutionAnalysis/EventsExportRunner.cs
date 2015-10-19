@@ -115,11 +115,19 @@ namespace KaVE.RS.SolutionAnalysis
 
             streamFile.Close();
 
-            int idx2 = 1;
+            setFile.WriteLine('[');
+            var isFirst = true;
             foreach (var e in eventList)
             {
-                setFile.WriteLine(@"{0}, {1}", idx2++, e.ToCompactJson());
+                if (!isFirst)
+                {
+                    setFile.WriteLine(',');
+                }
+                setFile.Write(e.ToCompactJson());
+                isFirst = false;
             }
+            setFile.WriteLine();
+            setFile.WriteLine(']');
 
             // -> write eventList
 
