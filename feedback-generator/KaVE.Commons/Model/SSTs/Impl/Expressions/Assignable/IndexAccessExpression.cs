@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -25,10 +26,13 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
+    [DataContract]
     public class IndexAccessExpression : IIndexAccessExpression
     {
+        [DataMember]
         public IVariableReference Reference { get; set; }
 
+        [DataMember]
         public IKaVEList<ISimpleExpression> Indices { get; set; }
 
         public IndexAccessExpression()

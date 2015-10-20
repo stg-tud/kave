@@ -597,6 +597,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return new ReferenceExpression {Reference = newRef};
         }
 
+        public override IAssignableExpression VisitElementAccessExpression(IElementAccessExpression expr, IList<IStatement> body)
+        {
+            return new IndexAccessExpression
+            {
+                Reference = ToVariableRef(expr.Operand, body),
+                Indices = GetArgumentList(expr.ArgumentList, body)
+            };
+        }
+
         #region ComposedExpressionCreator entry points
 
         public override IAssignableExpression VisitAdditiveExpression(IAdditiveExpression expr,
