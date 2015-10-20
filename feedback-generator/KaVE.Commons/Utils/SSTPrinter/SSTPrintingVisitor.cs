@@ -494,10 +494,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             {
                 reference.Accept(this, c);
 
-                if (!ReferenceEquals(reference, expr.References.Last()))
-                {
-                    c.Text(", ");
-                }
+                AddCommaIfNotLast(reference, expr.References, c);
             }
 
             c.Text(")");
@@ -539,10 +536,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             {
                 parameter.Accept(this, c);
 
-                if (!ReferenceEquals(parameter, expr.Parameters.Last()))
-                {
-                    c.Text(", ");
-                }
+                AddCommaIfNotLast(parameter, expr.Parameters, c);
             }
 
             c.Text(")");
@@ -592,6 +586,21 @@ namespace KaVE.Commons.Utils.SSTPrinter
             expr.Reference.Accept(this, c);
         }
 
+        public void Visit(IIndexAccessExpression expr, SSTPrintingContext c)
+        {
+            expr.Reference.Accept(this, c);
+            c.Text("[");
+
+            foreach (var indexExpr in expr.Indices)
+            {
+                indexExpr.Accept(this, c);
+
+                AddCommaIfNotLast(indexExpr, expr.Indices, c);
+            }
+
+            c.Text("]");
+        }
+
         public void Visit(IEventReference eventRef, SSTPrintingContext c)
         {
             c.Text(eventRef.Reference.Identifier).Text(".").Text(eventRef.EventName.Name);
@@ -630,6 +639,15 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(IUnknownStatement unknownStmt, SSTPrintingContext c)
         {
             c.Indentation().UnknownMarker().Text(";");
+        }
+
+        private static void AddCommaIfNotLast<T>(T node, IKaVEList<T> list, SSTPrintingContext c)
+            where T : ISSTNode
+        {
+            if (!ReferenceEquals(node, list.Last()))
+            {
+                c.Text(", ");
+            }
         }
     }
 }

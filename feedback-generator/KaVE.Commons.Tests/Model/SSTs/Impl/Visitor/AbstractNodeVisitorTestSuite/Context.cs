@@ -473,6 +473,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
         }
 
         [Test]
+        public void IndexAccessExpression()
+        {
+            Visit(new IndexAccessExpression {Reference = _vr});
+
+            AssertAccept(_vr);
+        }
+
+        [Test]
         public void InvocationExpression()
         {
             Visit(

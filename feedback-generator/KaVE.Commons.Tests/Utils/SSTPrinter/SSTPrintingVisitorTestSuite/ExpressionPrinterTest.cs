@@ -316,6 +316,30 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 "(Int32) i");
         }
 
+        [Test]
+        public void IndexAccessExpression()
+        {
+            var sst = new IndexAccessExpression
+            {
+                Reference = VarRef("arr"),
+                Indices = { new ConstantValueExpression {Value = "1"} }
+            };
+
+            AssertPrint(sst, "arr[1]");
+        }
+
+        [Test]
+        public void IndexAccessExpression_Multiple()
+        {
+            var sst = new IndexAccessExpression
+            {
+                Reference = VarRef("arr"),
+                Indices = { new ConstantValueExpression { Value = "1" }, new ConstantValueExpression { Value = "2" } }
+            };
+
+            AssertPrint(sst, "arr[1, 2]");
+        }
+
         private static INullExpression Null()
         {
             return new NullExpression();
