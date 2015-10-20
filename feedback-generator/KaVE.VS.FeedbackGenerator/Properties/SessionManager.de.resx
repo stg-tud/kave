@@ -276,7 +276,7 @@
   <data name="Options_ModelPath" xml:space="preserve">
     <value>Pfad zu Verwendungsmodellen</value>
   </data>
-  <data name="Options_ModelUrl" xml:space="preserve">
+  <data name="Options_ModelUri" xml:space="preserve">
     <value>Externe Verwendungsmodelle</value>
   </data>
 </root>

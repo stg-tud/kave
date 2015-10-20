@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 
@@ -53,20 +59,82 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return ModelStoreSettings.ModelStorePath; }
             set
             {
+                if (!value.EndsWith("\\"))
+                {
+                    value = value + "\\";
+                }
                 ModelStoreSettings.ModelStorePath = value;
                 RaisePropertyChanged(self => self.ModelPath);
             }
         }
 
-        public IKaVEList<UsageModelsTableRow> UsageModelsTableContent
+        public string ModelUri
+        {
+            get { return ModelStoreSettings.ModelStoreUri; }
+            set
+            {
+                ModelStoreSettings.ModelStoreUri = value;
+                RaisePropertyChanged(self => self.ModelUri);
+            }
+        }
+
+        private static IPBNRecommenderStore LocalStore
         {
             get
             {
-                return new KaVEList<UsageModelsTableRow>
+                try
                 {
-                    new UsageModelsTableRow(new Commons.Model.ObjectUsage.CoReTypeName("LSomeType"), 5, 10),
-                    new UsageModelsTableRow(new Commons.Model.ObjectUsage.CoReTypeName("LSomeOtherType"), null, 10)
-                };
+                    return Registry.GetComponent<IPBNRecommenderStore>();
+                }
+                catch (InvalidOperationException)
+                {
+                    return null;
+                }
+            }
+        }
+
+        private static IRemotePBNRecommenderStore RemoteStore
+        {
+            get
+            {
+                try
+                {
+                    return Registry.GetComponent<IRemotePBNRecommenderStore>();
+                }
+                catch (InvalidOperationException)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public IEnumerable<UsageModelsTableRow> UsageModelsTableContent
+        {
+            get
+            {
+                var mergedModels =
+                    (RemoteStore != null ? RemoteStore.GetAvailableModels() : Lists.NewList<UsageModelDescriptor>())
+                        .ToDictionary(
+                            remoteModel => remoteModel.TypeName,
+                            remoteModel => new UsageModelsTableRow(remoteModel.TypeName, null, remoteModel.Version));
+
+                foreach (
+                    var localModel in
+                        LocalStore != null ? LocalStore.GetAvailableModels() : Lists.NewList<UsageModelDescriptor>())
+                {
+                    if (mergedModels.ContainsKey(localModel.TypeName))
+                    {
+                        mergedModels[localModel.TypeName].LoadedVersion = localModel.Version;
+                    }
+                    else
+                    {
+                        mergedModels.Add(
+                            localModel.TypeName,
+                            new UsageModelsTableRow(localModel.TypeName, localModel.Version, null));
+                    }
+                }
+
+                return mergedModels.Values;
             }
         }
 

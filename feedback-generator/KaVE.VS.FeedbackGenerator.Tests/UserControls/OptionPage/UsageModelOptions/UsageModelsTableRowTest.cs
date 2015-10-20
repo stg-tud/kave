@@ -15,6 +15,8 @@
  */
 
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.TestUtils;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using NUnit.Framework;
 
@@ -61,6 +63,44 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         {
             _uut = new UsageModelsTableRow(SomeTypeName, localVersion, remoteVersion);
             Assert.AreEqual(shouldBeRemoveable, _uut.IsRemoveable);
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new UsageModelsTableRow(new CoReTypeName("LSomeType"), 0, 0));
+        }
+
+        [Test]
+        public void Equality_ReallyTheSame()
+        {
+            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
+            var b = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
+            Assert.AreEqual(a, b);
+        }
+
+        [Test]
+        public void Equality_DifferentTypeNames()
+        {
+            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
+            var b = new UsageModelsTableRow(new CoReTypeName("LSomeOtherType"), 1, 2);
+            Assert.AreNotEqual(a, b);
+        }
+
+        [Test]
+        public void Equality_DifferentLoadedVersions()
+        {
+            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
+            var b = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 2, 2);
+            Assert.AreNotEqual(a, b);
+        }
+
+        [Test]
+        public void Equality_DifferentNewestAvailableVersions()
+        {
+            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 1);
+            var b = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
+            Assert.AreNotEqual(a, b);
         }
     }
 }

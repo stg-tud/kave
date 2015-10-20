@@ -17,6 +17,7 @@
 using System.Windows;
 using System.Windows.Input;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using MsgBox.Commands;
 
@@ -32,7 +33,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         [CanBeNull]
         public int? NewestAvailableVersion { get; set; }
-        
+
         public bool IsUpdateable
         {
             get
@@ -51,7 +52,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return LoadedVersion != null; }
         }
 
-        public ICommand Install { get {return new RelayCommand(InstallModel);} }
+        public ICommand Install
+        {
+            get { return new RelayCommand(InstallModel); }
+        }
 
         public ICommand Update
         {
@@ -60,7 +64,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public ICommand Remove
         {
-            get { return new RelayCommand(RemoveModel);}
+            get { return new RelayCommand(RemoveModel); }
         }
 
         public UsageModelsTableRow([NotNull] CoReTypeName typeName,
@@ -74,17 +78,39 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void InstallModel()
         {
-            MessageBox.Show("Installing " + TypeName);
+            // TODO implement this
+            MessageBox.Show("Installing " + TypeName, "(Prototype)");
         }
 
         private void UpdateModel()
         {
-            MessageBox.Show("Updating " + TypeName);
+            // TODO implement this
+            MessageBox.Show("Updating " + TypeName, "(Prototype)");
         }
 
         private void RemoveModel()
         {
-            MessageBox.Show("Removing " + TypeName);
+            // TODO implement this
+            MessageBox.Show("Removing " + TypeName, "(Prototype)");
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as UsageModelsTableRow;
+            return other != null && 
+                Equals(TypeName, other.TypeName) && 
+                Equals(LoadedVersion, other.LoadedVersion) &&
+                Equals(NewestAvailableVersion, other.NewestAvailableVersion);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

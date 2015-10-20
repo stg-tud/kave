@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-using JetBrains.Application.Settings;
-using JetBrains.UsageStatistics;
+using JetBrains.Application;
+using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.RS.Commons.Settings
+namespace KaVE.RS.Commons.Injectables
 {
-    namespace KaVE.RS.Commons.Settings
+    [ShellComponent]
+    internal class InjectableRemotePBNRecommenderStore : RemotePBNRecommenderStore
     {
-        [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
-        public class ModelStoreSettings
-        {
-            [SettingsEntry(@"c:\kave-models\", "Path to KaVE models")]
-            public string ModelStorePath;
-
-            [SettingsEntry(@"file://C:/", "Remote KaVE models")]
-            public string ModelStoreUri;
-        }
+        public InjectableRemotePBNRecommenderStore([NotNull] IUsageModelsSource usageModelsSource)
+            : base(usageModelsSource) {}
     }
 }

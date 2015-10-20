@@ -64,7 +64,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 Content = content,
                 Command = command,
                 IsEnabled = enabled,
-                Visibility = enabled ? Visibility.Visible : Visibility.Collapsed
+                Visibility = enabled ? Visibility.Visible : Visibility.Collapsed,
+                Padding = new Thickness(15,3,15,3)
             };
         }
     }

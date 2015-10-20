@@ -90,6 +90,8 @@
     <Compile Include="Model\SSTs\Statements\IEventSubscriptionStatement.cs" />
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommender.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\RemotePBNRecommenderStore.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\IUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtils.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\TypePathUtil.cs" />
     <Compile Include="Utils\CodeCompletion\IPBNRecommenderStore.cs" />

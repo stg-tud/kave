@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.Collections;
+using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOptions
@@ -26,6 +33,43 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private const string TestModelStorePath = @"c:/";
         private const string InvalidModelStorePath = @"c:/some/folder/that/surely/does/not/exist";
 
+        private static IEnumerable<UsageModelDescriptor> SomeLocalModels
+        {
+            get
+            {
+                return new KaVEList<UsageModelDescriptor>
+                {
+                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly/SomeType"), 2),
+                    new UsageModelDescriptor(new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"), 3)
+                };
+            }
+        }
+
+        private static IEnumerable<UsageModelDescriptor> SomeRemoteModels
+        {
+            get
+            {
+                return new KaVEList<UsageModelDescriptor>
+                {
+                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly/SomeType"), 4),
+                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly/OnlyRemoteType"), 5)
+                };
+            }
+        }
+
+        private static IEnumerable<UsageModelsTableRow> ExpectedUsageModelsTableContent
+        {
+            get
+            {
+                return new KaVEList<UsageModelsTableRow>
+                {
+                    new UsageModelsTableRow(new CoReTypeName("LSomeAssembly/SomeType"), 2, 4),
+                    new UsageModelsTableRow(new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"), 3, null),
+                    new UsageModelsTableRow(new CoReTypeName("LSomeAssembly/OnlyRemoteType"), null, 5)
+                };
+            }
+        }
+
         private UsageModelOptionsViewModel _uut;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
 
@@ -34,6 +78,20 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         {
             _uut = new UsageModelOptionsViewModel();
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
+
+            var localStore = Mock.Of<IPBNRecommenderStore>();
+            Mock.Get(localStore).Setup(store => store.GetAvailableModels()).Returns(SomeLocalModels);
+            Registry.RegisterComponent(localStore);
+
+            var remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
+            Mock.Get(remoteStore).Setup(store => store.GetAvailableModels()).Returns(SomeRemoteModels);
+            Registry.RegisterComponent(remoteStore);
+        }
+
+        [TearDown]
+        public void ClearRegistry()
+        {
+            Registry.Clear();
         }
 
         [Test]
@@ -65,6 +123,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             };
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GeneratingUsageModelsTableContent()
+        {
+            CollectionAssert.AreEquivalent(ExpectedUsageModelsTableContent, _uut.UsageModelsTableContent);
         }
     }
 }

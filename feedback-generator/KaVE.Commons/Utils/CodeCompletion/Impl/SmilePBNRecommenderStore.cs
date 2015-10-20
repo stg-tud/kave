@@ -27,14 +27,15 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
     public class SmilePBNRecommenderStore : IPBNRecommenderStore
     {
         public string BasePath { get; protected set; }
-        private readonly IIoUtils _io;
-        private readonly TypePathUtil _typePath;
 
-        public SmilePBNRecommenderStore(string basePath, IIoUtils io, TypePathUtil typePath)
+        private readonly IIoUtils _io;
+        private readonly TypePathUtil _typePathUtil;
+
+        public SmilePBNRecommenderStore(string basePath, IIoUtils io, TypePathUtil typePathUtil)
         {
             BasePath = basePath;
             _io = io;
-            _typePath = typePath;
+            _typePathUtil = typePathUtil;
         }
 
         public bool IsAvailable(CoReTypeName type)
@@ -45,7 +46,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
         public IPBNRecommender Load(CoReTypeName type)
         {
             var availableModel = GetAvailableModels().FirstOrDefault(model => model.TypeName.Equals(type));
-            Asserts.NotNull(availableModel, "Coudn't find zip file for {0}", type);
+            Asserts.NotNull(availableModel, "Model for {0} is not available", type);
 
             var zipFileName = GetNestedFileName(BasePath, type, availableModel.Version, "zip");
 
@@ -73,14 +74,14 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         private string GetNestedFileName(string basePath, CoReTypeName typeName, int version, string extension)
         {
-            var typePart = _typePath.ToNestedPath(typeName);
+            var typePart = _typePathUtil.ToNestedPath(typeName);
             var fileName = Path.Combine(basePath, typePart + '.' + version + '.' + extension);
             return fileName;
         }
 
         private string GetFlatFileName(string basePath, CoReTypeName typeName, string extension)
         {
-            var typePart = _typePath.ToFlatPath(typeName);
+            var typePart = _typePathUtil.ToFlatPath(typeName);
             var fileName = Path.Combine(basePath, typePart + '.' + extension);
             return fileName;
         }
@@ -89,12 +90,22 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
         {
             var availableModels = new Dictionary<CoReTypeName, UsageModelDescriptor>();
 
-            foreach (var newModel in _io.GetFilesRecursive(BasePath, "*.zip")
+            string[] zipFiles;
+            try
+            {
+                zipFiles = _io.GetFilesRecursive(BasePath, "*.zip");
+            }
+            catch
+            {
+                zipFiles = new string[0];
+            }
+
+            foreach (var newModel in zipFiles
                                         .Select(
                                             modelFilePath =>
                                                 new UsageModelDescriptor(
-                                                    GetTypeNameString(modelFilePath),
-                                                    GetVersionNumber(modelFilePath)))
+                                                    GetTypeNameString(modelFilePath.Replace(BasePath, "").TrimStart('\\')),
+                                                    GetVersionNumber(modelFilePath.Replace(BasePath, "").TrimStart('\\'))))
                                         .Where(
                                             newModel =>
                                                 !availableModels.ContainsKey(newModel.TypeName) ||
@@ -106,22 +117,20 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             return availableModels.Values;
         }
 
-        private static int GetVersionNumber(string modelFilePath)
+        private static int GetVersionNumber(string relativeModelFilePath)
         {
-            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modelFilePath);
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(relativeModelFilePath);
             Asserts.NotNull(fileNameWithoutExtension);
             var versionSubstring =
                 fileNameWithoutExtension.Substring(fileNameWithoutExtension.LastIndexOf('.') + 1);
             return int.Parse(versionSubstring);
         }
 
-        private static CoReTypeName GetTypeNameString(string modelFilePath)
+        private static CoReTypeName GetTypeNameString(string relativeModelFilePath)
         {
-            var filePathWithoutExtension = modelFilePath.Substring(0, modelFilePath.LastIndexOf('.'));
+            var filePathWithoutExtension = relativeModelFilePath.Substring(0, relativeModelFilePath.LastIndexOf('.'));
             Asserts.NotNull(filePathWithoutExtension);
-            var typeNameSubstring = filePathWithoutExtension.Substring(
-                0,
-                filePathWithoutExtension.LastIndexOf('.'));
+            var typeNameSubstring = filePathWithoutExtension.Substring(0, filePathWithoutExtension.LastIndexOf('.'));
             return new CoReTypeName(typeNameSubstring);
         }
     }

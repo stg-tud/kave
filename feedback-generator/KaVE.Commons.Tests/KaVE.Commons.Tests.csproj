@@ -188,6 +188,7 @@
     <Compile Include="ExternalSerializationTests\TestCaseProviderTest.cs" />
     <Compile Include="Utils\Assertion\AssertsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommenderTest.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\RemotePBNRecommenderStoreTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtilsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderConstantsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderStoreTest.cs" />
