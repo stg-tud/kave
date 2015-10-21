@@ -338,15 +338,15 @@ namespace KaVE.FeedbackProcessor
 
         private void LogActivityIntervalStatistics(IFeedbackDatabase activityDatabase)
         {
-            var activityIntervalProcessor = new ActivityIntervalProcessor(TimeSpan.FromHours(4));
+            var intervalProcessor = new ActivityIntervalProcessor(TimeSpan.FromHours(3));
 
             var processor = new FeedbackProcessor(activityDatabase, _logger);
-            processor.Register(activityIntervalProcessor);
+            processor.Register(intervalProcessor);
             processor.ProcessFeedback();
             
             Output(
-                    "activity-budget-per-developer-(intervals)-15-05.csv",
-                    activityIntervalProcessor.IntervalsToDeveloperBudgetCsv(
+                    "activity-budget-per-developer-(intervals)-15-05_dayoffset3.csv",
+                    intervalProcessor.IntervalsToDeveloperBudgetCsv(
                         TimeSpan.FromSeconds(15),
                         TimeSpan.FromMinutes(5)));
 

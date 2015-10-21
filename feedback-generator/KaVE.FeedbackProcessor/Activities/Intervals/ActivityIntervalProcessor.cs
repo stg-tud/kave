@@ -284,6 +284,7 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 {
                     builder[activity.Key.ToString()] = activity.Value.RoundedTotalSeconds();
                 }
+                builder["work time"] = developerStream.Value.Duration.RoundedTotalSeconds();
                 builder["# of Any events"] = developerStream.Value.NumberOfAnyActivities;
                 builder["# of events"] = developerStream.Value.TotalNumberOfActivities;
             }
