@@ -17,6 +17,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Utils;
 
 namespace KaVE.FeedbackProcessor.Activities.Intervals
@@ -52,6 +53,13 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
         {
             get { return _intervals.Count > 0 ? _intervals[0].Start : default(DateTime); }
         }
+
+        public DateTime End
+        {
+            get { return _intervals.Count > 0 ? _intervals.Last().End : default(DateTime); }
+        }
+
+        public TimeSpan Duration { get { return End - Start; } }
 
         public Interval<T> this[int index]
         {
