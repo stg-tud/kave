@@ -17,6 +17,7 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
@@ -50,6 +51,20 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             };
 
             var view = new EventViewModel(completionEvent);
+            Assert.AreEqual(
+                "\r\n\r\n<Span Foreground=\"Blue\">class</Span> <Span Foreground=\"#2B91AF\">TestClass</Span>\r\n{\r\n}",
+                view.XamlContextRepresentation);
+        }
+
+        [Test]
+        public void FormatsEditEventContext()
+        {
+            var editEvent = new EditEvent
+            {
+                Context2 = new Context { SST = new SST { EnclosingType = TypeName.Get("TestClass,TestProject") } }
+            };
+
+            var view = new EventViewModel(editEvent);
             Assert.AreEqual(
                 "\r\n\r\n<Span Foreground=\"Blue\">class</Span> <Span Foreground=\"#2B91AF\">TestClass</Span>\r\n{\r\n}",
                 view.XamlContextRepresentation);

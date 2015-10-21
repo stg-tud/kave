@@ -97,6 +97,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
+        public void ShouldFormatEditEventDetailsWhileHidingContext()
+        {
+            var editEvent = new EditEvent
+            {
+                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}},
+                NumberOfChanges = 2,
+                SizeOfChanges = 20
+            };
+
+            var expected = String.Join(
+                Environment.NewLine,
+                "    \"NumberOfChanges\": 2",
+                "    \"SizeOfChanges\": 20");
+                var actual = editEvent.GetDetailsAsJson();
+                Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void ShouldNotIncludeIDEEventPropertiesInDetails()
         {
             var actionEvent = new CommandEvent

@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.SSTPrinter;
@@ -160,22 +161,34 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
 
         private string GetContextAsXaml()
         {
-            var completionEvent = Event as CompletionEvent;
+            Context ctx = null;
 
+            var completionEvent = Event as CompletionEvent;
             if (completionEvent != null)
             {
+                ctx = completionEvent.Context2;
+            }
+
+            var editEvent = Event as EditEvent;
+            if (editEvent != null)
+            {
+                ctx = editEvent.Context2;
+            }
+
+            if (ctx != null)
+            {
                 var visitor = new SSTPrintingVisitor();
-                var context = new XamlSSTPrintingContext {TypeShape = completionEvent.Context2.TypeShape};
-                visitor.Visit(completionEvent.Context2.SST, context);
+                var printerContext = new XamlSSTPrintingContext {TypeShape = ctx.TypeShape};
+                visitor.Visit(ctx.SST, printerContext);
 
                 var usingListContext = new XamlSSTPrintingContext();
-                context.SeenNamespaces.FormatAsUsingList(usingListContext);
+                printerContext.SeenNamespaces.FormatAsUsingList(usingListContext);
 
                 return String.Concat(
                     usingListContext.ToString(),
                     Environment.NewLine,
                     Environment.NewLine,
-                    context.ToString());
+                    printerContext.ToString());
             }
 
             return null;
@@ -190,7 +203,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
         {
             get { return _xamlRaw ?? (_xamlRaw = AddSyntaxHighlightingIfNotTooLong(Event.ToFormattedJson())); }
         }
-
 
         /// <summary>
         ///     Adds syntax highlighting (Xaml formatting) to the json, if the json ist not too long.

@@ -20,6 +20,7 @@ using System.Linq;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Json;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
@@ -40,6 +41,11 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
                 hiddenProperties.Add("Context2");
                 hiddenProperties.Add("Selections");
                 hiddenProperties.Add("ProposalCollection");
+            }
+
+            if (ideEvent is EditEvent)
+            {
+                hiddenProperties.Add("Context2");
             }
 
             return ideEvent.ToPrettyPrintJson(hiddenProperties)
