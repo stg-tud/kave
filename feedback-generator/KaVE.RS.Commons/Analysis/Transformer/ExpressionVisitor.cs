@@ -507,15 +507,25 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
         }
 
-        public override IAssignableExpression VisitLambdaParameterDeclaration(ILambdaParameterDeclaration expr,
+        public override IAssignableExpression VisitAnonymousMethodExpression(IAnonymousMethodExpression expr,
             IList<IStatement> body)
         {
-            throw new InvalidOperationException("VisitLambdaParameterDeclaration should never be hit.");
-        }
+            var lambdaName = expr.GetName();
+            var lambdaBody = new KaVEList<IStatement>();
+            var bodyVisitor = new BodyVisitor(_nameGen, _marker);
 
-        public override IAssignableExpression VisitLambdaSignature(ILambdaSignature expr, IList<IStatement> body)
-        {
-            throw new InvalidOperationException("VisitLambdaSignature should never be hit.");
+            if (expr.Body == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
+            {
+                lambdaBody.Add(new ExpressionStatement { Expression = new CompletionExpression() });
+            }
+
+            expr.Body.Accept(bodyVisitor, lambdaBody);
+
+            return new LambdaExpression
+            {
+                Name = lambdaName,
+                Body = lambdaBody
+            };
         }
 
         public override IAssignableExpression VisitConditionalTernaryExpression(IConditionalTernaryExpression expr,

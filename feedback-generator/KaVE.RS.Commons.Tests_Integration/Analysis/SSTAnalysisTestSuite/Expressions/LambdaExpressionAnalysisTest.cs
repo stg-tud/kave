@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -35,10 +34,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign("a", new LambdaExpression
-                {
-                    Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
-                }),
+                VarAssign(
+                    "a",
+                    new LambdaExpression
+                    {
+                        Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -51,11 +52,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign("a", new LambdaExpression
-                {
-                    Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
-                    Body = { new ReturnStatement {IsVoid = true} }
-                }),
+                VarAssign(
+                    "a",
+                    new LambdaExpression
+                    {
+                        Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Body = {new ReturnStatement {IsVoid = true}}
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -68,16 +71,22 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.FuncOfIntAndInt),
-                VarAssign("a", new LambdaExpression
-                {
-                    Name = LambdaName.Get("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
-                    Body =
+                VarAssign(
+                    "a",
+                    new LambdaExpression
                     {
-                        VarDecl("$0", Fix.Int),
-                        VarAssign("$0", new ComposedExpression {References = {VarRef("i")}}),
-                        new ReturnStatement { IsVoid = false, Expression = new ReferenceExpression {Reference = VarRef("$0")}}
-                    }
-                }),
+                        Name = LambdaName.Get("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Body =
+                        {
+                            VarDecl("$0", Fix.Int),
+                            VarAssign("$0", new ComposedExpression {References = {VarRef("i")}}),
+                            new ReturnStatement
+                            {
+                                IsVoid = false,
+                                Expression = new ReferenceExpression {Reference = VarRef("$0")}
+                            }
+                        }
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -90,16 +99,22 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.FuncOfIntAndInt),
-                VarAssign("a", new LambdaExpression
-                {
-                    Name = LambdaName.Get("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
-                    Body =
+                VarAssign(
+                    "a",
+                    new LambdaExpression
                     {
-                        VarDecl("$0", Fix.Int),
-                        VarAssign("$0", new ComposedExpression {References = {VarRef("i")}}),
-                        new ReturnStatement { IsVoid = false, Expression = new ReferenceExpression {Reference = VarRef("$0")}}
-                    }
-                }),
+                        Name = LambdaName.Get("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Body =
+                        {
+                            VarDecl("$0", Fix.Int),
+                            VarAssign("$0", new ComposedExpression {References = {VarRef("i")}}),
+                            new ReturnStatement
+                            {
+                                IsVoid = false,
+                                Expression = new ReferenceExpression {Reference = VarRef("$0")}
+                            }
+                        }
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -110,11 +125,81 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign("a", new LambdaExpression
-                {
-                    Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
-                    Body = { Fix.EmptyCompletion }
-                }));
+                VarAssign(
+                    "a",
+                    new LambdaExpression
+                    {
+                        Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Body = {Fix.EmptyCompletion}
+                    }));
+        }
+
+        [Test]
+        public void Delegate()
+        {
+            CompleteInMethod(@"Action<int> a = delegate(int i) { return; }; $");
+
+            AssertBody(
+                VarDecl("a", Fix.ActionOfInt),
+                VarAssign(
+                    "a",
+                    new LambdaExpression
+                    {
+                        Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Body = {Fix.Return}
+                    }),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Delegate_NoParam()
+        {
+            CompleteInMethod(@"Action<int> a = delegate { $ };");
+
+            AssertBody(
+                VarDecl("a", Fix.ActionOfInt),
+                VarAssign(
+                    "a",
+                    new LambdaExpression
+                    {
+                        Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ()"),
+                        Body = {Fix.EmptyCompletion}
+                    }));
+        }
+
+        [Test]
+        public void AssignMethodToActionVariable()
+        {
+            CompleteInClass(@"
+                public void L(int i) { }
+                public void M() { Action<int> a = L; $ }");
+
+            var methodName =
+                MethodName.Get(
+                    "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].L([System.Int32, mscorlib, 4.0.0.0] i)");
+            AssertBody(
+                "M",
+                VarDecl("a", Fix.ActionOfInt),
+                VarAssign("a", RefExpr(MethodRef(methodName, VarRef("this")))),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Delegate_Reassign()
+        {
+            CompleteInMethod(@"Action<int> a = delegate { $ }; Action<int> b = a;");
+
+            AssertBody(
+                VarDecl("a", Fix.ActionOfInt),
+                VarAssign(
+                    "a",
+                    new LambdaExpression
+                    {
+                        Name = LambdaName.Get("[System.Void, mscorlib, 4.0.0.0] ()"),
+                        Body = {Fix.EmptyCompletion}
+                    }),
+                VarDecl("b", Fix.ActionOfInt),
+                VarAssign("b", RefExpr("a")));
         }
 
         [Test, Ignore]
@@ -125,14 +210,16 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.FuncOfIntAndInt),
-                VarAssign("a", new LambdaExpression
-                {
-                    Name = LambdaName.Get("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
-                    Body =
+                VarAssign(
+                    "a",
+                    new LambdaExpression
                     {
-                        Fix.EmptyCompletion
-                    }
-                }));
+                        Name = LambdaName.Get("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Body =
+                        {
+                            Fix.EmptyCompletion
+                        }
+                    }));
         }
     }
 }

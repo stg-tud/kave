@@ -346,6 +346,18 @@ namespace KaVE.RS.Commons.Utils.Names
             return LambdaName.Get(identifier.ToString());
         }
 
+        [NotNull]
+        public static ILambdaName GetName([NotNull] this IAnonymousMethodExpression anonymousMethodDecl)
+        {
+            var seen = new Dictionary<DeclaredElementInstance, IName>();
+
+            var identifier = new StringBuilder();
+            identifier.AppendType(anonymousMethodDecl.ReturnType, seen);
+            identifier.Append(' ');
+            identifier.AppendParameters(anonymousMethodDecl.DeclaredParametersOwner, EmptySubstitution.INSTANCE, seen);
+            return LambdaName.Get(identifier.ToString());
+        }
+
         private static void AppendMemberBase(this StringBuilder identifier,
             IClrDeclaredElement member,
             ISubstitution substitution,
