@@ -68,7 +68,7 @@ limitations under the License.
         <!--usage models table-->
         <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Name="UsageModelsTable" ColumnWidth="*"
                   CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                  IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+                  IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" ItemsSource="{Binding UsageModelsTableContent}" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" />
                 <DataGridTextColumn Header="Current Version" Binding="{Binding LoadedVersion}" />

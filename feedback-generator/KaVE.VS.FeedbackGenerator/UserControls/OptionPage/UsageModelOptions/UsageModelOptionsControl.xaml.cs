@@ -66,12 +66,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
-            var viewModel = new UsageModelOptionsViewModel
+            DataContext = new UsageModelOptionsViewModel
             {
                 ModelStoreSettings = _modelStoreSettings
             };
-            DataContext = viewModel;
-            UsageModelsTable.ItemsSource = viewModel.UsageModelsTableContent;
 
             if (ctx != null)
             {
