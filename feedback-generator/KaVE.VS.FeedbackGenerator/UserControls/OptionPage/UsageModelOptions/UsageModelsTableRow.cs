@@ -52,17 +52,17 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return LoadedVersion != null; }
         }
 
-        public ICommand Install
+        public ICommand OnInstall
         {
             get { return new RelayCommand(InstallModel); }
         }
 
-        public ICommand Update
+        public ICommand OnUpdate
         {
             get { return new RelayCommand(UpdateModel); }
         }
 
-        public ICommand Remove
+        public ICommand OnRemove
         {
             get { return new RelayCommand(RemoveModel); }
         }

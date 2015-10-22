@@ -36,7 +36,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
 
         private static bool _shouldZipBeFound;
         private static bool _shouldXdslBeFound;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -142,12 +142,15 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         }
 
         [Test]
-        public void ShouldOnlyProvideNewestAvailableModels()
+        public void ShouldUseDefaultValueIfVersionCannotBeParsed()
         {
-            Mock.Get(_io).Setup(io => io.GetFilesRecursive(_basePath, "*.zip")).Returns(TypeFilesWithDuplicateType);
+            Mock.Get(_io)
+                .Setup(io => io.GetFilesRecursive(_basePath, "*.zip"))
+                .Returns(new[] {"LSomePackage/SomeType.zip"});
+
             var expected = new List<UsageModelDescriptor>
             {
-                new UsageModelDescriptor(SomeType, 5)
+                new UsageModelDescriptor(SomeType, 0)
             };
             CollectionAssert.AreEquivalent(expected, _sut.GetAvailableModels());
         }
@@ -163,20 +166,6 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
                     {
                         ZipFileForSomeType,
                         "LSomePackage/SomeOtherType.2.zip"
-                    }
-                    : new string[0];
-            }
-        }
-
-        private static string[] TypeFilesWithDuplicateType
-        {
-            get
-            {
-                return _shouldZipBeFound
-                    ? new[]
-                    {
-                        ZipFileForSomeType,
-                        "LSomePackage/SomeType.5.zip"
                     }
                     : new string[0];
             }

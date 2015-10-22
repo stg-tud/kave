@@ -39,9 +39,9 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
                 // TODO implement this
                 return new KaVEList<UsageModelDescriptor>
                 {
-                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Collections\\List"), 2),
-                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly\\SomeType"), 9),
-                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly\\SomeOtherType"), 10)
+                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1),
+                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Enum"), 2),
+                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Environment"), 3)
                 };
             }
         }
