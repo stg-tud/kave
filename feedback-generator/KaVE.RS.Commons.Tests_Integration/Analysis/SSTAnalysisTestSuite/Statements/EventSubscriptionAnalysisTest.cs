@@ -97,7 +97,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 new EventSubscriptionStatement
                 {
                     Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression() // TODO: LambdaExpression
+                    Expression = new LambdaExpression
+                    {
+                        Name = LambdaName.Get(string.Format("[{0}] ([{1}] i)", Fix.Void, Fix.Int))
+                    }
                 },
                 ExprStmt(new CompletionExpression()));
         }

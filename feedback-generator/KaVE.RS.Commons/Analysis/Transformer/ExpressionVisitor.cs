@@ -20,7 +20,6 @@ using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.Resolve;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
@@ -35,7 +34,6 @@ using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
@@ -237,9 +235,20 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     ? resolvedMethod.GetName<IMethodName>()
                     : MethodName.UnknownName;
 
-                var varRef = methodName.IsStatic
-                    ? new VariableReference()
-                    : CreateVariableReference(invokedExpression.QualifierExpression, body);
+                VariableReference varRef;
+                if (invokedExpression.IsClassifiedAsVariable)
+                {
+                    // TODO move this handling to CreateVarRef helper?
+                    varRef = CreateVariableReference(invokedExpression, body);
+                }
+                else if (methodName.IsStatic)
+                {
+                    varRef = new VariableReference();
+                }
+                else
+                {
+                    varRef = CreateVariableReference(invokedExpression.QualifierExpression, body);
+                }
 
                 var parameters = GetArgumentList(inv.ArgumentList, body);
 
@@ -557,7 +566,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 return assignable;
             }
 
-            var newRef = new VariableReference { Identifier = _nameGen.GetNextVariableName() };
+            var newRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
 
             body.Add(
                 new VariableDeclaration
@@ -579,6 +588,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         }
 
         #region ComposedExpressionCreator entry points
+
         public override IAssignableExpression VisitAdditiveExpression(IAdditiveExpression expr,
             IList<IStatement> context)
         {
@@ -591,7 +601,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return ComposedExpressionCreator.Create(this, expr, context);
         }
 
-        public override IAssignableExpression VisitParenthesizedExpression(IParenthesizedExpression expr, IList<IStatement> context)
+        public override IAssignableExpression VisitParenthesizedExpression(IParenthesizedExpression expr,
+            IList<IStatement> context)
         {
             return ComposedExpressionCreator.Create(this, expr, context);
         }
@@ -602,17 +613,20 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return ComposedExpressionCreator.Create(this, expr, context);
         }
 
-        public override IAssignableExpression VisitConditionalOrExpression(IConditionalOrExpression expr, IList<IStatement> context)
+        public override IAssignableExpression VisitConditionalOrExpression(IConditionalOrExpression expr,
+            IList<IStatement> context)
         {
             return ComposedExpressionCreator.Create(this, expr, context);
         }
 
-        public override IAssignableExpression VisitEqualityExpression(IEqualityExpression expr, IList<IStatement> context)
+        public override IAssignableExpression VisitEqualityExpression(IEqualityExpression expr,
+            IList<IStatement> context)
         {
             return ComposedExpressionCreator.Create(this, expr, context);
         }
 
-        public override IAssignableExpression VisitBitwiseAndExpression(IBitwiseAndExpression expr, IList<IStatement> context)
+        public override IAssignableExpression VisitBitwiseAndExpression(IBitwiseAndExpression expr,
+            IList<IStatement> context)
         {
             return ComposedExpressionCreator.Create(this, expr, context);
         }
@@ -629,7 +643,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return ComposedExpressionCreator.Create(this, expr, context);
         }
 
-        public override IAssignableExpression VisitUnaryOperatorExpression(IUnaryOperatorExpression expr, IList<IStatement> context)
+        public override IAssignableExpression VisitUnaryOperatorExpression(IUnaryOperatorExpression expr,
+            IList<IStatement> context)
         {
             return ComposedExpressionCreator.Create(this, expr, context);
         }
@@ -639,10 +654,12 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return ComposedExpressionCreator.Create(this, expr, context);
         }
 
-        public override IAssignableExpression VisitRelationalExpression(IRelationalExpression expr, IList<IStatement> context)
+        public override IAssignableExpression VisitRelationalExpression(IRelationalExpression expr,
+            IList<IStatement> context)
         {
             return ComposedExpressionCreator.Create(this, expr, context);
         }
+
         #endregion
     }
 }

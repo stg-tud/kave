@@ -141,6 +141,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         public static readonly IReturnStatement Return =
             new ReturnStatement {IsVoid = true};
 
+        // ReSharper disable once InconsistentNaming
+        public static readonly IMethodName Action_Invoke =
+            MethodName.Get(
+                string.Format(
+                    "[{0}] [d:[{0}] [System.Action`1[[T -> {1}]], mscorlib, 4.0.0.0].([T] obj)].Invoke([T] obj)",
+                    Void,
+                    Int));
+
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {
             return MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Int, declaringType));

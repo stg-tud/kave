@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -378,6 +379,63 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("$1", Fix.Int),
                 Assign("$1", Invoke("$0", Fix.GetHashCode(Fix.String))),
                 InvokeStmt("$1", Fix.ToString(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+
+        [Test]
+        public void InvocationLambda()
+        {
+            CompleteInClass(@"
+                private Action<int> _a;
+                public void M()
+                {
+                    _a.Invoke(1);
+                    $
+                }
+            ");
+
+            AssertBody(
+                "M",
+                VarDecl("$0", Fix.ActionOfInt),
+                Assign("$0", RefExpr(FieldRef("_a", Fix.ActionOfInt))),
+                InvokeStmt("$0", Fix.Action_Invoke, new ConstantValueExpression()),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationLambda_SyntacticSugar()
+        {
+            CompleteInClass(@"
+                private Action<int> _a;
+                public void M()
+                {
+                    _a(1);
+                    $
+                }
+            ");
+
+            AssertBody(
+                "M",
+                VarDecl("$0", Fix.ActionOfInt),
+                Assign("$0", RefExpr(FieldRef("_a", Fix.ActionOfInt))),
+                InvokeStmt("$0", Fix.Action_Invoke, new ConstantValueExpression()),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationLambda_Local()
+        {
+            CompleteInMethod(@"
+                Action<int> a = null;
+                a(1);
+                $
+            ");
+
+            AssertBody(
+                VarDecl("a", Fix.ActionOfInt),
+                Assign("a", new NullExpression()),
+                InvokeStmt("a", Fix.Action_Invoke, new ConstantValueExpression()),
                 ExprStmt(new CompletionExpression()));
         }
     }
