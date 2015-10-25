@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
@@ -27,11 +26,16 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
 {
     internal class ScopedNameResolverTest
     {
+        private CoReTypeName TypeUnknown
+        {
+            get { return TypeName.UnknownName.ToCoReName(); }
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new ScopedNameResolver();
-            Assert.False(sut.IsExisting(TypeName.UnknownName));
+            Assert.False(sut.IsExisting(TypeUnknown));
             Assert.NotNull(sut.BoundNames);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -129,10 +133,10 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             var q = SomeQuery();
 
             var sut = new ScopedNameResolver();
-            sut.Register(TypeName.UnknownName, q);
+            sut.Register(TypeUnknown, q);
 
-            Assert.True(sut.IsExisting(TypeName.UnknownName));
-            Assert.AreEqual(q, sut.Find(TypeName.UnknownName));
+            Assert.True(sut.IsExisting(TypeUnknown));
+            Assert.AreEqual(q, sut.Find(TypeUnknown));
         }
 
         [Test]
@@ -153,11 +157,11 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             var q = SomeQuery();
 
             var parent = new ScopedNameResolver();
-            parent.Register(TypeName.UnknownName, q);
+            parent.Register(TypeUnknown, q);
             var sut = new ScopedNameResolver(parent);
 
-            Assert.True(sut.IsExisting(TypeName.UnknownName));
-            Assert.AreEqual(q, sut.Find(TypeName.UnknownName));
+            Assert.True(sut.IsExisting(TypeUnknown));
+            Assert.AreEqual(q, sut.Find(TypeUnknown));
         }
 
         [Test]
@@ -180,12 +184,12 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             var q2 = SomeQuery();
 
             var parent = new ScopedNameResolver();
-            parent.Register(TypeName.UnknownName, q1);
+            parent.Register(TypeUnknown, q1);
             var sut = new ScopedNameResolver(parent);
-            sut.Register(TypeName.UnknownName, q2);
+            sut.Register(TypeUnknown, q2);
 
-            Assert.AreEqual(q1, parent.Find(TypeName.UnknownName));
-            Assert.AreEqual(q2, sut.Find(TypeName.UnknownName));
+            Assert.AreEqual(q1, parent.Find(TypeUnknown));
+            Assert.AreEqual(q2, sut.Find(TypeUnknown));
         }
 
         [Test]
@@ -244,7 +248,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         public void Equality_DifferentRegistration_Type()
         {
             var a = new ScopedNameResolver();
-            a.Register(TypeName.UnknownName, new Query());
+            a.Register(TypeUnknown, new Query());
             var b = new ScopedNameResolver();
 
             Assert.AreNotEqual(a, b);
@@ -264,7 +268,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
 
         [Test,
          ExpectedException(typeof (AssertException),
-             ExpectedMessage = "type 'X, P' is already bound in current scope")]
+             ExpectedMessage = "type 'LX' is already bound in current scope")]
         public void CannotReregisterInTheSameScope_Type()
         {
             var sut = new ScopedNameResolver();
@@ -325,9 +329,9 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             return Mock.Of<Query>();
         }
 
-        private static ITypeName Type(string name)
+        private static CoReTypeName Type(string name)
         {
-            return TypeName.Get(name + ", P");
+            return TypeName.Get(name + ", P").ToCoReName();
         }
     }
 }

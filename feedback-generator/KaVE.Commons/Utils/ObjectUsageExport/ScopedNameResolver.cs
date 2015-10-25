@@ -28,7 +28,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         public readonly ScopedNameResolver ParentResolver;
 
         [NotNull]
-        private readonly IDictionary<ITypeName, Query> _typeToQuery;
+        private readonly IDictionary<CoReTypeName, Query> _typeToQuery;
 
         [NotNull]
         private readonly IDictionary<string, Query> _idToQuery;
@@ -58,7 +58,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         {
             ParentResolver = parentResolver;
 
-            _typeToQuery = new Dictionary<ITypeName, Query>();
+            _typeToQuery = new Dictionary<CoReTypeName, Query>();
             _idToQuery = new Dictionary<string, Query>();
         }
 
@@ -87,12 +87,12 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             return ParentResolver != null ? ParentResolver.Find(id) : null;
         }
 
-        public bool IsExistingInCurrentScope(ITypeName type)
+        public bool IsExistingInCurrentScope(CoReTypeName type)
         {
             return _typeToQuery.ContainsKey(type);
         }
 
-        public bool IsExisting(ITypeName type)
+        public bool IsExisting(CoReTypeName type)
         {
             var exists = IsExistingInCurrentScope(type);
             if (!exists && ParentResolver != null)
@@ -102,7 +102,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             return exists;
         }
 
-        public Query Find(ITypeName type)
+        public Query Find(CoReTypeName type)
         {
             var existsInCurrentScope = _typeToQuery.ContainsKey(type);
             if (existsInCurrentScope)
@@ -118,7 +118,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             _idToQuery.Add(id, q);
         }
 
-        public void Register(ITypeName type, Query q)
+        public void Register(CoReTypeName type, Query q)
         {
             Asserts.Not(_typeToQuery.ContainsKey(type), "type '{0}' is already bound in current scope", type);
             _typeToQuery.Add(type, q);
