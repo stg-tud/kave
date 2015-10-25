@@ -36,8 +36,11 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         {
             _sut = new UsageContext
             {
-                EnclosingType = SomeType,
-                EnclosingMethod = SomeMethodName
+                Enclosings =
+                {
+                    Type = SomeType,
+                    Method = SomeMethodName
+                }
             };
         }
 
@@ -45,8 +48,8 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         public void DefaultValues()
         {
             var sut = new UsageContext();
-            Assert.AreEqual(TypeName.UnknownName, sut.EnclosingType);
-            Assert.AreEqual(MethodName.UnknownName, sut.EnclosingMethod);
+            Assert.AreEqual(TypeName.UnknownName, sut.Enclosings.Type);
+            Assert.AreEqual(MethodName.UnknownName, sut.Enclosings.Method);
             Assert.AreEqual(Lists.NewList<Query>(), sut.AllQueries);
             Assert.AreEqual(new ScopedNameResolver(), sut.NameResolver);
         }
@@ -56,11 +59,14 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         {
             var sut = new UsageContext
             {
-                EnclosingType = SomeType,
-                EnclosingMethod = SomeMethodName
+                Enclosings =
+                {
+                    Type = SomeType,
+                    Method = SomeMethodName
+                }
             };
-            Assert.AreEqual(SomeType, sut.EnclosingType);
-            Assert.AreEqual(SomeMethodName, sut.EnclosingMethod);
+            Assert.AreEqual(SomeType, sut.Enclosings.Type);
+            Assert.AreEqual(SomeMethodName, sut.Enclosings.Method);
         }
 
         [Test]
@@ -182,6 +188,66 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         public void CannotLeaveMainScope()
         {
             _sut.LeaveCurrentScope();
+        }
+
+        [Test]
+        public void EnteringLambdasClonesReachableVariablesAndAdaptsContext()
+        {
+            _sut.Enclosings.Type = Type("T1");
+            _sut.Enclosings.Method = Method(Type("T2"), "M");
+
+            _sut.DefineVariable("v", Type("V"), DefinitionByThis());
+            _sut.EnterNewLambdaScope();
+
+            AssertQueries(
+                new Query
+                {
+                    type = Type("V").ToCoReName(),
+                    classCtx = Type("T1").ToCoReName(),
+                    methodCtx = Method(Type("T2"), "M").ToCoReName(),
+                    definition = DefinitionByThis()
+                },
+                new Query
+                {
+                    type = Type("V").ToCoReName(),
+                    classCtx = Type("T1$Lambda").ToCoReName(),
+                    methodCtx = Method(Type("T2"), "M$Lambda").ToCoReName(),
+                    definition = DefinitionByThis()
+                });
+        }
+
+        [Test]
+        public void EnteringLambdasTwiceAppendsMarkerTwice()
+        {
+            _sut.Enclosings.Type = Type("T1");
+            _sut.Enclosings.Method = Method(Type("T2"), "M");
+
+            _sut.DefineVariable("v", Type("V"), DefinitionByThis());
+            _sut.EnterNewLambdaScope();
+            _sut.EnterNewLambdaScope();
+
+            AssertQueries(
+                new Query
+                {
+                    type = Type("V").ToCoReName(),
+                    classCtx = Type("T1").ToCoReName(),
+                    methodCtx = Method(Type("T2"), "M").ToCoReName(),
+                    definition = DefinitionByThis()
+                },
+                new Query
+                {
+                    type = Type("V").ToCoReName(),
+                    classCtx = Type("T1$Lambda").ToCoReName(),
+                    methodCtx = Method(Type("T2"), "M$Lambda").ToCoReName(),
+                    definition = DefinitionByThis()
+                },
+                new Query
+                {
+                    type = Type("V").ToCoReName(),
+                    classCtx = Type("T1$Lambda$Lambda").ToCoReName(),
+                    methodCtx = Method(Type("T2"), "M$Lambda$Lambda").ToCoReName(),
+                    definition = DefinitionByThis()
+                });
         }
 
         #region test helper

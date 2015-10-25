@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
@@ -25,8 +26,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
 {
     public class UsageContext
     {
-        internal ITypeName EnclosingType { get; set; }
-        internal IMethodName EnclosingMethod { get; set; }
+        internal ScopedEnclosings Enclosings { get; private set; }
         internal CoReTypeName TargetType { get; set; }
 
         internal IKaVEList<Query> AllQueries { get; private set; }
@@ -34,8 +34,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
 
         public UsageContext()
         {
-            EnclosingType = TypeName.UnknownName;
-            EnclosingMethod = MethodName.UnknownName;
+            Enclosings = new ScopedEnclosings();
             AllQueries = Lists.NewList<Query>();
             NameResolver = new ScopedNameResolver();
         }
@@ -43,15 +42,54 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         public void EnterNewScope()
         {
             NameResolver = new ScopedNameResolver(NameResolver);
+            Enclosings = new ScopedEnclosings(Enclosings);
+        }
+
+        public void EnterNewLambdaScope()
+        {
+            var names = NameResolver.BoundNames.ToList();
+
+            EnterNewScope();
+            Enclosings.Type = AddLambda(Enclosings.Type);
+            Enclosings.Method = AddLambda(Enclosings.Method);
+
+            foreach (var name in names)
+            {
+                var q = NameResolver.Find(name);
+                DefineVariable(name, q.type, q.definition);
+            }
+        }
+
+        internal static ITypeName AddLambda(ITypeName type)
+        {
+            var oldName = type.Name + ",";
+            var newName = type.Name + "$Lambda,";
+            var newId = type.Identifier.Replace(oldName, newName);
+            return TypeName.Get(newId);
+        }
+
+        internal static IMethodName AddLambda(IMethodName method)
+        {
+            var oldName = "." + method.Name + "(";
+            var newName = "." + method.Name + "$Lambda(";
+            var newId = method.Identifier.Replace(oldName, newName);
+            return MethodName.Get(newId);
         }
 
         public void LeaveCurrentScope()
         {
             Asserts.NotNull(NameResolver.ParentResolver);
             NameResolver = NameResolver.ParentResolver;
+            Asserts.NotNull(Enclosings.Parent);
+            Enclosings = Enclosings.Parent;
         }
 
         public void DefineVariable(string id, ITypeName type, DefinitionSite defSite)
+        {
+            DefineVariable(id, type.ToCoReName(), defSite);
+        }
+
+        public void DefineVariable(string id, CoReTypeName type, DefinitionSite defSite)
         {
             if (NameResolver.IsExistingInCurrentScope(id))
             {
@@ -86,7 +124,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
             else
             {
-                var type = callsite.DeclaringType;
+                var type = callsite.DeclaringType.ToCoReName();
                 if (NameResolver.IsExisting(type))
                 {
                     var q = NameResolver.Find(type);
@@ -111,16 +149,16 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
         }
 
-        private Query NewQueryFor(ITypeName type, DefinitionSite defSite)
+        private Query NewQueryFor(CoReTypeName type, DefinitionSite defSite)
         {
             var q = new Query();
             AllQueries.Add(q);
             try
             {
                 q.definition = defSite;
-                q.type = type.ToCoReName();
-                q.classCtx = EnclosingType.ToCoReName();
-                q.methodCtx = EnclosingMethod.ToCoReName();
+                q.type = type;
+                q.classCtx = Enclosings.Type.ToCoReName();
+                q.methodCtx = Enclosings.Method.ToCoReName();
                 return q;
             }
             catch (Exception e)
