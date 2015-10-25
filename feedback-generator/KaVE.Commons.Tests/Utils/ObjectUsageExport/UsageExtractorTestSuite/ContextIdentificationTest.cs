@@ -43,7 +43,11 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
 
             Context.TypeShape.TypeHierarchy = new TypeHierarchy
             {
-                Element = Type("TSuper")
+                Element = DefaultClassContext,
+                Extends = new TypeHierarchy
+                {
+                    Element = Type("TSuper")
+                }
             };
 
             var actual = AssertSingleQuery().classCtx;
@@ -59,7 +63,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
             ResetMethodHierarchies(
                 new MethodHierarchy
                 {
-                    Element = DefaultMethodContext,
+                    Element = DefaultMethodContext
                 });
 
             var actual = AssertSingleQuery().methodCtx;
@@ -76,7 +80,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                 new MethodHierarchy
                 {
                     Element = DefaultMethodContext,
-                    Super = SomeMethodOnType("TSuper"),
+                    Super = SomeMethodOnType("TSuper")
                 });
 
             var actual = AssertSingleQuery().methodCtx;
@@ -94,7 +98,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                 {
                     Element = DefaultMethodContext,
                     First = SomeMethodOnType("TFirst"),
-                    Super = SomeMethodOnType("TSuper"),
+                    Super = SomeMethodOnType("TSuper")
                 });
 
             var actual = AssertSingleQuery().methodCtx;

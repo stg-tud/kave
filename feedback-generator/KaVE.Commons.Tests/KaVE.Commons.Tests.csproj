@@ -236,9 +236,11 @@
     <Compile Include="Utils\Logging\Json\JsonLogWriterTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
     <Compile Include="Utils\ObjectUsageExport\QueryExtractorTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\ScopedEnclosingsTest.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\BaseObjectUsageExporterTest.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\ContextIdentificationTest.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\InvocationCollectionTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\LambdaTest.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\MissingInformationTest.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\ObjectUsageExporterTestFixture.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\DefinitionSiteDetectionTest.cs" />

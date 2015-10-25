@@ -52,9 +52,13 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             {
                 var context = new UsageContext
                 {
-                    EnclosingType = sst.EnclosingType,
-                    EnclosingMethod = method.Name
+                    Enclosings =
+                    {
+                        Type = sst.EnclosingType,
+                        Method = method.Name
+                    }
                 };
+
                 AddDefaultQueries(sst, context);
 
                 Extract(method, context);
@@ -123,7 +127,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         {
             foreach (var query in queries)
             {
-                query.classCtx = GetClassContext(typeShape.TypeHierarchy);
+                query.classCtx = GetClassContext(query.classCtx, typeShape.TypeHierarchy);
                 query.methodCtx = GetMethodContext(query.methodCtx, typeShape.MethodHierarchies);
             }
         }
@@ -142,22 +146,37 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
         }
 
-        private static CoReTypeName GetClassContext(ITypeHierarchy typeHierarchy)
+        private static CoReTypeName GetClassContext(CoReTypeName classCtx, ITypeHierarchy typeHierarchy)
         {
+            var wasLambdaCtx = IsLambdaContext(classCtx);
             if (typeHierarchy.Extends != null)
             {
                 // TODO @seb: fix analysis and remove check
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (typeHierarchy.Extends.Element != null)
                 {
-                    return typeHierarchy.Extends.Element.ToCoReName();
+                    classCtx = typeHierarchy.Extends.Element.ToCoReName();
                 }
             }
-            return typeHierarchy.Element.ToCoReName();
+            var isLambdaCtx = IsLambdaContext(classCtx);
+            if (wasLambdaCtx && !isLambdaCtx)
+            {
+                return new CoReTypeName(classCtx + "$Lambda");
+            }
+            return classCtx;
+        }
+
+        private static bool IsLambdaContext(CoReName cName)
+        {
+            return cName.Name.Contains("$Lambda");
         }
 
         private static CoReMethodName GetMethodContext(CoReMethodName method, IEnumerable<IMethodHierarchy> hierarchies)
         {
+            var orig = method;
+            var wasLambdaName = IsLambdaContext(method);
+            method = new CoReMethodName(method.Name.Replace("$Lambda", ""));
+
             foreach (var methodHierarchy in hierarchies)
             {
                 // TODO @seb: fix analysis and then remove this check
@@ -170,18 +189,29 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 var elem = methodHierarchy.Element.ToCoReName();
                 if (elem.Equals(method))
                 {
+                    CoReMethodName outMethod = method;
                     if (methodHierarchy.First != null)
                     {
-                        return methodHierarchy.First.ToCoReName();
+                        outMethod = methodHierarchy.First.ToCoReName();
                     }
-                    if (methodHierarchy.Super != null)
+                    else if (methodHierarchy.Super != null)
                     {
-                        return methodHierarchy.Super.ToCoReName();
+                        outMethod = methodHierarchy.Super.ToCoReName();
                     }
+
+                    if (wasLambdaName)
+                    {
+                        var oldName = "." + outMethod.Method + "(";
+                        var newName = "." + outMethod.Method + "$Lambda(";
+                        var newId = outMethod.Name.Replace(oldName, newName);
+                        outMethod = new CoReMethodName(newId);
+                    }
+
+                    return outMethod;
                 }
             }
 
-            return method;
+            return orig;
         }
     }
 }

@@ -118,6 +118,7 @@
     <Compile Include="Utils\Logging\ILogWriter.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogWriter.cs" />
+    <Compile Include="Utils\ObjectUsageExport\ScopedEnclosings.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageDefinitionVisitor.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractionVisitor.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractor.cs" />

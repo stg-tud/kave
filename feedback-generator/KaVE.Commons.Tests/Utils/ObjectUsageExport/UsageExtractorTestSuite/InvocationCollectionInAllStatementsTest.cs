@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -109,6 +110,45 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                     sites =
                     {
                         CallSites.CreateReceiverCallSite(Method(Type("R"), Type("A"), "methodA"))
+                    }
+                });
+        }
+
+        [Test]
+        public void LambdaExpressionTest()
+        {
+            SetupDefaultEnclosingMethod(
+                VarDecl("a", Fix.Action),
+                Assign(
+                    "a",
+                    new LambdaExpression
+                    {
+                        Name = LambdaName.Get(string.Format("[{0}] ()", Fix.Void)),
+                        Body =
+                        {
+                            VarDecl("v", Type("V")),
+                            new ExpressionStatement
+                            {
+                                Expression = new InvocationExpression
+                                {
+                                    MethodName = Method(Type("R"), Type("V"), "methodV"),
+                                    Reference = VarRef("v")
+                                }
+                            }
+                        }
+                    }));
+
+
+            var lambdaMethod = string.Format("[{0}] [{1}].M$Lambda()", Type("A"), DefaultClassContext);
+            AssertQueriesWithoutSettingContexts(
+                new Query
+                {
+                    type = Type("V").ToCoReName(),
+                    classCtx = Type("TDecl$Lambda").ToCoReName(),
+                    methodCtx = MethodName.Get(lambdaMethod).ToCoReName(),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(Method(Type("R"), Type("V"), "methodV"))
                     }
                 });
         }
@@ -451,7 +491,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                                 MethodName = Method(Type("R"), Type("A"), "methodA"),
                                 Reference = VarRef("a")
                             }
-                        },
+                        }
                     }
                 }
                 );
