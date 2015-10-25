@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
@@ -31,6 +32,27 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
 
         [NotNull]
         private readonly IDictionary<string, Query> _idToQuery;
+
+        [NotNull]
+        public IEnumerable<string> BoundNames
+        {
+            get
+            {
+                var boundNames = Sets.NewHashSet<string>();
+                if (ParentResolver != null)
+                {
+                    foreach (var name in ParentResolver.BoundNames)
+                    {
+                        boundNames.Add(name);
+                    }
+                }
+                foreach (var name in _idToQuery.Keys)
+                {
+                    boundNames.Add(name);
+                }
+                return boundNames;
+            }
+        }
 
         public ScopedNameResolver(ScopedNameResolver parentResolver = null)
         {

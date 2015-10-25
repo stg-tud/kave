@@ -18,6 +18,7 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using Moq;
 using NUnit.Framework;
@@ -31,6 +32,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         {
             var sut = new ScopedNameResolver();
             Assert.False(sut.IsExisting(TypeName.UnknownName));
+            Assert.NotNull(sut.BoundNames);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -277,6 +279,45 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             var sut = new ScopedNameResolver();
             sut.Register("x", new Query());
             sut.Register("x", new Query());
+        }
+
+        [Test]
+        public void RegisteredVariablesAreAccessibleInBoundNames()
+        {
+            var sut = new ScopedNameResolver();
+            sut.Register("x", new Query());
+
+            var actual = Lists.NewListFrom(sut.BoundNames);
+            var expected = Lists.NewList("x");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void RegisteredVariablesOfParentScopesAreAccessibleInBoundNames()
+        {
+            var parent = new ScopedNameResolver();
+            parent.Register("x", new Query());
+
+            var sut = new ScopedNameResolver(parent);
+            sut.Register("y", new Query());
+
+            var actual = Lists.NewListFrom(sut.BoundNames);
+            var expected = Lists.NewList("x", "y");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void BoundNamesHaveSetSemantic()
+        {
+            var parent = new ScopedNameResolver();
+            parent.Register("x", new Query());
+
+            var sut = new ScopedNameResolver(parent);
+            sut.Register("x", new Query());
+
+            var actual = Lists.NewListFrom(sut.BoundNames);
+            var expected = Lists.NewList("x");
+            Assert.AreEqual(expected, actual);
         }
 
         private static Query SomeQuery()
