@@ -52,7 +52,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
             }
         }
 
-        private void Visit(IKaVEList<IStatement> stmts, TContext context)
+        public void Visit(IKaVEList<IStatement> stmts, TContext context)
         {
             foreach (var stmt in stmts)
             {

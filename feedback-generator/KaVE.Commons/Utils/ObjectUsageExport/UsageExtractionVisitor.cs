@@ -28,6 +28,17 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
     {
         private readonly UsageDefinitionVisitor _defSiteVisitor = new UsageDefinitionVisitor();
 
+        #region blocks
+
+        public override void Visit(IDoLoop block, UsageContext context)
+        {
+            block.Condition.Accept(this, context);
+            foreach (var statement in block.Body)
+            {
+                statement.Accept(this, context);
+            }
+        }
+
         public override void Visit(IForEachLoop block, UsageContext context)
         {
             block.Declaration.Accept(this, context);
@@ -137,11 +148,6 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
         }
 
-        public override void Visit(ILabelledStatement stmt, UsageContext context)
-        {
-            stmt.Statement.Accept(this, context);
-        }
-
         public override void Visit(IWhileLoop block, UsageContext context)
         {
             block.Condition.Accept(this, context);
@@ -151,33 +157,9 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
         }
 
-        public override void Visit(IDoLoop block, UsageContext context)
-        {
-            block.Condition.Accept(this, context);
-            foreach (var statement in block.Body)
-            {
-                statement.Accept(this, context);
-            }
-        }
+        #endregion
 
-        public override void Visit(ILoopHeaderBlockExpression expr, UsageContext context)
-        {
-            foreach (var statement in expr.Body)
-            {
-                statement.Accept(this, context);
-            }
-        }
-
-        public override void Visit(IVariableDeclaration stmt, UsageContext context)
-        {
-            if (!stmt.IsMissing)
-            {
-                var id = stmt.Reference.Identifier;
-                var type = stmt.Type;
-                var def = DefinitionSites.CreateUnknownDefinitionSite();
-                context.DefineVariable(id, type, def);
-            }
-        }
+        #region statements
 
         public override void Visit(IAssignment stmt, UsageContext context)
         {
@@ -194,9 +176,40 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             // TODO @seb: field refs, etc.
         }
 
+        public override void Visit(ILabelledStatement stmt, UsageContext context)
+        {
+            stmt.Statement.Accept(this, context);
+        }
+
+        public override void Visit(IVariableDeclaration stmt, UsageContext context)
+        {
+            if (!stmt.IsMissing)
+            {
+                var id = stmt.Reference.Identifier;
+                var type = stmt.Type;
+                var def = DefinitionSites.CreateUnknownDefinitionSite();
+                context.DefineVariable(id, type, def);
+            }
+        }
+
         public override void Visit(IExpressionStatement stmt, UsageContext context)
         {
             stmt.Expression.Accept(this, context);
+        }
+
+        #endregion
+
+        #region expressions
+
+        public override void Visit(ILoopHeaderBlockExpression expr, UsageContext context)
+        {
+            Visit(expr.Body, context);
+        }
+
+        public override void Visit(ILambdaExpression expr, UsageContext context)
+        {
+            context.EnterNewLambdaScope();
+            Visit(expr.Body, context);
         }
 
         public override void Visit(IInvocationExpression expr, UsageContext context)
@@ -228,5 +241,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
 
             context.TargetType = context.NameResolver.GetStaticType(varName);
         }
+
+        #endregion
     }
 }
