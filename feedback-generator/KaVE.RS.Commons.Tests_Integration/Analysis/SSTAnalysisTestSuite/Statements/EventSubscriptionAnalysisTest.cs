@@ -16,6 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -27,6 +28,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 {
     internal class EventSubscriptionAnalysisTest : BaseSSTAnalysisTest
     {
+        private static readonly ILambdaExpression EmptyDefaultDelegate = new LambdaExpression
+        {
+            Name = LambdaName.Get(string.Format("[{0}] ()", Fix.Void))
+        };
+
         [Test]
         public void Operation_Adding()
         {
@@ -121,7 +127,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 new EventSubscriptionStatement
                 {
                     Reference = EventRef("E", Fix.ActionOfInt),
-                    Expression = new UnknownExpression() // TODO: LambdaExpression
+                    Expression = EmptyDefaultDelegate
                 },
                 ExprStmt(new CompletionExpression()));
         }
@@ -204,7 +210,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 {
                     Reference = EventRef("E", Fix.ActionOfInt),
                     Operation = EventSubscriptionOperation.Add,
-                    Expression = new UnknownExpression() // TODO
+                    Expression = EmptyDefaultDelegate
                 },
                 ExprStmt(new CompletionExpression()));
         }
@@ -226,7 +232,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 {
                     Reference = EventRef("E", Fix.ActionOfInt),
                     Operation = EventSubscriptionOperation.Add,
-                    Expression = new UnknownExpression() // TODO
+                    Expression = EmptyDefaultDelegate
                 },
                 ExprStmt(new CompletionExpression()));
         }
@@ -248,7 +254,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 {
                     Reference = FieldRef("_f", Fix.ActionOfInt, "c"),
                     Operation = EventSubscriptionOperation.Add,
-                    Expression = new UnknownExpression() // TODO
+                    Expression = EmptyDefaultDelegate
                 },
                 ExprStmt(new CompletionExpression()));
         }
@@ -270,7 +276,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 {
                     Reference = PropRef("P", Fix.ActionOfInt, "c"),
                     Operation = EventSubscriptionOperation.Add,
-                    Expression = new UnknownExpression() // TODO
+                    Expression = EmptyDefaultDelegate
                 },
                 ExprStmt(new CompletionExpression()));
         }
@@ -292,7 +298,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 {
                     Reference = VarRef("e"),
                     Operation = EventSubscriptionOperation.Add,
-                    Expression = new UnknownExpression() // TODO
+                    Expression = EmptyDefaultDelegate
                 },
                 ExprStmt(new CompletionExpression()));
         }
