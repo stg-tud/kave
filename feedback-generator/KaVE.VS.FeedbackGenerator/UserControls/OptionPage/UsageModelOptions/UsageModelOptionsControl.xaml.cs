@@ -125,6 +125,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             catch (InvalidOperationException) {}
         }
 
+        private void OnUpdateAllModels(object sender, RoutedEventArgs e)
+        {
+            // TODO implement this
+        }
+
+        private void OnRemoveAllModels(object sender, RoutedEventArgs e)
+        {
+            // TODO implement this
+        }
+
         public bool OnOk()
         {
             // TODO: validation

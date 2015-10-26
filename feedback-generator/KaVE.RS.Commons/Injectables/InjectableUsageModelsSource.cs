@@ -27,10 +27,9 @@ namespace KaVE.RS.Commons.Injectables
     [ShellComponent]
     internal class InjectableUsageModelsSource : UsageModelsSource
     {
-        public InjectableUsageModelsSource([NotNull] IIoUtils ioUtils, [NotNull] ISettingsStore store) : base(ioUtils)
+        public InjectableUsageModelsSource([NotNull] IIoUtils ioUtils, [NotNull] ISettingsStore store)
+            : base(ioUtils, ConvertToUri(store.GetSettings<ModelStoreSettings>().ModelStoreUri))
         {
-            Source = ConvertToUri(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
-
             store.SettingsChanged += (sender, args) =>
             {
                 if (args.SettingsType == typeof (ModelStoreSettings))

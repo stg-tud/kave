@@ -120,10 +120,16 @@
   <data name="ReloadModelsButton" xml:space="preserve">
     <value>Reload Models</value>
   </data>
+  <data name="RemoveAllModelsButton" xml:space="preserve">
+    <value>Remove all Models</value>
+  </data>
   <data name="SettingResetButton" xml:space="preserve">
     <value>Reset Usage Model Settings</value>
   </data>
   <data name="SettingResetDialog" xml:space="preserve">
     <value>Usage Model Settings will be reset. Are you sure?</value>
+  </data>
+  <data name="UpdateAllModelsButton" xml:space="preserve">
+    <value>Update all Models</value>
   </data>
 </root>

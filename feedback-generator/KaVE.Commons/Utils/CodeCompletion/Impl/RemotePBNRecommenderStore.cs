@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
@@ -44,7 +43,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         public bool IsAvailable(CoReTypeName typeName)
         {
-            return _usageModelsSource.UsageModels.Any(modelDescription => typeName.Equals(modelDescription.TypeName));
+            return _usageModelsSource.GetUsageModels().Any(modelDescription => typeName.Equals(modelDescription.TypeName));
         }
 
         public void Load(CoReTypeName typeName)
@@ -59,7 +58,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
             foreach (
                 var newModel in
-                    _usageModelsSource.UsageModels.Where(
+                    _usageModelsSource.GetUsageModels().Where(
                         newModel =>
                             !availableModels.ContainsKey(newModel.TypeName) ||
                             newModel.Version > availableModels[newModel.TypeName].Version))

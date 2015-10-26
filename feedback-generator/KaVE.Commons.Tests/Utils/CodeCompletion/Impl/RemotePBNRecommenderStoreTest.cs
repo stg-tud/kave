@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.IO;
 using Moq;
 using NUnit.Framework;
 
@@ -45,19 +49,6 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
                 return new List<UsageModelDescriptor>
                 {
                     new UsageModelDescriptor(SomeType, 1),
-                    new UsageModelDescriptor(SomeOtherType, 1),
-                    new UsageModelDescriptor(SomeOtherType, 2)
-                };
-            }
-        }
-
-        private static IEnumerable<UsageModelDescriptor> NewestAvailableModels
-        {
-            get
-            {
-                return new List<UsageModelDescriptor>
-                {
-                    new UsageModelDescriptor(SomeType, 1),
                     new UsageModelDescriptor(SomeOtherType, 2)
                 };
             }
@@ -72,7 +63,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         public void SetUp()
         {
             _testSource = Mock.Of<IUsageModelsSource>();
-            Mock.Get(_testSource).Setup(source => source.UsageModels).Returns(AvailableModels);
+            Mock.Get(_testSource).Setup(source => source.GetUsageModels()).Returns(AvailableModels);
 
             _sut = new RemotePBNRecommenderStore(_testSource);
         }
@@ -104,9 +95,61 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         }
 
         [Test]
-        public void ShouldProvideNewestAvailableModels()
+        public void ShouldProvideAvailableModels()
         {
-            Assert.AreEqual(NewestAvailableModels, _sut.GetAvailableModels());
+            Assert.AreEqual(AvailableModels, _sut.GetAvailableModels());
+        }
+    }
+
+    internal class LocalUsageModelsSourceTest
+    {
+        private const string BasePath = @"C:\";
+
+        private static string[] TestFiles
+        {
+            get
+            {
+                return new[]
+                {
+                    Path.Combine(BasePath, @"LSystem\Char.1.zip"),
+                    Path.Combine(BasePath, @"LSystem\String.1.zip")
+                };
+            }
+        }
+
+        private static IEnumerable<UsageModelDescriptor> ExpectedModels
+        {
+            get
+            {
+                return Lists.NewList(
+                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1),
+                    new UsageModelDescriptor(new CoReTypeName("LSystem\\String"), 1));
+            }
+        }
+
+        private UsageModelsSource _uut;
+        private IIoUtils _testIoUtil;
+
+        [SetUp]
+        public void Setup()
+        {
+            _testIoUtil = Mock.Of<IIoUtils>();
+            Mock.Get(_testIoUtil).Setup(io => io.GetFilesRecursive(BasePath, "*.zip")).Returns(TestFiles);
+
+            _uut = new UsageModelsSource(_testIoUtil, new Uri(BasePath));
+        }
+
+        [Test]
+        public void ShouldProvideModelsFromLocalPath()
+        {
+            CollectionAssert.AreEquivalent(ExpectedModels, _uut.GetUsageModels());
+        }
+
+        [Test]
+        public void ShouldProvideNothingIfPathIsInvalid()
+        {
+            _uut = new UsageModelsSource(_testIoUtil, new Uri(@"file://notvalid"));
+            CollectionAssert.IsEmpty(_uut.GetUsageModels());
         }
     }
 }

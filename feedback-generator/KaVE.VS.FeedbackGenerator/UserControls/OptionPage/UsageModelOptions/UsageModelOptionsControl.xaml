@@ -94,12 +94,21 @@ limitations under the License.
             </DataGrid.Columns>
         </DataGrid>
 
-
-        <!--reset buttons-->
-        <DockPanel Grid.Row="3" Grid.Column="0" Margin="10,45,10,6">
-            <Button Name="ReloadModelsButton" Padding="15,3,15,3" HorizontalAlignment="Left" Click="OnReloadModels"
+        <Grid Grid.Row="3" Grid.Column="0" Margin="10,45,10,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Name="ReloadModelsButton" Padding="15,3,15,3" HorizontalAlignment="Left" Margin="1" Click="OnReloadModels"
                     Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
-        </DockPanel>
+            <Button Grid.Column="0" Name="UpdateAllModelsButton" Padding="15,3,15,3" HorizontalAlignment="Left" Margin="1" Click="OnUpdateAllModels"
+                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
+            <Button Grid.Column="0" Name="RemoveModelsButton" Padding="15,3,15,3" HorizontalAlignment="Left" Margin="1" Click="OnRemoveAllModels"
+                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveAllModelsButton}" />
+        </Grid>
+        
+        <!-- reset button -->
         <DockPanel Grid.Row="3" Grid.Column="1" Margin="10,45,10,6">
             <Button Name="ResetButton" Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnResetSettings"
                     Content="{x:Static usageModelOptions:UsageModelOptionsMessages.SettingResetButton}" />

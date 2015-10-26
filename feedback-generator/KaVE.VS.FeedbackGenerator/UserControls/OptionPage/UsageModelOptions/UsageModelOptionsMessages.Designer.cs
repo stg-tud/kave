@@ -71,6 +71,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove all Models.
+        /// </summary>
+        public static string RemoveAllModelsButton {
+            get {
+                return ResourceManager.GetString("RemoveAllModelsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset Usage Model Settings.
         /// </summary>
         public static string SettingResetButton {
@@ -85,6 +94,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         public static string SettingResetDialog {
             get {
                 return ResourceManager.GetString("SettingResetDialog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update all Models.
+        /// </summary>
+        public static string UpdateAllModelsButton {
+            get {
+                return ResourceManager.GetString("UpdateAllModelsButton", resourceCulture);
             }
         }
     }

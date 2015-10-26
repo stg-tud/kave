@@ -16,8 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
@@ -26,40 +29,85 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
     public interface IUsageModelsSource
     {
-        IEnumerable<UsageModelDescriptor> UsageModels { get; }
+        IEnumerable<UsageModelDescriptor> GetUsageModels();
         void LoadZip(CoReTypeName typeName);
     }
 
     public class UsageModelsSource : IUsageModelsSource
     {
-        public IEnumerable<UsageModelDescriptor> UsageModels
-        {
-            get
-            {
-                // TODO implement this
-                return new KaVEList<UsageModelDescriptor>
-                {
-                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1),
-                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Enum"), 2),
-                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Environment"), 3)
-                };
-            }
-        }
-
         [CanBeNull]
-        public Uri Source { get; set; }
+        protected Uri Source;
 
         protected readonly IIoUtils IoUtils;
 
-        public UsageModelsSource(IIoUtils ioUtils)
+        public UsageModelsSource(IIoUtils ioUtils, Uri source)
         {
             IoUtils = ioUtils;
+            Source = source;
+        }
+
+        public IEnumerable<UsageModelDescriptor> GetUsageModels()
+        {
+            if (Source == null)
+            {
+                return Lists.NewList<UsageModelDescriptor>();
+            }
+
+            var localPath = Source.LocalPath;
+            if (localPath != "/")
+            {
+                return
+                    IoUtils.GetFilesRecursive(localPath, "*.zip")
+                           .Select(
+                               modelFilePath =>
+                                   new UsageModelDescriptor(
+                                       GetTypeNameString(modelFilePath.Replace(localPath, "").TrimStart('\\')),
+                                       GetVersionNumber(modelFilePath.Replace(localPath, "").TrimStart('\\'))));
+            }
+            
+            // TODO handle remote hosted models
+
+            return Lists.NewList<UsageModelDescriptor>();
         }
 
         public void LoadZip(CoReTypeName typeName)
         {
             // TODO implement this
             MessageBox.Show("Loading type " + typeName, "(Prototype)");
+        }
+
+        private static int GetVersionNumber(string relativeModelFilePath)
+        {
+            try
+            {
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(relativeModelFilePath);
+                Asserts.NotNull(fileNameWithoutExtension);
+                var versionSubstring =
+                    fileNameWithoutExtension.Substring(fileNameWithoutExtension.LastIndexOf('.') + 1);
+                return int.Parse(versionSubstring);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private static CoReTypeName GetTypeNameString(string relativeModelFilePath)
+        {
+            var filePathWithoutExtension = relativeModelFilePath.Substring(0, relativeModelFilePath.LastIndexOf('.'));
+            Asserts.NotNull(filePathWithoutExtension);
+            var typeNameSubstring = "";
+
+            try
+            {
+                typeNameSubstring = filePathWithoutExtension.Substring(0, filePathWithoutExtension.LastIndexOf('.'));
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                typeNameSubstring = filePathWithoutExtension;
+            }
+
+            return new CoReTypeName(typeNameSubstring);
         }
     }
 }
