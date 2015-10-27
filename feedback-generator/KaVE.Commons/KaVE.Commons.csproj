@@ -75,9 +75,11 @@
     <Compile Include="Model\SSTs\Expressions\Assignable\IIndexAccessExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\CastExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\IndexAccessExpression.cs" />
+    <Compile Include="Model\SSTs\Impl\References\IndexAccessReference.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\CompletionPrefixVisitor.cs" />
     <Compile Include="Model\SSTs\Impl\Statements\EventSubscriptionStatement.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\HasCompletionExpressionVisitor.cs" />
+    <Compile Include="Model\SSTs\References\IIndexAccessReference.cs" />
     <Compile Include="Model\SSTs\Statements\IEventSubscriptionStatement.cs" />
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommender.cs" />

@@ -626,6 +626,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.Text(varRef.Identifier);
         }
 
+        public void Visit(IIndexAccessReference indexAccessRef, SSTPrintingContext context)
+        {
+            indexAccessRef.Expression.Accept(this, context);
+        }
+
         public void Visit(IUnknownReference unknownRef, SSTPrintingContext c)
         {
             c.UnknownMarker();

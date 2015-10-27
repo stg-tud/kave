@@ -16,6 +16,8 @@
 
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 
@@ -76,6 +78,21 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             };
 
             AssertPrint(sst, "o.P");
+        }
+
+        [Test]
+        public void IndexAccessReference()
+        {
+            var sst = new IndexAccessReference
+            {
+                Expression = new IndexAccessExpression
+                {
+                    Reference = new VariableReference {Identifier = "arr"},
+                    Indices = {new ConstantValueExpression {Value = "1"}}
+                }
+            };
+
+            AssertPrint(sst, "arr[1]");
         }
 
         [Test]

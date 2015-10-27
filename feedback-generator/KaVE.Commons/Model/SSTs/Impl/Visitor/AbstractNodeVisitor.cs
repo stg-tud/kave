@@ -268,6 +268,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual void Visit(IVariableReference varRef, TContext context) {}
 
+        public virtual void Visit(IIndexAccessReference indexAccessRef, TContext context)
+        {
+            indexAccessRef.Expression.Accept(this, context);
+        }
+
         public virtual void Visit(IUnknownReference unknownRef, TContext context) {}
 
         public virtual void Visit(IUnknownExpression unknownExpr, TContext context) {}
@@ -581,6 +586,12 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public virtual TReturn Visit(IVariableReference varRef, TContext context)
         {
+            return default(TReturn);
+        }
+
+        public virtual TReturn Visit(IIndexAccessReference indexAccessRef, TContext context)
+        {
+            indexAccessRef.Expression.Accept(this, context);
             return default(TReturn);
         }
 

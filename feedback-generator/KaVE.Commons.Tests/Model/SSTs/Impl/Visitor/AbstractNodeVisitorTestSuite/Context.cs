@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -598,6 +599,16 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
         public void VariableReference()
         {
             Visit(new VariableReference());
+        }
+
+        [Test]
+        public void IndexAccessReference()
+        {
+            var iae = Mock.Of<IIndexAccessExpression>();
+
+            Visit(new IndexAccessReference {Expression = iae});
+
+            AssertAccept(iae);
         }
 
         #endregion

@@ -79,6 +79,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(IMethodReference methodRef, TContext context);
         void Visit(IPropertyReference propertyRef, TContext context);
         void Visit(IVariableReference varRef, TContext context);
+        void Visit(IIndexAccessReference indexAccessRef, TContext context);
 
         // unknowns
         void Visit(IUnknownReference unknownRef, TContext context);
@@ -141,6 +142,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(IMethodReference methodRef, TContext context);
         TReturn Visit(IPropertyReference propertyRef, TContext context);
         TReturn Visit(IVariableReference varRef, TContext context);
+        TReturn Visit(IIndexAccessReference indexAccessRef, TContext context);
 
         // unknowns
         TReturn Visit(IUnknownReference unknownRef, TContext context);
