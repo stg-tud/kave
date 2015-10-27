@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -142,6 +143,78 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Reference = VarRef("$0"),
                         Indices = {new ConstantValueExpression()}
                     }),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void AssigningValueToArrayElement()
+        {
+            CompleteInMethod(@"
+                arr[1] = 1;
+                $");
+
+            AssertBody(
+                Assign(
+                    new IndexAccessReference
+                    {
+                        Expression =
+                            new IndexAccessExpression
+                            {
+                                Reference = VarRef("arr"),
+                                Indices = {new ConstantValueExpression()}
+                            }
+                    },
+                    new ConstantValueExpression()),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void AssigningValueToArrayElement_TwoDimensional()
+        {
+            CompleteInMethod(@"
+                arr[1, 2] = 1;
+                $");
+
+            AssertBody(
+                Assign(
+                    new IndexAccessReference
+                    {
+                        Expression =
+                            new IndexAccessExpression
+                            {
+                                Reference = VarRef("arr"),
+                                Indices = { new ConstantValueExpression(), new ConstantValueExpression() }
+                            }
+                    },
+                    new ConstantValueExpression()),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void AssigningValueToArrayElement_Jagged()
+        {
+            CompleteInMethod(@"
+                int[][] arr;
+                arr[1][2] = 1;
+                $");
+
+            AssertBody(
+                VarDecl("arr", TypeName.Get("System.Int32[,], mscorlib, 4.0.0.0")),
+                VarDecl("$0", Fix.IntArray),
+                VarAssign(
+                    "$0",
+                    new IndexAccessExpression {Reference = VarRef("arr"), Indices = {new ConstantValueExpression()}}),
+                Assign(
+                    new IndexAccessReference
+                    {
+                        Expression =
+                            new IndexAccessExpression
+                            {
+                                Reference = VarRef("$0"),
+                                Indices = {new ConstantValueExpression()}
+                            }
+                    },
+                    new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
     }

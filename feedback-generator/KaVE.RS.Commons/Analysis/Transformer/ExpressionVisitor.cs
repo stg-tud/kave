@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -37,6 +38,9 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
+using ICastExpression = JetBrains.ReSharper.Psi.CSharp.Tree.ICastExpression;
+using IInvocationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IInvocationExpression;
+using ILambdaExpression = JetBrains.ReSharper.Psi.CSharp.Tree.ILambdaExpression;
 using IReferenceExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IReferenceExpression;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
@@ -396,6 +400,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
             }
 
+            var elementAccessExpr = csExpr as IElementAccessExpression;
+            if (elementAccessExpr != null)
+            {
+                return new IndexAccessReference
+                {
+                    Expression = (IIndexAccessExpression) VisitElementAccessExpression(elementAccessExpr, body)
+                };
+            }
+
             return new UnknownReference();
         }
 
@@ -597,7 +610,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return new ReferenceExpression {Reference = newRef};
         }
 
-        public override IAssignableExpression VisitElementAccessExpression(IElementAccessExpression expr, IList<IStatement> body)
+        public override IAssignableExpression VisitElementAccessExpression(IElementAccessExpression expr,
+            IList<IStatement> body)
         {
             return new IndexAccessExpression
             {
