@@ -183,7 +183,6 @@
     <Compile Include="Injectables\InjectableRandomizationUtils.cs" />
     <Compile Include="Injectables\InjectableRemotePBNRecommenderStore.cs" />
     <Compile Include="Injectables\InjectableTypePathUtil.cs" />
-    <Compile Include="Injectables\InjectableUsageModelsSource.cs" />
     <Compile Include="Injectables\InjectableVersionUtil.cs" />
     <Compile Include="Properties\Messages.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
+using System;
+using System.IO;
 using System.Text.RegularExpressions;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
     public class TypePathUtil
     {
+        [Pure]
         public string ToNestedPath(object o)
         {
             var regex = new Regex(@"[^a-zA-Z0-9,\-_/+$(){}[\]]");
@@ -35,11 +41,64 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             return relName;
         }
 
+        [Pure]
         public string ToFlatPath(object o)
         {
             var nested = ToNestedPath(o);
             var flat = nested.Replace("/", "_");
             return flat;
+        }
+
+        [Pure]
+        public int GetVersionNumber(string relativeModelFilePath)
+        {
+            try
+            {
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(relativeModelFilePath);
+                Asserts.NotNull(fileNameWithoutExtension);
+                var versionSubstring =
+                    fileNameWithoutExtension.Substring(fileNameWithoutExtension.LastIndexOf('.') + 1);
+                return int.Parse(versionSubstring);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        [Pure]
+        public CoReTypeName GetTypeNameString(string relativeModelFilePath)
+        {
+            var filePathWithoutExtension = relativeModelFilePath.Substring(0, relativeModelFilePath.LastIndexOf('.'));
+            Asserts.NotNull(filePathWithoutExtension);
+            var typeNameSubstring = "";
+
+            try
+            {
+                typeNameSubstring = filePathWithoutExtension.Substring(0, filePathWithoutExtension.LastIndexOf('.'));
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                typeNameSubstring = filePathWithoutExtension;
+            }
+
+            return new CoReTypeName(typeNameSubstring);
+        }
+
+        [Pure]
+        public string GetNestedFileName(string basePath, CoReTypeName typeName, int version, string extension)
+        {
+            var typePart = ToNestedPath(typeName).Replace("//", @"\");
+            var fileName = Path.Combine(basePath, typePart + '.' + version + '.' + extension);
+            return fileName;
+        }
+
+        [Pure]
+        public string GetNestedFileName(string basePath, CoReTypeName typeName, string extension)
+        {
+            var typePart = ToNestedPath(typeName).Replace("//", @"\");
+            var fileName = Path.Combine(basePath, typePart + '.' + extension);
+            return fileName;
         }
     }
 }

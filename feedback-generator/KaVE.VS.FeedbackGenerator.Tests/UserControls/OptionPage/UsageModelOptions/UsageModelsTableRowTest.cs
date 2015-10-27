@@ -15,9 +15,11 @@
  */
 
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.TestUtils;
+using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOptions
@@ -29,78 +31,106 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private const int SomeNewestAvailableVersion = 14;
 
         private UsageModelsTableRow _uut;
+        private IRemotePBNRecommenderStore _remoteStore;
 
         [SetUp]
         public void Setup()
         {
+            _remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
+            Registry.RegisterComponent(_remoteStore);
+
             _uut = new UsageModelsTableRow(
+                _remoteStore,
                 SomeTypeName,
                 SomeLoadedVersion,
                 SomeNewestAvailableVersion);
         }
 
-        [TestCase(0, 1, true)]
-        [TestCase(0, null, false)]
-        [TestCase(1, 1, false)]
+        [TearDown]
+        public void ClearRegistry()
+        {
+            Registry.Clear();
+        }
+
+        [TestCase(0, 1, true), TestCase(0, null, false), TestCase(1, 1, false)]
         public void IsUpdateableTest(int? localVersion, int? remoteVersion, bool shouldBeUpdateable)
         {
-            _uut = new UsageModelsTableRow(SomeTypeName, localVersion, remoteVersion);
+            _uut = new UsageModelsTableRow(_remoteStore, SomeTypeName, localVersion, remoteVersion);
             Assert.AreEqual(shouldBeUpdateable, _uut.IsUpdateable);
         }
 
-        [TestCase(null, 0, true)]
-        [TestCase(null, null, false)]
-        [TestCase(0, 1, false)]
+        [TestCase(null, 0, true), TestCase(null, null, false), TestCase(0, 1, false)]
         public void IsInstallableTest(int? localVersion, int? remoteVersion, bool shouldBeInstallable)
         {
-            _uut = new UsageModelsTableRow(SomeTypeName, localVersion, remoteVersion);
+            _uut = new UsageModelsTableRow(_remoteStore, SomeTypeName, localVersion, remoteVersion);
             Assert.AreEqual(shouldBeInstallable, _uut.IsInstallable);
         }
 
-        [TestCase(1, 1, true)]
-        [TestCase(null, 0, false)]
+        [TestCase(1, 1, true), TestCase(null, 0, false)]
         public void IsRemoveableTest(int? localVersion, int? remoteVersion, bool shouldBeRemoveable)
         {
-            _uut = new UsageModelsTableRow(SomeTypeName, localVersion, remoteVersion);
+            _uut = new UsageModelsTableRow(_remoteStore, SomeTypeName, localVersion, remoteVersion);
             Assert.AreEqual(shouldBeRemoveable, _uut.IsRemoveable);
         }
 
         [Test]
         public void ToStringReflection()
         {
-            ToStringAssert.Reflection(new UsageModelsTableRow(new CoReTypeName("LSomeType"), 0, 0));
+            ToStringAssert.Reflection(new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 0, 0));
         }
 
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
-            var b = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
+            var a = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 1, 2);
+            var b = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 1, 2);
             Assert.AreEqual(a, b);
         }
 
         [Test]
         public void Equality_DifferentTypeNames()
         {
-            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
-            var b = new UsageModelsTableRow(new CoReTypeName("LSomeOtherType"), 1, 2);
+            var a = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 1, 2);
+            var b = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeOtherType"), 1, 2);
             Assert.AreNotEqual(a, b);
         }
 
         [Test]
         public void Equality_DifferentLoadedVersions()
         {
-            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
-            var b = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 2, 2);
+            var a = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 1, 2);
+            var b = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 2, 2);
             Assert.AreNotEqual(a, b);
         }
 
         [Test]
         public void Equality_DifferentNewestAvailableVersions()
         {
-            var a = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 1);
-            var b = new UsageModelsTableRow(new CoReTypeName("LSomeType"), 1, 2);
+            var a = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 1, 1);
+            var b = new UsageModelsTableRow(_remoteStore, new CoReTypeName("LSomeType"), 1, 2);
             Assert.AreNotEqual(a, b);
+        }
+
+        [Test]
+        public void Equality_StoreIsIgnored()
+        {
+            var a = new UsageModelsTableRow(Mock.Of<IRemotePBNRecommenderStore>(), new CoReTypeName("LSomeType"), 1, 2);
+            var b = new UsageModelsTableRow(Mock.Of<IRemotePBNRecommenderStore>(), new CoReTypeName("LSomeType"), 1, 2);
+            Assert.AreEqual(a, b);
+        }
+
+        [Test]
+        public void CallModelLoadOnInstall()
+        {
+            _uut.OnInstall.Execute(null);
+            Mock.Get(_remoteStore).Verify(store => store.Load(SomeTypeName));
+        }
+
+        [Test]
+        public void CallModelLoadOnUpdate()
+        {
+            _uut.OnInstall.Execute(null);
+            Mock.Get(_remoteStore).Verify(store => store.Load(SomeTypeName));
         }
     }
 }

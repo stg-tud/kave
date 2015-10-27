@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.Collections;
@@ -31,6 +30,8 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
     internal class RemotePBNRecommenderStoreTest
     {
         #region helper
+
+        private const string LocalPath = @"C:\";
 
         private static CoReTypeName SomeType
         {
@@ -65,7 +66,8 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             _testSource = Mock.Of<IUsageModelsSource>();
             Mock.Get(_testSource).Setup(source => source.GetUsageModels()).Returns(AvailableModels);
 
-            _sut = new RemotePBNRecommenderStore(_testSource);
+            _sut = new RemotePBNRecommenderStore(_testSource, LocalPath);
+            _sut.ReloadAvailableModels();
         }
 
         [Test]
@@ -85,13 +87,22 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         {
             _sut.Load(SomeType);
             Mock.Get(_testSource)
-                .Verify(source => source.LoadZip(It.Is<CoReTypeName>(typeName => Equals(SomeType, typeName))));
+                .Verify(
+                    source =>
+                        source.Load(
+                            It.Is<UsageModelDescriptor>(
+                                model => Equals(SomeType, model.TypeName) && Equals(1, model.Version)),
+                            LocalPath));
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
-        public void Load_NotAvailable()
+        [Test]
+        public void LoadingNonAvailableTypesShouldDoNothing()
         {
             _sut.Load(new CoReTypeName("LNotAvailable"));
+            Mock.Get(_testSource)
+                .Verify(
+                    testSource => testSource.Load(It.IsAny<UsageModelDescriptor>(), It.IsAny<string>()),
+                    Times.Never);
         }
 
         [Test]
@@ -134,9 +145,10 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         public void Setup()
         {
             _testIoUtil = Mock.Of<IIoUtils>();
+            SetModelFileExists(true);
             Mock.Get(_testIoUtil).Setup(io => io.GetFilesRecursive(BasePath, "*.zip")).Returns(TestFiles);
 
-            _uut = new UsageModelsSource(_testIoUtil, new Uri(BasePath));
+            _uut = new UsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(BasePath)};
         }
 
         [Test]
@@ -146,10 +158,45 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         }
 
         [Test]
-        public void ShouldProvideNothingIfPathIsInvalid()
+        public void ShouldBeEmptyIfPathIsInvalid()
         {
-            _uut = new UsageModelsSource(_testIoUtil, new Uri(@"file://notvalid"));
+            _uut = new UsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(@"file://notvalid")};
+
             CollectionAssert.IsEmpty(_uut.GetUsageModels());
+        }
+
+        [Test]
+        public void CreatesFileOnLoad()
+        {
+            _uut.Load(new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1), @"D:\");
+            Mock.Get(_testIoUtil).Verify(ioUtil => ioUtil.CreateFile(@"D:\LSystem\Char.1.zip"));
+        }
+
+        [Test]
+        public void ShouldLoadModelToPath()
+        {
+            _uut.Load(new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1), @"D:\");
+            Mock.Get(_testIoUtil)
+                .Verify(
+                    ioUtil => ioUtil.CopyFile(Path.Combine(BasePath, @"LSystem\Char.1.zip"), @"D:\LSystem\Char.1.zip"));
+        }
+
+        [Test]
+        public void ShouldLoadWithoutVersionNumber()
+        {
+            SetModelFileExists(false);
+
+            _uut.Load(new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1), @"D:\");
+            Mock.Get(_testIoUtil)
+                .Verify(
+                    ioUtil => ioUtil.CopyFile(Path.Combine(BasePath, @"LSystem\Char.zip"), @"D:\LSystem\Char.1.zip"));
+        }
+
+        private void SetModelFileExists(bool value)
+        {
+            Mock.Get(_testIoUtil)
+                .Setup(io => io.FileExists(Path.Combine(BasePath, @"LSystem\Char.1.zip")))
+                .Returns(value);
         }
     }
 }

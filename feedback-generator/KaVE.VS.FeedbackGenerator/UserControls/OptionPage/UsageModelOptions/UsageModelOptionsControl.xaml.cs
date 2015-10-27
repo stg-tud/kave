@@ -89,13 +89,23 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private void OnBrowse(object sender, RoutedEventArgs e)
+        private void OnBrowse_Path(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();
             var result = dialog.ShowDialog();
             if (result.HasValue && result.Value)
             {
                 ModelStorePathTextBox.Text = dialog.SelectedPath;
+            }
+        }
+
+        private void OnBrowse_Uri(object sender, RoutedEventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                ModelStoreUriTextBox.Text = new Uri(dialog.SelectedPath).AbsoluteUri;
             }
         }
 

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -103,42 +102,8 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
                 zipFiles.Select(
                     modelFilePath =>
                         new UsageModelDescriptor(
-                            GetTypeNameString(modelFilePath.Replace(BasePath, "").TrimStart('\\')),
-                            GetVersionNumber(modelFilePath.Replace(BasePath, "").TrimStart('\\'))));
-        }
-
-        private static int GetVersionNumber(string relativeModelFilePath)
-        {
-            try
-            {
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(relativeModelFilePath);
-                Asserts.NotNull(fileNameWithoutExtension);
-                var versionSubstring =
-                    fileNameWithoutExtension.Substring(fileNameWithoutExtension.LastIndexOf('.') + 1);
-                return int.Parse(versionSubstring);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        private static CoReTypeName GetTypeNameString(string relativeModelFilePath)
-        {
-            var filePathWithoutExtension = relativeModelFilePath.Substring(0, relativeModelFilePath.LastIndexOf('.'));
-            Asserts.NotNull(filePathWithoutExtension);
-            var typeNameSubstring = "";
-
-            try
-            {
-                typeNameSubstring = filePathWithoutExtension.Substring(0, filePathWithoutExtension.LastIndexOf('.'));
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                typeNameSubstring = filePathWithoutExtension;
-            }
-
-            return new CoReTypeName(typeNameSubstring);
+                            _typePathUtil.GetTypeNameString(modelFilePath.Replace(BasePath, "").TrimStart('\\')),
+                            _typePathUtil.GetVersionNumber(modelFilePath.Replace(BasePath, "").TrimStart('\\'))));
         }
     }
 }

@@ -22,9 +22,9 @@ namespace KaVE.Commons.Utils.CodeCompletion
     public class UsageModelDescriptor
     {
         [NotNull]
-        public CoReTypeName TypeName { get; set; }
+        public readonly CoReTypeName TypeName;
 
-        public int Version { get; set; }
+        public readonly int Version;
 
         public UsageModelDescriptor([NotNull] CoReTypeName typeName, int version)
         {

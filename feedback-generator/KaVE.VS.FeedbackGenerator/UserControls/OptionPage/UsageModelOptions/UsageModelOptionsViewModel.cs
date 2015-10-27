@@ -18,9 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
@@ -78,6 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
+        [CanBeNull]
         private static IPBNRecommenderStore LocalStore
         {
             get
@@ -93,6 +96,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
+        [CanBeNull]
         private static IRemotePBNRecommenderStore RemoteStore
         {
             get
@@ -110,32 +114,40 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public IEnumerable<UsageModelsTableRow> UsageModelsTableContent
         {
-            get
+            get { return MergeAvailableModels(); }
+        }
+
+        private static IEnumerable<UsageModelsTableRow> MergeAvailableModels()
+        {
+            var mergedModels = RemoteStore != null
+                ? RemoteStore.GetAvailableModels()
+                             .ToDictionary(
+                                 remoteModel => remoteModel.TypeName,
+                                 remoteModel =>
+                                     new UsageModelsTableRow(
+                                         RemoteStore,
+                                         remoteModel.TypeName,
+                                         null,
+                                         remoteModel.Version))
+                : new Dictionary<CoReTypeName, UsageModelsTableRow>();
+
+            foreach (
+                var localModel in
+                    LocalStore != null ? LocalStore.GetAvailableModels() : Lists.NewList<UsageModelDescriptor>())
             {
-                var mergedModels =
-                    (RemoteStore != null ? RemoteStore.GetAvailableModels() : Lists.NewList<UsageModelDescriptor>())
-                        .ToDictionary(
-                            remoteModel => remoteModel.TypeName,
-                            remoteModel => new UsageModelsTableRow(remoteModel.TypeName, null, remoteModel.Version));
-
-                foreach (
-                    var localModel in
-                        LocalStore != null ? LocalStore.GetAvailableModels() : Lists.NewList<UsageModelDescriptor>())
+                if (mergedModels.ContainsKey(localModel.TypeName))
                 {
-                    if (mergedModels.ContainsKey(localModel.TypeName))
-                    {
-                        mergedModels[localModel.TypeName].LoadedVersion = localModel.Version;
-                    }
-                    else
-                    {
-                        mergedModels.Add(
-                            localModel.TypeName,
-                            new UsageModelsTableRow(localModel.TypeName, localModel.Version, null));
-                    }
+                    mergedModels[localModel.TypeName].LoadedVersion = localModel.Version;
                 }
-
-                return mergedModels.Values;
+                else
+                {
+                    mergedModels.Add(
+                        localModel.TypeName,
+                        new UsageModelsTableRow(RemoteStore, localModel.TypeName, localModel.Version, null));
+                }
             }
+
+            return mergedModels.Values;
         }
 
         public UsageModelOptionsViewModel()

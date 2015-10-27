@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-using System.Windows;
 using System.Windows.Input;
+using JetBrains.Util;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.JetBrains.Annotations;
 using MsgBox.Commands;
 
@@ -25,6 +26,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
     public class UsageModelsTableRow
     {
+        [CanBeNull]
+        private readonly IRemotePBNRecommenderStore _remoteStore;
+
         [NotNull]
         public CoReTypeName TypeName { get; set; }
 
@@ -67,10 +71,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return new RelayCommand(RemoveModel); }
         }
 
-        public UsageModelsTableRow([NotNull] CoReTypeName typeName,
+        public UsageModelsTableRow([CanBeNull] IRemotePBNRecommenderStore remoteStore,
+            [NotNull] CoReTypeName typeName,
             [CanBeNull] int? loadedVersion,
             [CanBeNull] int? newestAvailableVersion)
         {
+            _remoteStore = remoteStore;
             TypeName = typeName;
             LoadedVersion = loadedVersion;
             NewestAvailableVersion = newestAvailableVersion;
@@ -78,29 +84,37 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void InstallModel()
         {
-            // TODO implement this
-            MessageBox.Show("Installing " + TypeName, "(Prototype)");
+            if (_remoteStore != null)
+            {
+                _remoteStore.Load(TypeName);
+                _remoteStore.ReloadAvailableModels();
+                MessageBox.ShowInfo("Installed model for " + TypeName, "KaVE Project");
+            }
         }
 
         private void UpdateModel()
         {
-            // TODO implement this
-            MessageBox.Show("Updating " + TypeName, "(Prototype)");
+            if (_remoteStore != null)
+            {
+                _remoteStore.Load(TypeName);
+                _remoteStore.ReloadAvailableModels();
+            }
+            MessageBox.ShowInfo("Updated model for " + TypeName, "KaVE Project");
         }
 
         private void RemoveModel()
         {
             // TODO implement this
-            MessageBox.Show("Removing " + TypeName, "(Prototype)");
+            MessageBox.ShowInfo("Removing " + TypeName, "(Prototype)");
         }
 
         public override bool Equals(object obj)
         {
             var other = obj as UsageModelsTableRow;
-            return other != null && 
-                Equals(TypeName, other.TypeName) && 
-                Equals(LoadedVersion, other.LoadedVersion) &&
-                Equals(NewestAvailableVersion, other.NewestAvailableVersion);
+            return other != null &&
+                   Equals(TypeName, other.TypeName) &&
+                   Equals(LoadedVersion, other.LoadedVersion) &&
+                   Equals(NewestAvailableVersion, other.NewestAvailableVersion);
         }
 
         public override int GetHashCode()

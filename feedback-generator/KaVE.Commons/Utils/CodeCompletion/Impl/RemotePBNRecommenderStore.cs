@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl
@@ -30,43 +29,60 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         [NotNull]
         IEnumerable<UsageModelDescriptor> GetAvailableModels();
+
+        void ReloadAvailableModels();
     }
-    
+
     public class RemotePBNRecommenderStore : IRemotePBNRecommenderStore
     {
-        private readonly IUsageModelsSource _usageModelsSource;
+        [CanBeNull]
+        protected string LocalPath;
 
-        public RemotePBNRecommenderStore([NotNull] IUsageModelsSource usageModelsSource)
+        [NotNull]
+        protected IUsageModelsSource UsageModelsSource;
+
+        [NotNull]
+        private readonly Dictionary<CoReTypeName, UsageModelDescriptor> _availableModels =
+            new Dictionary<CoReTypeName, UsageModelDescriptor>();
+
+        public RemotePBNRecommenderStore([NotNull] IUsageModelsSource usageModelsSource, [CanBeNull] string localPath)
         {
-            _usageModelsSource = usageModelsSource;
+            LocalPath = localPath;
+            UsageModelsSource = usageModelsSource;
+        }
+
+        public void ReloadAvailableModels()
+        {
+            _availableModels.Clear();
+
+            foreach (
+                var newModel in
+                    UsageModelsSource.GetUsageModels().Where(
+                        newModel =>
+                            !_availableModels.ContainsKey(newModel.TypeName) ||
+                            newModel.Version > _availableModels[newModel.TypeName].Version))
+            {
+                _availableModels[newModel.TypeName] = newModel;
+            }
         }
 
         public bool IsAvailable(CoReTypeName typeName)
         {
-            return _usageModelsSource.GetUsageModels().Any(modelDescription => typeName.Equals(modelDescription.TypeName));
+            return _availableModels.ContainsKey(typeName);
         }
 
         public void Load(CoReTypeName typeName)
         {
-            Asserts.That(IsAvailable(typeName));
-            _usageModelsSource.LoadZip(typeName);
+            try
+            {
+                UsageModelsSource.Load(_availableModels[typeName], LocalPath);
+            }
+            catch (KeyNotFoundException) {}
         }
 
         public IEnumerable<UsageModelDescriptor> GetAvailableModels()
         {
-            var availableModels = new Dictionary<CoReTypeName, UsageModelDescriptor>();
-
-            foreach (
-                var newModel in
-                    _usageModelsSource.GetUsageModels().Where(
-                        newModel =>
-                            !availableModels.ContainsKey(newModel.TypeName) ||
-                            newModel.Version > availableModels[newModel.TypeName].Version))
-            {
-                availableModels[newModel.TypeName] = newModel;
-            }
-
-            return availableModels.Values;
+            return _availableModels.Values;
         }
     }
 }

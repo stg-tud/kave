@@ -14,16 +14,57 @@
  * limitations under the License.
  */
 
+using System;
 using JetBrains.Application;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 
 namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
-    internal class InjectableRemotePBNRecommenderStore : RemotePBNRecommenderStore
+    public class InjectableRemotePBNRecommenderStore : RemotePBNRecommenderStore
     {
-        public InjectableRemotePBNRecommenderStore([NotNull] IUsageModelsSource usageModelsSource)
-            : base(usageModelsSource) {}
+        public InjectableRemotePBNRecommenderStore([NotNull] IIoUtils ioUtils,
+            [NotNull] TypePathUtil typePathUtil,
+            [NotNull] ISettingsStore store)
+            : base(new UsageModelsSource(ioUtils, typePathUtil), store.GetSettings<ModelStoreSettings>().ModelStorePath)
+        {
+            UsageModelsSource.Source = ConvertToUri(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
+
+            store.SettingsChanged += (sender, args) =>
+            {
+                if (args.SettingsType == typeof (ModelStoreSettings))
+                {
+                    LocalPath = store.GetSettings<ModelStoreSettings>().ModelStorePath;
+                }
+            };
+
+            store.SettingsChanged += (sender, args) =>
+            {
+                if (args.SettingsType == typeof (ModelStoreSettings))
+                {
+                    UsageModelsSource.Source = ConvertToUri(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
+                    ReloadAvailableModels();
+                }
+            };
+
+            ReloadAvailableModels();
+        }
+
+        [CanBeNull]
+        private static Uri ConvertToUri(string uriString)
+        {
+            try
+            {
+                return new Uri(uriString);
+            }
+            catch (UriFormatException)
+            {
+                return null;
+            }
+        }
     }
 }

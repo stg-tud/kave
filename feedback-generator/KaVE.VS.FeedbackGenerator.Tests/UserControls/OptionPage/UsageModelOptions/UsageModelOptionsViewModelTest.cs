@@ -33,6 +33,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private const string TestModelStorePath = @"c:/";
         private const string InvalidModelStorePath = @"c:/some/folder/that/surely/does/not/exist";
 
+        private static IRemotePBNRecommenderStore TestRemoteStore
+        {
+            get { return Mock.Of<IRemotePBNRecommenderStore>(); }
+        }
+
         private static IEnumerable<UsageModelDescriptor> SomeLocalModels
         {
             get
@@ -63,9 +68,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             {
                 return new KaVEList<UsageModelsTableRow>
                 {
-                    new UsageModelsTableRow(new CoReTypeName("LSomeAssembly/SomeType"), 2, 4),
-                    new UsageModelsTableRow(new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"), 3, null),
-                    new UsageModelsTableRow(new CoReTypeName("LSomeAssembly/OnlyRemoteType"), null, 5)
+                    new UsageModelsTableRow(TestRemoteStore, new CoReTypeName("LSomeAssembly/SomeType"), 2, 4),
+                    new UsageModelsTableRow(
+                        TestRemoteStore,
+                        new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"),
+                        3,
+                        null),
+                    new UsageModelsTableRow(TestRemoteStore, new CoReTypeName("LSomeAssembly/OnlyRemoteType"), null, 5)
                 };
             }
         }

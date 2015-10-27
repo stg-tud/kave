@@ -16,10 +16,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
-using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
@@ -29,27 +27,33 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
     public interface IUsageModelsSource
     {
+        [CanBeNull]
+        Uri Source { get; set; }
+
+        [Pure, NotNull]
         IEnumerable<UsageModelDescriptor> GetUsageModels();
-        void LoadZip(CoReTypeName typeName);
+
+        void Load(UsageModelDescriptor model, string baseTargetDirectory);
     }
 
     public class UsageModelsSource : IUsageModelsSource
     {
-        [CanBeNull]
-        protected Uri Source;
+        public Uri Source { get; set; }
 
         protected readonly IIoUtils IoUtils;
+        protected readonly TypePathUtil TypePathUtil;
 
-        public UsageModelsSource(IIoUtils ioUtils, Uri source)
+        public UsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil)
         {
+            TypePathUtil = typePathUtil;
             IoUtils = ioUtils;
-            Source = source;
         }
 
         public IEnumerable<UsageModelDescriptor> GetUsageModels()
         {
             if (Source == null)
             {
+                MessageBox.Show("Source was null");
                 return Lists.NewList<UsageModelDescriptor>();
             }
 
@@ -61,53 +65,39 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
                            .Select(
                                modelFilePath =>
                                    new UsageModelDescriptor(
-                                       GetTypeNameString(modelFilePath.Replace(localPath, "").TrimStart('\\')),
-                                       GetVersionNumber(modelFilePath.Replace(localPath, "").TrimStart('\\'))));
+                                       TypePathUtil.GetTypeNameString(
+                                           modelFilePath.Replace(localPath, "").TrimStart('\\')),
+                                       TypePathUtil.GetVersionNumber(
+                                           modelFilePath.Replace(localPath, "").TrimStart('\\'))));
             }
-            
+
             // TODO handle remote hosted models
 
             return Lists.NewList<UsageModelDescriptor>();
         }
 
-        public void LoadZip(CoReTypeName typeName)
+        public void Load(UsageModelDescriptor model, string baseTargetDirectory)
         {
-            // TODO implement this
-            MessageBox.Show("Loading type " + typeName, "(Prototype)");
-        }
+            Asserts.NotNull(Source);
 
-        private static int GetVersionNumber(string relativeModelFilePath)
-        {
-            try
+            var localPath = Source.LocalPath;
+            if (localPath != "/")
             {
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(relativeModelFilePath);
-                Asserts.NotNull(fileNameWithoutExtension);
-                var versionSubstring =
-                    fileNameWithoutExtension.Substring(fileNameWithoutExtension.LastIndexOf('.') + 1);
-                return int.Parse(versionSubstring);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
+                var modelPath = TypePathUtil.GetNestedFileName(localPath, model.TypeName, model.Version, "zip");
+                var targetPath = TypePathUtil.GetNestedFileName(
+                    baseTargetDirectory,
+                    model.TypeName,
+                    model.Version,
+                    "zip");
 
-        private static CoReTypeName GetTypeNameString(string relativeModelFilePath)
-        {
-            var filePathWithoutExtension = relativeModelFilePath.Substring(0, relativeModelFilePath.LastIndexOf('.'));
-            Asserts.NotNull(filePathWithoutExtension);
-            var typeNameSubstring = "";
+                if (!IoUtils.FileExists(modelPath))
+                    modelPath = TypePathUtil.GetNestedFileName(localPath, model.TypeName, "zip");
 
-            try
-            {
-                typeNameSubstring = filePathWithoutExtension.Substring(0, filePathWithoutExtension.LastIndexOf('.'));
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                typeNameSubstring = filePathWithoutExtension;
+                IoUtils.CreateFile(targetPath);
+                IoUtils.CopyFile(modelPath, targetPath);
             }
 
-            return new CoReTypeName(typeNameSubstring);
+            // TODO handle remote hosted models
         }
     }
 }
