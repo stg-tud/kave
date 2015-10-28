@@ -37,8 +37,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             BasePath = basePath;
             _io = io;
             _typePathUtil = typePathUtil;
-
-            ReloadAvailableModels();
         }
 
         public bool IsAvailable(CoReTypeName type)
@@ -107,6 +105,11 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         public IEnumerable<UsageModelDescriptor> GetAvailableModels()
         {
+            if (_availableModels == null)
+            {
+                ReloadAvailableModels();
+            }
+
             return _availableModels;
         }
 
