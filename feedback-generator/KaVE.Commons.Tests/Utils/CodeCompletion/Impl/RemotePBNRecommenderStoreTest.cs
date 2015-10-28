@@ -110,6 +110,30 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         {
             Assert.AreEqual(AvailableModels, _sut.GetAvailableModels());
         }
+
+        [Test]
+        public void ShouldLoadAllModelsOnLoadAll()
+        {
+            _sut.LoadAll();
+            foreach (var testModel in AvailableModels)
+            {
+                Mock.Get(_testSource).Verify(testSource => testSource.Load(testModel, It.IsAny<string>()), Times.Once);
+            }
+        }
+
+        [Test]
+        public void ShouldUpdateAvailableModelsOnReload()
+        {
+            var newAvailableModels = new List<UsageModelDescriptor>
+            {
+                new UsageModelDescriptor(new CoReTypeName("LNewModel"), 5)
+            };
+            Mock.Get(_testSource).Setup(source => source.GetUsageModels()).Returns(newAvailableModels);
+
+            _sut.ReloadAvailableModels();
+
+            CollectionAssert.AreEquivalent(newAvailableModels, _sut.GetAvailableModels());
+        }
     }
 
     internal class LocalUsageModelsSourceTest

@@ -24,6 +24,7 @@ using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
+using JetBrains.Util;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
@@ -131,18 +132,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             try
             {
                 Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
+
             }
             catch (InvalidOperationException) {}
+
+            ((UsageModelOptionsViewModel) DataContext).ReloadUsageModelsTableContent();
         }
 
         private void OnUpdateAllModels(object sender, RoutedEventArgs e)
         {
-            // TODO implement this
+            ((UsageModelOptionsViewModel) DataContext).UpdateAllModels();
         }
 
         private void OnRemoveAllModels(object sender, RoutedEventArgs e)
         {
-            // TODO implement this
+            ((UsageModelOptionsViewModel)DataContext).RemoveAllModels();
         }
 
         public bool OnOk()

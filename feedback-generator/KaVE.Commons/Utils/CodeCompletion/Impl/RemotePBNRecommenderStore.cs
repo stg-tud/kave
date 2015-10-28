@@ -27,6 +27,8 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         void Load([NotNull] CoReTypeName typeName);
 
+        void LoadAll();
+
         [NotNull]
         IEnumerable<UsageModelDescriptor> GetAvailableModels();
 
@@ -78,6 +80,14 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
                 UsageModelsSource.Load(_availableModels[typeName], LocalPath);
             }
             catch (KeyNotFoundException) {}
+        }
+
+        public void LoadAll()
+        {
+            foreach (var model in GetAvailableModels())
+            {
+                Load(model.TypeName);
+            }
         }
 
         public IEnumerable<UsageModelDescriptor> GetAvailableModels()

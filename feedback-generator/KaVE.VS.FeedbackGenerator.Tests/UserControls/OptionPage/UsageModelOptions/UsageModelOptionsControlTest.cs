@@ -15,6 +15,9 @@
  */
 
 using KaVE.Commons.TestUtils.UserControls;
+using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -29,12 +32,28 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
     {
         private UsageModelOptionsControl _sut;
         private Mock<IPBNProposalItemsProvider> _proposalItemProviderMock;
+        private Mock<IRemotePBNRecommenderStore> _remoteStoreMock;
+        private Mock<IPBNRecommenderStore> _localStoreMock;
+
+        private UsageModelOptionsViewModel ViewModel
+        {
+            get { return (UsageModelOptionsViewModel) _sut.DataContext; }
+        }
 
         [SetUp]
         public void Setup()
         {
             _proposalItemProviderMock = new Mock<IPBNProposalItemsProvider>();
             Registry.RegisterComponent(_proposalItemProviderMock.Object);
+
+            _localStoreMock = new Mock<IPBNRecommenderStore>();
+            Registry.RegisterComponent(_localStoreMock.Object);
+
+            _remoteStoreMock = new Mock<IRemotePBNRecommenderStore>();
+            Registry.RegisterComponent(_remoteStoreMock.Object);
+
+            MockSettingsStore.Setup(settingsStore => settingsStore.GetSettings<ModelStoreSettings>())
+                             .Returns(new ModelStoreSettings());
 
             _sut = Open();
         }
@@ -97,6 +116,30 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             UserControlTestUtils.Click(_sut.ReloadModelsButton);
 
             _proposalItemProviderMock.Verify(provider => provider.Clear(), Times.Once);
+        }
+
+        [Test]
+        public void ShouldLoadAllModelsOnUpdateAllModels()
+        {
+            UserControlTestUtils.Click(_sut.UpdateModelsButton);
+
+            _remoteStoreMock.Verify(remoteStore => remoteStore.LoadAll(), Times.Once);
+        }
+
+        [Test]
+        public void ShouldRemoveAllModelsOnRemoveAllModels()
+        {
+            UserControlTestUtils.Click(_sut.RemoveModelsButton);
+
+            _localStoreMock.Verify(localStore => localStore.RemoveAll(), Times.Once);
+        }
+
+        [Test]
+        public void Binding_UsageModelsTableItemsSource()
+        {
+            Assert.AreSame(ViewModel.UsageModelsTableContent, _sut.UsageModelsTable.ItemsSource);
+            ViewModel.UsageModelsTableContent = new UsageModelsTableRow[0];
+            Assert.AreSame(ViewModel.UsageModelsTableContent, _sut.UsageModelsTable.ItemsSource);
         }
     }
 }

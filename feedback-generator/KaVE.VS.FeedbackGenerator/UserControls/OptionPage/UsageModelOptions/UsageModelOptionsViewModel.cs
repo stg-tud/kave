@@ -114,9 +114,37 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public IEnumerable<UsageModelsTableRow> UsageModelsTableContent
         {
-            get { return MergeAvailableModels(); }
+            get { return _usageModelsTableContent; }
+            set
+            {
+                _usageModelsTableContent = value;
+                RaisePropertyChanged(self => self.UsageModelsTableContent);
+            }
         }
 
+        private IEnumerable<UsageModelsTableRow> _usageModelsTableContent;
+
+        public UsageModelOptionsViewModel()
+        {
+            _errorNotificationRequest = new InteractionRequest<Notification>();
+            ReloadUsageModelsTableContent();
+        }
+
+        public void ReloadUsageModelsTableContent()
+        {
+            if (LocalStore != null)
+            {
+                LocalStore.ReloadAvailableModels();
+            }
+            if (RemoteStore != null)
+            {
+                RemoteStore.ReloadAvailableModels();
+            }
+
+            UsageModelsTableContent = MergeAvailableModels();
+        }
+
+        [Pure]
         private static IEnumerable<UsageModelsTableRow> MergeAvailableModels()
         {
             var mergedModels = RemoteStore != null
@@ -125,6 +153,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                                  remoteModel => remoteModel.TypeName,
                                  remoteModel =>
                                      new UsageModelsTableRow(
+                                         LocalStore,
                                          RemoteStore,
                                          remoteModel.TypeName,
                                          null,
@@ -143,16 +172,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 {
                     mergedModels.Add(
                         localModel.TypeName,
-                        new UsageModelsTableRow(RemoteStore, localModel.TypeName, localModel.Version, null));
+                        new UsageModelsTableRow(LocalStore, RemoteStore, localModel.TypeName, localModel.Version, null));
                 }
             }
 
             return mergedModels.Values;
         }
 
-        public UsageModelOptionsViewModel()
+        public void UpdateAllModels()
         {
-            _errorNotificationRequest = new InteractionRequest<Notification>();
+            if (RemoteStore != null)
+            {
+                RemoteStore.LoadAll();
+            }
+        }
+
+        public void RemoveAllModels()
+        {
+            if (LocalStore != null)
+            {
+                LocalStore.RemoveAll();
+            }
         }
 
         public ModelStoreValidation ValidateModelStoreInformation(string path)

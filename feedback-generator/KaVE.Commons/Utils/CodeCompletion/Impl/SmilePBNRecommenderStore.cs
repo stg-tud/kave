@@ -30,17 +30,36 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         private readonly IIoUtils _io;
         private readonly TypePathUtil _typePathUtil;
+        private IEnumerable<UsageModelDescriptor> _availableModels;
 
         public SmilePBNRecommenderStore(string basePath, IIoUtils io, TypePathUtil typePathUtil)
         {
             BasePath = basePath;
             _io = io;
             _typePathUtil = typePathUtil;
+
+            ReloadAvailableModels();
         }
 
         public bool IsAvailable(CoReTypeName type)
         {
             return GetAvailableModels().Any(model => model.TypeName.Equals(type));
+        }
+
+        public void Remove(CoReTypeName type)
+        {
+            var availableModel = GetAvailableModels().FirstOrDefault(model => model.TypeName.Equals(type));
+            Asserts.NotNull(availableModel, "No model installed for {0}", type);
+
+            _io.DeleteFile(GetNestedFileName(BasePath, type, availableModel.Version, "zip"));
+        }
+
+        public void RemoveAll()
+        {
+            foreach (var model in GetAvailableModels())
+            {
+                Remove(model.TypeName);
+            }
         }
 
         public IPBNRecommender Load(CoReTypeName type)
@@ -88,6 +107,11 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         public IEnumerable<UsageModelDescriptor> GetAvailableModels()
         {
+            return _availableModels;
+        }
+
+        public void ReloadAvailableModels()
+        {
             string[] zipFiles;
             try
             {
@@ -98,7 +122,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
                 zipFiles = new string[0];
             }
 
-            return
+            _availableModels =
                 zipFiles.Select(
                     modelFilePath =>
                         new UsageModelDescriptor(

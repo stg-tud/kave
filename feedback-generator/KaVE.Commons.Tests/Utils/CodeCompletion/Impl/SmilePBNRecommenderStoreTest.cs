@@ -55,7 +55,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             Mock.Get(_io).Setup(io => io.DirectoryExists(_basePath)).Returns(true);
             Mock.Get(_io).Setup(io => io.UnzipToTempFolder(fullZipFileName)).Returns(_tmpPath);
             Mock.Get(_io).Setup(io => io.FileExists(fullXdslFileName)).Returns(() => _shouldXdslBeFound);
-            Mock.Get(_io).Setup(io => io.GetFilesRecursive(_basePath, "*.zip")).Returns(() => TypeFiles);
+            Mock.Get(_io).Setup(io => io.GetFilesRecursive(_basePath, "*.zip")).Returns(() => TestTypeFiles);
 
             _sut = new SmilePBNRecommenderStore(_basePath, _io, new TypePathUtil());
         }
@@ -84,6 +84,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         public void IsAvailable_NoZipExists()
         {
             _shouldZipBeFound = false;
+            _sut.ReloadAvailableModels();
             Assert.False(_sut.IsAvailable(SomeType));
             // verify non unzip
         }
@@ -111,6 +112,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         public void Load_NoZipExists()
         {
             _shouldZipBeFound = false;
+            _sut.ReloadAvailableModels();
             _sut.Load(SomeType);
         }
 
@@ -147,6 +149,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             Mock.Get(_io)
                 .Setup(io => io.GetFilesRecursive(_basePath, "*.zip"))
                 .Returns(new[] {"LSomePackage/SomeType.zip"});
+            _sut.ReloadAvailableModels();
 
             var expected = new List<UsageModelDescriptor>
             {
@@ -155,9 +158,40 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             CollectionAssert.AreEquivalent(expected, _sut.GetAvailableModels());
         }
 
+        [Test]
+        public void ShouldDeleteModelFileOnRemove()
+        {
+            _sut.Remove(SomeType);
+            Mock.Get(_io).Verify(io => io.DeleteFile(Path.Combine(_basePath, ZipFileForSomeType)), Times.Once);
+        }
+
+        [Test]
+        public void ShouldDeleteAllModelsOnRemoveAll()
+        {
+            _sut.RemoveAll();
+
+            foreach (var modelFile in TestTypeFiles)
+            {
+                Mock.Get(_io).Verify(io => io.DeleteFile(Path.Combine(_basePath, modelFile)), Times.Once);
+            }
+        }
+
+        [Test]
+        public void ShouldLoadModelsOnReload()
+        {
+
+            Mock.Get(_io)
+                .Setup(io => io.GetFilesRecursive(_basePath, "*.zip"))
+                .Returns(new[] { "LSomePackage/SomeType.5.zip" });
+
+            _sut.ReloadAvailableModels();
+
+            CollectionAssert.AreEquivalent(new [] {new UsageModelDescriptor(new CoReTypeName("LSomePackage/SomeType"), 5)}, _sut.GetAvailableModels());
+        }
+
         #region helper
 
-        private static string[] TypeFiles
+        private static string[] TestTypeFiles
         {
             get
             {

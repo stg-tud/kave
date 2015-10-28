@@ -33,11 +33,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private const string TestModelStorePath = @"c:/";
         private const string InvalidModelStorePath = @"c:/some/folder/that/surely/does/not/exist";
 
-        private static IRemotePBNRecommenderStore TestRemoteStore
-        {
-            get { return Mock.Of<IRemotePBNRecommenderStore>(); }
-        }
-
         private static IEnumerable<UsageModelDescriptor> SomeLocalModels
         {
             get
@@ -68,19 +63,32 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             {
                 return new KaVEList<UsageModelsTableRow>
                 {
-                    new UsageModelsTableRow(TestRemoteStore, new CoReTypeName("LSomeAssembly/SomeType"), 2, 4),
                     new UsageModelsTableRow(
-                        TestRemoteStore,
+                        Mock.Of<IPBNRecommenderStore>(),
+                        Mock.Of<IRemotePBNRecommenderStore>(),
+                        new CoReTypeName("LSomeAssembly/SomeType"),
+                        2,
+                        4),
+                    new UsageModelsTableRow(
+                        Mock.Of<IPBNRecommenderStore>(),
+                        Mock.Of<IRemotePBNRecommenderStore>(),
                         new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"),
                         3,
                         null),
-                    new UsageModelsTableRow(TestRemoteStore, new CoReTypeName("LSomeAssembly/OnlyRemoteType"), null, 5)
+                    new UsageModelsTableRow(
+                        Mock.Of<IPBNRecommenderStore>(),
+                        Mock.Of<IRemotePBNRecommenderStore>(),
+                        new CoReTypeName("LSomeAssembly/OnlyRemoteType"),
+                        null,
+                        5)
                 };
             }
         }
 
         private UsageModelOptionsViewModel _uut;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
+        private IPBNRecommenderStore _localStore;
+        private IRemotePBNRecommenderStore _remoteStore;
 
         [SetUp]
         public void SetUp()
@@ -88,13 +96,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             _uut = new UsageModelOptionsViewModel();
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
 
-            var localStore = Mock.Of<IPBNRecommenderStore>();
-            Mock.Get(localStore).Setup(store => store.GetAvailableModels()).Returns(SomeLocalModels);
-            Registry.RegisterComponent(localStore);
+            _localStore = Mock.Of<IPBNRecommenderStore>();
+            Mock.Get(_localStore).Setup(store => store.GetAvailableModels()).Returns(SomeLocalModels);
+            Registry.RegisterComponent(_localStore);
 
-            var remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
-            Mock.Get(remoteStore).Setup(store => store.GetAvailableModels()).Returns(SomeRemoteModels);
-            Registry.RegisterComponent(remoteStore);
+            _remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
+            Mock.Get(_remoteStore).Setup(store => store.GetAvailableModels()).Returns(SomeRemoteModels);
+            Registry.RegisterComponent(_remoteStore);
         }
 
         [TearDown]
@@ -137,7 +145,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void GeneratingUsageModelsTableContent()
         {
+            _uut.ReloadUsageModelsTableContent();
             CollectionAssert.AreEquivalent(ExpectedUsageModelsTableContent, _uut.UsageModelsTableContent);
+        }
+
+        [Test]
+        public void ShouldCallReloadOnStoresOnReloadTableContent()
+        {
+            _uut.ReloadUsageModelsTableContent();
+
+            Mock.Get(_localStore).Verify(localStore => localStore.ReloadAvailableModels(), Times.Once);
+            Mock.Get(_remoteStore).Verify(remoteStore => remoteStore.ReloadAvailableModels(), Times.Once);
         }
     }
 }

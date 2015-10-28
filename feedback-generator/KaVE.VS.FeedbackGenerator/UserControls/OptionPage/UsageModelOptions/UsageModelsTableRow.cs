@@ -18,6 +18,7 @@ using System.Windows.Input;
 using JetBrains.Util;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.JetBrains.Annotations;
 using MsgBox.Commands;
@@ -26,6 +27,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
     public class UsageModelsTableRow
     {
+        [CanBeNull]
+        private readonly IPBNRecommenderStore _localStore;
+
         [CanBeNull]
         private readonly IRemotePBNRecommenderStore _remoteStore;
 
@@ -71,11 +75,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return new RelayCommand(RemoveModel); }
         }
 
-        public UsageModelsTableRow([CanBeNull] IRemotePBNRecommenderStore remoteStore,
+        public UsageModelsTableRow([CanBeNull] IPBNRecommenderStore localStore,
+            [CanBeNull] IRemotePBNRecommenderStore remoteStore,
             [NotNull] CoReTypeName typeName,
             [CanBeNull] int? loadedVersion,
             [CanBeNull] int? newestAvailableVersion)
         {
+            _localStore = localStore;
             _remoteStore = remoteStore;
             TypeName = typeName;
             LoadedVersion = loadedVersion;
@@ -87,8 +93,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             if (_remoteStore != null)
             {
                 _remoteStore.Load(TypeName);
-                _remoteStore.ReloadAvailableModels();
-                MessageBox.ShowInfo("Installed model for " + TypeName, "KaVE Project");
             }
         }
 
@@ -97,15 +101,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             if (_remoteStore != null)
             {
                 _remoteStore.Load(TypeName);
-                _remoteStore.ReloadAvailableModels();
             }
-            MessageBox.ShowInfo("Updated model for " + TypeName, "KaVE Project");
         }
 
         private void RemoveModel()
         {
-            // TODO implement this
-            MessageBox.ShowInfo("Removing " + TypeName, "(Prototype)");
+            if (_localStore != null)
+            {
+                _localStore.Remove(TypeName);
+            }
         }
 
         public override bool Equals(object obj)

@@ -22,7 +22,10 @@ namespace KaVE.Commons.Utils.CodeCompletion
     public interface IPBNRecommenderStore
     {
         bool IsAvailable(CoReTypeName typeName);
+        void Remove(CoReTypeName type);
+        void RemoveAll();
         IPBNRecommender Load(CoReTypeName typeName);
         IEnumerable<UsageModelDescriptor> GetAvailableModels();
+        void ReloadAvailableModels();
     }
 }

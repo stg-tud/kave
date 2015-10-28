@@ -94,7 +94,7 @@ limitations under the License.
             <Button Grid.Column="0" Name="ReloadModelsButton" Padding="15,3,15,3" 
                     HorizontalAlignment="Left" Margin="1" Click="OnReloadModels"
                     Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
-            <Button Grid.Column="1" Name="UpdateAllModelsButton" Padding="15,3,15,3" 
+            <Button Grid.Column="1" Name="UpdateModelsButton" Padding="15,3,15,3" 
                     HorizontalAlignment="Left" Margin="1" Click="OnUpdateAllModels"
                     Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
             <Button Grid.Column="2" Name="RemoveModelsButton" Padding="15,3,15,3" 
