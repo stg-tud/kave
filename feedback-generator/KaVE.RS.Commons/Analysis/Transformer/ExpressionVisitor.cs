@@ -574,6 +574,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
         }
 
+        public override IAssignableExpression VisitIsExpression(IIsExpression expr, IList<IStatement> body)
+        {
+            return new TypeCheckExpression
+            {
+                Reference = ToVariableRef(expr.Operand, body),
+                Type = expr.IsType.GetName()
+            };
+        }
+
         public override IAssignableExpression VisitUncheckedExpression(IUncheckedExpression expr, IList<IStatement> body)
         {
             var uncheckedBlock = new UncheckedBlock();
