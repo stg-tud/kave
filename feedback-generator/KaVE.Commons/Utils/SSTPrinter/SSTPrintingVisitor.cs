@@ -601,6 +601,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.Text("]");
         }
 
+        public void Visit(ITypeCheckExpression expr, SSTPrintingContext c)
+        {
+            expr.Reference.Accept(this, c);
+            c.Space().Keyword("is").Space().Type(expr.Type);
+        }
+
         public void Visit(IEventReference eventRef, SSTPrintingContext c)
         {
             c.Text(eventRef.Reference.Identifier).Text(".").Text(eventRef.EventName.Name);

@@ -545,6 +545,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
             AssertAccept(_vr);
         }
 
+        [Test]
+        public void TypeCheckExpression()
+        {
+            AssertReturn(new TypeCheckExpression {Reference = _vr});
+            AssertAccept(_vr);
+        }
+
         #endregion
 
         #region references

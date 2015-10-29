@@ -73,8 +73,10 @@
     <Compile Include="Model\SSTs\Expressions\Assignable\IBooleanExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\ICastExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IIndexAccessExpression.cs" />
+    <Compile Include="Model\SSTs\Expressions\Assignable\ITypeCheckExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\CastExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\IndexAccessExpression.cs" />
+    <Compile Include="Model\SSTs\Impl\Expressions\Assignable\TypeCheckExpression.cs" />
     <Compile Include="Model\SSTs\Impl\References\IndexAccessReference.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\CompletionPrefixVisitor.cs" />
     <Compile Include="Model\SSTs\Impl\Statements\EventSubscriptionStatement.cs" />

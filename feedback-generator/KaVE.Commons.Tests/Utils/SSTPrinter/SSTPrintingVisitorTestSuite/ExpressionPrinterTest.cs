@@ -339,6 +339,29 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 
             AssertPrint(sst, "arr[1, 2]");
         }
+ [Test]
+        public void TypeCheckExpression()
+        {
+            var sst = new TypeCheckExpression
+            {
+                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Reference = VarRef("i")
+            };
+
+            AssertPrint(sst, "i is Int32");
+        }
+
+        [Test]
+        public void IndexAccessExpression_Multiple()
+        {
+            var sst = new IndexAccessExpression
+            {
+                Reference = VarRef("arr"),
+                Indices = { new ConstantValueExpression { Value = "1" }, new ConstantValueExpression { Value = "2" } }
+            };
+
+            AssertPrint(sst, "arr[1, 2]");
+        }
 
         private static INullExpression Null()
         {

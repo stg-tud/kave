@@ -134,6 +134,7 @@
     <Compile Include="Model\SSTs\Impl\Declarations\PropertyDeclarationTest.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\CastExpressionTest.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\IndexAccessExpressionTest.cs" />
+    <Compile Include="Model\SSTs\Impl\Expressions\Assignable\TypeCheckExpressionTest.cs" />
     <Compile Include="Model\SSTs\Impl\References\IndexAccessReferenceTest.cs" />
     <Compile Include="Model\SSTs\Impl\Statements\EventSubscriptionStatementTest.cs" />
     <Compile Include="Model\SSTs\Impl\Statements\VariableDeclarationTest.cs" />
