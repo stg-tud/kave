@@ -583,6 +583,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
         }
 
+        public override IAssignableExpression VisitTypeofExpression(ITypeofExpression expr, IList<IStatement> body)
+        {
+            return new ConstantValueExpression();
+        }
+
         public override IAssignableExpression VisitUncheckedExpression(IUncheckedExpression expr, IList<IStatement> body)
         {
             var uncheckedBlock = new UncheckedBlock();

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
@@ -64,6 +65,17 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     Reference = BaseSSTAnalysisTest.VarRef("i"),
                     Expression = new ConstantValueExpression()
                 },
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void TypeofExpression()
+        {
+            CompleteInMethod(@"var t = typeof(int); $");
+
+            AssertBody(
+                VarDecl("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")),
+                VarAssign("t", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
