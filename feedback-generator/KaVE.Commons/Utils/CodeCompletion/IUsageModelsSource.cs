@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-using JetBrains.Application.Settings;
-using JetBrains.UsageStatistics;
+using System;
+using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.RS.Commons.Settings
+namespace KaVE.Commons.Utils.CodeCompletion
 {
-    namespace KaVE.RS.Commons.Settings
+    public interface IUsageModelsSource
     {
-        [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
-        public class ModelStoreSettings
-        {
-            [SettingsEntry(@"c:\kave-models\", "Path to KaVE models")]
-            public string ModelStorePath;
+        [CanBeNull]
+        Uri Source { get; set; }
 
-            [SettingsEntry(@"http://www.kave.cc/", "Remote KaVE models")]
-            public string ModelStoreUri;
-        }
+        [Pure, NotNull]
+        IEnumerable<UsageModelDescriptor> GetUsageModels();
+
+        void Load(UsageModelDescriptor model, string baseTargetDirectory);
     }
 }

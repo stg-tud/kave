@@ -162,7 +162,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             }
         }
 
-        private UsageModelsSource _uut;
+        private LocalUsageModelsSource _uut;
         private IIoUtils _testIoUtil;
 
         [SetUp]
@@ -172,7 +172,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             SetModelFileExists(true);
             Mock.Get(_testIoUtil).Setup(io => io.GetFilesRecursive(BasePath, "*.zip")).Returns(TestFiles);
 
-            _uut = new UsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(BasePath)};
+            _uut = new LocalUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(BasePath)};
         }
 
         [Test]
@@ -184,7 +184,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         [Test]
         public void ShouldBeEmptyIfPathIsInvalid()
         {
-            _uut = new UsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(@"file://notvalid")};
+            _uut = new LocalUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(@"file://notvalid")};
 
             CollectionAssert.IsEmpty(_uut.GetUsageModels());
         }

@@ -15,6 +15,7 @@
  */
 
 using JetBrains.Application;
+using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.IO;
 using KaVE.RS.Commons.Settings;
@@ -23,10 +24,10 @@ using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
-    public class InjectablePBNRecommenderStore : SmilePBNRecommenderStore
+    public class InjectableLocalPBNRecommenderStore : SmilePBNRecommenderStore
     {
-        public InjectablePBNRecommenderStore(IIoUtils io, ISettingsStore store, TypePathUtil typePathUtil)
-            : base(store.GetSettings<ModelStoreSettings>().ModelStorePath, io, typePathUtil)
+        public InjectableLocalPBNRecommenderStore(IIoUtils io, ISettingsStore store, TypePathUtil typePathUtil, IRemotePBNRecommenderStore remoteStore)
+            : base(store.GetSettings<ModelStoreSettings>().ModelStorePath, io, typePathUtil, remoteStore)
         {
             store.SettingsChanged += (sender, args) =>
             {

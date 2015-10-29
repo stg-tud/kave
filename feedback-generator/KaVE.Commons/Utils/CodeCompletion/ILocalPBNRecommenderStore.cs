@@ -16,16 +16,25 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.CodeCompletion
 {
-    public interface IPBNRecommenderStore
+    public interface ILocalPBNRecommenderStore
     {
+        [Pure]
         bool IsAvailable(CoReTypeName typeName);
+
         void Remove(CoReTypeName type);
+
         void RemoveAll();
+
+        [CanBeNull]
         IPBNRecommender Load(CoReTypeName typeName);
+
+        [NotNull]
         IEnumerable<UsageModelDescriptor> GetAvailableModels();
+
         void ReloadAvailableModels();
     }
 }

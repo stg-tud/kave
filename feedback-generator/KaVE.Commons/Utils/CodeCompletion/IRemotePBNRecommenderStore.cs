@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-using JetBrains.Application.Settings;
-using JetBrains.UsageStatistics;
+using System.Collections.Generic;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.RS.Commons.Settings
+namespace KaVE.Commons.Utils.CodeCompletion
 {
-    namespace KaVE.RS.Commons.Settings
+    public interface IRemotePBNRecommenderStore
     {
-        [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
-        public class ModelStoreSettings
-        {
-            [SettingsEntry(@"c:\kave-models\", "Path to KaVE models")]
-            public string ModelStorePath;
+        bool IsAvailable([NotNull] CoReTypeName typeName);
 
-            [SettingsEntry(@"http://www.kave.cc/", "Remote KaVE models")]
-            public string ModelStoreUri;
-        }
+        void Load([NotNull] CoReTypeName typeName);
+
+        void LoadAll();
+
+        [NotNull]
+        IEnumerable<UsageModelDescriptor> GetAvailableModels();
+
+        void ReloadAvailableModels();
     }
 }

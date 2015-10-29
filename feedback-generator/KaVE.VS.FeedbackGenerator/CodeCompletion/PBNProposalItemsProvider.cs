@@ -45,13 +45,13 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
     public class PBNProposalItemsProvider : CSharpItemsProviderBasic, IPBNProposalItemsProvider
     {
         private readonly ILogger _logger;
-        private readonly IPBNRecommenderStore _store;
+        private readonly ILocalPBNRecommenderStore _store;
         private readonly QueryExtractor _queryGen;
         private readonly Dictionary<CoReTypeName, IPBNRecommender> _models;
 
         private Query _currentQuery;
 
-        public PBNProposalItemsProvider(IPBNRecommenderStore store, ILogger logger)
+        public PBNProposalItemsProvider(ILocalPBNRecommenderStore store, ILogger logger)
         {
             _models = new Dictionary<CoReTypeName, IPBNRecommender>();
             _store = store;
@@ -127,7 +127,11 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
                 return _models[type];
             }
             var model = _store.Load(type);
-            _models[type] = model;
+            if (model != null)
+            {
+                _models[type] = model;
+            }
+
             return model;
         }
 

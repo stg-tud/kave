@@ -30,7 +30,7 @@ namespace KaVE.RS.Commons.Injectables
         public InjectableRemotePBNRecommenderStore([NotNull] IIoUtils ioUtils,
             [NotNull] TypePathUtil typePathUtil,
             [NotNull] ISettingsStore store)
-            : base(new UsageModelsSource(ioUtils, typePathUtil), store.GetSettings<ModelStoreSettings>().ModelStorePath)
+            : base(new LocalUsageModelsSource(ioUtils, typePathUtil), store.GetSettings<ModelStoreSettings>().ModelStorePath)
         {
             UsageModelsSource.Source = ConvertToUri(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
 

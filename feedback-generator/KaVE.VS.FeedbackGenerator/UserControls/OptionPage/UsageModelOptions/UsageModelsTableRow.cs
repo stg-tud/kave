@@ -28,7 +28,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
     public class UsageModelsTableRow
     {
         [CanBeNull]
-        private readonly IPBNRecommenderStore _localStore;
+        private readonly ILocalPBNRecommenderStore _localStore;
 
         [CanBeNull]
         private readonly IRemotePBNRecommenderStore _remoteStore;
@@ -75,7 +75,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return new RelayCommand(RemoveModel); }
         }
 
-        public UsageModelsTableRow([CanBeNull] IPBNRecommenderStore localStore,
+        public UsageModelsTableRow([CanBeNull] ILocalPBNRecommenderStore localStore,
             [CanBeNull] IRemotePBNRecommenderStore remoteStore,
             [NotNull] CoReTypeName typeName,
             [CanBeNull] int? loadedVersion,

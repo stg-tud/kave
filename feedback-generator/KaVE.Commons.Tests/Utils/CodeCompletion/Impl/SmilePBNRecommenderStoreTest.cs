@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.IO;
@@ -36,6 +35,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
 
         private static bool _shouldZipBeFound;
         private static bool _shouldXdslBeFound;
+        private IRemotePBNRecommenderStore _remoteStore;
 
         [SetUp]
         public void SetUp()
@@ -57,7 +57,9 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             Mock.Get(_io).Setup(io => io.FileExists(fullXdslFileName)).Returns(() => _shouldXdslBeFound);
             Mock.Get(_io).Setup(io => io.GetFilesRecursive(_basePath, "*.zip")).Returns(() => TestTypeFiles);
 
-            _sut = new SmilePBNRecommenderStore(_basePath, _io, new TypePathUtil());
+            _remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
+
+            _sut = new SmilePBNRecommenderStore(_basePath, _io, new TypePathUtil(), _remoteStore);
         }
 
         [TearDown]
@@ -75,7 +77,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         [Test]
         public void IsAvailable_NoRootFolder()
         {
-            _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil());
+            _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil(), _remoteStore);
             Assert.False(_sut.IsAvailable(SomeType));
             // verify non unzip
         }
@@ -101,35 +103,35 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             Assert.AreEqual(expected, actual);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test]
         public void Load_NoRootFolder()
         {
-            _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil());
-            _sut.Load(SomeType);
+            _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil(), _remoteStore);
+            Assert.IsNull(_sut.Load(SomeType));
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test]
         public void Load_NoZipExists()
         {
             _shouldZipBeFound = false;
             _sut.ReloadAvailableModels();
-            _sut.Load(SomeType);
+            Assert.IsNull(_sut.Load(SomeType));
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test]
         public void Load_XdslFileNotFound()
         {
             _shouldXdslBeFound = false;
-            _sut.Load(SomeType);
+            Assert.IsNull(_sut.Load(SomeType));
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test]
         public void Load_ExceptionWhileInstantiating()
         {
             var fullXdslFileName = Path.Combine(_tmpPath, XdslFileForSomeType);
             File.Delete(fullXdslFileName);
             File.WriteAllText(fullXdslFileName, "this cannot be parsed by smile");
-            _sut.Load(SomeType);
+            Assert.IsNull(_sut.Load(SomeType));
         }
 
         [Test]
@@ -179,14 +181,37 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         [Test]
         public void ShouldLoadModelsOnReload()
         {
-
             Mock.Get(_io)
                 .Setup(io => io.GetFilesRecursive(_basePath, "*.zip"))
-                .Returns(new[] { "LSomePackage/SomeType.5.zip" });
+                .Returns(new[] {"LSomePackage/SomeType.5.zip"});
 
             _sut.ReloadAvailableModels();
 
-            CollectionAssert.AreEquivalent(new [] {new UsageModelDescriptor(new CoReTypeName("LSomePackage/SomeType"), 5)}, _sut.GetAvailableModels());
+            CollectionAssert.AreEquivalent(
+                new[] {new UsageModelDescriptor(new CoReTypeName("LSomePackage/SomeType"), 5)},
+                _sut.GetAvailableModels());
+        }
+
+        [Test]
+        public void ShouldTriggerRemoteLoadIfEnabled()
+        {
+            _sut.EnableAutoRemoteLoad = true;
+            var testType = new CoReTypeName("LNotLocallyAvailable");
+
+            _sut.Load(testType);
+
+            Mock.Get(_remoteStore).Verify(remoteStore => remoteStore.Load(testType), Times.Once);
+        }
+
+        [Test]
+        public void ShouldNotTriggerRemoteLoadIfDisabled()
+        {
+            _sut.EnableAutoRemoteLoad = false;
+            var testType = new CoReTypeName("LNotLocallyAvailable");
+
+            _sut.Load(testType);
+
+            Mock.Get(_remoteStore).Verify(remoteStore => remoteStore.Load(testType), Times.Never);
         }
 
         #region helper

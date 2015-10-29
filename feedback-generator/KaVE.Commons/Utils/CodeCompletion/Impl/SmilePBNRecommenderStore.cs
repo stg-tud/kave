@@ -20,23 +20,37 @@ using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
+using KaVE.JetBrains.Annotations;
 using Smile;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
-    public class SmilePBNRecommenderStore : IPBNRecommenderStore
+    public class SmilePBNRecommenderStore : ILocalPBNRecommenderStore
     {
         public string BasePath { get; protected set; }
 
+        public bool EnableAutoRemoteLoad = false;
+
         private readonly IIoUtils _io;
         private readonly TypePathUtil _typePathUtil;
+
+        [NotNull]
         private IEnumerable<UsageModelDescriptor> _availableModels;
 
-        public SmilePBNRecommenderStore(string basePath, IIoUtils io, TypePathUtil typePathUtil)
+        private readonly IRemotePBNRecommenderStore _remoteStore;
+
+        public SmilePBNRecommenderStore(string basePath,
+            IIoUtils io,
+            TypePathUtil typePathUtil,
+            IRemotePBNRecommenderStore remoteStore)
         {
+            _remoteStore = remoteStore;
             BasePath = basePath;
             _io = io;
             _typePathUtil = typePathUtil;
+
+            _availableModels = new List<UsageModelDescriptor>();
+            ReloadAvailableModels();
         }
 
         public bool IsAvailable(CoReTypeName type)
@@ -63,16 +77,37 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
         public IPBNRecommender Load(CoReTypeName type)
         {
             var availableModel = GetAvailableModels().FirstOrDefault(model => model.TypeName.Equals(type));
-            Asserts.NotNull(availableModel, "Model for {0} is not available", type);
+            if (availableModel == null)
+            {
+                LoadFromRemote(type);
+                return null;
+            }
 
             var zipFileName = GetNestedFileName(BasePath, type, availableModel.Version, "zip");
 
             var tmpFolder = _io.UnzipToTempFolder(zipFileName);
             var xdslFileName = GetFlatFileName(tmpFolder, type, "xdsl");
-            Asserts.That(_io.FileExists(xdslFileName), "Couldn't find xdsl file for {0}", type);
+            if (!_io.FileExists(xdslFileName))
+            {
+                return null;
+            }
 
-            var network = ReadNetwork(xdslFileName);
-            return new SmilePBNRecommender(type, network);
+            try
+            {
+                return new SmilePBNRecommender(type, ReadNetwork(xdslFileName));
+            }
+            catch (AssertException)
+            {
+                return null;
+            }
+        }
+
+        private void LoadFromRemote(CoReTypeName type)
+        {
+            if (EnableAutoRemoteLoad)
+            {
+                _remoteStore.Load(type);
+            }
         }
 
         private static Network ReadNetwork(string xdslFileName)
@@ -105,11 +140,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 
         public IEnumerable<UsageModelDescriptor> GetAvailableModels()
         {
-            if (_availableModels == null)
-            {
-                ReloadAvailableModels();
-            }
-
             return _availableModels;
         }
 

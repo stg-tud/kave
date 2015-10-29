@@ -33,7 +33,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private UsageModelOptionsControl _sut;
         private Mock<IPBNProposalItemsProvider> _proposalItemProviderMock;
         private Mock<IRemotePBNRecommenderStore> _remoteStoreMock;
-        private Mock<IPBNRecommenderStore> _localStoreMock;
+        private Mock<ILocalPBNRecommenderStore> _localStoreMock;
 
         private UsageModelOptionsViewModel ViewModel
         {
@@ -46,7 +46,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             _proposalItemProviderMock = new Mock<IPBNProposalItemsProvider>();
             Registry.RegisterComponent(_proposalItemProviderMock.Object);
 
-            _localStoreMock = new Mock<IPBNRecommenderStore>();
+            _localStoreMock = new Mock<ILocalPBNRecommenderStore>();
             Registry.RegisterComponent(_localStoreMock.Object);
 
             _remoteStoreMock = new Mock<IRemotePBNRecommenderStore>();

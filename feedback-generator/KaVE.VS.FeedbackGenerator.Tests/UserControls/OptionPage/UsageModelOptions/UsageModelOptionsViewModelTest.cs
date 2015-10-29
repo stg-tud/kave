@@ -64,19 +64,19 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                 return new KaVEList<UsageModelsTableRow>
                 {
                     new UsageModelsTableRow(
-                        Mock.Of<IPBNRecommenderStore>(),
+                        Mock.Of<ILocalPBNRecommenderStore>(),
                         Mock.Of<IRemotePBNRecommenderStore>(),
                         new CoReTypeName("LSomeAssembly/SomeType"),
                         2,
                         4),
                     new UsageModelsTableRow(
-                        Mock.Of<IPBNRecommenderStore>(),
+                        Mock.Of<ILocalPBNRecommenderStore>(),
                         Mock.Of<IRemotePBNRecommenderStore>(),
                         new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"),
                         3,
                         null),
                     new UsageModelsTableRow(
-                        Mock.Of<IPBNRecommenderStore>(),
+                        Mock.Of<ILocalPBNRecommenderStore>(),
                         Mock.Of<IRemotePBNRecommenderStore>(),
                         new CoReTypeName("LSomeAssembly/OnlyRemoteType"),
                         null,
@@ -87,7 +87,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 
         private UsageModelOptionsViewModel _uut;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
-        private IPBNRecommenderStore _localStore;
+        private ILocalPBNRecommenderStore _localStore;
         private IRemotePBNRecommenderStore _remoteStore;
 
         [SetUp]
@@ -96,7 +96,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             _uut = new UsageModelOptionsViewModel();
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
 
-            _localStore = Mock.Of<IPBNRecommenderStore>();
+            _localStore = Mock.Of<ILocalPBNRecommenderStore>();
             Mock.Get(_localStore).Setup(store => store.GetAvailableModels()).Returns(SomeLocalModels);
             Registry.RegisterComponent(_localStore);
 

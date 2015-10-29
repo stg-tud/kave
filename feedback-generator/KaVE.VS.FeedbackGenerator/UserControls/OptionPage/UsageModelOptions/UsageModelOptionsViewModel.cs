@@ -81,13 +81,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         }
 
         [CanBeNull]
-        private static IPBNRecommenderStore LocalStore
+        private static ILocalPBNRecommenderStore LocalStore
         {
             get
             {
                 try
                 {
-                    return Registry.GetComponent<IPBNRecommenderStore>();
+                    return Registry.GetComponent<ILocalPBNRecommenderStore>();
                 }
                 catch (InvalidOperationException)
                 {

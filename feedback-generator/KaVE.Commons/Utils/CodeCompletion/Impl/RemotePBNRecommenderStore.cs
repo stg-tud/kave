@@ -21,20 +21,6 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
-    public interface IRemotePBNRecommenderStore
-    {
-        bool IsAvailable([NotNull] CoReTypeName typeName);
-
-        void Load([NotNull] CoReTypeName typeName);
-
-        void LoadAll();
-
-        [NotNull]
-        IEnumerable<UsageModelDescriptor> GetAvailableModels();
-
-        void ReloadAvailableModels();
-    }
-
     public class RemotePBNRecommenderStore : IRemotePBNRecommenderStore
     {
         [CanBeNull]

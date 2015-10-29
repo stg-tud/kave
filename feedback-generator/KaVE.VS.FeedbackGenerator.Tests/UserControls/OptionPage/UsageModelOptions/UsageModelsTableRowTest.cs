@@ -32,13 +32,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private const int SomeNewestAvailableVersion = 14;
 
         private UsageModelsTableRow _uut;
-        private IPBNRecommenderStore _localStore;
+        private ILocalPBNRecommenderStore _localStore;
         private IRemotePBNRecommenderStore _remoteStore;
 
         [SetUp]
         public void Setup()
         {
-            _localStore = Mock.Of<IPBNRecommenderStore>();
+            _localStore = Mock.Of<ILocalPBNRecommenderStore>();
             _remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
             _uut = new UsageModelsTableRow(
                 _localStore,
@@ -118,13 +118,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         public void Equality_StoresAreIgnored()
         {
             var a = new UsageModelsTableRow(
-                Mock.Of<IPBNRecommenderStore>(),
+                Mock.Of<ILocalPBNRecommenderStore>(),
                 Mock.Of<IRemotePBNRecommenderStore>(),
                 new CoReTypeName("LSomeType"),
                 1,
                 2);
             var b = new UsageModelsTableRow(
-                Mock.Of<IPBNRecommenderStore>(),
+                Mock.Of<ILocalPBNRecommenderStore>(),
                 Mock.Of<IRemotePBNRecommenderStore>(),
                 new CoReTypeName("LSomeType"),
                 1,

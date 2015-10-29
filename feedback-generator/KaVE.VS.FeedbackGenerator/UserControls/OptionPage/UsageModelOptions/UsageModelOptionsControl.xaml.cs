@@ -106,7 +106,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             var result = dialog.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                ModelStoreUriTextBox.Text = new Uri(dialog.SelectedPath).AbsoluteUri;
+                ModelStoreUriTextBox.Text = dialog.SelectedPath;
             }
         }
 

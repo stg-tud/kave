@@ -179,7 +179,7 @@
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="Analysis\Util\Scope.cs" />
     <Compile Include="Analysis\Util\UniqueVariableNameGenerator.cs" />
-    <Compile Include="Injectables\InjectablePBNRecommenderStore.cs" />
+    <Compile Include="Injectables\InjectableLocalPBNRecommenderStore.cs" />
     <Compile Include="Injectables\InjectableRandomizationUtils.cs" />
     <Compile Include="Injectables\InjectableRemotePBNRecommenderStore.cs" />
     <Compile Include="Injectables\InjectableTypePathUtil.cs" />
