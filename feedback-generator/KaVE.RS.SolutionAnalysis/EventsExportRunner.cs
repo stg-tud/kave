@@ -101,7 +101,7 @@ namespace KaVE.RS.SolutionAnalysis
                     eventList.Add(e);
                 }
 
-                var idx = eventList.IndexOf(e) + 1;
+                var idx = eventList.IndexOf(e);
 
                 if (e.Kind == EventKind.MethodStart)
                 {
