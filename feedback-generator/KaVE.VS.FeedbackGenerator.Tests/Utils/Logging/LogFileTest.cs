@@ -92,6 +92,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void ShouldApproximateTheNumberOfContainedEvents()
+        {
+            _mockIoUtils.Setup(io => io.CountLines(It.IsAny<string>())).Returns(123);
+            Assert.AreEqual(123, _uut.ApproximateNumberOfEvents);
+        }
+
+        private static TestIDEEvent Test(int num)
+        {
+            return new TestIDEEvent {TestProperty = "" + num};
+        }
+
+        [Test]
         public void ShouldInditicateIfEmpty()
         {
             GivenTestLogContains( /* empty */);

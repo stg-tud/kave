@@ -117,6 +117,11 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
                             Path));
         }
 
+        public int ApproximateNumberOfEvents
+        {
+            get { return _ioUtils.CountLines(Path); }
+        }
+
         public bool IsEmpty()
         {
             using (var reader = NewLogReader())

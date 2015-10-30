@@ -54,6 +54,8 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 
         long SizeInBytes { get; }
 
+        int ApproximateNumberOfEvents { get; }
+
         bool IsEmpty();
 
         IEnumerable<IDEEvent> ReadAll();

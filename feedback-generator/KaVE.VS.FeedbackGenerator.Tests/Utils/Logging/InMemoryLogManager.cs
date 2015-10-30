@@ -42,7 +42,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 
         public void Add(DateTime logDate, IEnumerable<IDEEvent> logEntries)
         {
-            var log = new InMemoryLog { Date = logDate };
+            var log = new InMemoryLog {Date = logDate};
             logEntries.ForEach(log.Append);
             _logs.Add(logDate, log);
         }
@@ -99,6 +99,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
             private readonly IList<IDEEvent> _entries = new List<IDEEvent>();
 
             public long SizeInBytes
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public int ApproximateNumberOfEvents
             {
                 get { throw new NotImplementedException(); }
             }

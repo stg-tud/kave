@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -403,6 +404,60 @@ namespace KaVE.Commons.Tests.Utils.IO
             var zipFileName = Path.Combine(_testRoot, "NonExistingParent", "a.zip");
             _sut.CreateArchive(zipFileName);
         }
+
+        [Test]
+        public void ShouldCountLines()
+        {
+            var file = Path.Combine(_testRoot, "x.txt");
+
+            CreateContentInFile(file, 0);
+            Assert.AreEqual(0, _sut.CountLines(file));
+
+            CreateContentInFile(file, 1);
+            Assert.AreEqual(1, _sut.CountLines(file));
+
+            CreateContentInFile(file, 10);
+            Assert.AreEqual(10, _sut.CountLines(file));
+        }
+
+        [Test]
+        public void ShouldManageToCountLinesInLargeLinesInReasonableAmountOfTime()
+        {
+            const int maxLines = 20000;
+            
+            var rnd = new Random();
+            var file = Path.Combine(_testRoot, "x.txt");
+            var lines = new List<string>();
+            for (var i = 0; i < maxLines; i++)
+            {
+                var sb = new StringBuilder();
+                var linelength = 1000 + rnd.Next()%10000;
+                for (var j = 0; j < linelength; j++)
+                {
+                    sb.Append('.');
+                }
+                lines.Add(sb.ToString());
+            }
+            File.WriteAllLines(file, lines);
+
+            var sw = Stopwatch.StartNew();
+            Assert.AreEqual(maxLines, _sut.CountLines(file));
+            var duration = sw.ElapsedMilliseconds;
+
+            Assert.That(duration < 3*1000); // 3s
+        }
+
+        private static void CreateContentInFile(string fileName, int numLines)
+        {
+            var lines = new List<string>();
+            for (var i = 0; i < numLines; i++)
+            {
+                var line = "l" + i;
+                lines.Add(line);
+            }
+            File.WriteAllLines(fileName, lines);
+        }
+
 
         private object AssertExistsAndRead(string folder, string fileName)
         {

@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using Ionic.Zip;
 using KaVE.Commons.Utils.Assertion;
@@ -162,6 +163,11 @@ namespace KaVE.Commons.Utils.IO
             Asserts.Not(File.Exists(fileName));
             Asserts.That(Directory.GetParent(fileName).Exists);
             return new WritingArchive(fileName);
+        }
+
+        public int CountLines(string fileName)
+        {
+            return File.ReadLines(fileName).Count();
         }
     }
 }

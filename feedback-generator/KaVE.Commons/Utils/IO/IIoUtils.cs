@@ -61,5 +61,7 @@ namespace KaVE.Commons.Utils.IO
 
         IReadingArchive ReadArchive(string fileName);
         IWritingArchive CreateArchive(string fileName);
+
+        int CountLines(string fileName);
     }
 }
