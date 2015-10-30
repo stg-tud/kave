@@ -91,6 +91,7 @@ namespace KaVE.RS.SolutionAnalysis
             var uniqueEvents = new HashSet<Event>();
             var eventList = new List<Event>();
 
+            var isFirstMethod = true;
             var time = 0.000;
 
             foreach (var e in events)
@@ -103,10 +104,11 @@ namespace KaVE.RS.SolutionAnalysis
 
                 var idx = eventList.IndexOf(e);
 
-                if (e.Kind == EventKind.MethodStart)
+                if (e.Kind == EventKind.MethodDeclaration && !isFirstMethod)
                 {
                     time += EventStreamTimeout;
                 }
+                isFirstMethod = false;
 
                 streamFile.Write("{0},{1:0.000}\n", idx, time);
 

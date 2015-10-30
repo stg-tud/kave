@@ -22,12 +22,11 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
     internal class Event
     {
         public EventKind Kind;
-        public ITypeName Type;
         public IMethodName Method;
 
         protected bool Equals(Event other)
         {
-            return Kind == other.Kind && Equals(Type, other.Type) && Equals(Method, other.Method);
+            return Kind == other.Kind && Equals(Method, other.Method);
         }
 
         public override bool Equals(object obj)
@@ -52,7 +51,6 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
             unchecked
             {
                 var hashCode = (int) Kind;
-                hashCode = (hashCode*397) ^ (Type != null ? Type.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Method != null ? Method.GetHashCode() : 0);
                 return hashCode;
             }
@@ -66,8 +64,7 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
 
     internal enum EventKind
     {
-        Stop,
-        MethodStart,
+        MethodDeclaration,
         Invocation
     }
 }

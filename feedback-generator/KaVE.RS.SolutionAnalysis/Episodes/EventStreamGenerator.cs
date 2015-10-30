@@ -44,8 +44,17 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
 
         public override void Visit(IInvocationExpression inv, IList<Event> events)
         {
-            AddMethodIf(events);
-            events.Add(Events.NewInvocation(inv.MethodName));
+            var isUnknownMethod = MethodName.UnknownName.Equals(inv.MethodName);
+            if (!isUnknownMethod)
+            {
+                AddMethodIf(events);
+                events.Add(Events.NewInvocation(inv.MethodName));
+            }
+        }
+
+        public override void Visit(ILambdaExpression inv, IList<Event> events)
+        {
+            // stop here for now!
         }
 
         private void AddMethodIf(IList<Event> events)
@@ -61,20 +70,11 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
 
     internal class Events
     {
-        public static Event NewStopEvent()
-        {
-            return new Event
-            {
-                Kind = EventKind.Stop,
-                Method = MethodName.UnknownName
-            };
-        }
-
         public static Event NewMethodEvent(IMethodName name)
         {
             return new Event
             {
-                Kind = EventKind.MethodStart,
+                Kind = EventKind.MethodDeclaration,
                 Method = name
             };
         }
