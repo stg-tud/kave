@@ -17,7 +17,6 @@
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.CodeCompletion;
-using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using Moq;
@@ -58,21 +57,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         public void IsUpdateableTest(int? localVersion, int? remoteVersion, bool shouldBeUpdateable)
         {
             _uut = new UsageModelsTableRow(_localStore, _remoteStore, SomeTypeName, localVersion, remoteVersion);
-            Assert.AreEqual(shouldBeUpdateable, _uut.IsUpdateable);
+            Assert.AreEqual(shouldBeUpdateable, _uut.UpdateModel.CanExecute(null));
         }
 
         [TestCase(null, 0, true), TestCase(null, null, false), TestCase(0, 1, false)]
         public void IsInstallableTest(int? localVersion, int? remoteVersion, bool shouldBeInstallable)
         {
             _uut = new UsageModelsTableRow(_localStore, _remoteStore, SomeTypeName, localVersion, remoteVersion);
-            Assert.AreEqual(shouldBeInstallable, _uut.IsInstallable);
+            Assert.AreEqual(shouldBeInstallable, _uut.LoadedVersion == null && _uut.NewestAvailableVersion != null);
         }
 
         [TestCase(1, 1, true), TestCase(null, 0, false)]
         public void IsRemoveableTest(int? localVersion, int? remoteVersion, bool shouldBeRemoveable)
         {
             _uut = new UsageModelsTableRow(_localStore, _remoteStore, SomeTypeName, localVersion, remoteVersion);
-            Assert.AreEqual(shouldBeRemoveable, _uut.IsRemoveable);
+            Assert.AreEqual(shouldBeRemoveable, _uut.RemoveModel.CanExecute(null));
         }
 
         [Test]
@@ -135,21 +134,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void CallModelLoadOnInstall()
         {
-            _uut.OnInstall.Execute(null);
+            _uut.InstallModel.Execute(null);
             Mock.Get(_remoteStore).Verify(store => store.Load(SomeTypeName));
         }
 
         [Test]
         public void CallModelLoadOnUpdate()
         {
-            _uut.OnInstall.Execute(null);
+            _uut.UpdateModel.Execute(null);
             Mock.Get(_remoteStore).Verify(store => store.Load(SomeTypeName));
         }
 
         [Test]
         public void CallModelRemoveOnRemove()
         {
-            _uut.OnRemove.Execute(null);
+            _uut.RemoveModel.Execute(null);
             Mock.Get(_localStore).Verify(store => store.Remove(SomeTypeName));
         }
     }

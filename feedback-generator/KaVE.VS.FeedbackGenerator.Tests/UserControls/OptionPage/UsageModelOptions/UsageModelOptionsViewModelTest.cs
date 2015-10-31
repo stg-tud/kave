@@ -93,7 +93,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [SetUp]
         public void SetUp()
         {
-            _uut = new UsageModelOptionsViewModel();
+            var mergingStrategy = Mock.Of<IUsageModelMergingStrategy>();
+            Mock.Get(mergingStrategy).Setup(strategy => strategy.MergeAvailableModels(_localStore, _remoteStore)).Returns(ExpectedUsageModelsTableContent);
+
+            _uut = new UsageModelOptionsViewModel(mergingStrategy);
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
 
             _localStore = Mock.Of<ILocalPBNRecommenderStore>();
@@ -145,7 +148,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void GeneratingUsageModelsTableContent()
         {
-            _uut.ReloadUsageModelsTableContent();
+            // TODO test merging logic in UsageModelMergingStrategy
             CollectionAssert.AreEquivalent(ExpectedUsageModelsTableContent, _uut.UsageModelsTableContent);
         }
 

@@ -112,20 +112,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public IEnumerable<UsageModelsTableRow> UsageModelsTableContent
-        {
-            get { return _usageModelsTableContent; }
-            set
-            {
-                _usageModelsTableContent = value;
-                RaisePropertyChanged(self => self.UsageModelsTableContent);
-            }
-        }
+        public IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; set; }
 
-        private IEnumerable<UsageModelsTableRow> _usageModelsTableContent;
+        [NotNull]
+        private readonly IUsageModelMergingStrategy _mergingStrategy;
 
-        public UsageModelOptionsViewModel()
+        public UsageModelOptionsViewModel([NotNull] IUsageModelMergingStrategy mergingStrategy)
         {
+            _mergingStrategy = mergingStrategy;
             _errorNotificationRequest = new InteractionRequest<Notification>();
             ReloadUsageModelsTableContent();
         }
@@ -141,42 +135,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 RemoteStore.ReloadAvailableModels();
             }
 
-            UsageModelsTableContent = MergeAvailableModels();
-        }
-
-        [Pure]
-        private static IEnumerable<UsageModelsTableRow> MergeAvailableModels()
-        {
-            var mergedModels = RemoteStore != null
-                ? RemoteStore.GetAvailableModels()
-                             .ToDictionary(
-                                 remoteModel => remoteModel.TypeName,
-                                 remoteModel =>
-                                     new UsageModelsTableRow(
-                                         LocalStore,
-                                         RemoteStore,
-                                         remoteModel.TypeName,
-                                         null,
-                                         remoteModel.Version))
-                : new Dictionary<CoReTypeName, UsageModelsTableRow>();
-
-            foreach (
-                var localModel in
-                    LocalStore != null ? LocalStore.GetAvailableModels() : Lists.NewList<UsageModelDescriptor>())
-            {
-                if (mergedModels.ContainsKey(localModel.TypeName))
-                {
-                    mergedModels[localModel.TypeName].LoadedVersion = localModel.Version;
-                }
-                else
-                {
-                    mergedModels.Add(
-                        localModel.TypeName,
-                        new UsageModelsTableRow(LocalStore, RemoteStore, localModel.TypeName, localModel.Version, null));
-                }
-            }
-
-            return mergedModels.Values;
+            UsageModelsTableContent = _mergingStrategy.MergeAvailableModels(LocalStore, RemoteStore);
         }
 
         public void UpdateAllModels()

@@ -24,7 +24,6 @@ using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
-using JetBrains.Util;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
@@ -56,7 +55,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             KaVEISettingsStore settingsStore,
             IActionExecutor actionExecutor,
             DataContexts dataContexts,
-            IMessageBoxCreator messageBoxCreator)
+            IMessageBoxCreator messageBoxCreator,
+            IUsageModelMergingStrategy usageModelMergingStrategy)
         {
             _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
@@ -67,7 +67,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
-            DataContext = new UsageModelOptionsViewModel
+            DataContext = new UsageModelOptionsViewModel(usageModelMergingStrategy)
             {
                 ModelStoreSettings = _modelStoreSettings
             };
@@ -132,7 +132,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             try
             {
                 Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
-
             }
             catch (InvalidOperationException) {}
 
@@ -146,7 +145,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void OnRemoveAllModels(object sender, RoutedEventArgs e)
         {
-            ((UsageModelOptionsViewModel)DataContext).RemoveAllModels();
+            ((UsageModelOptionsViewModel) DataContext).RemoveAllModels();
         }
 
         public bool OnOk()

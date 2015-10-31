@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Windows.Input;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils.CodeCompletion;
-using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
@@ -34,10 +35,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private Mock<IPBNProposalItemsProvider> _proposalItemProviderMock;
         private Mock<IRemotePBNRecommenderStore> _remoteStoreMock;
         private Mock<ILocalPBNRecommenderStore> _localStoreMock;
+        private Mock<IUsageModelMergingStrategy> _mergingStrategyMock;
 
         private UsageModelOptionsViewModel ViewModel
         {
             get { return (UsageModelOptionsViewModel) _sut.DataContext; }
+        }
+
+        private static List<IUsageModelsTableRow> TestRows
+        {
+            get
+            {
+                return new List<IUsageModelsTableRow>
+                {
+                    GenerateMockedRow(true, true, true),
+                    GenerateMockedRow(true, true, true),
+                    GenerateMockedRow(true, true, true)
+                };
+            }
         }
 
         [SetUp]
@@ -51,6 +66,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 
             _remoteStoreMock = new Mock<IRemotePBNRecommenderStore>();
             Registry.RegisterComponent(_remoteStoreMock.Object);
+
+            _mergingStrategyMock = new Mock<IUsageModelMergingStrategy>();
+            _mergingStrategyMock.Setup(
+                merging => merging.MergeAvailableModels(_localStoreMock.Object, _remoteStoreMock.Object))
+                                .Returns(TestRows);
 
             MockSettingsStore.Setup(settingsStore => settingsStore.GetSettings<ModelStoreSettings>())
                              .Returns(new ModelStoreSettings());
@@ -74,7 +94,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                         MockSettingsStore.Object,
                         MockActionExecutor.Object,
                         TestDataContexts,
-                        MockMessageBoxCreator.Object
+                        MockMessageBoxCreator.Object,
+                        _mergingStrategyMock.Object
                         ));
         }
 
@@ -138,8 +159,29 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         public void Binding_UsageModelsTableItemsSource()
         {
             Assert.AreSame(ViewModel.UsageModelsTableContent, _sut.UsageModelsTable.ItemsSource);
-            ViewModel.UsageModelsTableContent = new UsageModelsTableRow[0];
-            Assert.AreSame(ViewModel.UsageModelsTableContent, _sut.UsageModelsTable.ItemsSource);
+        }
+
+        private static IUsageModelsTableRow GenerateMockedRow(bool isInstallable, bool isUpdateable, bool isRemoveable)
+        {
+            var mockedRow = new Mock<IUsageModelsTableRow>();
+
+            var installCommand = new Mock<ICommand>();
+            installCommand.Setup(command => command.CanExecute(It.IsAny<object>())).Returns(isInstallable);
+            var updateCommand = new Mock<ICommand>();
+            updateCommand.Setup(command => command.CanExecute(It.IsAny<object>())).Returns(isUpdateable);
+            var removeCommand = new Mock<ICommand>();
+            removeCommand.Setup(command => command.CanExecute(It.IsAny<object>())).Returns(isRemoveable);
+
+            mockedRow.Setup(row => row.InstallModel).Returns(installCommand.Object);
+            mockedRow.Setup(row => row.UpdateModel).Returns(updateCommand.Object);
+            mockedRow.Setup(row => row.RemoveModel).Returns(removeCommand.Object);
+
+            return mockedRow.Object;
+        }
+
+        private static void VerifyExecuted(Mock<ICommand> commandMock)
+        {
+            commandMock.Verify(command => command.Execute(It.IsAny<object>()));
         }
     }
 }

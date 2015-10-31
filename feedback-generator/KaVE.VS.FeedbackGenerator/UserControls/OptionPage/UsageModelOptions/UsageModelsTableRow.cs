@@ -15,17 +15,38 @@
  */
 
 using System.Windows.Input;
-using JetBrains.Util;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion;
-using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.JetBrains.Annotations;
 using MsgBox.Commands;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
-    public class UsageModelsTableRow
+    public interface IUsageModelsTableRow
+    {
+        [NotNull]
+        CoReTypeName TypeName { get; set; }
+
+        [CanBeNull]
+        int? LoadedVersion { get; set; }
+
+        [CanBeNull]
+        int? NewestAvailableVersion { get; set; }
+
+        [NotNull]
+        ICommand InstallModel { get; }
+
+        [NotNull]
+        ICommand UpdateModel { get; }
+
+        [NotNull]
+        ICommand RemoveModel { get; }
+
+        void Install();
+    }
+
+    public class UsageModelsTableRow : IUsageModelsTableRow
     {
         [CanBeNull]
         private readonly ILocalPBNRecommenderStore _localStore;
@@ -33,47 +54,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         [CanBeNull]
         private readonly IRemotePBNRecommenderStore _remoteStore;
 
-        [NotNull]
         public CoReTypeName TypeName { get; set; }
 
-        [CanBeNull]
         public int? LoadedVersion { get; set; }
 
-        [CanBeNull]
         public int? NewestAvailableVersion { get; set; }
 
-        public bool IsUpdateable
+        public ICommand InstallModel
         {
-            get
-            {
-                return LoadedVersion != null && NewestAvailableVersion != null && LoadedVersion < NewestAvailableVersion;
-            }
+            get { return new RelayCommand(Install, IsInstallable); }
         }
 
-        public bool IsInstallable
+        public ICommand UpdateModel
         {
-            get { return LoadedVersion == null && NewestAvailableVersion != null; }
+            get { return new RelayCommand(Update, IsUpdateable); }
         }
 
-        public bool IsRemoveable
+        public ICommand RemoveModel
         {
-            get { return LoadedVersion != null; }
+            get { return new RelayCommand(Remove, IsRemoveable); }
         }
 
-        public ICommand OnInstall
-        {
-            get { return new RelayCommand(InstallModel); }
-        }
-
-        public ICommand OnUpdate
-        {
-            get { return new RelayCommand(UpdateModel); }
-        }
-
-        public ICommand OnRemove
-        {
-            get { return new RelayCommand(RemoveModel); }
-        }
 
         public UsageModelsTableRow([CanBeNull] ILocalPBNRecommenderStore localStore,
             [CanBeNull] IRemotePBNRecommenderStore remoteStore,
@@ -88,7 +89,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             NewestAvailableVersion = newestAvailableVersion;
         }
 
-        private void InstallModel()
+        public void Install()
         {
             if (_remoteStore != null)
             {
@@ -96,7 +97,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private void UpdateModel()
+        private void Update()
         {
             if (_remoteStore != null)
             {
@@ -104,12 +105,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private void RemoveModel()
+        private void Remove()
         {
             if (_localStore != null)
             {
                 _localStore.Remove(TypeName);
             }
+        }
+
+        private bool IsInstallable()
+        {
+            return LoadedVersion == null && NewestAvailableVersion != null;
+        }
+
+        public bool IsUpdateable()
+        {
+            return LoadedVersion != null && NewestAvailableVersion != null && LoadedVersion < NewestAvailableVersion;
+        }
+
+        private bool IsRemoveable()
+        {
+            return LoadedVersion != null;
         }
 
         public override bool Equals(object obj)

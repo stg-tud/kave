@@ -23,7 +23,7 @@ limitations under the License.
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <Grid Margin="5,5,5,5">
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -41,66 +41,57 @@ limitations under the License.
                Content="{x:Static properties:SessionManager.Options_ModelPath}"
                Margin="0,0,0,0" />
         <TextBox Grid.Row="0" Grid.Column="1" Name="ModelStorePathTextBox"
-                 VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,10,0"
+                 VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10,0,10,0"
                  Text="{Binding ModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <Button Grid.Row="0" Grid.Column="2" Name="ModelStorePathBrowseButton"
-                Click="OnBrowse_Path" Content="Browse ..." />
+                Click="OnBrowse_Path" Content="Browse ..." VerticalAlignment="Center" />
 
         <!--model url-->
         <Label Grid.Row="1" Grid.Column="0"
                Content="{x:Static properties:SessionManager.Options_ModelUri}"
                Margin="0,0,0,0" />
         <TextBox Grid.Row="1" Grid.Column="1" Name="ModelStoreUriTextBox"
-                 VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,10,0"
+                 VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10,0,10,0"
                  Text="{Binding ModelUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <Button Grid.Row="1" Grid.Column="2" Name="ModelStoreUriBrowseButton" 
-                Click="OnBrowse_Uri" Content="Browse ..." />
+        <Button Grid.Row="1" Grid.Column="2" Name="ModelStoreUriBrowseButton"
+                Click="OnBrowse_Uri" Content="Browse ..." VerticalAlignment="Center" />
 
-        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" SelectionMode="Single"
-                  Name="UsageModelsTable" ColumnWidth="*" ScrollViewer.CanContentScroll="True"
-                  CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
-                  IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column"
-                  ItemsSource="{Binding UsageModelsTableContent}">
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="Install" Command="{Binding OnInstall}"
-                                IsEnabled="{Binding IsInstallable}" Padding="15,3,15,3" Margin="1" />
-                        <Button Grid.Column="1" Content="Update" Command="{Binding OnUpdate}"
-                                IsEnabled="{Binding IsUpdateable}" Padding="15,3,15,3" Margin="1" />
-                        <Button Grid.Column="2" Content="Remove" Command="{Binding OnRemove}"
-                                IsEnabled="{Binding IsRemoveable}" Padding="15,3,15,3" Margin="1" />
-                    </Grid>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" />
-                <DataGridTextColumn Header="Current Version" Binding="{Binding LoadedVersion}" />
-                <DataGridTextColumn Header="Newest Version" Binding="{Binding NewestAvailableVersion}" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- models table and buttons -->
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
+            <DockPanel Margin="3" HorizontalAlignment="Stretch" LastChildFill="False">
+                <Button Name="InstallSelectedModelButton" Padding="15,3,15,3" Margin="1" DockPanel.Dock="Left"
+                        ToolTip="{x:Static usageModelOptions:UsageModelOptionsMessages.InstallSelectedModelToolTip}"
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.InstallSelectedModelButton}" />
+                <Button Name="UpdateSelectedModelButton" Padding="15,3,15,3" Margin="1" DockPanel.Dock="Left"
+                        ToolTip="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateSelectedModelToolTip}"
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateSelectedModelButton}" />
+                <Button Name="RemoveSelectedModelButton" Padding="15,3,15,3" Margin="1" DockPanel.Dock="Left"
+                        ToolTip="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveSelectedModelToolTip}"
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveSelectedModelButton}" />
 
-        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,45,10,6">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Name="ReloadModelsButton" Padding="15,3,15,3" 
-                    HorizontalAlignment="Left" Margin="1" Click="OnReloadModels"
-                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
-            <Button Grid.Column="1" Name="UpdateModelsButton" Padding="15,3,15,3" 
-                    HorizontalAlignment="Left" Margin="1" Click="OnUpdateAllModels"
-                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
-            <Button Grid.Column="2" Name="RemoveModelsButton" Padding="15,3,15,3" 
-                    HorizontalAlignment="Left" Margin="1" Click="OnRemoveAllModels"
-                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveAllModelsButton}" />
-        </Grid>
+                <Button Name="ReloadModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
+                        Margin="1" Click="OnReloadModels"
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
+                <Button Name="UpdateModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
+                        Margin="1" Click="OnUpdateAllModels"
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
+                <Button Name="RemoveModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
+                        Margin="1" Click="OnRemoveAllModels"
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveAllModelsButton}" />
+            </DockPanel>
+
+            <DataGrid Name="UsageModelsTable" ColumnWidth="*" ScrollViewer.CanContentScroll="True"
+                      CanUserReorderColumns="False" CanUserResizeRows="False" SelectionMode="Single"
+                      IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+                      SelectionUnit="FullRow" ItemsSource="{Binding UsageModelsTableContent}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" />
+                    <DataGridTextColumn Header="Current Version" Binding="{Binding LoadedVersion}" />
+                    <DataGridTextColumn Header="Newest Version" Binding="{Binding NewestAvailableVersion}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
 
         <!-- reset button -->
         <DockPanel Grid.Row="3" Grid.Column="2" Margin="10,45,10,6">

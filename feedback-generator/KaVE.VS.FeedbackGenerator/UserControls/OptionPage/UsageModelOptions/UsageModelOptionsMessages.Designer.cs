@@ -62,6 +62,24 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string InstallSelectedModelButton {
+            get {
+                return ResourceManager.GetString("InstallSelectedModelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installs the selected model.
+        /// </summary>
+        public static string InstallSelectedModelToolTip {
+            get {
+                return ResourceManager.GetString("InstallSelectedModelToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reload Models.
         /// </summary>
         public static string ReloadModelsButton {
@@ -76,6 +94,24 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         public static string RemoveAllModelsButton {
             get {
                 return ResourceManager.GetString("RemoveAllModelsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string RemoveSelectedModelButton {
+            get {
+                return ResourceManager.GetString("RemoveSelectedModelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removes the selected model.
+        /// </summary>
+        public static string RemoveSelectedModelToolTip {
+            get {
+                return ResourceManager.GetString("RemoveSelectedModelToolTip", resourceCulture);
             }
         }
         
@@ -103,6 +139,24 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         public static string UpdateAllModelsButton {
             get {
                 return ResourceManager.GetString("UpdateAllModelsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string UpdateSelectedModelButton {
+            get {
+                return ResourceManager.GetString("UpdateSelectedModelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installs the newest version of the selected model.
+        /// </summary>
+        public static string UpdateSelectedModelToolTip {
+            get {
+                return ResourceManager.GetString("UpdateSelectedModelToolTip", resourceCulture);
             }
         }
     }

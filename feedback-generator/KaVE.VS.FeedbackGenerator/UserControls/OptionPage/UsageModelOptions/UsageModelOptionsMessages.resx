@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="InstallSelectedModelButton" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="InstallSelectedModelToolTip" xml:space="preserve">
+    <value>Installs the selected model</value>
+  </data>
   <data name="ReloadModelsButton" xml:space="preserve">
     <value>Reload Models</value>
   </data>
   <data name="RemoveAllModelsButton" xml:space="preserve">
     <value>Remove all Models</value>
+  </data>
+  <data name="RemoveSelectedModelButton" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="RemoveSelectedModelToolTip" xml:space="preserve">
+    <value>Removes the selected model</value>
   </data>
   <data name="SettingResetButton" xml:space="preserve">
     <value>Reset Usage Model Settings</value>
@@ -131,5 +143,11 @@
   </data>
   <data name="UpdateAllModelsButton" xml:space="preserve">
     <value>Update all Models</value>
+  </data>
+  <data name="UpdateSelectedModelButton" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="UpdateSelectedModelToolTip" xml:space="preserve">
+    <value>Installs the newest version of the selected model</value>
   </data>
 </root>
