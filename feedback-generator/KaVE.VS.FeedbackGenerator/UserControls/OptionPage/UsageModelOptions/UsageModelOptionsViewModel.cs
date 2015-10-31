@@ -21,6 +21,7 @@ using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;

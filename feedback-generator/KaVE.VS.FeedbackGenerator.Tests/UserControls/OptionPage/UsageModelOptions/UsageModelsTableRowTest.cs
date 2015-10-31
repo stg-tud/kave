@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using Moq;

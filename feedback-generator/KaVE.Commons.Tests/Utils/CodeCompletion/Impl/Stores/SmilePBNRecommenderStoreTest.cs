@@ -17,14 +17,15 @@
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
 using Moq;
 using NUnit.Framework;
 using Fix = KaVE.Commons.Tests.Utils.CodeCompletion.Impl.SmilePBNRecommenderFixture;
 
-namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
+namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
 {
     internal class SmilePBNRecommenderStoreTest
     {

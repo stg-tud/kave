@@ -18,14 +18,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
+namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
 {
     internal class RemotePBNRecommenderStoreTest
     {
@@ -162,7 +163,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             }
         }
 
-        private LocalUsageModelsSource _uut;
+        private FilePathUsageModelsSource _uut;
         private IIoUtils _testIoUtil;
 
         [SetUp]
@@ -172,7 +173,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             SetModelFileExists(true);
             Mock.Get(_testIoUtil).Setup(io => io.GetFilesRecursive(BasePath, "*.zip")).Returns(TestFiles);
 
-            _uut = new LocalUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(BasePath)};
+            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(BasePath)};
         }
 
         [Test]
@@ -184,7 +185,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         [Test]
         public void ShouldBeEmptyIfPathIsInvalid()
         {
-            _uut = new LocalUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(@"file://notvalid")};
+            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(@"file://notvalid")};
 
             CollectionAssert.IsEmpty(_uut.GetUsageModels());
         }

@@ -17,9 +17,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.Utils.CodeCompletion.Impl
+namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
 {
     public class RemotePBNRecommenderStore : IRemotePBNRecommenderStore
     {

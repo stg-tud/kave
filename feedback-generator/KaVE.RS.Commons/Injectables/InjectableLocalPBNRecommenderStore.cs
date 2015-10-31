@@ -17,6 +17,8 @@
 using JetBrains.Application;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;

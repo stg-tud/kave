@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-using System;
 using JetBrains.Application;
-using KaVE.Commons.Utils.CodeCompletion.Impl;
-using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Utils.CodeCompletion;
 
 namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
     public class InjectableRemotePBNRecommenderStore : RemotePBNRecommenderStore
     {
-        public InjectableRemotePBNRecommenderStore([NotNull] IIoUtils ioUtils,
-            [NotNull] TypePathUtil typePathUtil,
-            [NotNull] ISettingsStore store)
-            : base(new LocalUsageModelsSource(ioUtils, typePathUtil), store.GetSettings<ModelStoreSettings>().ModelStorePath)
+        private UsageModelsSourceFactory _sourceFactory;
+
+        public InjectableRemotePBNRecommenderStore(
+            [NotNull] ISettingsStore store,
+            [NotNull] UsageModelsSourceFactory sourceFactory)
+            : base(
+                sourceFactory.GetSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri),
+                store.GetSettings<ModelStoreSettings>().ModelStorePath)
         {
-            UsageModelsSource.Source = ConvertToUri(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
+            _sourceFactory = sourceFactory;
+
+            UsageModelsSource = sourceFactory.GetSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
 
             store.SettingsChanged += (sender, args) =>
             {
@@ -46,25 +51,12 @@ namespace KaVE.RS.Commons.Injectables
             {
                 if (args.SettingsType == typeof (ModelStoreSettings))
                 {
-                    UsageModelsSource.Source = ConvertToUri(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
+                    UsageModelsSource = sourceFactory.GetSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
                     ReloadAvailableModels();
                 }
             };
 
             ReloadAvailableModels();
-        }
-
-        [CanBeNull]
-        private static Uri ConvertToUri(string uriString)
-        {
-            try
-            {
-                return new Uri(uriString);
-            }
-            catch (UriFormatException)
-            {
-                return null;
-            }
         }
     }
 }

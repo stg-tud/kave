@@ -195,6 +195,7 @@
     <Compile Include="Settings\SettingsStore.cs" />
     <Compile Include="Utils\BackgroundWorker.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
+    <Compile Include="Utils\CodeCompletion\UsageModelsSourceFactory.cs" />
     <Compile Include="Utils\FilePublisher.cs" />
     <Compile Include="Utils\HttpPublisher.cs" />
     <Compile Include="Injectables\InjectableDateUtils.cs" />

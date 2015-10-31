@@ -32,7 +32,6 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Utils;
 using Moq;
 

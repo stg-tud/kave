@@ -19,6 +19,7 @@ using System.Linq;
 using JetBrains.Application;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 

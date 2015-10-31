@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;

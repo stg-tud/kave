@@ -28,6 +28,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.JetBrains.Annotations;

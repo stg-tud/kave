@@ -17,7 +17,7 @@
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.Utils.CodeCompletion
+namespace KaVE.Commons.Utils.CodeCompletion.Stores
 {
     public class UsageModelDescriptor
     {

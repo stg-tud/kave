@@ -18,6 +18,7 @@ using System.Windows.Input;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
 using MsgBox.Commands;
 

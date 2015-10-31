@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
-using KaVE.Commons.Model.ObjectUsage;
-using KaVE.JetBrains.Annotations;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 
-namespace KaVE.Commons.Utils.CodeCompletion
+namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
 {
-    public interface ILocalPBNRecommenderStore
+    public class EmptyUsageModelsSource : IUsageModelsSource
     {
-        [Pure]
-        bool IsAvailable(CoReTypeName typeName);
+        public Uri Source { get; set; }
 
-        void Remove(CoReTypeName type);
+        public IEnumerable<UsageModelDescriptor> GetUsageModels()
+        {
+            return new UsageModelDescriptor[0];
+        }
 
-        void RemoveAll();
-
-        [CanBeNull]
-        IPBNRecommender Load(CoReTypeName typeName);
-
-        [NotNull]
-        IEnumerable<UsageModelDescriptor> GetAvailableModels();
-
-        void ReloadAvailableModels();
+        public void Load(UsageModelDescriptor model, string baseTargetDirectory)
+        {
+            // do nothing
+        }
     }
 }

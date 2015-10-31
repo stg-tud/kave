@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
 
-namespace KaVE.Commons.Utils.CodeCompletion.Impl
+namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
 {
-    public class LocalUsageModelsSource : IUsageModelsSource
+    public class FilePathUsageModelsSource : IUsageModelsSource
     {
         public Uri Source { get; set; }
 
         protected readonly IIoUtils IoUtils;
         protected readonly TypePathUtil TypePathUtil;
 
-        public LocalUsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil)
+        public FilePathUsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil)
         {
             TypePathUtil = typePathUtil;
             IoUtils = ioUtils;
@@ -43,8 +44,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
                                            modelFilePath.Replace(localPath, "").TrimStart('\\'))));
             }
 
-            // TODO handle remote hosted models
-
             return Lists.NewList<UsageModelDescriptor>();
         }
 
@@ -63,7 +62,9 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
                     "zip");
 
                 if (!IoUtils.FileExists(modelPath))
+                {
                     modelPath = TypePathUtil.GetNestedFileName(localPath, model.TypeName, "zip");
+                }
 
                 IoUtils.CreateFile(targetPath);
                 IoUtils.CopyFile(modelPath, targetPath);

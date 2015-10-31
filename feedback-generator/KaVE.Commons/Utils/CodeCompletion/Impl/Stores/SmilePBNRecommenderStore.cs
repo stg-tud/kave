@@ -19,11 +19,12 @@ using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 using Smile;
 
-namespace KaVE.Commons.Utils.CodeCompletion.Impl
+namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
 {
     public class SmilePBNRecommenderStore : ILocalPBNRecommenderStore
     {

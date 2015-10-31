@@ -16,10 +16,10 @@
 
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.TestUtils;
-using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.CodeCompletion
+namespace KaVE.Commons.Tests.Utils.CodeCompletion.Stores
 {
     internal class UsageModelDescriptorTest
     {

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;

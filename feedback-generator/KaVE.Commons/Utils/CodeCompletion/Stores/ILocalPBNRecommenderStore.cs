@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,19 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.Utils.CodeCompletion
+namespace KaVE.Commons.Utils.CodeCompletion.Stores
 {
-    public interface IRemotePBNRecommenderStore
+    public interface ILocalPBNRecommenderStore
     {
-        bool IsAvailable([NotNull] CoReTypeName typeName);
+        [Pure]
+        bool IsAvailable(CoReTypeName typeName);
 
-        void Load([NotNull] CoReTypeName typeName);
+        void Remove(CoReTypeName type);
 
-        void LoadAll();
+        void RemoveAll();
+
+        [CanBeNull]
+        IPBNRecommender Load(CoReTypeName typeName);
 
         [NotNull]
         IEnumerable<UsageModelDescriptor> GetAvailableModels();
