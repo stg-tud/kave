@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 using KaVE.Commons.TestUtils.UserControls;
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
@@ -133,6 +132,36 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
+        public void InstallSelectedModelOnInstallClick()
+        {
+            _sut.UsageModelsTable.SelectedIndex = 1;
+
+            UserControlTestUtils.Execute(_sut.InstallSelectedModelButton);
+
+            VerifyExecuted(((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem).InstallModel);
+        }
+
+        [Test]
+        public void UpdateSelectedModelOnUpdateClick()
+        {
+            _sut.UsageModelsTable.SelectedIndex = 1;
+
+            UserControlTestUtils.Execute(_sut.UpdateSelectedModelButton);
+
+            VerifyExecuted(((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem).UpdateModel);
+        }
+
+        [Test]
+        public void RemoveSelectedModelOnRemoveClick()
+        {
+            _sut.UsageModelsTable.SelectedIndex = 1;
+
+            UserControlTestUtils.Execute(_sut.RemoveSelectedModelButton);
+
+            VerifyExecuted(((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem).RemoveModel);
+        }
+
+        [Test]
         public void ShouldClearModelsOnReloadModels()
         {
             UserControlTestUtils.Click(_sut.ReloadModelsButton);
@@ -180,9 +209,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             return mockedRow.Object;
         }
 
-        private static void VerifyExecuted(Mock<ICommand> commandMock)
+        private static void VerifyExecuted(ICommand commandMock)
         {
-            commandMock.Verify(command => command.Execute(It.IsAny<object>()));
+            Mock.Get(commandMock).Verify(command => command.Execute(null));
         }
     }
 }

@@ -44,5 +44,15 @@ namespace KaVE.Commons.TestUtils.UserControls
         {
             hyperlink.RaiseEvent(new RoutedEventArgs(Hyperlink.ClickEvent));
         }
+
+        public static void Execute(ButtonBase button, object executeParameter = null)
+        {
+            button.Command.Execute(executeParameter);
+        }
+
+        public static bool CanExecute(ButtonBase button, object executeParameter = null)
+        {
+            return button.Command.CanExecute(executeParameter);
+        }
     }
 }

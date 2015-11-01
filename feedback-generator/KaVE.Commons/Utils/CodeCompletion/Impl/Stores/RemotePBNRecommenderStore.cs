@@ -38,20 +38,28 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
         {
             LocalPath = localPath;
             UsageModelsSource = usageModelsSource;
+            ReloadAvailableModels();
         }
 
         public void ReloadAvailableModels()
         {
             _availableModels.Clear();
 
-            foreach (
-                var newModel in
-                    UsageModelsSource.GetUsageModels().Where(
-                        newModel =>
-                            !_availableModels.ContainsKey(newModel.TypeName) ||
-                            newModel.Version > _availableModels[newModel.TypeName].Version))
+            try
             {
-                _availableModels[newModel.TypeName] = newModel;
+                foreach (
+                    var newModel in
+                        UsageModelsSource.GetUsageModels().Where(
+                            newModel =>
+                                !_availableModels.ContainsKey(newModel.TypeName) ||
+                                newModel.Version > _availableModels[newModel.TypeName].Version))
+                {
+                    _availableModels[newModel.TypeName] = newModel;
+                }
+            }
+            catch
+            {
+                _availableModels.Clear();
             }
         }
 

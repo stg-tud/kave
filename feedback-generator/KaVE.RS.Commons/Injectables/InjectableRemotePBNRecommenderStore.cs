@@ -26,8 +26,6 @@ namespace KaVE.RS.Commons.Injectables
     [ShellComponent]
     public class InjectableRemotePBNRecommenderStore : RemotePBNRecommenderStore
     {
-        private UsageModelsSourceFactory _sourceFactory;
-
         public InjectableRemotePBNRecommenderStore(
             [NotNull] ISettingsStore store,
             [NotNull] UsageModelsSourceFactory sourceFactory)
@@ -35,10 +33,6 @@ namespace KaVE.RS.Commons.Injectables
                 sourceFactory.GetSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri),
                 store.GetSettings<ModelStoreSettings>().ModelStorePath)
         {
-            _sourceFactory = sourceFactory;
-
-            UsageModelsSource = sourceFactory.GetSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
-
             store.SettingsChanged += (sender, args) =>
             {
                 if (args.SettingsType == typeof (ModelStoreSettings))
@@ -55,8 +49,6 @@ namespace KaVE.RS.Commons.Injectables
                     ReloadAvailableModels();
                 }
             };
-
-            ReloadAvailableModels();
         }
     }
 }

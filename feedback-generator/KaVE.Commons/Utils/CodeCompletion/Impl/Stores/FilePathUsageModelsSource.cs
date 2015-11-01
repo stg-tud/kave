@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
@@ -26,22 +25,32 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
         {
             if (Source == null)
             {
-                MessageBox.Show("Source was null");
                 return Lists.NewList<UsageModelDescriptor>();
             }
 
             var localPath = Source.LocalPath;
             if (localPath != "/")
             {
+                string[] modelFiles;
+
+                try
+                {
+                    modelFiles = IoUtils.GetFilesRecursive(localPath, "*.zip");
+                }
+                catch
+                {
+                    modelFiles = new string[0];
+                }
+
                 return
-                    IoUtils.GetFilesRecursive(localPath, "*.zip")
-                           .Select(
-                               modelFilePath =>
-                                   new UsageModelDescriptor(
-                                       TypePathUtil.GetTypeNameString(
-                                           modelFilePath.Replace(localPath, "").TrimStart('\\')),
-                                       TypePathUtil.GetVersionNumber(
-                                           modelFilePath.Replace(localPath, "").TrimStart('\\'))));
+                    modelFiles
+                        .Select(
+                            modelFilePath =>
+                                new UsageModelDescriptor(
+                                    TypePathUtil.GetTypeNameString(
+                                        modelFilePath.Replace(localPath, "").TrimStart('\\')),
+                                    TypePathUtil.GetVersionNumber(
+                                        modelFilePath.Replace(localPath, "").TrimStart('\\'))));
             }
 
             return Lists.NewList<UsageModelDescriptor>();

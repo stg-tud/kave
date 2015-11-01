@@ -68,7 +68,6 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
             Mock.Get(_testSource).Setup(source => source.GetUsageModels()).Returns(AvailableModels);
 
             _sut = new RemotePBNRecommenderStore(_testSource, LocalPath);
-            _sut.ReloadAvailableModels();
         }
 
         [Test]
