@@ -246,6 +246,23 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         }
 
         [Test]
+        public void Statements_EventSubscriptionStatement()
+        {
+            AssertSupportForStatement(new EventSubscriptionStatement());
+        }
+
+        [Test]
+        public void Statements_EventSubscriptionStatement_Nested()
+        {
+            Analyze(
+                new EventSubscriptionStatement
+                {
+                    Expression = new CompletionExpression()
+                });
+            AssertLocation(1, 1);
+        }
+
+        [Test]
         public void Statements_ExpressionStatement()
         {
             AssertSupportForStatement(new ExpressionStatement());
@@ -303,6 +320,40 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         public void Statements_VariableDeclarationStatement()
         {
             AssertSupportForStatement(new VariableDeclaration());
+        }
+
+        #endregion
+
+        #region nesting expressions
+
+        [Test]
+        public void Expression_EmptyLambdaExpression()
+        {
+            AssertSupportForStatement(
+                new ExpressionStatement
+                {
+                    Expression = new LambdaExpression()
+                });
+        }
+
+        [Test]
+        public void Expression_LambdaExpression()
+        {
+            Analyze(
+                new ExpressionStatement
+                {
+                    Expression = new LambdaExpression
+                    {
+                        Body =
+                        {
+                            new ExpressionStatement
+                            {
+                                Expression = new CompletionExpression()
+                            }
+                        }
+                    }
+                });
+            AssertLocation(2, 2);
         }
 
         #endregion

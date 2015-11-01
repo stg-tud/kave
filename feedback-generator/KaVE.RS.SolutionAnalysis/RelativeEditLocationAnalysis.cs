@@ -17,10 +17,8 @@
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.Statements;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.RS.SolutionAnalysis
 {
@@ -54,18 +52,8 @@ namespace KaVE.RS.SolutionAnalysis
                 loc.Location = loc.Size;
             }
 
-            public override void Visit(ILoopHeaderBlockExpression expr, RelativeEditLocation loc)
-            {
-                VisitBody(expr.Body, loc);
-            }
-
-            private void VisitBody(IKaVEList<IStatement> body, RelativeEditLocation loc)
-            {
-                foreach (var stmt in body)
-                {
-                    stmt.Accept(this, loc);
-                }
-            }
+            // other expressions are automatically traversed
+            // (e.g., see default impl of lambda expressions in abstract visitor)
 
             #region statements
 
@@ -83,6 +71,12 @@ namespace KaVE.RS.SolutionAnalysis
             public override void Visit(IContinueStatement stmt, RelativeEditLocation loc)
             {
                 loc.Size++;
+            }
+
+            public override void Visit(IEventSubscriptionStatement stmt, RelativeEditLocation loc)
+            {
+                loc.Size++;
+                stmt.Expression.Accept(this, loc);
             }
 
             public override void Visit(IExpressionStatement stmt, RelativeEditLocation loc)
@@ -129,63 +123,63 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 loc.Size++;
                 block.Condition.Accept(this, loc);
-                VisitBody(block.Body, loc);
+                Visit(block.Body, loc);
             }
 
             public override void Visit(IForEachLoop block, RelativeEditLocation loc)
             {
                 loc.Size++;
-                VisitBody(block.Body, loc);
+                Visit(block.Body, loc);
             }
 
             public override void Visit(IForLoop block, RelativeEditLocation loc)
             {
                 loc.Size++;
-                VisitBody(block.Init, loc);
+                Visit(block.Init, loc);
                 block.Condition.Accept(this, loc);
-                VisitBody(block.Step, loc);
-                VisitBody(block.Body, loc);
+                Visit(block.Step, loc);
+                Visit(block.Body, loc);
             }
 
             public override void Visit(IIfElseBlock block, RelativeEditLocation loc)
             {
                 loc.Size++;
                 block.Condition.Accept(this, loc);
-                VisitBody(block.Then, loc);
-                VisitBody(block.Else, loc);
+                Visit(block.Then, loc);
+                Visit(block.Else, loc);
             }
 
             public override void Visit(ILockBlock block, RelativeEditLocation loc)
             {
                 loc.Size++;
-                VisitBody(block.Body, loc);
+                Visit(block.Body, loc);
             }
 
             public override void Visit(ISwitchBlock block, RelativeEditLocation loc)
             {
                 loc.Size++;
-                VisitBody(block.DefaultSection, loc);
+                Visit(block.DefaultSection, loc);
                 foreach (var caseBlock in block.Sections)
                 {
-                    VisitBody(caseBlock.Body, loc);
+                    Visit(caseBlock.Body, loc);
                 }
             }
 
             public override void Visit(ITryBlock block, RelativeEditLocation loc)
             {
                 loc.Size++;
-                VisitBody(block.Body, loc);
+                Visit(block.Body, loc);
                 foreach (var catchBlock in block.CatchBlocks)
                 {
-                    VisitBody(catchBlock.Body, loc);
+                    Visit(catchBlock.Body, loc);
                 }
-                VisitBody(block.Finally, loc);
+                Visit(block.Finally, loc);
             }
 
             public override void Visit(IUncheckedBlock block, RelativeEditLocation loc)
             {
                 loc.Size++;
-                VisitBody(block.Body, loc);
+                Visit(block.Body, loc);
             }
 
             public override void Visit(IUnsafeBlock block, RelativeEditLocation loc)
@@ -196,14 +190,14 @@ namespace KaVE.RS.SolutionAnalysis
             public override void Visit(IUsingBlock block, RelativeEditLocation loc)
             {
                 loc.Size++;
-                VisitBody(block.Body, loc);
+                Visit(block.Body, loc);
             }
 
             public override void Visit(IWhileLoop block, RelativeEditLocation loc)
             {
                 loc.Size++;
                 block.Condition.Accept(this, loc);
-                VisitBody(block.Body, loc);
+                Visit(block.Body, loc);
             }
 
             #endregion
