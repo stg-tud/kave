@@ -42,6 +42,28 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         }
 
         [Test]
+        public void CastExpression()
+        {
+            AssertAnonymization(
+                new CastExpression
+                {
+                    TargetType = Type("a"),
+                    Reference = AnyVarReference
+                },
+                new CastExpression
+                {
+                    TargetType = Type("a").ToAnonymousName(),
+                    Reference = AnyVarReferenceAnonymized
+                });
+        }
+
+        [Test]
+        public void CastExpression_DefaultSafe()
+        {
+            AssertAnonymization(new CastExpression(), new CastExpression());
+        }
+
+        [Test]
         public void CompletionExpression()
         {
             AssertAnonymization(
@@ -107,6 +129,34 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         public void IfElseExpression_DefaultSafe()
         {
             AssertAnonymization(new IfElseExpression(), new IfElseExpression());
+        }
+
+        [Test]
+        public void IndexAccessExpression()
+        {
+            AssertAnonymization(
+                new IndexAccessExpression
+                {
+                    Reference = AnyVarReference,
+                    Indices =
+                    {
+                        AnyExpression
+                    }
+                },
+                new IndexAccessExpression
+                {
+                    Reference = AnyVarReferenceAnonymized,
+                    Indices =
+                    {
+                        AnyExpressionAnonymized
+                    }
+                });
+        }
+
+        [Test]
+        public void IndexAccessExpression_DefaultSafe()
+        {
+            AssertAnonymization(new IndexAccessExpression(), new IndexAccessExpression());
         }
 
         [Test]

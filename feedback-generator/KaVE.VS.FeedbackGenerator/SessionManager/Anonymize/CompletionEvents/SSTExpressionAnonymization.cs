@@ -40,6 +40,15 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             _refAnon = refAnon;
         }
 
+        public override IExpression Visit(ICastExpression entity, int context)
+        {
+            return new CastExpression
+            {
+                Reference = (IVariableReference) entity.Reference.Accept(_refAnon, context),
+                TargetType = entity.TargetType.ToAnonymousName()
+            };
+        }
+
         public override IExpression Visit(ICompletionExpression entity, int context)
         {
             return new CompletionExpression
@@ -78,6 +87,15 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
                 Condition = Anonymize(expr.Condition),
                 ThenExpression = Anonymize(expr.ThenExpression),
                 ElseExpression = Anonymize(expr.ElseExpression)
+            };
+        }
+
+        public override IExpression Visit(IIndexAccessExpression expr, int context)
+        {
+            return new IndexAccessExpression
+            {
+                Reference = _refAnon.Anonymize(expr.Reference),
+                Indices = Anonymize(expr.Indices)
             };
         }
 
