@@ -33,7 +33,7 @@ namespace KaVE.RS.SolutionAnalysis.UserProfileExports
 
         public virtual void LogOpenExport(string exportZip)
         {
-            Console.Write(@"{0}/{1}: {2}... ", ++_current, _count, exportZip);
+            Console.Write(@"{3} | {0}/{1}: {2}... ", ++_current, _count, exportZip, DateTime.Now);
         }
 
         public virtual void LogResult(bool hasProfile)
