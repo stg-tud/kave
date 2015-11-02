@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Model.ObjectUsage;
@@ -54,7 +55,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             }
         }
 
-        private string CreateTempDir()
+        private static string CreateTempDir()
         {
             var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(path);
@@ -78,15 +79,37 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
         }
 
         [Test]
-        public void ReadCompletionEvents_HappyPath()
+        public void ReadEvents_HappyPath()
         {
-            var e1 = new CompletionEvent
+            var e1 = new CommandEvent
             {
                 TriggeredAt = DateTime.Now,
                 ActiveDocument = DocumentName.Get("... somefile.cs")
             };
-            Write(e1);
-            AssertEvents(e1);
+            var e2 = new CompletionEvent
+            {
+                TriggeredAt = DateTime.Now,
+                ActiveDocument = DocumentName.Get("... otherfile.cs")
+            };
+            Write(e1, e2);
+            AssertEvents(e1, e2);
+        }
+
+        [Test]
+        public void ReadCompletionEvents_HappyPath()
+        {
+            var e1 = new CommandEvent
+            {
+                TriggeredAt = DateTime.Now,
+                ActiveDocument = DocumentName.Get("... somefile.cs")
+            };
+            var e2 = new CompletionEvent
+            {
+                TriggeredAt = DateTime.Now,
+                ActiveDocument = DocumentName.Get("... otherfile.cs")
+            };
+            Write(e1, e2);
+            AssertCompletionEvents(e2);
         }
 
         [Test]
@@ -98,7 +121,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
                 ActiveDocument = DocumentName.Get("... somefile.cs")
             };
             Write(e1, null);
-            AssertEvents(e1);
+            AssertCompletionEvents(e1);
         }
 
         [Test]
@@ -109,7 +132,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
                 ActiveDocument = DocumentName.Get("... somefile.cs")
             };
             Write(e1);
-            AssertEvents();
+            AssertCompletionEvents();
         }
 
         [Test]
@@ -121,7 +144,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
                 ActiveDocument = DocumentName.Get("... somefile.xml")
             };
             Write(e1);
-            AssertEvents();
+            AssertCompletionEvents();
         }
 
         [Test]
@@ -144,7 +167,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             Assert.AreEqual(expected, ts[0]);
         }
 
-        private void Write(params CompletionEvent[] es)
+        private void Write(params IDEEvent[] es)
         {
             var fullName = Path.Combine(_dirEvents, "x.zip");
             using (var wa = new WritingArchive(fullName))
@@ -153,7 +176,15 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             }
         }
 
-        private void AssertEvents(params CompletionEvent[] es)
+        private void AssertEvents(params IDEEvent[] es)
+        {
+            var fullName = Path.Combine(_dirEvents, "x.zip");
+            var actuals = _sut.ReadEvents(fullName);
+            var expecteds = Lists.NewListFrom(es);
+            Assert.AreEqual(expecteds, actuals);
+        }
+
+        private void AssertCompletionEvents(params IDEEvent[] es)
         {
             var fullName = Path.Combine(_dirEvents, "x.zip");
             var actuals = _sut.ReadCompletionEvents(fullName);

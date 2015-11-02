@@ -28,6 +28,7 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits
     public interface IIoHelper
     {
         IList<string> FindExports();
+        IEnumerable<IDEEvent> ReadEvents(string exportFile);
         IList<CompletionEvent> ReadCompletionEvents(string exportFile);
 
         void OpenCache();
@@ -53,13 +54,20 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits
             return Directory.EnumerateFiles(_dirEvents, "*.zip", SearchOption.AllDirectories).ToList();
         }
 
-        public IList<CompletionEvent> ReadCompletionEvents(string exportFile)
+        public IEnumerable<IDEEvent> ReadEvents(string exportFile)
         {
-            var events = new List<CompletionEvent>();
             var ra = new ReadingArchive(exportFile);
             while (ra.HasNext())
             {
-                var e = ra.GetNext<IDEEvent>();
+                yield return ra.GetNext<IDEEvent>();
+            }
+        }
+
+        public IList<CompletionEvent> ReadCompletionEvents(string exportFile)
+        {
+            var events = new List<CompletionEvent>();
+            foreach (var e in ReadEvents(exportFile))
+            {
                 var cce = e as CompletionEvent;
                 if (cce == null)
                 {

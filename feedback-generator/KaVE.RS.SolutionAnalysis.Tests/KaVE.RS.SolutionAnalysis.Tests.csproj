@@ -172,6 +172,8 @@
     <Compile Include="RelativeEditLocationTest.cs" />
     <Compile Include="SolutionAnalysisTest.cs" />
     <Compile Include="InjectableTestLogger.cs" />
+    <Compile Include="UserProfileExports\UserProfileExportHelperTest.cs" />
+    <Compile Include="UserProfileExports\UserProfileExportRunnerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
