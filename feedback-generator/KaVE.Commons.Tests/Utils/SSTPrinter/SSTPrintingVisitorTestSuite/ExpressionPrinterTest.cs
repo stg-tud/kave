@@ -322,7 +322,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new IndexAccessExpression
             {
                 Reference = VarRef("arr"),
-                Indices = { new ConstantValueExpression {Value = "1"} }
+                Indices = {new ConstantValueExpression {Value = "1"}}
             };
 
             AssertPrint(sst, "arr[1]");
@@ -334,12 +334,13 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new IndexAccessExpression
             {
                 Reference = VarRef("arr"),
-                Indices = { new ConstantValueExpression { Value = "1" }, new ConstantValueExpression { Value = "2" } }
+                Indices = {new ConstantValueExpression {Value = "1"}, new ConstantValueExpression {Value = "2"}}
             };
 
             AssertPrint(sst, "arr[1, 2]");
         }
- [Test]
+
+        [Test]
         public void TypeCheckExpression()
         {
             var sst = new TypeCheckExpression
@@ -349,18 +350,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             };
 
             AssertPrint(sst, "i is Int32");
-        }
-
-        [Test]
-        public void IndexAccessExpression_Multiple()
-        {
-            var sst = new IndexAccessExpression
-            {
-                Reference = VarRef("arr"),
-                Indices = { new ConstantValueExpression { Value = "1" }, new ConstantValueExpression { Value = "2" } }
-            };
-
-            AssertPrint(sst, "arr[1, 2]");
         }
 
         private static INullExpression Null()

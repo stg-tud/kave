@@ -114,6 +114,15 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             throw new AssertException("not available");
         }
 
+        public override IExpression Visit(ITypeCheckExpression expr, int context)
+        {
+            return new TypeCheckExpression
+            {
+                Reference = _refAnon.Anonymize(expr.Reference),
+                Type = expr.Type.ToAnonymousName()
+            };
+        }
+
         public override IExpression Visit(ILoopHeaderBlockExpression expr, int context)
         {
             throw new AssertException("not available");

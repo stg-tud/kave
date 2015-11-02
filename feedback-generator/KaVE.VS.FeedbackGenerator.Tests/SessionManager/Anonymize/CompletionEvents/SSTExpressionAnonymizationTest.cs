@@ -189,6 +189,28 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             _sut.Visit(new LambdaExpression(), 0);
         }
 
+        [Test]
+        public void TypeCheckExpression()
+        {
+            AssertAnonymization(
+                new TypeCheckExpression
+                {
+                    Reference = AnyVarReference,
+                    Type = Type("a")
+                },
+                new TypeCheckExpression
+                {
+                    Reference = AnyVarReferenceAnonymized,
+                    Type = Type("a").ToAnonymousName()
+                });
+        }
+
+        [Test]
+        public void TypeCheckExpression_DefaultSafe()
+        {
+            AssertAnonymization(new TypeCheckExpression(), new TypeCheckExpression());
+        }
+
         [Test, ExpectedException(typeof (AssertException))]
         public void LoopHeaderBlockExpression()
         {
