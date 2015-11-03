@@ -104,6 +104,7 @@
     <Compile Include="Utils\CodeCompletion\Impl\Stores\SmilePBNRecommenderStore.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommender.cs" />
     <Compile Include="Utils\CodeCompletion\Stores\UsageModelDescriptor.cs" />
+    <Compile Include="Utils\CodeCompletion\Stores\UsageModelsSourceBase.cs" />
     <Compile Include="Utils\Collections\ComparisonResult.cs" />
     <Compile Include="Utils\Collections\Multiset.cs" />
     <Compile Include="Utils\Collections\FifoCache.cs" />

@@ -188,12 +188,14 @@
     <Compile Include="ExternalSerializationTests\TestCaseProviderTest.cs" />
     <Compile Include="Utils\Assertion\AssertsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommenderTest.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\FilePathUsageModelsSourceTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\Stores\RemotePBNRecommenderStoreTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtilsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderConstantsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\Stores\SmilePBNRecommenderStoreTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderFixture.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderTest.cs" />
+    <Compile Include="Utils\CodeCompletion\Stores\UsageModelsSourceBaseTest.cs" />
     <Compile Include="Utils\CodeCompletion\TypePathUtilTest.cs" />
     <Compile Include="Utils\CodeCompletion\Stores\UsageModelDescriptorTest.cs" />
     <Compile Include="Utils\Collections\FifoCacheTest.cs" />

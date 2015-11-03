@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
-using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.IO;
 using Moq;
 using NUnit.Framework;
 
@@ -133,94 +128,6 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
             _sut.ReloadAvailableModels();
 
             CollectionAssert.AreEquivalent(newAvailableModels, _sut.GetAvailableModels());
-        }
-    }
-
-    internal class LocalUsageModelsSourceTest
-    {
-        private const string BasePath = @"C:\";
-
-        private static string[] TestFiles
-        {
-            get
-            {
-                return new[]
-                {
-                    Path.Combine(BasePath, @"LSystem\Char.1.zip"),
-                    Path.Combine(BasePath, @"LSystem\String.1.zip")
-                };
-            }
-        }
-
-        private static IEnumerable<UsageModelDescriptor> ExpectedModels
-        {
-            get
-            {
-                return Lists.NewList(
-                    new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1),
-                    new UsageModelDescriptor(new CoReTypeName("LSystem\\String"), 1));
-            }
-        }
-
-        private FilePathUsageModelsSource _uut;
-        private IIoUtils _testIoUtil;
-
-        [SetUp]
-        public void Setup()
-        {
-            _testIoUtil = Mock.Of<IIoUtils>();
-            SetModelFileExists(true);
-            Mock.Get(_testIoUtil).Setup(io => io.GetFilesRecursive(BasePath, "*.zip")).Returns(TestFiles);
-
-            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(BasePath)};
-        }
-
-        [Test]
-        public void ShouldProvideModelsFromLocalPath()
-        {
-            CollectionAssert.AreEquivalent(ExpectedModels, _uut.GetUsageModels());
-        }
-
-        [Test]
-        public void ShouldBeEmptyIfPathIsInvalid()
-        {
-            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(@"file://notvalid")};
-
-            CollectionAssert.IsEmpty(_uut.GetUsageModels());
-        }
-
-        [Test]
-        public void CreatesFileOnLoad()
-        {
-            _uut.Load(new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1), @"D:\");
-            Mock.Get(_testIoUtil).Verify(ioUtil => ioUtil.CreateFile(@"D:\LSystem\Char.1.zip"));
-        }
-
-        [Test]
-        public void ShouldLoadModelToPath()
-        {
-            _uut.Load(new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1), @"D:\");
-            Mock.Get(_testIoUtil)
-                .Verify(
-                    ioUtil => ioUtil.CopyFile(Path.Combine(BasePath, @"LSystem\Char.1.zip"), @"D:\LSystem\Char.1.zip"));
-        }
-
-        [Test]
-        public void ShouldLoadWithoutVersionNumber()
-        {
-            SetModelFileExists(false);
-
-            _uut.Load(new UsageModelDescriptor(new CoReTypeName("LSystem\\Char"), 1), @"D:\");
-            Mock.Get(_testIoUtil)
-                .Verify(
-                    ioUtil => ioUtil.CopyFile(Path.Combine(BasePath, @"LSystem\Char.zip"), @"D:\LSystem\Char.1.zip"));
-        }
-
-        private void SetModelFileExists(bool value)
-        {
-            Mock.Get(_testIoUtil)
-                .Setup(io => io.FileExists(Path.Combine(BasePath, @"LSystem\Char.1.zip")))
-                .Returns(value);
         }
     }
 }
