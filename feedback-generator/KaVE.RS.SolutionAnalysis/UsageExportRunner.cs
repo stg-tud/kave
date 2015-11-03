@@ -53,52 +53,59 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 foreach (var fileName in ctxZips)
                 {
-                    Log("### processing zip {0}/{1}: {2}", currentZip++, numZips, fileName);
-
-                    var numLocalCtxs = 0;
-                    var numLocalUsages = 0;
-
-                    var fullFileIn = _dirIn + fileName;
-
-                    var ra = new ReadingArchive(fullFileIn);
-                    Log("reading contexts...");
-                    var ctxs = ra.GetAll<Context>();
-                    var numCtxs = ctxs.Count;
-                    Log("found {0} contexts, exporting usages...\n\n", numCtxs);
-
-                    var colCounter = 0;
-                    foreach (var ctx in ctxs)
+                    try
                     {
-                        if (colCounter == 25)
+                        Log("### processing zip {0}/{1}: {2}", currentZip++, numZips, fileName);
+
+                        var numLocalCtxs = 0;
+                        var numLocalUsages = 0;
+
+                        var fullFileIn = _dirIn + fileName;
+
+                        var ra = new ReadingArchive(fullFileIn);
+                        Log("reading contexts...");
+                        var ctxs = ra.GetAll<Context>();
+                        var numCtxs = ctxs.Count;
+                        Log("found {0} contexts, exporting usages...\n\n", numCtxs);
+
+                        var colCounter = 0;
+                        foreach (var ctx in ctxs)
                         {
-                            Console.WriteLine();
-                            colCounter = 0;
+                            if (colCounter == 25)
+                            {
+                                Console.WriteLine();
+                                colCounter = 0;
+                            }
+                            colCounter++;
+
+                            var usages = ExtractUsages(ctx);
+                            var msg = usages.Count == 0
+                                ? "."
+                                : string.Format("{0}", usages.Count);
+                            Console.Write(msg.PadLeft(5));
+
+                            foreach (var u in usages)
+                            {
+                                cache.GetArchive(u.type).Add(u);
+                            }
+
+                            numLocalCtxs++;
+                            numLocalUsages += usages.Count;
                         }
-                        colCounter++;
 
-                        var usages = ExtractUsages(ctx);
-                        var msg = usages.Count == 0
-                            ? "."
-                            : string.Format("{0}", usages.Count);
-                        Console.Write(msg.PadLeft(5));
+                        Append("\n");
+                        Log(
+                            "--> {0} contexts, {1} usages\n\n",
+                            numLocalCtxs,
+                            numLocalUsages);
 
-                        foreach (var u in usages)
-                        {
-                            cache.GetArchive(u.type).Add(u);
-                        }
-
-                        numLocalCtxs++;
-                        numLocalUsages += usages.Count;
+                        numTotalCtxs += numLocalCtxs;
+                        numTotalUsages += numLocalUsages;
                     }
-
-                    Append("\n");
-                    Log(
-                        "--> {0} contexts, {1} usages\n\n",
-                        numLocalCtxs,
-                        numLocalUsages);
-
-                    numTotalCtxs += numLocalCtxs;
-                    numTotalUsages += numLocalUsages;
+                    catch (Exception e)
+                    {
+                        Log("oops, something went wrong...\n{0}", e);
+                    }
                 }
             }
 
