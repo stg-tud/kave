@@ -27,8 +27,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Stores
 
         void Remove(CoReTypeName type);
 
-        void RemoveAll();
-
         [CanBeNull]
         IPBNRecommender Load(CoReTypeName typeName);
 

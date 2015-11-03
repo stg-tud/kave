@@ -26,8 +26,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Stores
 
         void Load([NotNull] CoReTypeName typeName);
 
-        void LoadAll();
-
         [NotNull]
         IEnumerable<UsageModelDescriptor> GetAvailableModels();
 

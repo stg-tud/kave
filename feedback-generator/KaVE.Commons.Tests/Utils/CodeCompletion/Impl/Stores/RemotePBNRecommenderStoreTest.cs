@@ -107,16 +107,6 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
         }
 
         [Test]
-        public void ShouldLoadAllModelsOnLoadAll()
-        {
-            _sut.LoadAll();
-            foreach (var testModel in AvailableModels)
-            {
-                Mock.Get(_testSource).Verify(testSource => testSource.Load(testModel, It.IsAny<string>()), Times.Once);
-            }
-        }
-
-        [Test]
         public void ShouldUpdateAvailableModelsOnReload()
         {
             var newAvailableModels = new List<UsageModelDescriptor>

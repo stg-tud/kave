@@ -76,6 +76,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return new RelayCommand(Remove, IsRemoveable); }
         }
 
+        private bool _alreadyRemoved;
+        private bool _alreadyInstalled;
+        private bool _alreadyUpdated;
 
         public UsageModelsTableRow([CanBeNull] ILocalPBNRecommenderStore localStore,
             [CanBeNull] IRemotePBNRecommenderStore remoteStore,
@@ -92,6 +95,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public void Install()
         {
+            _alreadyInstalled = true;
             if (_remoteStore != null)
             {
                 _remoteStore.Load(TypeName);
@@ -100,6 +104,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void Update()
         {
+            _alreadyUpdated = true;
             if (_remoteStore != null)
             {
                 _remoteStore.Load(TypeName);
@@ -108,6 +113,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void Remove()
         {
+            _alreadyRemoved = true;
             if (_localStore != null)
             {
                 _localStore.Remove(TypeName);
@@ -116,17 +122,17 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private bool IsInstallable()
         {
-            return LoadedVersion == null && NewestAvailableVersion != null;
+            return !_alreadyInstalled && LoadedVersion == null && NewestAvailableVersion != null;
         }
 
         public bool IsUpdateable()
         {
-            return LoadedVersion != null && NewestAvailableVersion != null && LoadedVersion < NewestAvailableVersion;
+            return !_alreadyUpdated && LoadedVersion != null && NewestAvailableVersion != null && LoadedVersion < NewestAvailableVersion;
         }
 
         private bool IsRemoveable()
         {
-            return LoadedVersion != null;
+            return !_alreadyRemoved && LoadedVersion != null;
         }
 
         public override bool Equals(object obj)

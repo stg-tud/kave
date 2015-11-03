@@ -77,14 +77,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
             catch (KeyNotFoundException) {}
         }
 
-        public void LoadAll()
-        {
-            foreach (var model in GetAvailableModels())
-            {
-                Load(model.TypeName);
-            }
-        }
-
         public IEnumerable<UsageModelDescriptor> GetAvailableModels()
         {
             return _availableModels.Values;

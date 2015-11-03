@@ -67,14 +67,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
             _io.DeleteFile(GetNestedFileName(BasePath, type, availableModel.Version, "zip"));
         }
 
-        public void RemoveAll()
-        {
-            foreach (var model in GetAvailableModels())
-            {
-                Remove(model.TypeName);
-            }
-        }
-
         public IPBNRecommender Load(CoReTypeName type)
         {
             var availableModel = GetAvailableModels().FirstOrDefault(model => model.TypeName.Equals(type));

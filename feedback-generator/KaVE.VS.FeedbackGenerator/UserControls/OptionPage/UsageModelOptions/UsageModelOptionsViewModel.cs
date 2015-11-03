@@ -17,12 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.CodeCompletion;
-using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
-using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
@@ -81,6 +76,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
+        public IEnumerable<IUsageModelsTableRow> UsageModelsTableContent
+        {
+            get { return _usageModelsTableContent; }
+            set
+            {
+                _usageModelsTableContent = value;
+                RaisePropertyChanged(self => self.UsageModelsTableContent);
+            }
+        }
+
+        private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
+
         [CanBeNull]
         private static ILocalPBNRecommenderStore LocalStore
         {
@@ -113,8 +120,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; set; }
-
         [NotNull]
         private readonly IUsageModelMergingStrategy _mergingStrategy;
 
@@ -141,18 +146,32 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public void UpdateAllModels()
         {
-            if (RemoteStore != null)
+            foreach (var row in UsageModelsTableContent)
             {
-                RemoteStore.LoadAll();
+                if (row.UpdateModel.CanExecute(null))
+                {
+                    row.UpdateModel.Execute(null);
+                }
+                if (row.InstallModel.CanExecute(null))
+                {
+                    row.InstallModel.Execute(null);
+                }
             }
+
+            ReloadUsageModelsTableContent();
         }
 
         public void RemoveAllModels()
         {
-            if (LocalStore != null)
+            foreach (var row in UsageModelsTableContent)
             {
-                LocalStore.RemoveAll();
+                if (row.RemoveModel.CanExecute(null))
+                {
+                    row.RemoveModel.Execute(null);
+                }
             }
+
+            ReloadUsageModelsTableContent();
         }
 
         public ModelStoreValidation ValidateModelStoreInformation(string path)

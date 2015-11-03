@@ -169,17 +169,6 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
         }
 
         [Test]
-        public void ShouldDeleteAllModelsOnRemoveAll()
-        {
-            _sut.RemoveAll();
-
-            foreach (var modelFile in TestTypeFiles)
-            {
-                Mock.Get(_io).Verify(io => io.DeleteFile(Path.Combine(_basePath, modelFile)), Times.Once);
-            }
-        }
-
-        [Test]
         public void ShouldLoadModelsOnReload()
         {
             Mock.Get(_io)

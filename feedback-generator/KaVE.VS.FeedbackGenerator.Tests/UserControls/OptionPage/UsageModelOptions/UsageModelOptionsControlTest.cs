@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
@@ -174,7 +175,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         {
             UserControlTestUtils.Click(_sut.UpdateModelsButton);
 
-            _remoteStoreMock.Verify(remoteStore => remoteStore.LoadAll(), Times.Once);
+            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
+            {
+                VerifyExecuted(row.UpdateModel);
+                VerifyExecuted(row.InstallModel);
+            }
         }
 
         [Test]
@@ -182,7 +187,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         {
             UserControlTestUtils.Click(_sut.RemoveModelsButton);
 
-            _localStoreMock.Verify(localStore => localStore.RemoveAll(), Times.Once);
+            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
+            {
+                VerifyExecuted(row.RemoveModel);
+            }
         }
 
         [Test]

@@ -57,21 +57,21 @@ limitations under the License.
                 Click="OnBrowse_Uri" Content="Browse ..." VerticalAlignment="Center" />
 
         <!-- models table and buttons -->
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
-            <DockPanel Margin="3" HorizontalAlignment="Stretch" LastChildFill="False">
+        <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
+            <DockPanel Margin="3" HorizontalAlignment="Stretch" LastChildFill="False" DockPanel.Dock="Top">
                 <Button Name="InstallSelectedModelButton" Padding="15,3,15,3" Margin="1" DockPanel.Dock="Left"
                         ToolTip="{x:Static usageModelOptions:UsageModelOptionsMessages.InstallSelectedModelToolTip}"
-                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.InstallSelectedModelButton}" 
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.InstallSelectedModelButton}"
                         Command="{Binding (usageModelOptions:UsageModelsTableRow.InstallModel)}"
                         DataContext="{Binding SelectedItem, ElementName=UsageModelsTable}" />
                 <Button Name="UpdateSelectedModelButton" Padding="15,3,15,3" Margin="1" DockPanel.Dock="Left"
                         ToolTip="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateSelectedModelToolTip}"
-                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateSelectedModelButton}" 
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateSelectedModelButton}"
                         Command="{Binding (usageModelOptions:UsageModelsTableRow.UpdateModel)}"
                         DataContext="{Binding SelectedItem, ElementName=UsageModelsTable}" />
                 <Button Name="RemoveSelectedModelButton" Padding="15,3,15,3" Margin="1" DockPanel.Dock="Left"
                         ToolTip="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveSelectedModelToolTip}"
-                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveSelectedModelButton}" 
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveSelectedModelButton}"
                         Command="{Binding (usageModelOptions:UsageModelsTableRow.RemoveModel)}"
                         DataContext="{Binding SelectedItem, ElementName=UsageModelsTable}" />
 
@@ -86,7 +86,8 @@ limitations under the License.
                         Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveAllModelsButton}" />
             </DockPanel>
 
-            <DataGrid Name="UsageModelsTable" ColumnWidth="*" ScrollViewer.CanContentScroll="True"
+            <DataGrid Name="UsageModelsTable" DockPanel.Dock="Bottom"
+                      ColumnWidth="*" ScrollViewer.CanContentScroll="True"
                       CanUserReorderColumns="False" CanUserResizeRows="False" SelectionMode="Single"
                       IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column"
                       SelectionUnit="FullRow" ItemsSource="{Binding UsageModelsTableContent}">
@@ -96,8 +97,7 @@ limitations under the License.
                     <DataGridTextColumn Header="Newest Version" Binding="{Binding NewestAvailableVersion}" />
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
-
+        </DockPanel>
 
         <!-- reset button -->
         <DockPanel Grid.Row="3" Grid.Column="2" Margin="10,45,10,6">
