@@ -22,7 +22,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Stores
 {
     public interface IUsageModelsSource
     {
-        [CanBeNull]
+        [NotNull]
         Uri Source { get; set; }
 
         [Pure, NotNull]

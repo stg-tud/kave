@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
-using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources;
 using KaVE.Commons.Utils.IO;
 using KaVE.RS.Commons.Utils.CodeCompletion;
 using NUnit.Framework;

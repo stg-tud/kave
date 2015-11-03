@@ -28,7 +28,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
         protected string LocalPath;
 
         [NotNull]
-        protected IUsageModelsSource UsageModelsSource;
+        public IUsageModelsSource UsageModelsSource { get; protected set; }
 
         [NotNull]
         private readonly Dictionary<CoReTypeName, UsageModelDescriptor> _availableModels =

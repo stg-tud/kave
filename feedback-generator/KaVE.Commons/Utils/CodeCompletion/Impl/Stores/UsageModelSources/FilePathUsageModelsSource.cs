@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
+using System;
 using System.IO;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
 
-namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
+namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
     public class FilePathUsageModelsSource : UsageModelsSourceBase
     {
         protected readonly IIoUtils IoUtils;
         protected readonly TypePathUtil TypePathUtil;
 
-        public FilePathUsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil)
+        public FilePathUsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil, Uri source)
+            : base(source)
         {
             TypePathUtil = typePathUtil;
             IoUtils = ioUtils;
@@ -34,8 +35,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
 
         public override void Load(UsageModelDescriptor model, string baseTargetDirectory)
         {
-            Asserts.NotNull(Source, "Couldn't load model; Source was null.");
-
             if (Source.IsFile)
             {
                 var modelPath = TypePathUtil.GetNestedFileName(Source.LocalPath, model.TypeName, model.Version, "zip");
@@ -59,7 +58,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
         {
             try
             {
-                Asserts.NotNull(Source);
                 return IoUtils.ReadFile(Path.Combine(Source.LocalPath, "index.json"));
             }
             catch

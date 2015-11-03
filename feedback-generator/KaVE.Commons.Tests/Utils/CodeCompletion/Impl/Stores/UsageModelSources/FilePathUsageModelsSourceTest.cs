@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
-using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
@@ -27,7 +27,7 @@ using KaVE.Commons.Utils.Json;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
+namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
     internal class FilePathUsageModelsSourceTest
     {
@@ -56,7 +56,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
 
             SetIndexFileContent(ExpectedModels);
 
-            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(BasePath)};
+            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil(), new Uri(BasePath));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
         [Test]
         public void ShouldBeEmptyIfPathIsInvalid()
         {
-            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil()) {Source = new Uri(@"file://notvalid")};
+            _uut = new FilePathUsageModelsSource(_testIoUtil, new TypePathUtil(), new Uri(@"file://notvalid"));
 
             CollectionAssert.IsEmpty(_uut.GetUsageModels());
         }

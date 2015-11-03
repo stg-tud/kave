@@ -79,6 +79,8 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Stores
             {
                 return IndexContent;
             }
+
+            public UsageModelsSourceBaseTestImpl() : base(new Uri("C:\\")) {}
         }
     }
 }

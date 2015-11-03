@@ -90,10 +90,10 @@
     <Compile Include="Model\SSTs\Statements\IEventSubscriptionStatement.cs" />
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommender.cs" />
-    <Compile Include="Utils\CodeCompletion\Impl\Stores\EmptyUsageModelsSource.cs" />
-    <Compile Include="Utils\CodeCompletion\Impl\Stores\HttpUsageModelsSource.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\EmptyUsageModelsSource.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\HttpUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Stores\IRemotePBNRecommenderStore.cs" />
-    <Compile Include="Utils\CodeCompletion\Impl\Stores\FilePathUsageModelsSource.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\FilePathUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\Stores\RemotePBNRecommenderStore.cs" />
     <Compile Include="Utils\CodeCompletion\Stores\IUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtils.cs" />

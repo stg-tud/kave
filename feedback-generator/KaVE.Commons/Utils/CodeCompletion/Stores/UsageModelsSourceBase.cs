@@ -24,6 +24,11 @@ namespace KaVE.Commons.Utils.CodeCompletion.Stores
     {
         public Uri Source { get; set; }
 
+        protected UsageModelsSourceBase(Uri source)
+        {
+            Source = source;
+        }
+
         public IEnumerable<UsageModelDescriptor> GetUsageModels()
         {
             return ReadIndexFile(GetIndexContent());

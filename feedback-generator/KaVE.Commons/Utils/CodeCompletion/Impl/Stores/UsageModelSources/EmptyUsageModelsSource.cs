@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 
-namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
+namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
-    public class HttpUsageModelsSource : UsageModelsSourceBase
+    public class EmptyUsageModelsSource : IUsageModelsSource
     {
-        public override void Load(UsageModelDescriptor model, string baseTargetDirectory)
+        public Uri Source { get; set; }
+
+        public EmptyUsageModelsSource(Uri source)
         {
-            // TODO implement this
+            Source = source;
         }
 
-        protected override string GetIndexContent()
+        public IEnumerable<UsageModelDescriptor> GetUsageModels()
         {
-            // TODO implement this
-            return "";
+            return new UsageModelDescriptor[0];
+        }
+
+        public void Load(UsageModelDescriptor model, string baseTargetDirectory)
+        {
+            // do nothing
         }
     }
 }
