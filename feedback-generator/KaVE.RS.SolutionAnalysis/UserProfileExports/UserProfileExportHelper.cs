@@ -49,5 +49,10 @@ namespace KaVE.RS.SolutionAnalysis.UserProfileExports
                 Console.WriteLine(profile.ToFormattedJson());
             }
         }
+
+        public virtual void LogNumberDays(int fileCounter, int count)
+        {
+            Console.Write(@"found data in {0} files, covering {1} workdays", fileCounter, count);
+        }
     }
 }

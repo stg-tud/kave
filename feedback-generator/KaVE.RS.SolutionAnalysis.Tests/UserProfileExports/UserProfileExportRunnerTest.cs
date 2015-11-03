@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils.Collections;
@@ -41,25 +42,26 @@ namespace KaVE.RS.SolutionAnalysis.Tests.UserProfileExports
 
             _userProfileEvent = new UserProfileEvent
             {
+                TriggeredAt = DateTime.Now,
                 Id = "some id to make it non default"
             };
 
             Mock.Get(_io).Setup(io => io.FindExports()).Returns(Lists.NewList("a.zip", "b.zip"));
-            Mock.Get(_io).Setup(io => io.ReadEvents("a.zip")).Returns(Lists.NewList(new CommandEvent()));
+            Mock.Get(_io).Setup(io => io.ReadEvents("a.zip")).Returns(Lists.NewList(NewCommandEvent(1)));
             Mock.Get(_io).Setup(io => io.ReadEvents("b.zip")).Returns(Lists.NewList(_userProfileEvent));
-
-            _sut.Export("SomePath");
         }
 
         [Test]
         public void NumExportsIsLogged()
         {
+            _sut.Export("SomePath");
             Mock.Get(_helper).Verify(h => h.LogFoundExports(2));
         }
 
         [Test]
         public void AllExportsAreIterated()
         {
+            _sut.Export("SomePath");
             Mock.Get(_helper).Verify(h => h.LogOpenExport("a.zip"));
             Mock.Get(_helper).Verify(h => h.LogOpenExport("b.zip"));
         }
@@ -67,6 +69,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.UserProfileExports
         [Test]
         public void ResultIsLogged()
         {
+            _sut.Export("SomePath");
             Mock.Get(_helper).Verify(h => h.LogResult(false));
             Mock.Get(_helper).Verify(h => h.LogResult(true));
         }
@@ -74,7 +77,33 @@ namespace KaVE.RS.SolutionAnalysis.Tests.UserProfileExports
         [Test]
         public void UserProfilesAreLogged()
         {
+            _sut.Export("SomePath");
             Mock.Get(_helper).Verify(h => h.LogUserProfiles(Lists.NewList(_userProfileEvent)));
+        }
+
+        [Test]
+        public void NumDaysAreLogged_SameDayDifferentUpload()
+        {
+            _sut.Export("SomePath");
+            Mock.Get(_helper).Verify(h => h.LogNumberDays(2, 2));
+        }
+
+        [Test]
+        public void NumDaysAreLogged_SameUploadMutipleDays()
+        {
+            Mock.Get(_io).Setup(io => io.FindExports()).Returns(new[] {"a"});
+            Mock.Get(_io).Setup(io => io.ReadEvents("a")).Returns(new[] {NewCommandEvent(1), NewCommandEvent(2)});
+
+            _sut.Export("SomePath");
+            Mock.Get(_helper).Verify(h => h.LogNumberDays(1, 2));
+        }
+
+        private static IDEEvent NewCommandEvent(int i)
+        {
+            return new CommandEvent
+            {
+                TriggeredAt = DateTime.Now.AddDays(-10 + i)
+            };
         }
     }
 }

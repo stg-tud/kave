@@ -15,9 +15,8 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 
@@ -27,6 +26,8 @@ namespace KaVE.RS.SolutionAnalysis.UserProfileExports
     {
         private readonly IIoHelper _io;
         private readonly UserProfileExportHelper _helper;
+        private IKaVEList<UserProfileEvent> _profiles;
+        private ISet<string> _days;
 
         public UserProfileExportRunner(IIoHelper io, UserProfileExportHelper helper)
         {
@@ -37,32 +38,46 @@ namespace KaVE.RS.SolutionAnalysis.UserProfileExports
         public void Export(string rootDir)
         {
             var exports = _io.FindExports();
-            var ups = Lists.NewList<UserProfileEvent>();
+
+            _profiles = Lists.NewList<UserProfileEvent>();
+            _days = new HashSet<string>();
 
             _helper.LogFoundExports(exports.Count);
 
+            var fileCounter = 0;
             foreach (var exportZip in exports)
             {
                 _helper.LogOpenExport(exportZip);
 
                 var hasUserProfile = false;
-                var count = 0;
-                foreach (var up in ReadUserProfile(exportZip))
+                foreach (var up in _io.ReadEvents(exportZip))
                 {
-                    Asserts.That(count++ <= 1);
-                    hasUserProfile = true;
-                    ups.Add(up);
+                    RegisterKey(fileCounter, up);
+
+                    var userProfileEvent = up as UserProfileEvent;
+                    if (userProfileEvent != null)
+                    {
+                        hasUserProfile = true;
+                        _profiles.Add(userProfileEvent);
+                    }
                 }
 
                 _helper.LogResult(hasUserProfile);
+                fileCounter++;
             }
 
-            _helper.LogUserProfiles(ups);
+            _helper.LogNumberDays(fileCounter, _days.Count);
+            _helper.LogUserProfiles(_profiles);
         }
 
-        private IEnumerable<UserProfileEvent> ReadUserProfile(string exportZip)
+        private void RegisterKey(int fileCounter, IDEEvent up)
         {
-            return _io.ReadEvents(exportZip).OfType<UserProfileEvent>();
+            if (up.TriggeredAt.HasValue)
+            {
+                var day = up.TriggeredAt.Value.ToString("ddMMyy");
+                var idx = string.Format("{0}-{1}", fileCounter, day);
+                _days.Add(idx);
+            }
         }
     }
 }
