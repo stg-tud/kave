@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Text;
 using Ionic.Zip;
@@ -424,7 +425,7 @@ namespace KaVE.Commons.Tests.Utils.IO
         public void ShouldManageToCountLinesInLargeLinesInReasonableAmountOfTime()
         {
             const int maxLines = 20000;
-            
+
             var rnd = new Random();
             var file = Path.Combine(_testRoot, "x.txt");
             var lines = new List<string>();
@@ -445,6 +446,58 @@ namespace KaVE.Commons.Tests.Utils.IO
             var duration = sw.ElapsedMilliseconds;
 
             Assert.That(duration < 3*1000); // 3s
+        }
+
+        [Test]
+        public void ShouldCreateZippedFile()
+        {
+            var path = Path.Combine(_testRoot, "x");
+
+            _sut.WriteZippedFile("abc", path);
+
+            Assert.IsTrue(File.Exists(path));
+        }
+
+        [Test]
+        public void ShouldWriteZippedFile()
+        {
+            var path = Path.Combine(_testRoot, "x.gz");
+
+            var expected = "abc";
+            _sut.WriteZippedFile(expected, path);
+
+            using (var fs = new FileStream(path, FileMode.Open))
+            {
+                using (var gzs = new GZipStream(fs, CompressionMode.Decompress, false))
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        gzs.CopyTo(ms);
+                        var actual = ms.ToArray().AsString();
+                        Assert.AreEqual(expected, actual);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void ShouldReadZippedFile()
+        {
+            var path = Path.Combine(_testRoot, "x.gz");
+
+            var expected = "abc";
+
+            var bytes = expected.AsBytes();
+            using (var fs = new FileStream(path, FileMode.Create))
+            {
+                using (var gzs = new GZipStream(fs, CompressionMode.Compress, false))
+                {
+                    gzs.Write(bytes, 0, bytes.Length);
+                }
+            }
+
+            var actual = _sut.ReadZippedFile(path);
+            Assert.AreEqual(expected, actual);
         }
 
         private static void CreateContentInFile(string fileName, int numLines)

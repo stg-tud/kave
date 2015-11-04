@@ -16,7 +16,6 @@
 
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.TestUtils;
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
@@ -151,6 +150,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         {
             _uut.RemoveModel.Execute(null);
             Mock.Get(_localStore).Verify(store => store.Remove(SomeTypeName));
+        }
+
+        [Test]
+        public void DisableButtonsAfterFirstExecute()
+        {
+            _uut.InstallModel.Execute(null);
+            _uut.UpdateModel.Execute(null);
+            _uut.RemoveModel.Execute(null);
+
+            Assert.IsFalse(_uut.InstallModel.CanExecute(null));
+            Assert.IsFalse(_uut.UpdateModel.CanExecute(null));
+            Assert.IsFalse(_uut.RemoveModel.CanExecute(null));
         }
     }
 }

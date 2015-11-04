@@ -73,9 +73,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return new DelegateCommand(Remove, IsRemoveable); }
         }
 
-        private bool _alreadyRemoved;
         private bool _alreadyInstalled;
         private bool _alreadyUpdated;
+        private bool _alreadyRemoved;
 
         public UsageModelsTableRow([CanBeNull] ILocalPBNRecommenderStore localStore,
             [CanBeNull] IRemotePBNRecommenderStore remoteStore,
@@ -117,12 +117,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public bool IsInstallable()
+        private bool IsInstallable()
         {
             return !_alreadyInstalled && LoadedVersion == null && NewestAvailableVersion != null;
         }
 
-        public bool IsUpdateable()
+        private bool IsUpdateable()
         {
             return !_alreadyUpdated && LoadedVersion != null && NewestAvailableVersion != null &&
                    LoadedVersion < NewestAvailableVersion;

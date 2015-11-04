@@ -62,6 +62,9 @@ namespace KaVE.Commons.Utils.IO
         IReadingArchive ReadArchive(string fileName);
         IWritingArchive CreateArchive(string fileName);
 
+        string ReadZippedFile(string fileName);
+        void WriteZippedFile(string content, string fileName);
+
         int CountLines(string fileName);
     }
 }

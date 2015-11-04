@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using Ionic.Zip;
@@ -164,6 +165,35 @@ namespace KaVE.Commons.Utils.IO
             Asserts.That(Directory.GetParent(fileName).Exists);
             return new WritingArchive(fileName);
         }
+
+        public string ReadZippedFile(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open))
+            {
+                using (var gzs = new GZipStream(fs, CompressionMode.Decompress, false))
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        gzs.CopyTo(ms);
+                        var output = ms.ToArray().AsString();
+                        return output;
+                    }
+                }
+            }
+        }
+
+        public void WriteZippedFile(string content, string fileName)
+        {
+            var bytes = content.AsBytes();
+            using (var fs = new FileStream(fileName, FileMode.Create))
+            {
+                using (var gzs = new GZipStream(fs, CompressionMode.Compress))
+                {
+                    gzs.Write(bytes, 0, bytes.Length);
+                }
+            }
+        }
+
 
         public int CountLines(string fileName)
         {
