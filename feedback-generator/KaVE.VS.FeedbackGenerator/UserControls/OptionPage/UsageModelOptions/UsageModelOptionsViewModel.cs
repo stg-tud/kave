@@ -17,12 +17,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Input;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -57,10 +60,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get { return ModelStoreSettings.ModelStorePath; }
             set
             {
-                if (!value.EndsWith("\\"))
-                {
-                    value = value + "\\";
-                }
                 ModelStoreSettings.ModelStorePath = value;
                 RaisePropertyChanged(self => self.ModelPath);
             }
@@ -84,6 +83,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 _usageModelsTableContent = value;
                 RaisePropertyChanged(self => self.UsageModelsTableContent);
             }
+        }
+
+        public ICommand UpdateAllModelsCommand
+        {
+            get { return new DelegateCommand(UpdateAllModels, () => true); }
+        }
+
+        public ICommand RemoveAllModelsCommand
+        {
+            get { return new DelegateCommand(RemoveAllModels, () => true); }
+        }
+
+        public ICommand ReloadModelsCommand
+        {
+            get { return new DelegateCommand(ReloadModels, () => true); }
         }
 
         private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
@@ -144,7 +158,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             UsageModelsTableContent = _mergingStrategy.MergeAvailableModels(LocalStore, RemoteStore);
         }
 
-        public void UpdateAllModels()
+        private void UpdateAllModels()
         {
             foreach (var row in UsageModelsTableContent)
             {
@@ -161,7 +175,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             ReloadUsageModelsTableContent();
         }
 
-        public void RemoveAllModels()
+        private void RemoveAllModels()
         {
             foreach (var row in UsageModelsTableContent)
             {
@@ -170,6 +184,17 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     row.RemoveModel.Execute(null);
                 }
             }
+
+            ReloadUsageModelsTableContent();
+        }
+
+        private void ReloadModels()
+        {
+            try
+            {
+                Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
+            }
+            catch (InvalidOperationException) {}
 
             ReloadUsageModelsTableContent();
         }

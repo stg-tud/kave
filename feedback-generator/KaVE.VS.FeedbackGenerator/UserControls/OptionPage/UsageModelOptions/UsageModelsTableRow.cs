@@ -17,10 +17,9 @@
 using System.Windows.Input;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
-using MsgBox.Commands;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -43,8 +42,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         [NotNull]
         ICommand RemoveModel { get; }
-
-        void Install();
     }
 
     public class UsageModelsTableRow : IUsageModelsTableRow
@@ -63,17 +60,17 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public ICommand InstallModel
         {
-            get { return new RelayCommand(Install, IsInstallable); }
+            get { return new DelegateCommand(Install, IsInstallable); }
         }
 
         public ICommand UpdateModel
         {
-            get { return new RelayCommand(Update, IsUpdateable); }
+            get { return new DelegateCommand(Update, IsUpdateable); }
         }
 
         public ICommand RemoveModel
         {
-            get { return new RelayCommand(Remove, IsRemoveable); }
+            get { return new DelegateCommand(Remove, IsRemoveable); }
         }
 
         private bool _alreadyRemoved;
@@ -93,7 +90,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             NewestAvailableVersion = newestAvailableVersion;
         }
 
-        public void Install()
+        private void Install()
         {
             _alreadyInstalled = true;
             if (_remoteStore != null)
@@ -120,14 +117,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private bool IsInstallable()
+        public bool IsInstallable()
         {
             return !_alreadyInstalled && LoadedVersion == null && NewestAvailableVersion != null;
         }
 
         public bool IsUpdateable()
         {
-            return !_alreadyUpdated && LoadedVersion != null && NewestAvailableVersion != null && LoadedVersion < NewestAvailableVersion;
+            return !_alreadyUpdated && LoadedVersion != null && NewestAvailableVersion != null &&
+                   LoadedVersion < NewestAvailableVersion;
         }
 
         private bool IsRemoveable()

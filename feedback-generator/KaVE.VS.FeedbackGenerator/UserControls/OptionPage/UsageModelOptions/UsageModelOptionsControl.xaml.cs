@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using Avalon.Windows.Dialogs;
@@ -26,8 +25,6 @@ using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
-using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Utils;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
@@ -125,27 +122,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     window.Close();
                 }
             }
-        }
-
-        private void OnReloadModels(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
-            }
-            catch (InvalidOperationException) {}
-
-            ((UsageModelOptionsViewModel) DataContext).ReloadUsageModelsTableContent();
-        }
-
-        private void OnUpdateAllModels(object sender, RoutedEventArgs e)
-        {
-            ((UsageModelOptionsViewModel) DataContext).UpdateAllModels();
-        }
-
-        private void OnRemoveAllModels(object sender, RoutedEventArgs e)
-        {
-            ((UsageModelOptionsViewModel) DataContext).RemoveAllModels();
         }
 
         public bool OnOk()

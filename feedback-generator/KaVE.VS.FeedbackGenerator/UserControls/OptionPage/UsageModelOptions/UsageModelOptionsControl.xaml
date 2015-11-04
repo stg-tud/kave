@@ -76,14 +76,14 @@ limitations under the License.
                         DataContext="{Binding SelectedItem, ElementName=UsageModelsTable}" />
 
                 <Button Name="ReloadModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
-                        Margin="1" Click="OnReloadModels"
+                        Margin="1" Command="{Binding ReloadModelsCommand}"
                         Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
-                <Button Name="UpdateModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
-                        Margin="1" Click="OnUpdateAllModels"
-                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
                 <Button Name="RemoveModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
-                        Margin="1" Click="OnRemoveAllModels"
+                        Margin="1" Command="{Binding RemoveAllModelsCommand}"
                         Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveAllModelsButton}" />
+                <Button Name="UpdateModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
+                        Margin="1" Command="{Binding UpdateAllModelsCommand}"
+                        Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
             </DockPanel>
 
             <DataGrid Name="UsageModelsTable" DockPanel.Dock="Bottom"

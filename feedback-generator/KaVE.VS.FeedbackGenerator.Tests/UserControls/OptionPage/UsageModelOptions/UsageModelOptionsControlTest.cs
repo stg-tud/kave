@@ -165,7 +165,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void ShouldClearModelsOnReloadModels()
         {
-            UserControlTestUtils.Click(_sut.ReloadModelsButton);
+            UserControlTestUtils.Execute(_sut.ReloadModelsButton);
 
             _proposalItemProviderMock.Verify(provider => provider.Clear(), Times.Once);
         }
@@ -173,7 +173,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void ShouldLoadAllModelsOnUpdateAllModels()
         {
-            UserControlTestUtils.Click(_sut.UpdateModelsButton);
+            UserControlTestUtils.Execute(_sut.UpdateModelsButton);
 
             foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
             {
@@ -185,7 +185,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void ShouldRemoveAllModelsOnRemoveAllModels()
         {
-            UserControlTestUtils.Click(_sut.RemoveModelsButton);
+            UserControlTestUtils.Execute(_sut.RemoveModelsButton);
 
             foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
             {
