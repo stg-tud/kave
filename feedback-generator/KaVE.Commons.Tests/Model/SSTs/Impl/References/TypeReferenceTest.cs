@@ -39,7 +39,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void SettingValues()
         {
-            var sut = new TypeReference { TypeName = SomeType};
+            var sut = new TypeReference { TypeName = SomeType };
             Assert.AreEqual(SomeType, sut.TypeName);
         }
 

@@ -16,7 +16,9 @@
 
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
@@ -43,6 +45,89 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         {
             var sut = new FieldDeclaration {Name = SomeField};
             Assert.AreEqual(SomeField, sut.Name);
+        }
+
+        [Test]
+        public void DeclaringTypeIdentity()
+        {
+            var sut = new FieldDeclaration
+            {
+                Name = SomeField
+            };
+
+            Assert.AreEqual(new TypeReference { TypeName = SomeField.DeclaringType }, sut.DeclaringType);
+        }
+
+        [Test]
+        public void FieldNameIdentity()
+        {
+            var sut = new FieldDeclaration
+            {
+                Name = SomeField
+            };
+
+            Assert.AreEqual(new SimpleName { Name= SomeField.Name}, sut.FieldName);
+        }
+
+        [Test]
+        public void ValueTypeIdentity()
+        {
+            var sut = new FieldDeclaration
+            {
+                Name = SomeField
+            };
+
+            Assert.AreEqual(new TypeReference { TypeName = SomeField.ValueType }, sut.ValueType);
+        }
+
+        [Test]
+        public void IsStaticIdentity()
+        {
+            var sut = new FieldDeclaration
+            {
+                Name = FieldName.Get("static [T1,P1] [T2,P2].Field")
+            };
+
+            Assert.AreEqual(true, sut.IsStatic);
+        }
+
+        [Test]
+        public void DeclaringTypeIsCached()
+        {
+            var sut = new FieldDeclaration
+            {
+                Name = SomeField
+            };
+
+            var declaringType = sut.DeclaringType;
+
+            Assert.True(ReferenceEquals(declaringType, sut.DeclaringType));
+        }
+
+        [Test]
+        public void FieldNameIsCached()
+        {
+            var sut = new FieldDeclaration
+            {
+                Name = SomeField
+            };
+
+            var fieldName = sut.FieldName;
+
+            Assert.True(ReferenceEquals(fieldName, sut.FieldName));
+        }
+
+        [Test]
+        public void ValueTypeIsCached()
+        {
+            var sut = new FieldDeclaration
+            {
+                Name = SomeField
+            };
+
+            var valueType = sut.ValueType;
+
+            Assert.True(ReferenceEquals(valueType, sut.ValueType));
         }
 
         [Test]

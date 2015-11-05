@@ -89,6 +89,8 @@ namespace KaVE.Commons.Model.SSTs.Visitor
 
         void Visit(ISimpleName simpleName, TContext context);
 
+        void Visit(ISimpleName simpleName, TContext context);
+
         // unknowns
         void Visit(IUnknownReference unknownRef, TContext context);
         void Visit(IUnknownExpression unknownExpr, TContext context);
@@ -156,6 +158,8 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(ITypeReference typeReference, TContext context);
         TReturn Visit(IVariableReference varRef, TContext context);
         TReturn Visit(IIndexAccessReference indexAccessRef, TContext context);
+
+        TReturn Visit(ISimpleName simpleName, TContext context);
 
         TReturn Visit(ISimpleName simpleName, TContext context);
 

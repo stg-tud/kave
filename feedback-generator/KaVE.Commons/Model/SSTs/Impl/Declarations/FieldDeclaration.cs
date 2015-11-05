@@ -17,8 +17,9 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -28,8 +29,26 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
     [DataContract]
     public class FieldDeclaration : IFieldDeclaration
     {
+        private IFieldName _name;
+
         [DataMember]
-        public IFieldName Name { get; set; }
+        public IFieldName Name {
+            get { return _name; }
+            set
+            {
+                _name = value;
+
+                ValueType = new TypeReference {TypeName = Name.ValueType};
+                FieldName = new SimpleName{ Name = Name.Name};
+                DeclaringType = new TypeReference {TypeName = Name.DeclaringType};
+                IsStatic = Name.IsStatic;
+            } 
+        }
+
+        public ITypeReference ValueType { get; private set; }
+        public ISimpleName FieldName { get; private set; }
+        public ITypeReference DeclaringType { get; private set; }
+        public bool IsStatic { get; private set; }
 
         public IEnumerable<ISSTNode> Children
         {
@@ -38,7 +57,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 
         public FieldDeclaration()
         {
-            Name = FieldName.UnknownName;
+            Name = Names.CSharp.FieldName.UnknownName;
         }
 
         private bool Equals(FieldDeclaration other)

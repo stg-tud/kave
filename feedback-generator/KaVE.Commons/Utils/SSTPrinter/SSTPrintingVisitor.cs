@@ -699,6 +699,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.Text(simpleName.Name);
         }
 
+        public void Visit(ISimpleName simpleName, SSTPrintingContext c)
+        {
+            c.Text(simpleName.Name);
+        }
+
         public void Visit(IIndexAccessReference indexAccessRef, SSTPrintingContext context)
         {
             indexAccessRef.Expression.Accept(this, context);

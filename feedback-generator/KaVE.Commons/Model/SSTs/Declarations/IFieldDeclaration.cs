@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.SSTs.Declarations
@@ -23,5 +24,13 @@ namespace KaVE.Commons.Model.SSTs.Declarations
     {
         [NotNull]
         IFieldName Name { get; }
+
+        ITypeReference ValueType { get; }
+
+        ISimpleName FieldName { get; }
+
+        ITypeReference DeclaringType { get; }
+
+        bool IsStatic { get; }
     }
 }
