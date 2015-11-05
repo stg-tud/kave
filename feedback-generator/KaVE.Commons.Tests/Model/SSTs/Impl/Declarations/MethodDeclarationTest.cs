@@ -142,9 +142,9 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
                 Name = _mA
             };
 
-            var methodName = sut.DeclaringType;
+            var declaringType = sut.DeclaringType;
 
-            Assert.True(ReferenceEquals(methodName, sut.DeclaringType));
+            Assert.True(ReferenceEquals(declaringType, sut.DeclaringType));
         }
 
         [Test]
@@ -168,9 +168,9 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
                 Name = _mA
             };
 
-            var methodName = sut.Parameters;
+            var parameters = sut.Parameters;
 
-            Assert.True(ReferenceEquals(methodName, sut.Parameters));
+            Assert.True(ReferenceEquals(parameters, sut.Parameters));
         }
 
         [Test]
@@ -181,9 +181,9 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
                 Name = _mA
             };
 
-            var methodName = sut.ReturnType;
+            var returnType = sut.ReturnType;
 
-            Assert.True(ReferenceEquals(methodName, sut.ReturnType));
+            Assert.True(ReferenceEquals(returnType, sut.ReturnType));
         }
 
         [Test]
