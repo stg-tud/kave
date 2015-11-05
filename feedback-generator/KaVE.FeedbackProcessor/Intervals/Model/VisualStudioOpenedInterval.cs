@@ -14,25 +14,7 @@
  * limitations under the License.
  */
 
-using System;
-using KaVE.Commons.Utils.Exceptions;
-
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Intervals.Model
 {
-    internal class FeedbackProcessorApp
-    {
-        private static readonly ILogger Logger = new ConsoleLogger();
-
-        public static void Main()
-        {
-            //new SanityCheckApp().Run();
-
-            //new TimeBudgetEvaluationApp(Logger).Run();
-            //new SSTSequenceExtractor(Logger).Run();
-
-            new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/events.zip");
-
-            Console.ReadKey();
-        }
-    }
+    public class VisualStudioOpenedInterval : Interval {}
 }

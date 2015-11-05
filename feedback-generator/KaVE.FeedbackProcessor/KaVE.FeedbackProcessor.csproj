@@ -112,6 +112,15 @@
     <Compile Include="IEventProcessor.cs" />
     <Compile Include="Import\FeedbackImporter.cs" />
     <Compile Include="Import\FeedbackArchiveReader.cs" />
+    <Compile Include="Intervals\Model\UserActiveInterval.cs" />
+    <Compile Include="Intervals\Transformers\IEventToIntervalTransformer.cs" />
+    <Compile Include="Intervals\IntervalTransformer.cs" />
+    <Compile Include="Intervals\Model\Interval.cs" />
+    <Compile Include="Intervals\Model\VisualStudioOpenedInterval.cs" />
+    <Compile Include="Intervals\Transformers\SingleIntervalTransformerBase.cs" />
+    <Compile Include="Intervals\Transformers\UserActiveTransformer.cs" />
+    <Compile Include="Intervals\Transformers\VisualStudioOpenedTransformer.cs" />
+    <Compile Include="IntervalTransformerApp.cs" />
     <Compile Include="Model\ConcurrentEvent.cs" />
     <Compile Include="Model\Developer.cs" />
     <Compile Include="Model\DevelopmentHistory\SSTSnapshot.cs" />
@@ -200,6 +209,7 @@
   <ItemGroup>
     <Content Include="Resources\MongoDBQueriesForDataEvaluation.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

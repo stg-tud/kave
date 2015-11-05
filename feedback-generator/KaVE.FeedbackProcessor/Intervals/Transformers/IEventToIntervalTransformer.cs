@@ -15,24 +15,15 @@
  */
 
 using System;
-using KaVE.Commons.Utils.Exceptions;
+using KaVE.FeedbackProcessor.Intervals.Model;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
-    internal class FeedbackProcessorApp
+    public delegate void IntervalCompletedHandler<in T>(T interval) where T : Interval;
+
+    public interface IEventToIntervalTransformer<out TIntervalType> : IEventProcessor
+        where TIntervalType : Interval
     {
-        private static readonly ILogger Logger = new ConsoleLogger();
-
-        public static void Main()
-        {
-            //new SanityCheckApp().Run();
-
-            //new TimeBudgetEvaluationApp(Logger).Run();
-            //new SSTSequenceExtractor(Logger).Run();
-
-            new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/events.zip");
-
-            Console.ReadKey();
-        }
+        event IntervalCompletedHandler<TIntervalType> IntervalCompleted;
     }
 }

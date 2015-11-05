@@ -14,25 +14,29 @@
  * limitations under the License.
  */
 
-using System;
-using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Model.Events;
+using KaVE.FeedbackProcessor.Intervals.Model;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
-    internal class FeedbackProcessorApp
+    internal class VisualStudioOpenedTransformer : SingleIntervalTransformerBase<VisualStudioOpenedInterval>
     {
-        private static readonly ILogger Logger = new ConsoleLogger();
-
-        public static void Main()
+        public override void OnEvent(IDEEvent e)
         {
-            //new SanityCheckApp().Run();
+            if (EventHasNoTimeData(e))
+            {
+                return;
+            }
 
-            //new TimeBudgetEvaluationApp(Logger).Run();
-            //new SSTSequenceExtractor(Logger).Run();
+            if (_currentInterval == null)
+            {
+                CreateIntervalFromFirstEvent(e);
+            }
+        }
 
-            new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/events.zip");
-
-            Console.ReadKey();
+        public override void OnStreamEnds()
+        {
+            FireInterval();
         }
     }
 }

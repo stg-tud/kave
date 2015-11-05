@@ -15,24 +15,22 @@
  */
 
 using System;
-using KaVE.Commons.Utils.Exceptions;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Intervals.Model
 {
-    internal class FeedbackProcessorApp
+    public abstract class Interval
     {
-        private static readonly ILogger Logger = new ConsoleLogger();
+        [NotNull]
+        public DateTime StartTime { get; set; }
 
-        public static void Main()
+        [NotNull]
+        public TimeSpan Duration { get; set; }
+
+        protected Interval()
         {
-            //new SanityCheckApp().Run();
-
-            //new TimeBudgetEvaluationApp(Logger).Run();
-            //new SSTSequenceExtractor(Logger).Run();
-
-            new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/events.zip");
-
-            Console.ReadKey();
+            StartTime = DateTime.MinValue;
+            Duration = TimeSpan.Zero;
         }
     }
 }
