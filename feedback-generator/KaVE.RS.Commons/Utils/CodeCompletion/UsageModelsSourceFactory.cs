@@ -17,7 +17,6 @@
 using System;
 using JetBrains.Application;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
-using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
 using KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
@@ -53,7 +52,7 @@ namespace KaVE.RS.Commons.Utils.CodeCompletion
                 return new HttpUsageModelsSource(source);
             }
 
-            return new EmptyUsageModelsSource(source);
+            return new EmptyUsageModelsSource();
         }
 
         [Pure]
@@ -65,7 +64,7 @@ namespace KaVE.RS.Commons.Utils.CodeCompletion
             }
             catch (UriFormatException)
             {
-                return new EmptyUsageModelsSource(new Uri(uriSource));
+                return new EmptyUsageModelsSource();
             }
         }
     }

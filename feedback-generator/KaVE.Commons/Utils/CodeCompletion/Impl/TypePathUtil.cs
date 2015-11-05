@@ -67,12 +67,12 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
         }
 
         [Pure]
-        public CoReTypeName GetTypeNameString(string relativeModelFilePath)
+        public CoReTypeName GetTypeName(string relativeModelFilePath)
         {
             var filePathWithoutExtension = relativeModelFilePath.Substring(0, relativeModelFilePath.LastIndexOf('.'));
             Asserts.NotNull(filePathWithoutExtension);
-            var typeNameSubstring = "";
 
+            string typeNameSubstring;
             try
             {
                 typeNameSubstring = filePathWithoutExtension.Substring(0, filePathWithoutExtension.LastIndexOf('.'));

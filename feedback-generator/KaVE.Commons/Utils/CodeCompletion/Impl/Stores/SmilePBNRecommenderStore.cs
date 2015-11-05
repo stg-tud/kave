@@ -152,7 +152,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
                 zipFiles.Select(
                     modelFilePath =>
                         new UsageModelDescriptor(
-                            _typePathUtil.GetTypeNameString(modelFilePath.Replace(BasePath, "").TrimStart('\\')),
+                            _typePathUtil.GetTypeName(modelFilePath.Replace(BasePath, "").TrimStart('\\')),
                             _typePathUtil.GetVersionNumber(modelFilePath.Replace(BasePath, "").TrimStart('\\'))));
         }
     }

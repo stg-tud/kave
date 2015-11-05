@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 
@@ -22,9 +21,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Stores
 {
     public interface IUsageModelsSource
     {
-        [NotNull]
-        Uri Source { get; set; }
-
         [Pure, NotNull]
         IEnumerable<UsageModelDescriptor> GetUsageModels();
 

@@ -42,16 +42,6 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.CodeCompletion
             get { return new Uri("ftp://someurl"); }
         }
 
-        private static IoUtils TestIoUtils
-        {
-            get { return new IoUtils(); }
-        }
-
-        private static TypePathUtil TestTypePathUtil
-        {
-            get { return new TypePathUtil(); }
-        }
-
         #endregion
 
         private UsageModelsSourceFactory _uut;
@@ -59,45 +49,25 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.CodeCompletion
         [SetUp]
         public void Setup()
         {
-            _uut = new UsageModelsSourceFactory(TestIoUtils, TestTypePathUtil);
+            _uut = new UsageModelsSourceFactory(new IoUtils(), new TypePathUtil());
         }
 
         [Test]
         public void ReturnsFileSourceForFilePaths()
         {
-            Assert.IsInstanceOf<FilePathUsageModelsSource>(
-                _uut.GetSource(FileTestSource));
-        }
-
-        [Test]
-        public void SetsFileSource()
-        {
-            Assert.AreEqual(
-                FileTestSource,
-                _uut.GetSource(FileTestSource).Source);
+            Assert.IsInstanceOf<FilePathUsageModelsSource>(_uut.GetSource(FileTestSource));
         }
 
         [Test]
         public void ReturnsHttpSourceForUrls()
         {
-            Assert.IsInstanceOf<HttpUsageModelsSource>(
-                _uut.GetSource(HttpTestSource));
-        }
-
-        [Test]
-        public void SetsHttpSource()
-        {
-            Assert.AreEqual(
-                HttpTestSource,
-                _uut.GetSource(HttpTestSource).Source);
+            Assert.IsInstanceOf<HttpUsageModelsSource>(_uut.GetSource(HttpTestSource));
         }
 
         [Test]
         public void ReturnsEmptySourceForOtherUris()
         {
-            var actualSource = _uut.GetSource(FtpTestSource);
-            Assert.IsInstanceOf<EmptyUsageModelsSource>(actualSource);
-            Assert.AreEqual(FtpTestSource, actualSource.Source);
+            Assert.IsInstanceOf<EmptyUsageModelsSource>(_uut.GetSource(FtpTestSource));
         }
     }
 }

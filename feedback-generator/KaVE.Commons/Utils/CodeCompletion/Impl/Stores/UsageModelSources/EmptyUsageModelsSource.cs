@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 
@@ -22,13 +21,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
     public class EmptyUsageModelsSource : IUsageModelsSource
     {
-        public Uri Source { get; set; }
-
-        public EmptyUsageModelsSource(Uri source)
-        {
-            Source = source;
-        }
-
         public IEnumerable<UsageModelDescriptor> GetUsageModels()
         {
             return new UsageModelDescriptor[0];

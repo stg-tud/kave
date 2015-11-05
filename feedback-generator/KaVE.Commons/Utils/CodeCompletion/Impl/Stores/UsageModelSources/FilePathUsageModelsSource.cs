@@ -15,29 +15,48 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.Json;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
-    public class FilePathUsageModelsSource : UsageModelsSourceBase
+    public class FilePathUsageModelsSource : IUsageModelsSource
     {
         protected readonly IIoUtils IoUtils;
         protected readonly TypePathUtil TypePathUtil;
+        private readonly Uri _myUri;
 
-        public FilePathUsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil, Uri source)
-            : base(source)
+        public FilePathUsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil, Uri myUri)
         {
             TypePathUtil = typePathUtil;
             IoUtils = ioUtils;
+            _myUri = myUri;
         }
 
-        public override void Load(UsageModelDescriptor model, string baseTargetDirectory)
+        public IEnumerable<UsageModelDescriptor> GetUsageModels()
         {
-            if (Source.IsFile)
+            IEnumerable<UsageModelDescriptor> result;
+
+            try
             {
-                var modelPath = TypePathUtil.GetNestedFileName(Source.LocalPath, model.TypeName, model.Version, "zip");
+                result = GetIndexFileContent().ParseJsonTo<IEnumerable<UsageModelDescriptor>>();
+            }
+            catch
+            {
+                result = null;
+            }
+
+            return result ?? new UsageModelDescriptor[0];
+        }
+
+        public void Load(UsageModelDescriptor model, string baseTargetDirectory)
+        {
+            if (_myUri.IsFile)
+            {
+                var modelPath = TypePathUtil.GetNestedFileName(_myUri.LocalPath, model.TypeName, model.Version, "zip");
                 var targetPath = TypePathUtil.GetNestedFileName(
                     baseTargetDirectory,
                     model.TypeName,
@@ -46,7 +65,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 
                 if (!IoUtils.FileExists(modelPath))
                 {
-                    modelPath = TypePathUtil.GetNestedFileName(Source.LocalPath, model.TypeName, "zip");
+                    modelPath = TypePathUtil.GetNestedFileName(_myUri.LocalPath, model.TypeName, "zip");
                 }
 
                 IoUtils.CreateFile(targetPath);
@@ -54,7 +73,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
             }
         }
 
-        protected override string GetIndexContent()
+        private string GetIndexFileContent()
         {
             try
             {

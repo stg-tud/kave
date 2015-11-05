@@ -15,23 +15,29 @@
  */
 
 using System;
+using System.Collections.Generic;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
-    public class HttpUsageModelsSource : UsageModelsSourceBase
+    public class HttpUsageModelsSource : IUsageModelsSource
     {
-        public HttpUsageModelsSource(Uri source) : base(source) {}
+        private Uri _myUri;
 
-        public override void Load(UsageModelDescriptor model, string baseTargetDirectory)
+        public HttpUsageModelsSource(Uri myUri)
         {
-            // TODO implement this
+            _myUri = myUri;
         }
 
-        protected override string GetIndexContent()
+        public IEnumerable<UsageModelDescriptor> GetUsageModels()
         {
             // TODO implement this
-            return "";
+            return new UsageModelDescriptor[0];
+        }
+
+        public void Load(UsageModelDescriptor model, string baseTargetDirectory)
+        {
+            // TODO implement this
         }
     }
 }

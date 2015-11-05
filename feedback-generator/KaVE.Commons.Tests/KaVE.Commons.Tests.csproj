@@ -195,7 +195,6 @@
     <Compile Include="Utils\CodeCompletion\Impl\Stores\SmilePBNRecommenderStoreTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderFixture.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderTest.cs" />
-    <Compile Include="Utils\CodeCompletion\Stores\UsageModelsSourceBaseTest.cs" />
     <Compile Include="Utils\CodeCompletion\TypePathUtilTest.cs" />
     <Compile Include="Utils\CodeCompletion\Stores\UsageModelDescriptorTest.cs" />
     <Compile Include="Utils\Collections\FifoCacheTest.cs" />

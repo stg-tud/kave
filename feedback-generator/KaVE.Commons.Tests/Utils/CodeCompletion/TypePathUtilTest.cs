@@ -22,6 +22,14 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion
 {
     internal class TypePathUtilTest
     {
+        private static readonly CoReTypeName ExpectedTypeName = new CoReTypeName(@"LSystem\Collections\List");
+        private static readonly string PathWithVersion = ExpectedTypeName + ".1.zip";
+        private static readonly string PathWithoutVersion = ExpectedTypeName + ".zip";
+
+        private const string BasePath = "C:\\";
+        private static readonly string ExpectedPathWithVersion = BasePath + PathWithVersion;
+        private static readonly string ExpectedPathWithoutVersion = BasePath + PathWithoutVersion;
+
         private TypePathUtil _sut;
 
         [SetUp]
@@ -46,6 +54,42 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion
             var actual = _sut.ToFlatPath(name);
             const string expected = "La_b_C";
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldGetTypeNameWithVersionNumber()
+        {
+            Assert.AreEqual(ExpectedTypeName, _sut.GetTypeName(PathWithVersion));
+        }
+
+        [Test]
+        public void ShouldGetTypeNameWithoutVersionNumber()
+        {
+            Assert.AreEqual(ExpectedTypeName, _sut.GetTypeName(PathWithoutVersion));
+        }
+
+        [Test]
+        public void ShouldGetVersionNumber()
+        {
+            Assert.AreEqual(1, _sut.GetVersionNumber(PathWithVersion));
+        }
+
+        [Test]
+        public void ShouldUseVersionZeroAsFallback()
+        {
+            Assert.AreEqual(0, _sut.GetVersionNumber(PathWithoutVersion));
+        }
+
+        [Test]
+        public void ShouldGetCorrectNestedPath()
+        {
+            Assert.AreEqual(ExpectedPathWithVersion, _sut.GetNestedFileName(BasePath, ExpectedTypeName, 1, "zip"));
+        }
+
+        [Test]
+        public void ShouldGetCorrectNestedPathWithoutVersion()
+        {
+            Assert.AreEqual(ExpectedPathWithoutVersion, _sut.GetNestedFileName(BasePath, ExpectedTypeName, "zip"));
         }
     }
 }
