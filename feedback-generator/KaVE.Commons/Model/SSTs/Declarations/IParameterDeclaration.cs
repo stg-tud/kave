@@ -15,13 +15,19 @@
  */
 
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Visitor;
 
 namespace KaVE.Commons.Model.SSTs.Declarations
 {
-    public interface IParameterDeclaration : IMemberDeclaration
+    public interface IParameterDeclaration : ISSTNode
     {
         ITypeReference Type { get; }
 
         ISimpleName Name { get; }
+
+        bool IsPassedByReference { get; }
+        bool IsOutput { get; }
+        bool IsParameterArray { get; }
+        bool IsOptional { get; }
     }
 }

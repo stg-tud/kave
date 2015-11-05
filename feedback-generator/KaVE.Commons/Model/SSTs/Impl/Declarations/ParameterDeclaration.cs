@@ -15,7 +15,6 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
@@ -27,9 +26,15 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 {
     public class ParameterDeclaration : IParameterDeclaration
     {
-        public ISimpleName Name { get;  set; }
+        public ISimpleName Name { get; set; }
 
-        public ITypeReference Type { get;  set; }
+        public bool IsPassedByReference { get; set; }
+        public bool IsOutput { get; set; }
+        public bool IsParameterArray { get; set; }
+        public bool IsOptional { get; set; }
+
+        public ITypeReference Type { get; set; }
+
 
         public IEnumerable<ISSTNode> Children
         {
@@ -50,7 +55,8 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 
         private bool Equals(ParameterDeclaration other)
         {
-            return Equals(Name, other.Name) && Equals(Type,other.Type);
+            return Equals(Name, other.Name) && Equals(Type, other.Type) && IsOptional.Equals(other.IsOptional) &&
+                   IsOutput.Equals(other.IsOutput) && IsParameterArray.Equals(other.IsParameterArray) && IsPassedByReference.Equals(other.IsPassedByReference);
         }
 
         public override bool Equals(object obj)
@@ -62,6 +68,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
         {
             var hashCode = Name.GetHashCode();
             hashCode = (hashCode*397) ^ Type.GetHashCode();
+            hashCode = (hashCode*397) ^ IsOptional.GetHashCode();
+            hashCode = (hashCode*397) ^ IsOutput.GetHashCode();
+            hashCode = (hashCode*397) ^ IsParameterArray.GetHashCode();
+            hashCode = (hashCode*397) ^ IsPassedByReference.GetHashCode();
             return hashCode;
         }
 

@@ -43,6 +43,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
                 ReturnType = new TypeReference { TypeName = Name.ReturnType };
                 DeclaringType = new TypeReference { TypeName = Name.DeclaringType };
                 Parameters = CreateParameterDeclarationList(Name.Parameters);
+                IsStatic = Name.IsStatic;
             }
         }
 
@@ -65,6 +66,8 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 
         public IEnumerable<IParameterDeclaration> Parameters { get; private set; }
 
+        public bool IsStatic { get; private set; }
+
         public MethodDeclaration()
         {
             Name = Names.CSharp.MethodName.UnknownName;
@@ -80,7 +83,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
                     new ParameterDeclaration
                     {
                         Name = new SimpleName {Name = parameterName.Name},
-                        Type = new TypeReference {TypeName = parameterName.ValueType}
+                        Type = new TypeReference {TypeName = parameterName.ValueType},
+                        IsOptional = parameterName.IsOptional,
+                        IsOutput = parameterName.IsOutput,
+                        IsParameterArray = parameterName.IsParameterArray,
+                        IsPassedByReference = parameterName.IsPassedByReference,
                     });
             }
             return parameters;

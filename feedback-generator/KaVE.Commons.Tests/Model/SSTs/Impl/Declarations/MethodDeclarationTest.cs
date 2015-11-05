@@ -125,6 +125,16 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         }
 
         [Test]
+        public void IsStaticIdentity()
+        {
+            var sut = new MethodDeclaration
+            {
+                Name = MethodName.Get("static [T1,P1] [T2,P2].A()")
+            };
+            Assert.AreEqual(true, sut.IsStatic);
+        }
+
+        [Test]
         public void DeclaringTypeIsCached()
         {
             var sut = new MethodDeclaration()

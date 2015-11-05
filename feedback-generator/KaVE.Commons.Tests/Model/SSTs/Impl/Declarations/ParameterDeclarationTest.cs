@@ -31,6 +31,10 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
             var sut = new ParameterDeclaration();
             Assert.AreEqual(new SimpleName(), sut.Name);
             Assert.AreEqual(new TypeReference(), sut.Type);
+            Assert.AreEqual(false, sut.IsOptional);
+            Assert.AreEqual(false, sut.IsOutput);
+            Assert.AreEqual(false, sut.IsParameterArray);
+            Assert.AreEqual(false, sut.IsPassedByReference);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -40,11 +44,19 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         {
             var sut = new ParameterDeclaration
             {
-                Name = new SimpleName { Name = "x" },
-                Type = new TypeReference()
+                Name = new SimpleName {Name = "x"},
+                Type = new TypeReference(),
+                IsOptional = true,
+                IsParameterArray = true,
+                IsOutput = true,
+                IsPassedByReference = true
             };
-            Assert.AreEqual(new SimpleName { Name = "x" }, sut.Name);
+            Assert.AreEqual(new SimpleName {Name = "x"}, sut.Name);
             Assert.AreEqual(new TypeReference(), sut.Type);
+            Assert.AreEqual(true, sut.IsOptional);
+            Assert.AreEqual(true, sut.IsOutput);
+            Assert.AreEqual(true, sut.IsParameterArray);
+            Assert.AreEqual(true, sut.IsPassedByReference);
         }
 
         [Test]
@@ -61,12 +73,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         {
             var a = new ParameterDeclaration
             {
-                Name = new SimpleName { Name = "x" },
+                Name = new SimpleName {Name = "x"},
                 Type = new TypeReference()
             };
             var b = new ParameterDeclaration
             {
-                Name = new SimpleName { Name = "x" },
+                Name = new SimpleName {Name = "x"},
                 Type = new TypeReference()
             };
             Assert.AreEqual(a, b);
@@ -78,7 +90,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         {
             var a = new ParameterDeclaration
             {
-                Name = new SimpleName { Name = "x" },
+                Name = new SimpleName {Name = "x"}
             };
             var b = new ParameterDeclaration();
             Assert.AreNotEqual(a, b);
@@ -90,7 +102,55 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         {
             var a = new ParameterDeclaration
             {
-                Type = new TypeReference { TypeName = TestNameFactory.GetAnonymousTypeName()}
+                Type = new TypeReference {TypeName = TestNameFactory.GetAnonymousTypeName()}
+            };
+            var b = new ParameterDeclaration();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentIsOptionalValue()
+        {
+            var a = new ParameterDeclaration
+            {
+                IsOptional = true
+            };
+            var b = new ParameterDeclaration();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentIsOutputValue()
+        {
+            var a = new ParameterDeclaration
+            {
+                IsOutput = true
+            };
+            var b = new ParameterDeclaration();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentIsParameterArrayValue()
+        {
+            var a = new ParameterDeclaration
+            {
+                IsParameterArray = true
+            };
+            var b = new ParameterDeclaration();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentIsPassedByReferenceValue()
+        {
+            var a = new ParameterDeclaration
+            {
+                IsPassedByReference = true
             };
             var b = new ParameterDeclaration();
             Assert.AreNotEqual(a, b);
