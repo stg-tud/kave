@@ -106,7 +106,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
                 expectedParameterList.Add(new ParameterDeclaration
                 {
                     Name = new SimpleName{Name = parameterName.Name},
-                    Type = new TypeReference { TypeName = parameterName.ValueType}
+                    Type = new TypeReference { TypeName = parameterName.ValueType},
+                    IsOptional = parameterName.IsOptional,
+                    IsOutput = parameterName.IsOutput,
+                    IsParameterArray = parameterName.IsParameterArray,
+                    IsPassedByReference = parameterName.IsPassedByReference,
                 });
             }
 
