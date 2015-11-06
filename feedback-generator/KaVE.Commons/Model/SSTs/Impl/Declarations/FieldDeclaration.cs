@@ -45,10 +45,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
             } 
         }
 
-        public ITypeReference ValueType { get; private set; }
-        public ISimpleName FieldName { get; private set; }
-        public ITypeReference DeclaringType { get; private set; }
-        public bool IsStatic { get; private set; }
+        public ITypeReference ValueType { get; set; }
+        public ISimpleName FieldName { get; set; }
+        public ITypeReference DeclaringType { get; set; }
+        public bool IsStatic { get; set; }
 
         public IEnumerable<ISSTNode> Children
         {
