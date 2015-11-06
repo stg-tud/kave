@@ -58,15 +58,15 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
             get { return Lists.NewList<ISSTNode>(); }
         }
 
-        public ITypeReference ReturnType { get; private set; }
+        public ITypeReference ReturnType { get;  set; }
 
-        public ISimpleName MethodName { get; private set; }
+        public ISimpleName MethodName { get;  set; }
 
-        public ITypeReference DeclaringType { get; private set; }
+        public ITypeReference DeclaringType { get;  set; }
 
-        public IEnumerable<IParameterDeclaration> Parameters { get; private set; }
+        public IEnumerable<IParameterDeclaration> Parameters { get;  set; }
 
-        public bool IsStatic { get; private set; }
+        public bool IsStatic { get;  set; }
 
         public MethodDeclaration()
         {
