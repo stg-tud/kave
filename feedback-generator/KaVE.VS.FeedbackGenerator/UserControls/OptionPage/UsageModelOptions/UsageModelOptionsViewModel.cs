@@ -26,7 +26,6 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
-using MsgBox.Commands;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -86,48 +85,67 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public ICommand UpdateAllModelsCommand
-        {
-            get { return new RelayCommand(UpdateAllModels, () => true); }
-        }
-
-        public ICommand RemoveAllModelsCommand
-        {
-            get { return new RelayCommand(RemoveAllModels, () => true); }
-        }
-
-        public ICommand ReloadModelsCommand
-        {
-            get { return new RelayCommand(ReloadModels, () => true); }
-        }
-
-        public RelayCommand<IUsageModelsTableRow> InstallModel
+        public AsyncCommand UpdateAllModelsCommand
         {
             get
             {
-                return new RelayCommand<IUsageModelsTableRow>(
+                var updateAllModelsCommand = new AsyncCommand(UpdateAllModels);
+                updateAllModelsCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                return updateAllModelsCommand;
+            }
+        }
+
+        public AsyncCommand RemoveAllModelsCommand
+        {
+            get
+            {
+                var removeAllModelsCommand = new AsyncCommand(RemoveAllModels);
+                removeAllModelsCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                return removeAllModelsCommand;
+            }
+        }
+
+        public AsyncCommand ReloadModelsCommand
+        {
+            get
+            {
+                return new AsyncCommand(ReloadModels);
+            }
+        }
+
+        public AsyncCommand<IUsageModelsTableRow> InstallModel
+        {
+            get
+            {
+                var installCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.LoadModel(),
                     row => { return row != null && row.IsInstallable; });
+                installCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                return installCommand;
             }
         }
 
-        public RelayCommand<IUsageModelsTableRow> UpdateModel
+        public AsyncCommand<IUsageModelsTableRow> UpdateModel
         {
             get
             {
-                return new RelayCommand<IUsageModelsTableRow>(
+                var updateCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.LoadModel(),
                     row => { return row != null && row.IsUpdateable; });
+                updateCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                return updateCommand;
             }
         }
 
-        public RelayCommand<IUsageModelsTableRow> RemoveModel
+        public AsyncCommand<IUsageModelsTableRow> RemoveModel
         {
             get
             {
-                return new RelayCommand<IUsageModelsTableRow>(
+                var removeCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.RemoveModel(),
                     row => { return row != null && row.IsRemoveable; });
+                removeCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                return removeCommand;
             }
         }
 
@@ -195,8 +213,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 row.LoadModel();
             }
-
-            ReloadUsageModelsTableContent();
         }
 
         private void RemoveAllModels()
@@ -205,19 +221,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 row.RemoveModel();
             }
-
-            ReloadUsageModelsTableContent();
         }
 
-        private void ReloadModels()
+        private static void ReloadModels()
         {
             try
             {
                 Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
             }
             catch (InvalidOperationException) {}
-
-            ReloadUsageModelsTableContent();
         }
 
         public ModelStoreValidation ValidateModelStoreInformation(string path)

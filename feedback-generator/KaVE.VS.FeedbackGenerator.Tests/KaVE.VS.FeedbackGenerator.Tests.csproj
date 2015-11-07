@@ -195,6 +195,7 @@
     <Compile Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsControlTest.cs" />
     <Compile Include="UserControls\OptionPage\BaseOptionPageUserControlTest.cs" />
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsControlTest.cs" />
+    <Compile Include="UserControls\OptionPage\UsageModelOptions\AsyncCommandTest.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsControlTest.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsViewModelTest.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelsTableRowTest.cs" />

@@ -295,6 +295,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnonymizationOptionsMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\OptionPage\UsageModelOptions\AsyncCommand.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelMergingStrategy.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelsTableRow.cs" />
     <Compile Include="Utils\Logging\LogFileUtils.cs" />
