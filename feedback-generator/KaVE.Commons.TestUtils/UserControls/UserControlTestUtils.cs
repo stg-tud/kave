@@ -45,14 +45,14 @@ namespace KaVE.Commons.TestUtils.UserControls
             hyperlink.RaiseEvent(new RoutedEventArgs(Hyperlink.ClickEvent));
         }
 
-        public static void Execute(ButtonBase button, object executeParameter = null)
+        public static void Execute(ButtonBase button)
         {
-            button.Command.Execute(executeParameter);
+            button.Command.Execute(button.CommandParameter);
         }
 
-        public static bool CanExecute(ButtonBase button, object executeParameter = null)
+        public static bool CanExecute(ButtonBase button)
         {
-            return button.Command.CanExecute(executeParameter);
+            return button.Command.CanExecute(button.CommandParameter);
         }
     }
 }

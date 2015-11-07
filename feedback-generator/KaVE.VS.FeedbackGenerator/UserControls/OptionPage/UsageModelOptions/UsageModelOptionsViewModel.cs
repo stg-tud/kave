@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
@@ -25,7 +26,7 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using MsgBox.Commands;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -87,17 +88,47 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public ICommand UpdateAllModelsCommand
         {
-            get { return new DelegateCommand(UpdateAllModels, () => true); }
+            get { return new RelayCommand(UpdateAllModels, () => true); }
         }
 
         public ICommand RemoveAllModelsCommand
         {
-            get { return new DelegateCommand(RemoveAllModels, () => true); }
+            get { return new RelayCommand(RemoveAllModels, () => true); }
         }
 
         public ICommand ReloadModelsCommand
         {
-            get { return new DelegateCommand(ReloadModels, () => true); }
+            get { return new RelayCommand(ReloadModels, () => true); }
+        }
+
+        public RelayCommand<IUsageModelsTableRow> InstallModel
+        {
+            get
+            {
+                return new RelayCommand<IUsageModelsTableRow>(
+                    row => row.LoadModel(),
+                    row => { return row != null && row.IsInstallable; });
+            }
+        }
+
+        public RelayCommand<IUsageModelsTableRow> UpdateModel
+        {
+            get
+            {
+                return new RelayCommand<IUsageModelsTableRow>(
+                    row => row.LoadModel(),
+                    row => { return row != null && row.IsUpdateable; });
+            }
+        }
+
+        public RelayCommand<IUsageModelsTableRow> RemoveModel
+        {
+            get
+            {
+                return new RelayCommand<IUsageModelsTableRow>(
+                    row => row.RemoveModel(),
+                    row => { return row != null && row.IsRemoveable; });
+            }
         }
 
         private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
@@ -160,16 +191,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void UpdateAllModels()
         {
-            foreach (var row in UsageModelsTableContent)
+            foreach (var row in UsageModelsTableContent.Where(row => row.IsUpdateable))
             {
-                if (row.UpdateModel.CanExecute(null))
-                {
-                    row.UpdateModel.Execute(null);
-                }
-                if (row.InstallModel.CanExecute(null))
-                {
-                    row.InstallModel.Execute(null);
-                }
+                row.LoadModel();
             }
 
             ReloadUsageModelsTableContent();
@@ -177,12 +201,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void RemoveAllModels()
         {
-            foreach (var row in UsageModelsTableContent)
+            foreach (var row in UsageModelsTableContent.Where(row => row.IsRemoveable))
             {
-                if (row.RemoveModel.CanExecute(null))
-                {
-                    row.RemoveModel.Execute(null);
-                }
+                row.RemoveModel();
             }
 
             ReloadUsageModelsTableContent();

@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-using System.Windows.Input;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -34,14 +32,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         [CanBeNull]
         int? NewestAvailableVersion { get; set; }
 
-        [NotNull]
-        ICommand InstallModel { get; }
+        bool IsInstallable { get; }
+        bool IsUpdateable { get; }
+        bool IsRemoveable { get; }
 
-        [NotNull]
-        ICommand UpdateModel { get; }
-
-        [NotNull]
-        ICommand RemoveModel { get; }
+        void LoadModel();
+        void RemoveModel();
     }
 
     public class UsageModelsTableRow : IUsageModelsTableRow
@@ -58,23 +54,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public int? NewestAvailableVersion { get; set; }
 
-        public ICommand InstallModel
+        public bool IsInstallable
         {
-            get { return new DelegateCommand(Install, IsInstallable); }
+            get { return !_alreadyLoaded && LoadedVersion == null && NewestAvailableVersion != null; }
         }
 
-        public ICommand UpdateModel
+        public bool IsUpdateable
         {
-            get { return new DelegateCommand(Update, IsUpdateable); }
+            get
+            {
+                return !_alreadyLoaded && LoadedVersion != null && NewestAvailableVersion != null &&
+                       LoadedVersion < NewestAvailableVersion;
+            }
         }
 
-        public ICommand RemoveModel
+        public bool IsRemoveable
         {
-            get { return new DelegateCommand(Remove, IsRemoveable); }
+            get { return !_alreadyRemoved && LoadedVersion != null; }
         }
 
-        private bool _alreadyInstalled;
-        private bool _alreadyUpdated;
+        private bool _alreadyLoaded;
+
         private bool _alreadyRemoved;
 
         public UsageModelsTableRow([CanBeNull] ILocalPBNRecommenderStore localStore,
@@ -90,47 +90,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             NewestAvailableVersion = newestAvailableVersion;
         }
 
-        private void Install()
+        public void LoadModel()
         {
-            _alreadyInstalled = true;
+            _alreadyLoaded = true;
             if (_remoteStore != null)
             {
                 _remoteStore.Load(TypeName);
             }
         }
 
-        private void Update()
-        {
-            _alreadyUpdated = true;
-            if (_remoteStore != null)
-            {
-                _remoteStore.Load(TypeName);
-            }
-        }
-
-        private void Remove()
+        public void RemoveModel()
         {
             _alreadyRemoved = true;
             if (_localStore != null)
             {
                 _localStore.Remove(TypeName);
             }
-        }
-
-        private bool IsInstallable()
-        {
-            return !_alreadyInstalled && LoadedVersion == null && NewestAvailableVersion != null;
-        }
-
-        private bool IsUpdateable()
-        {
-            return !_alreadyUpdated && LoadedVersion != null && NewestAvailableVersion != null &&
-                   LoadedVersion < NewestAvailableVersion;
-        }
-
-        private bool IsRemoveable()
-        {
-            return !_alreadyRemoved && LoadedVersion != null;
         }
 
         public override bool Equals(object obj)

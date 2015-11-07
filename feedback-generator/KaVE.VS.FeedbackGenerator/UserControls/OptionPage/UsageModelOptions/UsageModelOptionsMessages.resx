@@ -123,6 +123,9 @@
   <data name="InstallSelectedModelToolTip" xml:space="preserve">
     <value>Installs the selected model</value>
   </data>
+  <data name="PublicModelsInfo" xml:space="preserve">
+    <value>Due to technical reasons we can't provide more models yet.</value>
+  </data>
   <data name="ReloadModelsButton" xml:space="preserve">
     <value>Reload Models</value>
   </data>
@@ -136,10 +139,10 @@
     <value>Removes the selected model</value>
   </data>
   <data name="SettingResetButton" xml:space="preserve">
-    <value>Reset Usage Model Settings</value>
+    <value>Reset Model Paths</value>
   </data>
   <data name="SettingResetDialog" xml:space="preserve">
-    <value>Usage Model Settings will be reset. Are you sure?</value>
+    <value>Local and remote paths will be reset. Are you sure?</value>
   </data>
   <data name="UpdateAllModelsButton" xml:space="preserve">
     <value>Update all Models</value>
@@ -149,5 +152,8 @@
   </data>
   <data name="UpdateSelectedModelToolTip" xml:space="preserve">
     <value>Installs the newest version of the selected model</value>
+  </data>
+  <data name="UsageModelManagementHeader" xml:space="preserve">
+    <value>Usage Models Management</value>
   </data>
 </root>

@@ -57,21 +57,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         public void IsUpdateableTest(int? localVersion, int? remoteVersion, bool shouldBeUpdateable)
         {
             _uut = new UsageModelsTableRow(_localStore, _remoteStore, SomeTypeName, localVersion, remoteVersion);
-            Assert.AreEqual(shouldBeUpdateable, _uut.UpdateModel.CanExecute(null));
+            Assert.AreEqual(shouldBeUpdateable, _uut.IsUpdateable);
         }
 
         [TestCase(null, 0, true), TestCase(null, null, false), TestCase(0, 1, false)]
         public void IsInstallableTest(int? localVersion, int? remoteVersion, bool shouldBeInstallable)
         {
             _uut = new UsageModelsTableRow(_localStore, _remoteStore, SomeTypeName, localVersion, remoteVersion);
-            Assert.AreEqual(shouldBeInstallable, _uut.LoadedVersion == null && _uut.NewestAvailableVersion != null);
+            Assert.AreEqual(shouldBeInstallable, _uut.IsInstallable);
         }
 
         [TestCase(1, 1, true), TestCase(null, 0, false)]
         public void IsRemoveableTest(int? localVersion, int? remoteVersion, bool shouldBeRemoveable)
         {
             _uut = new UsageModelsTableRow(_localStore, _remoteStore, SomeTypeName, localVersion, remoteVersion);
-            Assert.AreEqual(shouldBeRemoveable, _uut.RemoveModel.CanExecute(null));
+            Assert.AreEqual(shouldBeRemoveable, _uut.IsRemoveable);
         }
 
         [Test]
@@ -132,36 +132,28 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void CallModelLoadOnInstall()
+        public void CallModelLoadOnLoad()
         {
-            _uut.InstallModel.Execute(null);
-            Mock.Get(_remoteStore).Verify(store => store.Load(SomeTypeName));
-        }
-
-        [Test]
-        public void CallModelLoadOnUpdate()
-        {
-            _uut.UpdateModel.Execute(null);
+            _uut.LoadModel();
             Mock.Get(_remoteStore).Verify(store => store.Load(SomeTypeName));
         }
 
         [Test]
         public void CallModelRemoveOnRemove()
         {
-            _uut.RemoveModel.Execute(null);
+            _uut.RemoveModel();
             Mock.Get(_localStore).Verify(store => store.Remove(SomeTypeName));
         }
 
         [Test]
         public void DisableButtonsAfterFirstExecute()
         {
-            _uut.InstallModel.Execute(null);
-            _uut.UpdateModel.Execute(null);
-            _uut.RemoveModel.Execute(null);
+            _uut.LoadModel();
+            _uut.RemoveModel();
 
-            Assert.IsFalse(_uut.InstallModel.CanExecute(null));
-            Assert.IsFalse(_uut.UpdateModel.CanExecute(null));
-            Assert.IsFalse(_uut.RemoveModel.CanExecute(null));
+            Assert.IsFalse(_uut.IsInstallable);
+            Assert.IsFalse(_uut.IsUpdateable);
+            Assert.IsFalse(_uut.IsRemoveable);
         }
     }
 }

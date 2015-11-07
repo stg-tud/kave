@@ -16,7 +16,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
@@ -43,22 +42,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             get { return (UsageModelOptionsViewModel) _sut.DataContext; }
         }
 
-        private static List<IUsageModelsTableRow> TestRows
-        {
-            get
-            {
-                return new List<IUsageModelsTableRow>
-                {
-                    GenerateMockedRow(true, true, true),
-                    GenerateMockedRow(true, true, true),
-                    GenerateMockedRow(true, true, true)
-                };
-            }
-        }
+        private IEnumerable<IUsageModelsTableRow> _testRows;
 
         [SetUp]
         public void Setup()
         {
+            _testRows = new[]
+            {
+                GenerateMockedRow(true, true, true),
+                GenerateMockedRow(true, true, true),
+                GenerateMockedRow(true, true, true)
+            };
+
             _proposalItemProviderMock = new Mock<IPBNProposalItemsProvider>();
             Registry.RegisterComponent(_proposalItemProviderMock.Object);
 
@@ -71,7 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             _mergingStrategyMock = new Mock<IUsageModelMergingStrategy>();
             _mergingStrategyMock.Setup(
                 merging => merging.MergeAvailableModels(_localStoreMock.Object, _remoteStoreMock.Object))
-                                .Returns(TestRows);
+                                .Returns(() => _testRows);
 
             MockSettingsStore.Setup(settingsStore => settingsStore.GetSettings<ModelStoreSettings>())
                              .Returns(new ModelStoreSettings());
@@ -136,10 +131,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         public void InstallSelectedModelOnInstallClick()
         {
             _sut.UsageModelsTable.SelectedIndex = 1;
-
+            
             UserControlTestUtils.Execute(_sut.InstallSelectedModelButton);
 
-            VerifyExecuted(((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem).InstallModel);
+            var selectedRow = Mock.Get((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem);
+            selectedRow.Verify(row => row.LoadModel(), Times.Once);
         }
 
         [Test]
@@ -149,7 +145,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 
             UserControlTestUtils.Execute(_sut.UpdateSelectedModelButton);
 
-            VerifyExecuted(((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem).UpdateModel);
+            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
+            selectedRow.Verify(row => row.LoadModel(), Times.Once);
         }
 
         [Test]
@@ -159,7 +156,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 
             UserControlTestUtils.Execute(_sut.RemoveSelectedModelButton);
 
-            VerifyExecuted(((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem).RemoveModel);
+            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
+            selectedRow.Verify(row => row.RemoveModel(), Times.Once);
         }
 
         [Test]
@@ -171,14 +169,22 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void ShouldLoadAllModelsOnUpdateAllModels()
+        public void ShouldLoadAllUpdateableModelsOnUpdateAllModels()
         {
+            _testRows = new[]
+            {
+                GenerateMockedRow(false, true, false),
+                GenerateMockedRow(false, true, false),
+                GenerateMockedRow(false, true, false),
+            };
+            _sut = Open();
+
             UserControlTestUtils.Execute(_sut.UpdateModelsButton);
 
             foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
             {
-                VerifyExecuted(row.UpdateModel);
-                VerifyExecuted(row.InstallModel);
+                Mock.Get(row).Verify(r => r.IsUpdateable);
+                Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
             }
         }
 
@@ -189,8 +195,78 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 
             foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
             {
-                VerifyExecuted(row.RemoveModel);
+                Mock.Get(row).Verify(r => r.IsRemoveable);
+                Mock.Get(row).Verify(r => r.RemoveModel(), Times.Once);
             }
+        }
+
+        [Test]
+        public void ButtonsShouldBeDisabledWhenNothingIsSelected()
+        {
+            Assert.IsNull(_sut.UsageModelsTable.SelectedItem);
+            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.InstallSelectedModelButton));
+            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.UpdateSelectedModelButton));
+            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.RemoveSelectedModelButton));
+        }
+
+        [Test]
+        public void InstallSelectedShouldBeEnabledIfSelectedIsInstallable()
+        {
+            _testRows = new[] {GenerateMockedRow(true, false, false)};
+            _sut = Open();
+            _sut.UsageModelsTable.SelectedIndex = 0;
+
+            Assert.IsTrue(UserControlTestUtils.CanExecute(_sut.InstallSelectedModelButton));
+        }
+
+        [Test]
+        public void InstallSelectedShouldBeDisabledIfSelectedIsNotInstallable()
+        {
+            _testRows = new[] { GenerateMockedRow(false, true, true) };
+            _sut = Open();
+            _sut.UsageModelsTable.SelectedIndex = 0;
+
+            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.InstallSelectedModelButton));
+        }
+
+        [Test]
+        public void UpdateSelectedShouldBeEnabledIfSelectedIsUpdateable()
+        {
+            _testRows = new[] { GenerateMockedRow(false, true, false) };
+            _sut = Open();
+            _sut.UsageModelsTable.SelectedIndex = 0;
+
+            Assert.IsTrue(UserControlTestUtils.CanExecute(_sut.UpdateSelectedModelButton));
+        }
+
+        [Test]
+        public void UpdateSelectedShouldBeDisabledIfSelectedIsNotUpdateable()
+        {
+            _testRows = new[] { GenerateMockedRow(true, false, true) };
+            _sut = Open();
+            _sut.UsageModelsTable.SelectedIndex = 0;
+
+            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.UpdateSelectedModelButton));
+        }
+
+        [Test]
+        public void RemoveSelectedShouldBeEnabledIfSelectedIsRemoveable()
+        {
+            _testRows = new[] { GenerateMockedRow(false, false, true) };
+            _sut = Open();
+            _sut.UsageModelsTable.SelectedIndex = 0;
+
+            Assert.IsTrue(UserControlTestUtils.CanExecute(_sut.RemoveSelectedModelButton));
+        }
+
+        [Test]
+        public void RemoveSelectedShouldBeDisabledIfSelectedIsNotRemoveable()
+        {
+            _testRows = new[] { GenerateMockedRow(true, true, false) };
+            _sut = Open();
+            _sut.UsageModelsTable.SelectedIndex = 0;
+
+            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.RemoveSelectedModelButton));
         }
 
         [Test]
@@ -202,24 +278,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private static IUsageModelsTableRow GenerateMockedRow(bool isInstallable, bool isUpdateable, bool isRemoveable)
         {
             var mockedRow = new Mock<IUsageModelsTableRow>();
-
-            var installCommand = new Mock<ICommand>();
-            installCommand.Setup(command => command.CanExecute(It.IsAny<object>())).Returns(isInstallable);
-            var updateCommand = new Mock<ICommand>();
-            updateCommand.Setup(command => command.CanExecute(It.IsAny<object>())).Returns(isUpdateable);
-            var removeCommand = new Mock<ICommand>();
-            removeCommand.Setup(command => command.CanExecute(It.IsAny<object>())).Returns(isRemoveable);
-
-            mockedRow.Setup(row => row.InstallModel).Returns(installCommand.Object);
-            mockedRow.Setup(row => row.UpdateModel).Returns(updateCommand.Object);
-            mockedRow.Setup(row => row.RemoveModel).Returns(removeCommand.Object);
-
+            mockedRow.Setup(row => row.IsInstallable).Returns(isInstallable);
+            mockedRow.Setup(row => row.IsUpdateable).Returns(isUpdateable);
+            mockedRow.Setup(row => row.IsRemoveable).Returns(isRemoveable);
             return mockedRow.Object;
-        }
-
-        private static void VerifyExecuted(ICommand commandMock)
-        {
-            Mock.Get(commandMock).Verify(command => command.Execute(null));
         }
     }
 }

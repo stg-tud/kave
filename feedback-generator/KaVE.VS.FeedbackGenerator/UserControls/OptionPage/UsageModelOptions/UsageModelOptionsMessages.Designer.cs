@@ -80,6 +80,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Due to technical reasons we can&apos;t provide more models yet..
+        /// </summary>
+        public static string PublicModelsInfo {
+            get {
+                return ResourceManager.GetString("PublicModelsInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reload Models.
         /// </summary>
         public static string ReloadModelsButton {
@@ -116,7 +125,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset Usage Model Settings.
+        ///   Looks up a localized string similar to Reset Model Paths.
         /// </summary>
         public static string SettingResetButton {
             get {
@@ -125,7 +134,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage Model Settings will be reset. Are you sure?.
+        ///   Looks up a localized string similar to Local and remote paths will be reset. Are you sure?.
         /// </summary>
         public static string SettingResetDialog {
             get {
@@ -157,6 +166,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         public static string UpdateSelectedModelToolTip {
             get {
                 return ResourceManager.GetString("UpdateSelectedModelToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage Models Management.
+        /// </summary>
+        public static string UsageModelManagementHeader {
+            get {
+                return ResourceManager.GetString("UsageModelManagementHeader", resourceCulture);
             }
         }
     }

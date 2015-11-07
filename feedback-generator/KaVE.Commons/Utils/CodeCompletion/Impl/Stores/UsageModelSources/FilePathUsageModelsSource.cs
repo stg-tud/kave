@@ -77,7 +77,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
         {
             try
             {
-                return IoUtils.ReadFile(Path.Combine(Source.LocalPath, "index.json"));
+                return IoUtils.ReadFile(Path.Combine(_myUri.LocalPath, "index.json"));
             }
             catch
             {
