@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
@@ -97,7 +98,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             var mergingStrategy = Mock.Of<IUsageModelMergingStrategy>();
             Mock.Get(mergingStrategy).Setup(strategy => strategy.MergeAvailableModels(_localStore, _remoteStore)).Returns(ExpectedUsageModelsTableContent);
 
-            _uut = new UsageModelOptionsViewModel(mergingStrategy);
+            _uut = new UsageModelOptionsViewModel(mergingStrategy, new KaVEBackgroundWorker());
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
 
             _localStore = Mock.Of<ILocalPBNRecommenderStore>();
@@ -151,15 +152,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         {
             // TODO test merging logic in UsageModelMergingStrategy
             CollectionAssert.AreEquivalent(ExpectedUsageModelsTableContent, _uut.UsageModelsTableContent);
-        }
-
-        [Test]
-        public void ShouldCallReloadOnStoresOnReloadTableContent()
-        {
-            _uut.ReloadUsageModelsTableContent();
-
-            Mock.Get(_localStore).Verify(localStore => localStore.ReloadAvailableModels(), Times.Once);
-            Mock.Get(_remoteStore).Verify(remoteStore => remoteStore.ReloadAvailableModels(), Times.Once);
         }
     }
 }

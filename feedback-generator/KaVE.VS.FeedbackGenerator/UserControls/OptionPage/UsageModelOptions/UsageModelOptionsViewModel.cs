@@ -18,6 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
+using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
@@ -25,6 +27,7 @@ using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -82,22 +85,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
+        private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
+
+        public AsyncCommand InstallAllModelsCommand
+        {
+            get { return new AsyncCommand(InstallAllModels, _usageModelCommandsWorker); }
+        }
+
         public AsyncCommand UpdateAllModelsCommand
         {
-            get
-            {
-                var updateAllModelsCommand = new AsyncCommand(UpdateAllModels, _usageModelCommandsWorker);
-                return updateAllModelsCommand;
-            }
+            get { return new AsyncCommand(UpdateAllModels, _usageModelCommandsWorker); }
         }
 
         public AsyncCommand RemoveAllModelsCommand
         {
-            get
-            {
-                var removeAllModelsCommand = new AsyncCommand(RemoveAllModels, _usageModelCommandsWorker);
-                return removeAllModelsCommand;
-            }
+            get { return new AsyncCommand(RemoveAllModels, _usageModelCommandsWorker); }
         }
 
         public AsyncCommand<IUsageModelsTableRow> InstallModel
@@ -136,6 +138,58 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
+        public ICommand CancelCurrentCommand
+        {
+            get
+            {
+                return new DelegateCommand(
+                    () => { _usageModelCommandsWorker.CancelAsync(); },
+                    () => _usageModelCommandsWorker.IsBusy && !_usageModelCommandsWorker.CancellationPending);
+            }
+        }
+
+        public int CurrentUsageModelCommandProgressValue
+        {
+            get { return _currentUsageModelCommandProgressValue; }
+            private set
+            {
+                _currentUsageModelCommandProgressValue = value;
+                RaisePropertyChanged(self => self.CurrentUsageModelCommandProgressValue);
+            }
+        }
+
+        private static int _currentUsageModelCommandProgressValue = 1;
+
+        public int MaximumUsageModelCommandProgressValue
+        {
+            get { return _maximumUsageModelCommandProgressValue; }
+            set
+            {
+                _maximumUsageModelCommandProgressValue = value;
+                RaisePropertyChanged(self => self.MaximumUsageModelCommandProgressValue);
+            }
+        }
+
+        private static int _maximumUsageModelCommandProgressValue = 1;
+
+        public bool RunningUsageModelCommand
+        {
+            get { return _runningUsageModelCommand; }
+            set
+            {
+                _runningUsageModelCommand = value;
+                RaisePropertyChanged(self => self.RunningUsageModelCommand);
+                RaisePropertyChanged(self => self.RunnerIsIdle);
+            }
+        }
+        
+        private static bool _runningUsageModelCommand;
+
+        public bool RunnerIsIdle
+        {
+            get { return !RunningUsageModelCommand; }
+        }
+
         [CanBeNull]
         private static ILocalPBNRecommenderStore LocalStore
         {
@@ -168,27 +222,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        [NotNull]
-        private readonly IUsageModelMergingStrategy _mergingStrategy;
-
         private readonly InteractionRequest<Notification> _errorNotificationRequest;
-
-        private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
 
         [NotNull]
         private readonly IKaVEBackgroundWorker _usageModelCommandsWorker;
 
-        public UsageModelOptionsViewModel([NotNull] IUsageModelMergingStrategy mergingStrategy)
+        public UsageModelOptionsViewModel([NotNull] IUsageModelMergingStrategy mergingStrategy,
+            [NotNull] IKaVEBackgroundWorker usageModelCommandsWorker)
         {
-            _mergingStrategy = mergingStrategy;
             _errorNotificationRequest = new InteractionRequest<Notification>();
-            _usageModelCommandsWorker = new KaVEBackgroundWorker();
-            _usageModelCommandsWorker.RunWorkerCompleted += delegate { ReloadUsageModelsTableContent(); };
+            _usageModelCommandsWorker = usageModelCommandsWorker;
+            _usageModelCommandsWorker.DoWork += delegate { RunningUsageModelCommand = true; };
+            _usageModelCommandsWorker.RunWorkerCompleted += delegate
+            {
+                RunningUsageModelCommand = false;
+                ReloadUsageModelsTableContent(mergingStrategy);
+            };
 
-            ReloadUsageModelsTableContent();
+            ReloadUsageModelsTableContent(mergingStrategy);
         }
-
-        public void ReloadUsageModelsTableContent()
+        
+        private void ReloadUsageModelsTableContent(IUsageModelMergingStrategy mergingStrategy)
         {
             if (LocalStore != null)
             {
@@ -199,22 +253,42 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 RemoteStore.ReloadAvailableModels();
             }
 
-            UsageModelsTableContent = _mergingStrategy.MergeAvailableModels(LocalStore, RemoteStore);
+            UsageModelsTableContent = mergingStrategy.MergeAvailableModels(LocalStore, RemoteStore);
+        }
+
+        private void InstallAllModels()
+        {
+            var installableRows = UsageModelsTableContent.Where(row => row.IsInstallable).AsArray();
+            MaximumUsageModelCommandProgressValue = installableRows.Length;
+            CurrentUsageModelCommandProgressValue = 0;
+            foreach (var row in installableRows)
+            {
+                row.LoadModel();
+                CurrentUsageModelCommandProgressValue++;
+            }
         }
 
         private void UpdateAllModels()
         {
-            foreach (var row in UsageModelsTableContent.Where(row => row.IsUpdateable))
+            var updateableRows = UsageModelsTableContent.Where(row => row.IsUpdateable).AsArray();
+            MaximumUsageModelCommandProgressValue = updateableRows.Length;
+            CurrentUsageModelCommandProgressValue = 0;
+            foreach (var row in updateableRows)
             {
                 row.LoadModel();
+                CurrentUsageModelCommandProgressValue++;
             }
         }
 
         private void RemoveAllModels()
         {
-            foreach (var row in UsageModelsTableContent.Where(row => row.IsRemoveable))
+            var removeableRows = UsageModelsTableContent.Where(row => row.IsRemoveable).AsArray();
+            MaximumUsageModelCommandProgressValue = removeableRows.Length;
+            CurrentUsageModelCommandProgressValue = 0;
+            foreach (var row in removeableRows)
             {
                 row.RemoveModel();
+                CurrentUsageModelCommandProgressValue++;
             }
         }
 

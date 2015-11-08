@@ -62,6 +62,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install all Models.
+        /// </summary>
+        public static string InstallAllModelsButton {
+            get {
+                return ResourceManager.GetString("InstallAllModelsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Install.
         /// </summary>
         public static string InstallSelectedModelButton {

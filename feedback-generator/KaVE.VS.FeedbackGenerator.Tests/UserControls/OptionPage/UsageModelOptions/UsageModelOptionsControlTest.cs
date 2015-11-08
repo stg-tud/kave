@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using KaVE.Commons.TestUtils.UserControls;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
@@ -92,8 +93,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                         MockActionExecutor.Object,
                         TestDataContexts,
                         MockMessageBoxCreator.Object,
-                        _mergingStrategyMock.Object
-                        ));
+                        _mergingStrategyMock.Object,
+                        new KaVEBackgroundWorker()));
         }
 
         [Test]
@@ -174,6 +175,27 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
+        public void ShouldLoadAllInstallableModelsOnInstallAllModels()
+        {
+            _testRows = new[]
+            {
+                GenerateMockedRow(true, false, false),
+                GenerateMockedRow(true, false, false),
+                GenerateMockedRow(true, false, false)
+            };
+            _sut = Open();
+
+            UserControlTestUtils.Execute(_sut.InstallAllModelsButton);
+            Thread.Sleep(250);
+
+            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
+            {
+                Mock.Get(row).Verify(r => r.IsInstallable);
+                Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
+            }
+        }
+
+        [Test]
         public void ShouldLoadAllUpdateableModelsOnUpdateAllModels()
         {
             _testRows = new[]
@@ -184,7 +206,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             };
             _sut = Open();
 
-            UserControlTestUtils.Execute(_sut.UpdateModelsButton);
+            UserControlTestUtils.Execute(_sut.UpdateAllModelsButton);
             Thread.Sleep(250);
 
             foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
@@ -205,7 +227,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             };
             _sut = Open();
 
-            UserControlTestUtils.Execute(_sut.RemoveModelsButton);
+            UserControlTestUtils.Execute(_sut.RemoveAllModelsButton);
             Thread.Sleep(250);
 
             foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())

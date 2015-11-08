@@ -24,6 +24,7 @@ using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
@@ -57,7 +58,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             IActionExecutor actionExecutor,
             DataContexts dataContexts,
             IMessageBoxCreator messageBoxCreator,
-            IUsageModelMergingStrategy usageModelMergingStrategy)
+            IUsageModelMergingStrategy usageModelMergingStrategy,
+            IKaVEBackgroundWorker usageModelBackgroundWorker)
         {
             _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
@@ -68,7 +70,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
-            DataContext = new UsageModelOptionsViewModel(usageModelMergingStrategy)
+            DataContext = new UsageModelOptionsViewModel(usageModelMergingStrategy, usageModelBackgroundWorker)
             {
                 ModelStoreSettings = _modelStoreSettings
             };
