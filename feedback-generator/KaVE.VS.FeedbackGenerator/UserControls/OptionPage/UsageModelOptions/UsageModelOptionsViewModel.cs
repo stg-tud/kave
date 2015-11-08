@@ -18,12 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 
@@ -46,8 +45,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
     public class UsageModelOptionsViewModel : ViewModelBase<UsageModelOptionsViewModel>
     {
-        private readonly InteractionRequest<Notification> _errorNotificationRequest;
-
         public IInteractionRequest<Notification> ErrorNotificationRequest
         {
             get { return _errorNotificationRequest; }
@@ -89,8 +86,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         {
             get
             {
-                var updateAllModelsCommand = new AsyncCommand(UpdateAllModels);
-                updateAllModelsCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                var updateAllModelsCommand = new AsyncCommand(UpdateAllModels, _usageModelCommandsWorker);
                 return updateAllModelsCommand;
             }
         }
@@ -99,17 +95,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         {
             get
             {
-                var removeAllModelsCommand = new AsyncCommand(RemoveAllModels);
-                removeAllModelsCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                var removeAllModelsCommand = new AsyncCommand(RemoveAllModels, _usageModelCommandsWorker);
                 return removeAllModelsCommand;
-            }
-        }
-
-        public AsyncCommand ReloadModelsCommand
-        {
-            get
-            {
-                return new AsyncCommand(ReloadModels);
             }
         }
 
@@ -119,8 +106,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 var installCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.LoadModel(),
-                    row => { return row != null && row.IsInstallable; });
-                installCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                    row => { return row != null && row.IsInstallable; },
+                    _usageModelCommandsWorker);
                 return installCommand;
             }
         }
@@ -131,8 +118,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 var updateCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.LoadModel(),
-                    row => { return row != null && row.IsUpdateable; });
-                updateCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                    row => { return row != null && row.IsUpdateable; },
+                    _usageModelCommandsWorker);
                 return updateCommand;
             }
         }
@@ -143,13 +130,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 var removeCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.RemoveModel(),
-                    row => { return row != null && row.IsRemoveable; });
-                removeCommand.ExecuteCompleted += delegate { ReloadUsageModelsTableContent(); };
+                    row => { return row != null && row.IsRemoveable; },
+                    _usageModelCommandsWorker);
                 return removeCommand;
             }
         }
-
-        private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
 
         [CanBeNull]
         private static ILocalPBNRecommenderStore LocalStore
@@ -186,10 +171,20 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         [NotNull]
         private readonly IUsageModelMergingStrategy _mergingStrategy;
 
+        private readonly InteractionRequest<Notification> _errorNotificationRequest;
+
+        private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
+
+        [NotNull]
+        private readonly IKaVEBackgroundWorker _usageModelCommandsWorker;
+
         public UsageModelOptionsViewModel([NotNull] IUsageModelMergingStrategy mergingStrategy)
         {
             _mergingStrategy = mergingStrategy;
             _errorNotificationRequest = new InteractionRequest<Notification>();
+            _usageModelCommandsWorker = new KaVEBackgroundWorker();
+            _usageModelCommandsWorker.RunWorkerCompleted += delegate { ReloadUsageModelsTableContent(); };
+
             ReloadUsageModelsTableContent();
         }
 
@@ -221,15 +216,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 row.RemoveModel();
             }
-        }
-
-        private static void ReloadModels()
-        {
-            try
-            {
-                Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
-            }
-            catch (InvalidOperationException) {}
         }
 
         public ModelStoreValidation ValidateModelStoreInformation(string path)

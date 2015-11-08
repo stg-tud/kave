@@ -18,40 +18,40 @@ using System;
 using System.ComponentModel;
 using System.Windows.Input;
 using JetBrains.UI.Extensions.Commands;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
-    public class AsyncCommand<TIn> : ICommand<TIn>, IDisposable
+    public class AsyncCommand<TIn> : ICommand<TIn>
     {
+        [NotNull]
+        private readonly IKaVEBackgroundWorker _backgroundWorker;
+
+        [NotNull]
+        private readonly Action<TIn> _onExecute;
+
         [NotNull]
         private readonly Func<TIn, bool> _canExecute;
 
-        [NotNull]
-        private readonly BackgroundWorker _backgroundWorker;
-
-        public AsyncCommand([NotNull] Action<TIn> onExecute, [NotNull] Func<TIn, bool> canExecute)
+        public AsyncCommand([NotNull] Action<TIn> onExecute,
+            [NotNull] Func<TIn, bool> canExecute,
+            [CanBeNull] IKaVEBackgroundWorker worker = null)
         {
+            _onExecute = onExecute;
             _canExecute = canExecute;
-
-            _backgroundWorker = new BackgroundWorker();
-
-            _backgroundWorker.DoWork += (sender, args) => { onExecute((TIn) args.Argument); };
-
-            _backgroundWorker.RunWorkerCompleted += delegate
-            {
-                if (ExecuteCompleted != null)
-                {
-                    ExecuteCompleted(this, EventArgs.Empty);
-                }
-            };
+            _backgroundWorker = worker ?? new KaVEBackgroundWorker();
         }
 
-        public AsyncCommand([NotNull] Action<TIn> onExecute) : this(onExecute, parameter => true) {}
+        public AsyncCommand([NotNull] Action<TIn> onExecute, [CanBeNull] IKaVEBackgroundWorker worker = null)
+            : this(onExecute, parameter => true, worker) {}
 
         public void Execute([CanBeNull] TIn parameter)
         {
+            DoWorkEventHandler executeAction = delegate { _onExecute(parameter); };
+            _backgroundWorker.DoWork += executeAction;
+            _backgroundWorker.RunWorkerCompleted += delegate { _backgroundWorker.DoWork -= executeAction; };
             _backgroundWorker.RunWorkerAsync(parameter);
         }
 
@@ -77,20 +77,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-
-        public event EventHandler ExecuteCompleted;
-
-        public void Dispose()
-        {
-            _backgroundWorker.Dispose();
-        }
     }
 
     public class AsyncCommand : AsyncCommand<object>
     {
-        public AsyncCommand([NotNull] Action onExecute, [NotNull] Func<bool> canExecute)
-            : base(o => onExecute(), o => canExecute()) {}
+        public AsyncCommand([NotNull] Action onExecute,
+            [NotNull] Func<bool> canExecute,
+            [CanBeNull] IKaVEBackgroundWorker worker = null)
+            : base(o => onExecute(), o => canExecute(), worker) {}
 
-        public AsyncCommand([NotNull] Action onExecute) : this(onExecute, () => true) {}
+        public AsyncCommand([NotNull] Action onExecute, [CanBeNull] IKaVEBackgroundWorker worker = null)
+            : this(onExecute, () => true, worker) {}
     }
 }

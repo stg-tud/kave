@@ -56,10 +56,13 @@ limitations under the License.
         <Button Grid.Row="1" Grid.Column="2" Name="ModelStoreUriBrowseButton"
                 Click="OnBrowse_Uri" Content="Browse ..." VerticalAlignment="Center" />
 
-        <!-- reset button -->
-        <Button Grid.Row="2" Grid.Column="2" Name="ResetButton" Padding="15,3,15,3" Margin="0,10,0,0"
-                Click="OnResetSettings" VerticalAlignment="Center"
-                Content="{x:Static usageModelOptions:UsageModelOptionsMessages.SettingResetButton}" />
+        <!-- reload and reset button -->
+        <DockPanel Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" Margin="0,10,0,0">
+            <Button Name="ReloadModelsButton" Padding="15,3,15,3" DockPanel.Dock="Left" Click="OnReloadModels"
+                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
+            <Button Name="ResetButton" Padding="15,3,15,3" DockPanel.Dock="Right" Click="OnResetSettings"
+                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.SettingResetButton}" />
+        </DockPanel>
 
         <!-- models table and buttons -->
         <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gainsboro"
@@ -69,6 +72,7 @@ limitations under the License.
                 <TextBlock DockPanel.Dock="Top" Background="Transparent" Foreground="Red"
                            Text="{x:Static usageModelOptions:UsageModelOptionsMessages.PublicModelsInfo}" />
 
+                <!-- usage model buttons -->
                 <DockPanel Margin="3" HorizontalAlignment="Stretch" LastChildFill="False" DockPanel.Dock="Top">
                     <Button Name="InstallSelectedModelButton" Padding="15,3,15,3" Margin="0,0,1,0"
                             DockPanel.Dock="Left" Command="{Binding InstallModel}"
@@ -89,15 +93,12 @@ limitations under the License.
                             ToolTip="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveSelectedModelToolTip}"
                             Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveSelectedModelButton}" />
 
-                    <Button Name="ReloadModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
-                            Margin="1,0,0,0" Command="{Binding ReloadModelsCommand}"
-                            Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
-                    <Button Name="UpdateModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
-                            Margin="1,0,0,0" Command="{Binding UpdateAllModelsCommand}"
-                            Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
-                    <Button Name="RemoveModelsButton" Padding="15,3,15,3" Width="Auto" DockPanel.Dock="Right"
+                    <Button Name="RemoveModelsButton" Padding="15,3,15,3" DockPanel.Dock="Right"
                             Margin="1,0,0,0" Command="{Binding RemoveAllModelsCommand}"
                             Content="{x:Static usageModelOptions:UsageModelOptionsMessages.RemoveAllModelsButton}" />
+                    <Button Name="UpdateModelsButton" Padding="15,3,15,3" DockPanel.Dock="Right"
+                            Margin="1,0,0,0" Command="{Binding UpdateAllModelsCommand}"
+                            Content="{x:Static usageModelOptions:UsageModelOptionsMessages.UpdateAllModelsButton}" />
                 </DockPanel>
 
                 <DataGrid Name="UsageModelsTable" DockPanel.Dock="Top"

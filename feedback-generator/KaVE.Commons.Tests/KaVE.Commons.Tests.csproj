@@ -250,6 +250,7 @@
     <Compile Include="Utils\Json\JsonSerializationTest.cs" />
     <Compile Include="Utils\JsonUtilsTest.cs" />
     <Compile Include="Utils\Json\SSTTypeNameShortenerTest.cs" />
+    <Compile Include="Utils\KaVEBackgroundWorkerTest.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogReaderTest.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogWriterTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />

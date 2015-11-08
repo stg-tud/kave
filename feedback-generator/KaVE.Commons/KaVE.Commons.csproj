@@ -133,6 +133,9 @@
     <Compile Include="Utils\Json\PropertyHidingContractResolver.cs" />
     <Compile Include="Utils\Json\ProposalCollectionConverter.cs" />
     <Compile Include="Utils\Json\SSTTypeNameShortener.cs" />
+    <Compile Include="Utils\KaVEBackgroundWorker.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utils\Logging\ILogReader.cs" />
     <Compile Include="Utils\Logging\ILogWriter.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogReader.cs" />

@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
@@ -127,59 +128,52 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             Assert.AreEqual(ResetTypes.ModelStoreSettings, UsageModelOptionsControl.ResetType);
         }
 
-        [Test, Timeout(1000)]
+        [Test]
         public void InstallSelectedModelOnInstallClick()
         {
             _sut.UsageModelsTable.SelectedIndex = 1;
 
-            ((AsyncCommand<IUsageModelsTableRow>) _sut.InstallSelectedModelButton.Command).ExecuteCompleted +=
-                delegate
-                {
-                    var selectedRow1 = Mock.Get((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem);
-                    selectedRow1.Verify(row => row.LoadModel(), Times.Once);
-                };
-
             UserControlTestUtils.Execute(_sut.InstallSelectedModelButton);
+            Thread.Sleep(100);
+
+            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
+            selectedRow.Verify(row => row.LoadModel(), Times.Once);
         }
 
-        [Test, Timeout(1000)]
+        [Test]
         public void UpdateSelectedModelOnUpdateClick()
         {
             _sut.UsageModelsTable.SelectedIndex = 1;
 
-            ((AsyncCommand<IUsageModelsTableRow>) _sut.UpdateSelectedModelButton.Command).ExecuteCompleted +=
-                delegate
-                {
-                    var selectedRow = Mock.Get((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem);
-                    selectedRow.Verify(row => row.LoadModel(), Times.Once);
-                };
-
             UserControlTestUtils.Execute(_sut.UpdateSelectedModelButton);
+            Thread.Sleep(100);
+
+            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
+            selectedRow.Verify(row => row.LoadModel(), Times.Once);
         }
 
-        [Test, Timeout(1000)]
+        [Test]
         public void RemoveSelectedModelOnRemoveClick()
         {
             _sut.UsageModelsTable.SelectedIndex = 1;
 
-            ((AsyncCommand<IUsageModelsTableRow>) _sut.RemoveSelectedModelButton.Command).ExecuteCompleted += delegate
-            {
-                var selectedRow = Mock.Get((IUsageModelsTableRow) _sut.UsageModelsTable.SelectedItem);
-                selectedRow.Verify(row => row.RemoveModel(), Times.Once);
-            };
-
             UserControlTestUtils.Execute(_sut.RemoveSelectedModelButton);
+            Thread.Sleep(100);
+
+            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
+            selectedRow.Verify(row => row.RemoveModel(), Times.Once);
         }
 
         [Test]
         public void ShouldClearModelsOnReloadModels()
         {
-            UserControlTestUtils.Execute(_sut.ReloadModelsButton);
+            UserControlTestUtils.Click(_sut.ReloadModelsButton);
+            Thread.Sleep(100);
 
             _proposalItemProviderMock.Verify(provider => provider.Clear(), Times.Once);
         }
 
-        [Test, Timeout(1000)]
+        [Test]
         public void ShouldLoadAllUpdateableModelsOnUpdateAllModels()
         {
             _testRows = new[]
@@ -190,19 +184,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             };
             _sut = Open();
 
-            ((AsyncCommand) _sut.UpdateModelsButton.Command).ExecuteCompleted += delegate
-            {
-                foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
-                {
-                    Mock.Get(row).Verify(r => r.IsUpdateable);
-                    Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
-                }
-            };
-
             UserControlTestUtils.Execute(_sut.UpdateModelsButton);
+            Thread.Sleep(250);
+
+            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
+            {
+                Mock.Get(row).Verify(r => r.IsUpdateable);
+                Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
+            }
         }
 
-        [Test, Timeout(1000)]
+        [Test]
         public void ShouldRemoveAllModelsOnRemoveAllModels()
         {
             _testRows = new[]
@@ -213,16 +205,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             };
             _sut = Open();
 
-            ((AsyncCommand) _sut.RemoveModelsButton.Command).ExecuteCompleted += delegate
-            {
-                foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
-                {
-                    Mock.Get(row).Verify(r => r.IsRemoveable);
-                    Mock.Get(row).Verify(r => r.RemoveModel(), Times.Once);
-                }
-            };
-
             UserControlTestUtils.Execute(_sut.RemoveModelsButton);
+            Thread.Sleep(250);
+
+            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
+            {
+                Mock.Get(row).Verify(r => r.IsRemoveable);
+                Mock.Get(row).Verify(r => r.RemoveModel(), Times.Once);
+            }
         }
 
         [Test]

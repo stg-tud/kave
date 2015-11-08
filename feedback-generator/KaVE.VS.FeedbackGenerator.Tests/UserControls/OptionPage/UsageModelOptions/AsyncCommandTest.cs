@@ -15,6 +15,7 @@
  */
 
 using System.Threading;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using NUnit.Framework;
@@ -24,11 +25,19 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
     internal class AsyncCommandTest
     {
         private bool _wasCalled;
+        private KaVEBackgroundWorker _worker;
 
         [SetUp]
         public void Setup()
         {
             _wasCalled = false;
+            _worker = new KaVEBackgroundWorker();
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            _worker.Dispose();
         }
 
         [Test]
@@ -41,20 +50,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void ShouldFireOnCompleted()
-        {
-            var uut = new AsyncCommand<object>(o => { }, o => true);
-            uut.ExecuteCompleted += delegate { _wasCalled = true; };
-            uut.Execute(null);
-            AssertWasCalled();
-        }
-
-        [Test]
         public void ShouldExecuteCommand()
         {
-            var uut = new AsyncCommand<object>(
-                o => _wasCalled = true,
-                o => true);
+            var uut = new AsyncCommand<object>(o => _wasCalled = true);
             uut.Execute(null);
             AssertWasCalled();
         }
@@ -62,16 +60,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void ShouldRunOnAnotherThread()
         {
-            new AsyncCommand<object>(o => { Assert.Fail(); }, o => true).Execute(null);
+            new AsyncCommand<object>(o => { Assert.Fail(); }).Execute(null);
             Thread.Sleep(100);
         }
 
-        [Test, Timeout(2000)]
+        [Test]
         public void ShouldNotBeAbleToExecuteWhileExecuteIsNotFinished()
         {
-            var uut = new AsyncCommand<object>(
-                b => { while (true) {} },
-                b => true);
+            var uut = new AsyncCommand<object>(b => { while (true) {} }, b => true);
 
             uut.Execute(null);
 
@@ -82,13 +78,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowOnWrongExecuteInputType()
         {
-            new AsyncCommand<int>(i => { }, i => true).Execute("");
+            new AsyncCommand<int>(i => { }).Execute("");
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowOnWrongCanExecuteInputType()
         {
-            new AsyncCommand<int>(i => { }, i => true).CanExecute("");
+            new AsyncCommand<int>(i => { }).CanExecute("");
         }
 
         private void AssertWasCalled()
