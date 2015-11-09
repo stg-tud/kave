@@ -75,11 +75,11 @@ limitations under the License.
                   Header="{x:Static usageModelOptions:UsageModelOptionsMessages.UsageModelManagementHeader}">
             <DockPanel>
                 <!-- public models warning -->
-                <TextBlock DockPanel.Dock="Top" Background="Transparent" Foreground="Red"
+                <TextBlock DockPanel.Dock="Top" Background="Transparent" Foreground="Red" Margin="0,0,0,3"
                            Text="{x:Static usageModelOptions:UsageModelOptionsMessages.PublicModelsInfo}" />
 
                 <!-- usage model buttons -->
-                <DockPanel Margin="3" HorizontalAlignment="Stretch" LastChildFill="False" DockPanel.Dock="Top"
+                <DockPanel Margin="0,0,0,3" HorizontalAlignment="Stretch" LastChildFill="False" DockPanel.Dock="Top"
                            Visibility="{Binding RunnerIsIdle, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Button Name="InstallSelectedModelButton" Padding="15,3,15,3" Margin="0,0,1,0"
                             DockPanel.Dock="Left" Command="{Binding InstallModel}"
@@ -111,26 +111,35 @@ limitations under the License.
                             Content="{x:Static usageModelOptions:UsageModelOptionsMessages.InstallAllModelsButton}" />
                 </DockPanel>
 
-                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Top"
+                <DockPanel Margin="0,0,0,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Top"
                            Visibility="{Binding RunningUsageModelCommand, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Button Name="CancelModelsAction" Content="Cancel" Padding="15,3,15,3" DockPanel.Dock="Right"
                             Command="{Binding CancelCurrentCommand}" />
-                    <ProgressBar Name="ModelCommandsProgressBar" Minimum="0"
-                                 Maximum="{Binding MaximumUsageModelCommandProgressValue, Mode=OneWay}"
-                                 Value="{Binding CurrentUsageModelCommandProgressValue, Mode=OneWay}" />
+                    <Grid>
+                        <ProgressBar Name="ModelCommandsProgressBar" Minimum="0"
+                                     Maximum="{Binding MaximumUsageModelCommandProgressValue, Mode=OneWay}"
+                                     Value="{Binding CurrentUsageModelCommandProgressValue, Mode=OneWay}" />
+                        <TextBlock Text="{Binding RunningCommandMessage}" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Background="Transparent" />
+                    </Grid>
                 </DockPanel>
 
-                <DataGrid Name="UsageModelsTable" DockPanel.Dock="Top"
-                          ColumnWidth="*" ScrollViewer.CanContentScroll="True"
-                          CanUserReorderColumns="False" CanUserResizeRows="False" SelectionMode="Single"
-                          IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column"
-                          SelectionUnit="FullRow" ItemsSource="{Binding UsageModelsTableContent}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" />
-                        <DataGridTextColumn Header="Current Version" Binding="{Binding LoadedVersion}" />
-                        <DataGridTextColumn Header="Newest Version" Binding="{Binding NewestAvailableVersion}" />
-                    </DataGrid.Columns>
-                </DataGrid>
+                <Grid DockPanel.Dock="Top">
+                    <DataGrid Name="UsageModelsTable"
+                              ColumnWidth="*" ScrollViewer.CanContentScroll="True"
+                              CanUserReorderColumns="False" CanUserResizeRows="False" SelectionMode="Single"
+                              IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+                              SelectionUnit="FullRow" ItemsSource="{Binding UsageModelsTableContent}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" />
+                            <DataGridTextColumn Header="Current Version" Binding="{Binding LoadedVersion}" />
+                            <DataGridTextColumn Header="Newest Version" Binding="{Binding NewestAvailableVersion}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Rectangle Fill="LightGray" Opacity="0.5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               Visibility="{Binding RunningUsageModelCommand, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
             </DockPanel>
         </GroupBox>
     </Grid>

@@ -108,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 var installCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.LoadModel(),
-                    row => { return row != null && row.IsInstallable; },
+                    row => row != null && row.IsInstallable,
                     _usageModelCommandsWorker);
                 return installCommand;
             }
@@ -120,7 +120,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 var updateCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.LoadModel(),
-                    row => { return row != null && row.IsUpdateable; },
+                    row => row != null && row.IsUpdateable,
                     _usageModelCommandsWorker);
                 return updateCommand;
             }
@@ -132,19 +132,19 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 var removeCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row => row.RemoveModel(),
-                    row => { return row != null && row.IsRemoveable; },
+                    row => row != null && row.IsRemoveable,
                     _usageModelCommandsWorker);
                 return removeCommand;
             }
         }
 
-        public ICommand CancelCurrentCommand
+        public DelegateCommand CancelCurrentCommand
         {
             get
             {
                 return new DelegateCommand(
-                    () => { _usageModelCommandsWorker.CancelAsync(); },
-                    () => _usageModelCommandsWorker.IsBusy && !_usageModelCommandsWorker.CancellationPending);
+                    () => { _cancelCurrentCommand = true; },
+                    () => true);
             }
         }
 
@@ -158,7 +158,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private static int _currentUsageModelCommandProgressValue = 1;
+        private int _currentUsageModelCommandProgressValue;
 
         public int MaximumUsageModelCommandProgressValue
         {
@@ -170,7 +170,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private static int _maximumUsageModelCommandProgressValue = 1;
+        private int _maximumUsageModelCommandProgressValue;
 
         public bool RunningUsageModelCommand
         {
@@ -183,12 +183,29 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
         
-        private static bool _runningUsageModelCommand;
+        private bool _runningUsageModelCommand;
 
         public bool RunnerIsIdle
         {
             get { return !RunningUsageModelCommand; }
         }
+
+        public string RunningCommandMessage
+        {
+            get
+            {
+                return _runningCommandMessage;
+            }
+            set
+            {
+                _runningCommandMessage = value;
+                RaisePropertyChanged(self => self.RunningCommandMessage);
+            }
+        }
+
+        private string _runningCommandMessage;
+
+        private bool _cancelCurrentCommand;
 
         [CanBeNull]
         private static ILocalPBNRecommenderStore LocalStore
@@ -232,9 +249,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         {
             _errorNotificationRequest = new InteractionRequest<Notification>();
             _usageModelCommandsWorker = usageModelCommandsWorker;
-            _usageModelCommandsWorker.DoWork += delegate { RunningUsageModelCommand = true; };
+            _usageModelCommandsWorker.DoWork += delegate
+            {
+                _cancelCurrentCommand = false;
+                RunningUsageModelCommand = true;
+            };
             _usageModelCommandsWorker.RunWorkerCompleted += delegate
             {
+                _cancelCurrentCommand = false;
                 RunningUsageModelCommand = false;
                 ReloadUsageModelsTableContent(mergingStrategy);
             };
@@ -258,11 +280,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void InstallAllModels()
         {
+            RunningCommandMessage = "Installing all models...";
+
             var installableRows = UsageModelsTableContent.Where(row => row.IsInstallable).AsArray();
             MaximumUsageModelCommandProgressValue = installableRows.Length;
             CurrentUsageModelCommandProgressValue = 0;
             foreach (var row in installableRows)
             {
+                if (_cancelCurrentCommand)
+                {
+                    return;
+                }
+
                 row.LoadModel();
                 CurrentUsageModelCommandProgressValue++;
             }
@@ -270,11 +299,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void UpdateAllModels()
         {
+            RunningCommandMessage = "Updating all models...";
+
             var updateableRows = UsageModelsTableContent.Where(row => row.IsUpdateable).AsArray();
             MaximumUsageModelCommandProgressValue = updateableRows.Length;
             CurrentUsageModelCommandProgressValue = 0;
             foreach (var row in updateableRows)
             {
+                if (_cancelCurrentCommand)
+                {
+                    return;
+                }
+
                 row.LoadModel();
                 CurrentUsageModelCommandProgressValue++;
             }
@@ -282,11 +318,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void RemoveAllModels()
         {
+            RunningCommandMessage = "Removing all models...";
+
             var removeableRows = UsageModelsTableContent.Where(row => row.IsRemoveable).AsArray();
             MaximumUsageModelCommandProgressValue = removeableRows.Length;
             CurrentUsageModelCommandProgressValue = 0;
             foreach (var row in removeableRows)
             {
+                if (_cancelCurrentCommand)
+                {
+                    return;
+                }
+
                 row.RemoveModel();
                 CurrentUsageModelCommandProgressValue++;
             }
