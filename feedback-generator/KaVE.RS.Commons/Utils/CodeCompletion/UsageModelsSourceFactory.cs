@@ -31,9 +31,9 @@ namespace KaVE.RS.Commons.Utils.CodeCompletion
         private readonly IIoUtils _ioUtils;
 
         [NotNull]
-        private readonly TypePathUtil _typePathUtil;
+        private readonly ITypePathUtil _typePathUtil;
 
-        public UsageModelsSourceFactory([NotNull] IIoUtils ioUtils, [NotNull] TypePathUtil typePathUtil)
+        public UsageModelsSourceFactory([NotNull] IIoUtils ioUtils, [NotNull] ITypePathUtil typePathUtil)
         {
             _typePathUtil = typePathUtil;
             _ioUtils = ioUtils;

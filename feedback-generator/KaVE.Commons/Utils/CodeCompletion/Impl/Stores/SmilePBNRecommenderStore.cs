@@ -33,7 +33,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
         public bool EnableAutoRemoteLoad = false;
 
         private readonly IIoUtils _io;
-        private readonly TypePathUtil _typePathUtil;
+        private readonly ITypePathUtil _typePathUtil;
 
         [NotNull]
         private IEnumerable<UsageModelDescriptor> _availableModels;
@@ -42,7 +42,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
 
         public SmilePBNRecommenderStore(string basePath,
             IIoUtils io,
-            TypePathUtil typePathUtil,
+            ITypePathUtil typePathUtil,
             IRemotePBNRecommenderStore remoteStore)
         {
             _remoteStore = remoteStore;

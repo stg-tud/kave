@@ -377,6 +377,7 @@
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\ToStringUtils.cs" />
     <Compile Include="Utils\ValueTypeWrapper.cs" />
+    <Compile Include="Utils\UsageModelsIndexFileGenerator.cs" />
     <Compile Include="Utils\VersionUtil.cs" />
     <Compile Include="Utils\WeakReference.cs" />
     <Compile Include="Utils\XamlUtils.cs" />

@@ -282,6 +282,7 @@
     <Compile Include="Utils\StringBuilderUtilsTest.cs" />
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\ToStringUtilsTest.cs" />
+    <Compile Include="Utils\UsageModelsIndexFileGeneratorTest.cs" />
     <Compile Include="Utils\VersionUtilTestSuite\$(KaVEProduct)Test.cs" />
     <Compile Include="Utils\WeakReferenceTest.cs" />
     <Compile Include="Utils\XamlUtilsTest.cs" />

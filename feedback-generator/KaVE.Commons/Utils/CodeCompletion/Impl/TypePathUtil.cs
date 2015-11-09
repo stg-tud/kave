@@ -24,7 +24,27 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
-    public class TypePathUtil
+    public interface ITypePathUtil
+    {
+        [NotNull]
+        string ToNestedPath(object o);
+
+        [NotNull]
+        string ToFlatPath(object o);
+
+        [NotNull]
+        CoReTypeName GetTypeName(string relativeModelFilePath);
+
+        int GetVersionNumber(string relativeModelFilePath);
+
+        [NotNull]
+        string GetNestedFileName(string basePath, CoReTypeName typeName, int version, string extension);
+
+        [NotNull]
+        string GetNestedFileName(string basePath, CoReTypeName typeName, string extension);
+    }
+
+    public class TypePathUtil : ITypePathUtil
     {
         [Pure]
         public string ToNestedPath(object o)

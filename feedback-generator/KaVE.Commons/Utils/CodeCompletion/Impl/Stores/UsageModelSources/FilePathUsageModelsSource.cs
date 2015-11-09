@@ -26,10 +26,10 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
     public class FilePathUsageModelsSource : IUsageModelsSource
     {
         protected readonly IIoUtils IoUtils;
-        protected readonly TypePathUtil TypePathUtil;
+        protected readonly ITypePathUtil TypePathUtil;
         private readonly Uri _myUri;
 
-        public FilePathUsageModelsSource(IIoUtils ioUtils, TypePathUtil typePathUtil, Uri myUri)
+        public FilePathUsageModelsSource(IIoUtils ioUtils, ITypePathUtil typePathUtil, Uri myUri)
         {
             TypePathUtil = typePathUtil;
             IoUtils = ioUtils;
