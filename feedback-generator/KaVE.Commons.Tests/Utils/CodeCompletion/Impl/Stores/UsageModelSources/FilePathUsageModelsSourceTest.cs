@@ -105,7 +105,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores.UsageModelSources
         private void SetIndexFileContent(IEnumerable<UsageModelDescriptor> content)
         {
             Mock.Get(_testIoUtil)
-                .Setup(io => io.ReadFile(Path.Combine(BasePath, "index.json")))
+                .Setup(io => io.ReadZippedFile(Path.Combine(BasePath, "index.json.gz")))
                 .Returns(content.ToCompactJson());
         }
     }

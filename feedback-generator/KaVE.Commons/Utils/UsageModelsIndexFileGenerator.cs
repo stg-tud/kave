@@ -35,11 +35,9 @@ namespace KaVE.Commons.Utils
             var basePath = Console.ReadLine();
             Asserts.NotNull(basePath);
 
-            var indexFile = Path.Combine(basePath, "index.json");
+            var indexFile = Path.Combine(basePath, "index.json.gz");
             var indexFileContent = GenerateIndexFileContent(basePath, new IoUtils(), new TypePathUtil());
-            File.WriteAllText(indexFile, indexFileContent);
-
-            Console.ReadKey();
+            new IoUtils().WriteZippedFile(indexFileContent, indexFile);
         }
 
         [Pure, NotNull]

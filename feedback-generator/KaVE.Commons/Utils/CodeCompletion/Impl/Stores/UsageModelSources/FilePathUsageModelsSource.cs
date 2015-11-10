@@ -77,7 +77,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
         {
             try
             {
-                return IoUtils.ReadFile(Path.Combine(_myUri.LocalPath, "index.json"));
+                return IoUtils.ReadZippedFile(Path.Combine(_myUri.LocalPath, "index.json.gz"));
             }
             catch
             {
