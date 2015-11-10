@@ -30,7 +30,7 @@ namespace KaVE.RS.Commons.Injectables
             [NotNull] ISettingsStore store,
             [NotNull] UsageModelsSourceFactory sourceFactory)
             : base(
-                sourceFactory.GetSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri),
+                sourceFactory.GetRemoteSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri),
                 store.GetSettings<ModelStoreSettings>().ModelStorePath)
         {
             store.SettingsChanged += (sender, args) =>
@@ -45,8 +45,7 @@ namespace KaVE.RS.Commons.Injectables
             {
                 if (args.SettingsType == typeof (ModelStoreSettings))
                 {
-                    UsageModelsSource = sourceFactory.GetSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
-                    ReloadAvailableModels();
+                    RemoteUsageModelsSource = sourceFactory.GetRemoteSource(store.GetSettings<ModelStoreSettings>().ModelStoreUri);
                 }
             };
         }

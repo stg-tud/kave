@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using Moq;
 using NUnit.Framework;
@@ -53,13 +54,13 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
 
         #endregion
 
-        private IUsageModelsSource _testSource;
+        private IRemoteUsageModelsSource _testSource;
         private RemotePBNRecommenderStore _sut;
 
         [SetUp]
         public void SetUp()
         {
-            _testSource = Mock.Of<IUsageModelsSource>();
+            _testSource = Mock.Of<IRemoteUsageModelsSource>();
             Mock.Get(_testSource).Setup(source => source.GetUsageModels()).Returns(AvailableModels);
 
             _sut = new RemotePBNRecommenderStore(_testSource, LocalPath);
@@ -114,8 +115,6 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl.Stores
                 new UsageModelDescriptor(new CoReTypeName("LNewModel"), 5)
             };
             Mock.Get(_testSource).Setup(source => source.GetUsageModels()).Returns(newAvailableModels);
-
-            _sut.ReloadAvailableModels();
 
             CollectionAssert.AreEquivalent(newAvailableModels, _sut.GetAvailableModels());
         }

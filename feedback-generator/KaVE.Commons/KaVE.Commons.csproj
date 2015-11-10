@@ -91,11 +91,13 @@
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommender.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\EmptyUsageModelsSource.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\FilePathLocalUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\HttpUsageModelsSource.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\ILocalUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Stores\IRemotePBNRecommenderStore.cs" />
-    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\FilePathUsageModelsSource.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\FilePathRemoteUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\Stores\RemotePBNRecommenderStore.cs" />
-    <Compile Include="Utils\CodeCompletion\Stores\IUsageModelsSource.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\Stores\UsageModelSources\IRemoteUsageModelsSource.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtils.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\TypePathUtil.cs" />
     <Compile Include="Utils\CodeCompletion\Stores\ILocalPBNRecommenderStore.cs" />

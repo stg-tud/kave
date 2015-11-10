@@ -55,19 +55,19 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.CodeCompletion
         [Test]
         public void ReturnsFileSourceForFilePaths()
         {
-            Assert.IsInstanceOf<FilePathUsageModelsSource>(_uut.GetSource(FileTestSource));
+            Assert.IsInstanceOf<FilePathRemoteUsageModelsSource>(_uut.GetRemoteSource(FileTestSource));
         }
 
         [Test]
         public void ReturnsHttpSourceForUrls()
         {
-            Assert.IsInstanceOf<HttpUsageModelsSource>(_uut.GetSource(HttpTestSource));
+            Assert.IsInstanceOf<HttpUsageModelsSource>(_uut.GetRemoteSource(HttpTestSource));
         }
 
         [Test]
         public void ReturnsEmptySourceForOtherUris()
         {
-            Assert.IsInstanceOf<EmptyUsageModelsSource>(_uut.GetSource(FtpTestSource));
+            Assert.IsInstanceOf<EmptyUsageModelsSource>(_uut.GetRemoteSource(FtpTestSource));
         }
     }
 }

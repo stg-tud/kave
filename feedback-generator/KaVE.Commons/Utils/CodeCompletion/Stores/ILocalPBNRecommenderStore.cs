@@ -22,17 +22,14 @@ namespace KaVE.Commons.Utils.CodeCompletion.Stores
 {
     public interface ILocalPBNRecommenderStore
     {
-        [Pure]
-        bool IsAvailable(CoReTypeName typeName);
+        [NotNull]
+        IEnumerable<UsageModelDescriptor> GetAvailableModels();
 
-        void Remove(CoReTypeName type);
+        bool IsAvailable(CoReTypeName typeName);
 
         [CanBeNull]
         IPBNRecommender Load(CoReTypeName typeName);
 
-        [NotNull]
-        IEnumerable<UsageModelDescriptor> GetAvailableModels();
-
-        void ReloadAvailableModels();
+        void Remove(CoReTypeName type);
     }
 }

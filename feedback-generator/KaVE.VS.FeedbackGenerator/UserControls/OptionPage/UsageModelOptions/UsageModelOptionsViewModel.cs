@@ -107,7 +107,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get
             {
                 var installCommand = new AsyncCommand<IUsageModelsTableRow>(
-                    row => row.LoadModel(),
+                    row =>
+                    {
+                        RunningCommandMessage = string.Format("Installing model for {0}", row.TypeName);
+                        row.LoadModel();
+                    },
                     row => row != null && row.IsInstallable,
                     _usageModelCommandsWorker);
                 return installCommand;
@@ -119,7 +123,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get
             {
                 var updateCommand = new AsyncCommand<IUsageModelsTableRow>(
-                    row => row.LoadModel(),
+                    row =>
+                    {
+                        RunningCommandMessage = string.Format("Updating model for {0}", row.TypeName);
+                        row.LoadModel();
+                    },
                     row => row != null && row.IsUpdateable,
                     _usageModelCommandsWorker);
                 return updateCommand;
@@ -131,7 +139,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             get
             {
                 var removeCommand = new AsyncCommand<IUsageModelsTableRow>(
-                    row => row.RemoveModel(),
+                    row =>
+                    {
+                        RunningCommandMessage = string.Format("Removing model for {0}", row.TypeName);;
+                        row.RemoveModel();
+                    },
                     row => row != null && row.IsRemoveable,
                     _usageModelCommandsWorker);
                 return removeCommand;
@@ -266,15 +278,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         
         private void ReloadUsageModelsTableContent(IUsageModelMergingStrategy mergingStrategy)
         {
-            if (LocalStore != null)
-            {
-                LocalStore.ReloadAvailableModels();
-            }
-            if (RemoteStore != null)
-            {
-                RemoteStore.ReloadAvailableModels();
-            }
-
             UsageModelsTableContent = mergingStrategy.MergeAvailableModels(LocalStore, RemoteStore);
         }
 

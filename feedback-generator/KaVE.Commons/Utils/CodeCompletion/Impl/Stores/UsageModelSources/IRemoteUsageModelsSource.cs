@@ -15,13 +15,14 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.Utils.CodeCompletion.Stores
+namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
-    public interface IUsageModelsSource
+    public interface IRemoteUsageModelsSource
     {
-        [Pure, NotNull]
+        [NotNull]
         IEnumerable<UsageModelDescriptor> GetUsageModels();
 
         void Load(UsageModelDescriptor model, string baseTargetDirectory);

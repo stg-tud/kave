@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
@@ -37,8 +36,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Injectables
 
             // ReSharper disable once ObjectCreationAsStatement
             new InjectableLocalPBNRecommenderStore(
-                ioUtils,
                 settingsStore,
+                ioUtils,
                 new TypePathUtil(),
                 Mock.Of<IRemotePBNRecommenderStore>());
 
@@ -53,19 +52,19 @@ namespace KaVE.RS.Commons.Tests_Unit.Injectables
             settingsStoreMock.Setup(s => s.GetSettings<ModelStoreSettings>()).Returns(settings);
 
             var sut = new InjectableLocalPBNRecommenderStore(
-                Mock.Of<IIoUtils>(),
                 settingsStoreMock.Object,
+                Mock.Of<IIoUtils>(),
                 new TypePathUtil(),
                 Mock.Of<IRemotePBNRecommenderStore>());
 
-            Assert.AreEqual(settings.ModelStorePath, sut.BasePath);
+            Assert.AreEqual(settings.ModelStorePath, sut.ModelsSource.SourcePath);
 
             settings.ModelStorePath = @"C:\new\path";
             settingsStoreMock.Raise(
                 s => s.SettingsChanged += null,
                 new SettingsChangedEventArgs(typeof (ModelStoreSettings)));
 
-            Assert.AreEqual(settings.ModelStorePath, sut.BasePath);
+            Assert.AreEqual(settings.ModelStorePath, sut.ModelsSource.SourcePath);
         }
     }
 }

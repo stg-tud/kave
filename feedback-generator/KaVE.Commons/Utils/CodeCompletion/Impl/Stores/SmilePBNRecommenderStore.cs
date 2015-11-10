@@ -15,84 +15,72 @@
  */
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
-using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
-using Smile;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
 {
     public class SmilePBNRecommenderStore : ILocalPBNRecommenderStore
     {
-        public string BasePath { get; protected set; }
+        public ILocalUsageModelsSource ModelsSource { get; protected set; }
 
         public bool EnableAutoRemoteLoad = false;
 
-        private readonly IIoUtils _io;
-        private readonly ITypePathUtil _typePathUtil;
-
-        [NotNull]
-        private IEnumerable<UsageModelDescriptor> _availableModels;
-
         private readonly IRemotePBNRecommenderStore _remoteStore;
 
-        public SmilePBNRecommenderStore(string basePath,
-            IIoUtils io,
-            ITypePathUtil typePathUtil,
-            IRemotePBNRecommenderStore remoteStore)
+        public SmilePBNRecommenderStore([NotNull] ILocalUsageModelsSource modelsSource,
+            [NotNull] IRemotePBNRecommenderStore remoteStore)
         {
             _remoteStore = remoteStore;
-            BasePath = basePath;
-            _io = io;
-            _typePathUtil = typePathUtil;
-
-            _availableModels = new List<UsageModelDescriptor>();
-            ReloadAvailableModels();
+            ModelsSource = modelsSource;
         }
 
+        [Pure]
+        public IEnumerable<UsageModelDescriptor> GetAvailableModels()
+        {
+            return GetModelsDictionary().Values;
+        }
+
+        private IDictionary<CoReTypeName, UsageModelDescriptor> GetModelsDictionary()
+        {
+            var availableModels = new Dictionary<CoReTypeName, UsageModelDescriptor>();
+
+            foreach (
+                var newModel in
+                    ModelsSource.GetUsageModels().Where(
+                        newModel =>
+                            !availableModels.ContainsKey(newModel.TypeName) ||
+                            newModel.Version > availableModels[newModel.TypeName].Version))
+            {
+                availableModels[newModel.TypeName] = newModel;
+            }
+
+            return availableModels;
+        }
+
+        [Pure]
         public bool IsAvailable(CoReTypeName type)
         {
-            return GetAvailableModels().Any(model => model.TypeName.Equals(type));
-        }
-
-        public void Remove(CoReTypeName type)
-        {
-            var availableModel = GetAvailableModels().FirstOrDefault(model => model.TypeName.Equals(type));
-            Asserts.NotNull(availableModel, "No model installed for {0}", type);
-
-            _io.DeleteFile(GetNestedFileName(BasePath, type, availableModel.Version, "zip"));
+            return GetModelsDictionary().ContainsKey(type);
         }
 
         public IPBNRecommender Load(CoReTypeName type)
         {
-            var availableModel = GetAvailableModels().FirstOrDefault(model => model.TypeName.Equals(type));
-            if (availableModel == null)
+            var recommender = ModelsSource.Load(type);
+            if (recommender == null)
             {
                 LoadFromRemote(type);
-                return null;
             }
 
-            var zipFileName = GetNestedFileName(BasePath, type, availableModel.Version, "zip");
+            return recommender;
+        }
 
-            var tmpFolder = _io.UnzipToTempFolder(zipFileName);
-            var xdslFileName = GetFlatFileName(tmpFolder, type, "xdsl");
-            if (!_io.FileExists(xdslFileName))
-            {
-                return null;
-            }
-
-            try
-            {
-                return new SmilePBNRecommender(type, ReadNetwork(xdslFileName));
-            }
-            catch (AssertException)
-            {
-                return null;
-            }
+        public void Remove(CoReTypeName type)
+        {
+            ModelsSource.Remove(type);
         }
 
         private void LoadFromRemote(CoReTypeName type)
@@ -101,59 +89,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores
             {
                 _remoteStore.Load(type);
             }
-        }
-
-        private static Network ReadNetwork(string xdslFileName)
-        {
-            try
-            {
-                var network = new Network();
-                network.ReadFile(xdslFileName);
-                return network;
-            }
-            catch (SmileException e)
-            {
-                throw new AssertException("error reading the network", e);
-            }
-        }
-
-        private string GetNestedFileName(string basePath, CoReTypeName typeName, int version, string extension)
-        {
-            var typePart = _typePathUtil.ToNestedPath(typeName);
-            var fileName = Path.Combine(basePath, typePart + '.' + version + '.' + extension);
-            return fileName;
-        }
-
-        private string GetFlatFileName(string basePath, CoReTypeName typeName, string extension)
-        {
-            var typePart = _typePathUtil.ToFlatPath(typeName);
-            var fileName = Path.Combine(basePath, typePart + '.' + extension);
-            return fileName;
-        }
-
-        public IEnumerable<UsageModelDescriptor> GetAvailableModels()
-        {
-            return _availableModels;
-        }
-
-        public void ReloadAvailableModels()
-        {
-            string[] zipFiles;
-            try
-            {
-                zipFiles = _io.GetFilesRecursive(BasePath, "*.zip");
-            }
-            catch
-            {
-                zipFiles = new string[0];
-            }
-
-            _availableModels =
-                zipFiles.Select(
-                    modelFilePath =>
-                        new UsageModelDescriptor(
-                            _typePathUtil.GetTypeName(modelFilePath.Replace(BasePath, "").TrimStart('\\')),
-                            _typePathUtil.GetVersionNumber(modelFilePath.Replace(BasePath, "").TrimStart('\\'))));
         }
     }
 }

@@ -15,11 +15,12 @@
  */
 
 using JetBrains.Application;
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
+using KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
+using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 
@@ -28,14 +29,26 @@ namespace KaVE.RS.Commons.Injectables
     [ShellComponent]
     public class InjectableLocalPBNRecommenderStore : SmilePBNRecommenderStore
     {
-        public InjectableLocalPBNRecommenderStore(IIoUtils io, ISettingsStore store, ITypePathUtil typePathUtil, IRemotePBNRecommenderStore remoteStore)
-            : base(store.GetSettings<ModelStoreSettings>().ModelStorePath, io, typePathUtil, remoteStore)
+        public InjectableLocalPBNRecommenderStore([NotNull] ISettingsStore store,
+            [NotNull] IIoUtils io,
+            [NotNull] ITypePathUtil typePathUtil,
+            [NotNull] IRemotePBNRecommenderStore remoteStore)
+            : base(
+                new FilePathLocalUsageModelsSource(
+                    store.GetSettings<ModelStoreSettings>().ModelStorePath,
+                    io,
+                    typePathUtil),
+                remoteStore)
         {
             store.SettingsChanged += (sender, args) =>
             {
                 if (args.SettingsType == typeof (ModelStoreSettings))
                 {
-                    BasePath = store.GetSettings<ModelStoreSettings>().ModelStorePath;
+                    ModelsSource =
+                        new FilePathLocalUsageModelsSource(
+                            store.GetSettings<ModelStoreSettings>().ModelStorePath,
+                            io,
+                            typePathUtil);
                 }
             };
         }

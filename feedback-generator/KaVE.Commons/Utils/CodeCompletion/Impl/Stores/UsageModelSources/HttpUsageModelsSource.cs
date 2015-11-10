@@ -20,7 +20,7 @@ using KaVE.Commons.Utils.CodeCompletion.Stores;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
-    public class HttpUsageModelsSource : IUsageModelsSource
+    public class HttpUsageModelsSource : IRemoteUsageModelsSource
     {
         private Uri _myUri;
 

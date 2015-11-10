@@ -17,31 +17,20 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
-    public class EmptyUsageModelsSource : IRemoteUsageModelsSource, ILocalUsageModelsSource
+    public interface ILocalUsageModelsSource
     {
-        public string SourcePath { get { return ""; } }
+        string SourcePath { get; }
 
-        public IEnumerable<UsageModelDescriptor> GetUsageModels()
-        {
-            return new UsageModelDescriptor[0];
-        }
+        [NotNull]
+        IEnumerable<UsageModelDescriptor> GetUsageModels();
 
-        public void Load(UsageModelDescriptor model, string baseTargetDirectory)
-        {
-            // do nothing
-        }
+        [CanBeNull]
+        IPBNRecommender Load(CoReTypeName type);
 
-        public IPBNRecommender Load(CoReTypeName type)
-        {
-            return null;
-        }
-
-        public void Remove(CoReTypeName type)
-        {
-            // do nothing
-        }
+        void Remove(CoReTypeName type);
     }
 }

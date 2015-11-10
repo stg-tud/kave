@@ -137,18 +137,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
             }
             catch (InvalidOperationException) {}
-
-            try
-            {
-                Registry.GetComponent<ILocalPBNRecommenderStore>().ReloadAvailableModels();
-            }
-            catch (InvalidOperationException) {}
-
-            try
-            {
-                Registry.GetComponent<IRemotePBNRecommenderStore>().ReloadAvailableModels();
-            }
-            catch (InvalidOperationException) {}
         }
 
         public bool OnOk()

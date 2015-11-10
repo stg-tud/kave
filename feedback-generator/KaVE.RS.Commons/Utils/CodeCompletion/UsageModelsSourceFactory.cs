@@ -18,7 +18,6 @@ using System;
 using JetBrains.Application;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources;
-using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 
@@ -40,11 +39,11 @@ namespace KaVE.RS.Commons.Utils.CodeCompletion
         }
 
         [Pure]
-        public IUsageModelsSource GetSource(Uri source)
+        public IRemoteUsageModelsSource GetRemoteSource(Uri source)
         {
             if (source.IsFile)
             {
-                return new FilePathUsageModelsSource(_ioUtils, _typePathUtil, source);
+                return new FilePathRemoteUsageModelsSource(_ioUtils, _typePathUtil, source);
             }
 
             if (source.AbsoluteUri.StartsWith("http://"))
@@ -56,11 +55,11 @@ namespace KaVE.RS.Commons.Utils.CodeCompletion
         }
 
         [Pure]
-        public IUsageModelsSource GetSource(string uriSource)
+        public IRemoteUsageModelsSource GetRemoteSource(string uriSource)
         {
             try
             {
-                return GetSource(new Uri(uriSource));
+                return GetRemoteSource(new Uri(uriSource));
             }
             catch (UriFormatException)
             {

@@ -17,19 +17,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.Json;
 
 namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 {
-    public class FilePathUsageModelsSource : IUsageModelsSource
+    public class FilePathRemoteUsageModelsSource : IRemoteUsageModelsSource
     {
         protected readonly IIoUtils IoUtils;
         protected readonly ITypePathUtil TypePathUtil;
         private readonly Uri _myUri;
 
-        public FilePathUsageModelsSource(IIoUtils ioUtils, ITypePathUtil typePathUtil, Uri myUri)
+        public FilePathRemoteUsageModelsSource(IIoUtils ioUtils, ITypePathUtil typePathUtil, Uri myUri)
         {
             TypePathUtil = typePathUtil;
             IoUtils = ioUtils;
@@ -70,6 +71,17 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl.Stores.UsageModelSources
 
                 IoUtils.CreateFile(targetPath);
                 IoUtils.CopyFile(modelPath, targetPath);
+
+                var indexContent = new List<UsageModelDescriptor>();
+                var indexFile = Path.Combine(baseTargetDirectory, "index.json.gz");
+                if (IoUtils.FileExists(indexFile))
+                {
+                    indexContent =
+                        IoUtils.ReadZippedFile(indexFile).ParseJsonTo<IEnumerable<UsageModelDescriptor>>().ToList();
+                }
+
+                indexContent.Add(model);
+                IoUtils.WriteZippedFile(indexContent.ToCompactJson(), indexFile);
             }
         }
 
