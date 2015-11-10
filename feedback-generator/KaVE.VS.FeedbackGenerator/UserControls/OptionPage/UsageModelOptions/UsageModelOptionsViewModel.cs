@@ -283,8 +283,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void InstallAllModels()
         {
-            RunningCommandMessage = "Installing all models...";
-
             var installableRows = UsageModelsTableContent.Where(row => row.IsInstallable).AsArray();
             MaximumUsageModelCommandProgressValue = installableRows.Length;
             CurrentUsageModelCommandProgressValue = 0;
@@ -295,6 +293,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     return;
                 }
 
+                RunningCommandMessage = "Installing " + row.TypeName;
                 row.LoadModel();
                 CurrentUsageModelCommandProgressValue++;
             }
@@ -302,8 +301,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void UpdateAllModels()
         {
-            RunningCommandMessage = "Updating all models...";
-
             var updateableRows = UsageModelsTableContent.Where(row => row.IsUpdateable).AsArray();
             MaximumUsageModelCommandProgressValue = updateableRows.Length;
             CurrentUsageModelCommandProgressValue = 0;
@@ -314,6 +311,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     return;
                 }
 
+                RunningCommandMessage = "Updating " + row.TypeName;
                 row.LoadModel();
                 CurrentUsageModelCommandProgressValue++;
             }
@@ -321,8 +319,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void RemoveAllModels()
         {
-            RunningCommandMessage = "Removing all models...";
-
             var removeableRows = UsageModelsTableContent.Where(row => row.IsRemoveable).AsArray();
             MaximumUsageModelCommandProgressValue = removeableRows.Length;
             CurrentUsageModelCommandProgressValue = 0;
@@ -333,6 +329,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                     return;
                 }
 
+                RunningCommandMessage = "Removing " + row.TypeName;
                 row.RemoveModel();
                 CurrentUsageModelCommandProgressValue++;
             }
