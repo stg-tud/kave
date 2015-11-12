@@ -79,7 +79,8 @@ limitations under the License.
                            Text="{x:Static usageModelOptions:UsageModelOptionsMessages.PublicModelsInfo}" />
 
                 <!-- usage model buttons -->
-                <DockPanel Margin="0,0,0,3" HorizontalAlignment="Stretch" LastChildFill="False" DockPanel.Dock="Top"
+                <DockPanel Name="ModelManagementCommandButtons" Margin="0,0,0,3" HorizontalAlignment="Stretch"
+                           LastChildFill="False" DockPanel.Dock="Top"
                            Visibility="{Binding RunnerIsIdle, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Button Name="InstallSelectedModelButton" Padding="15,3,15,3" Margin="0,0,1,0"
                             DockPanel.Dock="Left" Command="{Binding InstallModel}"
@@ -111,7 +112,8 @@ limitations under the License.
                             Content="{x:Static usageModelOptions:UsageModelOptionsMessages.InstallAllModelsButton}" />
                 </DockPanel>
 
-                <DockPanel Margin="0,0,0,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Top"
+                <DockPanel Margin="0,0,0,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           DockPanel.Dock="Top"
                            Visibility="{Binding RunningUsageModelCommand, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Button Name="CancelModelsAction" Content="Cancel" Padding="15,3,15,3" DockPanel.Dock="Right"
                             Command="{Binding CancelCurrentCommand}" />
@@ -119,7 +121,8 @@ limitations under the License.
                         <ProgressBar Name="ModelCommandsProgressBar" Minimum="0"
                                      Maximum="{Binding MaximumUsageModelCommandProgressValue, Mode=OneWay}"
                                      Value="{Binding CurrentUsageModelCommandProgressValue, Mode=OneWay}" />
-                        <TextBlock Text="{Binding RunningCommandMessage}" HorizontalAlignment="Center"
+                        <TextBlock Name="RunningCommandsProgressBarTextBlock" Text="{Binding RunningCommandMessage}"
+                                   HorizontalAlignment="Center"
                                    VerticalAlignment="Center" Background="Transparent" />
                     </Grid>
                 </DockPanel>
@@ -137,7 +140,8 @@ limitations under the License.
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Rectangle Fill="LightGray" Opacity="0.5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    <Rectangle Name="UsageModelsTableBusyOverlay" Fill="LightGray" Opacity="0.5"
+                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                Visibility="{Binding RunningUsageModelCommand, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </Grid>
             </DockPanel>

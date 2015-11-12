@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Threading;
+using System.Windows;
+using System.Windows.Input;
+using JetBrains.UI.Extensions.Commands;
 using KaVE.Commons.TestUtils.UserControls;
-using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.CodeCompletion.Stores;
+using KaVE.Commons.Utils.Reflection;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
@@ -35,43 +39,47 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
     {
         private UsageModelOptionsControl _sut;
         private Mock<IPBNProposalItemsProvider> _proposalItemProviderMock;
-        private Mock<IRemotePBNRecommenderStore> _remoteStoreMock;
-        private Mock<ILocalPBNRecommenderStore> _localStoreMock;
-        private Mock<IUsageModelMergingStrategy> _mergingStrategyMock;
 
-        private UsageModelOptionsViewModel ViewModel
-        {
-            get { return (UsageModelOptionsViewModel) _sut.DataContext; }
-        }
+        private IUsageModelOptionsViewModel ViewModel;
 
-        private IEnumerable<IUsageModelsTableRow> _testRows;
+        #region command mocks
+
+        private readonly ICommand<IUsageModelsTableRow> InstallModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
+        private readonly ICommand<IUsageModelsTableRow> UpdateModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
+        private readonly ICommand<IUsageModelsTableRow> RemoveModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
+        private readonly ICommand<object> InstallAllModelsCommand = Mock.Of<ICommand<object>>();
+        private readonly ICommand<object> UpdateAllModelsCommand = Mock.Of<ICommand<object>>();
+        private readonly ICommand<object> RemoveAllModelsCommand = Mock.Of<ICommand<object>>();
+        private readonly ICommand CancelCurrentCommand = Mock.Of<ICommand>();
+
+        #endregion
 
         [SetUp]
         public void Setup()
         {
-            _testRows = new[]
-            {
-                GenerateMockedRow(true, true, true),
-                GenerateMockedRow(true, true, true),
-                GenerateMockedRow(true, true, true)
-            };
-
             _proposalItemProviderMock = new Mock<IPBNProposalItemsProvider>();
             Registry.RegisterComponent(_proposalItemProviderMock.Object);
 
-            _localStoreMock = new Mock<ILocalPBNRecommenderStore>();
-            Registry.RegisterComponent(_localStoreMock.Object);
-
-            _remoteStoreMock = new Mock<IRemotePBNRecommenderStore>();
-            Registry.RegisterComponent(_remoteStoreMock.Object);
-
-            _mergingStrategyMock = new Mock<IUsageModelMergingStrategy>();
-            _mergingStrategyMock.Setup(
-                merging => merging.MergeAvailableModels(_localStoreMock.Object, _remoteStoreMock.Object))
-                                .Returns(() => _testRows);
-
             MockSettingsStore.Setup(settingsStore => settingsStore.GetSettings<ModelStoreSettings>())
                              .Returns(new ModelStoreSettings());
+
+            ViewModel = Mock.Of<IUsageModelOptionsViewModel>();
+            Mock.Get(ViewModel)
+                .Setup(viewModel => viewModel.UsageModelsTableContent)
+                .Returns(
+                    new List<IUsageModelsTableRow>
+                    {
+                        Mock.Of<IUsageModelsTableRow>(),
+                        Mock.Of<IUsageModelsTableRow>(),
+                        Mock.Of<IUsageModelsTableRow>()
+                    });
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.InstallModel).Returns(InstallModelCommand);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.UpdateModel).Returns(UpdateModelCommand);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.RemoveModel).Returns(RemoveModelCommand);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.InstallAllModelsCommand).Returns(InstallAllModelsCommand);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.UpdateAllModelsCommand).Returns(UpdateAllModelsCommand);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.RemoveAllModelsCommand).Returns(RemoveAllModelsCommand);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.CancelCurrentCommand).Returns(CancelCurrentCommand);
 
             _sut = Open();
         }
@@ -93,14 +101,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                         MockActionExecutor.Object,
                         TestDataContexts,
                         MockMessageBoxCreator.Object,
-                        _mergingStrategyMock.Object,
-                        new KaVEBackgroundWorker()));
+                        ViewModel));
         }
 
         [Test]
-        public void DataContextIsSetCorrectly()
+        public void IsUsingModelStoreSettingsResetType()
         {
-            Assert.IsInstanceOf<UsageModelOptionsViewModel>(_sut.DataContext);
+            Assert.AreEqual(ResetTypes.ModelStoreSettings, UsageModelOptionsControl.ResetType);
         }
 
         [Test]
@@ -124,48 +131,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void IsUsingModelStoreSettingsResetType()
-        {
-            Assert.AreEqual(ResetTypes.ModelStoreSettings, UsageModelOptionsControl.ResetType);
-        }
-
-        [Test]
-        public void InstallSelectedModelOnInstallClick()
-        {
-            _sut.UsageModelsTable.SelectedIndex = 1;
-
-            UserControlTestUtils.Execute(_sut.InstallSelectedModelButton);
-            Thread.Sleep(100);
-
-            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
-            selectedRow.Verify(row => row.LoadModel(), Times.Once);
-        }
-
-        [Test]
-        public void UpdateSelectedModelOnUpdateClick()
-        {
-            _sut.UsageModelsTable.SelectedIndex = 1;
-
-            UserControlTestUtils.Execute(_sut.UpdateSelectedModelButton);
-            Thread.Sleep(100);
-
-            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
-            selectedRow.Verify(row => row.LoadModel(), Times.Once);
-        }
-
-        [Test]
-        public void RemoveSelectedModelOnRemoveClick()
-        {
-            _sut.UsageModelsTable.SelectedIndex = 1;
-
-            UserControlTestUtils.Execute(_sut.RemoveSelectedModelButton);
-            Thread.Sleep(100);
-
-            var selectedRow = Mock.Get((IUsageModelsTableRow)_sut.UsageModelsTable.SelectedItem);
-            selectedRow.Verify(row => row.RemoveModel(), Times.Once);
-        }
-
-        [Test]
         public void ShouldClearModelsOnReloadModels()
         {
             UserControlTestUtils.Click(_sut.ReloadModelsButton);
@@ -175,150 +140,135 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void ShouldLoadAllInstallableModelsOnInstallAllModels()
-        {
-            _testRows = new[]
-            {
-                GenerateMockedRow(true, false, false),
-                GenerateMockedRow(true, false, false),
-                GenerateMockedRow(true, false, false)
-            };
-            _sut = Open();
-
-            UserControlTestUtils.Execute(_sut.InstallAllModelsButton);
-            Thread.Sleep(250);
-
-            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
-            {
-                Mock.Get(row).Verify(r => r.IsInstallable);
-                Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
-            }
-        }
-
-        [Test]
-        public void ShouldLoadAllUpdateableModelsOnUpdateAllModels()
-        {
-            _testRows = new[]
-            {
-                GenerateMockedRow(false, true, false),
-                GenerateMockedRow(false, true, false),
-                GenerateMockedRow(false, true, false)
-            };
-            _sut = Open();
-
-            UserControlTestUtils.Execute(_sut.UpdateAllModelsButton);
-            Thread.Sleep(250);
-
-            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
-            {
-                Mock.Get(row).Verify(r => r.IsUpdateable);
-                Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
-            }
-        }
-
-        [Test]
-        public void ShouldRemoveAllModelsOnRemoveAllModels()
-        {
-            _testRows = new[]
-            {
-                GenerateMockedRow(false, false, true),
-                GenerateMockedRow(false, false, true),
-                GenerateMockedRow(false, false, true)
-            };
-            _sut = Open();
-
-            UserControlTestUtils.Execute(_sut.RemoveAllModelsButton);
-            Thread.Sleep(250);
-
-            foreach (var row in _sut.UsageModelsTable.Items.Cast<IUsageModelsTableRow>())
-            {
-                Mock.Get(row).Verify(r => r.IsRemoveable);
-                Mock.Get(row).Verify(r => r.RemoveModel(), Times.Once);
-            }
-        }
-
-        [Test]
-        public void ButtonsShouldBeDisabledWhenNothingIsSelected()
-        {
-            Assert.IsNull(_sut.UsageModelsTable.SelectedItem);
-            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.InstallSelectedModelButton));
-            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.UpdateSelectedModelButton));
-            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.RemoveSelectedModelButton));
-        }
-
-        [Test]
-        public void InstallSelectedShouldBeEnabledIfSelectedIsInstallable()
-        {
-            _testRows = new[] {GenerateMockedRow(true, false, false)};
-            _sut = Open();
-            _sut.UsageModelsTable.SelectedIndex = 0;
-
-            Assert.IsTrue(UserControlTestUtils.CanExecute(_sut.InstallSelectedModelButton));
-        }
-
-        [Test]
-        public void InstallSelectedShouldBeDisabledIfSelectedIsNotInstallable()
-        {
-            _testRows = new[] {GenerateMockedRow(false, true, true)};
-            _sut = Open();
-            _sut.UsageModelsTable.SelectedIndex = 0;
-
-            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.InstallSelectedModelButton));
-        }
-
-        [Test]
-        public void UpdateSelectedShouldBeEnabledIfSelectedIsUpdateable()
-        {
-            _testRows = new[] {GenerateMockedRow(false, true, false)};
-            _sut = Open();
-            _sut.UsageModelsTable.SelectedIndex = 0;
-
-            Assert.IsTrue(UserControlTestUtils.CanExecute(_sut.UpdateSelectedModelButton));
-        }
-
-        [Test]
-        public void UpdateSelectedShouldBeDisabledIfSelectedIsNotUpdateable()
-        {
-            _testRows = new[] {GenerateMockedRow(true, false, true)};
-            _sut = Open();
-            _sut.UsageModelsTable.SelectedIndex = 0;
-
-            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.UpdateSelectedModelButton));
-        }
-
-        [Test]
-        public void RemoveSelectedShouldBeEnabledIfSelectedIsRemoveable()
-        {
-            _testRows = new[] {GenerateMockedRow(false, false, true)};
-            _sut = Open();
-            _sut.UsageModelsTable.SelectedIndex = 0;
-
-            Assert.IsTrue(UserControlTestUtils.CanExecute(_sut.RemoveSelectedModelButton));
-        }
-
-        [Test]
-        public void RemoveSelectedShouldBeDisabledIfSelectedIsNotRemoveable()
-        {
-            _testRows = new[] {GenerateMockedRow(true, true, false)};
-            _sut = Open();
-            _sut.UsageModelsTable.SelectedIndex = 0;
-
-            Assert.IsFalse(UserControlTestUtils.CanExecute(_sut.RemoveSelectedModelButton));
-        }
-
-        [Test]
-        public void Binding_UsageModelsTableItemsSource()
+        public void Binding_UsageModelsTable_ItemsSource()
         {
             Assert.AreSame(ViewModel.UsageModelsTableContent, _sut.UsageModelsTable.ItemsSource);
         }
 
-        private static IUsageModelsTableRow GenerateMockedRow(bool isInstallable, bool isUpdateable, bool isRemoveable)
+        [Test]
+        public void Binding_InstallSelectedModelButton_Command()
         {
-            var mockedRow = new Mock<IUsageModelsTableRow>();
-            mockedRow.Setup(row => row.IsInstallable).Returns(isInstallable);
-            mockedRow.Setup(row => row.IsUpdateable).Returns(isUpdateable);
-            mockedRow.Setup(row => row.IsRemoveable).Returns(isRemoveable);
-            return mockedRow.Object;
+            Assert.AreSame(ViewModel.InstallModel, _sut.InstallSelectedModelButton.Command);
+        }
+
+        [Test]
+        public void Binding_UpdateSelectedModelButton_Command()
+        {
+            Assert.AreSame(ViewModel.UpdateModel, _sut.UpdateSelectedModelButton.Command);
+        }
+
+        [Test]
+        public void Binding_RemoveSelectedModelButton_Command()
+        {
+            Assert.AreSame(ViewModel.RemoveModel, _sut.RemoveSelectedModelButton.Command);
+        }
+
+        [Test]
+        public void Binding_InstallAllModelsButton()
+        {
+            Assert.AreSame(ViewModel.InstallAllModelsCommand, _sut.InstallAllModelsButton.Command);
+        }
+
+        [Test]
+        public void Binding_UpdateAllModelsButton()
+        {
+            Assert.AreSame(ViewModel.UpdateAllModelsCommand, _sut.UpdateAllModelsButton.Command);
+        }
+
+        [Test]
+        public void Binding_RemoveAllModelsButton()
+        {
+            Assert.AreSame(ViewModel.RemoveAllModelsCommand, _sut.RemoveAllModelsButton.Command);
+        }
+
+        [Test]
+        public void Binding_CancelModelsAction()
+        {
+            Assert.AreSame(ViewModel.CancelCurrentCommand, _sut.CancelModelsAction.Command);
+        }
+
+        [Test]
+        public void Binding_InstallSelectedModelButton_CommandParameter()
+        {
+            _sut.UsageModelsTable.SelectedIndex = 1;
+            Assert.AreSame(_sut.UsageModelsTable.SelectedItem, _sut.InstallSelectedModelButton.CommandParameter);
+        }
+
+        [Test]
+        public void Binding_UpdateSelectedModelButton_CommandParameter()
+        {
+            _sut.UsageModelsTable.SelectedIndex = 1;
+            Assert.AreSame(_sut.UsageModelsTable.SelectedItem, _sut.UpdateSelectedModelButton.CommandParameter);
+        }
+
+        [Test]
+        public void Binding_RemoveSelectedModelButton_CommandParameter()
+        {
+            _sut.UsageModelsTable.SelectedIndex = 1;
+            Assert.AreSame(_sut.UsageModelsTable.SelectedItem, _sut.RemoveSelectedModelButton.CommandParameter);
+        }
+
+        [Test]
+        public void Binding_UsageModelsTableBusyOverlay_Visibility()
+        {
+            SetCommandIsRunning(true);
+            Assert.AreEqual(Visibility.Visible, _sut.UsageModelsTableBusyOverlay.Visibility);
+            SetCommandIsRunning(false);
+            Assert.AreEqual(Visibility.Collapsed, _sut.UsageModelsTableBusyOverlay.Visibility);
+        }
+
+        [Test]
+        public void Binding_ModelManagementCommandButtons_Visibility()
+        {
+            SetCommandIsRunning(false);
+            Assert.AreEqual(Visibility.Visible, _sut.ModelManagementCommandButtons.Visibility);
+            SetCommandIsRunning(true);
+            Assert.AreEqual(Visibility.Collapsed, _sut.ModelManagementCommandButtons.Visibility);
+        }
+
+        [Test]
+        public void Binding_ModelCommandsProgressBar_Maximum()
+        {
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.MaximumUsageModelCommandProgressValue).Returns(259);
+            RaisePropertyChanged(viewModel => viewModel.MaximumUsageModelCommandProgressValue);
+            Assert.AreEqual(ViewModel.MaximumUsageModelCommandProgressValue, _sut.ModelCommandsProgressBar.Maximum);
+        }
+
+        [Test]
+        public void Binding_ModelCommandsProgressBar_Value()
+        {
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.MaximumUsageModelCommandProgressValue).Returns(259);
+            RaisePropertyChanged(viewModel => viewModel.MaximumUsageModelCommandProgressValue);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.CurrentUsageModelCommandProgressValue).Returns(104);
+            RaisePropertyChanged(viewModel => viewModel.CurrentUsageModelCommandProgressValue);
+            Assert.AreEqual(ViewModel.CurrentUsageModelCommandProgressValue, _sut.ModelCommandsProgressBar.Value);
+        }
+
+        [Test]
+        public void Binding_ModelCommandsProgressBarText()
+        {
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.RunningCommandMessage).Returns("some message");
+            RaisePropertyChanged(viewModel => viewModel.RunningCommandMessage);
+            Assert.AreEqual(ViewModel.RunningCommandMessage, _sut.RunningCommandsProgressBarTextBlock.Text);
+        }
+
+
+        private void SetCommandIsRunning(bool value)
+        {
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.RunningUsageModelCommand).Returns(value);
+            Mock.Get(ViewModel).Setup(viewModel => viewModel.RunnerIsIdle).Returns(!value);
+            RaisePropertyChanged(viewModel => viewModel.RunningUsageModelCommand);
+            RaisePropertyChanged(viewModel => viewModel.RunnerIsIdle);
+        }
+
+        protected void RaisePropertyChanged<TProperty>(
+            Expression<Func<IUsageModelOptionsViewModel, TProperty>> expression)
+        {
+            var propertyName = TypeExtensions<IUsageModelOptionsViewModel>.GetPropertyName(expression);
+            Mock.Get(ViewModel)
+                .Raise(
+                    viewModel => viewModel.PropertyChanged += null,
+                    new PropertyChangedEventArgs(propertyName));
         }
     }
 }

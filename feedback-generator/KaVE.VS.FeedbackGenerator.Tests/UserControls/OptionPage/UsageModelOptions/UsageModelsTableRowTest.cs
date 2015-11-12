@@ -75,10 +75,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void ToStringReflection()
+        public void ToStringTest()
         {
-            ToStringAssert.Reflection(
-                new UsageModelsTableRow(_localStore, _remoteStore, new CoReTypeName("LSomeType"), 0, 0));
+            Assert.AreEqual("(LSomeType,0,-)", new UsageModelsTableRow(null, null, new CoReTypeName("LSomeType"), 0, null).ToString());
         }
 
         [Test]

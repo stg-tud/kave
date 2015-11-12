@@ -15,6 +15,7 @@
  */
 
 using System.Threading;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
@@ -85,6 +86,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         public void ShouldThrowOnWrongCanExecuteInputType()
         {
             new AsyncCommand<int>(i => { }).CanExecute("");
+        }
+
+        [Test]
+        public void ToStringReflectionTest()
+        {
+            ToStringAssert.Reflection(new AsyncCommand(() => {}, () => true));
         }
 
         private void AssertWasCalled()

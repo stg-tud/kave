@@ -16,9 +16,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using JetBrains.Application;
+using JetBrains.UI.Extensions.Commands;
 using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
@@ -27,50 +30,58 @@ using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using DelegateCommand = KaVE.VS.FeedbackGenerator.SessionManager.Presentation.DelegateCommand;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
-    public class ModelStoreValidation
+    public interface IUsageModelOptionsViewModel : INotifyPropertyChanged
     {
-        public ModelStoreValidation(bool isPathValid)
-        {
-            IsPathValid = isPathValid;
-        }
+        IInteractionRequest<Notification> ErrorNotificationRequest { get; }
 
-        public bool IsPathValid { get; private set; }
+        string ModelPath { get; set; }
+        string ModelUri { get; set; }
 
-        public bool IsValidModelStoreInformation
-        {
-            get { return IsPathValid; }
-        }
+        IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; }
+        ICommand<object> InstallAllModelsCommand { get; }
+        ICommand<object> UpdateAllModelsCommand { get; }
+        ICommand<object> RemoveAllModelsCommand { get; }
+        ICommand<IUsageModelsTableRow> InstallModel { get; }
+        ICommand<IUsageModelsTableRow> UpdateModel { get; }
+        ICommand<IUsageModelsTableRow> RemoveModel { get; }
+        ICommand CancelCurrentCommand { get; }
+        int CurrentUsageModelCommandProgressValue { get; }
+        int MaximumUsageModelCommandProgressValue { get; }
+        bool RunningUsageModelCommand { get; }
+        bool RunnerIsIdle { get; }
+        string RunningCommandMessage { get; }
     }
 
-    public class UsageModelOptionsViewModel : ViewModelBase<UsageModelOptionsViewModel>
+    [ShellComponent]
+    public class UsageModelOptionsViewModel : ViewModelBase<UsageModelOptionsViewModel>, IUsageModelOptionsViewModel
     {
         public IInteractionRequest<Notification> ErrorNotificationRequest
         {
             get { return _errorNotificationRequest; }
         }
 
-        public ModelStoreSettings ModelStoreSettings { get; set; }
+        private readonly ModelStoreSettings _modelStoreSettings;
 
         public string ModelPath
         {
-            get { return ModelStoreSettings.ModelStorePath; }
+            get { return _modelStoreSettings.ModelStorePath; }
             set
             {
-                ModelStoreSettings.ModelStorePath = value;
+                _modelStoreSettings.ModelStorePath = value;
                 RaisePropertyChanged(self => self.ModelPath);
             }
         }
 
         public string ModelUri
         {
-            get { return ModelStoreSettings.ModelStoreUri; }
+            get { return _modelStoreSettings.ModelStoreUri; }
             set
             {
-                ModelStoreSettings.ModelStoreUri = value;
+                _modelStoreSettings.ModelStoreUri = value;
                 RaisePropertyChanged(self => self.ModelUri);
             }
         }
@@ -87,22 +98,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
 
-        public AsyncCommand InstallAllModelsCommand
+        public ICommand<object> InstallAllModelsCommand
         {
             get { return new AsyncCommand(InstallAllModels, _usageModelCommandsWorker); }
         }
 
-        public AsyncCommand UpdateAllModelsCommand
+        public ICommand<object> UpdateAllModelsCommand
         {
             get { return new AsyncCommand(UpdateAllModels, _usageModelCommandsWorker); }
         }
 
-        public AsyncCommand RemoveAllModelsCommand
+        public ICommand<object> RemoveAllModelsCommand
         {
             get { return new AsyncCommand(RemoveAllModels, _usageModelCommandsWorker); }
         }
 
-        public AsyncCommand<IUsageModelsTableRow> InstallModel
+        public ICommand<IUsageModelsTableRow> InstallModel
         {
             get
             {
@@ -118,7 +129,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public AsyncCommand<IUsageModelsTableRow> UpdateModel
+        public ICommand<IUsageModelsTableRow> UpdateModel
         {
             get
             {
@@ -134,14 +145,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public AsyncCommand<IUsageModelsTableRow> RemoveModel
+        public ICommand<IUsageModelsTableRow> RemoveModel
         {
             get
             {
                 var removeCommand = new AsyncCommand<IUsageModelsTableRow>(
                     row =>
                     {
-                        RunningCommandMessage = string.Format("Removing model for {0}", row.TypeName);;
+                        RunningCommandMessage = string.Format("Removing model for {0}", row.TypeName);
+                        ;
                         row.RemoveModel();
                     },
                     row => row != null && row.IsRemoveable,
@@ -150,7 +162,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public DelegateCommand CancelCurrentCommand
+        public ICommand CancelCurrentCommand
         {
             get
             {
@@ -194,7 +206,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 RaisePropertyChanged(self => self.RunnerIsIdle);
             }
         }
-        
+
         private bool _runningUsageModelCommand;
 
         public bool RunnerIsIdle
@@ -204,10 +216,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public string RunningCommandMessage
         {
-            get
-            {
-                return _runningCommandMessage;
-            }
+            get { return _runningCommandMessage; }
             set
             {
                 _runningCommandMessage = value;
@@ -256,9 +265,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         [NotNull]
         private readonly IKaVEBackgroundWorker _usageModelCommandsWorker;
 
-        public UsageModelOptionsViewModel([NotNull] IUsageModelMergingStrategy mergingStrategy,
+        public UsageModelOptionsViewModel([NotNull] ModelStoreSettings modelStoreSettings,
+            [NotNull] IUsageModelMergingStrategy mergingStrategy,
             [NotNull] IKaVEBackgroundWorker usageModelCommandsWorker)
         {
+            _modelStoreSettings = modelStoreSettings;
             _errorNotificationRequest = new InteractionRequest<Notification>();
             _usageModelCommandsWorker = usageModelCommandsWorker;
             _usageModelCommandsWorker.DoWork += delegate
@@ -275,7 +286,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
             ReloadUsageModelsTableContent(mergingStrategy);
         }
-        
+
         private void ReloadUsageModelsTableContent(IUsageModelMergingStrategy mergingStrategy)
         {
             UsageModelsTableContent = mergingStrategy.MergeAvailableModels(LocalStore, RemoteStore);
@@ -367,6 +378,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 return false;
             }
+        }
+    }
+
+    public class ModelStoreValidation
+    {
+        public ModelStoreValidation(bool isPathValid)
+        {
+            IsPathValid = isPathValid;
+        }
+
+        public bool IsPathValid { get; private set; }
+
+        public bool IsValidModelStoreInformation
+        {
+            get { return IsPathValid; }
         }
     }
 }

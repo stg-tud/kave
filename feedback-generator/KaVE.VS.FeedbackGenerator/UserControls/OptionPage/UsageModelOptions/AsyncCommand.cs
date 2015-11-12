@@ -24,19 +24,19 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
-    public class AsyncCommand<TIn> : ICommand<TIn>
+    public class AsyncCommand<T> : ICommand<T>
     {
         [NotNull]
         private readonly IKaVEBackgroundWorker _backgroundWorker;
 
         [NotNull]
-        private readonly Action<TIn> _onExecute;
+        private readonly Action<T> _onExecute;
 
         [NotNull]
-        private readonly Func<TIn, bool> _canExecute;
+        private readonly Func<T, bool> _canExecute;
 
-        public AsyncCommand([NotNull] Action<TIn> onExecute,
-            [NotNull] Func<TIn, bool> canExecute,
+        public AsyncCommand([NotNull] Action<T> onExecute,
+            [NotNull] Func<T, bool> canExecute,
             [CanBeNull] IKaVEBackgroundWorker worker = null)
         {
             _onExecute = onExecute;
@@ -44,10 +44,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             _backgroundWorker = worker ?? new KaVEBackgroundWorker();
         }
 
-        public AsyncCommand([NotNull] Action<TIn> onExecute, [CanBeNull] IKaVEBackgroundWorker worker = null)
+        public AsyncCommand([NotNull] Action<T> onExecute, [CanBeNull] IKaVEBackgroundWorker worker = null)
             : this(onExecute, parameter => true, worker) {}
 
-        public void Execute([CanBeNull] TIn parameter)
+        public void Execute([CanBeNull] T parameter)
         {
             DoWorkEventHandler executeAction = delegate { _onExecute(parameter); };
             _backgroundWorker.DoWork += executeAction;
@@ -55,27 +55,32 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             _backgroundWorker.RunWorkerAsync(parameter);
         }
 
-        public bool CanExecute([CanBeNull] TIn parameter)
+        public bool CanExecute([CanBeNull] T parameter)
         {
             return !_backgroundWorker.IsBusy && _canExecute(parameter);
         }
 
         public void Execute([CanBeNull] object parameter)
         {
-            Asserts.That(parameter == null || parameter is TIn, "Wrong parameter type!");
-            Execute((TIn) parameter);
+            Asserts.That(parameter == null || parameter is T, "Wrong parameter type!");
+            Execute((T) parameter);
         }
 
         public bool CanExecute([CanBeNull] object parameter)
         {
-            Asserts.That(parameter == null || parameter is TIn, "Wrong parameter type!");
-            return CanExecute((TIn) parameter);
+            Asserts.That(parameter == null || parameter is T, "Wrong parameter type!");
+            return CanExecute((T) parameter);
         }
 
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 

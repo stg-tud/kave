@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
 
@@ -124,7 +123,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public override string ToString()
         {
-            return this.ToStringReflection();
+            var loadedVersionString = LoadedVersion != null ? LoadedVersion.ToString() : "-";
+            var newestAvailableVersionString = NewestAvailableVersion != null ? NewestAvailableVersion.ToString() : "-";
+            return "(" + TypeName + "," + loadedVersionString + "," + newestAvailableVersionString + ")";
         }
     }
 }

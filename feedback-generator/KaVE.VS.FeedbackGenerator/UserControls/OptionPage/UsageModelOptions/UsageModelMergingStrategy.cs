@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -35,7 +34,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
     public class UsageModelMergingStrategy : IUsageModelMergingStrategy
     {
         [Pure]
-        public IEnumerable<IUsageModelsTableRow> MergeAvailableModels(ILocalPBNRecommenderStore localStore, IRemotePBNRecommenderStore remoteStore)
+        public IEnumerable<IUsageModelsTableRow> MergeAvailableModels(ILocalPBNRecommenderStore localStore,
+            IRemotePBNRecommenderStore remoteStore)
         {
             var mergedModels = remoteStore != null
                 ? remoteStore.GetAvailableModels()

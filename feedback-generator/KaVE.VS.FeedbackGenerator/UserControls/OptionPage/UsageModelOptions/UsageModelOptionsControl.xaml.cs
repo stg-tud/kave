@@ -24,8 +24,7 @@ using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
-using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.CodeCompletion.Stores;
+using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
@@ -52,14 +51,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         private readonly ModelStoreSettings _modelStoreSettings;
         private readonly IMessageBoxCreator _messageBoxCreator;
 
-        public UsageModelOptionsControl(Lifetime lifetime,
+        public UsageModelOptionsControl([NotNull] Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
-            KaVEISettingsStore settingsStore,
-            IActionExecutor actionExecutor,
-            DataContexts dataContexts,
-            IMessageBoxCreator messageBoxCreator,
-            IUsageModelMergingStrategy usageModelMergingStrategy,
-            IKaVEBackgroundWorker usageModelBackgroundWorker)
+            [NotNull] KaVEISettingsStore settingsStore,
+            [NotNull] IActionExecutor actionExecutor,
+            [NotNull] DataContexts dataContexts,
+            [NotNull] IMessageBoxCreator messageBoxCreator,
+            [NotNull] IUsageModelOptionsViewModel usageModelOptionsViewModel)
         {
             _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
@@ -70,10 +68,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
-            DataContext = new UsageModelOptionsViewModel(usageModelMergingStrategy, usageModelBackgroundWorker)
-            {
-                ModelStoreSettings = _modelStoreSettings
-            };
+            DataContext = usageModelOptionsViewModel;
 
             if (ctx != null)
             {

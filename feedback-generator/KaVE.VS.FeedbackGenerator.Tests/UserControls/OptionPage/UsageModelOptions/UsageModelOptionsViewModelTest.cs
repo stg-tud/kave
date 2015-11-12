@@ -15,13 +15,10 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Commons.Model.ObjectUsage;
+using System.Threading;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.CodeCompletion;
-using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
-using KaVE.Commons.Utils.Collections;
-using KaVE.RS.Commons.Utils;
+using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
@@ -34,86 +31,37 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
     {
         private const string TestModelStorePath = @"c:/";
         private const string InvalidModelStorePath = @"c:/some/folder/that/surely/does/not/exist";
-
-        private static IEnumerable<UsageModelDescriptor> SomeLocalModels
-        {
-            get
-            {
-                return new KaVEList<UsageModelDescriptor>
-                {
-                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly/SomeType"), 2),
-                    new UsageModelDescriptor(new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"), 3)
-                };
-            }
-        }
-
-        private static IEnumerable<UsageModelDescriptor> SomeRemoteModels
-        {
-            get
-            {
-                return new KaVEList<UsageModelDescriptor>
-                {
-                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly/SomeType"), 4),
-                    new UsageModelDescriptor(new CoReTypeName("LSomeAssembly/OnlyRemoteType"), 5)
-                };
-            }
-        }
-
-        private static IEnumerable<UsageModelsTableRow> ExpectedUsageModelsTableContent
-        {
-            get
-            {
-                return new KaVEList<UsageModelsTableRow>
-                {
-                    new UsageModelsTableRow(
-                        Mock.Of<ILocalPBNRecommenderStore>(),
-                        Mock.Of<IRemotePBNRecommenderStore>(),
-                        new CoReTypeName("LSomeAssembly/SomeType"),
-                        2,
-                        4),
-                    new UsageModelsTableRow(
-                        Mock.Of<ILocalPBNRecommenderStore>(),
-                        Mock.Of<IRemotePBNRecommenderStore>(),
-                        new CoReTypeName("LSomeOtherAssembly/OnlyLocalType"),
-                        3,
-                        null),
-                    new UsageModelsTableRow(
-                        Mock.Of<ILocalPBNRecommenderStore>(),
-                        Mock.Of<IRemotePBNRecommenderStore>(),
-                        new CoReTypeName("LSomeAssembly/OnlyRemoteType"),
-                        null,
-                        5)
-                };
-            }
-        }
+        
+        private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
 
         private UsageModelOptionsViewModel _uut;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
-        private ILocalPBNRecommenderStore _localStore;
-        private IRemotePBNRecommenderStore _remoteStore;
 
         [SetUp]
         public void SetUp()
         {
+            var rowMock = Mock.Of<IUsageModelsTableRow>();
+            Mock.Get(rowMock).Setup(row => row.IsInstallable).Returns(true);
+            Mock.Get(rowMock).Setup(row => row.IsUpdateable).Returns(true);
+            Mock.Get(rowMock).Setup(row => row.IsRemoveable).Returns(true);
+            _usageModelsTableContent = new List<IUsageModelsTableRow>
+            {
+                rowMock,
+                rowMock,
+                rowMock
+            };
+
             var mergingStrategy = Mock.Of<IUsageModelMergingStrategy>();
-            Mock.Get(mergingStrategy).Setup(strategy => strategy.MergeAvailableModels(_localStore, _remoteStore)).Returns(ExpectedUsageModelsTableContent);
+            Mock.Get(mergingStrategy)
+                .Setup(
+                    strategy =>
+                        strategy.MergeAvailableModels(
+                            It.IsAny<ILocalPBNRecommenderStore>(),
+                            It.IsAny<IRemotePBNRecommenderStore>()))
+                .Returns(_usageModelsTableContent);
 
-            _uut = new UsageModelOptionsViewModel(mergingStrategy, new KaVEBackgroundWorker());
+            _uut = new UsageModelOptionsViewModel(new ModelStoreSettings(), mergingStrategy, new KaVEBackgroundWorker());
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
-
-            _localStore = Mock.Of<ILocalPBNRecommenderStore>();
-            Mock.Get(_localStore).Setup(store => store.GetAvailableModels()).Returns(SomeLocalModels);
-            Registry.RegisterComponent(_localStore);
-
-            _remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
-            Mock.Get(_remoteStore).Setup(store => store.GetAvailableModels()).Returns(SomeRemoteModels);
-            Registry.RegisterComponent(_remoteStore);
-        }
-
-        [TearDown]
-        public void ClearRegistry()
-        {
-            Registry.Clear();
         }
 
         [Test]
@@ -148,10 +96,117 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void GeneratingUsageModelsTableContent()
+        public void UsageModelsTableContentIsGeneratedByMergingStrategy()
         {
-            // TODO test merging logic in UsageModelMergingStrategy
-            CollectionAssert.AreEquivalent(ExpectedUsageModelsTableContent, _uut.UsageModelsTableContent);
+            CollectionAssert.AreEquivalent(_usageModelsTableContent, _uut.UsageModelsTableContent);
+        }
+
+        [Test]
+        public void InstallModelTriggersLoad()
+        {
+            var row = Mock.Of<IUsageModelsTableRow>();
+            _uut.InstallModel.Execute(row);
+            Thread.Sleep(100);
+            Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
+        }
+
+        [Test]
+        public void UpdateModelTriggersLoad()
+        {
+            var row = Mock.Of<IUsageModelsTableRow>();
+            _uut.UpdateModel.Execute(row);
+            Thread.Sleep(100);
+            Mock.Get(row).Verify(r => r.LoadModel(), Times.Once);
+        }
+
+        [Test]
+        public void RemoveModelTriggersRemove()
+        {
+            var row = Mock.Of<IUsageModelsTableRow>();
+            _uut.RemoveModel.Execute(row);
+            Thread.Sleep(100);
+            Mock.Get(row).Verify(r => r.RemoveModel(), Times.Once);
+        }
+
+        [Test]
+        public void InstallModelCanExecuteChecksIsInstallable()
+        {
+            var row = Mock.Of<IUsageModelsTableRow>();
+            _uut.InstallModel.CanExecute(row);
+            Mock.Get(row).Verify(r => r.IsInstallable);
+        }
+
+        [Test]
+        public void UpdateModelCanExecuteChecksIsUpdateable()
+        {
+            var row = Mock.Of<IUsageModelsTableRow>();
+            _uut.UpdateModel.CanExecute(row);
+            Mock.Get(row).Verify(r => r.IsUpdateable);
+        }
+
+        [Test]
+        public void RemoveModelCanExecuteChecksIsRemoveable()
+        {
+            var row = Mock.Of<IUsageModelsTableRow>();
+            _uut.RemoveModel.CanExecute(row);
+            Mock.Get(row).Verify(r => r.IsRemoveable);
+        }
+
+        [Test]
+        public void InstallModelCannotExecuteForNull()
+        {
+            Assert.IsFalse(_uut.InstallModel.CanExecute(null));
+        }
+
+        [Test]
+        public void UpdateModelCannotExecuteForNull()
+        {
+            Assert.IsFalse(_uut.UpdateModel.CanExecute(null));
+        }
+
+        [Test]
+        public void RemoveModelCannotExecuteForNull()
+        {
+            Assert.IsFalse(_uut.RemoveModel.CanExecute(null));
+        }
+
+        [Test]
+        public void InstallAllModelsTriggersLoadOnAllRows()
+        {
+            _uut.InstallAllModelsCommand.Execute(null);
+            Thread.Sleep(100);
+
+            foreach (var row in _uut.UsageModelsTableContent)
+            {
+                Mock.Get(row).Verify(r => r.IsInstallable);
+                Mock.Get(row).Verify(r => r.LoadModel());
+            }
+        }
+
+        [Test]
+        public void UpdateAllModelsTriggersLoadOnAllRows()
+        {
+            _uut.UpdateAllModelsCommand.Execute(null);
+            Thread.Sleep(100);
+
+            foreach (var row in _uut.UsageModelsTableContent)
+            {
+                Mock.Get(row).Verify(r => r.IsUpdateable);
+                Mock.Get(row).Verify(r => r.LoadModel());
+            }
+        }
+
+        [Test]
+        public void RemoveAllModelsTriggersRemoveOnAllRows()
+        {
+            _uut.RemoveAllModelsCommand.Execute(null);
+            Thread.Sleep(100);
+
+            foreach (var row in _uut.UsageModelsTableContent)
+            {
+                Mock.Get(row).Verify(r => r.IsRemoveable);
+                Mock.Get(row).Verify(r => r.RemoveModel());
+            }
         }
     }
 }

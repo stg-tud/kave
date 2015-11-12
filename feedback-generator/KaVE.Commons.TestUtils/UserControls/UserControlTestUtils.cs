@@ -38,6 +38,11 @@ namespace KaVE.Commons.TestUtils.UserControls
         public static void Click(ButtonBase button)
         {
             button.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+
+            if (button.Command != null)
+            {
+                button.Command.Execute(button.CommandParameter);
+            }
         }
 
         public static void Click(Hyperlink hyperlink)
@@ -45,14 +50,9 @@ namespace KaVE.Commons.TestUtils.UserControls
             hyperlink.RaiseEvent(new RoutedEventArgs(Hyperlink.ClickEvent));
         }
 
-        public static void Execute(ButtonBase button)
+        public static bool IsClickable(ButtonBase button)
         {
-            button.Command.Execute(button.CommandParameter);
-        }
-
-        public static bool CanExecute(ButtonBase button)
-        {
-            return button.Command.CanExecute(button.CommandParameter);
+            return button.Command == null ? button.IsEnabled : button.Command.CanExecute(button.CommandParameter);
         }
     }
 }
