@@ -234,7 +234,7 @@
   <data name="Loading" xml:space="preserve">
     <value>Lade Feedback</value>
   </data>
-  <data name="OptionPageInvalidUploadInfoMessage" xml:space="preserve">
+  <data name="Options_InvalidUploadInfoMessage" xml:space="preserve">
     <value>Invalid url, only HTTP- oder HTTPS are supported.</value>
   </data>
   <data name="VisitHomepage_Button" xml:space="preserve">
@@ -261,7 +261,7 @@
   <data name="Session" xml:space="preserve">
     <value>Day</value>
   </data>
-  <data name="OptionPageInvalidModelStorePathMessage" xml:space="preserve">
+  <data name="Options_InvalidModelStorePathMessage" xml:space="preserve">
     <value>Folder does not exist</value>
   </data>
   <data name="Options_ModelPath" xml:space="preserve">
@@ -272,5 +272,8 @@
   </data>
   <data name="Options_ModelUri" xml:space="preserve">
     <value>Remote Usage Models</value>
+  </data>
+  <data name="Options_InvalidModelStoreUriMessage" xml:space="preserve">
+    <value>URL or path is not valid</value>
   </data>
 </root>

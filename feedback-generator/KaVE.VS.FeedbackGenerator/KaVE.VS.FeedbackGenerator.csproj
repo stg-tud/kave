@@ -298,6 +298,8 @@
     <Compile Include="UserControls\OptionPage\UsageModelOptions\AsyncCommand.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelMergingStrategy.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelsTableRow.cs" />
+    <Compile Include="UserControls\ValidationRules\UsageModelsPathValidationRule.cs" />
+    <Compile Include="UserControls\ValidationRules\UsageModelsUriValidationRule.cs" />
     <Compile Include="Utils\Logging\LogFileUtils.cs" />
     <Compile Include="Utils\MessageBoxCreator.cs" />
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsMessages.Designer.cs">

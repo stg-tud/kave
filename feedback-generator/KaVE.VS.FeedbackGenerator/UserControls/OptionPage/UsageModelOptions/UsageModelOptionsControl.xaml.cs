@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using Avalon.Windows.Dialogs;
@@ -31,7 +32,7 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Utils;
-using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
+using IKaVESettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -45,15 +46,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         public const ResetTypes ResetType = ResetTypes.ModelStoreSettings;
 
         private readonly Lifetime _lifetime;
-        private readonly KaVEISettingsStore _settingsStore;
+        private readonly IKaVESettingsStore _settingsStore;
         private readonly IActionExecutor _actionExecutor;
         private readonly DataContexts _dataContexts;
         private readonly ModelStoreSettings _modelStoreSettings;
         private readonly IMessageBoxCreator _messageBoxCreator;
 
-        public UsageModelOptionsControl([NotNull] Lifetime lifetime,
-            OptionsSettingsSmartContext ctx,
-            [NotNull] KaVEISettingsStore settingsStore,
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        public UsageModelOptionsControl([NotNull] Lifetime lifetime, 
+            [NotNull] OptionsSettingsSmartContext jetBrainsContext,
+            [NotNull] IKaVESettingsStore settingsStore,
             [NotNull] IActionExecutor actionExecutor,
             [NotNull] DataContexts dataContexts,
             [NotNull] IMessageBoxCreator messageBoxCreator,
@@ -67,25 +69,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             InitializeComponent();
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
-
+            
             DataContext = usageModelOptionsViewModel;
 
-            if (ctx != null)
-            {
-                // Binding to ModelStorePath
-                ctx.SetBinding(
-                    lifetime,
-                    (ModelStoreSettings s) => s.ModelStorePath,
-                    ModelStorePathTextBox,
-                    TextBox.TextProperty);
+            // Binding to ModelStorePath
+            jetBrainsContext.SetBinding(
+                lifetime,
+                (ModelStoreSettings s) => s.ModelStorePath,
+                ModelStorePathTextBox,
+                TextBox.TextProperty);
 
-                // Binding to ModelStoreUri
-                ctx.SetBinding(
-                    lifetime,
-                    (ModelStoreSettings s) => s.ModelStoreUri,
-                    ModelStoreUriTextBox,
-                    TextBox.TextProperty);
-            }
+            // Binding to ModelStoreUri
+            jetBrainsContext.SetBinding(
+                lifetime,
+                (ModelStoreSettings s) => s.ModelStoreUri,
+                ModelStoreUriTextBox,
+                TextBox.TextProperty);
         }
 
         private void OnBrowse_Path(object sender, RoutedEventArgs e)

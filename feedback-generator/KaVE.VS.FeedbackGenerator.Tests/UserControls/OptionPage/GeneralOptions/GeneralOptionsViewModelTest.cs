@@ -92,7 +92,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
             var expected = new Notification
             {
                 Caption = Properties.SessionManager.Options_Title,
-                Message = Properties.SessionManager.OptionPageInvalidUploadInfoMessage
+                Message = Properties.SessionManager.Options_InvalidUploadInfoMessage
             };
 
             Assert.AreEqual(expected, actual);
@@ -107,7 +107,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
             var expected = new Notification
             {
                 Caption = Properties.SessionManager.Options_Title,
-                Message = Properties.SessionManager.OptionPageInvalidUploadInfoMessage
+                Message = Properties.SessionManager.Options_InvalidUploadInfoMessage
             };
 
             Assert.AreEqual(expected, actual);

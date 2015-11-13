@@ -266,6 +266,8 @@
     <Compile Include="SessionManager\EventViewTest.cs" />
     <Compile Include="UserControls\UploadWizard\UploadWizardContextTest.cs" />
     <Compile Include="TestRSEnv.cs" />
+    <Compile Include="UserControls\ValidationRules\UsageModelsPathValidationRuleTest.cs" />
+    <Compile Include="UserControls\ValidationRules\UsageModelsUriValidationRuleTest.cs" />
     <Compile Include="UserControls\ValueConverter\EnumLocalizationConverterTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\Logging\InMemoryLogManager.cs" />

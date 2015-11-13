@@ -286,24 +286,6 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Folder does not exist.
-        /// </summary>
-        public static string OptionPageInvalidModelStorePathMessage {
-            get {
-                return ResourceManager.GetString("OptionPageInvalidModelStorePathMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid url, only HTTP- oder HTTPS are supported..
-        /// </summary>
-        public static string OptionPageInvalidUploadInfoMessage {
-            get {
-                return ResourceManager.GetString("OptionPageInvalidUploadInfoMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Opens the options page....
         /// </summary>
         public static string Options {
@@ -345,6 +327,33 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         public static string Options_Export_WebAccessPraefix {
             get {
                 return ResourceManager.GetString("Options_Export_WebAccessPraefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder does not exist.
+        /// </summary>
+        public static string Options_InvalidModelStorePathMessage {
+            get {
+                return ResourceManager.GetString("Options_InvalidModelStorePathMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL or path is not valid.
+        /// </summary>
+        public static string Options_InvalidModelStoreUriMessage {
+            get {
+                return ResourceManager.GetString("Options_InvalidModelStoreUriMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid url, only HTTP- oder HTTPS are supported..
+        /// </summary>
+        public static string Options_InvalidUploadInfoMessage {
+            get {
+                return ResourceManager.GetString("Options_InvalidUploadInfoMessage", resourceCulture);
             }
         }
         

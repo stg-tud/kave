@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using JetBrains.Application;
@@ -26,20 +25,21 @@ using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 using DelegateCommand = KaVE.VS.FeedbackGenerator.SessionManager.Presentation.DelegateCommand;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
     public interface IUsageModelOptionsViewModel : INotifyPropertyChanged
     {
-        IInteractionRequest<Notification> ErrorNotificationRequest { get; }
-
         string ModelPath { get; set; }
         string ModelUri { get; set; }
+        ICommand SaveSettings { get; }
+        ICommand DiscardSettingsChanges { get; }
 
         IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; }
         ICommand<object> InstallAllModelsCommand { get; }
@@ -59,32 +59,97 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
     [ShellComponent]
     public class UsageModelOptionsViewModel : ViewModelBase<UsageModelOptionsViewModel>, IUsageModelOptionsViewModel
     {
-        public IInteractionRequest<Notification> ErrorNotificationRequest
+        public UsageModelOptionsViewModel([NotNull] ISettingsStore store,
+            [NotNull] IUsageModelMergingStrategy mergingStrategy,
+            [NotNull] IKaVEBackgroundWorker usageModelCommandsWorker)
         {
-            get { return _errorNotificationRequest; }
+            _modelStoreSettings = store.GetSettings<ModelStoreSettings>();
+
+            _usageModelCommandsWorker = usageModelCommandsWorker;
+            _usageModelCommandsWorker.DoWork += delegate
+            {
+                _cancelCurrentCommand = false;
+                RunningUsageModelCommand = true;
+            };
+            _usageModelCommandsWorker.RunWorkerCompleted += delegate
+            {
+                _cancelCurrentCommand = false;
+                RunningUsageModelCommand = false;
+                ReloadUsageModelsTableContent(mergingStrategy);
+            };
+
+            ReloadUsageModelsTableContent(mergingStrategy);
         }
 
-        private readonly ModelStoreSettings _modelStoreSettings;
+        #region Model store settings
 
         public string ModelPath
         {
             get { return _modelStoreSettings.ModelStorePath; }
             set
             {
-                _modelStoreSettings.ModelStorePath = value;
+                _modelPath = value;
                 RaisePropertyChanged(self => self.ModelPath);
             }
         }
+
+        private string _modelPath;
 
         public string ModelUri
         {
             get { return _modelStoreSettings.ModelStoreUri; }
             set
             {
-                _modelStoreSettings.ModelStoreUri = value;
+                _modelUri = value;
                 RaisePropertyChanged(self => self.ModelUri);
             }
         }
+
+        private string _modelUri;
+
+        public ICommand SaveSettings
+        {
+            get
+            {
+                return new DelegateCommand(
+                    () =>
+                    {
+                        var modelPathIsValid = UsageModelsPathValidationRule.Validate(_modelPath).IsValid;
+                        if (modelPathIsValid)
+                        {
+                            _modelStoreSettings.ModelStorePath = _modelPath;
+                        }
+
+                        var modelUriIsValid = UsageModelsUriValidationRule.Validate(_modelUri).IsValid;
+                        if (modelUriIsValid)
+                        {
+                            _modelStoreSettings.ModelStoreUri = _modelUri;
+                        }
+                    },
+                    () => true);
+            }
+        }
+
+        public ICommand DiscardSettingsChanges
+        {
+            get
+            {
+                return new DelegateCommand(
+                    () =>
+                    {
+                        _modelPath = _modelStoreSettings.ModelStorePath;
+                        _modelUri = _modelStoreSettings.ModelStoreUri;
+                    },
+                    () => true);
+            }
+        }
+
+        [NotNull]
+        private readonly ModelStoreSettings _modelStoreSettings;
+
+        #endregion
+
+        #region Usage models management
 
         public IEnumerable<IUsageModelsTableRow> UsageModelsTableContent
         {
@@ -97,6 +162,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         }
 
         private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
+
+        #region Usage models management commands
 
         public ICommand<object> InstallAllModelsCommand
         {
@@ -172,6 +239,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
+        private bool _cancelCurrentCommand;
+
+        #endregion
+
+        #region Usage models management progress bar
+
         public int CurrentUsageModelCommandProgressValue
         {
             get { return _currentUsageModelCommandProgressValue; }
@@ -226,7 +299,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private string _runningCommandMessage;
 
-        private bool _cancelCurrentCommand;
+        #endregion
 
         [CanBeNull]
         private static ILocalPBNRecommenderStore LocalStore
@@ -260,32 +333,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private readonly InteractionRequest<Notification> _errorNotificationRequest;
-
         [NotNull]
         private readonly IKaVEBackgroundWorker _usageModelCommandsWorker;
-
-        public UsageModelOptionsViewModel([NotNull] ModelStoreSettings modelStoreSettings,
-            [NotNull] IUsageModelMergingStrategy mergingStrategy,
-            [NotNull] IKaVEBackgroundWorker usageModelCommandsWorker)
-        {
-            _modelStoreSettings = modelStoreSettings;
-            _errorNotificationRequest = new InteractionRequest<Notification>();
-            _usageModelCommandsWorker = usageModelCommandsWorker;
-            _usageModelCommandsWorker.DoWork += delegate
-            {
-                _cancelCurrentCommand = false;
-                RunningUsageModelCommand = true;
-            };
-            _usageModelCommandsWorker.RunWorkerCompleted += delegate
-            {
-                _cancelCurrentCommand = false;
-                RunningUsageModelCommand = false;
-                ReloadUsageModelsTableContent(mergingStrategy);
-            };
-
-            ReloadUsageModelsTableContent(mergingStrategy);
-        }
 
         private void ReloadUsageModelsTableContent(IUsageModelMergingStrategy mergingStrategy)
         {
@@ -346,53 +395,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        public ModelStoreValidation ValidateModelStoreInformation(string path)
-        {
-            var pathIsValid = ValidatePath(path);
-
-            if (!pathIsValid)
-            {
-                ShowInformationInvalidMessage(Properties.SessionManager.OptionPageInvalidModelStorePathMessage);
-            }
-
-            return new ModelStoreValidation(pathIsValid);
-        }
-
-        private void ShowInformationInvalidMessage(string message)
-        {
-            _errorNotificationRequest.Raise(
-                new Notification
-                {
-                    Caption = Properties.SessionManager.Options_Title,
-                    Message = message
-                });
-        }
-
-        private static bool ValidatePath(string path)
-        {
-            try
-            {
-                return new DirectoryInfo(path).Exists;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-    }
-
-    public class ModelStoreValidation
-    {
-        public ModelStoreValidation(bool isPathValid)
-        {
-            IsPathValid = isPathValid;
-        }
-
-        public bool IsPathValid { get; private set; }
-
-        public bool IsValidModelStoreInformation
-        {
-            get { return IsPathValid; }
-        }
+        #endregion
     }
 }

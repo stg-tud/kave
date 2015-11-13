@@ -78,7 +78,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
             if (!uriIsValid.IsValid || !prefixIsValid.IsValid)
             {
-                ShowInformationInvalidMessage(Properties.SessionManager.OptionPageInvalidUploadInfoMessage);
+                ShowInformationInvalidMessage(Properties.SessionManager.Options_InvalidUploadInfoMessage);
             }
 
             return new UploadValidation(uriIsValid.IsValid, prefixIsValid.IsValid);
