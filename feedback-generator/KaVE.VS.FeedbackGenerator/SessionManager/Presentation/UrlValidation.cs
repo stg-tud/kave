@@ -17,9 +17,9 @@ using System;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
-    public class UriValidation {
+    public class UrlValidation {
 
-        public static bool ValidateUri(string url)
+        public static bool ValidateUrl(string url)
         {
             Uri uri;
             return Uri.TryCreate(url, UriKind.Absolute, out uri) && HasSupportedScheme(uri);

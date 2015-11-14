@@ -28,7 +28,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
             {
                 var prefix = value.ToString();
                 var prefixIsEmpty = prefix.Length == 0;
-                var prefixIsValid = prefixIsEmpty || UriValidation.ValidateUri(prefix);
+                var prefixIsValid = prefixIsEmpty || UrlValidation.ValidateUrl(prefix);
                 return new ValidationResult(prefixIsValid, null);
             }
             return new ValidationResult(false, null);

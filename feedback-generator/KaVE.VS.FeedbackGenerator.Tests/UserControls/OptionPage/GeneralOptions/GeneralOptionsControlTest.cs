@@ -16,6 +16,7 @@
 
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using Moq;
 using NUnit.Framework;
@@ -26,6 +27,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
     internal class GeneralOptionsControlTest : BaseOptionPageUserControlTest
     {
         private GeneralOptionsControl _sut;
+        private ExportSettings _testSettings;
 
         private GeneralOptionsControl Open()
         {
@@ -43,6 +45,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
         [SetUp]
         public void Setup()
         {
+            _testSettings = new ExportSettings();
+            MockSettingsStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(_testSettings);
+
             _sut = Open();
         }
 
@@ -102,6 +107,59 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
         public void IsUsingCorrectResetTypeForFeedbackSettings()
         {
             Assert.AreEqual(ResetTypes.Feedback, GeneralOptionsControl.FeedbackResetType);
+        }
+
+        [Test]
+        public void ShouldSetSettingsOnOk()
+        {
+            const string newUrl = "http://www.kave.cc/";
+            const string newPrefix = "http://www";
+            _sut.UploadUrlTextBox.Text = newUrl;
+            _sut.WebPraefixTextBox.Text = newPrefix;
+
+            _sut.OnOk();
+
+            Assert.AreEqual(newUrl, _testSettings.UploadUrl);
+            Assert.AreEqual(newPrefix, _testSettings.WebAccessPrefix);
+            MockSettingsStore.Verify(store => store.SetSettings(_testSettings), Times.Once);
+        }
+
+        [Test]
+        public void ShouldNotSetSettingsOnInvalidValues()
+        {
+            const string invalidUrl = "invalid url";
+            const string invalidPrefix = "invalid prefix";
+            _sut.UploadUrlTextBox.Text = invalidUrl;
+            _sut.WebPraefixTextBox.Text = invalidPrefix;
+
+            _sut.OnOk();
+
+            Assert.AreEqual(new ExportSettings().UploadUrl, _testSettings.UploadUrl);
+            Assert.AreEqual(new ExportSettings().WebAccessPrefix, _testSettings.WebAccessPrefix);
+        }
+
+        [Test]
+        public void ShouldNotCloseWithUnsavedChangesIfUserAnswersNo()
+        {
+            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(false);
+            const string invalidUrl = "invalid url";
+            const string invalidPrefix = "invalid prefix";
+            _sut.UploadUrlTextBox.Text = invalidUrl;
+            _sut.WebPraefixTextBox.Text = invalidPrefix;
+
+            Assert.IsFalse(_sut.OnOk());
+        }
+
+        [Test]
+        public void ShouldCloseWithUnsavedChangesIfUserAnswersYes()
+        {
+            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(true);
+            const string invalidUrl = "invalid url";
+            const string invalidPrefix = "invalid prefix";
+            _sut.UploadUrlTextBox.Text = invalidUrl;
+            _sut.WebPraefixTextBox.Text = invalidPrefix;
+
+            Assert.IsTrue(_sut.OnOk());
         }
     }
 }

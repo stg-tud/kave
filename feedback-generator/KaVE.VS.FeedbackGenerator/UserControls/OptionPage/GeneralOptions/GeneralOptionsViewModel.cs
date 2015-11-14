@@ -14,85 +14,61 @@
  * limitations under the License.
  */
 
-using System.Globalization;
-using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 {
-    public class UploadValidation
-    {
-        public UploadValidation(bool isUrlValid, bool isPrefixValid)
-        {
-            IsUrlValid = isUrlValid;
-            IsPrefixValid = isPrefixValid;
-        }
-
-        public bool IsUrlValid { private set; get; }
-        public bool IsPrefixValid { private set; get; }
-
-        public bool IsValidUploadInformation
-        {
-            get { return IsUrlValid && IsPrefixValid; }
-        }
-    }
-    
     public class GeneralOptionsViewModel : ViewModelBase<GeneralOptionsViewModel>
     {
-        private readonly InteractionRequest<Notification> _errorNotificationRequest;
-        private readonly UploadUrlValidationRule _uploadUrlValidationRule;
-        private readonly WebAccessPrefixValidationRule _webAccessPrefixValidationRule;
-
-        public IInteractionRequest<Notification> ErrorNotificationRequest
-        {
-            get { return _errorNotificationRequest; }
-        }
-
-        public ExportSettings ExportSettings { get; set; }
-
         public string UploadUrl
         {
-            get { return ExportSettings.UploadUrl; }
-            set { ExportSettings.UploadUrl = value; }
+            get { return _uploadUrl; }
+            set
+            {
+                _uploadUrl = value;
+                RaisePropertyChanged(self => self.UploadUrl);
+            }
         }
+
+        private string _uploadUrl;
 
         public string WebAccessPrefix
         {
-            get { return ExportSettings.WebAccessPrefix; }
-            set { ExportSettings.WebAccessPrefix = value; }
-        }
-        
-        public GeneralOptionsViewModel()
-        {
-            _errorNotificationRequest = new InteractionRequest<Notification>();
-            _uploadUrlValidationRule = new UploadUrlValidationRule();
-            _webAccessPrefixValidationRule = new WebAccessPrefixValidationRule();
-        }
-
-        public UploadValidation ValidateUploadInformation(string url, string prefix)
-        {
-            var uriIsValid = _uploadUrlValidationRule.Validate(url, CultureInfo.CurrentUICulture);
-            var prefixIsValid = _webAccessPrefixValidationRule.Validate(prefix, CultureInfo.CurrentUICulture);
-
-            if (!uriIsValid.IsValid || !prefixIsValid.IsValid)
+            get { return _webAccessPrefix; }
+            set
             {
-                ShowInformationInvalidMessage(Properties.SessionManager.Options_InvalidUploadInfoMessage);
+                _webAccessPrefix = value;
+                RaisePropertyChanged(self => self.WebAccessPrefix);
+            }
+        }
+
+        private string _webAccessPrefix;
+
+        public GeneralOptionsViewModel([NotNull] ISettingsStore settingsStore)
+        {
+            _uploadUrl = settingsStore.GetSettings<ExportSettings>().UploadUrl;
+            _webAccessPrefix = settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
+        }
+
+        public bool SaveSettings(ExportSettings settings)
+        {
+            var urlIsValid = UploadUrlValidationRule.Validate(UploadUrl).IsValid;
+            if (urlIsValid)
+            {
+                settings.UploadUrl = UploadUrl;
             }
 
-            return new UploadValidation(uriIsValid.IsValid, prefixIsValid.IsValid);
-        }
+            var prefixIsValid = UploadUrlValidationRule.Validate(WebAccessPrefix).IsValid;
+            if (prefixIsValid)
+            {
+                settings.WebAccessPrefix = WebAccessPrefix;
+            }
 
-        private void ShowInformationInvalidMessage(string message)
-        {
-            _errorNotificationRequest.Raise(
-                new Notification
-                {
-                    Caption = Properties.SessionManager.Options_Title,
-                    Message = message
-                });
+            return urlIsValid && prefixIsValid;
         }
-        
     }
 }

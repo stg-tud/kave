@@ -31,6 +31,7 @@ using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 using KaVE.VS.FeedbackGenerator.Utils;
 using IKaVESettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
@@ -53,8 +54,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         private readonly IMessageBoxCreator _messageBoxCreator;
 
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
-        public UsageModelOptionsControl([NotNull] Lifetime lifetime, 
-            [NotNull] OptionsSettingsSmartContext jetBrainsContext,
+        public UsageModelOptionsControl([NotNull] Lifetime lifetime,
+            OptionsSettingsSmartContext jetBrainsContext,
             [NotNull] IKaVESettingsStore settingsStore,
             [NotNull] IActionExecutor actionExecutor,
             [NotNull] DataContexts dataContexts,
@@ -69,22 +70,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             InitializeComponent();
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
-            
+
             DataContext = usageModelOptionsViewModel;
-
-            // Binding to ModelStorePath
-            jetBrainsContext.SetBinding(
-                lifetime,
-                (ModelStoreSettings s) => s.ModelStorePath,
-                ModelStorePathTextBox,
-                TextBox.TextProperty);
-
-            // Binding to ModelStoreUri
-            jetBrainsContext.SetBinding(
-                lifetime,
-                (ModelStoreSettings s) => s.ModelStoreUri,
-                ModelStoreUriTextBox,
-                TextBox.TextProperty);
+            usageModelOptionsViewModel.ModelPath = _modelStoreSettings.ModelStorePath;
+            usageModelOptionsViewModel.ModelUri = _modelStoreSettings.ModelStoreUri;
         }
 
         private void OnBrowse_Path(object sender, RoutedEventArgs e)
@@ -135,14 +124,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public bool OnOk()
         {
-            // TODO: validation
+            // TODO: validation; currently the window closes without warning the user
+            var viewModel = (IUsageModelOptionsViewModel) DataContext;
+            var saveSuccessful = viewModel.SaveSettings(_modelStoreSettings);
             _settingsStore.SetSettings(_modelStoreSettings);
-            return true;
+            return saveSuccessful || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
         }
 
         public bool ValidatePage()
         {
-            return true;
+            var pathIsValid = UsageModelsPathValidationRule.Validate(ModelStorePathTextBox.Text).IsValid;
+            var uriIsValid = UsageModelsUriValidationRule.Validate(ModelStoreUriTextBox.Text).IsValid;
+            return pathIsValid && uriIsValid;
         }
 
         public EitherControl Control

@@ -25,9 +25,9 @@ using JetBrains.UI.Options;
 using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 using KaVE.VS.FeedbackGenerator.Utils;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
-using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 {
@@ -35,7 +35,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
         ParentId = RootOptionPage.PID, Sequence = 1.0)]
     public partial class GeneralOptionsControl : IOptionsPage
     {
-        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions.GeneralOptionsControl";
+        private const string PID =
+            "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions.GeneralOptionsControl";
 
         public const ResetTypes GeneralSettingsResetType = ResetTypes.GeneralSettings;
         public const ResetTypes FeedbackResetType = ResetTypes.Feedback;
@@ -66,25 +67,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
             _exportSettings = settingsStore.GetSettings<ExportSettings>();
 
-            DataContext = new GeneralOptionsViewModel()
-            {
-                ExportSettings = _exportSettings,
-            };
-
-            if (_ctx != null)
-            {
-                BindToGeneralChanges();
-            }
+            DataContext = new GeneralOptionsViewModel(settingsStore);
         }
-        
+
         private void OnResetSettings(object sender, RoutedEventArgs e)
         {
             var result = _messageBoxCreator.ShowYesNo(GeneralOptionsMessages.SettingResetDialog);
             if (result)
             {
                 var settingResetType = new SettingResetType {ResetType = GeneralSettingsResetType};
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts,_lifetime));
-                
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(
+                    settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
+
                 var window = Window.GetWindow(this);
                 if (window != null)
                 {
@@ -98,8 +92,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             var result = _messageBoxCreator.ShowYesNo(GeneralOptionsMessages.FeedbackResetDialog);
             if (result)
             {
-                var settingResetType = new SettingResetType { ResetType = FeedbackResetType };
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
+                var settingResetType = new SettingResetType {ResetType = FeedbackResetType};
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(
+                    settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)
@@ -111,14 +106,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
         public bool OnOk()
         {
-            // TODO: validation
+            // TODO: validation; currently the window closes without warning the user
+            var viewModel = (GeneralOptionsViewModel) DataContext;
+            var saveSuccessful = viewModel.SaveSettings(_exportSettings);
             _settingsStore.SetSettings(_exportSettings);
-            return true;
+            return saveSuccessful || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
         }
 
         public bool ValidatePage()
         {
-            return true;
+            var uploadUrlIsValid = UploadUrlValidationRule.Validate(UploadUrlTextBox.Text).IsValid;
+            var prefixIsValid = UploadUrlValidationRule.Validate(WebPraefixTextBox.Text).IsValid;
+            return uploadUrlIsValid && prefixIsValid;
         }
 
         public EitherControl Control
@@ -130,23 +129,5 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
         {
             get { return PID; }
         }
-
-        #region jetbrains smart-context bindings
-
-        private void BindToGeneralChanges()
-        {
-            _ctx.SetBinding(
-                _lifetime,
-                (ExportSettings s) => s.UploadUrl,
-                UploadUrlTextBox,
-                TextBox.TextProperty);
-            _ctx.SetBinding(
-                _lifetime,
-                (ExportSettings s) => s.WebAccessPrefix,
-                WebPraefixTextBox,
-                TextBox.TextProperty);
-        }
-
-        #endregion
     }
 }

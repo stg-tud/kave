@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-using KaVE.VS.FeedbackGenerator.Interactivity;
-using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
+using System.Collections.Generic;
+using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
@@ -24,101 +26,47 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
     internal class GeneralOptionsViewModelTest
     {
         private const string TestUploadUrl = "http://foo.bar/";
-        private const string InvalidUploadUrl = "ht8tp://foo.bar/";
-
         private const string TestUploadPrefix = "http://pre";
-        private const string InvalidUploadPrefix = "ht5tp://";
 
         private GeneralOptionsViewModel _uut;
-        private InteractionRequestTestHelper<Notification> _notificationHelper;
+        private List<string> _changedProperties;
 
         [SetUp]
         public void SetUp()
         {
-            _uut = new GeneralOptionsViewModel();
-            _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
+            var settingsStore = Mock.Of<ISettingsStore>();
+            Mock.Get(settingsStore).Setup(store => store.GetSettings<ExportSettings>()).Returns(
+                new ExportSettings
+                {
+                    UploadUrl = TestUploadUrl,
+                    WebAccessPrefix = TestUploadPrefix
+                });
+
+            _uut = new GeneralOptionsViewModel(settingsStore);
+
+            _changedProperties = new List<string>();
+            _uut.PropertyChanged += (sender, args) => { _changedProperties.Add(args.PropertyName); };
         }
 
         [Test]
-        public void InvalidUploadUrlRaisesErrorNotification()
+        public void SetsInitialValuesOfPropertiesUsingExportSettings()
         {
-            var info = _uut.ValidateUploadInformation(InvalidUploadUrl, TestUploadPrefix);
-            Assert.IsTrue(_notificationHelper.IsRequestRaised);
-            Assert.IsFalse(info.IsUrlValid);
+            Assert.AreEqual(TestUploadUrl, _uut.UploadUrl);
+            Assert.AreEqual(TestUploadPrefix, _uut.WebAccessPrefix);
         }
 
         [Test]
-        public void InvalidUploadPrefixRaisesErrorNotification()
+        public void PropertyChanged_UploadUrl()
         {
-            var info = _uut.ValidateUploadInformation(TestUploadUrl, InvalidUploadPrefix);
-            Assert.IsTrue(_notificationHelper.IsRequestRaised);
-            Assert.IsFalse(info.IsPrefixValid);
+            _uut.UploadUrl = "new value";
+            CollectionAssert.Contains(_changedProperties, "UploadUrl");
         }
 
         [Test]
-        public void ValidUploadInformationRaisesNoErrorNotification()
+        public void PropertyChanged_WebAccessPrefix()
         {
-            var info = _uut.ValidateUploadInformation(TestUploadUrl, TestUploadPrefix);
-            Assert.IsFalse(_notificationHelper.IsRequestRaised);
-            Assert.IsTrue(info.IsUrlValid);
-            Assert.IsTrue(info.IsPrefixValid);
-            Assert.IsTrue(info.IsValidUploadInformation);
+            _uut.WebAccessPrefix = "new value";
+            CollectionAssert.Contains(_changedProperties, "WebAccessPrefix");
         }
-
-        [Test]
-        public void EmptyUploadUrlRaisesErrorNotification()
-        {
-            var info = _uut.ValidateUploadInformation("", TestUploadPrefix);
-            Assert.IsTrue(_notificationHelper.IsRequestRaised);
-            Assert.IsFalse(info.IsUrlValid);
-        }
-
-        [Test]
-        public void EmptyPrefixRaisesNoErrorNotification()
-        {
-            var info = _uut.ValidateUploadInformation(TestUploadUrl, "");
-            Assert.IsFalse(_notificationHelper.IsRequestRaised);
-            Assert.IsTrue(info.IsUrlValid);
-            Assert.IsTrue(info.IsPrefixValid);
-            Assert.IsTrue(info.IsValidUploadInformation);
-        }
-
-        [Test]
-        public void InvalidUploadPrefixErrorHasCorrectMessage()
-        {
-            _uut.ValidateUploadInformation(TestUploadUrl, InvalidUploadPrefix);
-
-            var actual = _notificationHelper.Context;
-            var expected = new Notification
-            {
-                Caption = Properties.SessionManager.Options_Title,
-                Message = Properties.SessionManager.Options_InvalidUploadInfoMessage
-            };
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void InvalidUploadUrlErrorHasCorrectMessage()
-        {
-            _uut.ValidateUploadInformation(InvalidUploadUrl, TestUploadPrefix);
-
-            var actual = _notificationHelper.Context;
-            var expected = new Notification
-            {
-                Caption = Properties.SessionManager.Options_Title,
-                Message = Properties.SessionManager.Options_InvalidUploadInfoMessage
-            };
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void InvalidUrlAndPrefixRaisesOneNotification()
-        {
-            _uut.ValidateUploadInformation(InvalidUploadPrefix, InvalidUploadPrefix);
-            Assert.AreEqual(1, _notificationHelper.NumberOfRequests);
-        }
-        
     }
 }

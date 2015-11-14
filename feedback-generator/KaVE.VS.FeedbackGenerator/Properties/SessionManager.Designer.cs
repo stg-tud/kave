@@ -331,6 +331,15 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Some changes are invalid and will be discarded. Close anyway?.
+        /// </summary>
+        public static string Options_InvalidChangeDiscardConfirmationDialog {
+            get {
+                return ResourceManager.GetString("Options_InvalidChangeDiscardConfirmationDialog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Folder does not exist.
         /// </summary>
         public static string Options_InvalidModelStorePathMessage {

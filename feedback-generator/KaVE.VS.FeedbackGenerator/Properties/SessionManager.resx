@@ -276,4 +276,7 @@
   <data name="Options_InvalidModelStoreUriMessage" xml:space="preserve">
     <value>URL or path is not valid</value>
   </data>
+  <data name="Options_InvalidChangeDiscardConfirmationDialog" xml:space="preserve">
+    <value>Some changes are invalid and will be discarded. Close anyway?</value>
+  </data>
 </root>

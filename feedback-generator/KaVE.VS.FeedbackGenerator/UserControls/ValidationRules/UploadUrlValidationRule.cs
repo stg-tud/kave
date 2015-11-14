@@ -26,10 +26,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
         {
             if (value != null && !value.Equals(""))
             {
-                var uriIsValid = UriValidation.ValidateUri(value.ToString());
+                var uriIsValid = UrlValidation.ValidateUrl(value.ToString());
                 return new ValidationResult(uriIsValid, null);
             }
             return new ValidationResult(false, null);
+        }
+
+        public static ValidationResult Validate(object value)
+        {
+            return new UploadUrlValidationRule().Validate(value, CultureInfo.InvariantCulture);
         }
     }
 }

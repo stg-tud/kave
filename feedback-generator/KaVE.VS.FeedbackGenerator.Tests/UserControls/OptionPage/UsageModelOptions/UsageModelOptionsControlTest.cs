@@ -41,7 +41,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private Mock<IPBNProposalItemsProvider> _proposalItemProviderMock;
 
         private IUsageModelOptionsViewModel ViewModel;
-
+        private ModelStoreSettings _testSettings;
+        
         #region command mocks
 
         private readonly ICommand<IUsageModelsTableRow> InstallModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
@@ -60,8 +61,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             _proposalItemProviderMock = new Mock<IPBNProposalItemsProvider>();
             Registry.RegisterComponent(_proposalItemProviderMock.Object);
 
+            _testSettings = new ModelStoreSettings();
             MockSettingsStore.Setup(settingsStore => settingsStore.GetSettings<ModelStoreSettings>())
-                             .Returns(new ModelStoreSettings());
+                             .Returns(_testSettings);
 
             ViewModel = Mock.Of<IUsageModelOptionsViewModel>();
             Mock.Get(ViewModel)
@@ -252,6 +254,35 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             Assert.AreEqual(ViewModel.RunningCommandMessage, _sut.RunningCommandsProgressBarTextBlock.Text);
         }
 
+        [Test]
+        public void ShouldSetModelStoreSettingsOnOk()
+        {
+            _sut.OnOk();
+            Mock.Get(ViewModel).Verify(viewModel => viewModel.SaveSettings(_testSettings), Times.Once);
+            MockSettingsStore.Verify(store => store.SetSettings(_testSettings));
+        }
+
+        [Test]
+        public void ShouldNotCloseWithInvalidChangesIfUserAnswersNo()
+        {
+            Mock.Get(ViewModel)
+                .Setup(viewModel => viewModel.SaveSettings(It.IsAny<ModelStoreSettings>()))
+                .Returns(false);
+            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(false);
+
+            Assert.IsFalse(_sut.OnOk());
+        }
+
+        [Test]
+        public void ShouldCloseWithInvalidChangesIfUserAnswersYes()
+        {
+            Mock.Get(ViewModel)
+                .Setup(viewModel => viewModel.SaveSettings(It.IsAny<ModelStoreSettings>()))
+                .Returns(false);
+            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(true);
+
+            Assert.IsTrue(_sut.OnOk());
+        }
 
         private void SetCommandIsRunning(bool value)
         {

@@ -360,7 +360,7 @@
     <Compile Include="Utils\Export\Exporter.cs" />
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
-    <Compile Include="SessionManager\Presentation\UriValidation.cs" />
+    <Compile Include="SessionManager\Presentation\UrlValidation.cs" />
     <Compile Include="UserControls\UserProfile\CheckedUserProfileControl.xaml.cs">
       <DependentUpon>CheckedUserProfileControl.xaml</DependentUpon>
     </Compile>

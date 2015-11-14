@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Threading;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
-using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using Moq;
@@ -28,12 +27,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 {
     public class UsageModelOptionsViewModelTest
     {
-        private const string DefaultModelStoreUri = "http://www.default.org/";
-        private const string DefaultModelStorePath = @"C:\default\";
-
         private UsageModelOptionsViewModel _uut;
-        private List<string> _changedProperties;
-        private ModelStoreSettings _testSettings;
         private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
 
         [SetUp]
@@ -55,82 +49,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                             It.IsAny<IRemotePBNRecommenderStore>()))
                 .Returns(_usageModelsTableContent);
 
-            _testSettings = new ModelStoreSettings
-            {
-                ModelStorePath = DefaultModelStorePath,
-                ModelStoreUri = DefaultModelStoreUri
-            };
-            var settingsStore = Mock.Of<ISettingsStore>();
-            Mock.Get(settingsStore)
-                .Setup(store => store.GetSettings<ModelStoreSettings>())
-                .Returns(_testSettings);
-
             _uut = new UsageModelOptionsViewModel(
-                settingsStore,
                 mergingStrategy,
                 new KaVEBackgroundWorker());
-
-            _changedProperties = new List<string>();
-            _uut.PropertyChanged += (sender, args) => { _changedProperties.Add(args.PropertyName); };
-        }
-
-        [Test]
-        public void PropertyChanged_ModelPath()
-        {
-            _uut.ModelPath = "C:\\";
-            CollectionAssert.Contains(_changedProperties, "ModelPath");
-        }
-
-        [Test]
-        public void PropertyChanged_ModelUri()
-        {
-            _uut.ModelUri = "http://www.kave.cc/";
-            CollectionAssert.Contains(_changedProperties, "ModelUri");
-        }
-
-        [Test, Ignore("we would have to mock the validation for this since there is no index file")]
-        public void SettingModelPathSetsSettingOnSave()
-        {
-            const string modelPath = @"C:\KaVE\";
-            _uut.ModelPath = modelPath;
-            _uut.SaveSettings.Execute(null);
-            Assert.AreEqual(modelPath, _testSettings.ModelStorePath);
-        }
-
-        [Test]
-        public void SettingModelUriSetsSettingOnSave()
-        {
-            const string modelUri = "http://www.kave.cc/";
-            _uut.ModelUri = modelUri;
-            _uut.SaveSettings.Execute(null);
-            Assert.AreEqual(modelUri, _testSettings.ModelStoreUri);
-        }
-
-        [Test]
-        public void ShouldNotSetModelPathWhenInvalid()
-        {
-            _uut.ModelPath = "invalid path";
-            _uut.SaveSettings.Execute(null);
-            Assert.AreEqual(DefaultModelStorePath, _testSettings.ModelStorePath);
-        }
-
-        [Test]
-        public void ShouldNotSetModelUriWhenInvalid()
-        {
-            _uut.ModelUri = "invalid uri";
-            _uut.SaveSettings.Execute(null);
-            Assert.AreEqual(DefaultModelStoreUri, _testSettings.ModelStoreUri);
-        }
-
-        [Test]
-        public void ShouldDiscardChangedOnDiscardSettingsChanged()
-        {
-            _uut.ModelPath = @"C:\KaVE\";
-            _uut.ModelUri = "http://www.kave.cc/";
-            _uut.DiscardSettingsChanges.Execute(null);
-            _uut.SaveSettings.Execute(null);
-            Assert.AreEqual(DefaultModelStorePath, _testSettings.ModelStorePath);
-            Assert.AreEqual(DefaultModelStoreUri, _testSettings.ModelStoreUri);
         }
 
         [Test]
@@ -245,6 +166,30 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                 Mock.Get(row).Verify(r => r.IsRemoveable);
                 Mock.Get(row).Verify(r => r.RemoveModel());
             }
+        }
+
+        [Test]
+        public void ShouldSetSettingsOnSave()
+        {
+            const string newUri = "http://www.kave.cc/";
+            var testSettings = new ModelStoreSettings();
+            _uut.ModelUri = newUri;
+
+            _uut.SaveSettings(testSettings);
+
+            Assert.AreEqual(newUri, testSettings.ModelStoreUri);
+        }
+
+        [Test]
+        public void ShouldNotSetInvalidSettingsOnSave()
+        {
+            const string invalidPath = "invalid path";
+            var testSettings = new ModelStoreSettings();
+            _uut.ModelPath = invalidPath;
+
+            _uut.SaveSettings(testSettings);
+
+            Assert.AreEqual(new ModelStoreSettings().ModelStorePath, testSettings.ModelStorePath);
         }
 
         private static IUsageModelsTableRow GenerateRowMock()

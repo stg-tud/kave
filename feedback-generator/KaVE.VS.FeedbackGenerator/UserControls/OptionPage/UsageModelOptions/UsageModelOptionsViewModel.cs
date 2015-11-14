@@ -25,7 +25,6 @@ using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
-using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.SessionManager;
@@ -38,8 +37,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
     {
         string ModelPath { get; set; }
         string ModelUri { get; set; }
-        ICommand SaveSettings { get; }
-        ICommand DiscardSettingsChanges { get; }
+        bool SaveSettings(ModelStoreSettings settings);
 
         IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; }
         ICommand<object> InstallAllModelsCommand { get; }
@@ -59,12 +57,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
     [ShellComponent]
     public class UsageModelOptionsViewModel : ViewModelBase<UsageModelOptionsViewModel>, IUsageModelOptionsViewModel
     {
-        public UsageModelOptionsViewModel([NotNull] ISettingsStore store,
-            [NotNull] IUsageModelMergingStrategy mergingStrategy,
+        public UsageModelOptionsViewModel([NotNull] IUsageModelMergingStrategy mergingStrategy,
             [NotNull] IKaVEBackgroundWorker usageModelCommandsWorker)
         {
-            _modelStoreSettings = store.GetSettings<ModelStoreSettings>();
-
             _usageModelCommandsWorker = usageModelCommandsWorker;
             _usageModelCommandsWorker.DoWork += delegate
             {
@@ -81,11 +76,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             ReloadUsageModelsTableContent(mergingStrategy);
         }
 
-        #region Model store settings
+        #region Model store settings properties
 
         public string ModelPath
         {
-            get { return _modelStoreSettings.ModelStorePath; }
+            get { return _modelPath; }
             set
             {
                 _modelPath = value;
@@ -97,7 +92,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public string ModelUri
         {
-            get { return _modelStoreSettings.ModelStoreUri; }
+            get { return _modelUri; }
             set
             {
                 _modelUri = value;
@@ -107,45 +102,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private string _modelUri;
 
-        public ICommand SaveSettings
+        public bool SaveSettings(ModelStoreSettings settings)
         {
-            get
+            var pathIsValid = UsageModelsPathValidationRule.Validate(ModelPath).IsValid;
+            if (pathIsValid)
             {
-                return new DelegateCommand(
-                    () =>
-                    {
-                        var modelPathIsValid = UsageModelsPathValidationRule.Validate(_modelPath).IsValid;
-                        if (modelPathIsValid)
-                        {
-                            _modelStoreSettings.ModelStorePath = _modelPath;
-                        }
-
-                        var modelUriIsValid = UsageModelsUriValidationRule.Validate(_modelUri).IsValid;
-                        if (modelUriIsValid)
-                        {
-                            _modelStoreSettings.ModelStoreUri = _modelUri;
-                        }
-                    },
-                    () => true);
+                settings.ModelStorePath = ModelPath;
             }
-        }
 
-        public ICommand DiscardSettingsChanges
-        {
-            get
+            var uriIsValid = UsageModelsUriValidationRule.Validate(ModelUri).IsValid;
+            if (uriIsValid)
             {
-                return new DelegateCommand(
-                    () =>
-                    {
-                        _modelPath = _modelStoreSettings.ModelStorePath;
-                        _modelUri = _modelStoreSettings.ModelStoreUri;
-                    },
-                    () => true);
+                settings.ModelStoreUri = ModelUri;
             }
-        }
 
-        [NotNull]
-        private readonly ModelStoreSettings _modelStoreSettings;
+            return pathIsValid && uriIsValid;
+        }
 
         #endregion
 
