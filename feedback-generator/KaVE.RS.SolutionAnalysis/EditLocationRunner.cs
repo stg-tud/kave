@@ -30,7 +30,8 @@ namespace KaVE.RS.SolutionAnalysis
         private readonly string _root;
         private DateTime _startedAt;
 
-        private readonly FlatHistogram _flatHist = new FlatHistogram(10);
+        private readonly FlatHistogram _flatHist = new FlatHistogram(25);
+        private readonly FlatHistogram _flatHistExec = new FlatHistogram(25);
         private readonly Histogram _histogram2 = new Histogram(2);
         private readonly Histogram _histogram3 = new Histogram(3);
         private readonly Histogram _histogram4 = new Histogram(4);
@@ -66,6 +67,7 @@ namespace KaVE.RS.SolutionAnalysis
             int numTotal = zips.Count;
             int numEvents = 0;
             int numCompletionEvents = 0;
+            int numCompletionEventsApplied = 0;
             int numHistoryTuples = 0;
             int numCurrent = 1;
 
@@ -112,7 +114,11 @@ namespace KaVE.RS.SolutionAnalysis
                     Console.Write('x');
 
                     _flatHist.Add(loc.Location, loc.Size);
-
+                    if (complEvent.TerminatedState == TerminationState.Applied)
+                    {
+                        numCompletionEventsApplied++;
+                        _flatHistExec.Add(loc.Location, loc.Size);
+                    }
 
                     switch (loc.Size)
                     {
@@ -145,16 +151,18 @@ namespace KaVE.RS.SolutionAnalysis
                             break;
                     }
                 }
-                Log(@" done!");
+                Console.WriteLine();
+                Log("");
             }
 
             Log("");
             Log("started at {0}", _startedAt);
             Log(
-                "finished analyzing {0} events ({1} completion events, {2} with location)",
+                "finished analyzing {0} events ({1} completion events, {2} with location, {3} applied)",
                 numEvents,
                 numCompletionEvents,
-                numHistoryTuples);
+                numHistoryTuples,
+                numCompletionEventsApplied);
             Log("");
 
             Print("histogram 2:", _histogram2);
@@ -169,6 +177,22 @@ namespace KaVE.RS.SolutionAnalysis
 
             Console.WriteLine(@"flat histogram:");
             Console.WriteLine(_flatHist);
+
+            Console.WriteLine(@"flat histogram (applied):");
+            Console.WriteLine(_flatHistExec);
+
+            HistToCsv(_flatHist);
+            HistToCsv(_flatHistExec);
+        }
+
+        private static void HistToCsv(FlatHistogram hist)
+        {
+            Console.WriteLine();
+            var bins = hist.GetBins();
+            for (var i = 0; i < bins.Length; i++)
+            {
+                Console.WriteLine(@"{0} {1}", i, bins[i]);
+            }
         }
 
         private void Print(string title, Histogram h)
