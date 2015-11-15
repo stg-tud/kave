@@ -19,16 +19,12 @@ using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
+using KaVE.RS.SolutionAnalysis.UserProfileExports;
+
+// ReSharper disable InconsistentNaming
 
 namespace KaVE.RS.SolutionAnalysis
 {
-    public class Test
-    {
-        private Test _t;
-
-        public void M() {}
-    }
-
     internal class Program
     {
         private const string DirRoot = @"E:\";
@@ -36,13 +32,13 @@ namespace KaVE.RS.SolutionAnalysis
         private const string DirEventsCompletion_KeepNoTrigger = DirRoot + @"Events\OnlyCompletion\";
         private const string DirEventsCompletion_KeepNoTriggerInlined = DirRoot + @"Events\OnlyCompletion-inlined\";
         private const string DirEventsCompletion_RemoveNoTrigger = DirRoot + @"Events\OnlyCompletionWithTriggerPoint\";
-        private const string DirHistories = DirRoot + @"Histories\";
-        private const string DirHistories_Inlined = DirRoot + @"Histories-inlined\";
+        private const string DirMicroCommits = DirRoot + @"MicroCommits\";
+        private const string DirMicroCommits_Inlined = DirRoot + @"MicroCommits-inlined\";
         private const string DirContexts = DirRoot + @"Contexts\";
         private const string DirContexts_Inlined = DirRoot + @"Contexts-inlined\";
         private const string DirUsages = DirRoot + @"Usages\";
         private const string DirUsages_Inlined = DirRoot + @"Usages-inlined\";
-        private const string DirEpisodes = DirRoot + @"Episodes\";
+        private const string DirEventStream = DirRoot + @"EventStreamForEpisodeMining\";
 
         private static void Main(string[] args)
         {
@@ -51,31 +47,42 @@ namespace KaVE.RS.SolutionAnalysis
             /* data preparation */
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
-            //RunCompletionEventFilter(
-            //   DirEventsAll,
-            //   DirEventsCompletion_KeepNoTrigger,
-            //   CompletionEventFilter.NoTriggerPointOption.Keep);
-            RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirHistories);
-            RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTriggerInlined, DirHistories_Inlined);
-            //RunEventStreamExport(DirContexts, DirEpisodes);
+            //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
+            //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Remove);
+            RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirMicroCommits);
+            //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTriggerInlined, DirMicroCommits_Inlined);
+            //RunEventStreamExport(DirContexts, DirEventStream);
 
             /* evaluations */
-            new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
-
+            //new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
+            //new EditLocationRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
+            //RunUserProfileExport();
+            RunStatisticsForPaperCreation();
 
             Console.WriteLine(@"{0} finish", DateTime.Now);
         }
 
-        private static void RunUsageExport(string dirContextsAll, string dirUsages)
+        private static void RunStatisticsForPaperCreation()
         {
-            CleanDirs(dirUsages);
-            new UsageExportRunner(dirContextsAll, dirUsages).Run();
+            var io = new IoHelper(DirEventsAll, DirMicroCommits);
+            var helper = new UserProfileExportHelper();
+            new UserProfileExportRunner(io, helper).Export(DirEventsAll);
         }
 
-        private static void RunCompletionEventFilter(string dirIn,
-            string dirOut,
-            CompletionEventFilter.NoTriggerPointOption noTriggerPointOption)
+        private static void RunUserProfileExport()
         {
+            var io = new IoHelper(DirEventsAll, DirMicroCommits);
+            var helper = new UserProfileExportHelper();
+            new UserProfileExportRunner(io, helper).Export(DirEventsAll);
+        }
+
+        private static void RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption noTriggerPointOption)
+        {
+            const string dirIn = DirEventsAll;
+            var dirOut = noTriggerPointOption == CompletionEventFilter.NoTriggerPointOption.Keep
+                ? DirEventsCompletion_KeepNoTrigger
+                : DirEventsCompletion_RemoveNoTrigger;
+
             CleanDirs(dirOut);
             Console.WriteLine(@"reading from: {0}", dirIn);
             Console.WriteLine(@"writing to:   {0}", dirOut);
@@ -88,20 +95,26 @@ namespace KaVE.RS.SolutionAnalysis
                 new CompletionEventFilterLogger()).Run();
         }
 
-        private static void RunCompletionEventToMicroCommit(string eventDir, string historiesDir)
+        private static void RunUsageExport(string dirContextsAll, string dirUsages)
         {
-            CleanDirs(historiesDir);
+            CleanDirs(dirUsages);
+            new UsageExportRunner(dirContextsAll, dirUsages).Run();
+        }
+
+        private static void RunCompletionEventToMicroCommit(string eventDir, string outDir)
+        {
+            CleanDirs(outDir);
             Console.WriteLine(@"reading from: {0}", eventDir);
-            Console.WriteLine(@"writing to:   {0}", historiesDir);
+            Console.WriteLine(@"writing to:   {0}", outDir);
             var usageExtractor = new UsageExtractor();
             var microCommitGenerator = new MicroCommitGenerator(usageExtractor);
-            var ioHelper = new IoHelper(eventDir, historiesDir);
+            var ioHelper = new IoHelper(eventDir, outDir);
             new CompletionEventToMicroCommitRunner(microCommitGenerator, ioHelper).Run();
         }
 
         private static void RunEventStreamExport(string dirCtxIn, string dirEventsOut)
         {
-            CleanDirs(DirEpisodes);
+            CleanDirs(DirEventStream);
             new EventsExportRunner(dirCtxIn, dirEventsOut).Run();
         }
 

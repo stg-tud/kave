@@ -184,6 +184,9 @@
     <Compile Include="RelativeEditLocation.cs" />
     <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SolutionAnalysis.cs" />
+    <Compile Include="StatisticsForPapers\StatisticsIo.cs" />
+    <Compile Include="StatisticsForPapers\StatisticsPrinter.cs" />
+    <Compile Include="StatisticsForPapers\StatisticsForPaperRunner.cs" />
     <Compile Include="UsageExportRunner.cs" />
     <Compile Include="UserProfileExports\UserProfileExportHelper.cs" />
     <Compile Include="UserProfileExports\UserProfileExportRunner.cs" />
