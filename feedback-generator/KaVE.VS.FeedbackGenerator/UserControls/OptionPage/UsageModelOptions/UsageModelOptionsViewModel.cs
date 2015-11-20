@@ -37,7 +37,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
     {
         string ModelPath { get; set; }
         string ModelUri { get; set; }
-        bool SaveSettings(ModelStoreSettings settings);
+        void SaveSettings(ModelStoreSettings settings);
 
         IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; }
         ICommand<object> InstallAllModelsCommand { get; }
@@ -102,7 +102,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private string _modelUri;
 
-        public bool SaveSettings(ModelStoreSettings settings)
+        public void SaveSettings(ModelStoreSettings settings)
         {
             var pathIsValid = UsageModelsPathValidationRule.Validate(ModelPath).IsValid;
             if (pathIsValid)
@@ -115,8 +115,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             {
                 settings.ModelStoreUri = ModelUri;
             }
-
-            return pathIsValid && uriIsValid;
         }
 
         #endregion

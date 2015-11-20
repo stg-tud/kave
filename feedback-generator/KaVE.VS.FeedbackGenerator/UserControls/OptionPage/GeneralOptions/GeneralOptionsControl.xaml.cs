@@ -42,7 +42,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
         public const ResetTypes FeedbackResetType = ResetTypes.Feedback;
 
         private readonly Lifetime _lifetime;
-        private readonly OptionsSettingsSmartContext _ctx;
         private readonly IActionExecutor _actionExecutor;
         private readonly KaVEISettingsStore _settingsStore;
         private readonly DataContexts _dataContexts;
@@ -58,7 +57,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
         {
             _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
-            _ctx = ctx;
             _actionExecutor = actionExecutor;
             _settingsStore = settingsStore;
             _dataContexts = dataContexts;
@@ -66,6 +64,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             InitializeComponent();
 
             _exportSettings = settingsStore.GetSettings<ExportSettings>();
+            UploadUrlTextBox.Text = _exportSettings.UploadUrl;
+            WebPraefixTextBox.Text = _exportSettings.WebAccessPrefix;
 
             DataContext = new GeneralOptionsViewModel(settingsStore);
         }
@@ -106,11 +106,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
         public bool OnOk()
         {
-            // TODO: validation; currently the window closes without warning the user
             var viewModel = (GeneralOptionsViewModel) DataContext;
-            var saveSuccessful = viewModel.SaveSettings(_exportSettings);
+            viewModel.SaveSettings(_exportSettings);
             _settingsStore.SetSettings(_exportSettings);
-            return saveSuccessful || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
+            return ValidatePage() || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
         }
 
         public bool ValidatePage()

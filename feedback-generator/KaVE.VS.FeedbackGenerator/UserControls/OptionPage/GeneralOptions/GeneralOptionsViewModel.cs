@@ -54,7 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             _webAccessPrefix = settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
         }
 
-        public bool SaveSettings(ExportSettings settings)
+        public void SaveSettings(ExportSettings settings)
         {
             var urlIsValid = UploadUrlValidationRule.Validate(UploadUrl).IsValid;
             if (urlIsValid)
@@ -67,8 +67,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             {
                 settings.WebAccessPrefix = WebAccessPrefix;
             }
-
-            return urlIsValid && prefixIsValid;
         }
     }
 }

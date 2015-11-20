@@ -40,18 +40,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         private UsageModelOptionsControl _sut;
         private Mock<IPBNProposalItemsProvider> _proposalItemProviderMock;
 
-        private IUsageModelOptionsViewModel ViewModel;
+        private IUsageModelOptionsViewModel _viewModel;
         private ModelStoreSettings _testSettings;
         
         #region command mocks
 
-        private readonly ICommand<IUsageModelsTableRow> InstallModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
-        private readonly ICommand<IUsageModelsTableRow> UpdateModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
-        private readonly ICommand<IUsageModelsTableRow> RemoveModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
-        private readonly ICommand<object> InstallAllModelsCommand = Mock.Of<ICommand<object>>();
-        private readonly ICommand<object> UpdateAllModelsCommand = Mock.Of<ICommand<object>>();
-        private readonly ICommand<object> RemoveAllModelsCommand = Mock.Of<ICommand<object>>();
-        private readonly ICommand CancelCurrentCommand = Mock.Of<ICommand>();
+        private readonly ICommand<IUsageModelsTableRow> _installModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
+        private readonly ICommand<IUsageModelsTableRow> _updateModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
+        private readonly ICommand<IUsageModelsTableRow> _removeModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
+        private readonly ICommand<object> _installAllModelsCommand = Mock.Of<ICommand<object>>();
+        private readonly ICommand<object> _updateAllModelsCommand = Mock.Of<ICommand<object>>();
+        private readonly ICommand<object> _removeAllModelsCommand = Mock.Of<ICommand<object>>();
+        private readonly ICommand _cancelCurrentCommand = Mock.Of<ICommand>();
 
         #endregion
 
@@ -65,8 +65,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             MockSettingsStore.Setup(settingsStore => settingsStore.GetSettings<ModelStoreSettings>())
                              .Returns(_testSettings);
 
-            ViewModel = Mock.Of<IUsageModelOptionsViewModel>();
-            Mock.Get(ViewModel)
+            _viewModel = Mock.Of<IUsageModelOptionsViewModel>();
+            Mock.Get(_viewModel)
                 .Setup(viewModel => viewModel.UsageModelsTableContent)
                 .Returns(
                     new List<IUsageModelsTableRow>
@@ -75,13 +75,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                         Mock.Of<IUsageModelsTableRow>(),
                         Mock.Of<IUsageModelsTableRow>()
                     });
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.InstallModel).Returns(InstallModelCommand);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.UpdateModel).Returns(UpdateModelCommand);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.RemoveModel).Returns(RemoveModelCommand);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.InstallAllModelsCommand).Returns(InstallAllModelsCommand);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.UpdateAllModelsCommand).Returns(UpdateAllModelsCommand);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.RemoveAllModelsCommand).Returns(RemoveAllModelsCommand);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.CancelCurrentCommand).Returns(CancelCurrentCommand);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.InstallModel).Returns(_installModelCommand);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.UpdateModel).Returns(_updateModelCommand);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.RemoveModel).Returns(_removeModelCommand);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.InstallAllModelsCommand).Returns(_installAllModelsCommand);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.UpdateAllModelsCommand).Returns(_updateAllModelsCommand);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.RemoveAllModelsCommand).Returns(_removeAllModelsCommand);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.CancelCurrentCommand).Returns(_cancelCurrentCommand);
 
             _sut = Open();
         }
@@ -103,7 +103,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                         MockActionExecutor.Object,
                         TestDataContexts,
                         MockMessageBoxCreator.Object,
-                        ViewModel));
+                        _viewModel));
         }
 
         [Test]
@@ -144,49 +144,49 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void Binding_UsageModelsTable_ItemsSource()
         {
-            Assert.AreSame(ViewModel.UsageModelsTableContent, _sut.UsageModelsTable.ItemsSource);
+            Assert.AreSame(_viewModel.UsageModelsTableContent, _sut.UsageModelsTable.ItemsSource);
         }
 
         [Test]
         public void Binding_InstallSelectedModelButton_Command()
         {
-            Assert.AreSame(ViewModel.InstallModel, _sut.InstallSelectedModelButton.Command);
+            Assert.AreSame(_viewModel.InstallModel, _sut.InstallSelectedModelButton.Command);
         }
 
         [Test]
         public void Binding_UpdateSelectedModelButton_Command()
         {
-            Assert.AreSame(ViewModel.UpdateModel, _sut.UpdateSelectedModelButton.Command);
+            Assert.AreSame(_viewModel.UpdateModel, _sut.UpdateSelectedModelButton.Command);
         }
 
         [Test]
         public void Binding_RemoveSelectedModelButton_Command()
         {
-            Assert.AreSame(ViewModel.RemoveModel, _sut.RemoveSelectedModelButton.Command);
+            Assert.AreSame(_viewModel.RemoveModel, _sut.RemoveSelectedModelButton.Command);
         }
 
         [Test]
         public void Binding_InstallAllModelsButton()
         {
-            Assert.AreSame(ViewModel.InstallAllModelsCommand, _sut.InstallAllModelsButton.Command);
+            Assert.AreSame(_viewModel.InstallAllModelsCommand, _sut.InstallAllModelsButton.Command);
         }
 
         [Test]
         public void Binding_UpdateAllModelsButton()
         {
-            Assert.AreSame(ViewModel.UpdateAllModelsCommand, _sut.UpdateAllModelsButton.Command);
+            Assert.AreSame(_viewModel.UpdateAllModelsCommand, _sut.UpdateAllModelsButton.Command);
         }
 
         [Test]
         public void Binding_RemoveAllModelsButton()
         {
-            Assert.AreSame(ViewModel.RemoveAllModelsCommand, _sut.RemoveAllModelsButton.Command);
+            Assert.AreSame(_viewModel.RemoveAllModelsCommand, _sut.RemoveAllModelsButton.Command);
         }
 
         [Test]
         public void Binding_CancelModelsAction()
         {
-            Assert.AreSame(ViewModel.CancelCurrentCommand, _sut.CancelModelsAction.Command);
+            Assert.AreSame(_viewModel.CancelCurrentCommand, _sut.CancelModelsAction.Command);
         }
 
         [Test]
@@ -231,43 +231,42 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void Binding_ModelCommandsProgressBar_Maximum()
         {
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.MaximumUsageModelCommandProgressValue).Returns(259);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.MaximumUsageModelCommandProgressValue).Returns(259);
             RaisePropertyChanged(viewModel => viewModel.MaximumUsageModelCommandProgressValue);
-            Assert.AreEqual(ViewModel.MaximumUsageModelCommandProgressValue, _sut.ModelCommandsProgressBar.Maximum);
+            Assert.AreEqual(_viewModel.MaximumUsageModelCommandProgressValue, _sut.ModelCommandsProgressBar.Maximum);
         }
 
         [Test]
         public void Binding_ModelCommandsProgressBar_Value()
         {
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.MaximumUsageModelCommandProgressValue).Returns(259);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.MaximumUsageModelCommandProgressValue).Returns(259);
             RaisePropertyChanged(viewModel => viewModel.MaximumUsageModelCommandProgressValue);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.CurrentUsageModelCommandProgressValue).Returns(104);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.CurrentUsageModelCommandProgressValue).Returns(104);
             RaisePropertyChanged(viewModel => viewModel.CurrentUsageModelCommandProgressValue);
-            Assert.AreEqual(ViewModel.CurrentUsageModelCommandProgressValue, _sut.ModelCommandsProgressBar.Value);
+            Assert.AreEqual(_viewModel.CurrentUsageModelCommandProgressValue, _sut.ModelCommandsProgressBar.Value);
         }
 
         [Test]
         public void Binding_ModelCommandsProgressBarText()
         {
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.RunningCommandMessage).Returns("some message");
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.RunningCommandMessage).Returns("some message");
             RaisePropertyChanged(viewModel => viewModel.RunningCommandMessage);
-            Assert.AreEqual(ViewModel.RunningCommandMessage, _sut.RunningCommandsProgressBarTextBlock.Text);
+            Assert.AreEqual(_viewModel.RunningCommandMessage, _sut.RunningCommandsProgressBarTextBlock.Text);
         }
 
         [Test]
         public void ShouldSetModelStoreSettingsOnOk()
         {
             _sut.OnOk();
-            Mock.Get(ViewModel).Verify(viewModel => viewModel.SaveSettings(_testSettings), Times.Once);
+            Mock.Get(_viewModel).Verify(viewModel => viewModel.SaveSettings(_testSettings), Times.Once);
             MockSettingsStore.Verify(store => store.SetSettings(_testSettings));
         }
 
         [Test]
         public void ShouldNotCloseWithInvalidChangesIfUserAnswersNo()
         {
-            Mock.Get(ViewModel)
-                .Setup(viewModel => viewModel.SaveSettings(It.IsAny<ModelStoreSettings>()))
-                .Returns(false);
+            _sut.ModelStorePathTextBox.Text = "invalid path";
+
             MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(false);
 
             Assert.IsFalse(_sut.OnOk());
@@ -276,9 +275,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void ShouldCloseWithInvalidChangesIfUserAnswersYes()
         {
-            Mock.Get(ViewModel)
-                .Setup(viewModel => viewModel.SaveSettings(It.IsAny<ModelStoreSettings>()))
-                .Returns(false);
+            _sut.ModelStorePathTextBox.Text = "invalid path";
+
             MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(true);
 
             Assert.IsTrue(_sut.OnOk());
@@ -286,8 +284,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 
         private void SetCommandIsRunning(bool value)
         {
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.RunningUsageModelCommand).Returns(value);
-            Mock.Get(ViewModel).Setup(viewModel => viewModel.RunnerIsIdle).Returns(!value);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.RunningUsageModelCommand).Returns(value);
+            Mock.Get(_viewModel).Setup(viewModel => viewModel.RunnerIsIdle).Returns(!value);
             RaisePropertyChanged(viewModel => viewModel.RunningUsageModelCommand);
             RaisePropertyChanged(viewModel => viewModel.RunnerIsIdle);
         }
@@ -296,7 +294,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             Expression<Func<IUsageModelOptionsViewModel, TProperty>> expression)
         {
             var propertyName = TypeExtensions<IUsageModelOptionsViewModel>.GetPropertyName(expression);
-            Mock.Get(ViewModel)
+            Mock.Get(_viewModel)
                 .Raise(
                     viewModel => viewModel.PropertyChanged += null,
                     new PropertyChangedEventArgs(propertyName));

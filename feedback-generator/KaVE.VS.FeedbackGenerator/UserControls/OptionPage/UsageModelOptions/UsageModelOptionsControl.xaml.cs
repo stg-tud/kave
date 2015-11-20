@@ -53,7 +53,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         private readonly ModelStoreSettings _modelStoreSettings;
         private readonly IMessageBoxCreator _messageBoxCreator;
 
-        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
         public UsageModelOptionsControl([NotNull] Lifetime lifetime,
             OptionsSettingsSmartContext jetBrainsContext,
             [NotNull] IKaVESettingsStore settingsStore,
@@ -72,8 +71,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
             DataContext = usageModelOptionsViewModel;
-            usageModelOptionsViewModel.ModelPath = _modelStoreSettings.ModelStorePath;
-            usageModelOptionsViewModel.ModelUri = _modelStoreSettings.ModelStoreUri;
+            ModelStorePathTextBox.Text = _modelStoreSettings.ModelStorePath;
+            ModelStoreUriTextBox.Text = _modelStoreSettings.ModelStoreUri;
         }
 
         private void OnBrowse_Path(object sender, RoutedEventArgs e)
@@ -124,11 +123,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public bool OnOk()
         {
-            // TODO: validation; currently the window closes without warning the user
             var viewModel = (IUsageModelOptionsViewModel) DataContext;
-            var saveSuccessful = viewModel.SaveSettings(_modelStoreSettings);
+            viewModel.SaveSettings(_modelStoreSettings);
             _settingsStore.SetSettings(_modelStoreSettings);
-            return saveSuccessful || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
+            return ValidatePage() || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
         }
 
         public bool ValidatePage()
