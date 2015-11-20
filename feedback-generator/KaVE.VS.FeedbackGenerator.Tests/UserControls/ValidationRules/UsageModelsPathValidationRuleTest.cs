@@ -60,6 +60,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.ValidationRules
         }
 
         [Test]
+        public void ShouldAcceptEmptyString()
+        {
+            Assert.IsTrue(_uut.Validate("", CultureInfo.InvariantCulture).IsValid);
+        }
+
+        [Test]
         public void ExistingFolderWithIndexFileShouldBeValid()
         {
             Assert.IsTrue(_uut.Validate(_validPath, CultureInfo.InvariantCulture).IsValid);

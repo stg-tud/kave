@@ -41,12 +41,12 @@ namespace KaVE.RS.Commons.Utils.CodeCompletion
         [Pure]
         public IRemoteUsageModelsSource GetRemoteSource(Uri source)
         {
-            if (source.IsFile)
+            if (source.Scheme == Uri.UriSchemeFile)
             {
                 return new FilePathRemoteUsageModelsSource(_ioUtils, _typePathUtil, source);
             }
 
-            if (source.AbsoluteUri.StartsWith("http://"))
+            if (source.Scheme == Uri.UriSchemeHttp || source.Scheme == Uri.UriSchemeHttps)
             {
                 return new HttpUsageModelsSource(source);
             }

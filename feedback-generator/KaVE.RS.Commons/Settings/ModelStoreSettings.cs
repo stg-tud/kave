@@ -24,10 +24,10 @@ namespace KaVE.RS.Commons.Settings
         [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
         public class ModelStoreSettings
         {
-            [SettingsEntry(@"c:\kave-models\", "Path to KaVE models")]
+            [SettingsEntry(@"", "Path to KaVE models")]
             public string ModelStorePath;
 
-            [SettingsEntry(@"http://www.kave.cc/", "Remote KaVE models")]
+            [SettingsEntry(@"", "Remote KaVE models")]
             public string ModelStoreUri;
         }
     }

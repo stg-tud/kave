@@ -59,6 +59,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.ValidationRules
             }
         }
 
+        [Test]
+        public void ShouldAcceptEmptyString()
+        {
+            Assert.IsTrue(_uut.Validate("", CultureInfo.InvariantCulture).IsValid);
+        }
+
         #region file path validation tests
 
         [Test]

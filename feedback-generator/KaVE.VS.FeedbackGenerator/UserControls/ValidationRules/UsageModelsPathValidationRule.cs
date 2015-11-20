@@ -25,10 +25,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var path = value as string;
-            if (path == null || !Directory.Exists(path) || !File.Exists(Path.Combine(path, "index.json.gz")))
+            if (path == null)
             {
                 return new ValidationResult(false, null);
             }
+
+            if (path.Equals(""))
+            {
+                return new ValidationResult(true, null);
+            }
+
+            if (!Directory.Exists(path) || !File.Exists(Path.Combine(path, "index.json.gz")))
+            {
+                return new ValidationResult(false, null);
+            }
+            
 
             return new ValidationResult(true, null);
         }

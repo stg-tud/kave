@@ -29,6 +29,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
             {
                 return new ValidationResult(false, null);
             }
+            if (valueString.Equals(""))
+            {
+                return new ValidationResult(true, null);
+            }
 
             Uri uri;
             try
