@@ -16,14 +16,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Ionic.Zip;
-using JetBrains;
 using JetBrains.Application;
-using JetBrains.Util;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Json;
+using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
@@ -34,13 +30,13 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
     public interface IExporter
     {
         event Action ExportStarted;
-        event Action<string> StatusChanged;
+        event Action<int> ExportProgressChanged;
         event Action ExportEnded;
 
         /// <summary>
         ///     Exports all events before the given export time. Returns the number of exported events.
         /// </summary>
-        int Export(DateTime exportTime, IPublisher publisher);
+        int Export(DateTime to, IPublisher publisher);
     }
 
     [ShellComponent]
@@ -59,85 +55,97 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
             _profileEventGenerator = profileEventGenerator;
         }
 
-        public event Action ExportStarted = () => { };
-        public event Action<string> StatusChanged = s => { };
-        public event Action ExportEnded = () => { };
+        public event Action ExportStarted;
+        public event Action<int> ExportProgressChanged;
+        public event Action ExportEnded;
 
-        public int Export(DateTime exportTime, IPublisher publisher)
+        public int Export(DateTime to, IPublisher publisher)
         {
-            ExportStarted();
+            OnExportStarted();
             try
             {
-                var events = LoadEventsToExport(exportTime);
-                MaybeAppendUserProfile(events);
-                if (SomethingToExport(events))
+                var events = LoadEventsToExport(to);
+                var numEvents = EstimateNumberEventsToExport();
+                var upe = CreateUserProfileEvent();
+                var progressReporter = CreateProgressReporter(numEvents);
+
+                var lastEventNumber = 0;
+                Action progressCallback = () =>
                 {
-                    DoExport(events, publisher);
+                    lastEventNumber++;
+                    progressReporter(lastEventNumber);
+                };
+
+                if (numEvents > 0)
+                {
+                    publisher.Publish(upe, events, progressCallback);
                 }
-                return events.Count;
+
+                return lastEventNumber;
             }
             finally
             {
-                ExportEnded();
+                OnExportEnded();
             }
         }
 
-        private ICollection<IDEEvent> LoadEventsToExport(DateTime exportTime)
+        private IEnumerable<IDEEvent> LoadEventsToExport(DateTime exportTime)
         {
-            StatusChanged(Properties.UploadWizard.FetchingEvents);
             return
                 _logManager.Logs.SelectMany(log => log.ReadAll())
                            .Where(e => e.TriggeredAt <= exportTime)
-                           .Select(_anonymizer.Anonymize)
-                           .ToList();
+                           .Select(_anonymizer.Anonymize);
         }
 
-        private void MaybeAppendUserProfile(ICollection<IDEEvent> events)
+        private int EstimateNumberEventsToExport()
         {
-            if (_profileEventGenerator.ShouldCreateEvent())
+            return _logManager.Logs.Sum(l => l.ApproximateNumberOfEvents);
+        }
+
+        private UserProfileEvent CreateUserProfileEvent()
+        {
+            return _profileEventGenerator.ShouldCreateEvent() ? _profileEventGenerator.CreateEvent() : null;
+        }
+
+        private Action<int> CreateProgressReporter(int totalEvents)
+        {
+            var currentProgress = 0;
+            return eventNumber =>
             {
-                events.Add(_profileEventGenerator.CreateEvent());
-            }
-        }
-
-        private static bool SomethingToExport(ICollection<IDEEvent> events)
-        {
-            return !events.IsEmpty();
-        }
-
-        private void DoExport(ICollection<IDEEvent> events, IPublisher publisher)
-        {
-            using (var stream = new MemoryStream())
-            {
-                WriteEventsToZipStream(events, events.Count, stream);
-                StatusChanged(Properties.UploadWizard.PublishingEvents);
-                publisher.Publish(stream);
-            }
-        }
-
-        private void WriteEventsToZipStream(IEnumerable<IDEEvent> events, int numberOfEvents, Stream stream)
-        {
-            using (var zipFile = new ZipFile())
-            {
-                zipFile.UseZip64WhenSaving = Zip64Option.AsNecessary;
-                var i = 0;
-                ReportExportProgress(i, numberOfEvents);
-                foreach (var e in events)
+                var oldProgress = currentProgress;
+                currentProgress = Math.Min(eventNumber*100/totalEvents, 100);
+                if (oldProgress != currentProgress && ExportProgressChanged != null)
                 {
-                    var fileName = (i++) + "-" + e.GetType().Name + ".json";
-                    var json = e.ToFormattedJson();
-                    zipFile.AddEntry(fileName, json);
-                    ReportExportProgress(i, numberOfEvents);
+                    OnExportProgressChanged(currentProgress);
                 }
-                StatusChanged(Properties.UploadWizard.CompressingEvents);
-                zipFile.Save(stream);
+            };
+        }
+
+        private void OnExportStarted()
+        {
+            var handlers = ExportStarted;
+            if (handlers != null)
+            {
+                handlers();
             }
         }
 
-        private void ReportExportProgress(int eventsExported, int totalNumberOfEvents)
+        private void OnExportProgressChanged(int currentProgress)
         {
-            var progress = eventsExported*100/totalNumberOfEvents;
-            StatusChanged(Properties.UploadWizard.WritingEvents.FormatEx(progress));
+            var handlers = ExportProgressChanged;
+            if (handlers != null)
+            {
+                handlers(currentProgress);
+            }
+        }
+
+        private void OnExportEnded()
+        {
+            var handlers = ExportEnded;
+            if (handlers != null)
+            {
+                handlers();
+            }
         }
     }
 }

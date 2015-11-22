@@ -65,7 +65,10 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
         {
             using (var reader = NewLogReader())
             {
-                return reader.ReadAll().ToList();
+                foreach (var e in reader.ReadAll())
+                {
+                    yield return e;
+                }
             }
         }
 

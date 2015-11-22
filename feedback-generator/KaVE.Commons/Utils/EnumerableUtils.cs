@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
-using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Events.UserProfiles;
 
-namespace KaVE.RS.Commons.Utils
+namespace KaVE.Commons.Utils
 {
-    public interface IPublisher
+    public static class EnumerableUtils
     {
-        void Publish(UserProfileEvent upe, IEnumerable<IDEEvent> events, Action progress);
+        public static IEnumerable<TSource> PrependWith<TSource>(this IEnumerable<TSource> source, TSource element)
+        {
+            if (element != null)
+            {
+                yield return element;
+            }
+
+            foreach (var e in source)
+            {
+                yield return e;
+            }
+        }
     }
 }

@@ -194,6 +194,7 @@
     <Compile Include="Utils\Csv\CsvBuilderTest.cs" />
     <Compile Include="Utils\Csv\ReadCsvTest.cs" />
     <Compile Include="Utils\DateTime\SimilarDateTimeComparerTest.cs" />
+    <Compile Include="Utils\EnumerableUtilsTest.cs" />
     <Compile Include="Utils\EqualityUtilsTest.cs" />
     <Compile Include="Utils\Events\EventHandlingTest.cs" />
     <Compile Include="Utils\Exceptions\ExecuteTest.cs" />

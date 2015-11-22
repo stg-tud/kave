@@ -16,66 +16,74 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.IO;
 using KaVE.RS.Commons.Utils;
-using Moq;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
     [TestFixture]
-    internal class FilePublisherTest
+    internal class FilePublisherTest : PublisherTestBase
     {
-        private Mock<IIoUtils> _ioMock;
         private const string SomeTargetLocation = "existing target file";
-        private MemoryStream _stream;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _ioMock = new Mock<IIoUtils>();
-            Registry.RegisterComponent(_ioMock.Object);
-            _stream = new MemoryStream();
-        }
 
         [Test]
-        public void ShouldInvokeCopy()
+        public void ShouldOpenFileForWriting()
         {
             var uut = new FilePublisher(() => SomeTargetLocation);
-            uut.Publish(_stream);
+            uut.Publish(_userProfileEvent, TestEventSource(1), () => { });
 
-            _ioMock.Verify(m => m.WriteAllByte(It.IsAny<byte[]>(), SomeTargetLocation));
+            _ioUtilsMock.Verify(m => m.OpenFile(SomeTargetLocation, FileMode.Create, FileAccess.Write));
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowExceptionOnNullArgument()
         {
             var uut = new FilePublisher(() => null);
-            uut.Publish(_stream);
+            uut.Publish(_userProfileEvent, TestEventSource(1), () => { });
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowExceptionOnEmptyArgument()
         {
             var uut = new FilePublisher(() => "");
-            uut.Publish(_stream);
+            uut.Publish(_userProfileEvent, TestEventSource(1), () => { });
         }
 
         private const string CopyFailureMessage = "Datei-Export fehlgeschlagen: XYZ";
 
         [Test, ExpectedException(typeof (AssertException), ExpectedMessage = CopyFailureMessage)]
-        public void ShouldThrowExceptionIfCopyFails()
+        public void ShouldThrowExceptionIfSomething()
         {
-            _ioMock.Setup(io => io.WriteAllByte(It.IsAny<byte[]>(), SomeTargetLocation)).Throws(new Exception("XYZ"));
+            _ioUtilsMock.Setup(io => io.OpenFile(SomeTargetLocation, FileMode.Create, FileAccess.Write))
+                        .Throws(new Exception("XYZ"));
             var uut = new FilePublisher(() => SomeTargetLocation);
-            uut.Publish(_stream);
+            uut.Publish(_userProfileEvent, TestEventSource(1), () => { });
         }
 
-        [TearDown]
-        public void CleanUpRegistry()
+        [Test]
+        public void AllSourceEventsArePublished()
         {
-            Registry.Clear();
+            var testEvents = TestEventSource(10).ToList();
+
+            var uut = new FilePublisher(() => SomeTargetLocation);
+            uut.Publish(null, testEvents, () => { });
+
+            Assert.AreEqual(1, _exportedPackages.Count);
+            var exported = _exportedPackages.SelectMany(e => e).ToList();
+            CollectionAssert.AreEqual(testEvents, exported);
+        }
+
+        [Test]
+        public void ProgressCallsArePassedThrough()
+        {
+            const int expected = 8;
+            var count = 0;
+            var uut = new FilePublisher(() => SomeTargetLocation);
+            uut.Publish(null, TestEventSource(expected), () => count++);
+
+            Assert.AreEqual(expected, count);
         }
     }
 }

@@ -163,12 +163,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils\FilePublisherTest.cs" />
     <Compile Include="Injectables\InjectablePBNRecommenderStoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\SettingsStoreTest.cs" />
     <Compile Include="TestFactories\TypeMockUtils.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
-    <Compile Include="Utils\FilePublisherTest.cs" />
+    <Compile Include="Utils\PublisherTestBase.cs" />
+    <Compile Include="Utils\PublisherUtilsTestSuite\UploadEventsByHttpTest.cs" />
     <Compile Include="Utils\GZipStreamTest.cs" />
     <Compile Include="Utils\HierarchyTest.cs" />
     <Compile Include="Utils\HttpPublisherTest.cs" />
@@ -176,6 +178,7 @@
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
     <Compile Include="Utils\ProposalProbabilityUtilsTest.cs" />
+    <Compile Include="Utils\PublisherUtilsTestSuite\WriteEventsToZipStreamTest.cs" />
     <Compile Include="Utils\XamlFormattingUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +189,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
+      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
+      <Name>KaVE.Commons.TestUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
@@ -193,6 +200,10 @@
     <ProjectReference Include="..\KaVE.RS.Commons\KaVE.RS.Commons.csproj">
       <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
       <Name>KaVE.RS.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.VS.FeedbackGenerator\KaVE.VS.FeedbackGenerator.csproj">
+      <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
+      <Name>KaVE.VS.FeedbackGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

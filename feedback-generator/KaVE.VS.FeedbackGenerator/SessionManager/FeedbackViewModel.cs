@@ -56,7 +56,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
 
             exporter.ExportStarted += () => SetBusy(Properties.UploadWizard.Export_BusyMessage);
             exporter.ExportEnded += SetIdle;
-            exporter.StatusChanged += msg => SetBusy(string.Format("{0} ({1})", Properties.UploadWizard.Export_BusyMessage, msg));
+            exporter.ExportProgressChanged += msg => SetBusy(string.Format("{0} ({1})", Properties.UploadWizard.Export_BusyMessage, msg));
         }
 
         private void OnLogCreated(ILog log)

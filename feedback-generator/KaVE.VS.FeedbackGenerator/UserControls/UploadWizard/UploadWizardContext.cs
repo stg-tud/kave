@@ -15,11 +15,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
@@ -79,7 +76,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             _exportWorker.RunWorkerCompleted += OnExportCompleted;
 
             UserProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
-
         }
 
         private void OnProgressChanged(object sender, ProgressChangedEventArgs progressChangedEventArgs)
@@ -114,8 +110,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             var worker = (BackgroundWorker) sender;
             _exportType = (UploadWizardControl.ExportType) args.Argument;
 
-            Action<string> reportExportStatusChange = exportStatus => worker.ReportProgress(0, exportStatus);
-            _exporter.StatusChanged += reportExportStatusChange;
+            Action<int> reportExportStatusChange = percentage => worker.ReportProgress(percentage, string.Format("{0}%", percentage));
+            _exporter.ExportProgressChanged += reportExportStatusChange;
 
             try
             {
@@ -126,7 +122,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             }
             finally
             {
-                _exporter.StatusChanged -= reportExportStatusChange;
+                _exporter.ExportProgressChanged -= reportExportStatusChange;
             }
         }
 

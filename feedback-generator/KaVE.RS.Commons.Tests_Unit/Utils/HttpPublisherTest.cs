@@ -15,173 +15,65 @@
  */
 
 using System;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using JetBrains.Annotations;
-using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.IO;
 using KaVE.RS.Commons.Utils;
-using Moq;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
     [TestFixture]
-    internal class HttpPublisherTest
+    internal class HttpPublisherTest : PublisherTestBase
     {
-        private const string FileContent = "arbitrary file content";
-        private MemoryStream _stream;
-
         private static readonly Uri ValidUri = new Uri("http://server");
 
-        private Mock<IIoUtils> _ioUtilsMock;
         private HttpPublisher _uut;
 
         [SetUp]
         public void SetUp()
         {
-            _ioUtilsMock = new Mock<IIoUtils>();
-            Registry.RegisterComponent(_ioUtilsMock.Object);
-            _uut = new HttpPublisher(ValidUri);
-            _stream = new MemoryStream();
-        }
-
-        [TearDown]
-        public void CleanUpRegistry()
-        {
-            Registry.Clear();
+            _uut = new HttpPublisher(ValidUri, TestEventCountPerUpload);
         }
 
         [Test]
-        public void ShouldInvokeTransferToCorrectUri()
+        public void UploadsEventsInPackages()
         {
-            var resp = CreateResponse(true);
-            SetupResponse(resp);
+            _uut.Publish(_userProfileEvent, TestEventSource(2*TestEventCountPerUpload + 1), () => { });
 
-            _uut.Publish(_stream);
-            _ioUtilsMock.Verify(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri));
+            Assert.AreEqual(3, _exportedPackages.Count);
+            Assert.AreEqual(TestEventCountPerUpload + 1, _exportedPackages[0].Count);
+            Assert.AreEqual(TestEventCountPerUpload + 1, _exportedPackages[1].Count);
+            Assert.AreEqual(2, _exportedPackages[2].Count);
         }
 
         [Test]
-        public void ShouldInvokeTransferWithCorrectData()
+        public void UploadsEventsInPackages_NoUserProfileEvent()
         {
-            HttpContent lastUploadedContent = null;
+            _uut.Publish(null, TestEventSource(2*TestEventCountPerUpload + 1), () => { });
 
-            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri)).Returns(
-                (HttpContent content, Uri uri) =>
-                {
-                    lastUploadedContent = content;
-                    return CreateResponse(true);
-                });
-
-            _uut.Publish(new MemoryStream(FileContent.AsBytes()));
-
-            var actual = ReadFirstContent(lastUploadedContent);
-            Assert.AreEqual(FileContent, actual);
+            Assert.AreEqual(3, _exportedPackages.Count);
+            Assert.AreEqual(TestEventCountPerUpload, _exportedPackages[0].Count);
+            Assert.AreEqual(TestEventCountPerUpload, _exportedPackages[1].Count);
+            Assert.AreEqual(1, _exportedPackages[2].Count);
         }
 
-        private const string TransferFailMessage = "Transfer war nicht möglich";
-
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = TransferFailMessage)]
-        public void ShouldFailIfTransferFails()
+        [Test]
+        public void AllSourceEventsArePublished()
         {
-            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri))
-                        .Throws(new AssertException(TransferFailMessage));
-            _uut.Publish(_stream);
+            var testEvents = TestEventSource(2*TestEventCountPerUpload + 1).ToList();
+            _uut.Publish(null, testEvents, () => { });
+
+            var exported = _exportedPackages.SelectMany(e => e).ToList();
+            CollectionAssert.AreEqual(testEvents, exported);
         }
 
-        [Test,
-         ExpectedException(typeof (AssertException),
-             ExpectedMessage = "Antwort des Servers enthält keine verwertbaren Informationen")]
-        public void ShouldFailIfMessageIsEmpty()
+        [Test]
+        public void ProgressCallsArePassedThrough()
         {
-            var resp = new HttpResponseMessage
-            {
-                Content = new StringContent("")
-            };
-            SetupResponse(resp);
+            const int expected = 8;
+            var count = 0;
+            _uut.Publish(null, TestEventSource(expected), () => count++);
 
-            _uut.Publish(_stream);
-        }
-
-        [Test,
-         ExpectedException(typeof (InvalidResponseException),
-             ExpectedMessage = "Antwort des Servers entspricht nicht dem erwarteten Format:\r\nXYZ")]
-        public void ShouldFailIfMessageCannotBeParsed()
-        {
-            var resp = new HttpResponseMessage
-            {
-                Content = new StringContent("XYZ")
-            };
-            SetupResponse(resp);
-
-            _uut.Publish(_stream);
-        }
-
-        [Test, ExpectedException(typeof (InvalidResponseException))]
-        public void ShouldFailIfMessageCannotBeParsed_verifyLog()
-        {
-            var resp = new HttpResponseMessage
-            {
-                Content = new StringContent("XYZ")
-            };
-            SetupResponse(resp);
-
-            _uut.Publish(_stream);
-        }
-
-        [Test,
-         ExpectedException(typeof (AssertException),
-             ExpectedMessage = "Server meldet eine fehlerhafte Anfrage:\r\nXYZ")]
-        public void ShouldFailIfStateIsNotOk()
-        {
-            var resp = CreateResponse(false, "XYZ");
-            SetupResponse(resp);
-
-            _uut.Publish(_stream);
-        }
-
-        private void SetupResponse(HttpResponseMessage resp)
-        {
-            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri))
-                        .Returns(resp);
-        }
-
-        private static HttpResponseMessage CreateResponse(bool isSuccessful, string message = null)
-        {
-            var state = isSuccessful ? "Ok" : "Fail";
-            var responseMessage = "";
-            if (message != null)
-            {
-                responseMessage = ",\"Message\": \"" + message + "\"";
-            }
-
-            var resp = new HttpResponseMessage
-            {
-                Content = new StringContent("{\"Status\": \"" + state + "\"" + responseMessage + "}")
-            };
-            return resp;
-        }
-
-        private static string ReadFirstContent([NotNull] HttpContent content)
-        {
-            // IsNotNull-Asserts are semantically equivalent to the corresponding IsInstanceOf-Assert but R# produces warnings otherwise
-            // IsInstanceOf-Asserts are kept, because if they fail the result is more informative
-            Assert.IsInstanceOf<MultipartFormDataContent>(content);
-            var multipartFormDataContent = content as MultipartFormDataContent;
-            Assert.IsNotNull(multipartFormDataContent);
-            Assert.AreEqual(1, multipartFormDataContent.Count());
-            var element = multipartFormDataContent.First();
-            Assert.IsInstanceOf<ByteArrayContent>(element);
-            var byteArrayContent = element as ByteArrayContent;
-            Assert.IsNotNull(byteArrayContent);
-
-            Assert.AreEqual("file", byteArrayContent.Headers.ContentDisposition.Name);
-            Assert.AreEqual("tmp.zip", byteArrayContent.Headers.ContentDisposition.FileName);
-
-            return byteArrayContent.ReadAsByteArrayAsync().Result.AsString();
+            Assert.AreEqual(expected, count);
         }
     }
 }

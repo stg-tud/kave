@@ -18,9 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using JetBrains;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils.Assertion;
@@ -54,6 +55,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         private InteractionRequestTestHelper<LinkNotification> _linkNotificationHelper;
         private TestDateUtils _testDateUtils;
         private Mock<IIoUtils> _mockIoUtils;
+        private Mock<IPublisherUtils> _mockPublisherUtils;
         private Mock<ILogger> _mockLogger;
         private ExportSettings _exportSettings;
         private UserProfileSettings _userSettings;
@@ -64,6 +66,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             _mockIoUtils = new Mock<IIoUtils>();
             Registry.RegisterComponent(_mockIoUtils.Object);
+
+            _mockPublisherUtils = new Mock<IPublisherUtils>();
+            Registry.RegisterComponent(_mockPublisherUtils.Object);
 
             _mockLogger = new Mock<ILogger>();
 
@@ -145,11 +150,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
                          .Callback(
                              () =>
                              {
-                                 _mockExporter.Raise(e => e.StatusChanged += null, "13%");
+                                 _mockExporter.Raise(e => e.ExportProgressChanged += null, 13);
                                  Thread.Sleep(10);
-                                 _mockExporter.Raise(e => e.StatusChanged += null, "42%");
+                                 _mockExporter.Raise(e => e.ExportProgressChanged += null, 42);
                                  Thread.Sleep(10);
-                                 _mockExporter.Raise(e => e.StatusChanged += null, "finishing");
+                                 _mockExporter.Raise(e => e.ExportProgressChanged += null, 100);
                              });
 
             var expected = new List<string>
@@ -157,7 +162,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
                 Properties.UploadWizard.Export_BusyMessage,
                 Properties.UploadWizard.Export_BusyMessage + " (13%)",
                 Properties.UploadWizard.Export_BusyMessage + " (42%)",
-                Properties.UploadWizard.Export_BusyMessage + " (finishing)"
+                Properties.UploadWizard.Export_BusyMessage + " (100%)"
             };
 
             var actual = new List<string>();
@@ -191,25 +196,34 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void ShouldUseUploadUrlFromSettingsForUpload()
         {
+            _mockPublisherUtils
+                .Setup(
+                    p =>
+                        p.WriteEventsToZipStream(
+                            It.IsAny<IEnumerable<IDEEvent>>(),
+                            It.IsAny<Stream>(),
+                            It.IsAny<Action>()))
+                .Returns((IEnumerable<IDEEvent> events, Stream stream, Action action) => events.Any());
+
             HttpPublisher httpPublisher = null;
-            _mockExporter.Setup(
-                exporter =>
-                    exporter.Export(It.IsAny<DateTime>(), It.IsAny<HttpPublisher>()))
-                         .Callback<DateTime, IPublisher>(
-                             (exportTime, publisher) => httpPublisher = (HttpPublisher) publisher);
+            _mockExporter
+                .Setup(exporter => exporter.Export(It.IsAny<DateTime>(), It.IsAny<HttpPublisher>()))
+                .Callback<DateTime, IPublisher>(
+                    (exportTime, publisher) => httpPublisher = (HttpPublisher) publisher);
 
             WhenExportIsExecuted(UploadWizardControl.ExportType.HttpUpload);
             try
             {
                 // There's currently no clean way to find out what Url is passed to the publisher. Therefore, we
-                // invoke the publisher and rely on that it calls IIoUtils.TransferByHttp and then fails because the
-                // utils return null.
-                httpPublisher.Publish(new MemoryStream());
+                // invoke the publisher and rely on that it calls IPublisherUtils.UploadEventsByHttp and then fails 
+                // because the utils return null.
+                httpPublisher.Publish(null, new List<IDEEvent> {new WindowEvent()}, () => { });
             }
             catch (NullReferenceException) {}
 
-            _mockIoUtils.Verify(
-                ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestUploadUrl)));
+            _mockPublisherUtils.Verify(
+                utils =>
+                    utils.UploadEventsByHttp(It.IsAny<IIoUtils>(), new Uri(TestUploadUrl), It.IsAny<MemoryStream>()));
         }
 
         [Test]

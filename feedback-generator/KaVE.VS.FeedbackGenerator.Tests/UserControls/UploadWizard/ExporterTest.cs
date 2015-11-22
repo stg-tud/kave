@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
-using JetBrains;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Model.Events.VisualStudio;
@@ -47,9 +46,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
         private IPublisher _publisher;
         private Exporter _sut;
-        private MemoryStream _lastPublishedStream;
+        private IList<IDEEvent> _publishedEvents;
         private IDataExportAnonymizer _anonymizer;
-        private IUserProfileEventGenerator _exportEventGenerator;
+        private IUserProfileEventGenerator _userProfileEventGenerator;
         private UserProfileEvent _userProfileEvent;
         private InMemoryLogManager _logManager;
         private static readonly DateTime SomeDate = DateTime.Today;
@@ -59,21 +58,38 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             _logManager = new InMemoryLogManager();
 
-            _lastPublishedStream = null;
+            _publishedEvents = null;
             _publisher = Mock.Of<IPublisher>();
-            Mock.Get(_publisher).Setup(p => p.Publish(It.IsAny<MemoryStream>())).Callback<MemoryStream>(
-                stream => { _lastPublishedStream = new MemoryStream(stream.ToArray()); });
+            Mock.Get(_publisher)
+                .Setup(
+                    p => p.Publish(It.IsAny<UserProfileEvent>(), It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<Action>()))
+                .Callback<UserProfileEvent, IEnumerable<IDEEvent>, Action>(
+                    (upe, events, callback) =>
+                    {
+                        callback();
+                        _publishedEvents = new List<IDEEvent>();
+                        // TODO: maybe make this a bit nicer with the prepend function
+                        if (upe != null)
+                        {
+                            _publishedEvents.Add(upe);
+                        }
+                        foreach (var e in events)
+                        {
+                            _publishedEvents.Add(e);
+                            callback();
+                        }
+                    });
 
             _anonymizer = Mock.Of<IDataExportAnonymizer>();
             Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns<IDEEvent>(ideEvent => ideEvent);
 
             _userProfileEvent = new UserProfileEvent {ProfileId = "p"};
 
-            _exportEventGenerator = Mock.Of<IUserProfileEventGenerator>();
-            Mock.Get(_exportEventGenerator).Setup(e => e.ShouldCreateEvent()).Returns(false);
-            Mock.Get(_exportEventGenerator).Setup(e => e.CreateEvent()).Returns(_userProfileEvent);
+            _userProfileEventGenerator = Mock.Of<IUserProfileEventGenerator>();
+            Mock.Get(_userProfileEventGenerator).Setup(e => e.ShouldCreateEvent()).Returns(false);
+            Mock.Get(_userProfileEventGenerator).Setup(e => e.CreateEvent()).Returns(_userProfileEvent);
 
-            _sut = new Exporter(_logManager, _anonymizer, _exportEventGenerator);
+            _sut = new Exporter(_logManager, _anonymizer, _userProfileEventGenerator);
         }
 
         [Test]
@@ -81,7 +97,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             WhenEverythingIsExported();
 
-            AssertNothingPublished();
+            Assert.IsNull(_publishedEvents);
         }
 
         [Test]
@@ -115,7 +131,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void PublishesProfileEvent()
         {
-            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+            Mock.Get(_userProfileEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
             var logEntries = TestEventFactory.SomeEvents(25);
             _logManager.Add(SomeDate, logEntries);
 
@@ -125,10 +141,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             Assert.AreEqual(26, numberOfEvents);
         }
 
-        [Test]
+        // TODO: Is this useful?
+        [Test, Ignore]
         public void PublishesProfileEventIfNoEvents()
         {
-            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+            Mock.Get(_userProfileEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
 
             var numberOfEvents = WhenEverythingIsExported();
 
@@ -139,29 +156,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void AppendsProfileEvent()
         {
-            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+            Mock.Get(_userProfileEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
             _logManager.Add(SomeDate, TestEventFactory.SomeEvents(3));
 
             WhenEverythingIsExported();
 
-            var actualEvents = GetLastExportEvents();
-            Assert.AreEqual(_userProfileEvent, actualEvents.Last());
-        }
-
-        [Test]
-        public void CreatesFileNamesFromEventIndexAndType()
-        {
-            _logManager.Add(
-                SomeDate,
-                TestEventFactory.Some<EditEvent>(),
-                TestEventFactory.Some<ErrorEvent>(),
-                TestEventFactory.Some<WindowEvent>());
-
-            WhenEverythingIsExported();
-
-            var zipFile = GetLastExport();
-            var actual = zipFile.EntryFileNames;
-            Assert.AreEqual(new[] {"0-EditEvent.json", "1-ErrorEvent.json", "2-WindowEvent.json"}, actual);
+            CollectionAssert.Contains(_publishedEvents, _userProfileEvent);
         }
 
         [Test]
@@ -218,22 +218,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             var logEntries = TestEventFactory.SomeEvents(4);
             _logManager.Add(SomeDate, logEntries);
-            var actual = new List<string>();
-            _sut.StatusChanged += actual.Add;
+            var actual = new List<int>();
+            _sut.ExportProgressChanged += actual.Add;
 
             WhenEverythingIsExported();
 
-            var expected = new List<string>
-            {
-                Properties.UploadWizard.FetchingEvents,
-                Properties.UploadWizard.WritingEvents.FormatEx(0),
-                Properties.UploadWizard.WritingEvents.FormatEx(25),
-                Properties.UploadWizard.WritingEvents.FormatEx(50),
-                Properties.UploadWizard.WritingEvents.FormatEx(75),
-                Properties.UploadWizard.WritingEvents.FormatEx(100),
-                Properties.UploadWizard.CompressingEvents,
-                Properties.UploadWizard.PublishingEvents
-            };
+            var expected = new List<int> {0, 25, 50, 75, 100};
             Assert.AreEqual(expected, actual);
         }
 
@@ -268,11 +258,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             return _sut.Export(DateTime.Now, _publisher);
         }
 
-        private void AssertNothingPublished()
-        {
-            Assert.IsNull(_lastPublishedStream);
-        }
-
         private void AssertPublishedEvents(params IDEEvent[] expectedEvents)
         {
             AssertPublishedEvents(expectedEvents.ToList());
@@ -280,13 +265,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
         private void AssertPublishedEvents(IEnumerable<IDEEvent> expectedEvents)
         {
-            var actualEvents = GetLastExportEvents();
-            CollectionAssert.AreEquivalent(expectedEvents, actualEvents);
-        }
-
-        private IEnumerable<IDEEvent> GetLastExportEvents()
-        {
-            return ReadEvents(GetLastExport());
+            CollectionAssert.AreEquivalent(expectedEvents, _publishedEvents);
         }
 
         private static IEnumerable<IDEEvent> ReadEvents(ZipFile zipFile)
@@ -300,17 +279,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
                     yield return json.ParseJsonTo<IDEEvent>();
                 }
             }
-        }
-
-        private ZipFile GetLastExport()
-        {
-            Assert.NotNull(_lastPublishedStream, "nothing published");
-            var tempFileName = Path.GetTempFileName();
-            using (var fileStream = File.Open(tempFileName, FileMode.Create))
-            {
-                _lastPublishedStream.CopyTo(fileStream);
-            }
-            return new ZipFile(tempFileName);
         }
     }
 }

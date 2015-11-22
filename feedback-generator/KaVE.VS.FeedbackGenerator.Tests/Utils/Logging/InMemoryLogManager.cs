@@ -105,7 +105,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 
             public int ApproximateNumberOfEvents
             {
-                get { throw new NotImplementedException(); }
+                get { return _entries.Count; }
             }
 
             public bool IsEmpty()

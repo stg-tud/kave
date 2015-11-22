@@ -15,78 +15,59 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
-using JetBrains;
 using JetBrains.Annotations;
-using JetBrains.Util;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO;
-using KaVE.RS.Commons.Properties;
-using Newtonsoft.Json;
 
 namespace KaVE.RS.Commons.Utils
 {
     public class HttpPublisher : IPublisher
     {
+        private readonly int _eventCountPerUpload;
         private readonly Uri _hostAddress;
         private readonly IIoUtils _ioUtils;
+        private readonly IPublisherUtils _publisherUtils;
 
-        public HttpPublisher([NotNull] Uri hostAddress)
+        public HttpPublisher([NotNull] Uri hostAddress, int eventCountPerUpload = 1000)
         {
             _hostAddress = hostAddress;
             _ioUtils = Registry.GetComponent<IIoUtils>();
+            _publisherUtils = Registry.GetComponent<IPublisherUtils>();
+            _eventCountPerUpload = eventCountPerUpload;
         }
 
-        public void Publish(MemoryStream stream)
+        public void Publish(UserProfileEvent upe,
+            IEnumerable<IDEEvent> events,
+            Action progress)
         {
-            Asserts.That(stream.CanRead);
-            var content = CreateMultipartContent(stream, "tmp.zip");
-            var response = _ioUtils.TransferByHttp(content, _hostAddress);
-            var json = response.Content.ReadAsStringAsync().Result;
+            var en = events.GetEnumerator();
 
-            Asserts.Not(json.IsNullOrEmpty(), Messages.ServerResponseEmpty);
-
-            ExportResult res;
-            try
+            bool eventsWereWritten;
+            do
             {
-                res = Deserialize(json);
+                var eventsToExport = Next(_eventCountPerUpload, en).PrependWith(upe);
+
+                using (var stream = new MemoryStream())
+                {
+                    eventsWereWritten = _publisherUtils.WriteEventsToZipStream(eventsToExport, stream, progress);
+                    if (eventsWereWritten)
+                    {
+                        _publisherUtils.UploadEventsByHttp(_ioUtils, _hostAddress, stream);
+                    }
+                }
+            } while (eventsWereWritten);
+        }
+
+        private static IEnumerable<IDEEvent> Next(int max, IEnumerator<IDEEvent> en)
+        {
+            for (var i = 0; i < max && en.MoveNext(); i++)
+            {
+                yield return en.Current;
             }
-            catch (JsonException e)
-            {
-                throw new InvalidResponseException(Messages.ServerResponseIncorrentFormat.FormatEx(json), e);
-            }
-
-            Asserts.NotNull(res, Messages.ServerResponseIncompatible);
-            Asserts.That(res.Status == State.Ok, Messages.ServerResponseRequestFailure, res.Message);
-        }
-
-        private static HttpContent CreateMultipartContent([NotNull] MemoryStream stream, [NotNull] string name)
-        {
-            return new MultipartFormDataContent
-            {
-                {new ByteArrayContent(stream.ToArray()), "file", name}
-            };
-        }
-
-        private static ExportResult Deserialize(string json)
-        {
-            return JsonConvert.DeserializeObject<ExportResult>(json);
-        }
-
-        internal enum State
-        {
-            Ok,
-            Fail
-        }
-
-        private class ExportResult
-        {
-            [UsedImplicitly]
-            public State Status;
-
-            [UsedImplicitly]
-            public string Message;
         }
     }
 }
