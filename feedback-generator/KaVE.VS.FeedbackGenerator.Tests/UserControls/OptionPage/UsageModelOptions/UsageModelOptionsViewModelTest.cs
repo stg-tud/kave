@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Threading;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using Moq;
 using NUnit.Framework;
@@ -166,30 +165,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                 Mock.Get(row).Verify(r => r.IsRemoveable);
                 Mock.Get(row).Verify(r => r.RemoveModel());
             }
-        }
-
-        [Test]
-        public void ShouldSetSettingsOnSave()
-        {
-            const string newUri = "http://www.kave.cc/";
-            var testSettings = new ModelStoreSettings();
-            _uut.ModelUri = newUri;
-
-            _uut.SaveSettings(testSettings);
-
-            Assert.AreEqual(newUri, testSettings.ModelStoreUri);
-        }
-
-        [Test]
-        public void ShouldNotSetInvalidSettingsOnSave()
-        {
-            const string invalidPath = "invalid path";
-            var testSettings = new ModelStoreSettings();
-            _uut.ModelPath = invalidPath;
-
-            _uut.SaveSettings(testSettings);
-
-            Assert.AreEqual(new ModelStoreSettings().ModelStorePath, testSettings.ModelStorePath);
         }
 
         private static IUsageModelsTableRow GenerateRowMock()

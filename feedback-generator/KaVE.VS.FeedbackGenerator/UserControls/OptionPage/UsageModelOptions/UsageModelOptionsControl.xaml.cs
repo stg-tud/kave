@@ -15,12 +15,9 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.Windows.Controls;
 using Avalon.Windows.Dialogs;
 using JetBrains.Application.DataContext;
-using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
@@ -123,17 +120,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public bool OnOk()
         {
-            var viewModel = (IUsageModelOptionsViewModel) DataContext;
-            viewModel.SaveSettings(_modelStoreSettings);
+            var pathIsValid = UsageModelsPathValidationRule.Validate(ModelStorePathTextBox.Text).IsValid;
+            if (pathIsValid)
+            {
+                _modelStoreSettings.ModelStorePath = ModelStorePathTextBox.Text;
+            }
+
+            var uriIsValid = UsageModelsUriValidationRule.Validate(ModelStoreUriTextBox.Text).IsValid;
+            if (uriIsValid)
+            {
+                _modelStoreSettings.ModelStoreUri = ModelStoreUriTextBox.Text;
+            }
+
             _settingsStore.SetSettings(_modelStoreSettings);
-            return ValidatePage() || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
+            return (pathIsValid && uriIsValid) ||
+                   _messageBoxCreator.ShowYesNo(
+                       Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
         }
 
         public bool ValidatePage()
         {
-            var pathIsValid = UsageModelsPathValidationRule.Validate(ModelStorePathTextBox.Text).IsValid;
-            var uriIsValid = UsageModelsUriValidationRule.Validate(ModelStoreUriTextBox.Text).IsValid;
-            return pathIsValid && uriIsValid;
+            return true;
         }
 
         public EitherControl Control

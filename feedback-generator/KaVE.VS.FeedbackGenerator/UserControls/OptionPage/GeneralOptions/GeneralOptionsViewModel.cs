@@ -18,12 +18,19 @@ using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
-using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 {
     public class GeneralOptionsViewModel : ViewModelBase<GeneralOptionsViewModel>
     {
+        public GeneralOptionsViewModel([NotNull] ISettingsStore settingsStore)
+        {
+            _uploadUrl = settingsStore.GetSettings<ExportSettings>().UploadUrl;
+            _webAccessPrefix = settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
+        }
+
+        #region general options settings properties
+
         public string UploadUrl
         {
             get { return _uploadUrl; }
@@ -48,25 +55,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
         private string _webAccessPrefix;
 
-        public GeneralOptionsViewModel([NotNull] ISettingsStore settingsStore)
-        {
-            _uploadUrl = settingsStore.GetSettings<ExportSettings>().UploadUrl;
-            _webAccessPrefix = settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
-        }
-
-        public void SaveSettings(ExportSettings settings)
-        {
-            var urlIsValid = UploadUrlValidationRule.Validate(UploadUrl).IsValid;
-            if (urlIsValid)
-            {
-                settings.UploadUrl = UploadUrl;
-            }
-
-            var prefixIsValid = UploadUrlValidationRule.Validate(WebAccessPrefix).IsValid;
-            if (prefixIsValid)
-            {
-                settings.WebAccessPrefix = WebAccessPrefix;
-            }
-        }
+        #endregion
     }
 }

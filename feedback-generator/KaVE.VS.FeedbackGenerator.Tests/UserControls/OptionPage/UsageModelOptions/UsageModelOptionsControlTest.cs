@@ -42,7 +42,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
 
         private IUsageModelOptionsViewModel _viewModel;
         private ModelStoreSettings _testSettings;
-        
+
         #region command mocks
 
         private readonly ICommand<IUsageModelsTableRow> _installModelCommand = Mock.Of<ICommand<IUsageModelsTableRow>>();
@@ -257,8 +257,25 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         [Test]
         public void ShouldSetModelStoreSettingsOnOk()
         {
+            // TODO mock verification to make sure the validation is successful for these settings
+            const string testUri = "http://www.kave.cc/";
+            _sut.ModelStoreUriTextBox.Text = testUri;
+
             _sut.OnOk();
-            Mock.Get(_viewModel).Verify(viewModel => viewModel.SaveSettings(_testSettings), Times.Once);
+
+            Assert.AreEqual(_testSettings.ModelStoreUri, testUri);
+            MockSettingsStore.Verify(store => store.SetSettings(_testSettings));
+        }
+
+        [Test]
+        public void ShouldNotSetInvalidSettingsOnOk()
+        {
+            // TODO mock verification to make sure the validation is not successful for these settings
+            _sut.ModelStorePathTextBox.Text = "invalid path";
+
+            _sut.OnOk();
+
+            Assert.AreEqual(_testSettings.ModelStorePath, new ModelStoreSettings().ModelStorePath);
             MockSettingsStore.Verify(store => store.SetSettings(_testSettings));
         }
 

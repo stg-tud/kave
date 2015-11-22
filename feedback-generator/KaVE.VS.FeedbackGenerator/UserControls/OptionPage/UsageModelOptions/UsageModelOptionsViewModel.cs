@@ -25,10 +25,8 @@ using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.SessionManager;
-using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 using DelegateCommand = KaVE.VS.FeedbackGenerator.SessionManager.Presentation.DelegateCommand;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
@@ -37,7 +35,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
     {
         string ModelPath { get; set; }
         string ModelUri { get; set; }
-        void SaveSettings(ModelStoreSettings settings);
 
         IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; }
         ICommand<object> InstallAllModelsCommand { get; }
@@ -102,23 +99,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private string _modelUri;
 
-        public void SaveSettings(ModelStoreSettings settings)
-        {
-            var pathIsValid = UsageModelsPathValidationRule.Validate(ModelPath).IsValid;
-            if (pathIsValid)
-            {
-                settings.ModelStorePath = ModelPath;
-            }
-
-            var uriIsValid = UsageModelsUriValidationRule.Validate(ModelUri).IsValid;
-            if (uriIsValid)
-            {
-                settings.ModelStoreUri = ModelUri;
-            }
-        }
-
         #endregion
-
+        
         #region Usage models management
 
         public IEnumerable<IUsageModelsTableRow> UsageModelsTableContent

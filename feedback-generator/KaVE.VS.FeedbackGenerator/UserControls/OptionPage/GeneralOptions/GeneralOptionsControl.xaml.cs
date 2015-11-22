@@ -15,9 +15,7 @@
  */
 
 using System.Windows;
-using System.Windows.Controls;
 using JetBrains.Application.DataContext;
-using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.CrossFramework;
@@ -106,17 +104,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
         public bool OnOk()
         {
-            var viewModel = (GeneralOptionsViewModel) DataContext;
-            viewModel.SaveSettings(_exportSettings);
+            var uploadUrlIsValid = UploadUrlValidationRule.Validate(UploadUrlTextBox.Text).IsValid;
+            if (uploadUrlIsValid)
+            {
+                _exportSettings.UploadUrl = UploadUrlTextBox.Text;
+            }
+
+            var prefixIsValid = UploadUrlValidationRule.Validate(WebPraefixTextBox.Text).IsValid;
+            if (prefixIsValid)
+            {
+                _exportSettings.WebAccessPrefix = WebPraefixTextBox.Text;
+            }
+
             _settingsStore.SetSettings(_exportSettings);
-            return ValidatePage() || _messageBoxCreator.ShowYesNo(Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
+            return (uploadUrlIsValid && prefixIsValid) ||
+                   _messageBoxCreator.ShowYesNo(
+                       Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
         }
 
         public bool ValidatePage()
         {
-            var uploadUrlIsValid = UploadUrlValidationRule.Validate(UploadUrlTextBox.Text).IsValid;
-            var prefixIsValid = UploadUrlValidationRule.Validate(WebPraefixTextBox.Text).IsValid;
-            return uploadUrlIsValid && prefixIsValid;
+            return true;
         }
 
         public EitherControl Control
