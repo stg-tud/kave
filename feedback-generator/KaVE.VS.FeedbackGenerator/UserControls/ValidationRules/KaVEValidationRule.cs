@@ -16,30 +16,28 @@
 
 using System.Globalization;
 using System.Windows.Controls;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
-    public class WebAccessPrefixValidationRule : KaVEValidationRule
+    public abstract class KaVEValidationRule : ValidationRule
     {
-        public WebAccessPrefixValidationRule() : base(Properties.SessionManager.Options_Export_WebAccessPraefix) {}
+        public string RuleTarget { get; private set; }
 
-        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        protected KaVEValidationRule(string ruleTarget)
         {
-            if (value == null)
-            {
-                return Fail(ValidationErrorMessages.ValueIsNull);
-            }
+            RuleTarget = ruleTarget;
+        }
 
-            var prefix = value.ToString();
-            if (prefix.Equals(""))
-            {
-                return Success();
-            }
+        public abstract override ValidationResult Validate(object value, CultureInfo cultureInfo);
 
-            return UrlValidation.ValidateUrl(prefix)
-                ? Success()
-                : Fail(ValidationErrorMessages.GeneralOptions_InvalidPrefix);
+        protected ValidationResult Success()
+        {
+            return new ValidationResult(true, "");
+        }
+
+        protected ValidationResult Fail(string message)
+        {
+            return new ValidationResult(false, string.Format("{0}: {1}", RuleTarget, message ?? ""));
         }
     }
 }

@@ -60,6 +60,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.ValidationRules
         }
 
         [Test]
+        public void ShouldNotAcceptNull()
+        {
+            Assert.IsFalse(_uut.Validate(null, CultureInfo.InvariantCulture).IsValid);
+        }
+
+        [Test]
         public void ShouldAcceptEmptyString()
         {
             Assert.IsTrue(_uut.Validate("", CultureInfo.InvariantCulture).IsValid);

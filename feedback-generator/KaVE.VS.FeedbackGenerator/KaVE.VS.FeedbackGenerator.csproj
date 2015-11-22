@@ -298,8 +298,14 @@
     <Compile Include="UserControls\OptionPage\UsageModelOptions\AsyncCommand.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelMergingStrategy.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelsTableRow.cs" />
+    <Compile Include="UserControls\ValidationRules\KaVEValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\UsageModelsPathValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\UsageModelsUriValidationRule.cs" />
+    <Compile Include="UserControls\ValidationRules\ValidationErrorMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ValidationErrorMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Logging\LogFileUtils.cs" />
     <Compile Include="Utils\MessageBoxCreator.cs" />
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsMessages.Designer.cs">
@@ -523,6 +529,10 @@
     <EmbeddedResource Include="UserControls\UserProfile\UserProfileMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UserProfileMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ValidationRules\ValidationErrorMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ValidationErrorMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

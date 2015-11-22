@@ -208,6 +208,7 @@
     <Compile Include="UserControls\UploadWizard\UserProfile\UserProfileWindowTest.cs" />
     <Compile Include="UserControls\UserProfile\CheckedUserProfileControlTest.cs" />
     <Compile Include="UserControls\UserProfile\UserProfileControlTest.cs" />
+    <Compile Include="UserControls\ValidationRules\KaVEValidationRuleTest.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRuleTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
     <Compile Include="Generators\EventLoggerTest.cs" />

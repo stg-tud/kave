@@ -21,24 +21,33 @@ using System.Windows.Controls;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
-    public class MailValidationRule : ValidationRule
+    public class MailValidationRule : KaVEValidationRule
     {
-        private const string ErrorMessage = "Please enter a valid mail address.";
+        public MailValidationRule() : base(ValidationErrorMessages.UserProfile_InvalidMail) {}
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
+            if (value == null)
+            {
+                return Fail(ValidationErrorMessages.ValueIsNull);
+            }
+
+            var mail = value.ToString();
+            if (mail.Equals(""))
+            {
+                return Success();
+            }
+
             try
             {
-                if (value != null && !value.Equals(""))
-                {
-                    // ReSharper disable once ObjectCreationAsStatement
-                    new MailAddress(value.ToString());
-                }
-                return new ValidationResult(true, null);
+                // ReSharper disable once ObjectCreationAsStatement
+                new MailAddress(mail);
+
+                return Success();
             }
             catch (FormatException)
             {
-                return new ValidationResult(false, ErrorMessage);
+                return Fail(ValidationErrorMessages.UserProfile_InvalidMail);
             }
         }
     }

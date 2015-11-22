@@ -20,18 +20,21 @@ using System.Windows.Controls;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
-    internal class UsageModelsUriValidationRule : ValidationRule
+    internal class UsageModelsUriValidationRule : KaVEValidationRule
     {
+        public UsageModelsUriValidationRule() : base(Properties.SessionManager.Options_ModelUri) {}
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            var valueString = value as string;
-            if (valueString == null)
+            if (value == null)
             {
-                return new ValidationResult(false, null);
+                return Fail(ValidationErrorMessages.ValueIsNull);
             }
+
+            var valueString = value.ToString();
             if (valueString.Equals(""))
             {
-                return new ValidationResult(true, null);
+                return Success();
             }
 
             Uri uri;
@@ -41,7 +44,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
             }
             catch (UriFormatException)
             {
-                return new ValidationResult(false, null);
+                return Fail(ValidationErrorMessages.UsageModelsOptions_InvalidUri);
             }
 
             if (uri.Scheme == Uri.UriSchemeFile)
@@ -51,7 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 
             if (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
             {
-                return new ValidationResult(true, null);
+                return Success();
             }
 
             return new ValidationResult(false, null);

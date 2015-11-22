@@ -20,28 +20,34 @@ using System.Windows.Controls;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
-    internal class UsageModelsPathValidationRule : ValidationRule
+    internal class UsageModelsPathValidationRule : KaVEValidationRule
     {
+        public UsageModelsPathValidationRule() : base(Properties.SessionManager.Options_ModelPath) {}
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            var path = value as string;
-            if (path == null)
+            if (value == null)
             {
-                return new ValidationResult(false, null);
+                return Fail(ValidationErrorMessages.ValueIsNull);
             }
 
+            var path = value.ToString();
             if (path.Equals(""))
             {
-                return new ValidationResult(true, null);
+                return Success();
             }
 
-            if (!Directory.Exists(path) || !File.Exists(Path.Combine(path, "index.json.gz")))
+            if (!Directory.Exists(path))
             {
-                return new ValidationResult(false, null);
+                return Fail(ValidationErrorMessages.FolderDoesntExist);
             }
-            
 
-            return new ValidationResult(true, null);
+            if (!File.Exists(Path.Combine(path, "index.json.gz")))
+            {
+                return Fail(ValidationErrorMessages.UsageModelsOptions_NoIndexFile);
+            }
+
+            return Success();
         }
 
         public static ValidationResult Validate(object value)

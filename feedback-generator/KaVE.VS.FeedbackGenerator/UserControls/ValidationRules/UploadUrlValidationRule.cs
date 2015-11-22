@@ -20,16 +20,26 @@ using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
-    public class UploadUrlValidationRule : ValidationRule
+    public class UploadUrlValidationRule : KaVEValidationRule
     {
+        public UploadUrlValidationRule() : base(Properties.SessionManager.Options_Export_UploadUrl) {}
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            if (value != null && !value.Equals(""))
+            if (value == null)
             {
-                var uriIsValid = UrlValidation.ValidateUrl(value.ToString());
-                return new ValidationResult(uriIsValid, null);
+                return Fail(ValidationErrorMessages.ValueIsNull);
             }
-            return new ValidationResult(false, null);
+
+            var url = value.ToString();
+            if (url.Equals(""))
+            {
+                return Fail(ValidationErrorMessages.ValueIsEmptyString);
+            }
+
+            return UrlValidation.ValidateUrl(url)
+                ? Success()
+                : Fail(ValidationErrorMessages.GeneralOptions_InvalidUploadURL);
         }
 
         public static ValidationResult Validate(object value)
