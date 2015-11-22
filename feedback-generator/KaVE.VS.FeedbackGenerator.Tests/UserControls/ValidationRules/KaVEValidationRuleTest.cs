@@ -56,7 +56,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.ValidationRules
             KaVEValidationRuleTestImpl.ValidationSuccessful = false;
             KaVEValidationRuleTestImpl.ErrorMessage = errorMessage;
             Assert.AreEqual(
-                TestRuleTarget + ": " + errorMessage,
+                errorMessage,
                 new KaVEValidationRuleTestImpl().Validate(new object(), CultureInfo.InvariantCulture).ErrorContent);
         }
 
@@ -64,8 +64,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.ValidationRules
         {
             public static bool ValidationSuccessful;
             public static string ErrorMessage;
-
-            public KaVEValidationRuleTestImpl() : base(TestRuleTarget) {}
 
             public override ValidationResult Validate(object value, CultureInfo cultureInfo)
             {

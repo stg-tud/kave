@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Text;
 using System.Windows;
 using Avalon.Windows.Dialogs;
 using JetBrains.Application.DataContext;
@@ -24,7 +25,7 @@ using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -48,6 +49,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         private readonly IActionExecutor _actionExecutor;
         private readonly DataContexts _dataContexts;
         private readonly ModelStoreSettings _modelStoreSettings;
+
         private readonly IMessageBoxCreator _messageBoxCreator;
 
         public UsageModelOptionsControl([NotNull] Lifetime lifetime,
@@ -60,13 +62,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         {
             _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
-            _settingsStore = settingsStore;
             _actionExecutor = actionExecutor;
+            _settingsStore = settingsStore;
             _dataContexts = dataContexts;
+
             InitializeComponent();
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
-
+            
             DataContext = usageModelOptionsViewModel;
             ModelStorePathTextBox.Text = _modelStoreSettings.ModelStorePath;
             ModelStoreUriTextBox.Text = _modelStoreSettings.ModelStoreUri;
@@ -120,22 +123,41 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         public bool OnOk()
         {
-            var pathIsValid = UsageModelsPathValidationRule.Validate(ModelStorePathTextBox.Text).IsValid;
-            if (pathIsValid)
+            var errorMessage = new StringBuilder();
+
+            var pathValidationResult = UsageModelsPathValidationRule.Validate(ModelStorePathTextBox.Text);
+            if (pathValidationResult.IsValid)
             {
                 _modelStoreSettings.ModelStorePath = ModelStorePathTextBox.Text;
             }
+            else
+            {
+                errorMessage.AppendLine(
+                    ValidationErrorMessage(
+                        Properties.SessionManager.Options_ModelPath,
+                        pathValidationResult.ErrorContent));
+            }
 
-            var uriIsValid = UsageModelsUriValidationRule.Validate(ModelStoreUriTextBox.Text).IsValid;
-            if (uriIsValid)
+            var uriValidationResult = UsageModelsUriValidationRule.Validate(ModelStoreUriTextBox.Text);
+            if (uriValidationResult.IsValid)
             {
                 _modelStoreSettings.ModelStoreUri = ModelStoreUriTextBox.Text;
             }
+            else
+            {
+                errorMessage.AppendLine(
+                    ValidationErrorMessage(Properties.SessionManager.Options_ModelUri, uriValidationResult.ErrorContent));
+            }
 
             _settingsStore.SetSettings(_modelStoreSettings);
-            return (pathIsValid && uriIsValid) ||
-                   _messageBoxCreator.ShowYesNo(
-                       Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
+
+            if (!pathValidationResult.IsValid || !uriValidationResult.IsValid)
+            {
+                _messageBoxCreator.ShowError(errorMessage.ToString());
+                return false;
+            }
+
+            return true;
         }
 
         public bool ValidatePage()
@@ -151,6 +173,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         public string Id
         {
             get { return PID; }
+        }
+
+        private static string ValidationErrorMessage(string invalidItemName, object errorContent)
+        {
+            return invalidItemName + ": " + errorContent;
         }
     }
 }

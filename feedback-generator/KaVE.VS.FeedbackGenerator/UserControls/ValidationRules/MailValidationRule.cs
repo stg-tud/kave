@@ -23,8 +23,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     public class MailValidationRule : KaVEValidationRule
     {
-        public MailValidationRule() : base(ValidationErrorMessages.UserProfile_InvalidMail) {}
-
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (value == null)

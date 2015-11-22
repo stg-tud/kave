@@ -22,8 +22,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     internal class UsageModelsPathValidationRule : KaVEValidationRule
     {
-        public UsageModelsPathValidationRule() : base(Properties.SessionManager.Options_ModelPath) {}
-
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (value == null)
@@ -52,7 +50,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 
         public static ValidationResult Validate(object value)
         {
-            return new UsageModelsUriValidationRule().Validate(value, CultureInfo.InvariantCulture);
+            return new UsageModelsPathValidationRule().Validate(value, CultureInfo.InvariantCulture);
         }
     }
 }

@@ -279,4 +279,7 @@
   <data name="Options_InvalidChangeDiscardConfirmationDialog" xml:space="preserve">
     <value>Some changes are invalid and will be discarded. Close anyway?</value>
   </data>
+  <data name="MessageBoxCaption" xml:space="preserve">
+    <value>KaVE Project</value>
+  </data>
 </root>

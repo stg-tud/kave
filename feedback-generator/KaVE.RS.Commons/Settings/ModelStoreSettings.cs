@@ -19,16 +19,13 @@ using JetBrains.UsageStatistics;
 
 namespace KaVE.RS.Commons.Settings
 {
-    namespace KaVE.RS.Commons.Settings
+    [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
+    public class ModelStoreSettings
     {
-        [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
-        public class ModelStoreSettings
-        {
-            [SettingsEntry(@"", "Path to KaVE models")]
-            public string ModelStorePath;
+        [SettingsEntry("", "Path to KaVE models")]
+        public string ModelStorePath;
 
-            [SettingsEntry(@"", "Remote KaVE models")]
-            public string ModelStoreUri;
-        }
+        [SettingsEntry("", "Remote KaVE models")]
+        public string ModelStoreUri;
     }
 }

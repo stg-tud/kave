@@ -24,7 +24,7 @@ using System.Windows.Input;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils.Reflection;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -280,23 +280,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
-        public void ShouldNotCloseWithInvalidChangesIfUserAnswersNo()
+        public void ShouldNotCloseWithInvalidChanges()
         {
             _sut.ModelStorePathTextBox.Text = "invalid path";
-
-            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(false);
 
             Assert.IsFalse(_sut.OnOk());
-        }
-
-        [Test]
-        public void ShouldCloseWithInvalidChangesIfUserAnswersYes()
-        {
-            _sut.ModelStorePathTextBox.Text = "invalid path";
-
-            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(true);
-
-            Assert.IsTrue(_sut.OnOk());
+            MockMessageBoxCreator.Verify(messageBox => messageBox.ShowError(It.IsAny<string>()), Times.Once);
         }
 
         private void SetCommandIsRunning(bool value)

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Text;
 using System.Windows;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
@@ -104,22 +105,43 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
         public bool OnOk()
         {
-            var uploadUrlIsValid = UploadUrlValidationRule.Validate(UploadUrlTextBox.Text).IsValid;
-            if (uploadUrlIsValid)
+            var errorMessage = new StringBuilder();
+
+            var uploadUrlValidationResult = UploadUrlValidationRule.Validate(UploadUrlTextBox.Text);
+            if (uploadUrlValidationResult.IsValid)
             {
                 _exportSettings.UploadUrl = UploadUrlTextBox.Text;
             }
+            else
+            {
+                errorMessage.AppendLine(
+                    ValidationErrorMessage(
+                        Properties.SessionManager.Options_Export_UploadUrl,
+                        uploadUrlValidationResult.ErrorContent));
+            }
 
-            var prefixIsValid = UploadUrlValidationRule.Validate(WebPraefixTextBox.Text).IsValid;
-            if (prefixIsValid)
+            var prefixValidationResult = WebAccessPrefixValidationRule.Validate(WebPraefixTextBox.Text);
+            if (prefixValidationResult.IsValid)
             {
                 _exportSettings.WebAccessPrefix = WebPraefixTextBox.Text;
             }
+            else
+            {
+                errorMessage.AppendLine(
+                    ValidationErrorMessage(
+                        Properties.SessionManager.Options_Export_WebAccessPraefix,
+                        prefixValidationResult.ErrorContent));
+            }
 
             _settingsStore.SetSettings(_exportSettings);
-            return (uploadUrlIsValid && prefixIsValid) ||
-                   _messageBoxCreator.ShowYesNo(
-                       Properties.SessionManager.Options_InvalidChangeDiscardConfirmationDialog);
+
+            if (!uploadUrlValidationResult.IsValid || !prefixValidationResult.IsValid)
+            {
+                _messageBoxCreator.ShowError(errorMessage.ToString());
+                return false;
+            }
+
+            return true;
         }
 
         public bool ValidatePage()
@@ -135,6 +157,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
         public string Id
         {
             get { return PID; }
+        }
+
+        private static string ValidationErrorMessage(string invalidItemName, object errorContent)
+        {
+            return invalidItemName + ": " + errorContent;
         }
     }
 }

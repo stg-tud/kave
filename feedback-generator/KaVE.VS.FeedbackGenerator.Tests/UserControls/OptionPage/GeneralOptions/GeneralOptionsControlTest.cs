@@ -139,27 +139,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
         }
 
         [Test]
-        public void ShouldNotCloseWithUnsavedChangesIfUserAnswersNo()
+        public void ShouldNotCloseWithUnsavedChanges()
         {
-            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(false);
             const string invalidUrl = "invalid url";
             const string invalidPrefix = "invalid prefix";
             _sut.UploadUrlTextBox.Text = invalidUrl;
             _sut.WebPraefixTextBox.Text = invalidPrefix;
 
             Assert.IsFalse(_sut.OnOk());
-        }
-
-        [Test]
-        public void ShouldCloseWithUnsavedChangesIfUserAnswersYes()
-        {
-            MockMessageBoxCreator.Setup(box => box.ShowYesNo(It.IsAny<string>())).Returns(true);
-            const string invalidUrl = "invalid url";
-            const string invalidPrefix = "invalid prefix";
-            _sut.UploadUrlTextBox.Text = invalidUrl;
-            _sut.WebPraefixTextBox.Text = invalidPrefix;
-
-            Assert.IsTrue(_sut.OnOk());
+            MockMessageBoxCreator.Verify(messageBox => messageBox.ShowError(It.IsAny<string>()), Times.Once);
         }
     }
 }

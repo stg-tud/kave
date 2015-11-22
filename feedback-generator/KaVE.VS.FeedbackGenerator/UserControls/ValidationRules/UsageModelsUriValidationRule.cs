@@ -22,8 +22,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     internal class UsageModelsUriValidationRule : KaVEValidationRule
     {
-        public UsageModelsUriValidationRule() : base(Properties.SessionManager.Options_ModelUri) {}
-
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (value == null)

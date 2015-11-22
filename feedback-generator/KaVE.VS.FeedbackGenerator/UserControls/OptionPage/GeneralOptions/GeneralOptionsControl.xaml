@@ -21,9 +21,9 @@ limitations under the License.
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
              xmlns:validationRules="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValidationRules"
-             xmlns:generalOptions="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions">
+             xmlns:generalOptions="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions"
+             xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties">
     <ScrollViewer>
         <StackPanel Margin="5,5,5,5">
             <Grid>
@@ -38,7 +38,7 @@ limitations under the License.
 
                 <!-- upload URL-->
                 <Label Grid.Column="0" Grid.Row="0"
-                       Content="{x:Static root:Properties.SessionManager.Options_Export_UploadUrl}"
+                       Content="{x:Static properties:SessionManager.Options_Export_UploadUrl}"
                        Margin="0,0,0,0" />
                 <TextBox Grid.Column="1" Grid.Row="0" Name="UploadUrlTextBox"
                          VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0">
@@ -51,7 +51,7 @@ limitations under the License.
 
                 <!-- web prefix-->
                 <Label Grid.Column="0" Grid.Row="1"
-                       Content="{x:Static root:Properties.SessionManager.Options_Export_WebAccessPraefix}"
+                       Content="{x:Static properties:SessionManager.Options_Export_WebAccessPraefix}"
                        Margin="0,0,0,0" />
                 <TextBox Grid.Column="1" Grid.Row="1" Name="WebPraefixTextBox"
                          VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0">

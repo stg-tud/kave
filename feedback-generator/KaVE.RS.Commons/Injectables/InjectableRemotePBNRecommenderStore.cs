@@ -18,7 +18,6 @@ using JetBrains.Application;
 using KaVE.Commons.Utils.CodeCompletion.Impl.Stores;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils.CodeCompletion;
 
 namespace KaVE.RS.Commons.Injectables

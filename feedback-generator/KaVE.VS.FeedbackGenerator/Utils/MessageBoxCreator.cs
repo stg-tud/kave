@@ -24,12 +24,19 @@ namespace KaVE.VS.FeedbackGenerator.Utils
     {
         public bool ShowYesNo(string message)
         {
-            return MessageBox.ShowYesNo(message);
+            return MessageBox.ShowYesNo(message, Properties.SessionManager.MessageBoxCaption);
+        }
+
+        public void ShowError(string message)
+        {
+            MessageBox.ShowError(message, Properties.SessionManager.MessageBoxCaption);
         }
     }
 
     public interface IMessageBoxCreator
     {
         bool ShowYesNo(string message);
+
+        void ShowError(string message);
     }
 }

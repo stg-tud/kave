@@ -22,8 +22,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     public class UploadUrlValidationRule : KaVEValidationRule
     {
-        public UploadUrlValidationRule() : base(Properties.SessionManager.Options_Export_UploadUrl) {}
-
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (value == null)

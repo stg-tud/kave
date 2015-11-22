@@ -16,13 +16,11 @@
 
 using JetBrains.Application.DataContext;
 using KaVE.RS.Commons.Settings;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
-using Moq.Language.Flow;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Settings

@@ -22,7 +22,6 @@ using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 
 namespace KaVE.RS.Commons.Injectables
 {

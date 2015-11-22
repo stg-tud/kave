@@ -16,18 +16,12 @@
 
 using System.Globalization;
 using System.Windows.Controls;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     public abstract class KaVEValidationRule : ValidationRule
     {
-        public string RuleTarget { get; private set; }
-
-        protected KaVEValidationRule(string ruleTarget)
-        {
-            RuleTarget = ruleTarget;
-        }
-
         public abstract override ValidationResult Validate(object value, CultureInfo cultureInfo);
 
         protected ValidationResult Success()
@@ -35,9 +29,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
             return new ValidationResult(true, "");
         }
 
-        protected ValidationResult Fail(string message)
+        protected ValidationResult Fail([NotNull] string message)
         {
-            return new ValidationResult(false, string.Format("{0}: {1}", RuleTarget, message ?? ""));
+            return new ValidationResult(false, message);
         }
     }
 }

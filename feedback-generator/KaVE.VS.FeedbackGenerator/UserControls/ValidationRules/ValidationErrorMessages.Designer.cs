@@ -97,7 +97,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t find file \&apos;index.json.gz\&apos;..
+        ///   Looks up a localized string similar to Couldn&apos;t find file &apos;index.json.gz&apos;..
         /// </summary>
         internal static string UsageModelsOptions_NoIndexFile {
             get {

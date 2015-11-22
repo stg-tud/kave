@@ -277,6 +277,15 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to KaVE Project.
+        /// </summary>
+        public static string MessageBoxCaption {
+            get {
+                return ResourceManager.GetString("MessageBoxCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings will be reset and the locally generated feedback will be deleted. Are you sure?.
         /// </summary>
         public static string Option_SettingsCleaner_Dialog {

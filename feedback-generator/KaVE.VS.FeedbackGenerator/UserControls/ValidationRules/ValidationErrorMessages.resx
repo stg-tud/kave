@@ -130,7 +130,7 @@
     <value>No valid remote source. Please enter a local path or URI.</value>
   </data>
   <data name="UsageModelsOptions_NoIndexFile" xml:space="preserve">
-    <value>Couldn't find file \'index.json.gz\'.</value>
+    <value>Couldn't find file 'index.json.gz'.</value>
   </data>
   <data name="UsageModelsOptions_UriSchemeNotSupported" xml:space="preserve">
     <value>The given URI Scheme is not supported. Please enter a file, http or https URI.</value>

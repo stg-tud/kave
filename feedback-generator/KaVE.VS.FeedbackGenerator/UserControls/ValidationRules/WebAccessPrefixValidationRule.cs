@@ -22,8 +22,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     public class WebAccessPrefixValidationRule : KaVEValidationRule
     {
-        public WebAccessPrefixValidationRule() : base(Properties.SessionManager.Options_Export_WebAccessPraefix) {}
-
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (value == null)
@@ -40,6 +38,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
             return UrlValidation.ValidateUrl(prefix)
                 ? Success()
                 : Fail(ValidationErrorMessages.GeneralOptions_InvalidPrefix);
+        }
+
+        public static ValidationResult Validate(object value)
+        {
+            return new WebAccessPrefixValidationRule().Validate(value, CultureInfo.InvariantCulture);
         }
     }
 }
