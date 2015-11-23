@@ -16,11 +16,14 @@
 
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using JetBrains.Application.DataContext;
+using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
+using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
@@ -47,18 +50,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
         private readonly ExportSettings _exportSettings;
         private readonly IMessageBoxCreator _messageBoxCreator;
 
-        public GeneralOptionsControl(Lifetime lifetime,
-            OptionsSettingsSmartContext ctx,
-            IActionExecutor actionExecutor,
-            KaVEISettingsStore settingsStore,
-            DataContexts dataContexts,
-            IMessageBoxCreator messageBoxCreator)
+        public GeneralOptionsControl([NotNull] Lifetime lifetime,
+            // ReSharper disable once SuggestBaseTypeForParameter
+            [CanBeNull] OptionsSettingsSmartContext jetBrainsContext,
+            [NotNull] IActionExecutor actionExecutor,
+            [NotNull] KaVEISettingsStore settingsStore,
+            [NotNull] DataContexts dataContexts,
+            [NotNull] IMessageBoxCreator messageBoxCreator,
+            [NotNull] IGeneralOptionsViewModel generalOptionsViewModel)
         {
             _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
             _actionExecutor = actionExecutor;
             _settingsStore = settingsStore;
             _dataContexts = dataContexts;
+            DataContext = generalOptionsViewModel;
 
             InitializeComponent();
 
@@ -66,7 +72,20 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             UploadUrlTextBox.Text = _exportSettings.UploadUrl;
             WebPraefixTextBox.Text = _exportSettings.WebAccessPrefix;
 
-            DataContext = new GeneralOptionsViewModel(settingsStore);
+            if (jetBrainsContext != null)
+            {
+                jetBrainsContext.SetBinding(
+                    lifetime,
+                    (ExportSettings s) => s.UploadUrl,
+                    UploadUrlTextBox,
+                    TextBox.TextProperty);
+
+                jetBrainsContext.SetBinding(
+                    lifetime,
+                    (ExportSettings s) => s.WebAccessPrefix,
+                    WebPraefixTextBox,
+                    TextBox.TextProperty);
+            }
         }
 
         private void OnResetSettings(object sender, RoutedEventArgs e)

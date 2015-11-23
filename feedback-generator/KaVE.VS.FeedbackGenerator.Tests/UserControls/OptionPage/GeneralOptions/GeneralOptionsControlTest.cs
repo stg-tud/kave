@@ -39,7 +39,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
                         MockActionExecutor.Object,
                         MockSettingsStore.Object,
                         TestDataContexts,
-                        MockMessageBoxCreator.Object));
+                        MockMessageBoxCreator.Object,
+                        Mock.Of<IGeneralOptionsViewModel>()));
         }
 
         [SetUp]
@@ -49,12 +50,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
             MockSettingsStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(_testSettings);
 
             _sut = Open();
-        }
-
-        [Test]
-        public void DataContextIsSetCorrectly()
-        {
-            Assert.IsInstanceOf<GeneralOptionsViewModel>(_sut.DataContext);
         }
 
         [Test]

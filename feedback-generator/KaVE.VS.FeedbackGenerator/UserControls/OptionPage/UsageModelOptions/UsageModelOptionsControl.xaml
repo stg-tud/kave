@@ -46,7 +46,7 @@ limitations under the License.
                Margin="0,0,0,0" />
         <TextBox Grid.Row="0" Grid.Column="1" Name="ModelStorePathTextBox"
                  VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10,0,10,0">
-            <Binding Path="ModelPath" UpdateSourceTrigger="PropertyChanged">
+            <Binding Path="ModelPath" UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource">
                 <Binding.ValidationRules>
                     <validationRules:UsageModelsPathValidationRule />
                 </Binding.ValidationRules>
@@ -61,7 +61,7 @@ limitations under the License.
                Margin="0,0,0,0" />
         <TextBox Grid.Row="1" Grid.Column="1" Name="ModelStoreUriTextBox"
                  VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10,0,10,0">
-            <Binding Path="ModelUri" UpdateSourceTrigger="PropertyChanged">
+            <Binding Path="ModelUri" UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource">
                 <Binding.ValidationRules>
                     <validationRules:UsageModelsUriValidationRule />
                 </Binding.ValidationRules>

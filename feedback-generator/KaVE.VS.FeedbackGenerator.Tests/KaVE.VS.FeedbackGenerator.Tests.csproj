@@ -254,7 +254,6 @@
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverterTest.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelectionTest.cs" />
-    <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsViewModelTest.cs" />
     <Compile Include="UserControls\UserProfile\UserProfileContextTest.cs" />
     <Compile Include="SessionManager\Presentation\XamlBindableRichTextBoxTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />

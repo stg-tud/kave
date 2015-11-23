@@ -75,29 +75,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         #region Model store settings properties
 
-        public string ModelPath
-        {
-            get { return _modelPath; }
-            set
-            {
-                _modelPath = value;
-                RaisePropertyChanged(self => self.ModelPath);
-            }
-        }
-
-        private string _modelPath;
-
-        public string ModelUri
-        {
-            get { return _modelUri; }
-            set
-            {
-                _modelUri = value;
-                RaisePropertyChanged(self => self.ModelUri);
-            }
-        }
-
-        private string _modelUri;
+        // only bound for validation rule
+        public string ModelPath { get; set; }
+        // only bound for validation rule
+        public string ModelUri { get; set; }
 
         #endregion
         

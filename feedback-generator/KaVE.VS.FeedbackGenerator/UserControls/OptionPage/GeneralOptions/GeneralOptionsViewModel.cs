@@ -14,46 +14,26 @@
  * limitations under the License.
  */
 
-using KaVE.JetBrains.Annotations;
-using KaVE.RS.Commons.Settings;
+using JetBrains.Application;
 using KaVE.VS.FeedbackGenerator.SessionManager;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 {
-    public class GeneralOptionsViewModel : ViewModelBase<GeneralOptionsViewModel>
+    public interface IGeneralOptionsViewModel
     {
-        public GeneralOptionsViewModel([NotNull] ISettingsStore settingsStore)
-        {
-            _uploadUrl = settingsStore.GetSettings<ExportSettings>().UploadUrl;
-            _webAccessPrefix = settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
-        }
+        string UploadUrl { get; set; }
+        string WebAccessPrefix { get; set; }
+    }
 
+    [ShellComponent]
+    public class GeneralOptionsViewModel : ViewModelBase<GeneralOptionsViewModel>, IGeneralOptionsViewModel
+    {
         #region general options settings properties
 
-        public string UploadUrl
-        {
-            get { return _uploadUrl; }
-            set
-            {
-                _uploadUrl = value;
-                RaisePropertyChanged(self => self.UploadUrl);
-            }
-        }
-
-        private string _uploadUrl;
-
-        public string WebAccessPrefix
-        {
-            get { return _webAccessPrefix; }
-            set
-            {
-                _webAccessPrefix = value;
-                RaisePropertyChanged(self => self.WebAccessPrefix);
-            }
-        }
-
-        private string _webAccessPrefix;
+        // only bound for validation rule
+        public string UploadUrl { get; set; }
+        // only bound for validation rule
+        public string WebAccessPrefix { get; set; }
 
         #endregion
     }
