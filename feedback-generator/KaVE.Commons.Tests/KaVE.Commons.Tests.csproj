@@ -177,6 +177,7 @@
     <Compile Include="Model\TypeShapes\MethodHierarchyTest.cs" />
     <Compile Include="Model\TypeShapes\TypeHierarchyTest.cs" />
     <Compile Include="Model\TypeShapes\TypeShapeTest.cs" />
+    <Compile Include="TestUtilsTests\ExternalTestCaseProviderTest.cs" />
     <Compile Include="Utils\Assertion\AssertsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommenderTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtilsTest.cs" />

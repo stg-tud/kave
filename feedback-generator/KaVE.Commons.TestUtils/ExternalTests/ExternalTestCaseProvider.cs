@@ -18,18 +18,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.TestUtils.Utils
+namespace KaVE.Commons.TestUtils.ExternalTests
 {
     public static class ExternalTestCaseProvider
     {
-        private const string FileNameExpected = "expected.json";
+        private const string ExpectedFileName = "expected.json";
 
+        [Pure, NotNull]
         public static IEnumerable<TestCase> GetTestCases(string rootFolderPath)
         {
-            return RecursiveGetTestCases(new DirectoryInfo(rootFolderPath), rootFolderPath);
+            return RecursiveGetTestCases(
+                new DirectoryInfo(rootFolderPath),
+                Regex.Escape(rootFolderPath));
         }
 
+        [Pure, NotNull]
         private static IEnumerable<TestCase> RecursiveGetTestCases(DirectoryInfo folderDirectory,
             string rootFolderPath)
         {
@@ -43,49 +48,36 @@ namespace KaVE.Commons.TestUtils.Utils
             return testCases;
         }
 
+        [Pure, NotNull]
         private static IEnumerable<TestCase> GetTestCasesInCurrentFolder(DirectoryInfo folderDirectory,
             string rootFolderPath)
         {
-            var expectedFile = folderDirectory.GetFiles().FirstOrDefault(file => file.Name.Equals(FileNameExpected));
+            var expectedFile = folderDirectory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedFileName));
             if (expectedFile == null)
             {
                 return new List<TestCase>();
             }
 
-            var inputFiles = folderDirectory.GetFiles().Where(file => !file.Name.Equals(FileNameExpected));
+            var inputFiles = folderDirectory.GetFiles().Where(file => !file.Name.Equals(ExpectedFileName));
             return
                 inputFiles.Select(
                     inputFile =>
                         new TestCase(
-                            GetTestCaseName(rootFolderPath, inputFile),
+                            GetTestCaseName(rootFolderPath, inputFile.FullName),
                             File.ReadAllText(inputFile.FullName),
                             File.ReadAllText(expectedFile.FullName)));
         }
 
-        private static string GetTestCaseName(string rootFolderPath, FileSystemInfo inputFile)
+        [Pure, NotNull]
+        private static string GetTestCaseName(string rootFolderPath, string testCaseFile)
         {
-            var testCaseName = Regex.Replace(inputFile.FullName, rootFolderPath, "").TrimStart('\\');
-            var extension = Path.GetExtension(testCaseName);
-            return Regex.Replace(testCaseName, extension, "");
-        }
-    }
-
-    public class TestCase
-    {
-        public readonly string Name;
-        public readonly string Input;
-        public readonly string Expected;
-
-        public TestCase(string name, string input, string expected)
-        {
-            Expected = expected;
-            Input = input;
-            Name = name;
+            return Regex.Replace(TrimFileExtension(testCaseFile), rootFolderPath + @"\\", "");
         }
 
-        public override string ToString()
+        [Pure, NotNull]
+        private static string TrimFileExtension([NotNull] string fullName)
         {
-            return Name;
+            return Regex.Replace(fullName, Path.GetExtension(fullName), "");
         }
     }
 }

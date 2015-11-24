@@ -58,7 +58,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Utils\ExternalTestCaseProvider.cs" />
+    <Compile Include="ExternalTests\ExternalTestCaseProvider.cs" />
+    <Compile Include="ExternalTests\TestCase.cs" />
     <Compile Include="Model\Names\NameAssert.cs" />
     <Compile Include="AsyncTestHelper.cs" />
     <Compile Include="ItIsException.cs" />
