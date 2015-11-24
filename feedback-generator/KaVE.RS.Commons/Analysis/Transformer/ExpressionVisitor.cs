@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
@@ -302,6 +301,69 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         }
 
         [NotNull]
+        private IReference GetReference(IReferenceExpression refExpr, IVariableReference baseRef)
+        {
+            if (refExpr != null)
+            {
+                var resolveResult = refExpr.Reference.Resolve();
+                var elem = resolveResult.DeclaredElement;
+                if (elem == null)
+                {
+                    return new UnknownReference();
+                }
+
+                var field = elem as IField;
+                if (field != null)
+                {
+                    return new FieldReference
+                    {
+                        FieldName = field.GetName<IFieldName>(),
+                        Reference = baseRef
+                    };
+                }
+
+                var property = elem as IProperty;
+                if (property != null)
+                {
+                    return new PropertyReference
+                    {
+                        PropertyName = property.GetName<IPropertyName>(),
+                        Reference = baseRef
+                    };
+                }
+
+                var @event = elem as IEvent;
+                if (@event != null)
+                {
+                    return new EventReference
+                    {
+                        EventName = @event.GetName<IEventName>(),
+                        Reference = baseRef
+                    };
+                }
+
+                var method = elem as IMethod;
+                if (method != null)
+                {
+                    return new MethodReference
+                    {
+                        MethodName = method.GetName<IMethodName>(),
+                        Reference = baseRef
+                    };
+                }
+
+                var localVar = elem as ILocalVariable;
+                var parameter = elem as IParameter;
+                if (localVar != null || parameter != null)
+                {
+                    return new VariableReference {Identifier = elem.ShortName};
+                }
+            }
+
+            return new UnknownReference();
+        }
+
+        [NotNull]
         private IReference ToReference(ICSharpExpression csExpr,
             IList<IStatement> body)
         {
@@ -343,7 +405,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var refExpr = csExpr as IReferenceExpression;
             if (refExpr != null)
             {
-                var baseRef = CreateVariableReference(refExpr.QualifierExpression, body);
+                var hasQualifier = refExpr.QualifierExpression != null;
+
+                IVariableReference baseRef = new VariableReference();
+                if (hasQualifier && refExpr.QualifierExpression.IsClassifiedAsVariable)
+                {
+                    baseRef = CreateVariableReference(refExpr.QualifierExpression, body);
+                }
 
                 var resolveResult = refExpr.Reference.Resolve();
                 var elem = resolveResult.DeclaredElement;
@@ -455,7 +523,12 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var hasQualifier = expr.QualifierExpression != null;
 
             IVariableReference varRef = null;
-            if (hasQualifier)
+            if (hasQualifier &&
+                (expr.QualifierExpression.IsClassifiedAsVariable ||
+                 expr.QualifierExpression is IObjectCreationExpression ||
+                 expr.QualifierExpression is IInvocationExpression ||
+                 expr.QualifierExpression is IBaseExpression ||
+                 expr.QualifierExpression is IThisExpression))
             {
                 varRef = ToVariableRef(expr.QualifierExpression, context);
             }
@@ -476,13 +549,10 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     Reference = ToReference(expr, context)
                 };
             }
+
             return new ReferenceExpression
             {
-                Reference = new FieldReference
-                {
-                    Reference = varRef,
-                    FieldName = FieldName.Get(string.Format("[{0}] [{0}].{1}", TypeName.UnknownName, name))
-                }
+                Reference = GetReference(expr, varRef)
             };
         }
 
@@ -529,7 +599,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             if (expr.Body == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
             {
-                lambdaBody.Add(new ExpressionStatement { Expression = new CompletionExpression() });
+                lambdaBody.Add(new ExpressionStatement {Expression = new CompletionExpression()});
             }
 
             expr.Body.Accept(bodyVisitor, lambdaBody);

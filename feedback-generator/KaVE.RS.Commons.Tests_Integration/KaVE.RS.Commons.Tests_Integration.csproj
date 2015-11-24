@@ -198,6 +198,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\LoopHeaderExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\SeveralNestedExpressionsAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\TypeCheckExpressionAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\ResolvingFullyResolvedTypesTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ContinueStatementAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\EventSubscriptionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ReturnAnalysisTest.cs" />

@@ -145,7 +145,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         new FieldReference
                         {
                             Reference = VarRef("c"),
-                            FieldName = FieldName.Get(string.Format("[{0}] [{0}].c", TypeName.UnknownName))
+                            FieldName = FieldName.Get(string.Format("[{0}] [{0}].c", "N.C, TestProject"))
                         })),
                 ExprStmt(
                     new CompletionExpression
