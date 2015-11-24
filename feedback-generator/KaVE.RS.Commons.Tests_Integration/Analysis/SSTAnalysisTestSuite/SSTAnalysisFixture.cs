@@ -44,6 +44,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         internal static readonly ITypeName Float =
             TypeName.Get("System.Single, mscorlib, 4.0.0.0");
 
+        internal static readonly ITypeName Double =
+            TypeName.Get("System.Double, mscorlib, 4.0.0.0");
+
         internal static readonly ITypeName IntArray =
             TypeName.Get("System.Int32[], mscorlib, 4.0.0.0");
 
