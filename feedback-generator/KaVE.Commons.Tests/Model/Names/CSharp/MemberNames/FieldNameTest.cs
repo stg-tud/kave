@@ -79,5 +79,17 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
             Assert.AreEqual("fieldName", fieldName.Name);
             Assert.AreEqual("d:[V,A] [D,A].()", fieldName.ValueType.Identifier);
         }
+
+        [Test]
+        public void StringHelperWorks()
+        {
+            const string id = "[{0}] [T,P].F";
+            const string t1 = "T1,P";
+            var a = FieldName.Get(string.Format(id, t1));
+            var b = FieldName.Get(id, t1);
+
+            Assert.AreEqual(a, b);
+            Assert.AreSame(a, b);
+        }
     }
 }

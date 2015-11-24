@@ -67,6 +67,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
+        [NotNull]
+        public static PropertyName Get(string identifier, params object[] args)
+        {
+            return Get(string.Format(identifier, args));
+        }
+
         private PropertyName(string identifier)
             : base(identifier) {}
 

@@ -51,6 +51,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
+        [NotNull]
+        public static EventName Get(string id, params object[] args)
+        {
+            return Get(string.Format(id, args));
+        }
+
         private EventName(string identifier) : base(identifier) {}
 
         public ITypeName HandlerType

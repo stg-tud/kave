@@ -56,6 +56,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
+        [NotNull]
+        public static IFieldName Get(string identifier, params object[] args)
+        {
+            return Get(string.Format(identifier, args));
+        }
+
         private FieldName(string identifier) : base(identifier) {}
     }
 }

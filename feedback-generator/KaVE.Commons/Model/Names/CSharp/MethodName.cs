@@ -70,6 +70,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
+        [NotNull]
+        public static IMethodName Get(string identifier, params object[] args)
+        {
+            return Get(string.Format(identifier, args));
+        }
+
         private static readonly Regex SignatureSyntax =
             new Regex("\\]\\.((([^([]+)(?:`[0-9]+\\[[^(]+\\]){0,1})\\(.*\\))$");
 

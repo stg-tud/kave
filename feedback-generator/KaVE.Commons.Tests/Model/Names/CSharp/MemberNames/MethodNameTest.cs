@@ -245,6 +245,18 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
             var ps = methodName.Parameters;
         }
 
+        [Test]
+        public void StringHelperWorks()
+        {
+            const string id = "[{0}] [T,P].M()";
+            const string t1 = "T1,P";
+            var a = MethodName.Get(string.Format(id, t1));
+            var b = MethodName.Get(id, t1);
+
+            Assert.AreEqual(a, b);
+            Assert.AreSame(a, b);
+        }
+
         // TODO @seb: add more tests for delegates
     }
 }
