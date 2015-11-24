@@ -57,6 +57,18 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void FieldReference_StaticField()
+        {
+            var sst = new FieldReference
+            {
+                FieldName = FieldName.Get("static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Empty"),
+                Reference = new VariableReference()
+            };
+
+            AssertPrint(sst, "String.Empty");
+        }
+
+        [Test]
         public void MethodReference()
         {
             var sst = new MethodReference

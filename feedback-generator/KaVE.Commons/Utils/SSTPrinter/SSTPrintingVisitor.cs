@@ -614,7 +614,16 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IFieldReference fieldRef, SSTPrintingContext c)
         {
-            c.Text(fieldRef.Reference.Identifier).Text(".").Text(fieldRef.FieldName.Name);
+            if (fieldRef.FieldName.IsStatic)
+            {
+                c.Type(fieldRef.FieldName.DeclaringType);
+            }
+            else
+            {
+                c.Text(fieldRef.Reference.Identifier);
+            }
+
+            c.Text(".").Text(fieldRef.FieldName.Name);
         }
 
         public void Visit(IMethodReference methodRef, SSTPrintingContext c)
