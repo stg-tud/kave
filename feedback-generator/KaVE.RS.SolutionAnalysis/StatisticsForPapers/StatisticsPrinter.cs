@@ -22,33 +22,35 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
 {
     public interface IStatisticsPrinter
     {
-        void StartZip(string zipName);
+        void StartZip(string zipName, int cur, int total);
         void FoundUserKey(string userKey);
         void FoundKeysInZip(IKaVESet<string> zipKeys);
         void FoundKeys(IKaVESet<string> keys);
         void FoundUpes(IKaVEList<IUserProfileEvent> upes);
+        void FoundUsers(IKaVESet<string> keys);
+        void FoundAssignableZips(IKaVESet<string> zips);
     }
 
     public class StatisticsPrinter : IStatisticsPrinter
     {
-        public void StartZip(string zipName)
+        public void StartZip(string zipName, int cur, int total)
         {
-            Console.WriteLine(@"#### {0}", zipName);
+            Console.WriteLine(@"#### {2}/{3}: {0} ({1}) ####", zipName, DateTime.Now, cur, total);
         }
 
         public void FoundUserKey(string userKey)
         {
-            Console.WriteLine(@"   user: {0}", userKey);
+            Console.WriteLine(@"user: {0}", userKey);
         }
 
         public void FoundKeysInZip(IKaVESet<string> zipKeys)
         {
-            Console.WriteLine(@"    keys: [");
+            Console.WriteLine(@"keys: [");
             foreach (var key in zipKeys)
             {
-                Console.WriteLine(@"       {0}", key);
+                Console.WriteLine(@"  {0}", key);
             }
-            Console.WriteLine(@"    ]");
+            Console.WriteLine(@"]");
             Console.WriteLine();
         }
 
@@ -70,6 +72,26 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
             foreach (var key in upes)
             {
                 Console.WriteLine(@"{0}/{1}: {2}", i++, total, key);
+            }
+            Console.WriteLine();
+        }
+
+        public void FoundUsers(IKaVESet<string> users)
+        {
+            Console.WriteLine(@"#### users:");
+            foreach (var user in users)
+            {
+                Console.WriteLine(user);
+            }
+            Console.WriteLine();
+        }
+
+        public void FoundAssignableZips(IKaVESet<string> zips)
+        {
+            Console.WriteLine(@"#### found {0} assignable submissions: ####", zips.Count);
+            foreach (var zip in zips)
+            {
+                Console.WriteLine(zip);
             }
             Console.WriteLine();
         }

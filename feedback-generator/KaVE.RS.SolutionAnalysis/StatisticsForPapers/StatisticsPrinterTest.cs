@@ -19,7 +19,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.StatisticsForPapersTest
+namespace KaVE.RS.SolutionAnalysis.Tests.StatisticsForPapers
 {
     internal class StatisticsPrinterTest
     {
@@ -28,17 +28,20 @@ namespace KaVE.RS.SolutionAnalysis.Tests.StatisticsForPapersTest
         {
             var sut = new StatisticsPrinter();
 
-            sut.StartZip("a.zip");
+            sut.StartZip("a.zip", 1, 2);
             sut.FoundUserKey("auser");
             sut.FoundKeysInZip(Sets.NewHashSet("a1", "a2", "a3"));
 
-            sut.StartZip("b.zip");
+            sut.StartZip("b.zip", 2, 2);
             sut.FoundUserKey("buser");
             sut.FoundKeysInZip(Sets.NewHashSet("b1", "b2", "b3"));
 
+            sut.FoundUsers(Sets.NewHashSet("u1", "u2", "u3"));
             sut.FoundKeys(Sets.NewHashSet("1", "2", "3"));
             sut.FoundUpes(
                 Lists.NewList<IUserProfileEvent>(new UserProfileEvent {Id = "1"}, new UserProfileEvent {Id = "2"}));
+
+            sut.FoundAssignableZips(Sets.NewHashSet("a", "b"));
         }
     }
 }

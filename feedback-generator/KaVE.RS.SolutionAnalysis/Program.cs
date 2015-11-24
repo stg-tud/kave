@@ -19,6 +19,7 @@ using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
+using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using KaVE.RS.SolutionAnalysis.UserProfileExports;
 
 // ReSharper disable InconsistentNaming
@@ -49,24 +50,24 @@ namespace KaVE.RS.SolutionAnalysis
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Remove);
-            RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirMicroCommits);
+            //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirMicroCommits);
             //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTriggerInlined, DirMicroCommits_Inlined);
             //RunEventStreamExport(DirContexts, DirEventStream);
 
             /* evaluations */
-            //new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
+            new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
             //new EditLocationRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
             //RunUserProfileExport();
-            RunStatisticsForPaperCreation();
+            //RunStatisticsForPaperCreation();
 
             Console.WriteLine(@"{0} finish", DateTime.Now);
         }
 
         private static void RunStatisticsForPaperCreation()
         {
-            var io = new IoHelper(DirEventsAll, DirMicroCommits);
-            var helper = new UserProfileExportHelper();
-            new UserProfileExportRunner(io, helper).Export(DirEventsAll);
+            var printer = new StatisticsPrinter();
+            var io = new StatisticsIo(DirEventsCompletion_KeepNoTrigger, DirEventsAll);
+            new StatisticsForPaperRunner(io, printer).Run();
         }
 
         private static void RunUserProfileExport()

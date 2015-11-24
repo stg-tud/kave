@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils.Collections;
 
@@ -26,6 +27,7 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
         private readonly IStatisticsPrinter _printer;
         private IKaVEList<IUserProfileEvent> _upes;
         private IKaVESet<string> _keys;
+        private IKaVESet<string> _assignableSubmissions;
 
         public StatisticsForPaperRunner(IStatisticsIo io, IStatisticsPrinter printer)
         {
@@ -36,13 +38,20 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
         public void Run()
         {
             _upes = Lists.NewList<IUserProfileEvent>();
+            var users = Sets.NewHashSet<string>();
             _keys = Sets.NewHashSet<string>();
+            _assignableSubmissions = Sets.NewHashSet<string>();
 
-            foreach (var zipName in _io.FindCcZips())
+            var zips = _io.FindCcZips().ToList();
+
+            var cur = 1;
+            var total = zips.Count;
+            foreach (var zipName in zips)
             {
-                _printer.StartZip(zipName);
+                _printer.StartZip(zipName, cur++, total);
 
                 var userKey = GetUserKey(zipName);
+                users.Add(userKey);
                 _printer.FoundUserKey(userKey);
 
                 var zipKeys = GetKeysFrom(zipName);
@@ -54,8 +63,10 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
                 }
             }
 
+            _printer.FoundUsers(users);
             _printer.FoundKeys(_keys);
             _printer.FoundUpes(_upes);
+            _printer.FoundAssignableZips(_assignableSubmissions);
         }
 
         private string GetUserKey(string zipName)
@@ -66,6 +77,7 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
                 return "AUTO_" + zipName;
             }
             _upes.Add(upe);
+            _assignableSubmissions.Add(zipName);
             return upe.ProfileId;
         }
 

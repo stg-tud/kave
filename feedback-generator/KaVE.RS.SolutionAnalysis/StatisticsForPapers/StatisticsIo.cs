@@ -15,8 +15,12 @@
  */
 
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
 {
@@ -29,19 +33,49 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
 
     public class StatisticsIo : IStatisticsIo
     {
+        private readonly string _dirCcEvents;
+        private readonly string _dirAllEvents;
+
+        public StatisticsIo(string dirCCEvents, string dirAllEvents)
+        {
+            _dirCcEvents = dirCCEvents;
+            _dirAllEvents = dirAllEvents;
+        }
+
         public IEnumerable<string> FindCcZips()
         {
-            throw new System.NotImplementedException();
+            var findCcZips = Directory.EnumerateFiles(_dirCcEvents, "*.zip", SearchOption.AllDirectories);
+            var shortened = findCcZips.Select(z => z.Substring(_dirCcEvents.Length));
+            return shortened;
         }
 
         public IUserProfileEvent TryGetUserProfile(string zipName)
         {
-            throw new System.NotImplementedException();
+            var fullPath = Path.Combine(_dirAllEvents, zipName);
+            var ra = new ReadingArchive(fullPath);
+            while (ra.HasNext())
+            {
+                var e = ra.GetNext<IDEEvent>() as IUserProfileEvent;
+                if (e != null)
+                {
+                    return e;
+                }
+            }
+            return null;
         }
 
         public IEnumerable<CompletionEvent> ReadCce(string zipName)
         {
-            throw new System.NotImplementedException();
+            var fullPath = Path.Combine(_dirCcEvents, zipName);
+            var ra = new ReadingArchive(fullPath);
+            while (ra.HasNext())
+            {
+                var e = ra.GetNext<IDEEvent>() as CompletionEvent;
+                if (e != null)
+                {
+                    yield return e;
+                }
+            }
         }
     }
 }
