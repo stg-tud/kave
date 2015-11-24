@@ -54,6 +54,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
+        [NotNull]
+        public static ILambdaName Get(string identifier, params object[] args)
+        {
+            return Get(string.Format(identifier, args));
+        }
+
         private LambdaName(string identifier) : base(identifier) {}
 
         public string Signature
