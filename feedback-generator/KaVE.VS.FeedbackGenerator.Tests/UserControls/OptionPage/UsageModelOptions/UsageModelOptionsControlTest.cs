@@ -148,6 +148,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
         }
 
         [Test]
+        public void Binding_ReloadModelsButton_Command()
+        {
+            Assert.AreSame(_viewModel.ReloadModelsCommand, _sut.ReloadModelsButton.Command);
+        }
+
+        [Test]
         public void Binding_InstallSelectedModelButton_Command()
         {
             Assert.AreSame(_viewModel.InstallModel, _sut.InstallSelectedModelButton.Command);

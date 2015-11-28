@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Threading;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using Moq;
 using NUnit.Framework;
@@ -28,6 +30,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
     {
         private UsageModelOptionsViewModel _uut;
         private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
+        private IPBNProposalItemsProvider _proposalItemsProvider;
+        private IUsageModelMergingStrategy _mergingStrategy;
+        private ILocalPBNRecommenderStore _localStore;
+        private IRemotePBNRecommenderStore _remoteStore;
 
         [SetUp]
         public void SetUp()
@@ -39,24 +45,37 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                 GenerateRowMock()
             };
 
-            var mergingStrategy = Mock.Of<IUsageModelMergingStrategy>();
-            Mock.Get(mergingStrategy)
+            _proposalItemsProvider = Mock.Of<IPBNProposalItemsProvider>();
+            _localStore = Mock.Of<ILocalPBNRecommenderStore>();
+            _remoteStore = Mock.Of<IRemotePBNRecommenderStore>();
+            Registry.RegisterComponent(_proposalItemsProvider);
+            Registry.RegisterComponent(_localStore);
+            Registry.RegisterComponent(_remoteStore);
+
+            _mergingStrategy = Mock.Of<IUsageModelMergingStrategy>();
+            Mock.Get(_mergingStrategy)
                 .Setup(
                     strategy =>
                         strategy.MergeAvailableModels(
-                            It.IsAny<ILocalPBNRecommenderStore>(),
-                            It.IsAny<IRemotePBNRecommenderStore>()))
-                .Returns(_usageModelsTableContent);
+                            _localStore,
+                            _remoteStore))
+                .Returns(() => _usageModelsTableContent);
 
             _uut = new UsageModelOptionsViewModel(
-                mergingStrategy,
+                _mergingStrategy,
                 new KaVEBackgroundWorker());
+        }
+
+        [TearDown]
+        public void ClearRegistry()
+        {
+            Registry.Clear();
         }
 
         [Test]
         public void UsageModelsTableContentIsGeneratedByMergingStrategy()
         {
-            CollectionAssert.AreEquivalent(_usageModelsTableContent, _uut.UsageModelsTableContent);
+            Assert.AreSame(_usageModelsTableContent, _uut.UsageModelsTableContent);
         }
 
         [Test]
@@ -165,6 +184,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
                 Mock.Get(row).Verify(r => r.IsRemoveable);
                 Mock.Get(row).Verify(r => r.RemoveModel());
             }
+        }
+
+        [Test]
+        public void ShouldClearCachedModelsOnReload()
+        {
+            _uut.ReloadModelsCommand.Execute(null);
+            Mock.Get(_proposalItemsProvider).Verify(provider => provider.Clear(), Times.Once);
+        }
+
+        [Test]
+        public void ShouldReloadModelsTableOnReload()
+        {
+            _usageModelsTableContent = new List<IUsageModelsTableRow> {GenerateRowMock()};
+            _uut.ReloadModelsCommand.Execute(null);
+            Assert.AreSame(_usageModelsTableContent, _uut.UsageModelsTableContent);
         }
 
         private static IUsageModelsTableRow GenerateRowMock()

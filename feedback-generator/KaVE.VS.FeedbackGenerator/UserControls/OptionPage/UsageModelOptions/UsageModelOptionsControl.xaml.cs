@@ -130,15 +130,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             }
         }
 
-        private void OnReloadModels(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
-            }
-            catch (InvalidOperationException) {}
-        }
-
         public bool OnOk()
         {
             var errorMessage = new StringBuilder();

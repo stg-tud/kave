@@ -77,7 +77,7 @@ limitations under the License.
                     Click="OnResetSettings"
                     Content="{x:Static usageModelOptions:UsageModelOptionsMessages.SettingResetButton}" />
             <Button Name="ReloadModelsButton" Padding="15,3,15,3" Margin="1,0,0,0" DockPanel.Dock="Right"
-                    Click="OnReloadModels"
+                    Command="{Binding ReloadModelsCommand}"
                     Content="{x:Static usageModelOptions:UsageModelOptionsMessages.ReloadModelsButton}" />
         </DockPanel>
 

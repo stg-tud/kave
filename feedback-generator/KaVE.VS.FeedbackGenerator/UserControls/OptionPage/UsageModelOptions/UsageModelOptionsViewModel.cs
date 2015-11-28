@@ -26,6 +26,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.CodeCompletion.Stores;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using DelegateCommand = KaVE.VS.FeedbackGenerator.SessionManager.Presentation.DelegateCommand;
 
@@ -37,6 +38,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         string ModelUri { get; set; }
 
         IEnumerable<IUsageModelsTableRow> UsageModelsTableContent { get; }
+        ICommand ReloadModelsCommand { get; }
         ICommand<object> InstallAllModelsCommand { get; }
         ICommand<object> UpdateAllModelsCommand { get; }
         ICommand<object> RemoveAllModelsCommand { get; }
@@ -57,6 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         public UsageModelOptionsViewModel([NotNull] IUsageModelMergingStrategy mergingStrategy,
             [NotNull] IKaVEBackgroundWorker usageModelCommandsWorker)
         {
+            _mergingStrategy = mergingStrategy;
             _usageModelCommandsWorker = usageModelCommandsWorker;
             _usageModelCommandsWorker.DoWork += delegate
             {
@@ -81,7 +84,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         public string ModelUri { get; set; }
 
         #endregion
-        
+
         #region Usage models management
 
         public IEnumerable<IUsageModelsTableRow> UsageModelsTableContent
@@ -97,6 +100,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         private IEnumerable<IUsageModelsTableRow> _usageModelsTableContent;
 
         #region Usage models management commands
+
+        public ICommand ReloadModelsCommand
+        {
+            get { return new DelegateCommand(ReloadModels, () => true); }
+        }
 
         public ICommand<object> InstallAllModelsCommand
         {
@@ -267,11 +275,25 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         }
 
         [NotNull]
+        private readonly IUsageModelMergingStrategy _mergingStrategy;
+
+        [NotNull]
         private readonly IKaVEBackgroundWorker _usageModelCommandsWorker;
 
         private void ReloadUsageModelsTableContent(IUsageModelMergingStrategy mergingStrategy)
         {
             UsageModelsTableContent = mergingStrategy.MergeAvailableModels(LocalStore, RemoteStore);
+        }
+
+        private void ReloadModels()
+        {
+            try
+            {
+                Registry.GetComponent<IPBNProposalItemsProvider>().Clear();
+            }
+            catch (InvalidOperationException) {}
+
+            ReloadUsageModelsTableContent(_mergingStrategy);
         }
 
         private void InstallAllModels()
