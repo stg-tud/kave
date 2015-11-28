@@ -29,21 +29,18 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
     [DataContract]
     public class MethodDeclaration : IMethodDeclaration
     {
-        private IMethodName _name;
-
         [DataMember]
         public IMethodName Name
         {
-            get { return _name; }
+            get { return this.CreateMethodName(); }
             set
             {
-                _name = value;
-
-                MethodName = new SimpleName { Name = _name.Name };
-                ReturnType = new TypeReference { TypeName = Name.ReturnType };
-                DeclaringType = new TypeReference { TypeName = Name.DeclaringType };
-                Parameters = CreateParameterDeclarationList(Name.Parameters);
-                IsStatic = Name.IsStatic;
+                MethodName = new SimpleName { Name = value.Name };
+                ReturnType = new TypeReference { TypeName = value.ReturnType };
+                DeclaringType = new TypeReference { TypeName = value.DeclaringType };
+                TypeParameters = CreateTypeParameterList(value.TypeParameters);
+                Parameters = CreateParameterDeclarationList(value.Parameters);
+                IsStatic = value.IsStatic;
             }
         }
 
@@ -65,6 +62,8 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
         public ITypeReference DeclaringType { get;  set; }
 
         public IEnumerable<IParameterDeclaration> Parameters { get;  set; }
+
+        public IEnumerable<ITypeReference> TypeParameters { get; set; }
 
         public bool IsStatic { get;  set; }
 
@@ -91,6 +90,16 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
                     });
             }
             return parameters;
+        }
+
+        private IEnumerable<ITypeReference> CreateTypeParameterList(IList<ITypeName> typeParametersNames)
+        {
+            var typeParameters = Lists.NewList<TypeReference>();
+            foreach (var typeParameterName in typeParametersNames)
+            {
+                typeParameters.Add(new TypeReference{TypeName = typeParameterName});                
+            }
+            return typeParameters;
         }
 
         public override bool Equals(object obj)

@@ -61,23 +61,23 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void DeclaringTypeIdentity()
         {
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = _mA
             };
 
-            Assert.AreEqual(new TypeReference { TypeName = _mA.DeclaringType }, sut.DeclaringType);
+            Assert.AreEqual(new TypeReference {TypeName = _mA.DeclaringType}, sut.DeclaringType);
         }
 
         [Test]
         public void MethodNameIdentity()
         {
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = _mA
             };
 
-            Assert.AreEqual(new SimpleName { Name = _mA.Name }, sut.MethodName);
+            Assert.AreEqual(new SimpleName {Name = _mA.Name}, sut.MethodName);
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
                     "[" + returnTypeIdentifier + "] [" + declaringTypeIdentifier + "].DoIt(" + param1Identifier + ", " +
                     param2Identifier + ", " + param3Identifier + ")");
 
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = methodName
             };
@@ -103,29 +103,45 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
 
             foreach (var parameterName in methodName.Parameters)
             {
-                expectedParameterList.Add(new ParameterDeclaration
-                {
-                    Name = new SimpleName{Name = parameterName.Name},
-                    Type = new TypeReference { TypeName = parameterName.ValueType},
-                    IsOptional = parameterName.IsOptional,
-                    IsOutput = parameterName.IsOutput,
-                    IsParameterArray = parameterName.IsParameterArray,
-                    IsPassedByReference = parameterName.IsPassedByReference,
-                });
+                expectedParameterList.Add(
+                    new ParameterDeclaration
+                    {
+                        Name = new SimpleName {Name = parameterName.Name},
+                        Type = new TypeReference {TypeName = parameterName.ValueType},
+                        IsOptional = parameterName.IsOptional,
+                        IsOutput = parameterName.IsOutput,
+                        IsParameterArray = parameterName.IsParameterArray,
+                        IsPassedByReference = parameterName.IsPassedByReference
+                    });
             }
 
-            Assert.AreEqual(expectedParameterList, sut.Parameters);
+            CollectionAssert.AreEqual(expectedParameterList, sut.Parameters);
+        }
+
+        [Test]
+        public void TypeParametersIdentity()
+        {
+            var sut = new MethodDeclaration
+            {
+                Name = MethodName.Get("[T1,P1] [T2,P2].M`2[[T],[O]]()")
+            };
+
+            var expectedTypeParameterList = Lists.NewList<TypeReference>();
+            expectedTypeParameterList.Add(new TypeReference{TypeName = TypeName.Get("T")});
+            expectedTypeParameterList.Add(new TypeReference{TypeName = TypeName.Get("O")});
+
+            CollectionAssert.AreEqual(expectedTypeParameterList, sut.TypeParameters);
         }
 
         [Test]
         public void ReturnTypeIdentity()
         {
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = _mA
             };
 
-            Assert.AreEqual(new TypeReference{TypeName = _mA.ReturnType}, sut.ReturnType );
+            Assert.AreEqual(new TypeReference {TypeName = _mA.ReturnType}, sut.ReturnType);
         }
 
         [Test]
@@ -141,7 +157,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void DeclaringTypeIsCached()
         {
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = _mA
             };
@@ -154,20 +170,20 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void MethodNameIsCached()
         {
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = _mA
             };
 
             var methodName = sut.MethodName;
 
-            Assert.True(ReferenceEquals(methodName,sut.MethodName));
+            Assert.True(ReferenceEquals(methodName, sut.MethodName));
         }
 
         [Test]
         public void ParametersIsCached()
         {
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = _mA
             };
@@ -175,12 +191,25 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
             var parameters = sut.Parameters;
 
             Assert.True(ReferenceEquals(parameters, sut.Parameters));
+        }        
+        
+        [Test]
+        public void TypeParametersIsCached()
+        {
+            var sut = new MethodDeclaration
+            {
+                Name = MethodName.Get("[T1,P1] [T2,P2].M`2[[T],[O]]()")
+            };
+
+            var parameters = sut.TypeParameters;
+
+            Assert.True(ReferenceEquals(parameters, sut.TypeParameters));
         }
 
         [Test]
         public void ReturnTypeIsCached()
         {
-            var sut = new MethodDeclaration()
+            var sut = new MethodDeclaration
             {
                 Name = _mA
             };

@@ -29,19 +29,15 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
     [DataContract]
     public class FieldDeclaration : IFieldDeclaration
     {
-        private IFieldName _name;
-
         [DataMember]
         public IFieldName Name {
-            get { return _name; }
+            get { return this.CreateFieldName(); }
             set
             {
-                _name = value;
-
-                ValueType = new TypeReference {TypeName = Name.ValueType};
-                FieldName = new SimpleName{ Name = Name.Name};
-                DeclaringType = new TypeReference {TypeName = Name.DeclaringType};
-                IsStatic = Name.IsStatic;
+                ValueType = new TypeReference {TypeName = value.ValueType};
+                FieldName = new SimpleName { Name = value.Name };
+                DeclaringType = new TypeReference { TypeName = value.DeclaringType };
+                IsStatic = value.IsStatic;
             } 
         }
 

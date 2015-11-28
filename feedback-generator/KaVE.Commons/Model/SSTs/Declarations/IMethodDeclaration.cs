@@ -40,6 +40,8 @@ namespace KaVE.Commons.Model.SSTs.Declarations
 
         IEnumerable<IParameterDeclaration> Parameters { get; }
 
+        IEnumerable<ITypeReference> TypeParameters { get; }
+
         bool IsStatic { get; }
 
     }

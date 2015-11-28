@@ -651,11 +651,6 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
             return default(TReturn);
         }
 
-        public virtual TReturn Visit(ISimpleName simpleName, TContext context)
-        {
-            return default(TReturn);
-        }
-
         public virtual TReturn Visit(IIndexAccessReference indexAccessRef, TContext context)
         {
             indexAccessRef.Expression.Accept(this, context);
