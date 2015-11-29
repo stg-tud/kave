@@ -192,6 +192,56 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         }
 
         [Test]
+        public void ExportsErrorEventIfAnonymizerFails()
+        {
+            var original = TestEventFactory.SomeEvent();
+            _logManager.Add(SomeDate, original);
+
+            Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns<IDEEvent>(
+                e =>
+                {
+                    if (!(e is ErrorEvent))
+                    {
+                        throw new NullReferenceException();
+                    }
+                    return e;
+                });
+
+            WhenEverythingIsExported();
+
+            var actual = _publishedEvents.Single();
+
+            Assert.IsInstanceOf<ErrorEvent>(actual);
+            Assert.AreEqual("An error occured during anonymization of KaVE.Commons.TestUtils.Model.Events.TestIDEEvent.", ((ErrorEvent)actual).Content);
+            Assert.NotNull(((ErrorEvent)actual).StackTrace);
+            Assert.AreEqual(original.TriggeredAt, actual.TriggeredAt);
+            Assert.AreEqual(original.TerminatedAt, actual.TerminatedAt);
+            Assert.AreEqual(original.Duration, actual.Duration);
+            Assert.AreEqual(original.IDESessionUUID, actual.IDESessionUUID);
+            Assert.AreEqual(original.ActiveDocument, actual.ActiveDocument);
+            Assert.AreEqual(original.ActiveWindow, actual.ActiveWindow);
+            Assert.AreEqual(original.Id, actual.Id);
+            Assert.AreEqual(original.KaVEVersion, actual.KaVEVersion);
+            Assert.AreEqual(original.TriggeredBy, actual.TriggeredBy);
+        }
+
+        [Test]
+        public void ExportsFatalErrorEventIfAnonymizerFailsTwice()
+        {
+            var original = TestEventFactory.SomeEvent();
+            _logManager.Add(SomeDate, original);
+
+            Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Throws<NullReferenceException>();
+
+            WhenEverythingIsExported();
+
+            var actual = _publishedEvents.Single();
+
+            Assert.IsInstanceOf<ErrorEvent>(actual);
+            Assert.AreEqual("An unrecoverable error occured during anonymization of KaVE.Commons.TestUtils.Model.Events.TestIDEEvent.", ((ErrorEvent)actual).Content);
+        }
+
+        [Test]
         public void RaisesExportStarted()
         {
             var exportStarted = false;

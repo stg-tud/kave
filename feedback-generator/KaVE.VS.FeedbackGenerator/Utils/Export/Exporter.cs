@@ -94,7 +94,49 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
             return
                 _logManager.Logs.SelectMany(log => log.ReadAll())
                            .Where(e => e.TriggeredAt <= exportTime)
-                           .Select(_anonymizer.Anonymize);
+                           .Select(Anonymize);
+        }
+
+        private IDEEvent Anonymize(IDEEvent e)
+        {
+            try
+            {
+                var anonymizedEvent = _anonymizer.Anonymize(e);
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                anonymizedEvent.GetHashCode();
+                return anonymizedEvent;
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    var errorEvent = new ErrorEvent
+                    {
+                        TriggeredAt = e.TriggeredAt,
+                        TerminatedAt = e.TerminatedAt,
+                        Duration = e.Duration,
+                        IDESessionUUID = e.IDESessionUUID,
+                        ActiveDocument = e.ActiveDocument,
+                        ActiveWindow = e.ActiveWindow,
+                        Id = e.Id,
+                        KaVEVersion = e.KaVEVersion,
+                        TriggeredBy = e.TriggeredBy,
+                        Content = string.Format("An error occured during anonymization of {0}.", e.GetType()),
+                        StackTrace = ex.StackTrace.Split('\n')
+                    };
+                    var anonymizedEvent = _anonymizer.Anonymize(errorEvent);
+                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                    anonymizedEvent.GetHashCode();
+                    return anonymizedEvent;
+                }
+                catch
+                {
+                    return new ErrorEvent
+                    {
+                        Content = string.Format("An unrecoverable error occured during anonymization of {0}.", e.GetType()),
+                    };
+                }
+            }
         }
 
         private int EstimateNumberEventsToExport()
