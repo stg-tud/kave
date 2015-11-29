@@ -28,6 +28,7 @@ using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
+    [Ignore]
     internal class BulkAnalysisTest : BaseTestWithExistingSolution
     {
         private const string Root = @"E:\";
