@@ -66,7 +66,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
                 .Callback<UserProfileEvent, IEnumerable<IDEEvent>, Action>(
                     (upe, events, callback) =>
                     {
-                        callback();
                         _publishedEvents = new List<IDEEvent>();
                         // TODO: maybe make this a bit nicer with the prepend function
                         if (upe != null)
@@ -273,7 +272,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             WhenEverythingIsExported();
 
-            var expected = new List<int> {0, 25, 50, 75, 100};
+            var expected = new List<int> {25, 50, 75, 100};
             Assert.AreEqual(expected, actual);
         }
 
