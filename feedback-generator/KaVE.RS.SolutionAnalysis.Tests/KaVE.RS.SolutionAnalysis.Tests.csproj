@@ -173,6 +173,8 @@
     <Compile Include="RelativeEditLocationTest.cs" />
     <Compile Include="SolutionAnalysisTest.cs" />
     <Compile Include="InjectableTestLogger.cs" />
+    <Compile Include="StatisticsForPapers\StatisticsIoTest.cs" />
+    <Compile Include="StatisticsForPapers\StatisticsPrinterTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportHelperTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportRunnerTest.cs" />
   </ItemGroup>
@@ -205,9 +207,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="StatisticsForPapers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\JetBrains.Platform.Core.Shell.103.0.20150818.190334\build\JetBrains.Platform.Core.Shell.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Shell.103.0.20150818.190334\build\JetBrains.Platform.Core.Shell.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
