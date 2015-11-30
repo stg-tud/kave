@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
-    [Ignore]
     internal class BulkAnalysisTest : BaseTestWithExistingSolution
     {
         private const string Root = @"E:\";
@@ -47,13 +46,20 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
         public static IEnumerable<string> FindSolutionFiles()
         {
-            var all = Directory.GetFiles(RepositoryRoot, "*.sln", SearchOption.AllDirectories);
-            var filtered = all.Where(sln => !sln.Contains(@"\test\data\"));
-            var shortened = filtered.Select(sln => sln.Substring(RepositoryRoot.Length));
-            var notAnalyzed = shortened.Where(s => !IsAlreadyAnalyzed(s));
-            var notMarked = notAnalyzed.Where(s => !IsAlreadyStarted(s));
-            var notCrashed = notMarked.Where(s => !IsCrashed(s));
-            return notCrashed;
+            try
+            {
+                var all = Directory.GetFiles(RepositoryRoot, "*.sln", SearchOption.AllDirectories);
+                var filtered = all.Where(sln => !sln.Contains(@"\test\data\"));
+                var shortened = filtered.Select(sln => sln.Substring(RepositoryRoot.Length));
+                var notAnalyzed = shortened.Where(s => !IsAlreadyAnalyzed(s));
+                var notMarked = notAnalyzed.Where(s => !IsAlreadyStarted(s));
+                var notCrashed = notMarked.Where(s => !IsCrashed(s));
+                return notCrashed;
+            }
+            catch (IOException e)
+            {
+                return new string[0];
+            }
         }
 
         private static bool IsCrashed(string shortenedSolution)
@@ -86,7 +92,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private const string StartedMarker = ".started";
         private const string EndMarker = ".ended";
 
-        [TestCaseSource("FindSolutionFiles")]
+        [Ignore, TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string shortenedSolution)
         {
             _currentSolution = shortenedSolution;
