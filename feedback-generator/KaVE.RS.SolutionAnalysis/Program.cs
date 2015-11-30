@@ -19,6 +19,7 @@ using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
+using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using KaVE.RS.SolutionAnalysis.UserProfileExports;
 
@@ -55,12 +56,18 @@ namespace KaVE.RS.SolutionAnalysis
             //RunEventStreamExport(DirContexts, DirEventStream);
 
             /* evaluations */
-            new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
+            //new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
             //new EditLocationRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
             //RunUserProfileExport();
             //RunStatisticsForPaperCreation();
 
+            var runner = new SortByUserRunner(
+                @"C:\Users\Andreas\Desktop\OSS-Events\source",
+                @"C:\Users\Andreas\Desktop\OSS-Events\target");
+            runner.Run();
+
             Console.WriteLine(@"{0} finish", DateTime.Now);
+            Console.ReadKey();
         }
 
         private static void RunStatisticsForPaperCreation()
