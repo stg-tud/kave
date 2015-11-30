@@ -19,7 +19,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json
 {
-    static class JsonAssert
+    internal static class JsonAssert
     {
         private delegate void Assertion(object expected, object actual);
 
@@ -56,6 +56,9 @@ namespace KaVE.Commons.Tests.Utils.Json
         {
             var actual = json.ParseJsonTo<T>();
             Assert.AreEqual(expected, actual);
+
+            var actual1 = expected == null ? json.ParseJsonTo(typeof (object)) : json.ParseJsonTo(expected.GetType());
+            Assert.AreEqual(expected, actual1);
         }
     }
 }

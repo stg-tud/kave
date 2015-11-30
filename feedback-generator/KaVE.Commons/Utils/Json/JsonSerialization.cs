@@ -131,6 +131,20 @@ namespace KaVE.Commons.Utils.Json
         }
 
         /// <summary>
+        ///     Parses an instance of <paramref name="type"/> from a Json string.
+        /// </summary>
+        /// <remarks>
+        ///     Uses the same serialization settings as <see cref="ToCompactJson" />.
+        /// </remarks>
+        public static object ParseJsonTo([NotNull] this string json, [NotNull] Type type)
+        {
+            var settings = CreateSerializationSettings();
+            // TODO get rid of this special case handling
+            json = LegacyDataUtils.UpdateLegacyDataFormats(json, settings);
+            return JsonConvert.DeserializeObject(json, type, settings);
+        }
+
+        /// <summary>
         ///     Converts an object to a pretty Json string that is tuned for human readability.
         /// </summary>
         /// <remarks>
