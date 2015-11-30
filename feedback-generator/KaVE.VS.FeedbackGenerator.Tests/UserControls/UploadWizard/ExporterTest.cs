@@ -137,7 +137,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             var numberOfEvents = WhenEverythingIsExported();
 
             AssertPublishedEvents(new[] {_userProfileEvent}.Union(logEntries));
-            Assert.AreEqual(26, numberOfEvents);
+            Assert.AreEqual(25, numberOfEvents);
         }
 
         // TODO: Is this useful?

@@ -286,7 +286,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
                                 }
                             }).Returns(new MemoryStream());
 
-            _uut.ReadAll();
+            _uut.ReadAll().ToList();
 
             Assert.AreEqual(3, numberOfCalls);
         }
@@ -298,7 +298,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read))
                         .Throws(new IOException(TestConcurrentAccessExceptionMessage));
 
-            _uut.ReadAll();
+            _uut.ReadAll().ToList();
         }
 
         [Test]
