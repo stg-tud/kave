@@ -174,7 +174,7 @@
     <Compile Include="SolutionAnalysisTest.cs" />
     <Compile Include="InjectableTestLogger.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIoTest.cs" />
-    <Compile Include="SortByUserTest.cs" />
+    <Compile Include="SortByUser\SortByUserRunnerTest.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinterTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportHelperTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportRunnerTest.cs" />

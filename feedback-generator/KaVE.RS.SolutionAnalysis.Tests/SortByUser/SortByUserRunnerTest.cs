@@ -18,9 +18,9 @@ using System.Collections.Generic;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests
+namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 {
-    internal class SortByUserTest
+    internal class SortByUserRunnerTest
     {
         [Test]
         public void MergesUsersWithSameProfileId()

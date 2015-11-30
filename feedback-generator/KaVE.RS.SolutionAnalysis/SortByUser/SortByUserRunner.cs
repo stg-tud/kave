@@ -65,7 +65,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
                     string.Join(", ", user.Files.Select(f => f.Replace(_sourceDir, ""))));
 
                 var allEvents = user.Files.SelectMany(GetEventsFromArchive).OrderBy(e => e.TriggeredAt);
-                WriteEvents(allEvents, Path.Combine(_targetDir, user.Identifiers.GetUniqueName()));
+                WriteEvents(allEvents, Path.Combine(_targetDir, user.Identifiers.GetUniqueName(), ".zip"));
             }
         }
 
