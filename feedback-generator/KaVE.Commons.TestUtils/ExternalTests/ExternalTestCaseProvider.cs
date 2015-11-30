@@ -28,7 +28,7 @@ namespace KaVE.Commons.TestUtils.ExternalTests
     {
         private const string ExpectedCompactFileName = "expected-compact.json";
         private const string ExpectedPrettyFileName = "expected-pretty.json";
-        private const string TypeHintFileName = "settings.ini";
+        private const string SettingsFileName = "settings.ini";
 
         [Pure, NotNull]
         public static IEnumerable<TestCase> GetTestCases(string rootFolderPath)
@@ -84,15 +84,15 @@ namespace KaVE.Commons.TestUtils.ExternalTests
         [Pure, CanBeNull]
         private static Type GetSerializedType(DirectoryInfo directory)
         {
-            var typeHintFile = directory.GetFiles().FirstOrDefault(file => file.Name.Equals(TypeHintFileName));
-            if (typeHintFile == null)
+            var settingsFile = directory.GetFiles().FirstOrDefault(file => file.Name.Equals(SettingsFileName));
+            if (settingsFile == null)
             {
-                // don't run tests with missing typehint file. (some tests will fail without type information - e.g. PrettyPrint tests)
+                // don't run tests with missing settings file. (some tests will fail without type information - e.g. PrettyPrint tests)
                 return null;
             }
 
-            var typeHint = File.ReadAllText(typeHintFile.FullName);
-            return Type.GetType(typeHint);
+            var settings = TestSettingsReader.ReadSection(settingsFile.FullName, "CSharp");
+            return Type.GetType(settings[ExternalTestSetting.SerializedType]);
         }
 
         [Pure]
@@ -101,7 +101,7 @@ namespace KaVE.Commons.TestUtils.ExternalTests
             return
                 !file.Name.Equals(ExpectedCompactFileName) &&
                 !file.Name.Equals(ExpectedPrettyFileName) &&
-                !file.Name.Equals(TypeHintFileName);
+                !file.Name.Equals(SettingsFileName);
         }
 
         [Pure, NotNull]

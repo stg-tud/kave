@@ -114,7 +114,12 @@ namespace KaVE.Commons.Tests.ExternalTests
             File.WriteAllText(expectedPrettyPrintFile, ExpectedPretty);
 
             var typeHintFile = Path.Combine(testCasesDirectory, "settings.ini");
-            File.WriteAllText(typeHintFile, ExpectedSerializedType.AssemblyQualifiedName);
+            var settingsFileContent = new[]
+            {
+                "[CSharp]",
+                string.Format("{0}={1}", ExternalTestSetting.SerializedType, ExpectedSerializedType.AssemblyQualifiedName)
+            };
+            File.WriteAllLines(typeHintFile, settingsFileContent);
         }
     }
 }

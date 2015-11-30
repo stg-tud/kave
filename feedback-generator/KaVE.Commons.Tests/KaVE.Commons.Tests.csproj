@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExternalTests\Serialization\SerializationTestSuite.cs" />
+    <Compile Include="ExternalTests\TestSettingsReaderTest.cs" />
     <Compile Include="Model\Events\CompletionEvent\CompletionEventTest.cs" />
     <Compile Include="Model\Events\CompletionEvent\ContextTest.cs" />
     <Compile Include="Model\Events\CompletionEvent\ProposalCollectionTest.cs" />

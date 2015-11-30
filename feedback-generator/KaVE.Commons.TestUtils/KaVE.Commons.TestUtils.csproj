@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExternalTests\ExternalTestCaseProvider.cs" />
+    <Compile Include="ExternalTests\ExternalTestSetting.cs" />
+    <Compile Include="ExternalTests\TestSettingsReader.cs" />
     <Compile Include="ExternalTests\TestCase.cs" />
     <Compile Include="Model\Names\NameAssert.cs" />
     <Compile Include="AsyncTestHelper.cs" />
