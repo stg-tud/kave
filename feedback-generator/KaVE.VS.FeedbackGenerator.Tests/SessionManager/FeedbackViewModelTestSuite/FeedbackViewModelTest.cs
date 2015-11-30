@@ -211,9 +211,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
             var busyMessage = "";
             _uut.OnPropertyChanged(fvm => fvm.BusyMessage, message => busyMessage = message);
 
-            _mockExporter.Raise(exporter => exporter.ExportProgressChanged += null, "progress");
+            _mockExporter.Raise(exporter => exporter.ExportProgressChanged += null, 123);
 
-            Assert.AreEqual(Properties.UploadWizard.Export_BusyMessage + " (progress)", busyMessage);
+            Assert.AreEqual(Properties.UploadWizard.Export_BusyMessage + " (123%)", busyMessage);
         }
 
         private void WhenEventsOfSingleSelectedSessionAreLoaded()
