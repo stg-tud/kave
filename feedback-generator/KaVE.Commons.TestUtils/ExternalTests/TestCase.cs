@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.TestUtils.ExternalTests
@@ -24,16 +25,28 @@ namespace KaVE.Commons.TestUtils.ExternalTests
         public readonly string Name;
 
         [NotNull]
+        public readonly Type SerializedType;
+
+        [NotNull]
         public readonly string Input;
 
         [NotNull]
-        public readonly string Expected;
+        public readonly string ExpectedCompact;
 
-        public TestCase([NotNull] string name, [NotNull] string input, [NotNull] string expected)
+        [NotNull]
+        public readonly string ExpectedPrettyPrint;
+
+        public TestCase([NotNull] string name,
+            [NotNull] Type serializedType,
+            [NotNull] string input,
+            [NotNull] string expectedCompact,
+            [NotNull] string expectedPrettyPrint)
         {
-            Expected = expected;
-            Input = input;
             Name = name;
+            SerializedType = serializedType;
+            Input = input;
+            ExpectedCompact = expectedCompact;
+            ExpectedPrettyPrint = expectedPrettyPrint;
         }
 
         public override string ToString()

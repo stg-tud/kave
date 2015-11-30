@@ -68,6 +68,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExternalTests\Serialization\SerializationTestSuite.cs" />
     <Compile Include="Model\Events\CompletionEvent\CompletionEventTest.cs" />
     <Compile Include="Model\Events\CompletionEvent\ContextTest.cs" />
     <Compile Include="Model\Events\CompletionEvent\ProposalCollectionTest.cs" />
@@ -177,7 +178,7 @@
     <Compile Include="Model\TypeShapes\MethodHierarchyTest.cs" />
     <Compile Include="Model\TypeShapes\TypeHierarchyTest.cs" />
     <Compile Include="Model\TypeShapes\TypeShapeTest.cs" />
-    <Compile Include="TestUtilsTests\ExternalTestCaseProviderTest.cs" />
+    <Compile Include="ExternalTests\ExternalTestCaseProviderTest.cs" />
     <Compile Include="Utils\Assertion\AssertsTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommenderTest.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtilsTest.cs" />

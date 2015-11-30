@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.TestUtils.ExternalTests
 {
     public static class ExternalTestCaseProvider
     {
-        private const string ExpectedFileName = "expected.json";
+        private const string ExpectedCompactFileName = "expected-compact.json";
+        private const string ExpectedPrettyFileName = "expected-pretty.json";
+        private const string TypeHintFileName = "settings.ini";
 
         [Pure, NotNull]
         public static IEnumerable<TestCase> GetTestCases(string rootFolderPath)
@@ -49,27 +53,59 @@ namespace KaVE.Commons.TestUtils.ExternalTests
         }
 
         [Pure, NotNull]
-        private static IEnumerable<TestCase> GetTestCasesInCurrentFolder(DirectoryInfo folderDirectory,
+        private static IEnumerable<TestCase> GetTestCasesInCurrentFolder(DirectoryInfo directory,
             string rootFolderPath)
         {
-            var expectedFile = folderDirectory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedFileName));
-            if (expectedFile == null)
+            var compactExpectedFile =
+                directory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedCompactFileName));
+            var prettyExpectedFile =
+                directory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedPrettyFileName));
+
+            if (compactExpectedFile == null || prettyExpectedFile == null)
             {
                 return new List<TestCase>();
             }
 
-            var inputFiles = folderDirectory.GetFiles().Where(file => !file.Name.Equals(ExpectedFileName));
+            var serializedType = GetSerializedType(directory);
+            Asserts.NotNull(serializedType, "ini file missing or invalid!");
+
+            var inputFiles = directory.GetFiles().Where(IsTestCaseFile);
             return
                 inputFiles.Select(
                     inputFile =>
                         new TestCase(
                             GetTestCaseName(rootFolderPath, inputFile.FullName),
+                            serializedType,
                             File.ReadAllText(inputFile.FullName),
-                            File.ReadAllText(expectedFile.FullName)));
+                            File.ReadAllText(compactExpectedFile.FullName),
+                            File.ReadAllText(prettyExpectedFile.FullName)));
+        }
+
+        [Pure, CanBeNull]
+        private static Type GetSerializedType(DirectoryInfo directory)
+        {
+            var typeHintFile = directory.GetFiles().FirstOrDefault(file => file.Name.Equals(TypeHintFileName));
+            if (typeHintFile == null)
+            {
+                // don't run tests with missing typehint file. (some tests will fail without type information - e.g. PrettyPrint tests)
+                return null;
+            }
+
+            var typeHint = File.ReadAllText(typeHintFile.FullName);
+            return Type.GetType(typeHint);
+        }
+
+        [Pure]
+        private static bool IsTestCaseFile([NotNull] FileInfo file)
+        {
+            return
+                !file.Name.Equals(ExpectedCompactFileName) &&
+                !file.Name.Equals(ExpectedPrettyFileName) &&
+                !file.Name.Equals(TypeHintFileName);
         }
 
         [Pure, NotNull]
-        private static string GetTestCaseName(string rootFolderPath, string testCaseFile)
+        private static string GetTestCaseName([NotNull] string rootFolderPath, [NotNull] string testCaseFile)
         {
             return Regex.Replace(TrimFileExtension(testCaseFile), rootFolderPath + @"\\", "");
         }

@@ -15,13 +15,11 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.Commons.TestUtils.ExternalTests;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
@@ -29,23 +27,6 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
 {
     internal class CompletionEventSerializationTest : SerializationTestBase
     {
-        private const string TestSourceRootFolder = @"H:\\KaVE\\Tests\\CompletionEventSerialization";
-
-        private static IEnumerable<TestCase> ExternalSerializationTestCases
-        {
-            get
-            {
-                return ExternalTestCaseProvider.GetTestCases(TestSourceRootFolder);
-            }
-        }
-
-        [TestCaseSource("ExternalSerializationTestCases"), Ignore]
-        public void ParseAndSerialize(TestCase testCase)
-        {
-            var actualString = testCase.Input.ParseJsonTo<CompletionEvent>().ToCompactJson();
-            Assert.AreEqual(testCase.Expected, actualString);
-        }
-
         [Test]
         public void VerifyToJson()
         {

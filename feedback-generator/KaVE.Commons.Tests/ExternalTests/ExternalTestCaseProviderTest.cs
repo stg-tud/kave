@@ -17,11 +17,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.TestUtils.ExternalTests;
-using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.TestUtilsTests
+namespace KaVE.Commons.Tests.ExternalTests
 {
     internal class ExternalTestCaseProviderTest
     {
@@ -29,7 +29,9 @@ namespace KaVE.Commons.Tests.TestUtilsTests
 
         private const string ExpectedFirstName = @"TestSuite\TestCases\FirstTest";
         private const string ExpectedFirstInput = "firstInputContent";
-        private const string ExpectedExpected = "expectedContent";
+        private const string ExpectedCompact = "expectedCompactContent";
+        private const string ExpectedPretty = "expectedPrettyContent";
+        private static readonly Type ExpectedSerializedType = typeof (CompletionEvent);
 
         [SetUp]
         public void Setup()
@@ -55,17 +57,24 @@ namespace KaVE.Commons.Tests.TestUtilsTests
         }
 
         [Test]
-        public void ShouldFindInputAndExpected()
+        public void ShouldFindInput()
         {
             var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(ExpectedFirstInput, firstTestCase.Input);
         }
 
         [Test]
-        public void ShouldFindExpected()
+        public void ShouldFindCompactExpected()
         {
             var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
-            Assert.AreEqual(ExpectedExpected, firstTestCase.Expected);
+            Assert.AreEqual(ExpectedCompact, firstTestCase.ExpectedCompact);
+        }
+
+        [Test]
+        public void ShouldFindPrettyExpected()
+        {
+            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            Assert.AreEqual(ExpectedPretty, firstTestCase.ExpectedPrettyPrint);
         }
 
         [Test]
@@ -73,6 +82,13 @@ namespace KaVE.Commons.Tests.TestUtilsTests
         {
             var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(ExpectedFirstName, firstTestCase.Name);
+        }
+
+        [Test]
+        public void ShouldGetSerializedTypeFromTypeHint()
+        {
+            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            Assert.AreEqual(ExpectedSerializedType, firstTestCase.SerializedType);
         }
 
         private static void GenerateTestCaseStructure(string baseDirectory)
@@ -91,8 +107,14 @@ namespace KaVE.Commons.Tests.TestUtilsTests
             var secondInputFile = Path.Combine(testCasesDirectory, "SecondTest.json");
             File.WriteAllText(secondInputFile, "secondInputContent");
 
-            var expectedFile = Path.Combine(testCasesDirectory, "expected.json");
-            File.WriteAllText(expectedFile, ExpectedExpected);
+            var expectedCompactFile = Path.Combine(testCasesDirectory, "expected-compact.json");
+            File.WriteAllText(expectedCompactFile, ExpectedCompact);
+
+            var expectedPrettyPrintFile = Path.Combine(testCasesDirectory, "expected-pretty.json");
+            File.WriteAllText(expectedPrettyPrintFile, ExpectedPretty);
+
+            var typeHintFile = Path.Combine(testCasesDirectory, "settings.ini");
+            File.WriteAllText(typeHintFile, ExpectedSerializedType.AssemblyQualifiedName);
         }
     }
 }
