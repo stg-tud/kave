@@ -609,7 +609,15 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IEventReference eventRef, SSTPrintingContext c)
         {
-            c.Text(eventRef.Reference.Identifier).Text(".").Text(eventRef.EventName.Name);
+            if (eventRef.EventName.IsStatic)
+            {
+                c.Type(eventRef.EventName.DeclaringType);
+            }
+            else
+            {
+                c.Text(eventRef.Reference.Identifier);
+            }
+            c.Text(".").Text(eventRef.EventName.Name);
         }
 
         public void Visit(IFieldReference fieldRef, SSTPrintingContext c)
@@ -628,12 +636,30 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IMethodReference methodRef, SSTPrintingContext c)
         {
-            c.Text(methodRef.Reference.Identifier).Text(".").Text(methodRef.MethodName.Name);
+            if (methodRef.MethodName.IsStatic)
+            {
+                c.Type(methodRef.MethodName.DeclaringType);
+            }
+            else
+            {
+                c.Text(methodRef.Reference.Identifier);
+            }
+
+            c.Text(".").Text(methodRef.MethodName.Name);
         }
 
         public void Visit(IPropertyReference propertyRef, SSTPrintingContext c)
         {
-            c.Text(propertyRef.Reference.Identifier).Text(".").Text(propertyRef.PropertyName.Name);
+            if (propertyRef.PropertyName.IsStatic)
+            {
+                c.Type(propertyRef.PropertyName.DeclaringType);
+            }
+            else
+            {
+                c.Text(propertyRef.Reference.Identifier);
+            }
+
+            c.Text(".").Text(propertyRef.PropertyName.Name);
         }
 
         public void Visit(IVariableReference varRef, SSTPrintingContext c)

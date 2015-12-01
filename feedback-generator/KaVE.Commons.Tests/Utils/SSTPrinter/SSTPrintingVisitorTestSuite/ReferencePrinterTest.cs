@@ -45,6 +45,17 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void EventReference_static()
+        {
+            var sst = new EventReference
+            {
+                EventName = EventName.Get("static [EventType,P] [DeclaringType,P].E"),
+            };
+
+            AssertPrint(sst, "DeclaringType.E");
+        }
+
+        [Test]
         public void FieldReference()
         {
             var sst = new FieldReference
@@ -62,7 +73,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new FieldReference
             {
                 FieldName = FieldName.Get("static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Empty"),
-                Reference = new VariableReference()
             };
 
             AssertPrint(sst, "String.Empty");
@@ -81,6 +91,17 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void MethodReference_static()
+        {
+            var sst = new MethodReference
+            {
+                MethodName = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+            };
+
+            AssertPrint(sst, "DeclaringType.M");
+        }
+
+        [Test]
         public void PropertyReference()
         {
             var sst = new PropertyReference
@@ -90,6 +111,17 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             };
 
             AssertPrint(sst, "o.P");
+        }
+
+        [Test]
+        public void PropertyReference_static()
+        {
+            var sst = new PropertyReference
+            {
+                PropertyName = PropertyName.Get("static get set [PropertyType,P] [DeclaringType,P].P"),
+            };
+
+            AssertPrint(sst, "DeclaringType.P");
         }
 
         [Test]
