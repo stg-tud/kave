@@ -27,10 +27,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         [Test]
         public void Empty()
         {
-            CompleteInMethod(@"switch(a) { } $");
+            CompleteInMethod(@"switch(this) { } $");
 
             AssertBody(
-                new SwitchBlock {Reference = VarRef("a")},
+                new SwitchBlock {Reference = VarRef("this")},
                 Fix.EmptyCompletion);
         }
 
@@ -38,7 +38,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void DefaultSectionOnly()
         {
             CompleteInMethod(@"
-                switch (a)
+                switch (this)
                 {
                     default:
                         break;
@@ -46,7 +46,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 $");
 
             AssertBody(
-                new SwitchBlock {Reference = VarRef("a"), DefaultSection = {new BreakStatement()}},
+                new SwitchBlock {Reference = VarRef("this"), DefaultSection = {new BreakStatement()}},
                 Fix.EmptyCompletion);
         }
 
@@ -54,7 +54,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void Standard()
         {
             CompleteInMethod(@"
-                switch (a)
+                switch (this)
                 {
                     case 0:
                     case 1:
@@ -72,7 +72,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new SwitchBlock
                 {
-                    Reference = VarRef("a"),
+                    Reference = VarRef("this"),
                     Sections =
                     {
                         new CaseBlock {Label = new ConstantValueExpression()},
@@ -96,7 +96,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void CompletionInCaseBlock_First()
         {
             CompleteInMethod(@"
-                switch (a)
+                switch (this)
                 {
                     default:
                         $
@@ -106,8 +106,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new SwitchBlock
                 {
-                    Reference = VarRef("a"),
-                    DefaultSection = { Fix.EmptyCompletion, new BreakStatement() }
+                    Reference = VarRef("this"),
+                    DefaultSection = {Fix.EmptyCompletion, new BreakStatement()}
                 });
         }
 
@@ -115,7 +115,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void CompletionInCaseBlock_Second()
         {
             CompleteInMethod(@"
-                switch (a)
+                switch (this)
                 {
                     default:
                         break;
@@ -125,8 +125,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new SwitchBlock
                 {
-                    Reference = VarRef("a"),
-                    DefaultSection = { new BreakStatement(), Fix.EmptyCompletion }
+                    Reference = VarRef("this"),
+                    DefaultSection = {new BreakStatement(), Fix.EmptyCompletion}
                 });
         }
 
@@ -134,7 +134,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void CompletionOutsideCaseBlockIsIgnored_BeforeFirst()
         {
             CompleteInMethod(@"
-                switch (a)
+                switch (this)
                 {
                     $
 
@@ -145,8 +145,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new SwitchBlock
                 {
-                    Reference = VarRef("a"),
-                    DefaultSection = { new BreakStatement() }
+                    Reference = VarRef("this"),
+                    DefaultSection = {new BreakStatement()}
                 });
         }
 
@@ -154,16 +154,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void CompletionOutsideCaseBlockIsIgnored_Empty()
         {
             CompleteInMethod(@"
-                switch (a)
+                switch ()
                 {
                     $
                 }");
 
-            AssertBody(
-                new SwitchBlock
-                {
-                    Reference = VarRef("a")
-                });
+            AssertBody(new SwitchBlock());
         }
     }
 }

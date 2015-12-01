@@ -29,7 +29,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         public void OneIndex()
         {
             CompleteInMethod(@"
-                int i = arr[1];
+                int i = this[1];
                 $");
 
             AssertBody(
@@ -38,7 +38,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "i",
                     new IndexAccessExpression
                     {
-                        Reference = VarRef("arr"),
+                        Reference = VarRef("this"),
                         Indices = {new ConstantValueExpression()}
                     }),
                 Fix.EmptyCompletion);
@@ -48,7 +48,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         public void TwoIndices()
         {
             CompleteInMethod(@"
-                int i = arr[1, 2];
+                int i = this[1, 2];
                 $");
 
             AssertBody(
@@ -57,7 +57,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "i",
                     new IndexAccessExpression
                     {
-                        Reference = VarRef("arr"),
+                        Reference = VarRef("this"),
                         Indices = {new ConstantValueExpression(), new ConstantValueExpression()}
                     }),
                 Fix.EmptyCompletion);
@@ -99,7 +99,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         {
             CompleteInMethod(@"
                 int index = 1;
-                int i = arr[index];
+                int i = this[index];
                 $");
 
             AssertBody(
@@ -110,7 +110,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "i",
                     new IndexAccessExpression
                     {
-                        Reference = VarRef("arr"),
+                        Reference = VarRef("this"),
                         Indices = {RefExpr(VarRef("index"))}
                     }),
                 Fix.EmptyCompletion);
@@ -147,7 +147,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void AssigningValueToArrayElement()
+        public void ArrayAccessUnresolved()
         {
             CompleteInMethod(@"
                 arr[1] = 1;
@@ -160,7 +160,28 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Expression =
                             new IndexAccessExpression
                             {
-                                Reference = VarRef("arr"),
+                                Indices = {new ConstantValueExpression()}
+                            }
+                    },
+                    new ConstantValueExpression()),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void AssigningValueToArrayElement()
+        {
+            CompleteInMethod(@"
+                this[1] = 1;
+                $");
+
+            AssertBody(
+                Assign(
+                    new IndexAccessReference
+                    {
+                        Expression =
+                            new IndexAccessExpression
+                            {
+                                Reference = VarRef("this"),
                                 Indices = {new ConstantValueExpression()}
                             }
                     },
@@ -172,7 +193,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         public void AssigningValueToArrayElement_TwoDimensional()
         {
             CompleteInMethod(@"
-                arr[1, 2] = 1;
+                this[1, 2] = 1;
                 $");
 
             AssertBody(
@@ -182,8 +203,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Expression =
                             new IndexAccessExpression
                             {
-                                Reference = VarRef("arr"),
-                                Indices = { new ConstantValueExpression(), new ConstantValueExpression() }
+                                Reference = VarRef("this"),
+                                Indices = {new ConstantValueExpression(), new ConstantValueExpression()}
                             }
                     },
                     new ConstantValueExpression()),

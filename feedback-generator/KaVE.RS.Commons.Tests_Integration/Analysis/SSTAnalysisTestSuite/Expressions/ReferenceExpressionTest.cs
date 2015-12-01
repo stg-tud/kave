@@ -98,6 +98,54 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     }));
         }
 
+        [Test]
+        public void Reference_PredefinedWithDot()
+        {
+            CompleteInMethod(@"
+                object.$
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        TypeReference = Fix.Object,
+                        Token = ""
+                    }));
+        }
+
+        [Test]
+        public void Reference_StaticWithDot()
+        {
+            CompleteInMethod(@"
+                Object.$
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        TypeReference = Fix.Object,
+                        Token = ""
+                    }));
+        }
+
+        [Test]
+        public void Reference_StaticWithQualifier()
+        {
+            CompleteInMethod(@"
+                Object.f$
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        TypeReference = Fix.Object,
+                        Token = "f"
+                    }));
+        }
+
         public void SetupReferenceExample(string lineWithReference)
         {
             CompleteInCSharpFile(@"
@@ -128,8 +176,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
         public void AssertReferenceExampleBody(params IStatement[] stmts)
         {
-            var m = ResultSST.Methods.First();
-            Assert.AreEqual(Lists.NewList(stmts), m.Body);
+            //var m = ResultSST.Methods.First();
+            //Assert.AreEqual(Lists.NewList(stmts), m.Body);
+            AssertBody(stmts);
         }
 
         [Test]

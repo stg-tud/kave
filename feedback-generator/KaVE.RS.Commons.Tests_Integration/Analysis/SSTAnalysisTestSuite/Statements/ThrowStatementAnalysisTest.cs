@@ -68,11 +68,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         public void LonelyThrow_UnassignedVariable()
         {
             CompleteInMethod(@"
-                throw e;
+                throw this;
                 $");
 
             AssertBody(
-                new ThrowStatement { Reference = VarRef("e") },
+                new ThrowStatement {Reference = VarRef("this")},
                 Fix.EmptyCompletion);
         }
 
@@ -119,7 +119,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
         [Test]
         public void TriggerInside()
-        { 
+        {
             CompleteInMethod(@"throw $");
 
             AssertBody(

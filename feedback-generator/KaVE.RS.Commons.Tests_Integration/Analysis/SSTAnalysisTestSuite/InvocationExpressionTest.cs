@@ -123,6 +123,23 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
+        public void Assignment_InvocationOnExpression()
+        {
+            CompleteInMethod(@"
+                var b = new object().Equals(null);
+                $
+            ");
+            AssertBody(
+                VarDecl("b", Fix.Bool),
+                VarDecl("$0", Fix.Object),
+                Assign("$0", InvokeCtor(Fix.Object_ctor)),
+                Assign(
+                    "b",
+                    Invoke("$0", Fix.Object_Equals, new NullExpression())),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
         public void This_Implicitly()
         {
             CompleteInMethod(@"

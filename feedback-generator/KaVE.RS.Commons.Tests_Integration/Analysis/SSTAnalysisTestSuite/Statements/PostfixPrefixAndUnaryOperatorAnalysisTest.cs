@@ -15,6 +15,8 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -28,28 +30,28 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         {
             CompleteInMethod(@"
                 $
-                i++;
+                this++;
             ");
 
             AssertCompletionMarker<IPostfixOperatorExpression>(CompletionCase.EmptyCompletionBefore);
 
             AssertBody(
                 Fix.EmptyCompletion,
-                VarAssign("i", Fix.ComposedExpr("i")));
+                VarAssign("this", Fix.ComposedExpr("this")));
         }
 
         [Test]
         public void PostfixMinusMinus_After()
         {
             CompleteInMethod(@"
-                i--;
+                this--;
                 $
             ");
 
             AssertCompletionMarker<IPostfixOperatorExpression>(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                VarAssign("i", Fix.ComposedExpr("i")),
+                VarAssign("this", Fix.ComposedExpr("this")),
                 Fix.EmptyCompletion);
         }
 
@@ -58,32 +60,32 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         {
             CompleteInMethod(@"
                 $
-                ++i;
+                ++this;
             ");
 
             AssertCompletionMarker<IPrefixOperatorExpression>(CompletionCase.EmptyCompletionBefore);
 
             AssertBody(
                 Fix.EmptyCompletion,
-                VarAssign("i", Fix.ComposedExpr("i")));
+                VarAssign("this", Fix.ComposedExpr("this")));
         }
 
         [Test]
         public void PrefixMinusMinus_After()
         {
             CompleteInMethod(@"
-                --i;
+                --this;
                 $
             ");
 
             AssertCompletionMarker<IPrefixOperatorExpression>(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                VarAssign("i", Fix.ComposedExpr("i")),
+                VarAssign("this", Fix.ComposedExpr("this")),
                 Fix.EmptyCompletion);
         }
 
-        [Test, Ignore]
+        [Test]
         public void Unary_Minus()
         {
             CompleteInMethod(@"
@@ -92,10 +94,15 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 $
             ");
 
-            Assert.Fail();
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                VarAssign("i", new ConstantValueExpression()),
+                VarDecl("j", Fix.Int),
+                VarAssign("j", Fix.ComposedExpr("i")),
+                Fix.EmptyCompletion);
         }
 
-        [Test, Ignore]
+        [Test]
         public void Unary_Not()
         {
             CompleteInMethod(@"
@@ -103,7 +110,84 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 $
             ");
 
-            Assert.Fail();
+            AssertBody(
+                VarDecl("b", Fix.Bool),
+                VarAssign("b", new ConstantValueExpression()),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Unresolved_Postfix()
+        {
+            CompleteInMethod(@"
+                i++;
+                $
+            ");
+
+            AssertBody(
+                new UnknownStatement(),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Unresolved_Prefix()
+        {
+            CompleteInMethod(@"
+                ++i;
+                $
+            ");
+
+            AssertBody(
+                new UnknownStatement(),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void UnresolvedField_Postfix()
+        {
+            CompleteInMethod(@"
+                this.i++;
+                $
+            ");
+            AssertBody(
+                new UnknownStatement(),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void UnresolvedFieldMultiple_Postfix()
+        {
+            CompleteInMethod(@"
+                this.i.i++;
+                $
+            ");
+            AssertBody(
+                new UnknownStatement(),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void UnresolvedField_Prefix()
+        {
+            CompleteInMethod(@"
+                ++this.i;
+                $
+            ");
+            AssertBody(
+                new UnknownStatement(),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void UnresolvedFieldMultiple_Prefix()
+        {
+            CompleteInMethod(@"
+                ++this.i.i;
+                $
+            ");
+            AssertBody(
+                new UnknownStatement(),
+                Fix.EmptyCompletion);
         }
     }
 }

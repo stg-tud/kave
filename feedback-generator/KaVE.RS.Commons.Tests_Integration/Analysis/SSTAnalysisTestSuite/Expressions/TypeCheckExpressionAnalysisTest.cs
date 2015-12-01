@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -26,33 +25,33 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         [Test]
         public void Is_Standard()
         {
-            CompleteInMethod(@"var a = b is Exception; $");
+            CompleteInMethod(@"var a = this is Exception; $");
 
             AssertBody(
                 VarDecl("a", Fix.Bool),
-                Assign("a", new TypeCheckExpression {Reference = VarRef("b"), Type = Fix.Exception}),
+                Assign("a", new TypeCheckExpression {Reference = VarRef("this"), Type = Fix.Exception}),
                 Fix.EmptyCompletion);
         }
 
         [Test]
         public void Is_FullQualified()
         {
-            CompleteInMethod(@"var a = b is System.Exception; $");
+            CompleteInMethod(@"var a = this is System.Exception; $");
 
             AssertBody(
                 VarDecl("a", Fix.Bool),
-                Assign("a", new TypeCheckExpression { Reference = VarRef("b"), Type = Fix.Exception }),
+                Assign("a", new TypeCheckExpression {Reference = VarRef("this"), Type = Fix.Exception}),
                 Fix.EmptyCompletion);
         }
 
         [Test]
         public void Is_Alias()
         {
-            CompleteInMethod(@"var a = b is int; $");
+            CompleteInMethod(@"var a = this is int; $");
 
             AssertBody(
                 VarDecl("a", Fix.Bool),
-                Assign("a", new TypeCheckExpression { Reference = VarRef("b"), Type = Fix.Int }),
+                Assign("a", new TypeCheckExpression {Reference = VarRef("this"), Type = Fix.Int}),
                 Fix.EmptyCompletion);
         }
 
@@ -60,10 +59,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         public void Is_MethodResult()
         {
             CompleteInClass(@"
-                public int GetInt() { return 1; }
                 public void M() 
                 {
-                    var a = GetInt() is int;
+                    var a = GetHashCode() is int;
                     $
                 }");
 
@@ -71,8 +69,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 "M",
                 VarDecl("a", Fix.Bool),
                 VarDecl("$0", Fix.Int),
-                Assign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                Assign("a", new TypeCheckExpression { Reference = VarRef("$0"), Type = Fix.Int }),
+                Assign("$0", Invoke("this", Fix.Object_GetHashCode)),
+                Assign("a", new TypeCheckExpression {Reference = VarRef("$0"), Type = Fix.Int}),
                 Fix.EmptyCompletion);
         }
     }

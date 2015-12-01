@@ -48,13 +48,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
     {
         private readonly UniqueVariableNameGenerator _nameGen;
         private readonly CompletionTargetMarker _marker;
-        private readonly ToAssignableReference _toAssignableRef;
 
         public ExpressionVisitor(UniqueVariableNameGenerator nameGen, CompletionTargetMarker marker)
         {
             _nameGen = nameGen;
             _marker = marker;
-            _toAssignableRef = new ToAssignableReference(nameGen);
         }
 
         public IAssignableExpression ToAssignableExpr(IVariableInitializer csExpr, IList<IStatement> body)
@@ -142,15 +140,10 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public IVariableReference ToVariableRef(ICSharpExpression csExpr, IList<IStatement> body)
         {
+            // keep this for cases where the AST is missing value while typing!
             if (csExpr == null)
             {
                 return new VariableReference();
-            }
-
-            var baseExpr = csExpr as IBaseExpression;
-            if (baseExpr != null)
-            {
-                return new VariableReference {Identifier = "base"};
             }
 
             var thisExpr = csExpr as IThisExpression;
@@ -159,11 +152,24 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 return new VariableReference {Identifier = "this"};
             }
 
+            var baseExpr = csExpr as IBaseExpression;
+            if (baseExpr != null)
+            {
+                return new VariableReference {Identifier = "base"};
+            }
+
             var refExpr = csExpr as IReferenceExpression;
             if (refExpr != null)
             {
+                if (!IsResolved(refExpr))
+                {
+                    return new VariableReference();
+                }
+
+                var isMember = IsMember(refExpr);
+
                 var hasName = refExpr.NameIdentifier != null;
-                var isSimpleReference = refExpr.QualifierExpression == null;
+                var isSimpleReference = !isMember && refExpr.QualifierExpression == null;
                 if (hasName && isSimpleReference)
                 {
                     return VarRef(refExpr.NameIdentifier.Name);
@@ -187,6 +193,19 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 });
 
             return tmpVar;
+        }
+
+        private static bool IsResolved(IReferenceExpression refExpr)
+        {
+            var elem = refExpr.Reference.Resolve().DeclaredElement;
+            return elem != null;
+        }
+
+        private static bool IsMember(IReferenceExpression refExpr)
+        {
+            var elem = refExpr.Reference.Resolve().DeclaredElement;
+            var isMember = elem is IEvent || elem is IField || elem is IMethod || elem is IProperty;
+            return isMember;
         }
 
         private static ITypeName GetTypeName([NotNull] ICSharpExpression csExpr)
@@ -238,11 +257,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     ? resolvedMethod.GetName<IMethodName>()
                     : MethodName.UnknownName;
 
-                VariableReference varRef;
+                IVariableReference varRef;
                 if (invokedExpression.IsClassifiedAsVariable)
                 {
                     // TODO move this handling to CreateVarRef helper?
-                    varRef = CreateVariableReference(invokedExpression, body);
+                    varRef = ToVariableRef(invokedExpression, body);
                 }
                 else if (methodName.IsStatic)
                 {
@@ -250,7 +269,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
                 else
                 {
-                    varRef = CreateVariableReference(invokedExpression.QualifierExpression, body);
+                    if (HasImpliciteThis(invokedExpression))
+                    {
+                        varRef = new VariableReference {Identifier = "this"};
+                    }
+                    else
+                    {
+                        varRef = ToVariableRef(invokedExpression.QualifierExpression, body);
+                    }
                 }
 
                 var parameters = GetArgumentList(inv.ArgumentList, body);
@@ -266,7 +292,12 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return new UnknownExpression();
         }
 
-        private VariableReference CreateVariableReference(ICSharpExpression refExpr,
+        private bool HasImpliciteThis(IReferenceExpression refExpr)
+        {
+            return IsMember(refExpr) && refExpr.QualifierExpression == null;
+        }
+
+        private VariableReference CreateVariableReference2(ICSharpExpression refExpr,
             IList<IStatement> body)
         {
             var reference = ToReference(refExpr, body);
@@ -367,7 +398,12 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         private IReference ToReference(ICSharpExpression csExpr,
             IList<IStatement> body)
         {
-            if (csExpr == null || csExpr is IThisExpression)
+            if (csExpr == null)
+            {
+                return new UnknownReference();
+            }
+
+            if (csExpr is IThisExpression)
             {
                 return new VariableReference {Identifier = "this"};
             }
@@ -405,59 +441,16 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var refExpr = csExpr as IReferenceExpression;
             if (refExpr != null)
             {
-                var hasQualifier = refExpr.QualifierExpression != null;
-
-                IVariableReference baseRef = new VariableReference();
-                if (hasQualifier && refExpr.QualifierExpression.IsClassifiedAsVariable)
-                {
-                    baseRef = CreateVariableReference(refExpr.QualifierExpression, body);
-                }
-
-                var resolveResult = refExpr.Reference.Resolve();
-                var elem = resolveResult.DeclaredElement;
+                var elem = refExpr.Reference.Resolve().DeclaredElement;
                 if (elem == null)
                 {
                     return new UnknownReference();
                 }
 
-                var field = elem as IField;
-                if (field != null)
+                var typeMember = elem as ITypeMember;
+                if (typeMember != null)
                 {
-                    return new FieldReference
-                    {
-                        FieldName = field.GetName<IFieldName>(),
-                        Reference = baseRef
-                    };
-                }
-
-                var property = elem as IProperty;
-                if (property != null)
-                {
-                    return new PropertyReference
-                    {
-                        PropertyName = property.GetName<IPropertyName>(),
-                        Reference = baseRef
-                    };
-                }
-
-                var @event = elem as IEvent;
-                if (@event != null)
-                {
-                    return new EventReference
-                    {
-                        EventName = @event.GetName<IEventName>(),
-                        Reference = baseRef
-                    };
-                }
-
-                var method = elem as IMethod;
-                if (method != null)
-                {
-                    return new MethodReference
-                    {
-                        MethodName = method.GetName<IMethodName>(),
-                        Reference = baseRef
-                    };
+                    return ToReference(refExpr, typeMember, body);
                 }
 
                 var localVar = elem as ILocalVariable;
@@ -474,6 +467,60 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 return new IndexAccessReference
                 {
                     Expression = (IIndexAccessExpression) VisitElementAccessExpression(elementAccessExpr, body)
+                };
+            }
+
+            return new UnknownReference();
+        }
+
+        // ReSharper disable once SuggestBaseTypeForParameter
+        private IReference ToReference(IReferenceExpression refExpr, ITypeMember elem, IList<IStatement> body)
+        {
+            IVariableReference baseRef = new VariableReference();
+            if (!elem.IsStatic)
+            {
+                baseRef = HasImpliciteThis(refExpr)
+                    ? new VariableReference {Identifier = "this"}
+                    : ToVariableRef(refExpr.QualifierExpression, body);
+            }
+
+            var field = elem as IField;
+            if (field != null)
+            {
+                return new FieldReference
+                {
+                    FieldName = field.GetName<IFieldName>(),
+                    Reference = baseRef
+                };
+            }
+
+            var property = elem as IProperty;
+            if (property != null)
+            {
+                return new PropertyReference
+                {
+                    PropertyName = property.GetName<IPropertyName>(),
+                    Reference = baseRef
+                };
+            }
+
+            var @event = elem as IEvent;
+            if (@event != null)
+            {
+                return new EventReference
+                {
+                    EventName = @event.GetName<IEventName>(),
+                    Reference = baseRef
+                };
+            }
+
+            var method = elem as IMethod;
+            if (method != null)
+            {
+                return new MethodReference
+                {
+                    MethodName = method.GetName<IMethodName>(),
+                    Reference = baseRef
                 };
             }
 
@@ -519,41 +566,86 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitReferenceExpression(IReferenceExpression expr,
             IList<IStatement> context)
         {
+            var qualifierExpr = expr.QualifierExpression;
             var name = expr.NameIdentifier != null ? expr.NameIdentifier.Name : "";
-            var hasQualifier = expr.QualifierExpression != null;
-
-            IVariableReference varRef = null;
-            if (hasQualifier &&
-                (expr.QualifierExpression.IsClassifiedAsVariable ||
-                 expr.QualifierExpression is IObjectCreationExpression ||
-                 expr.QualifierExpression is IInvocationExpression ||
-                 expr.QualifierExpression is IBaseExpression ||
-                 expr.QualifierExpression is IThisExpression))
-            {
-                varRef = ToVariableRef(expr.QualifierExpression, context);
-            }
-
             if (expr == _marker.AffectedNode)
             {
-                return new CompletionExpression
+                var ce = new CompletionExpression
                 {
-                    Token = name,
-                    VariableReference = varRef
+                    Token = name
                 };
+                if (qualifierExpr != null)
+                {
+                    if (qualifierExpr.IsClassifiedAsVariable ||
+                        qualifierExpr is IInvocationExpression ||
+                        qualifierExpr is IThisExpression ||
+                        qualifierExpr is IBaseExpression)
+                    {
+                        ce.VariableReference = ToVariableRef(qualifierExpr, context);
+                    }
+                    else
+                    {
+                        ce.TypeReference = ToTypeRef(qualifierExpr);
+                    }
+                }
+                return ce;
             }
 
-            if (varRef == null)
+            if (IsMember(expr))
             {
+                IVariableReference varRef;
+                if (IsStatic(expr))
+                {
+                    varRef = new VariableReference();
+                }
+                else
+                {
+                    varRef = HasImpliciteThis(expr)
+                        ? new VariableReference {Identifier = "this"}
+                        : ToVariableRef(qualifierExpr, context);
+                }
+
                 return new ReferenceExpression
                 {
-                    Reference = ToReference(expr, context)
+                    Reference = GetReference(expr, varRef)
                 };
             }
 
             return new ReferenceExpression
             {
-                Reference = GetReference(expr, varRef)
+                Reference = ToReference(expr, context)
             };
+        }
+
+        private static ITypeName ToTypeRef(ICSharpExpression expr)
+        {
+            var typeExpr = expr as IPredefinedTypeExpression;
+            if (typeExpr != null)
+            {
+                var elem = typeExpr.PredefinedTypeName.Reference.Resolve().DeclaredElement;
+                if (elem != null)
+                {
+                    return elem.GetName<ITypeName>(elem.GetIdSubstitutionSafe());
+                }
+            }
+
+            var refExpr = expr as IReferenceExpression;
+            if (refExpr != null)
+            {
+                var elem = refExpr.Reference.Resolve().DeclaredElement;
+                if (elem != null)
+                {
+                    return elem.GetName<ITypeName>(elem.GetIdSubstitutionSafe());
+                }
+            }
+            return TypeName.UnknownName;
+        }
+
+        private static bool IsStatic(IReferenceExpression expr)
+        {
+            var elem = expr.Reference.Resolve().DeclaredElement;
+            var typeMember = elem as ITypeMember;
+            return typeMember != null && typeMember.IsStatic;
         }
 
         public override IAssignableExpression VisitLambdaExpression(ILambdaExpression expr, IList<IStatement> body)

@@ -290,15 +290,22 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 body.Add(EmptyCompletionExpression);
             }
             var varRef = _exprVisitor.ToVariableRef(expr.Operand, body);
-            body.Add(
-                new Assignment
-                {
-                    Reference = varRef,
-                    Expression = new ComposedExpression
+            if (varRef.IsMissing)
+            {
+                body.Add(new UnknownStatement());
+            }
+            else
+            {
+                body.Add(
+                    new Assignment
                     {
-                        References = {varRef}
-                    }
-                });
+                        Reference = varRef,
+                        Expression = new ComposedExpression
+                        {
+                            References = {varRef}
+                        }
+                    });
+            }
             if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
             {
                 body.Add(EmptyCompletionExpression);
@@ -312,15 +319,22 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 body.Add(EmptyCompletionExpression);
             }
             var varRef = _exprVisitor.ToVariableRef(expr.Operand, body);
-            body.Add(
-                new Assignment
-                {
-                    Reference = varRef,
-                    Expression = new ComposedExpression
+            if (varRef.IsMissing)
+            {
+                body.Add(new UnknownStatement());
+            }
+            else
+            {
+                body.Add(
+                    new Assignment
                     {
-                        References = {varRef}
-                    }
-                });
+                        Reference = varRef,
+                        Expression = new ComposedExpression
+                        {
+                            References = {varRef}
+                        }
+                    });
+            }
             if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
             {
                 body.Add(EmptyCompletionExpression);
@@ -715,7 +729,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             throw new InvalidOperationException("VisitSwitchLabelStatement should never be hit.");
         }
-        
+
         public override void VisitUncheckedStatement(IUncheckedStatement block, IList<IStatement> body)
         {
             AddIf(block, CompletionCase.EmptyCompletionBefore, body);
