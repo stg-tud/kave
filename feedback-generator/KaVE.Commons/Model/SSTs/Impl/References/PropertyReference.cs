@@ -46,7 +46,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         private bool Equals(PropertyReference other)
         {
-            return Equals(PropertyName, other.PropertyName);
+            return Equals(PropertyName, other.PropertyName) && Equals(Reference, other.Reference);
         }
 
         public override bool Equals(object obj)
@@ -56,7 +56,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         public override int GetHashCode()
         {
-            return unchecked (505239 + PropertyName.GetHashCode());
+            unchecked
+            {
+                return (Reference.GetHashCode()*505239) ^ PropertyName.GetHashCode();
+            }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
@@ -24,6 +25,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
 {
     public class FieldReferenceTest
     {
+        private static IVariableReference SomeRef
+        {
+            get { return new VariableReference {Identifier = "i"}; }
+        }
+
         private static IFieldName SomeField
         {
             get { return FieldName.Get("[T1,P1] [T2,P2].E"); }
@@ -42,7 +48,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void SettingValues()
         {
-            var sut = new FieldReference {FieldName = SomeField};
+            var sut = new FieldReference
+            {
+                Reference = SomeRef,
+                FieldName = SomeField
+            };
+            Assert.AreEqual(SomeRef, sut.Reference);
             Assert.AreEqual(SomeField, sut.FieldName);
         }
 
@@ -58,10 +69,27 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new FieldReference {FieldName = SomeField};
-            var b = new FieldReference {FieldName = SomeField};
+            var a = new FieldReference
+            {
+                Reference = SomeRef,
+                FieldName = SomeField
+            };
+            var b = new FieldReference
+            {
+                Reference = SomeRef,
+                FieldName = SomeField
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentReference()
+        {
+            var a = new FieldReference {Reference = SomeRef};
+            var b = new FieldReference();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]

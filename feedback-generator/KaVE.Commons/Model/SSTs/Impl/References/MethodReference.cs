@@ -46,7 +46,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         private bool Equals(MethodReference other)
         {
-            return Equals(MethodName, other.MethodName);
+            return Equals(MethodName, other.MethodName) && Equals(Reference, other.Reference);
         }
 
         public override bool Equals(object obj)
@@ -56,7 +56,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         public override int GetHashCode()
         {
-            return unchecked(91747 + MethodName.GetHashCode());
+            unchecked
+            {
+                return (Reference.GetHashCode()*91747) ^ MethodName.GetHashCode();
+            }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

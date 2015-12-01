@@ -46,7 +46,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         private bool Equals(EventReference other)
         {
-            return Equals(EventName, other.EventName);
+            return Equals(EventName, other.EventName) && Equals(Reference, other.Reference);
         }
 
         public override bool Equals(object obj)
@@ -56,7 +56,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         public override int GetHashCode()
         {
-            return unchecked(175 + EventName.GetHashCode());
+            unchecked
+            {
+                return (Reference.GetHashCode()*397) ^ EventName.GetHashCode();
+            }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
@@ -24,6 +25,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
 {
     public class PropertyReferenceTest
     {
+        private static IVariableReference SomeRef
+        {
+            get { return new VariableReference {Identifier = "i"}; }
+        }
+
         private static IPropertyName SomeProperty
         {
             get { return PropertyName.Get("[T1,P1] [T2,P2].P"); }
@@ -42,7 +48,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void SettingValues()
         {
-            var sut = new PropertyReference {PropertyName = SomeProperty};
+            var sut = new PropertyReference
+            {
+                Reference = SomeRef,
+                PropertyName = SomeProperty
+            };
+            Assert.AreEqual(SomeRef, sut.Reference);
             Assert.AreEqual(SomeProperty, sut.PropertyName);
         }
 
@@ -58,10 +69,27 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new PropertyReference {PropertyName = SomeProperty};
-            var b = new PropertyReference {PropertyName = SomeProperty};
+            var a = new PropertyReference
+            {
+                Reference = SomeRef,
+                PropertyName = SomeProperty
+            };
+            var b = new PropertyReference
+            {
+                Reference = SomeRef,
+                PropertyName = SomeProperty
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentReference()
+        {
+            var a = new PropertyReference {Reference = SomeRef};
+            var b = new PropertyReference();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
