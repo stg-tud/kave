@@ -83,16 +83,19 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void ParametersIdentity()
         {
-            const string declaringTypeIdentifier = "A, B, 9.9.9.9";
-            const string returnTypeIdentifier = "R, C, 7.6.5.4";
+            const string declaringTypeIdentifier = "[A, B, 9.9.9.9]";
+            const string returnTypeIdentifier = "[R, C, 7.6.5.4]";
             const string param1Identifier = "[P, D, 3.4.3.2] n";
             const string param2Identifier = "[Q, E, 9.1.8.2] o";
             const string param3Identifier = "[R, F, 6.5.7.4] p";
 
-            var methodName =
-                MethodName.Get(
-                    "[" + returnTypeIdentifier + "] [" + declaringTypeIdentifier + "].DoIt(" + param1Identifier + ", " +
-                    param2Identifier + ", " + param3Identifier + ")");
+            var methodName = MethodName.Get(
+                "{0} {1}.TestMethod(out {2}, {3}, {4})",
+                declaringTypeIdentifier,
+                returnTypeIdentifier,
+                param1Identifier,
+                param2Identifier,
+                param3Identifier);
 
             var sut = new MethodDeclaration
             {

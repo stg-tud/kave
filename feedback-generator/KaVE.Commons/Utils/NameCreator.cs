@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -27,72 +28,74 @@ namespace KaVE.Commons.Utils
     {
         public static IMethodName CreateMethodName(this IMethodDeclaration methodDeclaration)
         {
-            string methodModifier = methodDeclaration.IsStatic ? "static " : "";
-            string returnType = methodDeclaration.ReturnType.TypeName.Identifier;
-            string declaringType = methodDeclaration.DeclaringType.TypeName.Identifier;
-            string methodName = methodDeclaration.MethodName.Name;
-            string parameters = GetParameterString(methodDeclaration.Parameters);
-            string typeParameters = GetTypeParameterString(methodDeclaration.TypeParameters);
+            var methodModifier = methodDeclaration.IsStatic ? "static " : "";
+            var returnType = methodDeclaration.ReturnType.TypeName.Identifier;
+            var declaringType = methodDeclaration.DeclaringType.TypeName.Identifier;
+            var methodName = methodDeclaration.MethodName.Name;
+            var typeParameters = GetTypeParameterString(methodDeclaration.TypeParameters.ToList());
+            var parameters = GetParameterString(methodDeclaration.Parameters);
 
-            return MethodName.Get(string.Format("{0}[{1}] [{2}].{3}{4}({5})", methodModifier, returnType, declaringType, methodName, typeParameters, parameters));
+            return MethodName.Get(
+                "{0}[{1}] [{2}].{3}{4}({5})",
+                methodModifier,
+                returnType,
+                declaringType,
+                methodName,
+                typeParameters,
+                parameters);
         }
 
-        private static string GetTypeParameterString(IEnumerable<ITypeReference> typeParameters)
+        private static string GetTypeParameterString(ICollection<ITypeReference> typeParameters)
         {
-            var typeParameterList = typeParameters.ToList();
-            var numberOfTypeParameters = typeParameterList.Count();
-            string result = numberOfTypeParameters != 0 ? string.Format("`{0}[", numberOfTypeParameters) : "";
-            
-            foreach (var typeParameter in typeParameterList)
+            var result = "";
+            var numberOfTypeParameters = typeParameters.Count;
+            if (numberOfTypeParameters > 0)
             {
-                result += string.Format("[{0}]", typeParameter.TypeName.Identifier);
-                if (!typeParameter.Equals(typeParameterList.Last()))
-                {
-                    result += ",";
-                }
-                else
-                {
-                    result += "]";
-                }
+                result = string.Format(
+                    "`{0}[{1}]",
+                    numberOfTypeParameters,
+                    string.Join(
+                        ",",
+                        typeParameters.Select(
+                            typeParameter => string.Format("[{0}]", typeParameter.TypeName.Identifier))));
             }
             return result;
         }
 
         private static string GetParameterString(IEnumerable<IParameterDeclaration> parameterDeclarations)
         {
-            string result = "";
+            var sb = new StringBuilder();
             var parameterDeclarationList = parameterDeclarations.ToList();
             foreach (var parameterDeclaration in parameterDeclarationList)
             {
-                string parameter = "";
-
                 if (parameterDeclaration.IsOptional)
                 {
-                    parameter += ParameterName.OptionalModifier + " ";
+                    sb.AppendFormat("{0} ", ParameterName.OptionalModifier);
                 }
                 if (parameterDeclaration.IsOutput)
                 {
-                    parameter += ParameterName.OutputModifier + " ";
+                    sb.AppendFormat("{0} ", ParameterName.OutputModifier);
                 }
                 if (parameterDeclaration.IsParameterArray)
                 {
-                    parameter += ParameterName.VarArgsModifier + " ";
+                    sb.AppendFormat("{0} ", ParameterName.VarArgsModifier);
                 }
                 if (parameterDeclaration.IsPassedByReference && parameterDeclaration.Type.TypeName.IsValueType)
                 {
-                    parameter += ParameterName.PassByReferenceModifier + " ";
+                    sb.AppendFormat("{0} ", ParameterName.PassByReferenceModifier);
                 }
 
-                parameter += string.Format("[{0}] ", parameterDeclaration.Type.TypeName.Identifier);
-                parameter += parameterDeclaration.Name.Name;
+                sb.AppendFormat(
+                    "[{0}] {1}",
+                    parameterDeclaration.Type.TypeName.Identifier,
+                    parameterDeclaration.Name.Name);
+
                 if (!parameterDeclaration.Equals(parameterDeclarationList.Last()))
                 {
-                    parameter += ", ";
+                    sb.Append(", ");
                 }
-
-                result += parameter;
             }
-            return result;
+            return sb.ToString();
         }
 
         public static IFieldName CreateFieldName(this IFieldDeclaration fieldDeclaration)
@@ -102,7 +105,7 @@ namespace KaVE.Commons.Utils
             string declaringType = fieldDeclaration.DeclaringType.TypeName.Identifier;
             string fieldName = fieldDeclaration.FieldName.Name;
 
-            return FieldName.Get(string.Format("{0}[{1}] [{2}].{3}", fieldModifier, valueType, declaringType, fieldName));
+            return FieldName.Get("{0}[{1}] [{2}].{3}", fieldModifier, valueType, declaringType, fieldName);
         }
     }
 }
