@@ -46,6 +46,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class ExpressionVisitor : TreeNodeVisitor<IList<IStatement>, IAssignableExpression>
     {
+        public readonly ITypeName Bool = TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
+
         private readonly UniqueVariableNameGenerator _nameGen;
         private readonly CompletionTargetMarker _marker;
 
@@ -793,6 +795,32 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             {
                 Reference = ToVariableRef(expr.Operand, body),
                 Indices = GetArgumentList(expr.ArgumentList, body)
+            };
+        }
+
+        public override IAssignableExpression VisitNullCoalescingExpression(INullCoalescingExpression expr,
+            IList<IStatement> context)
+        {
+            var lref = ToVariableRef(expr.LeftOperand, context);
+
+            var v0 = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+            context.Add(
+                new VariableDeclaration
+                {
+                    Reference = v0,
+                    Type = Bool
+                });
+            context.Add(
+                new Assignment
+                {
+                    Reference = v0,
+                    Expression = new ComposedExpression {References = {lref}}
+                });
+            return new IfElseExpression
+            {
+                Condition = new ReferenceExpression {Reference = v0},
+                ThenExpression = new ReferenceExpression {Reference = lref},
+                ElseExpression = ToSimpleExpression(expr.RightOperand, context)
             };
         }
 
