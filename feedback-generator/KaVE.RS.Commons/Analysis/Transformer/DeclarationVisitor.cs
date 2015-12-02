@@ -241,14 +241,21 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 foreach (var accessor in decl.AccessorDeclarations)
                 {
                     var bodyVisitor = new BodyVisitor(new UniqueVariableNameGenerator(), _marker);
+                    var body = Lists.NewList<IKaVEStatement>();
 
                     if (accessor.Kind == AccessorKind.GETTER)
                     {
-                        accessor.Accept(bodyVisitor, propDecl.Get);
+                        body = propDecl.Get;
                     }
                     if (accessor.Kind == AccessorKind.SETTER)
                     {
-                        accessor.Accept(bodyVisitor, propDecl.Set);
+                        body = propDecl.Set;
+                    }
+
+                    accessor.Accept(bodyVisitor, body);
+                    if (_marker.AffectedNode == accessor.Body && _marker.AffectedNode != null)
+                    {
+                        body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
                     }
                 }
             }

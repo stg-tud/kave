@@ -568,7 +568,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             var qualifierExpr = expr.QualifierExpression;
             var name = expr.NameIdentifier != null ? expr.NameIdentifier.Name : "";
-            if (expr == _marker.AffectedNode)
+            if (expr == _marker.AffectedNode && _marker.AffectedNode != null)
             {
                 var ce = new CompletionExpression
                 {

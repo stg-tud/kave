@@ -18,6 +18,7 @@ using System;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Collections;
@@ -66,6 +67,48 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
                     {
                         VarDecl("i", Fix.Int),
                         Assign("i", RefExpr("value"))
+                    }
+                });
+        }
+
+        [Test]
+        public void CompletionInEmptyGetter()
+        {
+            CompleteInClass(@"
+                public int P {
+                    get { $ }
+                    set;
+                }
+            ");
+
+            AssertProperties(
+                new PropertyDeclaration
+                {
+                    Name = P("set get [{0}] [{1}].P()", Fix.Int, Fix.TestClass),
+                    Get =
+                    {
+                        ExprStmt(new CompletionExpression())
+                    }
+                });
+        }
+
+        [Test]
+        public void CompletionInEmptySetter()
+        {
+            CompleteInClass(@"
+                public int P {
+                    get;
+                    set { $ }
+                }
+            ");
+
+            AssertProperties(
+                new PropertyDeclaration
+                {
+                    Name = P("set get [{0}] [{1}].P()", Fix.Int, Fix.TestClass),
+                    Set =
+                    {
+                        ExprStmt(new CompletionExpression())
                     }
                 });
         }

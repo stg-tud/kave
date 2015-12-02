@@ -133,7 +133,10 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         private bool IsTargetMatch(ICSharpTreeNode o, CompletionCase completionCase)
         {
-            return o == _marker.AffectedNode && _marker.Case == completionCase;
+            var isValid = _marker.AffectedNode != null;
+            var isMatch = o == _marker.AffectedNode;
+            var isRightCase = _marker.Case == completionCase;
+            return isValid && isMatch && isRightCase;
         }
 
         public override void VisitAssignmentExpression(IAssignmentExpression expr, IList<IStatement> body)
