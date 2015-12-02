@@ -74,6 +74,13 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         }
 
         [Test]
+        public void PropertyNameIsSimpleName()
+        {
+            var propertyName = PropertyName.Get("[TR,P] [TD,P].P()");
+            Assert.AreEqual("P", propertyName.Name);
+        }
+
+        [Test]
         public void StringHelperWorks()
         {
             const string id = "get set [{0}] [T,P].P()";

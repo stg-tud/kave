@@ -48,7 +48,11 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return Identifier.Substring(Identifier.LastIndexOf('.') + 1);
+                var nameWithBraces = Identifier.Substring(Identifier.LastIndexOf('.') + 1);
+                var endIdx = nameWithBraces.IndexOf('(');
+                return endIdx != -1
+                    ? nameWithBraces.Substring(0, endIdx)
+                    : nameWithBraces;
             }
         }
 
