@@ -182,6 +182,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\CurrentlyBrokenTests.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\ConstructorDeclarationAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\PropertyDeclarationAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\IndexAccessExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\CastExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ComposedExpressionAnalysisTestSuite\ArithmeticExpressionTest.cs" />

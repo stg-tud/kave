@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Threading;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -234,8 +235,22 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     return;
                 }
 
-                context.Properties.Add(new PropertyDeclaration {Name = name});
-                // TODO analyze getter/setter block
+                var propDecl = new PropertyDeclaration {Name = name};
+                context.Properties.Add(propDecl);
+
+                foreach (var accessor in decl.AccessorDeclarations)
+                {
+                    var bodyVisitor = new BodyVisitor(new UniqueVariableNameGenerator(), _marker);
+
+                    if (accessor.Kind == AccessorKind.GETTER)
+                    {
+                        accessor.Accept(bodyVisitor, propDecl.Get);
+                    }
+                    if (accessor.Kind == AccessorKind.SETTER)
+                    {
+                        accessor.Accept(bodyVisitor, propDecl.Set);
+                    }
+                }
             }
         }
 
