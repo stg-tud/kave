@@ -15,10 +15,9 @@
  */
 
 using System.IO;
-using KaVE.Commons.TestUtils.ExternalTests;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.ExternalTests
+namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
     internal class TestSettingsReaderTest
     {

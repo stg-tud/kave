@@ -16,7 +16,7 @@
 
 using System;
 
-namespace KaVE.Commons.TestUtils.ExternalTests
+namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
     public enum ExternalTestSetting
     {

@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.TestUtils.ExternalTests
+namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
     public static class ExternalTestCaseProvider
     {
         private const string ExpectedCompactFileName = "expected-compact.json";
-        private const string ExpectedPrettyFileName = "expected-pretty.json";
+        private const string ExpectedPrettyFileName = "expected-formatted.json";
         private const string SettingsFileName = "settings.ini";
 
         [Pure, NotNull]
         public static IEnumerable<TestCase> GetTestCases(string rootFolderPath)
         {
+            var directory = new DirectoryInfo(rootFolderPath);
             return RecursiveGetTestCases(
-                new DirectoryInfo(rootFolderPath),
-                Regex.Escape(rootFolderPath));
+                directory,
+                Regex.Escape(directory.FullName));
         }
 
         [Pure, NotNull]
@@ -58,50 +58,54 @@ namespace KaVE.Commons.TestUtils.ExternalTests
         {
             var compactExpectedFile =
                 directory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedCompactFileName));
-            var prettyExpectedFile =
-                directory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedPrettyFileName));
-
-            if (compactExpectedFile == null || prettyExpectedFile == null)
+            if (compactExpectedFile == null)
             {
                 return new List<TestCase>();
             }
+            var compactExpected = File.ReadAllText(compactExpectedFile.FullName);
 
-            var serializedType = GetSerializedType(directory);
-            Asserts.NotNull(serializedType, "ini file missing or invalid!");
+            var formattedExpectedFile =
+                directory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedPrettyFileName));
+            var formattedExpected = formattedExpectedFile != null
+                ? File.ReadAllText(formattedExpectedFile.FullName)
+                : compactExpected;
 
-            var inputFiles = directory.GetFiles().Where(IsTestCaseFile);
             return
-                inputFiles.Select(
-                    inputFile =>
-                        new TestCase(
-                            GetTestCaseName(rootFolderPath, inputFile.FullName),
-                            serializedType,
-                            File.ReadAllText(inputFile.FullName),
-                            File.ReadAllText(compactExpectedFile.FullName),
-                            File.ReadAllText(prettyExpectedFile.FullName)));
+                GetInputFiles(directory).Select(
+                    inputFile => new TestCase(
+                        GetTestCaseName(rootFolderPath, inputFile.FullName),
+                        GetSerializedType(directory),
+                        File.ReadAllText(inputFile.FullName),
+                        compactExpected,
+                        formattedExpected));
         }
 
-        [Pure, CanBeNull]
-        private static Type GetSerializedType(DirectoryInfo directory)
+        [Pure, NotNull]
+        private static IEnumerable<FileInfo> GetInputFiles(DirectoryInfo directory)
         {
-            var settingsFile = directory.GetFiles().FirstOrDefault(file => file.Name.Equals(SettingsFileName));
-            if (settingsFile == null)
-            {
-                // don't run tests with missing settings file. (some tests will fail without type information - e.g. PrettyPrint tests)
-                return null;
-            }
-
-            var settings = TestSettingsReader.ReadSection(settingsFile.FullName, "CSharp");
-            return Type.GetType(settings[ExternalTestSetting.SerializedType]);
+            return directory.GetFiles().Where(IsInputFile);
         }
 
         [Pure]
-        private static bool IsTestCaseFile([NotNull] FileInfo file)
+        private static bool IsInputFile([NotNull] FileInfo file)
         {
             return
                 !file.Name.Equals(ExpectedCompactFileName) &&
                 !file.Name.Equals(ExpectedPrettyFileName) &&
                 !file.Name.Equals(SettingsFileName);
+        }
+
+        [Pure, NotNull]
+        private static Type GetSerializedType(DirectoryInfo directory)
+        {
+            var settingsFile = directory.GetFiles().FirstOrDefault(file => file.Name.Equals(SettingsFileName));
+            if (settingsFile == null)
+            {
+                return typeof (object);
+            }
+
+            var settings = TestSettingsReader.ReadSection(settingsFile.FullName, "CSharp");
+            return Type.GetType(settings[ExternalTestSetting.SerializedType]) ?? typeof (object);
         }
 
         [Pure, NotNull]

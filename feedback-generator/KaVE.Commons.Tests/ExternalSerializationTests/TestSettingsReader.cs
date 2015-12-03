@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace KaVE.Commons.TestUtils.ExternalTests
+namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
     public static class TestSettingsReader
     {

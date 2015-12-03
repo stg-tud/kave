@@ -15,16 +15,14 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Commons.TestUtils.ExternalTests;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.ExternalTests.Serialization
+namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
-    [Ignore]
     internal class SerializationTestSuite
     {
-        private const string TestSourceRootFolder = @"E:\KaVE\SerializationTests";
+        private const string TestSourceRootFolder = @"..\..\ExternalSerializationTests\Data";
 
         private static IEnumerable<TestCase> TestCases
         {
@@ -32,14 +30,14 @@ namespace KaVE.Commons.Tests.ExternalTests.Serialization
         }
 
         [TestCaseSource("TestCases")]
-        public void Compact_StringEquality(TestCase testCase)
+        public void StringEquality_Compact(TestCase testCase)
         {
             var actualString = testCase.Input.ParseJsonTo(testCase.SerializedType).ToCompactJson();
             Assert.AreEqual(testCase.ExpectedCompact, actualString);
         }
 
         [TestCaseSource("TestCases")]
-        public void Compact_ObjectEquality(TestCase testCase)
+        public void ObjectEquality_Compact(TestCase testCase)
         {
             var parsedInput = testCase.Input.ParseJsonTo(testCase.SerializedType);
             var parsedExpected = testCase.ExpectedCompact.ParseJsonTo(testCase.SerializedType);
@@ -47,25 +45,25 @@ namespace KaVE.Commons.Tests.ExternalTests.Serialization
         }
 
         [TestCaseSource("TestCases")]
-        public void PrettyPrint_StringEquality(TestCase testCase)
+        public void StringEquality_Formatted(TestCase testCase)
         {
-            var actualString = testCase.Input.ParseJsonTo(testCase.SerializedType).ToPrettyPrintJson();
-            Assert.AreEqual(testCase.ExpectedPrettyPrint, actualString);
+            var actualString = testCase.Input.ParseJsonTo(testCase.SerializedType).ToFormattedJson();
+            Assert.AreEqual(testCase.ExpectedFormatted, actualString);
         }
 
         [TestCaseSource("TestCases")]
-        public void PrettyPrint_ObjectEquality(TestCase testCase)
+        public void ObjectEquality_Formatted(TestCase testCase)
         {
             var parsedInput = testCase.Input.ParseJsonTo(testCase.SerializedType);
-            var parsedExpected = testCase.ExpectedPrettyPrint.ParseJsonTo(testCase.SerializedType);
+            var parsedExpected = testCase.ExpectedFormatted.ParseJsonTo(testCase.SerializedType);
             Assert.AreEqual(parsedExpected, parsedInput);
         }
 
         [TestCaseSource("TestCases")]
-        public void PrettyPrint_Compact_ObjectEquality(TestCase testCase)
+        public void AssertEqualityOfExpectationFiles(TestCase testCase)
         {
             var parsedCompact = testCase.ExpectedCompact.ParseJsonTo(testCase.SerializedType);
-            var parsedPrettyPrint = testCase.ExpectedPrettyPrint.ParseJsonTo(testCase.SerializedType);
+            var parsedPrettyPrint = testCase.ExpectedFormatted.ParseJsonTo(testCase.SerializedType);
             Assert.AreEqual(parsedCompact, parsedPrettyPrint);
         }
     }

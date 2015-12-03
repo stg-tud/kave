@@ -17,7 +17,7 @@
 using System;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.TestUtils.ExternalTests
+namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
     public class TestCase
     {
@@ -34,19 +34,19 @@ namespace KaVE.Commons.TestUtils.ExternalTests
         public readonly string ExpectedCompact;
 
         [NotNull]
-        public readonly string ExpectedPrettyPrint;
+        public readonly string ExpectedFormatted;
 
         public TestCase([NotNull] string name,
             [NotNull] Type serializedType,
             [NotNull] string input,
             [NotNull] string expectedCompact,
-            [NotNull] string expectedPrettyPrint)
+            [NotNull] string expectedFormatted)
         {
             Name = name;
             SerializedType = serializedType;
             Input = input;
             ExpectedCompact = expectedCompact;
-            ExpectedPrettyPrint = expectedPrettyPrint;
+            ExpectedFormatted = expectedFormatted;
         }
 
         public override string ToString()

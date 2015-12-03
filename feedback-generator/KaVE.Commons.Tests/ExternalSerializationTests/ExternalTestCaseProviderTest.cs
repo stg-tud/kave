@@ -18,10 +18,9 @@ using System;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.TestUtils.ExternalTests;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.ExternalTests
+namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
     internal class ExternalTestCaseProviderTest
     {
@@ -30,8 +29,9 @@ namespace KaVE.Commons.Tests.ExternalTests
         private const string ExpectedFirstName = @"TestSuite\TestCases\FirstTest";
         private const string ExpectedFirstInput = "firstInputContent";
         private const string ExpectedCompact = "expectedCompactContent";
-        private const string ExpectedPretty = "expectedPrettyContent";
+        private const string ExpectedFormatted = "expectedFormattedContent";
         private static readonly Type ExpectedSerializedType = typeof (CompletionEvent);
+        private static string _testCasesDirectory;
 
         [SetUp]
         public void Setup()
@@ -71,10 +71,10 @@ namespace KaVE.Commons.Tests.ExternalTests
         }
 
         [Test]
-        public void ShouldFindPrettyExpected()
+        public void ShouldFindFormattedExpected()
         {
             var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
-            Assert.AreEqual(ExpectedPretty, firstTestCase.ExpectedPrettyPrint);
+            Assert.AreEqual(ExpectedFormatted, firstTestCase.ExpectedFormatted);
         }
 
         [Test]
@@ -91,6 +91,22 @@ namespace KaVE.Commons.Tests.ExternalTests
             Assert.AreEqual(ExpectedSerializedType, firstTestCase.SerializedType);
         }
 
+        [Test]
+        public void SettingsFileShouldBeOptional()
+        {
+            File.Delete(Path.Combine(_testCasesDirectory, "settings.ini"));
+            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            Assert.AreEqual(typeof (object), firstTestCase.SerializedType);
+        }
+
+        [Test]
+        public void ExpectedFormattedFileShouldBeOptional()
+        {
+            File.Delete(Path.Combine(_testCasesDirectory, "expected-formatted.json"));
+            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            Assert.AreEqual(ExpectedCompact, firstTestCase.ExpectedFormatted);
+        }
+
         private static void GenerateTestCaseStructure(string baseDirectory)
         {
             Directory.CreateDirectory(baseDirectory);
@@ -98,26 +114,29 @@ namespace KaVE.Commons.Tests.ExternalTests
             var suiteBasePath = Path.Combine(baseDirectory, "TestSuite");
             Directory.CreateDirectory(suiteBasePath);
 
-            var testCasesDirectory = Path.Combine(suiteBasePath, "TestCases");
-            Directory.CreateDirectory(testCasesDirectory);
+            _testCasesDirectory = Path.Combine(suiteBasePath, "TestCases");
+            Directory.CreateDirectory(_testCasesDirectory);
 
-            var firstInputFile = Path.Combine(testCasesDirectory, "FirstTest.json");
+            var firstInputFile = Path.Combine(_testCasesDirectory, "FirstTest.json");
             File.WriteAllText(firstInputFile, ExpectedFirstInput);
 
-            var secondInputFile = Path.Combine(testCasesDirectory, "SecondTest.json");
+            var secondInputFile = Path.Combine(_testCasesDirectory, "SecondTest.json");
             File.WriteAllText(secondInputFile, "secondInputContent");
 
-            var expectedCompactFile = Path.Combine(testCasesDirectory, "expected-compact.json");
+            var expectedCompactFile = Path.Combine(_testCasesDirectory, "expected-compact.json");
             File.WriteAllText(expectedCompactFile, ExpectedCompact);
 
-            var expectedPrettyPrintFile = Path.Combine(testCasesDirectory, "expected-pretty.json");
-            File.WriteAllText(expectedPrettyPrintFile, ExpectedPretty);
+            var expectedPrettyPrintFile = Path.Combine(_testCasesDirectory, "expected-formatted.json");
+            File.WriteAllText(expectedPrettyPrintFile, ExpectedFormatted);
 
-            var typeHintFile = Path.Combine(testCasesDirectory, "settings.ini");
+            var typeHintFile = Path.Combine(_testCasesDirectory, "settings.ini");
             var settingsFileContent = new[]
             {
                 "[CSharp]",
-                string.Format("{0}={1}", ExternalTestSetting.SerializedType, ExpectedSerializedType.AssemblyQualifiedName)
+                string.Format(
+                    "{0}={1}",
+                    ExternalTestSetting.SerializedType,
+                    ExpectedSerializedType.AssemblyQualifiedName)
             };
             File.WriteAllLines(typeHintFile, settingsFileContent);
         }
