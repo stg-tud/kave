@@ -20,11 +20,16 @@ using JetBrains.DataFlow;
 using JetBrains.Interop.WinApi;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Util;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons.Utils.Names;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators
@@ -57,10 +62,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         {
             if (args.KeysAndButtons == KeyStateMasks.MK_CONTROL)
             {
-                var infoEvent = Create<InfoEvent>();
-                var treeNode = _treeNodeProvider.GetTreeNode(args.TextControl);
-                infoEvent.Info = "CtrlClick: " + treeNode.GetText();
-                Fire(infoEvent);
+                var clickedNode = _treeNodeProvider.GetTreeNode(args.TextControl);
+
+                var ctrlClickEvent = Create<NavigationEvent>();
+                ctrlClickEvent.Target = GetTarget(clickedNode);
+                ctrlClickEvent.Location = GetLocation(clickedNode);
+                ctrlClickEvent.TriggeredBy = IDEEvent.Trigger.Click;
+
+                Fire(ctrlClickEvent);
             }
         }
 
@@ -79,6 +88,56 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         {
             textControl.Window.MouseUp.Advise(_myLifetime, OnClick);
         }
+
+        [Pure, NotNull]
+        private static IName GetTarget(ITreeNode clickedNode)
+        {
+            var targetName = Name.UnknownName;
+
+            var reference = clickedNode.GetContainingNode<IReferenceExpression>(true);
+            if (reference != null)
+            {
+                var resolvedReference = reference.Reference.Resolve();
+                var declaredElement = resolvedReference.DeclaredElement;
+                if (declaredElement != null)
+                {
+                    targetName = declaredElement.GetName(declaredElement.GetIdSubstitutionSafe());
+                }
+            }
+            else
+            {
+                var declaration = clickedNode.GetContainingNode<IDeclaration>();
+                if (declaration != null && declaration.DeclaredElement != null)
+                {
+                    var declaredElement = declaration.DeclaredElement;
+                    targetName = declaredElement.GetName(declaredElement.GetIdSubstitutionSafe());
+                }
+            }
+
+            return targetName;
+        }
+
+        [Pure, NotNull]
+        private static IName GetLocation(ITreeNode clickedNode)
+        {
+            var locationName = Name.UnknownName;
+
+            var surroundingMethodDeclaration = clickedNode.GetContainingNode<IMethodDeclaration>();
+            if (surroundingMethodDeclaration != null)
+            {
+                locationName = surroundingMethodDeclaration.GetName();
+            }
+            else
+            {
+                var surroundingTypeDeclaration = clickedNode.GetContainingNode<ITypeDeclaration>();
+                if (surroundingTypeDeclaration != null && surroundingTypeDeclaration.DeclaredElement != null)
+                {
+                    locationName = surroundingTypeDeclaration.DeclaredElement.GetName();
+                }
+            }
+
+            return locationName;
+        }
     }
 
     public interface ITreeNodeProvider
@@ -89,6 +148,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
     [SolutionComponent]
     internal class TreeNodeProvider : ITreeNodeProvider
     {
+        [NotNull]
         private readonly ISolution _solution;
 
         public TreeNodeProvider([NotNull] ISolution solution)

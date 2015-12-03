@@ -33,7 +33,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         private Mock<ISignal<TextControlMouseEventArgs>> _mouseUpSignalMock;
         private Mock<ITextControl> _textControlMock;
 
-        private Lifetime _testLifetime
+        private static Lifetime TestLifetime
         {
             get { return EternalLifetime.Instance; }
         }
@@ -46,7 +46,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             textControlManagerMock.Setup(tcManager => tcManager.TextControls)
                                   .Returns(
                                       new CollectionEvents<ITextControl>(
-                                          EternalLifetime.Instance,
+                                          TestLifetime,
                                           "this can't be empty")
                                       {
                                           _textControlMock.Object
@@ -67,20 +67,27 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
                 TestDateUtils,
                 textControlManagerMock.Object,
                 treeNodeProviderMock.Object,
-                _testLifetime);
+                TestLifetime);
         }
 
         [Test]
         public void ShouldAdviceOnClick()
         {
-            _mouseUpSignalMock.Verify(signal => signal.Advise(_testLifetime, _uut.OnClick));
+            _mouseUpSignalMock.Verify(signal => signal.Advise(TestLifetime, _uut.OnClick));
         }
 
         [Test]
         public void ShouldFireOnLeftClickIfCtrlIsPressed()
         {
             TriggerLeftClick(true);
-            GetSinglePublished<InfoEvent>();
+            GetSinglePublished<NavigationEvent>();
+        }
+
+        [Test]
+        public void ShouldUseClickTrigger()
+        {
+            TriggerLeftClick(true);
+            Assert.AreEqual(IDEEvent.Trigger.Click, GetSinglePublished<NavigationEvent>().TriggeredBy);
         }
 
         [Test]
