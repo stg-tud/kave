@@ -105,11 +105,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
 
             var newRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+            var exprIType = csExpr.GetExpressionType().ToIType();
+            // TODO write test for this null check
+            var exprType = exprIType == null ? TypeName.UnknownName : exprIType.GetName();
             body.Add(
                 new VariableDeclaration
                 {
                     Reference = newRef,
-                    Type = csExpr.GetExpressionType().ToIType().GetName()
+                    Type = exprType
                 });
             body.Add(
                 new Assignment

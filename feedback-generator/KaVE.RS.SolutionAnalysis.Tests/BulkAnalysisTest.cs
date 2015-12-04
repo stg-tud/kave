@@ -24,6 +24,7 @@ using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
@@ -46,15 +47,33 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
         public static IEnumerable<string> FindSolutionFiles()
         {
+            var shortened = ReadOrCreateIndex();
+            var notAnalyzed = shortened.Where(s => !IsAlreadyAnalyzed(s));
+            var notMarked = notAnalyzed.Where(s => !IsAlreadyStarted(s));
+            var notCrashed = notMarked.Where(s => !IsCrashed(s));
+            return notCrashed;
+        }
+
+        private static IEnumerable<string> ReadOrCreateIndex()
+        {
             try
             {
+                var indexFile = Path.Combine(RepositoryRoot, "index.json");
+                if (File.Exists(indexFile))
+                {
+                    Console.WriteLine("Reading index... {0}", DateTime.Now);
+                    var json = File.ReadAllText(indexFile);
+                    return json.ParseJsonTo<IEnumerable<string>>();
+                }
+
+                Console.WriteLine("Finding solutions... {0}", DateTime.Now);
                 var all = Directory.GetFiles(RepositoryRoot, "*.sln", SearchOption.AllDirectories);
                 var filtered = all.Where(sln => !sln.Contains(@"\test\data\"));
                 var shortened = filtered.Select(sln => sln.Substring(RepositoryRoot.Length));
-                var notAnalyzed = shortened.Where(s => !IsAlreadyAnalyzed(s));
-                var notMarked = notAnalyzed.Where(s => !IsAlreadyStarted(s));
-                var notCrashed = notMarked.Where(s => !IsCrashed(s));
-                return notCrashed;
+
+                Console.WriteLine("Creating index... {0}", DateTime.Now);
+                File.WriteAllText(indexFile, shortened.ToCompactJson());
+                return shortened;
             }
             catch (IOException e)
             {
@@ -102,7 +121,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CreateMarker(shortenedSolution, StartedMarker);
             File.Create(GetCrashMarkerName(shortenedSolution)).Close();
 
-            Console.WriteLine("Opening solution: {0}\n", ExistingSolutionFilePath);
+            Console.WriteLine("Opening solution: {0} ({1})\n", ExistingSolutionFilePath, DateTime.Now);
             Console.WriteLine("Log: {0}", _logName);
             Console.WriteLine("Contexts: {0}\n", _zipName);
 
@@ -123,7 +142,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
         private void RunAnalysis(Lifetime lifetime, ISolution solution)
         {
-            Console.WriteLine("Starting analysis...");
+            Console.WriteLine("Starting analysis... ({0})", DateTime.Now);
             var solutionAnalysis = new SolutionAnalysis(solution, _logger);
 
             var ctxs = solutionAnalysis.AnalyzeAllProjects();
@@ -134,7 +153,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             {
                 wa.AddAll(ctxs);
             }
-            Console.WriteLine("Analysis finished!");
+            Console.WriteLine("Analysis finished! ({0})", DateTime.Now);
             var count = ctxs.Count;
             var countWithMethods = ctxs.Where(c => c.SST.Methods.Count > 0).ToList().Count;
             Console.WriteLine(
