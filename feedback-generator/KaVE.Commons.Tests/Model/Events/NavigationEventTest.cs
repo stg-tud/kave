@@ -30,6 +30,7 @@ namespace KaVE.Commons.Tests.Model.Events
             var sut = new NavigationEvent();
             Assert.AreEqual(Name.UnknownName, sut.Target);
             Assert.AreEqual(Name.UnknownName, sut.Location);
+            Assert.AreEqual(NavigationEvent.NavigationType.Unknown, sut.TypeOfNavigation);
         }
 
         [Test]
@@ -44,6 +45,13 @@ namespace KaVE.Commons.Tests.Model.Events
         {
             var sut = new NavigationEvent {Location = Name.Get("A")};
             Assert.AreEqual(Name.Get("A"), sut.Location);
+        }
+
+        [Test]
+        public void SetValues_TypeOfNavigation()
+        {
+            var sut = new NavigationEvent {TypeOfNavigation = NavigationEvent.NavigationType.Click};
+            Assert.AreEqual(NavigationEvent.NavigationType.Click, sut.TypeOfNavigation);
         }
 
         [Test]
@@ -67,8 +75,18 @@ namespace KaVE.Commons.Tests.Model.Events
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new NavigationEvent {Target = Name.Get("A"), Location = Name.Get("B")};
-            var b = new NavigationEvent {Target = Name.Get("A"), Location = Name.Get("B")};
+            var a = new NavigationEvent
+            {
+                Target = Name.Get("A"),
+                Location = Name.Get("B"),
+                TypeOfNavigation = NavigationEvent.NavigationType.Click
+            };
+            var b = new NavigationEvent
+            {
+                Target = Name.Get("A"),
+                Location = Name.Get("B"),
+                TypeOfNavigation = NavigationEvent.NavigationType.Click
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -76,8 +94,8 @@ namespace KaVE.Commons.Tests.Model.Events
         [Test]
         public void Equality_DifferentTarget()
         {
-            var a = new NavigationEvent {Target = Name.Get("A"), Location = Name.Get("B")};
-            var b = new NavigationEvent {Target = Name.Get("C"), Location = Name.Get("B")};
+            var a = new NavigationEvent {Target = Name.Get("A")};
+            var b = new NavigationEvent {Target = Name.Get("B")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -85,8 +103,17 @@ namespace KaVE.Commons.Tests.Model.Events
         [Test]
         public void Equality_DifferentLocation()
         {
-            var a = new NavigationEvent {Target = Name.Get("A"), Location = Name.Get("B")};
-            var b = new NavigationEvent {Target = Name.Get("A"), Location = Name.Get("C")};
+            var a = new NavigationEvent {Location = Name.Get("A")};
+            var b = new NavigationEvent {Location = Name.Get("B")};
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentNavigationType()
+        {
+            var a = new NavigationEvent {TypeOfNavigation = NavigationEvent.NavigationType.Click};
+            var b = new NavigationEvent {TypeOfNavigation = NavigationEvent.NavigationType.ReSharperCtrlClick};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

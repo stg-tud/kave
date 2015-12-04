@@ -17,14 +17,15 @@
 using System.Drawing;
 using JetBrains.DataFlow;
 using JetBrains.Interop.WinApi;
-using JetBrains.ReSharper.Psi.Cpp.Tree;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
-using KaVE.VS.FeedbackGenerator.Generators;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.VS.FeedbackGenerator.Generators.Navigation;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.Generators
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
 {
     internal class CtrlClickEventGeneratorTest : EventGeneratorTestBase
     {
@@ -32,6 +33,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 
         private Mock<ISignal<TextControlMouseEventArgs>> _mouseUpSignalMock;
         private Mock<ITextControl> _textControlMock;
+
+        private IName _testLocation;
+        private IName _testTarget;
 
         private static Lifetime TestLifetime
         {
@@ -57,16 +61,22 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             windowMock.Setup(window => window.MouseUp).Returns(_mouseUpSignalMock.Object);
             _textControlMock.Setup(tc => tc.Window).Returns(windowMock.Object);
 
-            var treeNodeProviderMock = new Mock<ITreeNodeProvider>();
-            treeNodeProviderMock.Setup(treeNodeProvider => treeNodeProvider.GetTreeNode(It.IsAny<ITextControl>()))
-                                .Returns(new EmptyStatement());
+            _testTarget = TypeName.Get("System.Int32, mscore, 4.0.0.0");
+            _testLocation =
+                MethodName.Get("[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()");
+
+            var navigationUtilsMock = new Mock<INavigationUtils>();
+            navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetTarget(It.IsAny<ITextControl>()))
+                                .Returns(_testTarget);
+            navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetLocation(It.IsAny<ITextControl>()))
+                                .Returns(_testLocation);
 
             _uut = new CtrlClickEventGenerator(
                 TestRSEnv,
                 TestMessageBus,
                 TestDateUtils,
                 textControlManagerMock.Object,
-                treeNodeProviderMock.Object,
+                navigationUtilsMock.Object,
                 TestLifetime);
         }
 
@@ -102,6 +112,20 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         {
             TriggerRightClick();
             AssertNoEvent();
+        }
+
+        [Test]
+        public void ShouldSetTarget()
+        {
+            TriggerLeftClick(true);
+            Assert.AreEqual(_testTarget, GetSinglePublished<NavigationEvent>().Target);
+        }
+
+        [Test]
+        public void ShouldSetLocation()
+        {
+            TriggerLeftClick(true);
+            Assert.AreEqual(_testLocation, GetSinglePublished<NavigationEvent>().Location);
         }
 
         private void TriggerLeftClick(bool withCtrl)

@@ -30,10 +30,14 @@ namespace KaVE.Commons.Model.Events
         [DataMember, NotNull]
         public IName Location { get; set; }
 
+        [DataMember]
+        public NavigationType TypeOfNavigation { get; set; }
+
         public NavigationEvent()
         {
             Target = Name.UnknownName;
             Location = Name.UnknownName;
+            TypeOfNavigation = NavigationType.Unknown;
         }
 
         public override string ToString()
@@ -44,7 +48,8 @@ namespace KaVE.Commons.Model.Events
         public override bool Equals(object obj)
         {
             var other = obj as NavigationEvent;
-            return other != null && Equals(Target, other.Target) && Equals(Location, other.Location) && base.Equals(obj);
+            return other != null && Equals(Target, other.Target) && Equals(Location, other.Location) &&
+                   Equals(TypeOfNavigation, other.TypeOfNavigation) && base.Equals(obj);
         }
 
         public override int GetHashCode()
@@ -52,7 +57,16 @@ namespace KaVE.Commons.Model.Events
             var hashCode = base.GetHashCode();
             hashCode = (hashCode*397) ^ Target.GetHashCode();
             hashCode = (hashCode*397) ^ Location.GetHashCode();
+            hashCode = (hashCode*397) ^ (int) TypeOfNavigation;
             return hashCode;
+        }
+
+        public enum NavigationType
+        {
+            Unknown = 0,
+            ReSharperCtrlClick,
+            Click,
+            Keyboard
         }
     }
 }
