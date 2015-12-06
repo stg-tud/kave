@@ -550,6 +550,21 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor.AbstractNodeVisitorTestSuit
             AssertAccept(_vr);
         }
 
+        [Test]
+        public void UnaryExpression()
+        {
+            Visit(new UnaryExpression {Operand = _e1});
+            AssertAccept(_e1);
+        }
+
+        [Test]
+        public void BinaryExpression()
+        {
+            Visit(new BinaryExpression {LeftOperand = _e1, RightOperand = _e2});
+            AssertAccept(_e1);
+            AssertAccept(_e2);
+        }
+
         #endregion
 
         #region references
