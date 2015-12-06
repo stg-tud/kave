@@ -22,6 +22,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
+using ActivityEvent = KaVE.FeedbackProcessor.Activities.Model.ActivityEvent;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {

@@ -19,6 +19,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Utils;
+using ActivityEvent = KaVE.FeedbackProcessor.Activities.Model.ActivityEvent;
 
 namespace KaVE.FeedbackProcessor.Activities
 {

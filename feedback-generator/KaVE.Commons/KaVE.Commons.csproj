@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Events\NavigationEvent.cs" />
+    <Compile Include="Model\Events\ActivityEvent.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlAction.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlActionType.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlEvent.cs" />

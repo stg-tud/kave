@@ -21,6 +21,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
 using NUnit.Framework;
+using ActivityEvent = KaVE.FeedbackProcessor.Activities.Model.ActivityEvent;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {

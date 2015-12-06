@@ -186,6 +186,7 @@
     <Compile Include="Generators\Git\GitEventGeneratorUnitTest.cs" />
     <Compile Include="Generators\Git\GitLogFileChangedRegistrationTest.cs" />
     <Compile Include="Generators\Navigation\KeyboardClickNavigationEventGeneratorTest.cs" />
+    <Compile Include="Generators\Activity\MouseActivityEventGeneratorTest.cs" />
     <Compile Include="Generators\ReSharper\ActionEventGeneratorTest.cs" />
     <Compile Include="Menu\UploadWizardActionTest.cs" />
     <Compile Include="PropertiesTests\EnumLocalizationTest.cs" />
