@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -350,6 +351,31 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             };
 
             AssertPrint(sst, "i is Int32");
+        }
+
+        [Test]
+        public void UnaryExpression()
+        {
+            var sst = new UnaryExpression
+            {
+                Operator = UnaryOperator.Not,
+                Operand = new ConstantValueExpression()
+            };
+
+            AssertPrint(sst, "Not \"...\"");
+        }
+
+        [Test]
+        public void BinaryExpression()
+        {
+            var sst = new BinaryExpression
+            {
+                Operator = BinaryOperator.And,
+                LeftOperand = new ConstantValueExpression(),
+                RightOperand = new ReferenceExpression {Reference = new VariableReference {Identifier = "x"}}
+            };
+
+            AssertPrint(sst, "\"...\" And x");
         }
 
         private static INullExpression Null()

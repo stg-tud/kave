@@ -607,6 +607,21 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.Space().Keyword("is").Space().Type(expr.Type);
         }
 
+        public void Visit(IUnaryExpression expr, SSTPrintingContext c)
+        {
+            // TODO improve visualization
+            c.Text(expr.Operator.ToString()).Space();
+            expr.Operand.Accept(this, c);
+        }
+
+        public void Visit(IBinaryExpression expr, SSTPrintingContext c)
+        {
+            // TODO improve visualization
+            expr.LeftOperand.Accept(this, c);
+            c.Space().Text(expr.Operator.ToString()).Space();
+            expr.RightOperand.Accept(this, c);
+        }
+
         public void Visit(IEventReference eventRef, SSTPrintingContext c)
         {
             if (eventRef.EventName.IsStatic)
