@@ -16,14 +16,29 @@
 
 namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
 {
-    internal interface IBooleanExpression : IAssignableExpression
+    public interface IUnaryExpression : IAssignableExpression
     {
-        ISimpleExpression Left { get; }
+        UnaryOperator Operator { get; }
 
-        // TODO: introduce enum, e.g., (==, !=, <, >)
-        string Operation { get; }
-        // use case: if(o == null) { ... }
+        ISimpleExpression Operand { get; }
+    }
 
-        ISimpleExpression Right { get; }
+    public enum UnaryOperator
+    {
+        Unknown,
+
+        // Logical
+        Not, // !b
+
+        // Arithmetic
+        PreIncrement, // ++i
+        PostIncrement, // i++
+        PreDecrement, // --i
+        PostDecrement, // i--
+        Plus, // -i
+        Minus, // +i
+
+        // Bitwise
+        Complement // ~i
     }
 }

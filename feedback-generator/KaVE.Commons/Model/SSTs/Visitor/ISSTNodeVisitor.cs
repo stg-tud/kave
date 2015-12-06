@@ -73,6 +73,8 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(ICastExpression expr, TContext context);
         void Visit(IIndexAccessExpression expr, TContext context);
         void Visit(ITypeCheckExpression expr, TContext context);
+        void Visit(IUnaryExpression expr, TContext context);
+        void Visit(IBinaryExpression expr, TContext context);
 
         // References
         void Visit(IEventReference eventRef, TContext context);
@@ -137,6 +139,8 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(ICastExpression expr, TContext context);
         TReturn Visit(IIndexAccessExpression expr, TContext context);
         TReturn Visit(ITypeCheckExpression expr, TContext context);
+        TReturn Visit(IUnaryExpression expr, TContext context);
+        TReturn Visit(IBinaryExpression expr, TContext context);
 
         // References
         TReturn Visit(IEventReference eventRef, TContext context);
