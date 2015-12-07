@@ -26,6 +26,13 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Simple
     [DataContract]
     public class ConstantValueExpression : IConstantValueExpression
     {
+        public const string Null = "null";
+        public const string Sizeof = "sizeof";
+        public const string Typeof = "typeof";
+        public const string Default = "default";
+        public const string True = "true";
+        public const string False = "false";
+
         [DataMember]
         public string Value { get; set; }
 

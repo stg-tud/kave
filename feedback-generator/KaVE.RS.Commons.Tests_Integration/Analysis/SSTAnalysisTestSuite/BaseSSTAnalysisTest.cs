@@ -22,6 +22,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -329,6 +330,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         protected static IAssignment Assign(IAssignableReference reference, IAssignableExpression expr)
         {
             return new Assignment {Reference = reference, Expression = expr};
+        }
+
+        protected static IConstantValueExpression Const(string v)
+        {
+            return new ConstantValueExpression {Value = v};
         }
 
         protected static IStatement InvokeStmt(string id, IMethodName methodName, params ISimpleExpression[] parameters)

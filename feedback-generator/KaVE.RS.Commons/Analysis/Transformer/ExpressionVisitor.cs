@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
@@ -226,18 +227,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public override IAssignableExpression VisitDefaultExpression(IDefaultExpression expr, IList<IStatement> body)
         {
-            return new ConstantValueExpression();
+            return new ConstantValueExpression {Value = ConstantValueExpression.Default};
         }
 
         public override IAssignableExpression VisitCSharpLiteralExpression(ICSharpLiteralExpression litExpr,
             IList<IStatement> context)
         {
-            var isNull = litExpr.ConstantValue.IsPureNull(CSharpLanguage.Instance);
-            if (isNull)
-            {
-                return new NullExpression();
-            }
-            return new ConstantValueExpression();
+            return ToConst(litExpr, true);
         }
 
         public override IAssignableExpression VisitThisExpression(IThisExpression expr, IList<IStatement> body)
@@ -750,9 +746,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
         }
 
+        public override IAssignableExpression VisitUnsafeCodeSizeOfExpression(IUnsafeCodeSizeOfExpression expr,
+            IList<IStatement> context)
+        {
+            return new ConstantValueExpression {Value = ConstantValueExpression.Sizeof};
+        }
+
         public override IAssignableExpression VisitTypeofExpression(ITypeofExpression expr, IList<IStatement> body)
         {
-            return new ConstantValueExpression();
+            return new ConstantValueExpression {Value = ConstantValueExpression.Typeof};
         }
 
         public override IAssignableExpression VisitUncheckedExpression(IUncheckedExpression expr, IList<IStatement> body)
@@ -886,7 +888,72 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitUnaryOperatorExpression(IUnaryOperatorExpression expr,
             IList<IStatement> context)
         {
+            var lit = expr.Operand as ICSharpLiteralExpression;
+            if (lit != null)
+            {
+                switch (expr.UnaryOperatorType)
+                {
+                    case UnaryOperatorType.MINUS:
+                        return ToConst(lit, false);
+                    case UnaryOperatorType.PLUS:
+                        return ToConst(lit, true);
+                }
+            }
             return ComposedExpressionCreator.Create(this, expr, context);
+        }
+
+        private static IAssignableExpression ToConst(ICSharpLiteralExpression lit, bool isPositive)
+        {
+            var isNull = lit.ConstantValue.IsPureNull(CSharpLanguage.Instance);
+            if (isNull)
+            {
+                return new ConstantValueExpression {Value = ConstantValueExpression.Null};
+            }
+
+            var val = lit.ConstantValue.Value;
+
+            if (val is string)
+            {
+                return new ConstantValueExpression();
+            }
+
+            if (val is int)
+            {
+                var i = (int) val;
+                if (!isPositive)
+                {
+                    i = -1*i;
+                }
+                var v = i == -1 || i == 0 || i == 1 || i == 2 ? i.ToString() : null;
+                return new ConstantValueExpression {Value = v};
+            }
+
+            if (val is double)
+            {
+                var d = (double) val;
+                if (!isPositive)
+                {
+                    d = -1*d;
+                }
+                string v = null;
+                Func<double, double, bool> isEq = (a, b) => Math.Abs(a - b) < 0.000001;
+                if (isEq(d, 0) || isEq(d, -1) || isEq(d, 1))
+                {
+                    v = string.Format("{0:0.0}", d);
+                }
+                return new ConstantValueExpression {Value = v};
+            }
+
+            if (val is bool)
+            {
+                var b = (bool) val;
+                return new ConstantValueExpression
+                {
+                    Value = b ? ConstantValueExpression.True : ConstantValueExpression.False
+                };
+            }
+
+            return new ConstantValueExpression();
         }
 
         public override IAssignableExpression VisitShiftExpression(IShiftExpression expr, IList<IStatement> context)

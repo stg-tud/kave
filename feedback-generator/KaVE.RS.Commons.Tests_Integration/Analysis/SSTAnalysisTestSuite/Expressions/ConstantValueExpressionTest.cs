@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -24,25 +21,86 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 {
     internal class ConstantValueExpressionAnalysisTest : BaseSSTAnalysisTest
     {
-        [Test]
-        public void IntValue()
+        [TestCase(-2, ""),
+         TestCase(-1, "-1"),
+         TestCase(0, "0"),
+         TestCase(1, "1"),
+         TestCase(2, "2"),
+         TestCase(3, "")]
+        public void IntValue(int before, string after)
         {
             CompleteInMethod(@"
-                var i = 3;
+                var i = " + before + @";
                 $
             ");
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = BaseSSTAnalysisTest.VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = BaseSSTAnalysisTest.VarRef("i"),
-                    Expression = new ConstantValueExpression()
-                },
+                VarDecl("i", Fix.Int),
+                Assign("i", Const(after)),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void PlusOperator()
+        {
+            CompleteInMethod(@"
+                var i = +1;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                Assign("i", Const("1")),
+                Fix.EmptyCompletion);
+        }
+
+        [TestCase("-1.23", ""),
+         TestCase("-1.0", "-1.0"),
+         TestCase("0.0", "0.0"),
+         TestCase("0.5", ""),
+         TestCase("1.0", "1.0"),
+         TestCase("1.00001", ""),
+         TestCase("1.23", "")]
+        public void DoubleValue(string before, string after)
+        {
+            CompleteInMethod(@"
+                var d = " + before + @";
+                $
+            ");
+
+            AssertBody(
+                VarDecl("d", Fix.Double),
+                Assign("d", Const(after)),
+                Fix.EmptyCompletion);
+        }
+
+        [TestCase("true"),
+         TestCase("false")]
+        public void BooleanValue(string value)
+        {
+            CompleteInMethod(@"
+                var b = " + value + @";
+                $
+            ");
+
+            AssertBody(
+                VarDecl("b", Fix.Bool),
+                Assign("b", Const(value)),
+                Fix.EmptyCompletion);
+        }
+
+        [TestCase("\"x\"", "\"\""),
+         TestCase("\"1\"", "\"\"")]
+        public void StringValue(string before, string after)
+        {
+            CompleteInMethod(@"
+                var s = " + before + @";
+                $
+            ");
+
+            AssertBody(
+                VarDecl("s", Fix.String),
+                Assign("s", Const(after)),
                 Fix.EmptyCompletion);
         }
 
@@ -55,32 +113,51 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = BaseSSTAnalysisTest.VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = BaseSSTAnalysisTest.VarRef("i"),
-                    Expression = new ConstantValueExpression()
-                },
+                VarDecl("i", Fix.Int),
+                Assign("i", Const("default")),
                 Fix.EmptyCompletion);
         }
 
         [Test]
         public void TypeofExpression()
         {
-            CompleteInMethod(@"var t = typeof(int); $");
+            CompleteInMethod(@"
+                var t = typeof(int);
+                $
+            ");
 
             AssertBody(
-                VarDecl("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")),
-                VarAssign("t", new ConstantValueExpression()),
+                VarDecl("t", Fix.Type),
+                Assign("t", Const("typeof")),
                 Fix.EmptyCompletion);
         }
 
-        // TODO: CodeCompletion cases
+        [Test]
+        public void SizeofExpression()
+        {
+            CompleteInMethod(@"
+                var s = sizeof(int);
+                $
+            ");
 
-        // TODO: more smoke tests
+            AssertBody(
+                VarDecl("s", Fix.Int),
+                Assign("s", Const("sizeof")),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void NullExpression()
+        {
+            CompleteInMethod(@"
+                object o = null;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("o", Fix.Object),
+                Assign("o", Const("null")),
+                Fix.EmptyCompletion);
+        }
     }
 }
