@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -209,6 +210,52 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         public void TypeCheckExpression_DefaultSafe()
         {
             AssertAnonymization(new TypeCheckExpression(), new TypeCheckExpression());
+        }
+
+        [Test]
+        public void UnaryExpression()
+        {
+            AssertAnonymization(
+                new UnaryExpression
+                {
+                    Operator = UnaryOperator.Not,
+                    Operand = AnyExpression
+                },
+                new UnaryExpression
+                {
+                    Operator = UnaryOperator.Not,
+                    Operand = AnyExpressionAnonymized
+                });
+        }
+
+        [Test]
+        public void UnaryExpression_DefaultSafe()
+        {
+            AssertAnonymization(new UnaryExpression(), new UnaryExpression());
+        }
+
+        [Test]
+        public void BinaryExpression()
+        {
+            AssertAnonymization(
+                new BinaryExpression
+                {
+                    LeftOperand = AnyExpression,
+                    Operator = BinaryOperator.And,
+                    RightOperand = AnyExpression
+                },
+                new BinaryExpression
+                {
+                    LeftOperand = AnyExpressionAnonymized,
+                    Operator = BinaryOperator.And,
+                    RightOperand = AnyExpressionAnonymized
+                });
+        }
+
+        [Test]
+        public void BinaryExpression_DefaultSafe()
+        {
+            AssertAnonymization(new BinaryExpression(), new BinaryExpression());
         }
 
         [Test, ExpectedException(typeof (AssertException))]

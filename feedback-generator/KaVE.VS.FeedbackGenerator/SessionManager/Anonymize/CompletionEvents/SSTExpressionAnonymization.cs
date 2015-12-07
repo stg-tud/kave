@@ -123,6 +123,25 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
+        public override IExpression Visit(IUnaryExpression expr, int context)
+        {
+            return new UnaryExpression
+            {
+                Operator = expr.Operator,
+                Operand = Anonymize(expr.Operand)
+            };
+        }
+
+        public override IExpression Visit(IBinaryExpression expr, int context)
+        {
+            return new BinaryExpression
+            {
+                LeftOperand = Anonymize(expr.LeftOperand),
+                Operator = expr.Operator,
+                RightOperand = Anonymize(expr.RightOperand)
+            };
+        }
+
         public override IExpression Visit(ILoopHeaderBlockExpression expr, int context)
         {
             throw new AssertException("not available");
