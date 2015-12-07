@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -87,7 +89,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Equal,
+                        RightOperand = Const("2")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -100,7 +109,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.NotEqual,
+                        RightOperand = Const("2")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -113,7 +129,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new UnaryExpression
+                    {
+                        Operator = UnaryOperator.Not,
+                        Operand = Const("false")
+                    }),
                 Fix.EmptyCompletion);
         }
 

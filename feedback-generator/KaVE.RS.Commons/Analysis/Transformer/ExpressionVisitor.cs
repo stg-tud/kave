@@ -864,7 +864,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitEqualityExpression(IEqualityExpression expr,
             IList<IStatement> context)
         {
-            return ComposedExpressionCreator.Create(this, expr, context);
+            return new BinaryExpression
+            {
+                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
+                Operator =
+                    expr.EqualityType == EqualityExpressionType.EQEQ ? BinaryOperator.Equal : BinaryOperator.NotEqual,
+                RightOperand = ToSimpleExpression(expr.RightOperand, context)
+            };
         }
 
         public override IAssignableExpression VisitBitwiseAndExpression(IBitwiseAndExpression expr,
@@ -898,6 +904,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     case UnaryOperatorType.PLUS:
                         return ToConst(lit, true);
                 }
+            }
+            switch (expr.UnaryOperatorType)
+            {
+                case UnaryOperatorType.EXCL:
+                    return new UnaryExpression
+                    {
+                        Operator = UnaryOperator.Not,
+                        Operand = ToSimpleExpression(expr.Operand, context)
+                    };
             }
             return ComposedExpressionCreator.Create(this, expr, context);
         }
