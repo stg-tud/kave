@@ -17,7 +17,6 @@
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -56,7 +55,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign("i", Const("1")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -140,7 +139,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             AssertBody(
                 ExprStmt(new CompletionExpression()),
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()));
+                Assign("i", Const("1")));
         }
 
         [Test]
@@ -156,7 +155,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign("i", Const("1")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -244,7 +243,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Then =
                     {
                         ExprStmt(new CompletionExpression())

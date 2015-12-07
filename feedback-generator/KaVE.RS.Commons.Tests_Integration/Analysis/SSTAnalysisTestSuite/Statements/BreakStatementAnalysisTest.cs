@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -38,10 +37,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             AssertBody(
                 new WhileLoop
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Body =
                     {
-                        new BreakStatement(),
+                        new BreakStatement()
                     }
                 },
                 Fix.EmptyCompletion);

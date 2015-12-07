@@ -16,7 +16,6 @@
 
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -34,12 +33,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign(
+                Assign(
                     "i",
                     new IndexAccessExpression
                     {
                         Reference = VarRef("this"),
-                        Indices = {new ConstantValueExpression()}
+                        Indices = {Const("1")}
                     }),
                 Fix.EmptyCompletion);
         }
@@ -53,12 +52,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign(
+                Assign(
                     "i",
                     new IndexAccessExpression
                     {
                         Reference = VarRef("this"),
-                        Indices = {new ConstantValueExpression(), new ConstantValueExpression()}
+                        Indices = {Const("1"), Const("2")}
                     }),
                 Fix.EmptyCompletion);
         }
@@ -77,19 +76,19 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("arr", TypeName.Get("System.Int32[,], mscorlib, 4.0.0.0")),
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.IntArray),
-                VarAssign(
+                Assign(
                     "$0",
                     new IndexAccessExpression
                     {
                         Reference = VarRef("arr"),
-                        Indices = {new ConstantValueExpression()}
+                        Indices = {Const("1")}
                     }),
-                VarAssign(
+                Assign(
                     "i",
                     new IndexAccessExpression
                     {
                         Reference = VarRef("$0"),
-                        Indices = {new ConstantValueExpression()}
+                        Indices = {Const("2")}
                     }),
                 Fix.EmptyCompletion);
         }
@@ -104,9 +103,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("index", Fix.Int),
-                VarAssign("index", new ConstantValueExpression()),
+                Assign("index", Const("1")),
                 VarDecl("i", Fix.Int),
-                VarAssign(
+                Assign(
                     "i",
                     new IndexAccessExpression
                     {
@@ -135,13 +134,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 "M",
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.IntArray),
-                VarAssign("$0", Invoke("this", Fix.Method(Fix.IntArray, Type("C"), "GetArray"))),
-                VarAssign(
+                Assign("$0", Invoke("this", Fix.Method(Fix.IntArray, Type("C"), "GetArray"))),
+                Assign(
                     "i",
                     new IndexAccessExpression
                     {
                         Reference = VarRef("$0"),
-                        Indices = {new ConstantValueExpression()}
+                        Indices = {Const("1")}
                     }),
                 Fix.EmptyCompletion);
         }
@@ -160,10 +159,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Expression =
                             new IndexAccessExpression
                             {
-                                Indices = {new ConstantValueExpression()}
+                                Indices = {Const("1")}
                             }
                     },
-                    new ConstantValueExpression()),
+                    Const("1")),
                 Fix.EmptyCompletion);
         }
 
@@ -182,10 +181,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                             new IndexAccessExpression
                             {
                                 Reference = VarRef("this"),
-                                Indices = {new ConstantValueExpression()}
+                                Indices = {Const("1")}
                             }
                     },
-                    new ConstantValueExpression()),
+                    Const("1")),
                 Fix.EmptyCompletion);
         }
 
@@ -204,10 +203,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                             new IndexAccessExpression
                             {
                                 Reference = VarRef("this"),
-                                Indices = {new ConstantValueExpression(), new ConstantValueExpression()}
+                                Indices = {Const("1"), Const("2")}
                             }
                     },
-                    new ConstantValueExpression()),
+                    Const("1")),
                 Fix.EmptyCompletion);
         }
 
@@ -222,9 +221,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 VarDecl("arr", TypeName.Get("System.Int32[,], mscorlib, 4.0.0.0")),
                 VarDecl("$0", Fix.IntArray),
-                VarAssign(
+                Assign(
                     "$0",
-                    new IndexAccessExpression {Reference = VarRef("arr"), Indices = {new ConstantValueExpression()}}),
+                    new IndexAccessExpression
+                    {
+                        Reference = VarRef("arr"),
+                        Indices = {Const("1")}
+                    }),
                 Assign(
                     new IndexAccessReference
                     {
@@ -232,10 +235,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                             new IndexAccessExpression
                             {
                                 Reference = VarRef("$0"),
-                                Indices = {new ConstantValueExpression()}
+                                Indices = {Const("2")}
                             }
                     },
-                    new ConstantValueExpression()),
+                    Const("1")),
                 Fix.EmptyCompletion);
         }
     }

@@ -21,12 +21,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 {
     internal class ConstantValueExpressionAnalysisTest : BaseSSTAnalysisTest
     {
-        [TestCase(-2, ""),
+        [TestCase(-2, null),
          TestCase(-1, "-1"),
          TestCase(0, "0"),
          TestCase(1, "1"),
          TestCase(2, "2"),
-         TestCase(3, "")]
+         TestCase(3, null)]
         public void IntValue(int before, string after)
         {
             CompleteInMethod(@"
@@ -54,13 +54,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 Fix.EmptyCompletion);
         }
 
-        [TestCase("-1.23", ""),
+        [TestCase("-1.23", null),
          TestCase("-1.0", "-1.0"),
          TestCase("0.0", "0.0"),
-         TestCase("0.5", ""),
+         TestCase("0.5", null),
          TestCase("1.0", "1.0"),
-         TestCase("1.00001", ""),
-         TestCase("1.23", "")]
+         TestCase("1.00001", null),
+         TestCase("1.23", null)]
         public void DoubleValue(string before, string after)
         {
             CompleteInMethod(@"
@@ -89,8 +89,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 Fix.EmptyCompletion);
         }
 
-        [TestCase("\"x\"", "\"\""),
-         TestCase("\"1\"", "\"\"")]
+        [TestCase("\"x\"", null),
+         TestCase("\"1\"", null)]
         public void StringValue(string before, string after)
         {
             CompleteInMethod(@"

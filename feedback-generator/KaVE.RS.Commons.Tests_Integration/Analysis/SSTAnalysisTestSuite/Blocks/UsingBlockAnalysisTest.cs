@@ -44,7 +44,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("sw", _streamWriter),
-                VarAssign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                Assign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                 new UsingBlock
                 {
                     Reference = VarRef("sw"),
@@ -66,7 +66,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("sw", _streamWriter),
-                VarAssign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                Assign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                 new UsingBlock
                 {
                     Reference = VarRef("sw"),
@@ -89,7 +89,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("$0", _streamWriter),
-                VarAssign("$0", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                Assign("$0", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                 new UsingBlock
                 {
                     Reference = VarRef("$0"),
@@ -114,7 +114,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("sw", _streamWriter),
-                VarAssign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                Assign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                 new UsingBlock
                 {
                     Reference = VarRef("sw"),
@@ -139,14 +139,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("sw", _streamWriter),
-                VarAssign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                Assign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                 new UsingBlock
                 {
                     Reference = VarRef("sw"),
                     Body =
                     {
                         VarDecl("sw2", _streamWriter),
-                        VarAssign("sw2", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                        Assign("sw2", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                         new UsingBlock
                         {
                             Reference = VarRef("sw2"),
@@ -181,7 +181,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 "N",
                 VarDecl("$0", _streamWriter),
-                VarAssign("$0", Invoke("this", Fix.Method(_streamWriter, Type("C"), "M"))),
+                Assign("$0", Invoke("this", Fix.Method(_streamWriter, Type("C"), "M"))),
                 new UsingBlock
                 {
                     Reference = VarRef("$0"),
@@ -206,7 +206,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 Fix.EmptyCompletion,
                 VarDecl("sw", _streamWriter),
-                VarAssign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                Assign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                 new UsingBlock
                 {
                     Reference = VarRef("sw"),
@@ -229,7 +229,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("sw", _streamWriter),
-                VarAssign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
+                Assign("sw", InvokeCtor(_streamWriterCtor, new ConstantValueExpression())),
                 new UsingBlock
                 {
                     Reference = VarRef("sw"),

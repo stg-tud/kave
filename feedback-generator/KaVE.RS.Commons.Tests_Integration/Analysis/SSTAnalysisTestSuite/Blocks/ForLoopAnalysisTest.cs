@@ -78,7 +78,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     Init =
                     {
                         VarDecl("i", Fix.Int),
-                        VarAssign("i", new ConstantValueExpression())
+                        Assign("i", Const("0"))
                     }
                 },
                 Fix.EmptyCompletion);
@@ -102,8 +102,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 {
                     Init =
                     {
-                        VarAssign("i", new ConstantValueExpression()),
-                        VarAssign("j", new ConstantValueExpression())
+                        Assign("i", Const("0")),
+                        Assign("j", Const("1"))
                     }
                 },
                 Fix.EmptyCompletion);
@@ -122,7 +122,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new ForLoop
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("false")
                 },
                 Fix.EmptyCompletion);
         }
@@ -140,12 +140,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", Const("0")),
                 new ForLoop
                 {
                     Step =
                     {
-                        VarAssign("i", new ComposedExpression {References = {BaseSSTAnalysisTest.VarRef("i")}})
+                        Assign("i", new ComposedExpression {References = {VarRef("i")}})
                     }
                 },
                 Fix.EmptyCompletion);
@@ -159,18 +159,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 for(;;i++,i++) {}
                 $
             ");
-            
+
             AssertCompletionMarker<IForStatement>(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", Const("0")),
                 new ForLoop
                 {
                     Step =
                     {
-                        VarAssign("i", new ComposedExpression {References = {BaseSSTAnalysisTest.VarRef("i")}}),
-                        VarAssign("i", new ComposedExpression {References = {BaseSSTAnalysisTest.VarRef("i")}})
+                        Assign("i", new ComposedExpression {References = {VarRef("i")}}),
+                        Assign("i", new ComposedExpression {References = {VarRef("i")}})
                     }
                 },
                 Fix.EmptyCompletion);

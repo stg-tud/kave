@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -293,7 +291,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                InvokeStaticStmt(Fix.Object_static_Equals, new NullExpression(), new NullExpression()),
+                InvokeStaticStmt(Fix.Object_static_Equals, Const("null"), Const("null")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -306,7 +304,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                InvokeStaticStmt(Fix.Object_static_Equals, new NullExpression(), new NullExpression()),
+                InvokeStaticStmt(Fix.Object_static_Equals, Const("null"), Const("null")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -326,8 +324,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         MethodName = MethodName.UnknownName,
                         Parameters =
                         {
-                            new NullExpression(),
-                            new NullExpression()
+                            Const("null"),
+                            Const("null")
                         }
                     }),
                 ExprStmt(new CompletionExpression()));
@@ -340,8 +338,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 Equals(GetType());
                 $
             ");
-
-            var t = GetType();
 
             AssertBody(
                 VarDecl("$0", Fix.Type),
@@ -399,7 +395,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 "M",
                 VarDecl("$0", Fix.ActionOfInt),
                 Assign("$0", RefExpr(FieldRef("_a", Fix.ActionOfInt))),
-                InvokeStmt("$0", Fix.Action_Invoke, new ConstantValueExpression()),
+                InvokeStmt("$0", Fix.Action_Invoke, Const("1")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -419,7 +415,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 "M",
                 VarDecl("$0", Fix.ActionOfInt),
                 Assign("$0", RefExpr(FieldRef("_a", Fix.ActionOfInt))),
-                InvokeStmt("$0", Fix.Action_Invoke, new ConstantValueExpression()),
+                InvokeStmt("$0", Fix.Action_Invoke, Const("1")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -434,8 +430,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                Assign("a", new NullExpression()),
-                InvokeStmt("a", Fix.Action_Invoke, new ConstantValueExpression()),
+                Assign("a", Const("null")),
+                InvokeStmt("a", Fix.Action_Invoke, Const("1")),
                 ExprStmt(new CompletionExpression()));
         }
     }

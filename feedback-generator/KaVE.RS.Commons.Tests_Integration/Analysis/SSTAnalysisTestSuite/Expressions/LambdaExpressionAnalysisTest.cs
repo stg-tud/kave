@@ -34,7 +34,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -52,7 +52,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -71,7 +71,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.FuncOfIntAndInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -79,7 +79,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Body =
                         {
                             VarDecl("$0", Fix.Int),
-                            VarAssign("$0", new ComposedExpression {References = {VarRef("i")}}),
+                            Assign("$0", new ComposedExpression {References = {VarRef("i")}}),
                             new ReturnStatement
                             {
                                 IsVoid = false,
@@ -99,7 +99,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.FuncOfIntAndInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -107,7 +107,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Body =
                         {
                             VarDecl("$0", Fix.Int),
-                            VarAssign("$0", new ComposedExpression {References = {VarRef("i")}}),
+                            Assign("$0", new ComposedExpression {References = {VarRef("i")}}),
                             new ReturnStatement
                             {
                                 IsVoid = false,
@@ -125,7 +125,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -141,7 +141,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -158,7 +158,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -180,7 +180,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 "M",
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign("a", RefExpr(MethodRef(methodName, VarRef("this")))),
+                Assign("a", RefExpr(MethodRef(methodName, VarRef("this")))),
                 Fix.EmptyCompletion);
         }
 
@@ -191,7 +191,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.ActionOfInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {
@@ -199,7 +199,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Body = {Fix.EmptyCompletion}
                     }),
                 VarDecl("b", Fix.ActionOfInt),
-                VarAssign("b", RefExpr("a")));
+                Assign("b", RefExpr("a")));
         }
 
         [Test, Ignore]
@@ -210,7 +210,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("a", Fix.FuncOfIntAndInt),
-                VarAssign(
+                Assign(
                     "a",
                     new LambdaExpression
                     {

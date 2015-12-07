@@ -34,7 +34,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             AssertBody(
                 VarDecl("o", Fix.Object),
-                Assign("o", new NullExpression()),
+                Assign("o", Const("null")),
                 InvokeStmt("o", Fix.Object_GetHashCode),
                 ExprStmt(new CompletionExpression()));
         }
@@ -48,7 +48,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             ");
 
             AssertBody(
-                InvokeStaticStmt(Fix.Object_static_Equals, new NullExpression(), new NullExpression()),
+                InvokeStaticStmt(Fix.Object_static_Equals, Const("null"), Const("null")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -118,7 +118,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 VarDecl("b", Fix.Bool),
                 Assign(
                     "b",
-                    InvokeStatic(Fix.Object_static_Equals, new NullExpression(), new NullExpression())),
+                    InvokeStatic(Fix.Object_static_Equals, Const("null"), Const("null"))),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -135,7 +135,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 Assign("$0", InvokeCtor(Fix.Object_ctor)),
                 Assign(
                     "b",
-                    Invoke("$0", Fix.Object_Equals, new NullExpression())),
+                    Invoke("$0", Fix.Object_Equals, Const("null"))),
                 ExprStmt(new CompletionExpression()));
         }
 

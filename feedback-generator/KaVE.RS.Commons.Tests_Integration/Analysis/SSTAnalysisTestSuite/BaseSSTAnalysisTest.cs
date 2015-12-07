@@ -313,11 +313,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             };
         }
 
-        protected static Assignment VarAssign(string varName, IAssignableExpression expr)
-        {
-            return new Assignment {Reference = VarRef(varName), Expression = expr};
-        }
-
         protected static IAssignment Assign(string id, IAssignableExpression expr)
         {
             return new Assignment

@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-using System.Linq;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
-using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -38,7 +35,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("o", SSTAnalysisFixture.Object),
-                Assign("o", new NullExpression()),
+                Assign("o", Const("null")),
                 SSTAnalysisFixture.EmptyCompletion);
         }
 
@@ -52,7 +49,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("o", SSTAnalysisFixture.Object),
-                Assign("o", new NullExpression()),
+                Assign("o", Const("null")),
                 ExprStmt(
                     new CompletionExpression
                     {
@@ -70,7 +67,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("o", SSTAnalysisFixture.Object),
-                Assign("o", new NullExpression()),
+                Assign("o", Const("null")),
                 ExprStmt(
                     new CompletionExpression
                     {
@@ -89,7 +86,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("o", SSTAnalysisFixture.Object),
-                Assign("o", new NullExpression()),
+                Assign("o", Const("null")),
                 ExprStmt(
                     new CompletionExpression
                     {

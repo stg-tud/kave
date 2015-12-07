@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -43,7 +42,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     {
                         Condition = RefExpr("$1"),
                         ThenExpression = RefExpr("$0"),
-                        ElseExpression = new ConstantValueExpression()
+                        ElseExpression = Const("typeof")
                     }),
                 Fix.EmptyCompletion);
         }

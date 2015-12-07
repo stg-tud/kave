@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -37,7 +35,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 new WhileLoop
                 {
-                    Condition = new ConstantValueExpression()
+                    Condition = Const("true")
                 },
                 Fix.EmptyCompletion);
         }
@@ -53,7 +51,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("isX", Fix.Bool),
-                Assign("isX", new ConstantValueExpression()),
+                Assign("isX", Const("true")),
                 new WhileLoop
                 {
                     Condition = RefExpr("isX")
@@ -85,7 +83,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         {
                             VarDecl("$0", Fix.Bool),
                             Assign("$0", Invoke("this", Method("[{0}] [{1}].IsX()", Fix.Bool, Fix.TestClass))),
-                            new ReturnStatement{Expression = RefExpr("$0"), IsVoid = false}
+                            new ReturnStatement {Expression = RefExpr("$0"), IsVoid = false}
                         }
                     }
                 },

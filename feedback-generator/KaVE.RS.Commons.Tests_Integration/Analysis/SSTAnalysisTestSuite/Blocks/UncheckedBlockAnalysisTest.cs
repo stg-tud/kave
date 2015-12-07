@@ -60,7 +60,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -73,14 +73,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("j", Fix.Int),
-                VarAssign("j", new ConstantValueExpression()),
+                Assign("j", new ConstantValueExpression()),
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.Int),
                 new UncheckedBlock
                 {
-                    Body = {VarAssign("$0", new ComposedExpression {References = {VarRef("j")}})}
+                    Body = {Assign("$0", new ComposedExpression {References = {VarRef("j")}})}
                 },
-                VarAssign("i", RefExpr("$0")),
+                Assign("i", RefExpr("$0")),
                 Fix.EmptyCompletion);
         }
 
@@ -100,11 +100,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     Body =
                     {
                         VarDecl("$0", Fix.Int),
-                        VarAssign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "N"))),
-                        VarAssign("$1", new ComposedExpression { References = { VarRef("$0") } })
+                        Assign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "N"))),
+                        Assign("$1", new ComposedExpression {References = {VarRef("$0")}})
                     }
                 },
-                VarAssign("i", RefExpr("$1")),
+                Assign("i", RefExpr("$1")),
                 Fix.EmptyCompletion);
         }
     }

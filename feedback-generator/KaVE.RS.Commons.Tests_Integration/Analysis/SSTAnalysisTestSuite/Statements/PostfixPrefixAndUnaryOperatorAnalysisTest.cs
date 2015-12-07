@@ -37,7 +37,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 Fix.EmptyCompletion,
-                VarAssign("this", Fix.ComposedExpr("this")));
+                Assign("this", Fix.ComposedExpr("this")));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             AssertCompletionMarker<IPostfixOperatorExpression>(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                VarAssign("this", Fix.ComposedExpr("this")),
+                Assign("this", Fix.ComposedExpr("this")),
                 Fix.EmptyCompletion);
         }
 
@@ -67,7 +67,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 Fix.EmptyCompletion,
-                VarAssign("this", Fix.ComposedExpr("this")));
+                Assign("this", Fix.ComposedExpr("this")));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             AssertCompletionMarker<IPrefixOperatorExpression>(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                VarAssign("this", Fix.ComposedExpr("this")),
+                Assign("this", Fix.ComposedExpr("this")),
                 Fix.EmptyCompletion);
         }
 
@@ -96,9 +96,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", Const("1")),
                 VarDecl("j", Fix.Int),
-                VarAssign("j", Fix.ComposedExpr("i")),
+                Assign("j", Fix.ComposedExpr("i")),
                 Fix.EmptyCompletion);
         }
 
@@ -112,7 +112,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("b", Fix.Bool),
-                VarAssign("b", new ConstantValueExpression()),
+                Assign("b", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 

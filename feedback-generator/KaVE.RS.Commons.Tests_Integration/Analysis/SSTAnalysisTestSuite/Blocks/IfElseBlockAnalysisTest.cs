@@ -16,7 +16,6 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -40,7 +39,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 Fix.EmptyCompletion,
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression()
+                    Condition = Const("true")
                 });
         }
 
@@ -59,7 +58,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Then = {Fix.EmptyCompletion}
                 });
         }
@@ -80,7 +79,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Then =
                     {
                         VarDecl("i", Fix.Int),
@@ -104,7 +103,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Else = {Fix.EmptyCompletion}
                 });
         }
@@ -125,7 +124,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Else =
                     {
                         VarDecl("j", Fix.Int),
@@ -148,7 +147,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression()
+                    Condition = Const("true")
                 },
                 Fix.EmptyCompletion);
         }
@@ -168,7 +167,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression()
+                    Condition = Const("true")
                 },
                 Fix.EmptyCompletion);
         }
@@ -190,7 +189,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new IfElseBlock
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Then = {VarDecl("i", Fix.Int)},
                     Else = {VarDecl("j", Fix.Int)}
                 },

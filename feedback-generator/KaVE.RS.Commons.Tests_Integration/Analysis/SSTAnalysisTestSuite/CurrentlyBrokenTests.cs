@@ -113,7 +113,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             // Analysis will assign UnknownExpression. Should probably be ConstantValueExpression instead.
             AssertBody(
                 VarDecl("array", ArrayTypeName.From(Fix.Int, 1)),
-                VarAssign("array", new ConstantValueExpression()),
+                Assign("array", new ConstantValueExpression()),
                 ExprStmt(Fix.CompletionOnVar(VarRef("array"), "")));
 
             Assert.Fail();
@@ -239,7 +239,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             AssertBody(
                 "M",
                 VarDecl("$0", Fix.String),
-                VarAssign("$0", RefExpr(FieldRef(Fix.Field(Fix.String, Type("C"), "Str"), VarRef("this")))),
+                Assign("$0", RefExpr(FieldRef(Fix.Field(Fix.String, Type("C"), "Str"), VarRef("this")))),
                 ExprStmt(Fix.CompletionOnVar(VarRef("$0"), "")));
         }
 
@@ -253,8 +253,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             AssertBody(
                 VarDecl("$0", Fix.Exception),
-                VarAssign("$0", new CompletionExpression { Token = "e" }),
-                new ThrowStatement { Reference = VarRef("$0") });
+                Assign("$0", new CompletionExpression {Token = "e"}),
+                new ThrowStatement {Reference = VarRef("$0")});
         }
 
         [Test]
@@ -267,8 +267,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             AssertBody(
                 VarDecl("$0", Fix.Exception),
-                VarAssign("$0", new CompletionExpression()), // not sure how this completion would look
-                new ThrowStatement { Reference = VarRef("$0") });
+                Assign("$0", new CompletionExpression()),
+                // not sure how this completion would look
+                new ThrowStatement {Reference = VarRef("$0")});
         }
     }
 }

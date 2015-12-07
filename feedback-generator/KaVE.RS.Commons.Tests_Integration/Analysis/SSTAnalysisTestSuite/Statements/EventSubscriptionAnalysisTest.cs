@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Statements;
 using NUnit.Framework;
@@ -289,11 +287,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 e += delegate{};
                 $
             ");
-            Action<int> e = null;
-            e += delegate { };
+
             AssertBody(
                 VarDecl("e", Fix.ActionOfInt),
-                Assign("e", new NullExpression()),
+                Assign("e", Const("null")),
                 new EventSubscriptionStatement
                 {
                     Reference = VarRef("e"),

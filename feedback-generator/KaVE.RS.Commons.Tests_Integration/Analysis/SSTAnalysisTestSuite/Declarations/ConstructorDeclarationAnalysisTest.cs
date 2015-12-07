@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -78,7 +77,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
 
             var ctor1 = ConstructorDecl("N.C, TestProject");
             ctor1.Body.Add(
-                InvokeStmt("this", Constructor("N.C, TestProject", Param(Fix.Int, "i")), new ConstantValueExpression()));
+                InvokeStmt("this", Constructor("N.C, TestProject", Param(Fix.Int, "i")), Const("1")));
 
             var ctor2 = ConstructorDecl("N.C, TestProject", Param(Fix.Int, "i"));
 
@@ -100,7 +99,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
 
             var ctor1 = ConstructorDecl("N.C, TestProject");
             ctor1.Body.Add(
-                InvokeStmt("base", Constructor("N.S, TestProject", Param(Fix.Int, "i")), new ConstantValueExpression()));
+                InvokeStmt("base", Constructor("N.S, TestProject", Param(Fix.Int, "i")), Const("1")));
 
             AssertAllMethods(ctor1);
         }
@@ -121,7 +120,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
 
             var ctor1 = ConstructorDecl("N.C, TestProject");
             ctor1.Body.Add(
-                InvokeStmt("this", Constructor("N.C, TestProject", Param(Fix.Int, "i")), new ConstantValueExpression()));
+                InvokeStmt("this", Constructor("N.C, TestProject", Param(Fix.Int, "i")), Const("1")));
 
             var ctor2 = ConstructorDecl("N.C, TestProject", Param(Fix.Int, "i"));
             ctor2.Body.Add(InvokeStmt("base", Constructor("N.S, TestProject", Param(Fix.Int, "i")), RefExpr("i")));

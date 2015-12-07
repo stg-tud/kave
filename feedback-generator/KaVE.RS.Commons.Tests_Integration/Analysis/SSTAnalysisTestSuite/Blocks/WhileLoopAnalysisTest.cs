@@ -16,7 +16,6 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
@@ -39,7 +38,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new WhileLoop
                 {
-                    Condition = new ConstantValueExpression()
+                    Condition = Const("true")
                 },
                 Fix.EmptyCompletion);
         }
@@ -59,7 +58,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 Fix.EmptyCompletion,
                 new WhileLoop
                 {
-                    Condition = new ConstantValueExpression()
+                    Condition = Const("true")
                 });
         }
 
@@ -77,7 +76,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new WhileLoop
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Body =
                     {
                         Fix.EmptyCompletion
@@ -100,12 +99,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new WhileLoop
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Body =
                     {
                         new VariableDeclaration
                         {
-                            Reference = BaseSSTAnalysisTest.VarRef("i"),
+                            Reference = VarRef("i"),
                             Type = Fix.Int
                         }
                     }

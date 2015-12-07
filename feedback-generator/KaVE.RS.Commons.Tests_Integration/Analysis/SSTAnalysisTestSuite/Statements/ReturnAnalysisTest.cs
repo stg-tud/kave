@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -61,7 +60,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                 Fix.EmptyCompletion,
                 new ReturnStatement
                 {
-                    Expression = new ConstantValueExpression()
+                    Expression = Const("1")
                 });
         }
     }

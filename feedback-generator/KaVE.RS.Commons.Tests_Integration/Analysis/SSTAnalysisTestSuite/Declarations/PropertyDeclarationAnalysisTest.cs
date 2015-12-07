@@ -19,7 +19,6 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -61,7 +60,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
                     Name = P("set get [{0}] [{1}].P()", Fix.Int, Fix.TestClass),
                     Get =
                     {
-                        new ReturnStatement {Expression = new ConstantValueExpression()}
+                        new ReturnStatement {Expression = Const("1")}
                     },
                     Set =
                     {

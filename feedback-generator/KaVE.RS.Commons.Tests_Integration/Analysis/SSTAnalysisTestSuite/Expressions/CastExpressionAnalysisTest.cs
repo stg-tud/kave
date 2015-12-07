@@ -15,13 +15,12 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
 {
-    class CastExpressionAnalysisTest : BaseSSTAnalysisTest
+    internal class CastExpressionAnalysisTest : BaseSSTAnalysisTest
     {
         [Test]
         public void CastingConstantValue_Alias()
@@ -33,8 +32,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
-                VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
+                Assign("$0", Const("1")),
+                Assign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
                 SSTAnalysisFixture.EmptyCompletion);
         }
 
@@ -48,8 +47,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
-                VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression { TargetType = Fix.Float, Reference = VarRef("$0") }),
+                Assign("$0", Const("1")),
+                Assign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
                 SSTAnalysisFixture.EmptyCompletion);
         }
 
@@ -63,8 +62,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
-                VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression { TargetType = Fix.Float, Reference = VarRef("$0") }),
+                Assign("$0", Const("1")),
+                Assign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
                 SSTAnalysisFixture.EmptyCompletion);
         }
 
@@ -83,8 +82,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 "M",
                 VarDecl("i", Fix.Float),
                 VarDecl("$0", Fix.Int),
-                VarAssign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                VarAssign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
+                Assign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
+                Assign("i", new CastExpression {TargetType = Fix.Float, Reference = VarRef("$0")}),
                 Fix.EmptyCompletion);
         }
 
@@ -98,8 +97,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 VarDecl("i", Fix.Object),
                 VarDecl("$0", Fix.Int),
-                VarAssign("$0", new ConstantValueExpression()),
-                VarAssign("i", new CastExpression { TargetType = Fix.Object, Reference = VarRef("$0") }),
+                Assign("$0", Const("1")),
+                Assign("i", new CastExpression {TargetType = Fix.Object, Reference = VarRef("$0")}),
                 SSTAnalysisFixture.EmptyCompletion);
         }
     }

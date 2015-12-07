@@ -59,7 +59,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("$0", Fix.Exception),
-                VarAssign("$0", InvokeCtor(Fix.Exception_ctor, new ConstantValueExpression())),
+                Assign("$0", InvokeCtor(Fix.Exception_ctor, new ConstantValueExpression())),
                 new ThrowStatement {Reference = VarRef("$0")},
                 Fix.EmptyCompletion);
         }
@@ -86,11 +86,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("$0", Fix.Exception),
-                VarAssign("$0", InvokeCtor(Fix.Exception_ctor, new ConstantValueExpression())),
+                Assign("$0", InvokeCtor(Fix.Exception_ctor, new ConstantValueExpression())),
                 new ThrowStatement {Reference = VarRef("$0")},
                 Fix.EmptyCompletion,
                 VarDecl("$1", Fix.Exception),
-                VarAssign("$1", InvokeCtor(Fix.Exception_ctor, new ConstantValueExpression())),
+                Assign("$1", InvokeCtor(Fix.Exception_ctor, new ConstantValueExpression())),
                 new ThrowStatement {Reference = VarRef("$1")});
         }
 
@@ -108,7 +108,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             AssertBody(
                 new WhileLoop
                 {
-                    Condition = new ConstantValueExpression(),
+                    Condition = Const("true"),
                     Body =
                     {
                         new ThrowStatement()
@@ -124,7 +124,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("$0", Fix.Exception),
-                VarAssign("$0", new CompletionExpression()),
+                Assign("$0", new CompletionExpression()),
                 new ThrowStatement {Reference = VarRef("$0")},
                 Fix.EmptyCompletion);
         }

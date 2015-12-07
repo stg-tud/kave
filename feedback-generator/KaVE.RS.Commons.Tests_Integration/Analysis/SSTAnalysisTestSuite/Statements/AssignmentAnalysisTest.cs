@@ -225,7 +225,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("o", Fix.Object),
-                Assign("o", new NullExpression()),
+                Assign("o", Const("null")),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -242,7 +242,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             AssertBody(
                 VarDecl("i", Fix.Int),
                 VarDecl("j", Fix.Int),
-                Assign("j", new ConstantValueExpression()),
+                Assign("j", Const("0")),
                 Assign("i", RefExpr("j")),
                 ExprStmt(new CompletionExpression()));
         }
@@ -340,9 +340,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign("i", Const("1")),
                 VarDecl("j", Fix.Int),
-                Assign("j", new ConstantValueExpression()),
+                Assign("j", Const("2")),
                 Fix.EmptyCompletion);
         }
 
@@ -357,7 +357,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign("i", Const("2")),
                 VarDecl("j", Fix.Int),
                 Assign("j", RefExpr("i")),
                 Fix.EmptyCompletion);
@@ -374,7 +374,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign("i", Const("0")),
                 new Assignment
                 {
                     Reference = VarRef("i"),
@@ -394,7 +394,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign("i", Const("0")),
                 new Assignment
                 {
                     Reference = VarRef("i"),

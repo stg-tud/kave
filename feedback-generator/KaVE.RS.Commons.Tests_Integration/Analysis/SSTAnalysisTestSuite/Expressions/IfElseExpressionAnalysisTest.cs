@@ -32,12 +32,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new IfElseExpression
+                Assign(
+                    "i",
+                    new IfElseExpression
                     {
                         Condition = new ConstantValueExpression(),
                         ThenExpression = new ConstantValueExpression(),
                         ElseExpression = new ConstantValueExpression()
-                    }),  
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -51,16 +53,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("j", Fix.Int),
-                VarAssign("j", new ConstantValueExpression()),
+                Assign("j", Const("1")),
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.Bool),
-                VarAssign("$0", new ComposedExpression {References = {VarRef("j")}}),
-                VarAssign("i", new IfElseExpression
-                {
-                    Condition = new ReferenceExpression { Reference = VarRef("$0") },
-                    ThenExpression = new ConstantValueExpression(),
-                    ElseExpression = new ConstantValueExpression()
-                }),
+                Assign("$0", new ComposedExpression {References = {VarRef("j")}}),
+                Assign(
+                    "i",
+                    new IfElseExpression
+                    {
+                        Condition = new ReferenceExpression {Reference = VarRef("$0")},
+                        ThenExpression = new ConstantValueExpression(),
+                        ElseExpression = new ConstantValueExpression()
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -75,12 +79,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new IfElseExpression
-                {
-                    Condition = new ConstantValueExpression(),
-                    ThenExpression = new ConstantValueExpression(),
-                    ElseExpression = new ConstantValueExpression()
-                }),
+                Assign(
+                    "i",
+                    new IfElseExpression
+                    {
+                        Condition = new ConstantValueExpression(),
+                        ThenExpression = new ConstantValueExpression(),
+                        ElseExpression = new ConstantValueExpression()
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -93,12 +99,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new IfElseExpression
-                {
-                    Condition = new ConstantValueExpression(),
-                    ThenExpression = new ConstantValueExpression(),
-                    ElseExpression = new ConstantValueExpression()
-                }),
+                Assign(
+                    "i",
+                    new IfElseExpression
+                    {
+                        Condition = new ConstantValueExpression(),
+                        ThenExpression = new ConstantValueExpression(),
+                        ElseExpression = new ConstantValueExpression()
+                    }),
                 Fix.EmptyCompletion);
         }
     }

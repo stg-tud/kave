@@ -32,7 +32,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -45,7 +45,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -59,9 +59,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", Const("1")),
                 VarDecl("j", Fix.Int),
-                VarAssign("j", ComposedExpr("i")),
+                Assign("j", ComposedExpr("i")),
                 Fix.EmptyCompletion);
         }
 
@@ -80,8 +80,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 "M",
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.Int),
-                VarAssign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                VarAssign("i", ComposedExpr("$0")),
+                Assign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
+                Assign("i", ComposedExpr("$0")),
                 Fix.EmptyCompletion);
         }
 
@@ -101,10 +101,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 "M",
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Type("C")),
-                VarAssign("$0", Invoke("this", Fix.Method(Type("C"), Type("C"), "NewInstance"))),
+                Assign("$0", Invoke("this", Fix.Method(Type("C"), Type("C"), "NewInstance"))),
                 VarDecl("$1", Fix.Int),
-                VarAssign("$1", Invoke("$0", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                VarAssign("i", ComposedExpr("$1")),
+                Assign("$1", Invoke("$0", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
+                Assign("i", ComposedExpr("$1")),
                 Fix.EmptyCompletion);
         }
 
@@ -117,7 +117,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -130,7 +130,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -143,7 +143,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -156,7 +156,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
 
@@ -169,7 +169,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                VarAssign("i", new ConstantValueExpression()),
+                Assign("i", new ConstantValueExpression()),
                 Fix.EmptyCompletion);
         }
     }

@@ -16,7 +16,6 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -39,7 +38,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 Fix.EmptyCompletion,
                 // TODO @seb: think about the "Object" types for erroneous code... better use "Unknown"?
                 VarDecl("$0", Fix.Object),
-                Assign("$0", new NullExpression()),
+                Assign("$0", Const("null")),
                 new ForEachLoop
                 {
                     Declaration = VarDecl("n", Fix.Object),
@@ -59,7 +58,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("$0", Fix.Object),
-                Assign("$0", new NullExpression()),
+                Assign("$0", Const("null")),
                 new ForEachLoop
                 {
                     Declaration = VarDecl("n", Fix.Object),
@@ -81,7 +80,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
             AssertBody(
                 VarDecl("$0", Fix.Object),
-                Assign("$0", new NullExpression()),
+                Assign("$0", Const("null")),
                 new ForEachLoop
                 {
                     Declaration = VarDecl("n", Fix.Object),
@@ -114,7 +113,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     Body =
                     {
                         InvokeStmt("n", Fix.Int_GetHashCode),
-                        Fix.EmptyCompletion,
+                        Fix.EmptyCompletion
                     }
                 });
         }
@@ -139,7 +138,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     Body =
                     {
                         InvokeStmt("n", Fix.Int_GetHashCode),
-                        Fix.EmptyCompletion,
+                        Fix.EmptyCompletion
                     }
                 });
         }
