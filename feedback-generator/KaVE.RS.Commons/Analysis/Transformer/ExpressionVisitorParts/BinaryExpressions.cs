@@ -67,7 +67,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitRelationalExpression(IRelationalExpression expr,
             IList<IStatement> context)
         {
-            BinaryOperator op;
+            BinaryOperator op = BinaryOperator.Unknown;
             if (expr.OperatorSign.NodeType == CSharpTokenType.GT)
             {
                 op = BinaryOperator.GreaterThan;
@@ -83,10 +83,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             else if (expr.OperatorSign.NodeType == CSharpTokenType.LT)
             {
                 op = BinaryOperator.LessThan;
-            }
-            else
-            {
-                op = BinaryOperator.Unknown;
             }
 
             return new BinaryExpression
@@ -104,13 +100,47 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitAdditiveExpression(IAdditiveExpression expr,
             IList<IStatement> context)
         {
-            return ComposedExpressionCreator.Create(this, expr, context);
+            BinaryOperator op = BinaryOperator.Unknown;
+            if (expr.OperatorSign.NodeType == CSharpTokenType.PLUS)
+            {
+                op = BinaryOperator.Plus;
+            }
+            else if (expr.OperatorSign.NodeType == CSharpTokenType.MINUS)
+            {
+                op = BinaryOperator.Minus;
+            }
+
+            return new BinaryExpression
+            {
+                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
+                Operator = op,
+                RightOperand = ToSimpleExpression(expr.RightOperand, context)
+            };
         }
 
         public override IAssignableExpression VisitMultiplicativeExpression(IMultiplicativeExpression expr,
             IList<IStatement> context)
         {
-            return ComposedExpressionCreator.Create(this, expr, context);
+            BinaryOperator op = BinaryOperator.Unknown;
+            if (expr.OperatorSign.NodeType == CSharpTokenType.PERC)
+            {
+                op = BinaryOperator.Modulo;
+            }
+            else if (expr.OperatorSign.NodeType == CSharpTokenType.DIV)
+            {
+                op = BinaryOperator.Divide;
+            }
+            else if (expr.OperatorSign.NodeType == CSharpTokenType.ASTERISK)
+            {
+                op = BinaryOperator.Multiply;
+            }
+
+            return new BinaryExpression
+            {
+                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
+                Operator = op,
+                RightOperand = ToSimpleExpression(expr.RightOperand, context)
+            };
         }
 
         #endregion

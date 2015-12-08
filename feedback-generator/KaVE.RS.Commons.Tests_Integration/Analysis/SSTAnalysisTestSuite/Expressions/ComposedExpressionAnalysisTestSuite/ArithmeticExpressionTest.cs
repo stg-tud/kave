@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -32,7 +34,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Plus,
+                        RightOperand = Const("2")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -45,7 +54,23 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                VarDecl("$0", Fix.Int),
+                Assign(
+                    "$0",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Plus,
+                        RightOperand = Const("2")
+                    }),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = RefExpr("$0"),
+                        Operator = BinaryOperator.Plus,
+                        RightOperand = new ConstantValueExpression()
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -61,50 +86,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Int),
                 Assign("i", Const("1")),
                 VarDecl("j", Fix.Int),
-                Assign("j", ComposedExpr("i")),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void AddingConstantToMethodResult()
-        {
-            CompleteInClass(@"
-                public int GetInt() { return 1; }
-                public void M() 
-                {
-                    var i = 1 + GetInt();
-                    $
-                }");
-
-            AssertBody(
-                "M",
-                VarDecl("i", Fix.Int),
-                VarDecl("$0", Fix.Int),
-                Assign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                Assign("i", ComposedExpr("$0")),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void AddingConstantToMethodResult_Chained()
-        {
-            CompleteInClass(@"
-                public int GetInt() { return 1; }
-                public C NewInstance() { return new C(); }
-                public void M() 
-                {
-                    var i = 1 + NewInstance().GetInt();
-                    $
-                }");
-
-            AssertBody(
-                "M",
-                VarDecl("i", Fix.Int),
-                VarDecl("$0", Type("C")),
-                Assign("$0", Invoke("this", Fix.Method(Type("C"), Type("C"), "NewInstance"))),
-                VarDecl("$1", Fix.Int),
-                Assign("$1", Invoke("$0", Fix.Method(Fix.Int, Type("C"), "GetInt"))),
-                Assign("i", ComposedExpr("$1")),
+                Assign(
+                    "j",
+                    new BinaryExpression
+                    {
+                        LeftOperand = RefExpr("i"),
+                        Operator = BinaryOperator.Plus,
+                        RightOperand = Const("2")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -117,7 +106,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Minus,
+                        RightOperand = Const("2")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -130,7 +126,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Multiply,
+                        RightOperand = Const("2")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -143,7 +146,34 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Divide,
+                        RightOperand = Const("2")
+                    }),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void ModuloTwoInts()
+        {
+            CompleteInMethod(@"
+                var i = 1 % 2;
+                $");
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Modulo,
+                        RightOperand = Const("2")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -156,20 +186,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void Modulus()
-        {
-            CompleteInMethod(@"
-                var i = 100 % 6;
-                $");
-
-            AssertBody(
-                VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Plus,
+                        RightOperand = new ConstantValueExpression()
+                    }),
                 Fix.EmptyCompletion);
         }
     }
