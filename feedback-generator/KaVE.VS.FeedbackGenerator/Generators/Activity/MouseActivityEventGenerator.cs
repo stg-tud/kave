@@ -59,7 +59,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
 
             if (InActivityPeriod && UserIsInactive(now))
             {
-                FireNow(_currentEvent);
+                _currentEvent.TerminatedAt = _lastActivity;
+                Fire(_currentEvent);
             }
 
             if (!InActivityPeriod)
