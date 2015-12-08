@@ -40,6 +40,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
         public void ShouldFireOnMove()
         {
             Raise(events => events.MouseMove += null);
+            MakeUserInactive();
+            Raise(events => events.MouseMove += null);
+
             var actualEvent = GetSinglePublished<ActivityEvent>();
             Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
         }
@@ -48,6 +51,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
         public void ShouldFireOnClick()
         {
             Raise(events => events.MouseClick += null);
+            MakeUserInactive();
+            Raise(events => events.MouseMove += null);
+
             var actualEvent = GetSinglePublished<ActivityEvent>();
             Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
         }
@@ -56,6 +62,22 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
         public void ShouldFireOnWheel()
         {
             Raise(events => events.MouseWheel += null);
+            MakeUserInactive();
+            Raise(events => events.MouseMove += null);
+
+            var actualEvent = GetSinglePublished<ActivityEvent>();
+            Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
+        }
+
+        [Test]
+        public void ShouldNotFireMultipleEventsInARow()
+        {
+            Raise(events => events.MouseWheel += null);
+            Raise(events => events.MouseWheel += null);
+            Raise(events => events.MouseWheel += null);
+            MakeUserInactive();
+            Raise(events => events.MouseMove += null);
+
             var actualEvent = GetSinglePublished<ActivityEvent>();
             Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
         }
@@ -65,6 +87,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
             _mouseEventsMock.Raise(
                 mouseEvent,
                 new MouseEventArgs(MouseButtons.None, 1, 0, 0, 0));
+        }
+
+        private void MakeUserInactive()
+        {
+            TestDateUtils.Now += MouseActivityEventGenerator.InactivitySpanToBreakActivityPeriod +
+                                 TimeSpan.FromMilliseconds(1);
         }
     }
 }

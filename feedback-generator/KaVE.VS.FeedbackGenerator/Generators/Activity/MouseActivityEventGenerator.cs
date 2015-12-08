@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Windows.Forms;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events;
@@ -26,21 +27,53 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
     [ShellComponent]
     public class MouseActivityEventGenerator : EventGeneratorBase
     {
+        // TODO evaluate good threshold value
+        public static readonly TimeSpan InactivitySpanToBreakActivityPeriod = TimeSpan.FromSeconds(5);
+
+        private readonly IDateUtils _dateUtils;
+
+        private ActivityEvent _currentEvent;
+        private DateTime _lastActivity;
+
+        private bool InActivityPeriod
+        {
+            get { return _currentEvent != null; }
+        }
+
         public MouseActivityEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
             [NotNull] IKaVEMouseEvents mouseEvents) : base(env, messageBus, dateUtils)
         {
+            _dateUtils = dateUtils;
             mouseEvents.MouseMove += FireMouseActivity;
             mouseEvents.MouseClick += FireMouseActivity;
             mouseEvents.MouseWheel += FireMouseActivity;
+
+            _lastActivity = dateUtils.Now;
         }
 
         private void FireMouseActivity(object sender, MouseEventArgs e)
         {
-            var activityEvent = Create<ActivityEvent>();
-            activityEvent.TriggeredBy = IDEEvent.Trigger.Click;
-            Fire(activityEvent);
+            var now = _dateUtils.Now;
+
+            if (InActivityPeriod && UserIsInactive(now))
+            {
+                FireNow(_currentEvent);
+            }
+
+            if (!InActivityPeriod)
+            {
+                _currentEvent = Create<ActivityEvent>();
+                _currentEvent.TriggeredBy = IDEEvent.Trigger.Click;
+            }
+
+            _lastActivity = now;
+        }
+
+        private bool UserIsInactive(DateTime now)
+        {
+            return (now - _lastActivity) > InactivitySpanToBreakActivityPeriod;
         }
     }
 }
