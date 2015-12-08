@@ -145,6 +145,15 @@ namespace KaVE.RS.Commons.Analysis
                     res.EntryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
 
                     sst.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
+
+                    if (classDeclaration.IsPartial)
+                    {
+                        var file = nodeInFile.GetSourceFile();
+                        sst.PartialClassIdentifier = file == null
+                            ? "partial"
+                            : file.DisplayName;
+                    }
+
                     res.CompletionMarker = _completionTargetAnalysis.Analyze(nodeInFile);
                     classDeclaration.Accept(
                         new DeclarationVisitor(_logger, res.EntryPoints, res.CompletionMarker, _token),

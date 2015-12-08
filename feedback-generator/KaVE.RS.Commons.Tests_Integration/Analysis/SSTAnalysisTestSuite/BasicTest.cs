@@ -15,6 +15,7 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
@@ -277,6 +278,42 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             // TODO think about this simplification, perhaps it is better to create an artificial "no match" ITreeNode
             Assert.IsNull(LastCompletionMarker.AffectedNode);
             AssertCompletionCase(CompletionCase.Undefined);
+        }
+
+        [Test]
+        public void EnclosingTypeAndPartialClassIdentifier_nonPartial()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    class C {
+                        void M() {
+                            $
+                        }
+                    }
+                }
+            ");
+
+            Assert.AreEqual(TypeName.Get("N.C, TestProject"), ResultSST.EnclosingType);
+            Assert.AreEqual("", ResultSST.PartialClassIdentifier);
+        }
+
+        [Test]
+        public void EnclosingTypeAndPartialClassIdentifier_Partial()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    partial class C {
+                        void M() {
+                            $
+                        }
+                    }
+                }
+            ");
+
+            Assert.AreEqual(TypeName.Get("N.C, TestProject"), ResultSST.EnclosingType);
+            Assert.That(ResultSST.PartialClassIdentifier.StartsWith("<TestProject>"));
+            // name of test file is randomized and is unknown before
+            Assert.That(ResultSST.PartialClassIdentifier.EndsWith(".cs"));
         }
     }
 }
