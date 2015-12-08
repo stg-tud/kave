@@ -954,7 +954,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 Func<double, double, bool> isEq = (a, b) => Math.Abs(a - b) < 0.000001;
                 if (isEq(d, 0) || isEq(d, -1) || isEq(d, 1))
                 {
-                    v = string.Format("{0:0.0}", d);
+                    v = string.Format("{0:0.0}", d).Replace(',', '.');
                 }
                 return new ConstantValueExpression {Value = v};
             }

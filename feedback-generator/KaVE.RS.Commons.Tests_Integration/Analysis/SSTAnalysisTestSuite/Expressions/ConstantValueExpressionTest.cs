@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Globalization;
+using System.Threading;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -72,6 +74,25 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("d", Fix.Double),
                 Assign("d", Const(after)),
                 Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void DoubleValueInGermanLocale()
+        {
+            var currentCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+
+            CompleteInMethod(@"
+                var d = 1.0;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("d", Fix.Double),
+                Assign("d", Const("1.0")),
+                Fix.EmptyCompletion);
+
+            Thread.CurrentThread.CurrentCulture = currentCulture;
         }
 
         [TestCase("true"),

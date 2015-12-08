@@ -15,7 +15,8 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
@@ -112,7 +113,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
 
             AssertBody(
                 VarDecl("b", Fix.Bool),
-                Assign("b", new ConstantValueExpression()),
+                Assign(
+                    "b",
+                    new UnaryExpression
+                    {
+                        Operator = UnaryOperator.Not,
+                        Operand = Const("true")
+                    }),
                 Fix.EmptyCompletion);
         }
 

@@ -27,7 +27,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         public void ConstantTernaryExpression()
         {
             CompleteInMethod(@"
-                var i = 1 == 2 ? 3 : 4;
+                var i = true ? 1 : 2;
                 $");
 
             AssertBody(
@@ -36,9 +36,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "i",
                     new IfElseExpression
                     {
-                        Condition = new ConstantValueExpression(),
-                        ThenExpression = new ConstantValueExpression(),
-                        ElseExpression = new ConstantValueExpression()
+                        Condition = Const("true"),
+                        ThenExpression = Const("1"),
+                        ElseExpression = Const("2")
                     }),
                 Fix.EmptyCompletion);
         }
@@ -47,23 +47,21 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         public void TernaryExpressionWithVariables()
         {
             CompleteInMethod(@"
-                var j = 1;
-                var i = j == 2 ? 3 : 4;
+                var b = true;
+                var i = b ? 1 : 2;
                 $");
 
             AssertBody(
-                VarDecl("j", Fix.Int),
-                Assign("j", Const("1")),
+                VarDecl("b", Fix.Bool),
+                Assign("b", Const("true")),
                 VarDecl("i", Fix.Int),
-                VarDecl("$0", Fix.Bool),
-                Assign("$0", new ComposedExpression {References = {VarRef("j")}}),
                 Assign(
                     "i",
                     new IfElseExpression
                     {
-                        Condition = new ReferenceExpression {Reference = VarRef("$0")},
-                        ThenExpression = new ConstantValueExpression(),
-                        ElseExpression = new ConstantValueExpression()
+                        Condition = RefExpr("b"),
+                        ThenExpression = Const("1"),
+                        ElseExpression = Const("2")
                     }),
                 Fix.EmptyCompletion);
         }
