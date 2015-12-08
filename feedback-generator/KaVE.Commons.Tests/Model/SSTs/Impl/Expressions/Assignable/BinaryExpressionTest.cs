@@ -132,5 +132,37 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             ToStringAssert.Reflection(new BinaryExpression());
         }
+
+        [Test]
+        public void NumberingOfEnumIsStable()
+        {
+            // IMPORTANT! do not change any of these because it will affect serialization
+
+            Assert.AreEqual(0, (int) BinaryOperator.Unknown);
+
+            // Logical
+            Assert.AreEqual(1, (int) BinaryOperator.LessThan);
+            Assert.AreEqual(2, (int) BinaryOperator.LessThanOrEqual);
+            Assert.AreEqual(3, (int) BinaryOperator.Equal);
+            Assert.AreEqual(4, (int) BinaryOperator.GreaterThanOrEqual);
+            Assert.AreEqual(5, (int) BinaryOperator.GreaterThan);
+            Assert.AreEqual(6, (int) BinaryOperator.NotEqual);
+            Assert.AreEqual(7, (int) BinaryOperator.And);
+            Assert.AreEqual(8, (int) BinaryOperator.Or);
+
+            // Arithmetic
+            Assert.AreEqual(9, (int) BinaryOperator.Plus);
+            Assert.AreEqual(10, (int) BinaryOperator.Minus);
+            Assert.AreEqual(11, (int) BinaryOperator.Multiply);
+            Assert.AreEqual(12, (int) BinaryOperator.Divide);
+            Assert.AreEqual(13, (int) BinaryOperator.Modulo);
+
+            // Bitwise
+            Assert.AreEqual(14, (int) BinaryOperator.BitwiseAnd);
+            Assert.AreEqual(15, (int) BinaryOperator.BitwiseOr);
+            Assert.AreEqual(16, (int) BinaryOperator.BitwiseXor);
+            Assert.AreEqual(17, (int) BinaryOperator.ShiftLeft);
+            Assert.AreEqual(18, (int) BinaryOperator.ShiftRight);
+        }
     }
 }

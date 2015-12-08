@@ -25,7 +25,16 @@ namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
         [NotNull]
         ITypeName TargetType { get; }
 
+        CastOperator Operator { get; }
+
         [NotNull]
         IVariableReference Reference { get; }
+    }
+
+    public enum CastOperator
+    {
+        Unknown,
+        Cast, // (int)x
+        SafeCast // x as int
     }
 }

@@ -45,6 +45,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return new CastExpression
             {
                 Reference = (IVariableReference) entity.Reference.Accept(_refAnon, context),
+                Operator = entity.Operator,
                 TargetType = entity.TargetType.ToAnonymousName()
             };
         }

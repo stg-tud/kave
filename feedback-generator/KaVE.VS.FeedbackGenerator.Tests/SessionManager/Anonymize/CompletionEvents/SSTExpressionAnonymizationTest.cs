@@ -49,11 +49,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
                 new CastExpression
                 {
                     TargetType = Type("a"),
+                    Operator = CastOperator.SafeCast,
                     Reference = AnyVarReference
                 },
                 new CastExpression
                 {
                     TargetType = Type("a").ToAnonymousName(),
+                    Operator = CastOperator.SafeCast,
                     Reference = AnyVarReferenceAnonymized
                 });
         }

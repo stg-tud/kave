@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.TestUtils;
@@ -30,6 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             var sut = new CastExpression();
             Assert.AreEqual(new VariableReference(), sut.Reference);
             Assert.AreEqual(TypeName.UnknownName, sut.TargetType);
+            Assert.AreEqual(CastOperator.Unknown, sut.Operator);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -39,12 +41,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CastExpression
             {
-                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                Reference = SomeVarRef()
+                TargetType = TypeName.Get("T,P"),
+                Reference = SomeVarRef(),
+                Operator = CastOperator.SafeCast
             };
 
-            Assert.AreEqual(TypeName.Get("System.Int32, mscorlib, 4.0.0.0"), sut.TargetType);
+            Assert.AreEqual(TypeName.Get("T,P"), sut.TargetType);
             Assert.AreEqual(SomeVarRef(), sut.Reference);
+            Assert.AreEqual(CastOperator.SafeCast, sut.Operator);
         }
 
         [Test]
@@ -61,14 +65,16 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new CastExpression
             {
-                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                Reference = SomeVarRef()
+                TargetType = TypeName.Get("T,P"),
+                Reference = SomeVarRef(),
+                Operator = CastOperator.SafeCast
             };
 
             var b = new CastExpression
             {
-                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                Reference = SomeVarRef()
+                TargetType = TypeName.Get("T,P"),
+                Reference = SomeVarRef(),
+                Operator = CastOperator.SafeCast
             };
 
             Assert.AreEqual(a, b);
@@ -80,15 +86,10 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new CastExpression
             {
-                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                Reference = SomeVarRef()
+                TargetType = TypeName.Get("T,P")
             };
 
-            var b = new CastExpression
-            {
-                TargetType = TypeName.Get("System.String, mscorlib, 4.0.0.0"),
-                Reference = SomeVarRef()
-            };
+            var b = new CastExpression();
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -99,15 +100,24 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new CastExpression
             {
-                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef("i")
             };
 
-            var b = new CastExpression
+            var b = new CastExpression();
+
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentOperation()
+        {
+            var a = new CastExpression
             {
-                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
-                Reference = SomeVarRef("j")
+                Operator = CastOperator.SafeCast
             };
+
+            var b = new CastExpression();
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -131,6 +141,16 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         public void ToStringReflection()
         {
             ToStringAssert.Reflection(new CastExpression());
+        }
+
+        [Test]
+        public void NumberingOfEnumIsStable()
+        {
+            // IMPORTANT! do not change any of these because it will affect serialization
+
+            Assert.AreEqual(0, (int) CastOperator.Unknown);
+            Assert.AreEqual(1, (int) CastOperator.Cast);
+            Assert.AreEqual(2, (int) CastOperator.SafeCast);
         }
     }
 }

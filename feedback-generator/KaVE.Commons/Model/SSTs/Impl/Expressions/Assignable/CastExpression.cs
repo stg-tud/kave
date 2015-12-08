@@ -34,6 +34,9 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public ITypeName TargetType { get; set; }
 
         [DataMember]
+        public CastOperator Operator { get; set; }
+
+        [DataMember]
         public IVariableReference Reference { get; set; }
 
         public IEnumerable<ISSTNode> Children
@@ -47,29 +50,25 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
             Reference = new VariableReference();
         }
 
-        protected bool Equals(CastExpression other)
-        {
-            return TargetType.Equals(other.TargetType) && Reference.Equals(other.Reference);
-        }
-
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            return obj.GetType() == GetType() && Equals((CastExpression) obj);
+            return this.Equals(obj, Equals);
+        }
+
+        private bool Equals(CastExpression other)
+        {
+            return TargetType.Equals(other.TargetType) && Operator == other.Operator &&
+                   Reference.Equals(other.Reference);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (TargetType.GetHashCode()*397) ^ Reference.GetHashCode();
+                var hashCode = TargetType.GetHashCode();
+                hashCode = (hashCode*397) ^ (int) Operator;
+                hashCode = (hashCode*397) ^ Reference.GetHashCode();
+                return hashCode;
             }
         }
 

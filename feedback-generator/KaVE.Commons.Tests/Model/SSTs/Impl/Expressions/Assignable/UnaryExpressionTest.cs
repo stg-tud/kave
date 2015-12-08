@@ -115,5 +115,27 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             ToStringAssert.Reflection(new UnaryExpression());
         }
+
+        [Test]
+        public void NumberingOfEnumIsStable()
+        {
+            // IMPORTANT! do not change any of these because it will affect serialization
+
+            Assert.AreEqual(0, (int) UnaryOperator.Unknown);
+
+            // Logical
+            Assert.AreEqual(1, (int) UnaryOperator.Not);
+
+            // Arithmetic
+            Assert.AreEqual(2, (int) UnaryOperator.PreIncrement);
+            Assert.AreEqual(3, (int) UnaryOperator.PostIncrement);
+            Assert.AreEqual(4, (int) UnaryOperator.PreDecrement);
+            Assert.AreEqual(5, (int) UnaryOperator.PostDecrement);
+            Assert.AreEqual(6, (int) UnaryOperator.Plus);
+            Assert.AreEqual(7, (int) UnaryOperator.Minus);
+
+            // Bitwise
+            Assert.AreEqual(8, (int) UnaryOperator.Complement);
+        }
     }
 }
