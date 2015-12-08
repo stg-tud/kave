@@ -170,6 +170,9 @@
     <Compile Include="Analysis\Transformer\ComposedExpressionCreator.cs" />
     <Compile Include="Analysis\Transformer\DeclarationVisitor.cs" />
     <Compile Include="Analysis\Transformer\ExpressionVisitor.cs" />
+    <Compile Include="Analysis\Transformer\ExpressionVisitorParts\BinaryExpressions.cs" />
+    <Compile Include="Analysis\Transformer\ExpressionVisitorParts\ConstantValueExpressions.cs" />
+    <Compile Include="Analysis\Transformer\ExpressionVisitorParts\UnaryExpressions.cs" />
     <Compile Include="Analysis\Transformer\JetbrainsTreeDebugger.cs" />
     <Compile Include="Analysis\Transformer\ToAssignableReference.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />

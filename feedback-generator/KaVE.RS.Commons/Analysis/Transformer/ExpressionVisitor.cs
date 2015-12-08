@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
@@ -46,7 +43,7 @@ using IReferenceExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IReferenceExpre
 
 namespace KaVE.RS.Commons.Analysis.Transformer
 {
-    public class ExpressionVisitor : TreeNodeVisitor<IList<IStatement>, IAssignableExpression>
+    public partial class ExpressionVisitor : TreeNodeVisitor<IList<IStatement>, IAssignableExpression>
     {
         public readonly ITypeName Bool = TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
 
@@ -226,17 +223,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return new VariableReference {Identifier = id};
         }
 
-        public override IAssignableExpression VisitDefaultExpression(IDefaultExpression expr, IList<IStatement> body)
-        {
-            return new ConstantValueExpression {Value = ConstantValueExpression.Default};
-        }
-
-        public override IAssignableExpression VisitCSharpLiteralExpression(ICSharpLiteralExpression litExpr,
-            IList<IStatement> context)
-        {
-            return ToConst(litExpr, true);
-        }
-
         public override IAssignableExpression VisitThisExpression(IThisExpression expr, IList<IStatement> body)
         {
             return new ReferenceExpression {Reference = new VariableReference {Identifier = "this"}};
@@ -297,40 +283,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         private bool HasImpliciteThis(IReferenceExpression refExpr)
         {
             return IsMember(refExpr) && refExpr.QualifierExpression == null;
-        }
-
-        private VariableReference CreateVariableReference2(ICSharpExpression refExpr,
-            IList<IStatement> body)
-        {
-            var reference = ToReference(refExpr, body);
-
-            if (reference is UnknownReference)
-            {
-                return new VariableReference();
-            }
-
-            var varRef = reference as VariableReference;
-            if (varRef != null)
-            {
-                return varRef;
-            }
-
-            var type = refExpr == null ? TypeName.UnknownName : refExpr.GetExpressionType().ToIType().GetName();
-
-            var newVarRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
-            body.Add(
-                new VariableDeclaration
-                {
-                    Reference = newVarRef,
-                    Type = type
-                });
-            body.Add(
-                new Assignment
-                {
-                    Reference = newVarRef,
-                    Expression = new ReferenceExpression {Reference = reference}
-                });
-            return newVarRef;
         }
 
         [NotNull]
@@ -747,17 +699,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
         }
 
-        public override IAssignableExpression VisitUnsafeCodeSizeOfExpression(IUnsafeCodeSizeOfExpression expr,
-            IList<IStatement> context)
-        {
-            return new ConstantValueExpression {Value = ConstantValueExpression.Sizeof};
-        }
-
-        public override IAssignableExpression VisitTypeofExpression(ITypeofExpression expr, IList<IStatement> body)
-        {
-            return new ConstantValueExpression {Value = ConstantValueExpression.Typeof};
-        }
-
         public override IAssignableExpression VisitUncheckedExpression(IUncheckedExpression expr, IList<IStatement> body)
         {
             var uncheckedBlock = new UncheckedBlock();
@@ -831,194 +772,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         }
 
         #region ComposedExpressionCreator entry points
-
-        public override IAssignableExpression VisitAdditiveExpression(IAdditiveExpression expr,
-            IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitMultiplicativeExpression(IMultiplicativeExpression expr,
-            IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitParenthesizedExpression(IParenthesizedExpression expr,
-            IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitConditionalAndExpression(IConditionalAndExpression expr,
-            IList<IStatement> context)
-        {
-            return new BinaryExpression
-            {
-                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
-                Operator = BinaryOperator.And,
-                RightOperand = ToSimpleExpression(expr.RightOperand, context)
-            };
-        }
-
-        public override IAssignableExpression VisitConditionalOrExpression(IConditionalOrExpression expr,
-            IList<IStatement> context)
-        {
-            return new BinaryExpression
-            {
-                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
-                Operator = BinaryOperator.Or,
-                RightOperand = ToSimpleExpression(expr.RightOperand, context)
-            };
-        }
-
-        public override IAssignableExpression VisitEqualityExpression(IEqualityExpression expr,
-            IList<IStatement> context)
-        {
-            return new BinaryExpression
-            {
-                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
-                Operator =
-                    expr.EqualityType == EqualityExpressionType.EQEQ ? BinaryOperator.Equal : BinaryOperator.NotEqual,
-                RightOperand = ToSimpleExpression(expr.RightOperand, context)
-            };
-        }
-
-        public override IAssignableExpression VisitBitwiseAndExpression(IBitwiseAndExpression expr,
-            IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitBitwiseExclusiveOrExpression(IBitwiseExclusiveOrExpression expr,
-            IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitBitwiseInclusiveOrExpression(IBitwiseInclusiveOrExpression expr,
-            IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitUnaryOperatorExpression(IUnaryOperatorExpression expr,
-            IList<IStatement> context)
-        {
-            var lit = expr.Operand as ICSharpLiteralExpression;
-            if (lit != null)
-            {
-                switch (expr.UnaryOperatorType)
-                {
-                    case UnaryOperatorType.MINUS:
-                        return ToConst(lit, false);
-                    case UnaryOperatorType.PLUS:
-                        return ToConst(lit, true);
-                }
-            }
-            switch (expr.UnaryOperatorType)
-            {
-                case UnaryOperatorType.EXCL:
-                    return new UnaryExpression
-                    {
-                        Operator = UnaryOperator.Not,
-                        Operand = ToSimpleExpression(expr.Operand, context)
-                    };
-            }
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        private static IAssignableExpression ToConst(ICSharpLiteralExpression lit, bool isPositive)
-        {
-            var isNull = lit.ConstantValue.IsPureNull(CSharpLanguage.Instance);
-            if (isNull)
-            {
-                return new ConstantValueExpression {Value = ConstantValueExpression.Null};
-            }
-
-            var val = lit.ConstantValue.Value;
-
-            if (val is string)
-            {
-                return new ConstantValueExpression();
-            }
-
-            if (val is int)
-            {
-                var i = (int) val;
-                if (!isPositive)
-                {
-                    i = -1*i;
-                }
-                var v = i == -1 || i == 0 || i == 1 || i == 2 ? i.ToString() : null;
-                return new ConstantValueExpression {Value = v};
-            }
-
-            if (val is double)
-            {
-                var d = (double) val;
-                if (!isPositive)
-                {
-                    d = -1*d;
-                }
-                string v = null;
-                Func<double, double, bool> isEq = (a, b) => Math.Abs(a - b) < 0.000001;
-                if (isEq(d, 0) || isEq(d, -1) || isEq(d, 1))
-                {
-                    v = string.Format("{0:0.0}", d).Replace(',', '.');
-                }
-                return new ConstantValueExpression {Value = v};
-            }
-
-            if (val is bool)
-            {
-                var b = (bool) val;
-                return new ConstantValueExpression
-                {
-                    Value = b ? ConstantValueExpression.True : ConstantValueExpression.False
-                };
-            }
-
-            return new ConstantValueExpression();
-        }
-
-        public override IAssignableExpression VisitShiftExpression(IShiftExpression expr, IList<IStatement> context)
-        {
-            return ComposedExpressionCreator.Create(this, expr, context);
-        }
-
-        public override IAssignableExpression VisitRelationalExpression(IRelationalExpression expr,
-            IList<IStatement> context)
-        {
-            BinaryOperator op;
-            if (expr.OperatorSign.NodeType == CSharpTokenType.GT)
-            {
-                op = BinaryOperator.GreaterThan;
-            }
-            else if (expr.OperatorSign.NodeType == CSharpTokenType.GE)
-            {
-                op = BinaryOperator.GreaterThanOrEqual;
-            }
-            else if (expr.OperatorSign.NodeType == CSharpTokenType.LE)
-            {
-                op = BinaryOperator.LessThanOrEqual;
-            }
-            else if (expr.OperatorSign.NodeType == CSharpTokenType.LT)
-            {
-                op = BinaryOperator.LessThan;
-            }
-            else
-            {
-                op = BinaryOperator.Unknown;
-            }
-
-            return new BinaryExpression
-            {
-                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
-                Operator = op,
-                RightOperand = ToSimpleExpression(expr.RightOperand, context)
-            };
-        }
 
         #endregion
     }
