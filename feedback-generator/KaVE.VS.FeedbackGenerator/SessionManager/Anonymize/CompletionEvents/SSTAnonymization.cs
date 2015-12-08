@@ -43,6 +43,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return new SST
             {
                 EnclosingType = sst.EnclosingType.ToAnonymousName(),
+                PartialClassIdentifier = sst.PartialClassIdentifier.ToHash(),
                 Delegates = Sets.NewHashSetFrom(delegates),
                 Events = Sets.NewHashSetFrom(events),
                 Fields = Sets.NewHashSetFrom(fields),

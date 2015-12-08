@@ -40,12 +40,28 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         }
 
         [Test]
+        public void AnonymizationIsDefaultSafe()
+        {
+            var actual = _sut.Anonymize(new SST());
+            var expected = new SST();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void EnclosingTypeIsAnonymized()
         {
             var typeName = TypeName.Get("My.Type, MyProject");
 
             var actual = _sut.Anonymize(new SST {EnclosingType = typeName});
             var expected = new SST {EnclosingType = typeName.ToAnonymousName()};
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void PartialClassIdentifierIsAnonymized()
+        {
+            var actual = _sut.Anonymize(new SST {PartialClassIdentifier = "abc"});
+            var expected = new SST {PartialClassIdentifier = "abc".ToHash()};
             Assert.AreEqual(expected, actual);
         }
 

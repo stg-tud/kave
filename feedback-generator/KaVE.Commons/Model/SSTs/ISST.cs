@@ -28,6 +28,11 @@ namespace KaVE.Commons.Model.SSTs
         ITypeName EnclosingType { get; }
 
         [NotNull]
+        string PartialClassIdentifier { get; }
+
+        bool IsPartialClass { get; }
+
+        [NotNull]
         IKaVESet<IFieldDeclaration> Fields { get; }
 
         [NotNull]

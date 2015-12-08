@@ -33,6 +33,14 @@ namespace KaVE.Commons.Model.SSTs.Impl
         public ITypeName EnclosingType { get; set; }
 
         [DataMember]
+        public string PartialClassIdentifier { get; set; }
+
+        public bool IsPartialClass
+        {
+            get { return !Equals("", PartialClassIdentifier); }
+        }
+
+        [DataMember]
         public IKaVESet<IFieldDeclaration> Fields { get; set; }
 
         [DataMember]
@@ -65,6 +73,7 @@ namespace KaVE.Commons.Model.SSTs.Impl
         public SST()
         {
             EnclosingType = TypeName.UnknownName;
+            PartialClassIdentifier = "";
             Fields = Sets.NewHashSet<IFieldDeclaration>();
             Properties = Sets.NewHashSet<IPropertyDeclaration>();
             Methods = Sets.NewHashSet<IMethodDeclaration>();
@@ -79,9 +88,10 @@ namespace KaVE.Commons.Model.SSTs.Impl
 
         private bool Equals(SST other)
         {
-            return Equals(EnclosingType, other.EnclosingType) && Equals(Fields, other.Fields) &&
-                   Equals(Methods, other.Methods) && Equals(Properties, other.Properties) &&
-                   Equals(Events, other.Events) && Equals(Delegates, other.Delegates);
+            return EnclosingType.Equals(other.EnclosingType) &&
+                   string.Equals(PartialClassIdentifier, other.PartialClassIdentifier) && Fields.Equals(other.Fields) &&
+                   Properties.Equals(other.Properties) && Methods.Equals(other.Methods) && Events.Equals(other.Events) &&
+                   Delegates.Equals(other.Delegates);
         }
 
         public override int GetHashCode()
@@ -89,9 +99,10 @@ namespace KaVE.Commons.Model.SSTs.Impl
             unchecked
             {
                 var hashCode = EnclosingType.GetHashCode();
+                hashCode = (hashCode*397) ^ PartialClassIdentifier.GetHashCode();
                 hashCode = (hashCode*397) ^ Fields.GetHashCode();
-                hashCode = (hashCode*397) ^ Methods.GetHashCode();
                 hashCode = (hashCode*397) ^ Properties.GetHashCode();
+                hashCode = (hashCode*397) ^ Methods.GetHashCode();
                 hashCode = (hashCode*397) ^ Events.GetHashCode();
                 hashCode = (hashCode*397) ^ Delegates.GetHashCode();
                 return hashCode;

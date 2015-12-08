@@ -32,6 +32,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             var sut = new SST();
 
             Assert.AreEqual(TypeName.UnknownName, sut.EnclosingType);
+            Assert.AreEqual("", sut.PartialClassIdentifier);
+            Assert.False(sut.IsPartialClass);
             Assert.AreEqual(Lists.NewList<IDelegateDeclaration>(), sut.Delegates);
             Assert.AreEqual(Lists.NewList<IEventDeclaration>(), sut.Events);
             Assert.AreEqual(Lists.NewList<IFieldDeclaration>(), sut.Fields);
@@ -50,14 +52,17 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             var sut = new SST
             {
                 EnclosingType = TypeName.Get("T1, P1"),
+                PartialClassIdentifier = "abc",
+                Delegates = {new DelegateDeclaration()},
+                Events = {new EventDeclaration()},
+                Fields = {new FieldDeclaration()},
+                Methods = {new MethodDeclaration()},
+                Properties = {new PropertyDeclaration()}
             };
-            sut.Delegates.Add(new DelegateDeclaration());
-            sut.Events.Add(new EventDeclaration());
-            sut.Fields.Add(new FieldDeclaration());
-            sut.Methods.Add(new MethodDeclaration());
-            sut.Properties.Add(new PropertyDeclaration());
 
             Assert.AreEqual(TypeName.Get("T1, P1"), sut.EnclosingType);
+            Assert.AreEqual("abc", sut.PartialClassIdentifier);
+            Assert.True(sut.IsPartialClass);
             Assert.AreEqual(Lists.NewList(new DelegateDeclaration()), sut.Delegates);
             Assert.AreEqual(Lists.NewList(new EventDeclaration()), sut.Events);
             Assert.AreEqual(Lists.NewList(new FieldDeclaration()), sut.Fields);
@@ -77,20 +82,26 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new SST();
-            var b = new SST();
-            a.EnclosingType = TypeName.Get("T1, P1");
-            b.EnclosingType = TypeName.Get("T1, P1");
-            a.Delegates.Add(new DelegateDeclaration());
-            b.Delegates.Add(new DelegateDeclaration());
-            a.Events.Add(new EventDeclaration());
-            b.Events.Add(new EventDeclaration());
-            a.Fields.Add(new FieldDeclaration());
-            b.Fields.Add(new FieldDeclaration());
-            a.Methods.Add(new MethodDeclaration());
-            b.Methods.Add(new MethodDeclaration());
-            a.Properties.Add(new PropertyDeclaration());
-            b.Properties.Add(new PropertyDeclaration());
+            var a = new SST
+            {
+                EnclosingType = TypeName.Get("T1, P1"),
+                PartialClassIdentifier = "abc",
+                Delegates = {new DelegateDeclaration()},
+                Events = {new EventDeclaration()},
+                Fields = {new FieldDeclaration()},
+                Methods = {new MethodDeclaration()},
+                Properties = {new PropertyDeclaration()}
+            };
+            var b = new SST
+            {
+                EnclosingType = TypeName.Get("T1, P1"),
+                PartialClassIdentifier = "abc",
+                Delegates = {new DelegateDeclaration()},
+                Events = {new EventDeclaration()},
+                Fields = {new FieldDeclaration()},
+                Methods = {new MethodDeclaration()},
+                Properties = {new PropertyDeclaration()}
+            };
 
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -106,10 +117,18 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         }
 
         [Test]
+        public void Equality_DifferentPartialClassId()
+        {
+            var a = new SST {PartialClassIdentifier = "abc"};
+            var b = new SST();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void Equality_DifferentDelegates()
         {
-            var a = new SST();
-            a.Delegates.Add(new DelegateDeclaration());
+            var a = new SST {Delegates = {new DelegateDeclaration()}};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -118,8 +137,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         [Test]
         public void Equality_DifferentEvents()
         {
-            var a = new SST();
-            a.Events.Add(new EventDeclaration());
+            var a = new SST {Events = {new EventDeclaration()}};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -128,8 +146,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         [Test]
         public void Equality_DifferentFields()
         {
-            var a = new SST();
-            a.Fields.Add(new FieldDeclaration());
+            var a = new SST {Fields = {new FieldDeclaration()}};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -138,8 +155,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         [Test]
         public void Equality_DifferentMethods()
         {
-            var a = new SST();
-            a.Methods.Add(new MethodDeclaration());
+            var a = new SST {Methods = {new MethodDeclaration()}};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -148,8 +164,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         [Test]
         public void Equality_DifferentProperties()
         {
-            var a = new SST();
-            a.Properties.Add(new PropertyDeclaration());
+            var a = new SST {Properties = {new PropertyDeclaration()}};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
