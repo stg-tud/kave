@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
@@ -852,13 +853,23 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitConditionalAndExpression(IConditionalAndExpression expr,
             IList<IStatement> context)
         {
-            return ComposedExpressionCreator.Create(this, expr, context);
+            return new BinaryExpression
+            {
+                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
+                Operator = BinaryOperator.And,
+                RightOperand = ToSimpleExpression(expr.RightOperand, context)
+            };
         }
 
         public override IAssignableExpression VisitConditionalOrExpression(IConditionalOrExpression expr,
             IList<IStatement> context)
         {
-            return ComposedExpressionCreator.Create(this, expr, context);
+            return new BinaryExpression
+            {
+                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
+                Operator = BinaryOperator.Or,
+                RightOperand = ToSimpleExpression(expr.RightOperand, context)
+            };
         }
 
         public override IAssignableExpression VisitEqualityExpression(IEqualityExpression expr,
@@ -979,7 +990,34 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitRelationalExpression(IRelationalExpression expr,
             IList<IStatement> context)
         {
-            return ComposedExpressionCreator.Create(this, expr, context);
+            BinaryOperator op;
+            if (expr.OperatorSign.NodeType == CSharpTokenType.GT)
+            {
+                op = BinaryOperator.GreaterThan;
+            }
+            else if (expr.OperatorSign.NodeType == CSharpTokenType.GE)
+            {
+                op = BinaryOperator.GreaterThanOrEqual;
+            }
+            else if (expr.OperatorSign.NodeType == CSharpTokenType.LE)
+            {
+                op = BinaryOperator.LessThanOrEqual;
+            }
+            else if (expr.OperatorSign.NodeType == CSharpTokenType.LT)
+            {
+                op = BinaryOperator.LessThan;
+            }
+            else
+            {
+                op = BinaryOperator.Unknown;
+            }
+
+            return new BinaryExpression
+            {
+                LeftOperand = ToSimpleExpression(expr.LeftOperand, context),
+                Operator = op,
+                RightOperand = ToSimpleExpression(expr.RightOperand, context)
+            };
         }
 
         #endregion

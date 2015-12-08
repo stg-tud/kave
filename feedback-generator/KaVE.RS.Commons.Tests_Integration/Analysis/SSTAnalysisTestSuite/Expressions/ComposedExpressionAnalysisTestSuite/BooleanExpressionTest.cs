@@ -16,7 +16,6 @@
 
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -34,20 +33,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void BooleanAndOnThreeValues()
-        {
-            CompleteInMethod(@"
-                var i = true && false && true;
-                $");
-
-            AssertBody(
-                VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("true"),
+                        Operator = BinaryOperator.And,
+                        RightOperand = Const("false")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -63,7 +56,43 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Bool),
                 Assign("i", Const("false")),
                 VarDecl("j", Fix.Bool),
-                Assign("j", ComposedExpr("i")),
+                Assign(
+                    "j",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("true"),
+                        Operator = BinaryOperator.And,
+                        RightOperand = RefExpr("i")
+                    }),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void BooleanAndOnThreeValues()
+        {
+            CompleteInMethod(@"
+                var i = true && false && true;
+                $");
+
+            AssertBody(
+                VarDecl("i", Fix.Bool),
+                VarDecl("$0", Fix.Bool),
+                Assign(
+                    "$0",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("true"),
+                        Operator = BinaryOperator.And,
+                        RightOperand = Const("false")
+                    }),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = RefExpr("$0"),
+                        Operator = BinaryOperator.And,
+                        RightOperand = Const("true")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -76,7 +105,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("true"),
+                        Operator = BinaryOperator.Or,
+                        RightOperand = Const("false")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -148,7 +184,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("2"),
+                        Operator = BinaryOperator.GreaterThan,
+                        RightOperand = Const("1")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -161,7 +204,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("2"),
+                        Operator = BinaryOperator.GreaterThanOrEqual,
+                        RightOperand = Const("1")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -174,7 +224,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("2"),
+                        Operator = BinaryOperator.LessThan,
+                        RightOperand = Const("1")
+                    }),
                 Fix.EmptyCompletion);
         }
 
@@ -187,7 +244,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("i", Fix.Bool),
-                Assign("i", new ConstantValueExpression()),
+                Assign(
+                    "i",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("2"),
+                        Operator = BinaryOperator.LessThanOrEqual,
+                        RightOperand = Const("1")
+                    }),
                 Fix.EmptyCompletion);
         }
     }
