@@ -702,20 +702,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         public override IAssignableExpression VisitUncheckedExpression(IUncheckedExpression expr, IList<IStatement> body)
         {
             var uncheckedBlock = new UncheckedBlock();
-
-            var assignable = expr.Operand.Accept(this, uncheckedBlock.Body);
-            if (assignable == null)
-            {
-                return new UnknownExpression();
-            }
-
+            var assignable = ToAssignableExpr(expr.Operand, uncheckedBlock.Body);
             if (assignable is IConstantValueExpression)
             {
                 return assignable;
             }
 
             var newRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
-
             body.Add(
                 new VariableDeclaration
                 {

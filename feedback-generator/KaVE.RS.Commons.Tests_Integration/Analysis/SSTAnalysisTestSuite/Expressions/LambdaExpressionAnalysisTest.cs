@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -79,7 +80,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Body =
                         {
                             VarDecl("$0", Fix.Int),
-                            Assign("$0", new ComposedExpression {References = {VarRef("i")}}),
+                            Assign(
+                                "$0",
+                                new BinaryExpression
+                                {
+                                    LeftOperand = RefExpr("i"),
+                                    Operator = BinaryOperator.Plus,
+                                    RightOperand = Const("1")
+                                }),
                             new ReturnStatement
                             {
                                 IsVoid = false,
@@ -107,7 +115,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Body =
                         {
                             VarDecl("$0", Fix.Int),
-                            Assign("$0", new ComposedExpression {References = {VarRef("i")}}),
+                            Assign(
+                                "$0",
+                                new BinaryExpression
+                                {
+                                    LeftOperand = RefExpr("i"),
+                                    Operator = BinaryOperator.Plus,
+                                    RightOperand = Const("1")
+                                }),
                             new ReturnStatement
                             {
                                 IsVoid = false,

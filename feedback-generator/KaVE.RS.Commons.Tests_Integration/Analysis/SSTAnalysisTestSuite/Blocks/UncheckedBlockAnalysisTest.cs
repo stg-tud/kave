@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -56,11 +56,26 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         [Test]
         public void Expression_ConstantValue()
         {
-            CompleteInMethod(@"int i = unchecked(2147483647 + 10); $");
+            CompleteInMethod(@"int i = unchecked(1 + 2); $");
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", new ConstantValueExpression()),
+                VarDecl("$0", Fix.Int),
+                new UncheckedBlock
+                {
+                    Body =
+                    {
+                        Assign(
+                            "$0",
+                            new BinaryExpression
+                            {
+                                LeftOperand = Const("1"),
+                                Operator = BinaryOperator.Plus,
+                                RightOperand = Const("2")
+                            })
+                    }
+                },
+                Assign("i", RefExpr("$0")),
                 Fix.EmptyCompletion);
         }
 
@@ -68,17 +83,29 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void Expression_VariableReference()
         {
             CompleteInMethod(@"
-                int j = 2147483647;
-                int i = unchecked(j + 10); $");
+                int j = 1;
+                int i = unchecked(j + 2);
+                $
+            ");
 
             AssertBody(
                 VarDecl("j", Fix.Int),
-                Assign("j", new ConstantValueExpression()),
+                Assign("j", Const("1")),
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.Int),
                 new UncheckedBlock
                 {
-                    Body = {Assign("$0", new ComposedExpression {References = {VarRef("j")}})}
+                    Body =
+                    {
+                        Assign(
+                            "$0",
+                            new BinaryExpression
+                            {
+                                LeftOperand = RefExpr("j"),
+                                Operator = BinaryOperator.Plus,
+                                RightOperand = Const("2")
+                            })
+                    }
                 },
                 Assign("i", RefExpr("$0")),
                 Fix.EmptyCompletion);
@@ -87,9 +114,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         [Test]
         public void Expression_MethodCall()
         {
-            CompleteInClass(@"
-                public int N() { return 2147483647; }
-                public void M() { int i = unchecked(N() + 10); $ }");
+            CompleteInMethod(@"
+               var i = unchecked(GetHashCode() + 1);
+               $
+            ");
 
             AssertBody(
                 "M",
@@ -100,8 +128,15 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     Body =
                     {
                         VarDecl("$0", Fix.Int),
-                        Assign("$0", Invoke("this", Fix.Method(Fix.Int, Type("C"), "N"))),
-                        Assign("$1", new ComposedExpression {References = {VarRef("$0")}})
+                        Assign("$0", Invoke("this", Fix.Object_GetHashCode)),
+                        Assign(
+                            "$1",
+                            new BinaryExpression
+                            {
+                                LeftOperand = RefExpr("$0"),
+                                Operator = BinaryOperator.Plus,
+                                RightOperand = Const("1")
+                            })
                     }
                 },
                 Assign("i", RefExpr("$1")),
