@@ -44,12 +44,28 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
 
         public override void Visit(IInvocationExpression inv, IList<Event> events)
         {
-            var isUnknownMethod = MethodName.UnknownName.Equals(inv.MethodName);
-            if (!isUnknownMethod)
+            if (ShouldInclude(inv.MethodName))
             {
                 AddMethodIf(events);
                 events.Add(Events.NewInvocation(inv.MethodName));
             }
+        }
+
+        private static bool ShouldInclude(IMethodName name)
+        {
+            if (MethodName.UnknownName.Equals(name))
+            {
+                return false;
+            }
+
+            var mscorlib = AssemblyName.Get("mscorlib, 4.0.0.0");
+            var actualLib = name.DeclaringType.Assembly;
+            if (!mscorlib.Equals(actualLib))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public override void Visit(ILambdaExpression inv, IList<Event> events)
@@ -75,7 +91,7 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
             return new Event
             {
                 Kind = EventKind.MethodDeclaration,
-                Method = name
+                Method = name.RemoveGenerics()
             };
         }
 
@@ -84,7 +100,7 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
             return new Event
             {
                 Kind = EventKind.Invocation,
-                Method = name
+                Method = name.RemoveGenerics()
             };
         }
     }
