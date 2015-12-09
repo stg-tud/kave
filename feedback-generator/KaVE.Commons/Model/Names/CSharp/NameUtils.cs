@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
-    internal static class NameUtils
+    public static class NameUtils
     {
         public static IMethodName RemoveGenerics(this IMethodName name)
         {
@@ -34,34 +34,60 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 return id;
             }
-            Dictionary<string, string> replacements = new Dictionary<string, string>();
 
-            var open = id.FindNext(startIdx, '[');
+            var replacements = new Dictionary<string, string>();
+            var tick = id.FindNext(0, '`');
 
-            var numStr = id.Substring(startIdx + 1, open - startIdx - 1).Trim();
-            int numGenerics = int.Parse(numStr);
-            for (var i = 0; i < numGenerics; i++)
+            while (tick != -1)
             {
-                open = id.FindNext(open + 1, '[');
-                var close = id.FindCorrespondingCloseBracket(open);
+                var open = id.FindNext(tick, '[');
+                var length = open - tick - 1;
+                var numStr = length > 0
+                    ? id.Substring(tick + 1, length).Trim()
+                    : "0";
 
-                var arrowStart = id.FindNext(open, '-');
-                if (arrowStart != -1 && arrowStart < close)
+                if (length < 1)
                 {
-                    var param = id.Substring(open, arrowStart - open).Trim();
-                    var complete = id.Substring(open, close - open);
-                    replacements[complete] = param;
+                    // TODO fix name creation, this should not happen!
+                    Console.WriteLine("\nEE: cannot remove generic (no tick number): {0}", id);
                 }
-            }
 
+                int numGenerics = 0;
+                try
+                {
+                    numGenerics = int.Parse(numStr);
+                }
+                catch (FormatException)
+                {
+                    // TODO fix name creation, this should not happen!
+                    Console.WriteLine(
+                        "\nEE: cannot remove generic (invalid tick number between {1} and {2}): {0}",
+                        id,
+                        tick,
+                        open);
+                }
+
+                for (var i = 0; i < numGenerics; i++)
+                {
+                    open = id.FindNext(open + 1, '[');
+                    var close = id.FindCorrespondingCloseBracket(open);
+
+                    var arrowStart = id.FindNext(open, '-');
+                    if (arrowStart != -1 && arrowStart < close)
+                    {
+                        var param = id.Substring(open, arrowStart - open).Trim();
+                        var complete = id.Substring(open, close - open);
+                        replacements[complete] = param;
+                    }
+                }
+                tick = id.FindNext(tick + 1, '`');
+            }
             var res = id;
             foreach (var k in replacements.Keys)
             {
                 var with = replacements[k];
                 res = res.Replace(k, with);
             }
-
-
             return res;
         }
 
@@ -115,7 +141,8 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             for (var i = currentIndex; i < str.Length; i++)
             {
-                if (characters.Contains(str[i]))
+                var c = str[i];
+                if (characters.Contains(c))
                 {
                     return i;
                 }

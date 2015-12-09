@@ -138,6 +138,14 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void MultipleGenericTypes()
+        {
+            var actual = MethodName.Get("[T`1[[A->A2,P]],P] [T2`1[[B->B2,P]], P].Add([T] item)").RemoveGenerics();
+            var expected = MethodName.Get("[T`1[[A]],P] [T2`1[[B]], P].Add([T] item)");
+            Assert.AreEqual(expected, actual);
+        }
+
         // TODO more tests with delegates (in method name test)
 
         #region tests for helper methods
