@@ -207,6 +207,10 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         private static bool IsMember(IReferenceExpression refExpr)
         {
+            if (refExpr == null)
+            {
+                return false;
+            }
             var elem = refExpr.Reference.Resolve().DeclaredElement;
             var isMember = elem is IEvent || elem is IField || elem is IMethod || elem is IProperty;
             return isMember;
@@ -245,29 +249,64 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     ? resolvedMethod.GetName<IMethodName>()
                     : MethodName.UnknownName;
 
-                IVariableReference varRef;
-                if (invokedExpression.IsClassifiedAsVariable)
+                var qExpr = invokedExpression.QualifierExpression;
+
+                var parameters = Lists.NewList<ISimpleExpression>();
+                IVariableReference varRef = new VariableReference();
+                if (resolvedMethod != null)
                 {
-                    // TODO move this handling to CreateVarRef helper?
-                    varRef = ToVariableRef(invokedExpression, body);
-                }
-                else if (methodName.IsStatic)
-                {
-                    varRef = new VariableReference();
-                }
-                else
-                {
-                    if (HasImpliciteThis(invokedExpression))
+                    if (resolvedMethod.Element.IsStatic && !resolvedMethod.Element.IsExtensionMethod)
+                    {
+                        varRef = new VariableReference();
+                    }
+                    else if (invokedExpression.IsClassifiedAsVariable)
+                    {
+                        varRef = ToVariableRef(invokedExpression, body);
+                    }
+                    else if (qExpr != null && qExpr.IsClassifiedAsVariable)
+                    {
+                        varRef = ToVariableRef(qExpr, body);
+                    }
+                    else if (qExpr is ICSharpLiteralExpression)
+                    {
+                        varRef = ToVariableRef(qExpr, body);
+                    }
+                    else if (!resolvedMethod.Element.IsStatic && HasImpliciteThis(invokedExpression))
                     {
                         varRef = new VariableReference {Identifier = "this"};
                     }
-                    else
+                    else if (!resolvedMethod.Element.IsStatic && IsMember(invokedExpression))
                     {
                         varRef = ToVariableRef(invokedExpression.QualifierExpression, body);
                     }
+                    else if (IsMember(invokedExpression.QualifierExpression as IReferenceExpression))
+                    {
+                        varRef = ToVariableRef(invokedExpression.QualifierExpression, body);
+                    }
+                    else
+                    {
+                        varRef = new VariableReference();
+                    }
+
+                    if (resolvedMethod.Element.IsExtensionMethod)
+                    {
+                        var defaultVarRef = new VariableReference();
+                        if (!varRef.Equals(defaultVarRef))
+                        {
+                            parameters.Add(
+                                new ReferenceExpression
+                                {
+                                    Reference = varRef
+                                });
+                            varRef = defaultVarRef;
+                        }
+                    }
                 }
 
-                var parameters = GetArgumentList(inv.ArgumentList, body);
+                foreach (var arg in GetArgumentList(inv.ArgumentList, body))
+                {
+                    parameters.Add(arg);
+                }
 
                 return new InvocationExpression
                 {
@@ -280,7 +319,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return new UnknownExpression();
         }
 
-        private bool HasImpliciteThis(IReferenceExpression refExpr)
+        private static bool HasImpliciteThis(IReferenceExpression refExpr)
         {
             return IsMember(refExpr) && refExpr.QualifierExpression == null;
         }

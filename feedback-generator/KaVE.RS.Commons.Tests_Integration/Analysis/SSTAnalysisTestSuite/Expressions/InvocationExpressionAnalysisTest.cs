@@ -434,5 +434,110 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 InvokeStmt("a", Fix.Action_Invoke, Const("1")),
                 ExprStmt(new CompletionExpression()));
         }
+
+        [Test]
+        public void ExtensionMethod()
+        {
+            CompleteWithExtensionMethod(@"
+                var i = 1;
+                i.M0();
+                $
+            ");
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                Assign("i", Const("1")),
+                InvokeStaticStmt(
+                    MethodName.Get("static [{0}] [N.H, TestProject].M0([{1}] i)", Fix.Void, Fix.Int),
+                    RefExpr("i")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void ExtensionMethod_OnLiteral()
+        {
+            CompleteWithExtensionMethod(@"
+                1.M0();
+                $
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", Const("1")),
+                InvokeStaticStmt(
+                    MethodName.Get("static [{0}] [N.H, TestProject].M0([{1}] i)", Fix.Void, Fix.Int),
+                    RefExpr("$0")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void ExtensionMethod_static()
+        {
+            CompleteWithExtensionMethod(@"
+                H.M0(1);
+                $
+            ");
+
+            AssertBody(
+                InvokeStaticStmt(
+                    MethodName.Get("static [{0}] [N.H, TestProject].M0([{1}] i)", Fix.Void, Fix.Int),
+                    Const("1")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void ExtensionMethod_WithParam()
+        {
+            CompleteWithExtensionMethod(@"
+                1.M1(0);
+                $
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", Const("1")),
+                InvokeStaticStmt(
+                    MethodName.Get("static [{0}] [N.H, TestProject].M1([{1}] i, [{1}] j)", Fix.Void, Fix.Int),
+                    RefExpr("$0"),
+                    Const("0")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void ExtensionMethod_WithTwoParams()
+        {
+            CompleteWithExtensionMethod(@"
+                1.M2(0, -1);
+                $
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", Const("1")),
+                InvokeStaticStmt(
+                    MethodName.Get("static [{0}] [N.H, TestProject].M2([{1}] i, [{1}] j, [{1}] k)", Fix.Void, Fix.Int),
+                    RefExpr("$0"),
+                    Const("0"),
+                    Const("-1")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        private void CompleteWithExtensionMethod(string body)
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    class C {
+                        public void M() {
+                            " + body + @"
+                        }
+                    }
+                    static class H {
+                        public static void M0(this int i) {}
+                        public static void M1(this int i, int j) {}
+                        public static void M2(this int i, int j, int k) {}
+                    }
+                }
+            ");
+        }
     }
 }
