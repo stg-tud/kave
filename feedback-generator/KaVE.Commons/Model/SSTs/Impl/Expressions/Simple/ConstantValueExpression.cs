@@ -63,7 +63,9 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Simple
 
         public override string ToString()
         {
-            return this.ToStringReflection();
+            return Value == null
+                ? "Const()"
+                : string.Format("Const('{0}')", Value);
         }
     }
 }

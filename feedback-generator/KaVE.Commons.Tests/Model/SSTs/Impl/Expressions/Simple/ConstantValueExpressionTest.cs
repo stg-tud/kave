@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Simple
@@ -80,9 +79,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Simple
         }
 
         [Test]
-        public void ToStringReflection()
+        public void ToStringIsImplemented()
         {
-            ToStringAssert.Reflection(new ConstantValueExpression());
+            Assert.AreEqual("Const('1')", new ConstantValueExpression {Value = "1"}.ToString());
+            Assert.AreEqual("Const('\"s\"')", new ConstantValueExpression {Value = "\"s\""}.ToString());
+            Assert.AreEqual("Const('')", new ConstantValueExpression {Value = ""}.ToString());
+            Assert.AreEqual("Const()", new ConstantValueExpression {Value = null}.ToString());
         }
     }
 }
