@@ -90,6 +90,54 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.AreEqual(ParameterName.Get("out [T,P] p"), parameterNames[0]);
         }
 
+        [Test]
+        public void DoesNotHurtNonGenericNAmes()
+        {
+            var actual = MethodName.Get("[T,P] [T,P].Add()").RemoveGenerics();
+            var expected = MethodName.Get("[T,P] [T,P].Add()");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CanRemoveGenericInformationFromResolvedTypes()
+        {
+            var actual = MethodName.Get("[T,P] [G`1[[T -> U,P]], P].Add([T] item)").RemoveGenerics();
+            var expected = MethodName.Get("[T,P] [G`1[[T]], P].Add([T] item)");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void StillWorksWithUnresolvedParameters()
+        {
+            var actual = MethodName.Get("[T,P] [G`1[[T]], P].Add([T] item)").RemoveGenerics();
+            var expected = MethodName.Get("[T,P] [G`1[[T]], P].Add([T] item)");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void WorksWithNestedParameters()
+        {
+            var actual = MethodName.Get("[T,P] [G`1[[T -> G2`2[[A -> T,P],[B]]]], P].Add([T] item)").RemoveGenerics();
+            var expected = MethodName.Get("[T,P] [G`1[[T]], P].Add([T] item)");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void WorksWithMultipleParameters_2()
+        {
+            var actual = MethodName.Get("[T,P] [G`2[[T->T2,P],[U->U2,P]], P].Add([T] item)").RemoveGenerics();
+            var expected = MethodName.Get("[T,P] [G`2[[T],[U]], P].Add([T] item)");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void WorksWithMultipleParameters_3()
+        {
+            var actual = MethodName.Get("[T,P] [G`3[[T->T2,P],[U->U2,P],[V->V2,P]], P].Add([T] item)").RemoveGenerics();
+            var expected = MethodName.Get("[T,P] [G`3[[T],[U],[V]], P].Add([T] item)");
+            Assert.AreEqual(expected, actual);
+        }
+
         // TODO more tests with delegates (in method name test)
 
         #region tests for helper methods

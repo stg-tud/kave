@@ -22,6 +22,49 @@ namespace KaVE.Commons.Model.Names.CSharp
 {
     internal static class NameUtils
     {
+        public static IMethodName RemoveGenerics(this IMethodName name)
+        {
+            return MethodName.Get(RemoveGenerics(name.Identifier));
+        }
+
+        private static string RemoveGenerics(string id)
+        {
+            var startIdx = id.IndexOf('`');
+            if (startIdx == -1)
+            {
+                return id;
+            }
+            Dictionary<string, string> replacements = new Dictionary<string, string>();
+
+            var open = id.FindNext(startIdx, '[');
+
+            var numStr = id.Substring(startIdx + 1, open - startIdx - 1).Trim();
+            int numGenerics = int.Parse(numStr);
+            for (var i = 0; i < numGenerics; i++)
+            {
+                open = id.FindNext(open + 1, '[');
+                var close = id.FindCorrespondingCloseBracket(open);
+
+                var arrowStart = id.FindNext(open, '-');
+                if (arrowStart != -1 && arrowStart < close)
+                {
+                    var param = id.Substring(open, arrowStart - open).Trim();
+                    var complete = id.Substring(open, close - open);
+                    replacements[complete] = param;
+                }
+            }
+
+            var res = id;
+            foreach (var k in replacements.Keys)
+            {
+                var with = replacements[k];
+                res = res.Replace(k, with);
+            }
+
+
+            return res;
+        }
+
         public static bool HasParameters(this string identifierWithparameters)
         {
             var startOfParameters = identifierWithparameters.IndexOf('(');
@@ -50,7 +93,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             while (current != endOfParameters)
             {
                 var startOfParam = ++current;
-                
+
                 if (identifierWithParameters[current] != '[')
                 {
                     current = identifierWithParameters.FindNext(current, '[');
