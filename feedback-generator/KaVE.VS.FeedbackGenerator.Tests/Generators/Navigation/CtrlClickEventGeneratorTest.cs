@@ -67,9 +67,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
 
             var navigationUtilsMock = new Mock<INavigationUtils>();
             navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetTarget(It.IsAny<ITextControl>()))
-                                .Returns(_testTarget);
+                                .Returns(() => _testTarget);
             navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetLocation(It.IsAny<ITextControl>()))
-                                .Returns(_testLocation);
+                                .Returns(() => _testLocation);
 
             _uut = new CtrlClickEventGenerator(
                 TestRSEnv,
@@ -126,6 +126,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         {
             TriggerLeftClick(true);
             Assert.AreEqual(_testLocation, GetSinglePublished<NavigationEvent>().Location);
+        }
+
+        [Test]
+        public void ShouldNotTriggerIfTargetCouldNotBeResolved()
+        {
+            _testTarget = Name.UnknownName;
+            TriggerLeftClick(true);
+            AssertNoEvent();
         }
 
         private void TriggerLeftClick(bool withCtrl)

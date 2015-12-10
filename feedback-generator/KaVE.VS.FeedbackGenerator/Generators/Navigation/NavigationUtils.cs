@@ -68,29 +68,25 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         [Pure]
         public IName GetTarget(ITreeNode psiNode)
         {
-            var targetName = Name.UnknownName;
+            IDeclaredElement declaredElement = null;
+            var parent = psiNode.Parent;
 
-            var reference = psiNode.GetContainingNode<IReferenceExpression>(true);
+            var declaration = parent as IDeclaration;
+            if (declaration != null)
+            {
+                declaredElement = declaration.DeclaredElement;
+            }
+
+            var reference = parent as IReferenceName;
             if (reference != null)
             {
                 var resolvedReference = reference.Reference.Resolve();
-                var declaredElement = resolvedReference.DeclaredElement;
-                if (declaredElement != null)
-                {
-                    targetName = declaredElement.GetName(declaredElement.GetIdSubstitutionSafe());
-                }
-            }
-            else
-            {
-                var declaration = psiNode.GetContainingNode<IDeclaration>();
-                if (declaration != null && declaration.DeclaredElement != null)
-                {
-                    var declaredElement = declaration.DeclaredElement;
-                    targetName = declaredElement.GetName(declaredElement.GetIdSubstitutionSafe());
-                }
+                declaredElement = resolvedReference.DeclaredElement;
             }
 
-            return targetName;
+            return declaredElement == null
+                ? Name.UnknownName
+                : declaredElement.GetName(declaredElement.GetIdSubstitutionSafe());
         }
 
         [Pure]

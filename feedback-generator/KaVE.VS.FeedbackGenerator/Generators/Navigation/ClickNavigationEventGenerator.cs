@@ -18,6 +18,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using JetBrains.DataFlow;
 using JetBrains.Interop.WinApi;
+using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names;
@@ -27,6 +28,7 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
 {
+    [SolutionComponent]
     public class ClickNavigationEventGenerator : EventGeneratorBase
     {
         private readonly Lifetime _myLifetime;
@@ -56,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         public void OnClick(TextControlMouseEventArgs args)
         {
             var newLocation = _navigationUtils.GetLocation(args.TextControl);
-            
+
             if (_oldLocation != null && args.KeysAndButtons == KeyStateMasks.MK_LBUTTON)
             {
                 if (!Equals(newLocation, _oldLocation))

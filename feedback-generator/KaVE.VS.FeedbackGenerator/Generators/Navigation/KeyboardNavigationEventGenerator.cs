@@ -17,11 +17,10 @@
 using System.Collections.Specialized;
 using System.Linq;
 using JetBrains.DataFlow;
-using JetBrains.Interop.WinApi;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -29,43 +28,47 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
 {
     [SolutionComponent]
-    internal class CtrlClickEventGenerator : EventGeneratorBase
+    internal class KeyboardNavigationEventGenerator : EventGeneratorBase
     {
         private readonly Lifetime _myLifetime;
         private readonly INavigationUtils _navigationUtils;
 
-        public CtrlClickEventGenerator([NotNull] IRSEnv env,
+        [CanBeNull]
+        private IName _oldLocation;
+
+        public KeyboardNavigationEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
             [NotNull] ITextControlManager textControlManager,
             [NotNull] INavigationUtils navigationUtils,
             [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils)
         {
-            _myLifetime = lifetime;
             _navigationUtils = navigationUtils;
+            _myLifetime = lifetime;
 
             foreach (var textControl in textControlManager.TextControls)
             {
-                AdviceOnClick(textControl);
+                AdviceOnKeyPress(textControl);
             }
 
             textControlManager.TextControls.CollectionChanged += AdviceOnNewControls;
         }
 
-        public void OnClick(TextControlMouseEventArgs args)
+        public void OnKeyPress(EventArgs<ITextControl> args)
         {
-            if (args.KeysAndButtons == KeyStateMasks.MK_CONTROL)
-            {
-                var ctrlClickEvent = Create<NavigationEvent>();
-                ctrlClickEvent.Target = _navigationUtils.GetTarget(args.TextControl);
-                ctrlClickEvent.Location = _navigationUtils.GetLocation(args.TextControl);
-                ctrlClickEvent.TriggeredBy = IDEEvent.Trigger.Click;
+            var newLocation = _navigationUtils.GetLocation(args.Value);
 
-                if (!Equals(ctrlClickEvent.Target, Name.UnknownName))
-                {
-                    Fire(ctrlClickEvent);
-                }
+            if (_oldLocation != null && !Equals(newLocation, _oldLocation))
+            {
+                var keyboardEvent = Create<NavigationEvent>();
+                keyboardEvent.Target = newLocation;
+                keyboardEvent.Location = _oldLocation;
+                keyboardEvent.TypeOfNavigation = NavigationEvent.NavigationType.Keyboard;
+                keyboardEvent.TriggeredBy = IDEEvent.Trigger.Typing;
+                Fire(keyboardEvent);
             }
+
+            _oldLocation = newLocation;
         }
 
         private void AdviceOnNewControls(object sender, NotifyCollectionChangedEventArgs args)
@@ -74,14 +77,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             {
                 foreach (var newTextControl in args.NewItems.Cast<ITextControl>())
                 {
-                    AdviceOnClick(newTextControl);
+                    AdviceOnKeyPress(newTextControl);
                 }
             }
         }
 
-        private void AdviceOnClick(ITextControl textControl)
+        private void AdviceOnKeyPress(ITextControl textControl)
         {
-            textControl.Window.MouseUp.Advise(_myLifetime, OnClick);
+            textControl.Window.Keyboard.Advise(_myLifetime, OnKeyPress);
         }
     }
 }
