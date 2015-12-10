@@ -81,14 +81,20 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ForLoop {Condition = new ConstantValueExpression()};
-            a.Init.Add(new GotoStatement());
-            a.Step.Add(new BreakStatement());
-            a.Body.Add(new ContinueStatement());
-            var b = new ForLoop {Condition = new ConstantValueExpression()};
-            b.Init.Add(new GotoStatement());
-            b.Step.Add(new BreakStatement());
-            b.Body.Add(new ContinueStatement());
+            var a = new ForLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Init = {new GotoStatement()},
+                Step = {new BreakStatement()},
+                Body = {new ContinueStatement()}
+            };
+            var b = new ForLoop
+            {
+                Condition = new ConstantValueExpression(),
+                Init = {new GotoStatement()},
+                Step = {new BreakStatement()},
+                Body = {new ContinueStatement()}
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }

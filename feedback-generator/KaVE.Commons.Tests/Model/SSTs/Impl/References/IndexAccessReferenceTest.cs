@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -54,7 +49,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void SettingValues()
         {
-            var sut = new IndexAccessReference { Expression = SomeIndexAccess };
+            var sut = new IndexAccessReference {Expression = SomeIndexAccess};
             Assert.AreEqual(SomeIndexAccess, sut.Expression);
         }
 
@@ -70,8 +65,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new IndexAccessReference { Expression = SomeIndexAccess };
-            var b = new IndexAccessReference { Expression = SomeIndexAccess };
+            var a = new IndexAccessReference {Expression = SomeIndexAccess};
+            var b = new IndexAccessReference {Expression = SomeIndexAccess};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -79,7 +74,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         [Test]
         public void Equality_DifferentName()
         {
-            var a = new IndexAccessReference { Expression = SomeIndexAccess };
+            var a = new IndexAccessReference {Expression = SomeIndexAccess};
             var b = new IndexAccessReference();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

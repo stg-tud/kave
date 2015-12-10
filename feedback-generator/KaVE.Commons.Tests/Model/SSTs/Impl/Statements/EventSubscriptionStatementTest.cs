@@ -133,5 +133,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         {
             ToStringAssert.Reflection(new EventSubscriptionStatement());
         }
+
+        [Test]
+        public void NumberingOfEnumIsStable()
+        {
+            Assert.AreEqual(0, (int) EventSubscriptionOperation.Add);
+            Assert.AreEqual(1, (int) EventSubscriptionOperation.Remove);
+        }
     }
 }

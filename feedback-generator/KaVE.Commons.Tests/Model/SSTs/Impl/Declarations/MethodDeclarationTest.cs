@@ -47,13 +47,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
             var sut = new MethodDeclaration
             {
                 Name = _mA,
-                IsEntryPoint = true
+                IsEntryPoint = true,
+                Body = {new ReturnStatement()}
             };
-            sut.Body.Add(new ReturnStatement());
 
             Assert.AreEqual(_mA, sut.Name);
             Assert.True(sut.IsEntryPoint);
-
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
@@ -73,15 +72,15 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
             var a = new MethodDeclaration
             {
                 Name = _mA,
-                IsEntryPoint = true
+                IsEntryPoint = true,
+                Body = {new ReturnStatement()}
             };
-            a.Body.Add(new ReturnStatement());
             var b = new MethodDeclaration
             {
                 Name = _mA,
-                IsEntryPoint = true
+                IsEntryPoint = true,
+                Body = {new ReturnStatement()}
             };
-            b.Body.Add(new ReturnStatement());
 
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());

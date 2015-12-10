@@ -53,7 +53,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         public override string ToString()
         {
-            return this.ToStringReflection();
+            return "UnknownReference";
         }
     }
 }

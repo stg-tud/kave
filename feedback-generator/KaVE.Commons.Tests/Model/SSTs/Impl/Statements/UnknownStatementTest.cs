@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
@@ -54,9 +53,9 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         }
 
         [Test]
-        public void ToStringReflection()
+        public void ToStringIsImplemented()
         {
-            ToStringAssert.Reflection(new UnknownStatement());
+            Assert.AreEqual("UnknownStatement", new UnknownStatement().ToString());
         }
     }
 }

@@ -83,10 +83,24 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ForEachLoop {LoopedReference = SomeVarRef("a"), Declaration = SomeDeclaration()};
-            a.Body.Add(new ReturnStatement());
-            var b = new ForEachLoop {LoopedReference = SomeVarRef("a"), Declaration = SomeDeclaration()};
-            b.Body.Add(new ReturnStatement());
+            var a = new ForEachLoop
+            {
+                LoopedReference = SomeVarRef("a"),
+                Declaration = SomeDeclaration(),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
+            var b = new ForEachLoop
+            {
+                LoopedReference = SomeVarRef("a"),
+                Declaration = SomeDeclaration(),
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }

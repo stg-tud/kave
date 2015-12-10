@@ -42,12 +42,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
             var sut = new VariableDeclaration
             {
                 Reference = SSTUtil.VariableReference("a"),
-                Type = TypeName.UnknownName
+                Type = TypeName.Get("T,P")
             };
 
             Assert.False(sut.IsMissing);
             Assert.AreEqual(SSTUtil.VariableReference("a"), sut.Reference);
-            Assert.AreEqual(TypeName.UnknownName, sut.Type);
+            Assert.AreEqual(TypeName.Get("T,P"), sut.Type);
         }
 
         [Test]

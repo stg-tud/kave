@@ -128,5 +128,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         {
             ToStringAssert.Reflection(new CatchBlock());
         }
+
+        [Test]
+        public void EnumNumberingIsStable()
+        {
+            Assert.AreEqual(0, (int) CatchBlockKind.Default);
+            Assert.AreEqual(1, (int) CatchBlockKind.Unnamed);
+            Assert.AreEqual(2, (int) CatchBlockKind.General);
+        }
     }
 }

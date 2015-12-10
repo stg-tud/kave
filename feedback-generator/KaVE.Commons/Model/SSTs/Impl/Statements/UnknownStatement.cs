@@ -53,7 +53,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
 
         public override string ToString()
         {
-            return this.ToStringReflection();
+            return "UnknownStatement";
         }
     }
 }

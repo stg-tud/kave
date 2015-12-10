@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.References;
-using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
@@ -54,9 +53,9 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         }
 
         [Test]
-        public void ToStringReflection()
+        public void ToStringIsImplemented()
         {
-            ToStringAssert.Reflection(new UnknownReference());
+            Assert.AreEqual("UnknownReference", new UnknownReference().ToString());
         }
     }
 }

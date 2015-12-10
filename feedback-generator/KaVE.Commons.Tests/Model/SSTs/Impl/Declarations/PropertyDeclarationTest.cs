@@ -73,8 +73,18 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new PropertyDeclaration {Name = SomeProperty};
-            var b = new PropertyDeclaration {Name = SomeProperty};
+            var a = new PropertyDeclaration
+            {
+                Name = SomeProperty,
+                Get = {new ReturnStatement()},
+                Set = {new ContinueStatement()}
+            };
+            var b = new PropertyDeclaration
+            {
+                Name = SomeProperty,
+                Get = {new ReturnStatement()},
+                Set = {new ContinueStatement()}
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }

@@ -76,12 +76,18 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new IfElseBlock {Condition = new ConstantValueExpression()};
-            a.Then.Add(new ReturnStatement());
-            a.Else.Add(new ContinueStatement());
-            var b = new IfElseBlock {Condition = new ConstantValueExpression()};
-            b.Then.Add(new ReturnStatement());
-            b.Else.Add(new ContinueStatement());
+            var a = new IfElseBlock
+            {
+                Condition = new ConstantValueExpression(),
+                Then = {new ReturnStatement()},
+                Else = {new ContinueStatement()}
+            };
+            var b = new IfElseBlock
+            {
+                Condition = new ConstantValueExpression(),
+                Then = {new ReturnStatement()},
+                Else = {new ContinueStatement()}
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }

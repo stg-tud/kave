@@ -82,12 +82,24 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new SwitchBlock {Reference = SomeVarRef("a")};
-            a.Sections.Add(new CaseBlock());
-            a.DefaultSection.Add(new ReturnStatement());
-            var b = new SwitchBlock {Reference = SomeVarRef("a")};
-            b.Sections.Add(new CaseBlock());
-            b.DefaultSection.Add(new ReturnStatement());
+            var a = new SwitchBlock
+            {
+                Reference = SomeVarRef("a"),
+                Sections = {new CaseBlock()},
+                DefaultSection =
+                {
+                    new ReturnStatement()
+                }
+            };
+            var b = new SwitchBlock
+            {
+                Reference = SomeVarRef("a"),
+                Sections = {new CaseBlock()},
+                DefaultSection =
+                {
+                    new ReturnStatement()
+                }
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
