@@ -448,7 +448,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("i", Fix.Int),
                 Assign("i", Const("1")),
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].M0([{1}] i)", Fix.Void, Fix.Int),
+                    MethodName.Get("static [{0}] [N.H, TestProject].M0(this [{1}] i)", Fix.Void, Fix.Int),
                     RefExpr("i")),
                 ExprStmt(new CompletionExpression()));
         }
@@ -465,7 +465,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("$0", Fix.Int),
                 Assign("$0", Const("1")),
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].M0([{1}] i)", Fix.Void, Fix.Int),
+                    MethodName.Get("static [{0}] [N.H, TestProject].M0(this [{1}] i)", Fix.Void, Fix.Int),
                     RefExpr("$0")),
                 ExprStmt(new CompletionExpression()));
         }
@@ -480,7 +480,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].MT([{1}] o)", Fix.Void, Fix.Object),
+                    MethodName.Get("static [{0}] [N.H, TestProject].MT(this [{1}] o)", Fix.Void, Fix.Object),
                     RefExpr("this")),
                 ExprStmt(new CompletionExpression()));
         }
@@ -495,7 +495,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].M0([{1}] i)", Fix.Void, Fix.Int),
+                    MethodName.Get("static [{0}] [N.H, TestProject].M0(this [{1}] i)", Fix.Void, Fix.Int),
                     Const("1")),
                 ExprStmt(new CompletionExpression()));
         }
@@ -512,7 +512,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("$0", Fix.Int),
                 Assign("$0", Const("1")),
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].M1([{1}] i, [{1}] j)", Fix.Void, Fix.Int),
+                    MethodName.Get("static [{0}] [N.H, TestProject].M1(this [{1}] i, [{1}] j)", Fix.Void, Fix.Int),
                     RefExpr("$0"),
                     Const("0")),
                 ExprStmt(new CompletionExpression()));
@@ -530,7 +530,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("$0", Fix.Int),
                 Assign("$0", Const("1")),
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].M2([{1}] i, [{1}] j, [{1}] k)", Fix.Void, Fix.Int),
+                    MethodName.Get("static [{0}] [N.H, TestProject].M2(this [{1}] i, [{1}] j, [{1}] k)", Fix.Void, Fix.Int),
                     RefExpr("$0"),
                     Const("0"),
                     Const("-1")),

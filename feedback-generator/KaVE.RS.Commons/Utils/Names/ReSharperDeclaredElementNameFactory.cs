@@ -253,6 +253,7 @@ namespace KaVE.RS.Commons.Utils.Names
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier + " ");
             identifier.AppendIf(parameter.Kind == ParameterKind.OUTPUT, ParameterName.OutputModifier + " ");
+            identifier.AppendIf(parameter.IsExtensionFirstParameter(), ParameterName.ExtensionMethodModifier + " ");
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier + " ");
             identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier + " ");
             identifier.AppendType(parameter.Type, seenElements).Append(" ").Append(parameter.ShortName);
