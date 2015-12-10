@@ -397,13 +397,31 @@ namespace KaVE.RS.Commons.Utils.Names
             {
                 return UnknownTypeName.Identifier;
             }
+
+            var clrTypeName = type.GetClrName();
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
+            var moduleName = containingModule.GetQualifiedName();
+
+            var typeParameters = type.GetTypeParametersList(substitution, seenElements);
+
+            string myName;
+            var parent = type.GetContainingType();
+            if (parent != null)
+            {
+                var parentName = parent.GetName<ITypeName>(substitution).FullName;
+                myName = string.Format("{0}+{1}", parentName, clrTypeName.ShortName);
+            }
+            else
+            {
+                myName = clrTypeName.FullName;
+            }
+
             return String.Format(
                 "{0}{1}, {2}",
-                type.GetClrName().FullName,
-                type.GetTypeParametersList(substitution, seenElements),
-                containingModule.GetQualifiedName());
+                myName,
+                typeParameters,
+                moduleName);
         }
 
         private static String GetTypeParametersList(this ITypeParametersOwner typeParametersOwner,

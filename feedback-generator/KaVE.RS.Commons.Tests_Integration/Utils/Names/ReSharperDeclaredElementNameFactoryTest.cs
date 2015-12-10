@@ -49,5 +49,57 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Names
                     RefExpr("this")),
                 ExprStmt(new CompletionExpression()));
         }
+
+        [Test]
+        public void NameOfGenericClasses()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    class C {
+                        public void M() {
+                            G<int> g = new G<int>();
+                            $
+                        }
+                    }
+                    class G<T> {
+                        public class Nested{}
+                    }
+                }
+            ");
+
+            var type = string.Format("N.G`1[[T -> {0}]], TestProject", Fix.Int);
+            var ctor = string.Format("[{0}] [{1}]..ctor()", Fix.Void, type);
+
+            AssertBody(
+                VarDecl("g", TypeName.Get(type)),
+                Assign("g", InvokeCtor(MethodName.Get(ctor))),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void NameOfNestedClassesInGenericClasses()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    class C {
+                        public void M() {
+                            var n = new G<int>.Nested();
+                            $
+                        }
+                    }
+                    class G<T> {
+                        public class Nested{}
+                    }
+                }
+            ");
+
+            var type = string.Format("N.G`1[[T -> {0}]]+Nested, TestProject", Fix.Int);
+            var ctor = string.Format("[{0}] [{1}]..ctor()", Fix.Void, type);
+
+            AssertBody(
+                VarDecl("n", TypeName.Get(type)),
+                Assign("n", InvokeCtor(MethodName.Get(ctor))),
+                ExprStmt(new CompletionExpression()));
+        }
     }
 }
