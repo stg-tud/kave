@@ -24,6 +24,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         public const string OutputModifier = "out";
         public const string VarArgsModifier = "params";
         public const string OptionalModifier = "opt";
+        public const string ExtensionMethodModifier = "this";
 
         private static readonly WeakNameCache<ParameterName> Registry =
             WeakNameCache<ParameterName>.Get(id => new ParameterName(id));
@@ -117,6 +118,11 @@ namespace KaVE.Commons.Model.Names.CSharp
         public bool IsOptional
         {
             get { return Modifiers.Contains(OptionalModifier); }
+        }
+
+        public bool IsExtensionMethodParameter
+        {
+            get { return Modifiers.Contains(ExtensionMethodModifier); }
         }
     }
 }

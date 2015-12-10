@@ -258,5 +258,37 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         }
 
         // TODO @seb: add more tests for delegates
+
+        [Test]
+        public void ShouldBeExtensionMethod()
+        {
+            const string id = "static [T,P] [T,P].M(this [T,P] o)";
+            var sut = MethodName.Get(id);
+            Assert.True(sut.IsExtensionMethod);
+        }
+
+        [Test]
+        public void ShouldBeExtensionMethod_NotIfNotStatic()
+        {
+            const string id = "[T,P] [T,P].M(this [T,P] o)";
+            var sut = MethodName.Get(id);
+            Assert.False(sut.IsExtensionMethod);
+        }
+
+        [Test]
+        public void ShouldBeExtensionMethod_NotWithoutParameters()
+        {
+            const string id = "static [T,P] [T,P].M()";
+            var sut = MethodName.Get(id);
+            Assert.False(sut.IsExtensionMethod);
+        }
+
+        [Test]
+        public void ShouldBeExtensionMethod_NotWithoutThisMarker()
+        {
+            const string id = "static [T,P] [T,P].M([T,P] o)";
+            var sut = MethodName.Get(id);
+            Assert.False(sut.IsExtensionMethod);
+        }
     }
 }

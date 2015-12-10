@@ -131,5 +131,10 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get { return SignatureSyntax.Match(Identifier).Groups[1].Value; }
         }
+
+        public bool IsExtensionMethod
+        {
+            get { return IsStatic && Parameters.Count > 0 && Parameters[0].IsExtensionMethodParameter; }
+        }
     }
 }

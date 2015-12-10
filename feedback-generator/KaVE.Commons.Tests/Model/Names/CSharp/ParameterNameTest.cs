@@ -37,6 +37,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.IsFalse(parameterName.IsOptional);
             Assert.IsFalse(parameterName.IsOutput);
             Assert.IsFalse(parameterName.IsParameterArray);
+            Assert.IsFalse(parameterName.IsExtensionMethodParameter);
             Assert.IsTrue(parameterName.IsPassedByReference);
         }
 
@@ -89,6 +90,14 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             var parameterName = ParameterName.Get("opt [T, A, 4.3.2.1] p");
 
             Assert.IsTrue(parameterName.IsOptional);
+        }
+
+        [Test]
+        public void ShouldBeExtensionMethodParameter()
+        {
+            var parameterName = ParameterName.Get("this [T, A, 4.3.2.1] p");
+
+            Assert.IsTrue(parameterName.IsExtensionMethodParameter);
         }
 
         [Test]

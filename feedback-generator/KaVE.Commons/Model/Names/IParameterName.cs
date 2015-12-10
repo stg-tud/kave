@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace KaVE.Commons.Model.Names
 {
     public interface IParameterName : IName
@@ -23,5 +24,6 @@ namespace KaVE.Commons.Model.Names
         bool IsOutput { get; }
         bool IsParameterArray { get; }
         bool IsOptional { get; }
+        bool IsExtensionMethodParameter { get; }
     }
 }
