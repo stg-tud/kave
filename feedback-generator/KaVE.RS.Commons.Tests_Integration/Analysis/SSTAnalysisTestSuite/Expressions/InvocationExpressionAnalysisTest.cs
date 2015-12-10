@@ -471,6 +471,21 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
+        public void ExtensionMethod_OnThis()
+        {
+            CompleteWithExtensionMethod(@"
+                this.MT();
+                $
+            ");
+
+            AssertBody(
+                InvokeStaticStmt(
+                    MethodName.Get("static [{0}] [N.H, TestProject].MT([{1}] o)", Fix.Void, Fix.Object),
+                    RefExpr("this")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
         public void ExtensionMethod_static()
         {
             CompleteWithExtensionMethod(@"
@@ -527,11 +542,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             CompleteInCSharpFile(@"
                 namespace N {
                     class C {
-                        public void M() {
+                        public override int GetHashCode() {
                             " + body + @"
                         }
                     }
                     static class H {
+                        public static void MT(this object o) {}
                         public static void M0(this int i) {}
                         public static void M1(this int i, int j) {}
                         public static void M2(this int i, int j, int k) {}
