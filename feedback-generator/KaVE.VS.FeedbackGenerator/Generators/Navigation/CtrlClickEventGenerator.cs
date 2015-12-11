@@ -59,6 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
                 var ctrlClickEvent = Create<NavigationEvent>();
                 ctrlClickEvent.Target = _navigationUtils.GetTarget(args.TextControl);
                 ctrlClickEvent.Location = _navigationUtils.GetLocation(args.TextControl);
+                ctrlClickEvent.TypeOfNavigation = NavigationEvent.NavigationType.ReSharperCtrlClick;
                 ctrlClickEvent.TriggeredBy = IDEEvent.Trigger.Click;
 
                 if (!Equals(ctrlClickEvent.Target, Name.UnknownName))
