@@ -33,14 +33,14 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         [NotNull]
         public readonly string ExpectedCompact;
 
-        [NotNull]
+        [CanBeNull]
         public readonly string ExpectedFormatted;
 
         public TestCase([NotNull] string name,
             [NotNull] Type serializedType,
             [NotNull] string input,
             [NotNull] string expectedCompact,
-            [NotNull] string expectedFormatted)
+            [CanBeNull] string expectedFormatted)
         {
             Name = name;
             SerializedType = serializedType;

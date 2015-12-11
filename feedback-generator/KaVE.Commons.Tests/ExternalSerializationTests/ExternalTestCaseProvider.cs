@@ -68,7 +68,7 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
                 directory.GetFiles().FirstOrDefault(file => file.Name.Equals(ExpectedPrettyFileName));
             var formattedExpected = formattedExpectedFile != null
                 ? File.ReadAllText(formattedExpectedFile.FullName)
-                : compactExpected;
+                : null;
 
             return
                 GetInputFiles(directory).Select(

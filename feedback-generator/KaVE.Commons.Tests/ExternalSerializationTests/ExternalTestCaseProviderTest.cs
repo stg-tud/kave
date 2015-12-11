@@ -104,7 +104,7 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         {
             File.Delete(Path.Combine(_testCasesDirectory, "expected-formatted.json"));
             var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
-            Assert.AreEqual(ExpectedCompact, firstTestCase.ExpectedFormatted);
+            Assert.IsNull(firstTestCase.ExpectedFormatted);
         }
 
         private static void GenerateTestCaseStructure(string baseDirectory)

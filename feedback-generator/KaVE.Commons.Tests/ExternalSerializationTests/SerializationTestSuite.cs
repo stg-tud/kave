@@ -47,6 +47,11 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         [TestCaseSource("TestCases")]
         public void StringEquality_Formatted(TestCase testCase)
         {
+            if (testCase.ExpectedFormatted == null)
+            {
+                Assert.Ignore("No ExpectedFormatted");
+            }
+
             var actualString = testCase.Input.ParseJsonTo(testCase.SerializedType).ToFormattedJson();
             Assert.AreEqual(testCase.ExpectedFormatted, actualString);
         }
@@ -54,6 +59,11 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         [TestCaseSource("TestCases")]
         public void ObjectEquality_Formatted(TestCase testCase)
         {
+            if (testCase.ExpectedFormatted == null)
+            {
+                Assert.Ignore("No ExpectedFormatted");
+            }
+
             var parsedInput = testCase.Input.ParseJsonTo(testCase.SerializedType);
             var parsedExpected = testCase.ExpectedFormatted.ParseJsonTo(testCase.SerializedType);
             Assert.AreEqual(parsedExpected, parsedInput);
@@ -62,6 +72,11 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         [TestCaseSource("TestCases")]
         public void AssertEqualityOfExpectationFiles(TestCase testCase)
         {
+            if (testCase.ExpectedFormatted == null)
+            {
+                Assert.Ignore("No ExpectedFormatted");
+            }
+
             var parsedCompact = testCase.ExpectedCompact.ParseJsonTo(testCase.SerializedType);
             var parsedPrettyPrint = testCase.ExpectedFormatted.ParseJsonTo(testCase.SerializedType);
             Assert.AreEqual(parsedCompact, parsedPrettyPrint);
