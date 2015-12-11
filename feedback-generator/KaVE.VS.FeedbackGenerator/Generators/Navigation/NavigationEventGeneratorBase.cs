@@ -17,8 +17,6 @@
 using System.Collections.Specialized;
 using System.Linq;
 using JetBrains.DataFlow;
-using JetBrains.Interop.WinApi;
-using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names;
@@ -28,51 +26,48 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
 {
-    [SolutionComponent]
-    public class ClickNavigationEventGenerator : EventGeneratorBase
+    public abstract class NavigationEventGeneratorBase : EventGeneratorBase
     {
+        private readonly ITextControlManager _textControlManager;
         private readonly Lifetime _myLifetime;
-        private readonly INavigationUtils _navigationUtils;
 
-        [CanBeNull]
-        private IName _oldLocation;
-
-        public ClickNavigationEventGenerator([NotNull] IRSEnv env,
+        protected NavigationEventGeneratorBase([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
             [NotNull] ITextControlManager textControlManager,
-            [NotNull] INavigationUtils navigationUtils,
             [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils)
         {
-            _navigationUtils = navigationUtils;
             _myLifetime = lifetime;
+            _textControlManager = textControlManager;
 
-            foreach (var textControl in textControlManager.TextControls)
-            {
-                AdviceOnClick(textControl);
-            }
-
-            textControlManager.TextControls.CollectionChanged += AdviceOnNewControls;
+            AdviceOnAllTextControls();
+            UnsubscribeOnTerminate();
         }
 
-        public void OnClick(TextControlMouseEventArgs args)
+        protected void FireNavigationEvent(
+            [NotNull] IName target,
+            [NotNull] IName location,
+            NavigationEvent.NavigationType typeOfNavigation,
+            IDEEvent.Trigger triggeredBy)
         {
-            var newLocation = _navigationUtils.GetLocation(args.TextControl);
+            var navigationEvent = Create<NavigationEvent>();
+            navigationEvent.Target = target;
+            navigationEvent.Location = location;
+            navigationEvent.TypeOfNavigation = typeOfNavigation;
+            navigationEvent.TriggeredBy = triggeredBy;
+            Fire(navigationEvent);
+        }
 
-            if (_oldLocation != null && args.KeysAndButtons == KeyStateMasks.MK_LBUTTON)
+        protected abstract void Advice([NotNull] ITextControlWindow textControlWindow, [NotNull] Lifetime lifetime);
+
+        private void AdviceOnAllTextControls()
+        {
+            foreach (var textControl in _textControlManager.TextControls)
             {
-                if (!Equals(newLocation, _oldLocation))
-                {
-                    var clickEvent = Create<NavigationEvent>();
-                    clickEvent.Target = newLocation;
-                    clickEvent.Location = _oldLocation;
-                    clickEvent.TypeOfNavigation = NavigationEvent.NavigationType.Click;
-                    clickEvent.TriggeredBy = IDEEvent.Trigger.Click;
-                    Fire(clickEvent);
-                }
+                Advice(textControl.Window, _myLifetime);
             }
 
-            _oldLocation = newLocation;
+            _textControlManager.TextControls.CollectionChanged += AdviceOnNewControls;
         }
 
         private void AdviceOnNewControls(object sender, NotifyCollectionChangedEventArgs args)
@@ -81,14 +76,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             {
                 foreach (var newTextControl in args.NewItems.Cast<ITextControl>())
                 {
-                    AdviceOnClick(newTextControl);
+                    Advice(newTextControl.Window, _myLifetime);
                 }
             }
         }
 
-        private void AdviceOnClick(ITextControl textControl)
+        private void UnsubscribeOnTerminate()
         {
-            textControl.Window.MouseDown.Advise(_myLifetime, OnClick);
+            _myLifetime.AddAction(() => _textControlManager.TextControls.CollectionChanged -= AdviceOnNewControls);
         }
     }
 }

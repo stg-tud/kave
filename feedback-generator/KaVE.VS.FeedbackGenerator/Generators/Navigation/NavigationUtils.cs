@@ -77,10 +77,17 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
                 declaredElement = declaration.DeclaredElement;
             }
 
-            var reference = parent as IReferenceName;
-            if (reference != null)
+            var referenceName = parent as IReferenceName;
+            if (referenceName != null)
             {
-                var resolvedReference = reference.Reference.Resolve();
+                var resolvedReference = referenceName.Reference.Resolve();
+                declaredElement = resolvedReference.DeclaredElement;
+            }
+
+            var referenceExpression = parent as IReferenceExpression;
+            if (referenceExpression != null)
+            {
+                var resolvedReference = referenceExpression.Reference.Resolve();
                 declaredElement = resolvedReference.DeclaredElement;
             }
 

@@ -113,7 +113,7 @@ namespace KaVE.Commons.Tests.Model.Events
         public void Equality_DifferentNavigationType()
         {
             var a = new NavigationEvent {TypeOfNavigation = NavigationEvent.NavigationType.Click};
-            var b = new NavigationEvent {TypeOfNavigation = NavigationEvent.NavigationType.ReSharperCtrlClick};
+            var b = new NavigationEvent {TypeOfNavigation = NavigationEvent.NavigationType.CtrlClick};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

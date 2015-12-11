@@ -128,14 +128,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             Assert.AreEqual(_testLocation, GetSinglePublished<NavigationEvent>().Location);
         }
 
-        [Test]
-        public void ShouldNotTriggerIfTargetCouldNotBeResolved()
-        {
-            _testTarget = Name.UnknownName;
-            TriggerLeftClick(true);
-            AssertNoEvent();
-        }
-
         private void TriggerLeftClick(bool withCtrl)
         {
             var keyStateMasks = withCtrl ? KeyStateMasks.MK_CONTROL : KeyStateMasks.MK_LBUTTON;

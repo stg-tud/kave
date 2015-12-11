@@ -40,31 +40,33 @@ namespace KaVE.Commons.Model.Events
             TypeOfNavigation = NavigationType.Unknown;
         }
 
-        public override string ToString()
+        protected bool Equals(NavigationEvent other)
         {
-            return this.ToStringReflection();
+            return base.Equals(other) && Target.Equals(other.Target) && Location.Equals(other.Location) &&
+                   TypeOfNavigation == other.TypeOfNavigation;
         }
 
         public override bool Equals(object obj)
         {
-            var other = obj as NavigationEvent;
-            return other != null && Equals(Target, other.Target) && Equals(Location, other.Location) &&
-                   Equals(TypeOfNavigation, other.TypeOfNavigation) && base.Equals(obj);
+            return this.Equals(obj, Equals);
         }
 
         public override int GetHashCode()
         {
-            var hashCode = base.GetHashCode();
-            hashCode = (hashCode*397) ^ Target.GetHashCode();
-            hashCode = (hashCode*397) ^ Location.GetHashCode();
-            hashCode = (hashCode*397) ^ (int) TypeOfNavigation;
-            return hashCode;
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ Target.GetHashCode();
+                hashCode = (hashCode*397) ^ Location.GetHashCode();
+                hashCode = (hashCode*397) ^ (int) TypeOfNavigation;
+                return hashCode;
+            }
         }
 
         public enum NavigationType
         {
             Unknown = 0,
-            ReSharperCtrlClick,
+            CtrlClick,
             Click,
             Keyboard
         }

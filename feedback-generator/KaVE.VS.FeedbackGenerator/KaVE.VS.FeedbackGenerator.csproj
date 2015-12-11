@@ -185,11 +185,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generators\Navigation\ClickNavigationEventGenerator.cs" />
+    <Compile Include="Generators\Navigation\KeyboardClickNavigationEventGenerator.cs" />
     <Compile Include="Generators\Navigation\CtrlClickEventGenerator.cs" />
     <Compile Include="Generators\Git\GitEventGenerator.cs" />
     <Compile Include="Generators\Git\GitLogFileChangedRegistration.cs" />
-    <Compile Include="Generators\Navigation\KeyboardNavigationEventGenerator.cs" />
+    <Compile Include="Generators\Navigation\NavigationEventGeneratorBase.cs" />
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>

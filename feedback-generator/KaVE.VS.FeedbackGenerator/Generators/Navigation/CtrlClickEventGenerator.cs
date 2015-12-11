@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-using System.Collections.Specialized;
-using System.Linq;
 using JetBrains.DataFlow;
 using JetBrains.Interop.WinApi;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -29,9 +26,8 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
 {
     [SolutionComponent]
-    internal class CtrlClickEventGenerator : EventGeneratorBase
+    internal class CtrlClickEventGenerator : NavigationEventGeneratorBase
     {
-        private readonly Lifetime _myLifetime;
         private readonly INavigationUtils _navigationUtils;
 
         public CtrlClickEventGenerator([NotNull] IRSEnv env,
@@ -39,50 +35,26 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             [NotNull] IDateUtils dateUtils,
             [NotNull] ITextControlManager textControlManager,
             [NotNull] INavigationUtils navigationUtils,
-            [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils)
+            [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils, textControlManager, lifetime)
         {
-            _myLifetime = lifetime;
             _navigationUtils = navigationUtils;
-
-            foreach (var textControl in textControlManager.TextControls)
-            {
-                AdviceOnClick(textControl);
-            }
-
-            textControlManager.TextControls.CollectionChanged += AdviceOnNewControls;
         }
 
         public void OnClick(TextControlMouseEventArgs args)
         {
             if (args.KeysAndButtons == KeyStateMasks.MK_CONTROL)
             {
-                var ctrlClickEvent = Create<NavigationEvent>();
-                ctrlClickEvent.Target = _navigationUtils.GetTarget(args.TextControl);
-                ctrlClickEvent.Location = _navigationUtils.GetLocation(args.TextControl);
-                ctrlClickEvent.TypeOfNavigation = NavigationEvent.NavigationType.ReSharperCtrlClick;
-                ctrlClickEvent.TriggeredBy = IDEEvent.Trigger.Click;
-
-                if (!Equals(ctrlClickEvent.Target, Name.UnknownName))
-                {
-                    Fire(ctrlClickEvent);
-                }
+                FireNavigationEvent(
+                    _navigationUtils.GetTarget(args.TextControl),
+                    _navigationUtils.GetLocation(args.TextControl),
+                    NavigationEvent.NavigationType.CtrlClick,
+                    IDEEvent.Trigger.Click);
             }
         }
 
-        private void AdviceOnNewControls(object sender, NotifyCollectionChangedEventArgs args)
+        protected override void Advice(ITextControlWindow textControlWindow, Lifetime lifetime)
         {
-            if (args.NewItems != null)
-            {
-                foreach (var newTextControl in args.NewItems.Cast<ITextControl>())
-                {
-                    AdviceOnClick(newTextControl);
-                }
-            }
-        }
-
-        private void AdviceOnClick(ITextControl textControl)
-        {
-            textControl.Window.MouseUp.Advise(_myLifetime, OnClick);
+            textControlWindow.MouseUp.Advise(lifetime, OnClick);
         }
     }
 }
