@@ -77,6 +77,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             TypeName.Get(
                 "System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
 
+        internal static readonly ITypeName ListOfObject =
+            TypeName.Get(
+                "System.Collections.Generic.List`1[[T -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
+
         internal static readonly ITypeName Action =
             TypeName.Get(
                 "d:[System.Void, mscorlib, 4.0.0.0] [System.Action, mscorlib, 4.0.0.0].()");
@@ -105,6 +109,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         internal static IMethodName ListOfInt_Init =
             MethodName.Get(
                 "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]..ctor()");
+
+        // ReSharper disable once InconsistentNaming
+        internal static IMethodName ListOfInt_Add =
+            MethodName.Get(
+                "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Add([T] item)");
+
+        // ReSharper disable once InconsistentNaming
+        internal static IMethodName ListOfObject_Add =
+            MethodName.Get(
+                "[{0}] [System.Collections.Generic.List`1[[T -> {1}]], mscorlib, 4.0.0.0].Add([T] item)",
+                Void,
+                Object);
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName String_Format =

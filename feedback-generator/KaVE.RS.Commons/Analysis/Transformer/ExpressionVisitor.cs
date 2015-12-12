@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Util;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
@@ -39,6 +41,7 @@ using KaVE.RS.Commons.Utils.Names;
 using ICastExpression = JetBrains.ReSharper.Psi.CSharp.Tree.ICastExpression;
 using IInvocationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IInvocationExpression;
 using ILambdaExpression = JetBrains.ReSharper.Psi.CSharp.Tree.ILambdaExpression;
+using IReference = KaVE.Commons.Model.SSTs.IReference;
 using IReferenceExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IReferenceExpression;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
@@ -478,6 +481,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     : ToVariableRef(refExpr.QualifierExpression, body);
             }
 
+            return ToReference(elem, baseRef);
+        }
+
+        private static IReference ToReference(ITypeMember elem, IVariableReference baseRef)
+        {
             var field = elem as IField;
             if (field != null)
             {
@@ -527,6 +535,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var r = expr.ConstructorReference.Resolve();
             if (r.IsValid() && r.DeclaredElement != null)
             {
+                var varDeclName = GetNameFromDeclaration(expr);
+
                 var methodName = r.DeclaredElement.GetName<IMethodName>(r.Result.Substitution);
                 Asserts.That(methodName.IsConstructor);
 
@@ -537,13 +547,215 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     parameters.Add(parameter);
                 }
 
-                return new InvocationExpression
+                var sstInv = new InvocationExpression
                 {
                     MethodName = methodName,
                     Parameters = parameters
                 };
+
+                var oInit = expr.Initializer as IObjectInitializer;
+                var cInit = expr.Initializer as ICollectionInitializer;
+                if (oInit != null || cInit != null)
+                {
+                    IVariableReference newVar;
+                    if (varDeclName != null)
+                    {
+                        newVar = new VariableReference {Identifier = varDeclName};
+                    }
+                    else
+                    {
+                        newVar = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+                        body.Add(
+                            new VariableDeclaration
+                            {
+                                Reference = newVar,
+                                Type = sstInv.MethodName.DeclaringType
+                            });
+                    }
+                    body.Add(
+                        new Assignment
+                        {
+                            Reference = newVar,
+                            Expression = sstInv
+                        });
+
+                    if (oInit != null)
+                    {
+                        foreach (var mInit in oInit.MemberInitializersEnumerable)
+                        {
+                            IAssignableReference reference = null;
+                            var rr = mInit.Reference.Resolve();
+                            var elem = rr.DeclaredElement;
+                            var typeMember = elem as ITypeMember;
+                            if (typeMember != null)
+                            {
+                                reference = ToReference(typeMember, newVar) as IAssignableReference;
+                            }
+                            if (reference == null)
+                            {
+                                reference = new UnknownReference();
+                            }
+
+                            // check that operator is "="
+                            if (mInit.Expression != null)
+                            {
+                                body.Add(
+                                    new Assignment
+                                    {
+                                        Reference = reference,
+                                        Expression = ToAssignableExpr(mInit.Expression, body)
+                                    });
+                            }
+                            else
+                            {
+                                var prop = elem as IProperty;
+                                var pInit = mInit as IPropertyInitializer;
+                                if (prop != null && pInit != null && pInit.Initializer != null)
+                                {
+                                    var nextVar = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+                                    body.Add(
+                                        new VariableDeclaration
+                                        {
+                                            Reference = nextVar,
+                                            Type = prop.ReturnType.GetName()
+                                        });
+                                    if (varDeclName == null)
+                                    {
+                                        body.Add(
+                                            new Assignment
+                                            {
+                                                Reference = nextVar,
+                                                Expression = new ReferenceExpression
+                                                {
+                                                    Reference = reference
+                                                }
+                                            });
+                                    }
+
+                                    ISubstitution substitution = EmptySubstitution.INSTANCE;
+                                    var ctype = pInit.Initializer.ConstructedType as IDeclaredType;
+                                    if (ctype != null)
+                                    {
+                                        var rctype = ctype.Resolve();
+                                        substitution = rctype.Substitution;
+                                    }
+
+                                    var addName = FindAdd(prop, substitution);
+
+                                    foreach (var eInit in pInit.Initializer.InitializerElements)
+                                    {
+                                        var ceInit = eInit as ICollectionElementInitializer;
+                                        if (ceInit != null)
+                                        {
+                                            foreach (var arg in ceInit.Arguments)
+                                            {
+                                                body.Add(
+                                                    new ExpressionStatement
+                                                    {
+                                                        Expression = new InvocationExpression
+                                                        {
+                                                            Reference = nextVar,
+                                                            MethodName = addName,
+                                                            Parameters = {ToSimpleExpression(arg.Value, body)}
+                                                        }
+                                                    });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (cInit != null)
+                    {
+                        var m = r.DeclaredElement as IConstructor;
+                        var addName = FindAdd(m, r.Result.Substitution) ?? MethodName.UnknownName;
+
+                        foreach (var eInit in cInit.ElementInitializersEnumerable)
+                        {
+                            foreach (var arg in eInit.Arguments)
+                            {
+                                body.Add(
+                                    new ExpressionStatement
+                                    {
+                                        Expression = new InvocationExpression
+                                        {
+                                            Reference = newVar,
+                                            MethodName = addName,
+                                            Parameters = {ToSimpleExpression(arg.Value, body)}
+                                        }
+                                    });
+                            }
+                        }
+                    }
+
+                    return new ReferenceExpression
+                    {
+                        Reference = newVar
+                    };
+                }
+                return sstInv;
             }
-            return new UnknownExpression();
+            return new InvocationExpression
+            {
+                MethodName = MethodName.UnknownName
+            };
+        }
+
+        private static string GetNameFromDeclaration(IObjectCreationExpression expr)
+        {
+            if (expr.Parent != null)
+            {
+                var varDecl = expr.Parent.Parent as ILocalVariableDeclaration;
+                if (varDecl != null)
+                {
+                    var nameFromAssign = varDecl.NameIdentifier;
+
+                    return nameFromAssign.Name;
+                }
+            }
+            return null;
+        }
+
+        private IMethodName FindAdd(IProperty c, [NotNull] ISubstitution substitution)
+        {
+            if (c != null)
+            {
+                var declType = c.ReturnType.GetTypeElement();
+                if (declType != null)
+                {
+                    foreach (var m in declType.Methods)
+                    {
+                        if ("Add".Equals(m.ShortName) && m.Parameters.Count == 1)
+                        {
+                            return m.GetName<IMethodName>(substitution);
+                        }
+                    }
+                }
+            }
+
+            return MethodName.UnknownName;
+        }
+
+        private static IMethodName FindAdd(IConstructor c, [NotNull] ISubstitution substitution)
+        {
+            if (c != null)
+            {
+                var declType = c.GetContainingType();
+                if (declType != null)
+                {
+                    foreach (var m in declType.Methods)
+                    {
+                        if ("Add".Equals(m.ShortName) && m.Parameters.Count == 1)
+                        {
+                            return m.GetName<IMethodName>(substitution);
+                        }
+                    }
+                }
+            }
+
+            return MethodName.UnknownName;
         }
 
         public IKaVEList<ISimpleExpression> GetArgumentList(IArgumentList argumentListParam, IList<IStatement> body)

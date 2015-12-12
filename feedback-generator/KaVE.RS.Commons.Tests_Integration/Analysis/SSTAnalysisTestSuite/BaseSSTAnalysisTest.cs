@@ -113,7 +113,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return Lists.NewListFrom(ids.Select(RefExpr));
         }
 
-        protected ISimpleExpression RefExpr(string id)
+        protected static ISimpleExpression RefExpr(string id)
         {
             return new ReferenceExpression {Reference = new VariableReference {Identifier = id}};
         }
