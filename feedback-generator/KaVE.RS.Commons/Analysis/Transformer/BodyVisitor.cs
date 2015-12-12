@@ -122,7 +122,10 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             if (initializer != null)
             {
-                body.Add(SSTUtil.AssignmentToLocal(id, initializer));
+                if (!IsSelfAssign(id, initializer))
+                {
+                    body.Add(SSTUtil.AssignmentToLocal(id, initializer));
+                }
             }
 
             if (decl == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
@@ -168,18 +171,33 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
             else
             {
-                body.Add(
-                    new Assignment
-                    {
-                        Reference = sstRef,
-                        Expression = IsFancyAssign(expr) ? new ComposedExpression() : sstExpr
-                    });
+                if (!IsSelfAssign(sstRef, sstExpr))
+                {
+                    body.Add(
+                        new Assignment
+                        {
+                            Reference = sstRef,
+                            Expression = IsFancyAssign(expr) ? new ComposedExpression() : sstExpr
+                        });
+                }
             }
 
             if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
             {
                 body.Add(EmptyCompletionExpression);
             }
+        }
+
+        private static bool IsSelfAssign(string id, IAssignableExpression sstExpr)
+        {
+            return IsSelfAssign(new VariableReference {Identifier = id}, sstExpr);
+        }
+
+        private static bool IsSelfAssign(IAssignableReference sstRef, IAssignableExpression sstExpr)
+        {
+            // TODO add test!
+            var refExpr = sstExpr as KaVE.Commons.Model.SSTs.Expressions.Simple.IReferenceExpression;
+            return refExpr != null && sstRef.Equals(refExpr.Reference);
         }
 
         private static bool IsFancyAssign(IAssignmentExpression expr)

@@ -331,6 +331,34 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         }
 
         [Test]
+        public void Assigning_SelfAssignIsIgnored()
+        {
+            CompleteInMethod(@"
+                int i = 0;
+                i = i;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                Assign("i", Const("0")),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void Assigning_SelfAssignInInitIsIgnored()
+        {
+            CompleteInMethod(@"
+                int i = i;
+                $
+            ");
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
         public void Fancy1()
         {
             CompleteInMethod(@"
