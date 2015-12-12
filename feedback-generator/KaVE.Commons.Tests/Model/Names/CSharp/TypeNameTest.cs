@@ -490,5 +490,17 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
 
             Assert.IsFalse(genericType.IsTypeParameter);
         }
+
+        [Test]
+        public void StringHelperWorks()
+        {
+            const string id = "{0},P";
+            const string t1 = "T1";
+            var a = TypeName.Get(string.Format(id, t1));
+            var b = TypeName.Get(id, t1);
+
+            Assert.AreEqual(a, b);
+            Assert.AreSame(a, b);
+        }
     }
 }

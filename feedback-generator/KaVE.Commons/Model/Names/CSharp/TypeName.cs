@@ -129,6 +129,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
+        [NotNull]
+        public static ITypeName Get(string identifier, params object[] args)
+        {
+            return Get(string.Format(identifier, args));
+        }
+
         private static string FixLegacyNameFormat(string identifier)
         {
             if (DelegateTypeName.IsDelegateTypeIdentifier(identifier))
