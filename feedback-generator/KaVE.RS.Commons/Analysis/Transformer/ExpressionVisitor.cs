@@ -264,7 +264,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                         varRef = ToVariableRef(invokedExpression, body);
                     }
                     else if (qExpr != null &&
-                             (qExpr.IsClassifiedAsVariable || qExpr is IThisExpression))
+                             (qExpr.IsClassifiedAsVariable || qExpr is IThisExpression || qExpr is IInvocationExpression))
                     {
                         varRef = ToVariableRef(qExpr, body);
                     }

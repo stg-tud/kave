@@ -486,6 +486,23 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
+        public void ExtensionMethod_OnInvocation()
+        {
+            CompleteWithExtensionMethod(@"
+                GetHashCode().M0();
+                $
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", Invoke("this", Fix.Object_GetHashCode)),
+                InvokeStaticStmt(
+                    MethodName.Get("static [{0}] [N.H, TestProject].M0(this [{1}] i)", Fix.Void, Fix.Int),
+                    RefExpr("$0")),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
         public void ExtensionMethod_static()
         {
             CompleteWithExtensionMethod(@"
@@ -530,7 +547,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 VarDecl("$0", Fix.Int),
                 Assign("$0", Const("1")),
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].M2(this [{1}] i, [{1}] j, [{1}] k)", Fix.Void, Fix.Int),
+                    MethodName.Get(
+                        "static [{0}] [N.H, TestProject].M2(this [{1}] i, [{1}] j, [{1}] k)",
+                        Fix.Void,
+                        Fix.Int),
                     RefExpr("$0"),
                     Const("0"),
                     Const("-1")),
@@ -542,7 +562,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             CompleteInCSharpFile(@"
                 namespace N {
                     class C {
-                        public override int GetHashCode() {
+                        public int M() {
                             " + body + @"
                         }
                     }
