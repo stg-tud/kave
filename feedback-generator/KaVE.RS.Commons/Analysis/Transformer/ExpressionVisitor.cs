@@ -545,8 +545,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var r = expr.ConstructorReference.Resolve();
             if (r.IsValid() && r.DeclaredElement != null)
             {
-                var varDeclName = GetNameFromDeclaration(expr);
-
                 var methodName = r.DeclaredElement.GetName<IMethodName>(r.Result.Substitution);
                 Asserts.That(methodName.IsConstructor);
 
@@ -567,6 +565,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 var cInit = expr.Initializer as ICollectionInitializer;
                 if (oInit != null || cInit != null)
                 {
+                    var varDeclName = GetNameFromDeclaration(expr);
                     IVariableReference newVar;
                     if (varDeclName != null)
                     {
@@ -712,34 +711,40 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         private static string GetNameFromDeclaration(IObjectCreationExpression expr)
         {
-            // disabled for now... need to be discussed (e.g., object t = new T())
-            const bool tryToPickName = false;
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (tryToPickName)
+            var constructedType = expr.GetExpressionType().ToIType().GetName();
+
+            if (expr.Parent != null)
             {
-                if (expr.Parent != null)
+                var assignExpr = expr.Parent as IAssignmentExpression;
+                if (assignExpr != null)
                 {
-                    var assignExpr = expr.Parent as IAssignmentExpression;
-                    if (assignExpr != null)
+                    if (assignExpr.Dest.IsClassifiedAsVariable)
                     {
-                        if (assignExpr.Dest.IsClassifiedAsVariable)
+                        var refExpr = assignExpr.Dest as IReferenceExpression;
+                        if (refExpr != null)
                         {
-                            var refExpr = assignExpr.Dest as IReferenceExpression;
-                            if (refExpr != null)
+                            var expectedType = refExpr.GetExpressionType().ToIType().GetName();
+
+                            if (constructedType.Equals(expectedType))
                             {
                                 return refExpr.NameIdentifier.Name;
                             }
                         }
                     }
-                    var varDecl = expr.Parent.Parent as ILocalVariableDeclaration;
-                    if (varDecl != null)
+                }
+                var varDecl = expr.Parent.Parent as ILocalVariableDeclaration;
+                if (varDecl != null)
+                {
+                    var expectedType = varDecl.DeclaredElement.Type.GetName();
+                    var isSameType = constructedType.Equals(expectedType);
+                    if (varDecl.IsVar || isSameType)
                     {
                         var nameFromAssign = varDecl.NameIdentifier;
-
                         return nameFromAssign.Name;
                     }
                 }
             }
+
             return null;
         }
 

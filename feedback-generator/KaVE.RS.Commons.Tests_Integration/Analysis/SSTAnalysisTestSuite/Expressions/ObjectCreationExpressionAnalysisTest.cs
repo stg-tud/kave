@@ -71,7 +71,47 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void InAssign_ObjectInitializer()
+        public void InAssign_ObjectInitializer_1a()
+        {
+            CompleteWithInitializer(@"
+                object t;
+                t = new T
+                {
+                    P = 1
+                };
+                $
+            ");
+
+            AssertBody(
+                VarDecl("t", Fix.Object),
+                VarDecl("$0", TypeName.Get("N.T, TestProject")),
+                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                AssignP("$0", Const("1")),
+                Assign("t", RefExpr("$0")),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void InAssign_ObjectInitializer_1b()
+        {
+            CompleteWithInitializer(@"
+                T t;
+                t = new T
+                {
+                    P = 1
+                };
+                $
+            ");
+
+            AssertBody(
+                VarDecl("t", TypeName.Get("N.T, TestProject")),
+                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                AssignP("t", Const("1")),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void InAssign_ObjectInitializer_2a()
         {
             CompleteWithInitializer(@"
                 object t = new T
@@ -91,11 +131,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void InAssign_ObjectInitializer2()
+        public void InAssign_ObjectInitializer_2b()
         {
             CompleteWithInitializer(@"
-                object t;
-                t = new T
+                T t = new T
                 {
                     P = 1
                 };
@@ -103,11 +142,27 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("t", Fix.Object),
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                AssignP("$0", Const("1")),
-                Assign("t", RefExpr("$0")),
+                VarDecl("t", TypeName.Get("N.T, TestProject")),
+                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                AssignP("t", Const("1")),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void InAssign_ObjectInitializer_2c()
+        {
+            CompleteWithInitializer(@"
+                var t = new T
+                {
+                    P = 1
+                };
+                $
+            ");
+
+            AssertBody(
+                VarDecl("t", TypeName.Get("N.T, TestProject")),
+                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                AssignP("t", Const("1")),
                 Fix.EmptyCompletion);
         }
 
@@ -133,12 +188,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         public void InAssign_CollectionInitializer()
         {
             CompleteWithInitializer(@"
-                var t = new List<int> {1};
+                object t = new List<int> {1};
                 $
             ");
 
             AssertBody(
-                VarDecl("t", Fix.ListOfInt),
+                VarDecl("t", Fix.Object),
                 VarDecl("$0", Fix.ListOfInt),
                 Assign("$0", InvokeCtor(Fix.ListOfInt_Init)),
                 new ExpressionStatement {Expression = Invoke("$0", Fix.ListOfInt_Add, Const("1"))},
