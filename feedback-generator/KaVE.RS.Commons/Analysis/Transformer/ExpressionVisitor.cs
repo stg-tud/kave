@@ -712,26 +712,32 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         private static string GetNameFromDeclaration(IObjectCreationExpression expr)
         {
-            if (expr.Parent != null)
+            // disabled for now... need to be discussed (e.g., object t = new T())
+            const bool tryToPickName = false;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (tryToPickName)
             {
-                var assignExpr = expr.Parent as IAssignmentExpression;
-                if (assignExpr != null)
+                if (expr.Parent != null)
                 {
-                    if (assignExpr.Dest.IsClassifiedAsVariable)
+                    var assignExpr = expr.Parent as IAssignmentExpression;
+                    if (assignExpr != null)
                     {
-                        var refExpr = assignExpr.Dest as IReferenceExpression;
-                        if (refExpr != null)
+                        if (assignExpr.Dest.IsClassifiedAsVariable)
                         {
-                            return refExpr.NameIdentifier.Name;
+                            var refExpr = assignExpr.Dest as IReferenceExpression;
+                            if (refExpr != null)
+                            {
+                                return refExpr.NameIdentifier.Name;
+                            }
                         }
                     }
-                }
-                var varDecl = expr.Parent.Parent as ILocalVariableDeclaration;
-                if (varDecl != null)
-                {
-                    var nameFromAssign = varDecl.NameIdentifier;
+                    var varDecl = expr.Parent.Parent as ILocalVariableDeclaration;
+                    if (varDecl != null)
+                    {
+                        var nameFromAssign = varDecl.NameIdentifier;
 
-                    return nameFromAssign.Name;
+                        return nameFromAssign.Name;
+                    }
                 }
             }
             return null;
