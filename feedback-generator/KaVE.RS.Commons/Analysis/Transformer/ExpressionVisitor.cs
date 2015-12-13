@@ -619,18 +619,15 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                                             Reference = nextVar,
                                             Type = prop.ReturnType.GetName()
                                         });
-                                    if (varDeclName == null)
-                                    {
-                                        body.Add(
-                                            new Assignment
+                                    body.Add(
+                                        new Assignment
+                                        {
+                                            Reference = nextVar,
+                                            Expression = new ReferenceExpression
                                             {
-                                                Reference = nextVar,
-                                                Expression = new ReferenceExpression
-                                                {
-                                                    Reference = reference
-                                                }
-                                            });
-                                    }
+                                                Reference = reference
+                                            }
+                                        });
 
                                     ISubstitution substitution = EmptySubstitution.INSTANCE;
                                     var ctype = pInit.Initializer.ConstructedType as IDeclaredType;

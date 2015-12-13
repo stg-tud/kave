@@ -122,6 +122,22 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
+        public void Nested_CollectionInitializer()
+        {
+            CompleteWithInitializer(@"
+                Equals(new List<int> {1});
+                $
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.ListOfInt),
+                Assign("$0", InvokeCtor(Fix.ListOfInt_Init)),
+                new ExpressionStatement {Expression = Invoke("$0", Fix.ListOfInt_Add, Const("1"))},
+                ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
         public void InAssign_NestedInitializers()
         {
             CompleteWithInitializer(@"
@@ -129,7 +145,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 {
                     P = new T
                     {
-                        P = 2
+                        P = 1
                     }
                 };
                 $
@@ -182,48 +198,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                VarDecl("$1", TypeName.Get("N.T, TestProject")),
-                Assign("$1", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                AssignP("$1", Const("0")),
-                AssignP("$0", RefExpr("$1")),
-                ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void InAssign_Complex()
-        {
-            CompleteWithInitializer(@"
-                var t = new T
-                {
-                    P = new T(),
-                    CP = {1, 2, 3}
-                };
-                $
-            ");
-
-            AssertBody(
                 VarDecl("t", TypeName.Get("N.T, TestProject")),
                 Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                Fix.EmptyCompletion,
-                Fix.EmptyCompletion);
-        }
-
-        [Test]
-        public void Nested_CollectionInitializer()
-        {
-            CompleteWithInitializer(@"
-                Equals(new List<int> {1});
-                $
-            ");
-
-            AssertBody(
-                VarDecl("$0", Fix.ListOfInt),
-                Assign("$0", InvokeCtor(Fix.ListOfInt_Init)),
-                new ExpressionStatement {Expression = Invoke("$0", Fix.ListOfInt_Add, Const("1"))},
-                ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
+                VarDecl("$0", Fix.ListOfObject),
+                Assign(
+                    "$0",
+                    RefExpr(
+                        new PropertyReference
+                        {
+                            Reference = VarRef("t"),
+                            PropertyName = PropertyName.Get("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
+                        })),
+                InvokeStmt("$0", Fix.ListOfObject_Add, Const("1")),
                 Fix.EmptyCompletion);
         }
 
@@ -252,6 +238,42 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         })),
                 InvokeStmt("$1", Fix.ListOfObject_Add, Const("1")),
                 ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void InAssign_Complex()
+        {
+            CompleteWithInitializer(@"
+                var t = new T
+                {
+                    P = new T {
+                        P = 0
+                    },
+                    CP = {1}
+                };
+                $
+            ");
+
+            AssertBody(
+                VarDecl("t", TypeName.Get("N.T, TestProject")),
+                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", TypeName.Get("N.T, TestProject")),
+                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                AssignP("$0", Const("0")),
+                AssignP("t", RefExpr("$0")),
+                VarDecl("$1", Fix.ListOfObject),
+                Assign(
+                    "$1",
+                    new ReferenceExpression
+                    {
+                        Reference = new PropertyReference
+                        {
+                            Reference = VarRef("t"),
+                            PropertyName = PropertyName.Get("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
+                        }
+                    }),
+                InvokeStmt("$1", Fix.ListOfObject_Add, Const("1")),
                 Fix.EmptyCompletion);
         }
 
