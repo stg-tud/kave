@@ -714,6 +714,18 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (expr.Parent != null)
             {
+                var assignExpr = expr.Parent as IAssignmentExpression;
+                if (assignExpr != null)
+                {
+                    if (assignExpr.Dest.IsClassifiedAsVariable)
+                    {
+                        var refExpr = assignExpr.Dest as IReferenceExpression;
+                        if (refExpr != null)
+                        {
+                            return refExpr.NameIdentifier.Name;
+                        }
+                    }
+                }
                 var varDecl = expr.Parent.Parent as ILocalVariableDeclaration;
                 if (varDecl != null)
                 {

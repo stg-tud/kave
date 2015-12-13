@@ -89,6 +89,25 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
+        public void InAssign_ObjectInitializer2()
+        {
+            CompleteWithInitializer(@"
+                T t;
+                t = new T
+                {
+                    P = 1
+                };
+                $
+            ");
+
+            AssertBody(
+                VarDecl("t", TypeName.Get("N.T, TestProject")),
+                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                AssignP("t", Const("1")),
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
         public void Nested_ObjectInitializer()
         {
             CompleteWithInitializer(@"
