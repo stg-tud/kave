@@ -35,6 +35,7 @@ using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Names;
@@ -61,19 +62,30 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public IAssignableExpression ToAssignableExpr(IVariableInitializer csExpr, IList<IStatement> body)
         {
-            var exprInit = csExpr as IExpressionInitializer;
-            if (exprInit == null || exprInit.Value == null)
-            {
-                return new UnknownExpression();
-            }
-            return exprInit.Value.Accept(this, body) ?? new UnknownExpression();
+            IAssignableExpression result = new UnknownExpression();
+            Execute.AndSupressExceptions(
+                () =>
+                {
+                    var exprInit = csExpr as IExpressionInitializer;
+                    if (exprInit != null && exprInit.Value != null)
+                    {
+                        result = exprInit.Value.Accept(this, body) ?? new UnknownExpression();
+                    }
+                });
+            return result;
         }
 
         public IAssignableExpression ToAssignableExpr(ICSharpExpression csExpr, IList<IStatement> body)
         {
-            return csExpr == null
-                ? new UnknownExpression()
-                : csExpr.Accept(this, body) ?? new UnknownExpression();
+            IAssignableExpression result = new UnknownExpression();
+            Execute.AndSupressExceptions(
+                () =>
+                {
+                    result = csExpr == null
+                        ? new UnknownExpression()
+                        : csExpr.Accept(this, body) ?? new UnknownExpression();
+                });
+            return result;
         }
 
         public IAssignableReference ToAssignableRef(ICSharpExpression csExpr, IList<IStatement> body)
@@ -95,15 +107,14 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 return new UnknownExpression();
             }
 
-            var expr = csExpr.Accept(this, body);
-            if (expr == null)
-            {
-                return new UnknownExpression();
-            }
+            IAssignableExpression expr = new UnknownExpression();
+            Execute.AndSupressExceptions(
+                () => { expr = csExpr.Accept(this, body) ?? new UnknownExpression(); });
 
-            if (expr is ISimpleExpression)
+            var simpleExpression = expr as ISimpleExpression;
+            if (simpleExpression != null)
             {
-                return expr as ISimpleExpression;
+                return simpleExpression;
             }
 
             var newRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
@@ -470,7 +481,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             return new UnknownReference();
         }
 
-        // ReSharper disable once SuggestBaseTypeForParameter
         private IReference ToReference(IReferenceExpression refExpr, ITypeMember elem, IList<IStatement> body)
         {
             IVariableReference baseRef = new VariableReference();

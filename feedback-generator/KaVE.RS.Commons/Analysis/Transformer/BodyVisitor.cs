@@ -663,12 +663,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
         }
 
-        public override void VisitGeneralCatchClause(IGeneralCatchClause generalCatchClauseParam,
-            IList<IStatement> context)
-        {
-            base.VisitGeneralCatchClause(generalCatchClauseParam, context);
-        }
-
         public override void VisitUsingStatement(IUsingStatement block, IList<IStatement> body)
         {
             AddIf(block, CompletionCase.EmptyCompletionBefore, body);
