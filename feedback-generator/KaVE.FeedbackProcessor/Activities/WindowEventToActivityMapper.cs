@@ -60,38 +60,38 @@ namespace KaVE.FeedbackProcessor.Activities
             {"Hierarchy", new[] {Activity.Navigation}},
             {"Inspection Results", new[] {Activity.Development}},
             // testing
-            {"Code Coverage Results", new[] {Activity.Development}},
-            {"Tests Explorer", new[] {Activity.Development}},
-            {"Test Results", new[] {Activity.Development}},
-            {"Test Runs", new[] {Activity.Development}},
-            {"Unit Test Explorer", new[] {Activity.Development}},
-            {"Unit Test Sessions .+", new[] {Activity.Development}},
-            {"NCrunch Metrics", new[] {Activity.Development}},
-            {"NCrunch Tests", new[] {Activity.Development}},
+            {"Code Coverage Results", new[] {Activity.Testing}},
+            {"Tests Explorer", new[] {Activity.Testing}},
+            {"Test Results", new[] {Activity.Testing}},
+            {"Test Runs", new[] {Activity.Testing}},
+            {"Unit Test Explorer", new[] {Activity.Testing}},
+            {"Unit Test Sessions .+", new[] {Activity.Testing}},
+            {"NCrunch Metrics", new[] {Activity.Testing}},
+            {"NCrunch Tests", new[] {Activity.Testing}},
             // build
             {"Build Explorer", new[] {Activity.Development}},
             {"Builds", new[] {Activity.Development}},
             {"BuildVision", new[] {Activity.Development}},
             // version control
-            {"Folder Difference", new[] {Activity.ProjectManagement}},
-            {"History", new[] {Activity.ProjectManagement}},
-            {"Pending Changes.+", new[] {Activity.ProjectManagement}},
-            {"Resolve Conflicts", new[] {Activity.ProjectManagement}},
-            {"Source Control Explorer", new[] {Activity.ProjectManagement}},
-            {"Team Explorer.+", new[] {Activity.ProjectManagement}},
-            {"Tracking Changeset.+", new[] {Activity.ProjectManagement}},
+            {"Folder Difference", new[] {Activity.VersionControl}},
+            {"History", new[] {Activity.VersionControl}},
+            {"Pending Changes.+", new[] {Activity.VersionControl}},
+            {"Resolve Conflicts", new[] {Activity.VersionControl}},
+            {"Source Control Explorer", new[] {Activity.VersionControl}},
+            {"Team Explorer.+", new[] {Activity.VersionControl}},
+            {"Tracking Changeset.+", new[] {Activity.VersionControl}},
             // debugging
-            {"Breakpoints", new[] {Activity.Development}},
-            {"Call Stack", new[] {Activity.Development}},
-            {"Locals", new[] {Activity.Development}},
-            {"Watch.+", new[] {Activity.Development}},
-            {"Parallel Watch.+", new[] {Activity.Development}},
-            {"Threads", new[] {Activity.Development}},
-            {"IntelliTrace", new[] {Activity.Development}},
-            {"Modules", new[] {Activity.Development}},
-            {"Immediate Window", new[] {Activity.Development}},
-            {"Python .+ Interactive", new[] {Activity.Development}},
-            {"Registers", new[] {Activity.Development}},
+            {"Breakpoints", new[] {Activity.Debugging}},
+            {"Call Stack", new[] {Activity.Debugging}},
+            {"Locals", new[] {Activity.Debugging}},
+            {"Watch.+", new[] {Activity.Debugging}},
+            {"Parallel Watch.+", new[] {Activity.Debugging}},
+            {"Threads", new[] {Activity.Debugging}},
+            {"IntelliTrace", new[] {Activity.Debugging}},
+            {"Modules", new[] {Activity.Debugging}},
+            {"Immediate Window", new[] {Activity.Debugging}},
+            {"Python .+ Interactive", new[] {Activity.Debugging}},
+            {"Registers", new[] {Activity.Debugging}},
             // error tracking
             {"Error List", new[] {Activity.Development}},
             {"Errors in Solution", new[] {Activity.Development}},
@@ -115,9 +115,6 @@ namespace KaVE.FeedbackProcessor.Activities
             {"Templates Explorer", new[] {Activity.LocalConfiguration}},
             // time tracking
             {"Zeiterfassung", new[] {Activity.ProjectManagement}},
-            // ???
-            {"Source Not Available", new[] {Activity.Other}},
-            {"Source Not Found", new[] {Activity.Other}},
             // editing
             {"Properties", new[] {Activity.Development}},
             {"Refactoring.+", new[] {Activity.Development}},
@@ -137,11 +134,11 @@ namespace KaVE.FeedbackProcessor.Activities
                 var activity = GetMainWindowActivity(@event.Action);
                 InsertActivity(@event, activity);
             }
-            else if (IsOpen(@event) || IsMove(@event) || IsClose(@event))
+            else if (IsOpen(@event) || IsClose(@event))
             {
                 InsertActivity(@event, Activity.LocalConfiguration);
             }
-            else
+            else if (IsActivate(@event))
             {
                 var window = @event.Window;
                 switch (window.Type)
@@ -151,7 +148,7 @@ namespace KaVE.FeedbackProcessor.Activities
                         InsertActivities(@event, Activity.Navigation);
                         break;
                     case "vsWindowTypeOutput":
-                        InsertActivities(@event, Activity.Development);
+                        InsertActivities(@event, Activity.Debugging);
                         break;
                     case "vsWindowTypeToolbox":
                     case "vsWindowTypeProperties":
@@ -208,9 +205,9 @@ namespace KaVE.FeedbackProcessor.Activities
             return @event.Action == WindowEvent.WindowAction.Create;
         }
 
-        private static bool IsMove(WindowEvent @event)
+        private static bool IsActivate(WindowEvent @event)
         {
-            return @event.Action == WindowEvent.WindowAction.Move;
+            return @event.Action == WindowEvent.WindowAction.Activate;
         }
 
         private static bool IsClose(WindowEvent @event)

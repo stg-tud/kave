@@ -32,21 +32,14 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
 
         public override BaseToActivityMapper Sut
         {
-            get { return new CommandEventToActivityMapper(); }
+            get { return new CommandEventToActivityMapper(null); }
         }
 
         [Test]
         public void MapsCommandToActivityByProvidedMapping()
         {
-            var @event = new CommandEvent { CommandId = "TextControl.Paste" };
+            var @event = new CommandEvent { CommandId = "TextControl.Backspace" };
             AssertMapsToActivity(@event, Activity.Development);
-        }
-
-        [Test]
-        public void MapsUnknownCommandToOther()
-        {
-            var unknownCmd = new CommandEvent{CommandId = "SomeUnkownCommand"};
-            AssertMapsToActivity(unknownCmd, Activity.Other);
         }
 
         [Test]
@@ -54,13 +47,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var openRecentFileCmd = new CommandEvent {CommandId = "1 C:\\Some\\Path\\ToThe.File"};
             AssertMapsToActivity(openRecentFileCmd, Activity.Navigation);
-        }
-
-        [Test]
-        public void MapsTfsCommandsToProjectManagement()
-        {
-            var tfsCommand = new CommandEvent{CommandId = "something.TfsFoo"};
-            AssertMapsToActivity(tfsCommand, Activity.ProjectManagement);
         }
     }
 }

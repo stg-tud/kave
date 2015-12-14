@@ -29,7 +29,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void MapsToDevelopment()
+        public void MapsToDebugging()
         {
             var @event = new DebuggerEvent
             {
@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Reason = "some reason",
                 Mode = DebuggerEvent.DebuggerMode.Run
             };
-            AssertMapsToActivity(@event, Activity.Development);
+            AssertMapsToActivity(@event, Activity.Debugging);
         }
     }
 }

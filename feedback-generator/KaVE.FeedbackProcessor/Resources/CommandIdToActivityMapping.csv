@@ -1,1037 +1,1 @@
-Command ID,Mapping
-_Unshelve,PM
-{00000000-0000-0000-0000-313370000001}:56:VSCommands.BreakInCurrentDocument,D
-{132320BA-BC11-4A1E-8E7A-6833DD4D4D39}:256:Tools.WCFServiceConfigurationEditor,
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:103:Edit.SelectionCancel,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:104:Edit.ParameterInfo,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:105:Edit.ViewWhiteSpace,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1109:Project.IncludeInProject,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1110:Project.ExcludeFromProject,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1113:Project.AddReference,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:112:Edit.FormatSelection,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:114:Edit.InsertFileAsText,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:119:Edit.LineUpExtendColumn,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:120:Edit.LineDownExtendColumn,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:121:Edit.ToggleWordWrap,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:129:Edit.ToggleOutliningExpansion,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:130:Edit.ToggleAllOutlining,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:133:Edit.CollapsetoDefinitions,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:136:Edit.CommentSelection,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:137:Edit.UncommentSelection,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:138:Edit.OpenFile,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:143:Edit.FormatDocument,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:147:View.ShowSmartTag,
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:15:Edit.DocumentStart,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1561:Edit.SurroundWith,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:16:Edit.DocumentStartExtend,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1600:ToggleOutputWindowWordWrap,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1610:File.CopyFullPath,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1615:Edit.ClearOutputWindow,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1617:Edit.GoToOutputWindowNextLocation,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1632:OtherContextMenus.StubProject.EditProjectFile,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1635:Project.OpenFolderinWindowsExplorer,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1635:ProjectandSolutionContextMenus.Project.OpenFolderinFileExplorer,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1642:File.OpenContainingFolder,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1650:File.CloseAllButThis,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1680:View.ClassViewGoToSearchCombo,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:17:Edit.DocumentEnd,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:19:Edit.LineStart,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:20:Edit.LineStartExtend,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2210:Errors,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2211:Warnings,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2212:Messages,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2245:View.StartPage,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:23:Edit.LineEnd,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2301:EditorContextMenus.CodeWindow.ViewCallHierarchy,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2303:Edit.ToggleCompletionMode,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:24:Edit.LineEndExtend,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2400:Edit.NextHighlightedReference,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:28:Edit.PageUpExtend,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:282:Edit.SwitchtoFindinFiles,
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:286:Edit.SwitchtoReplaceinFiles,
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:30:Edit.PageDownExtend,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:31:Edit.ViewTop,
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:323:Edit.InsertSnippet,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:33:Edit.ViewBottom,
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:35:Edit.ScrollLineUp,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:356:ClassViewContextMenus.ClassViewProject.Debug.Startnewinstance,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:36:Edit.ScrollLineDown,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:412:Project.AddUserControl,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:47:Edit.MakeLowercase,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:48:Edit.MakeUppercase,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:5:Edit.TabLeft,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:53:Edit.GotoBrace,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:57:Edit.OvertypeMode,LC
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:600:Project.ShowAllFiles,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:61:Edit.LineCut,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:62:Edit.LineDelete,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:67:Edit.LineOpenAbove,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:76:Edit.ToggleBookmark,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:78:Edit.PreviousBookmark,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:90:Edit.SelectCurrentWord,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:91:Edit.WordDeleteToEnd,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:92:Edit.WordDeleteToStart,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:93:Edit.WordPrevious,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:94:Edit.WordPreviousExtend,D
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:96:Edit.WordNext,U
-{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:97:Edit.WordNextExtend,D
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:12291:Edit.EditQuery,
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:16389:View.SendtoMicrosoftOutlook,
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:16417:View.OpenSelectioninMicrosoftExcel,
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:16419:View.SendSelectiontoMicrosoftOutlook,
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20481:Team.ColumnOptions,LC
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20483:Team.GotoWorkItem,U
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20484:Edit.CreateCopyofWorkItem,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20486:Team.NewLinkedWorkItem,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:24577:Team.InsertClause,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:24578:Team.DeleteClauses,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:24579:Team.GroupClauses,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:4608:Team.NewWorkItemBug,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:4625:Edit.RefreshWorkItem,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8193:Team.Refresh,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8200:Team.NewFolder,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8208:TeamFoundationContextMenus.WorkItems.NewQuery,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8209:Team.NewQuery,PM
-{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8224:TeamFoundationContextMenus.QueriesSection.AddtoMyFavorites,PM
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:2457:TestExplorer.NextGroupBy,LC
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:4096:TestExplorer.GroupBy,LC
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:512:TestExplorer.ShowTestExplorer,LC
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:768:TestExplorer.OpenTest,U
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:784:TestExplorer.RunAllTests,D
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:785:TestExplorer.RunSelectedTests,D
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:801:TestExplorer.DebugSelectedTests,D
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:816:TestExplorer.CancelTests,D
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:836:TestExplorer.RepeatLastRun,D
-{1E198C22-5980-4E7E-92F3-F73168D1FB63}:841:TestExplorer.ToggleRunTestsAfterBuild,D
-{23D49123-60AC-4D7E-939A-E01A4E176BEE}:7:Team.ConnecttoTeamFoundationServer,LC
-{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:256:Project.ManageNuGetPackages,D
-{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:512:Tools.ManageNuGetPackagesforSolution,D
-{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:768:ProjectandSolutionContextMenus.Solution.EnableNuGetPackageRestore,D
-{2A8866DC-7BDE-4DC8-A360-A60679534384}:2:File.OpenfromSourceControl,U
-{2A8866DC-7BDE-4DC8-A360-A60679534384}:258:Edit.MoveSelectedLinesUp,D
-{2A8866DC-7BDE-4DC8-A360-A60679534384}:259:Edit.MoveSelectedLinesDown,D
-{2A8866DC-7BDE-4DC8-A360-A60679534384}:4:Edit.PeekDefinition,U
-{3174FE63-FB93-4A3A-82FD-4036F45CB1C2}:256:EditorContextMenus.CodeWindow.AddComment,D
-{3A680C5B-F815-414B-AA4A-0BE57DADB1AF}:512:Debug.ReAttach,D
-{3A680C5B-F815-414B-AA4A-0BE57DADB1AF}:515:Debug.ReAttachHistoryItem3,D
-{3EC04835-C2D5-4978-B9F9-4E62AD5384D2}:8448:File.Undounchanged,
-{4A79114A-19E4-11D3-B86B-00C04F79F802}:256:Help.ViewHelp,
-{4A9B7E50-AA16-11D0-A8C5-00A0C921A4D2}:1:View.NextError,U
-{4A9B7E50-AA16-11D0-A8C5-00A0C921A4D2}:598:Help.ShowTaskHelp,
-{5289D302-2432-4761-8C45-051C64BD00C4}:283:DebuggerContextMenus.DataTipsContext.Clear,D
-{5289D302-2432-4761-8C45-051C64BD00C4}:842:DebuggerContextMenus.WatchItemContext.RemoveExpression,D
-{5547E550-6D81-4F97-91ED-338926673EFA}:256:Build.EventsSolution,
-{5547E550-6D81-4F97-91ED-338926673EFA}:256:Build.vsSBE.Settings,
-{5570EAB3-9D8E-4577-95B6-604B88ACE02E}:289:NCrunch.Metrics,U
-{5570EAB3-9D8E-4577-95B6-604B88ACE02E}:304:NCrunch.Configuration,LC
-{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1056:File.TfsContextSceWildcardSearch,PM
-{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1136:File.TfsContextViewWith,PM
-{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1136:TeamFoundationContextMenus.SourceControlExplorer.TfsContextViewWith,PM
-{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1872:TeamFoundationContextMenus.ResultsList.TfsCopyWorkItemFullPath,PM
-{5AA8A2FD-A6CA-43FF-AB7B-79C4E55BCB68}:8194:Tools.SubMain.GhostDoc.DocumentThis,
-{5BF14E63-E267-4787-B20B-B814FD043B38}:11155:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextCheckIn,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:11157:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextCheckOutForEdit,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21002:File.TfsCheckOut,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21008:File.TfsUndoCheckout,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21009:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextUndoCheckout,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21010:File.TfsGetLatestVersion,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21011:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextGetLatestVersion,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21014:File.TfsCheckIn,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21016:File.TfsAddSolutionToSourceControl,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21026:File.TfsWorkspaces,LC
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21500:File.TfsGetSpecificVersion,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21501:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextGetSpecificVersion,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21506:File.TfsCompare,U
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21507:ClassViewContextMenus.ClassViewItem.TfsContextCompare,
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21508:File.TfsHistory,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21526:File.TfsChangeSourceControl,PM
-{5BF14E63-E267-4787-B20B-B814FD043B38}:21537:TfsShellIntegration.OpenFromScc,PM
-{5C199E63-E4F4-4B27-8955-75844A35066A}:14777:ProjectandSolutionContextMenus.Item.OpenContainingFolder,U
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4097:Build.QueueNewBuild,D
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4098:TeamFoundationContextMenus.BuildQueueExplorer.Stop,D
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4104:Build.ViewBuilds,U
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4105:TeamFoundationContextMenus.TeamExplorerBuildDefinition.EditBuildDefinition,D
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4113:TeamFoundationContextMenus.BuildExplorer.OpenDropFolder,U
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4115:TeamFoundationContextMenus.BuildExplorer.ReconcileWorkspace,
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4116:TeamFoundationContextMenus.TeamExplorerBuilds.Security,PM
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4119:TeamFoundationContextMenus.BuildExplorer.ViewChangeset,U
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4120:TeamFoundationContextMenus.BuildQueueExplorer.ViewShelveset,U
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4128:TeamFoundationContextMenus.TeamExplorerBuildsPageBuildDefinition.AddToFavorites,U
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4130:Build.ViewControllerQueue,U
-{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4131:TeamFoundationContextMenus.BuildExplorer.OpeninBrowser,U
-{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:257:Diff.PreviousDifference,U
-{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:258:Diff.NextDifference,U
-{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:513:Diff.SideBySideView,U
-{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:514:Diff.InlineView,U
-{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6401:EditorContextMenus.CodeWindow.ImplementInterface.ImplementInterface,D
-{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6419:EditorContextMenus.CodeWindow.OrganizeUsings.RemoveAndSort,D
-{5DD0BB59-7076-4C59-88D3-DE36931F63F0}:3000:Tools.ExtensionsandUpdates,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1036:Tools.Customize,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1060:Tools.AttachtoProcess,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1124:Window.NextDocumentWindowNav,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:150:File.Rename,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:17:Edit.Delete,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:179:Debug.StopDebugging,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:180:Debug.BreakAll,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:189:View.Refresh,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1915:Edit.FindAllReferences,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:199:View.OpenWith,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:213:Debug.AttachtoProcess,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:216:File.NewProject,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:217:File.OpenProject,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:219:File.CloseSolution,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:220:Project.AddNewItem,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:221:File.NewFile,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:222:File.OpenFile,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:223:File.Close,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:229:File.Exit,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:230:Edit.Replace,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:231:Edit.GoTo,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:233:View.FullScreen,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:234:View.SolutionExplorer,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:235:View.PropertiesWindow,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:237:View.Output,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:238:View.ObjectBrowser,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:243:Debug.CallStack,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:244:Project.AddExistingItem,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:245:Project.NewFolder,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:246:Project.SetasStartUpProject,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:248:Debug.StepInto,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:249:Debug.StepOver,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:250:Debug.StepOut,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:251:Debug.RunToCursor,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:252:Debug.AddWatch,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:254:Debug.QuickWatch,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:255:Debug.ToggleBreakpoint,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:256:Debug.DeleteAllBreakpoints,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:258:Debug.SetNextStatement,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:259:Debug.ShowNextStatement,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:261:View.Open,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:264:Tools.Options,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:265:Window.NewWindow,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:266:Window.Split,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:269:Window.NewVerticalTabGroup,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:271:Help.About,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:277:Edit.FindinFiles,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:278:Edit.ReplaceinFiles,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:279:Edit.GoToNextLocation,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:285:Window.Hide,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:288:Window.CloseToolWindow,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:289:Window.ActivateDocumentWindow,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:29:Edit.Redo,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:291:Window.Float,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:296:Debug.Restart,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:297:Tools.AddinManager,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:31:Edit.SelectAll,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:314:Debug.HexadecimalDisplay,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:318:Edit.ClearAll,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:320:View.ErrorList,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:328:Help.Samples,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:332:View.ViewDesigner,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:333:View.ViewCode,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:338:View.EditLabel,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:339:Debug.Exceptions,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:368:Debug.StartWithoutDebugging,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:370:Edit.FindNext,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:371:Edit.FindPrevious,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:372:Edit.FindNextSelected,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:373:Edit.FindPreviousSelected,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:375:EditorContextMenus.CodeWindow.Breakpoint.InsertBreakpoint,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:376:Debug.EnableBreakpoint,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:377:Help.F1Help,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:384:Window.MovetoNextTabGroup,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:393:Window.MovetoPreviousTabGroup,LC
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:397:ClassViewContextMenus.ClassViewMultiselectProjectreferencesItems.Properties,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:412:Project.ReloadProject,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:413:Project.UnloadProject,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:43:Edit.Undo,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:432:Debug.EvaluateStatement,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:595:Window.Windows,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:630:Tools.ExternalCommand1,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:631:Tools.ExternalCommand2,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:655:Edit.CycleClipboardRing,
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:657:Project.ProjectDependencies,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:658:Window.CloseDocumentWindow,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:70:Format.Italic,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:771:Build.ConfigurationManager,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:772:File.AddNewProject,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:773:File.AddExistingProject,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:809:View.NavigateBackward,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:810:View.NavigateForward,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:882:Build.BuildSolution,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:883:Build.RebuildSolution,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:885:Build.CleanSolution,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:886:Build.BuildSelection,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:887:Build.RebuildSelection,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:890:Build.Cancel,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:892:ClassViewContextMenus.ClassViewProject.Build,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:893:ClassViewContextMenus.ClassViewProject.Rebuild,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:895:ClassViewContextMenus.ClassViewProject.Clean,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:935:Edit.GoToDefinition,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:937:View.BrowseDefinition,U
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:946:Project.AddClass,D
-{5EFC7975-14BC-11CF-9B2B-00AA00573819}:97:Edit.Find,U
-{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8256:Resources.Strings,
-{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8257:Resources.Images,
-{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8258:Resources.Icons,
-{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8260:Resources.Files,
-{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget,D
-{74D21313-2AEE-11D1-8BFB-00A0C90F26F7}:4097:OtherContextMenus.Selection.Properties,D
-{7E0B03F9-66C3-40CD-B8AB-17C37849B355}:8324:Profiler.NewProfilerSession,D
-{9B529DC2-A902-4EEA-9DCE-9E348551ABA6}:775:Debug.DiagnosticsHub.Launch,D
-{9D55DA8F-2BE1-44DC-A94A-08154F98F634}:256:Debug.BreakonAllCLRExceptions,LC
-{ADC1BC7B-958B-4548-9F9F-10FC49099825}:8205:DirectedGraph.Zoom,
-{B85579AA-8BE0-4C4F-A850-90902B317571}:12291:Test.TestRuns,D
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13057:OtherContextMenus.TestResultsContextMenu.ViewTestResultsDetails,D
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13067:Test.TestResults.ViewAllResults,D
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13067:TestResults.ViewAllResults,D
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13068:Test.TestResults.ViewResultsbyResultList,D
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13085:OtherContextMenus.TestResultsContextMenu.AddRemoveColumns,LC
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13090:Test.TestResults.ImportTestResults,D
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13110:Test.TestResults.RunDetails,D
-{B85579AA-8BE0-4C4F-A850-90902B317571}:13110:TestResults.RunDetails,D
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:256:FortifyToolMenu.AnalyzeSourceCodeofSolution,D
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:257:FortifyToolMenu.AnalyzeComponentProject,D
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:260:FortifyToolMenu.GenerateReport,D
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:264:FortifyToolMenu.SaveAuditProject,D
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:265:FortifyToolMenu.ExportAuditProject,D
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:273:FortifyToolMenu.LoadSavedProject,D
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:279:FortifyToolMenu.Options,LC
-{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:291:FortifyToolMenu.OpenAuditProject,U
-{C0D88179-5D25-4982-BFE6-EC5FD59AC103}:784:Tools.PackageVisualizer,LC
-{C7547851-4E3A-4E5B-9173-FA6E9C8BD82C}:45:File.AddNewWebSite,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:16777728:Debug.Memory1,LC
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:16777984:Debug.Watch1,LC
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:257:Debug.Disassembly,LC
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:259:Debug.Registers,LC
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:260:Debug.Modules,LC
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:264:Debug.Output,LC
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:278:Debug.LocationToolbar.ProcessCombo,U
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:280:Debug.LocationToolbar.ThreadCombo,U
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:288:Debug.LocationToolbar.StackFrameCombo,U
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:290:Debug.DisableAllBreakpoints,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:293:Debug.TerminateAll,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:295:DebuggerContextMenus.AutosWindow.LoadSymbols,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:311:Debug.BreakatFunction,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:323:EditorContextMenus.CodeWindow.Breakpoint.BreakpointCondition,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:325:EditorContextMenus.CodeWindow.Breakpoint.BreakpointFilter,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:327:DebuggerContextMenus.AutosWindow.MakeObjectID,
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:32770:DebuggerContextMenus.StacksWindowShortcutMenu.ShowParameterValues,U
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:32773:DebuggerContextMenus.StacksWindowShortcutMenu.ShowModuleNames,U
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:32775:DebuggerContextMenus.StacksWindowShortcutMenu.ShowByteOffsets,U
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:329:DebuggerContextMenus.DataTipWindow.CopyExpression,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:330:DebuggerContextMenus.DataTipWindow.CopyValue,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:331:DebuggerContextMenus.AutosWindow.DeleteObjectID,
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:377:Debug.AddParallelWatch,D
-{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:4099:DebuggerContextMenus.BreakpointsWindow.Delete,D
-{CBE1FEF1-D8E2-4041-A0A8-25D23EDA02DD}:258:OtherContextMenus.ErrorList.SuppressMessage.InSource,D
-{CBE1FEF1-D8E2-4041-A0A8-25D23EDA02DD}:259:OtherContextMenus.ErrorList.SuppressMessage.InSuppressionFile,D
-{CD203EB7-5920-47F9-8927-1804E7498464}:1792:OtherContextMenus.ParallelWatchWindowShortcutMenu.ClearAllWatches,D
-{CE99DB75-E6A6-41C9-9091-434390724FAC}:256:ClassViewContextMenus.ClassViewProject.RunStyleCop,D
-{CE99DB75-E6A6-41C9-9091-434390724FAC}:304:EditorContextMenus.CodeWindow.RunStyleCop,D
-{CE99DB75-E6A6-41C9-9091-434390724FAC}:352:Tools.RunStyleCopRescanAll,D
-{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:10:Window.MoveToMainDocumentGroup,LC
-{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:36:SolutionExplorer.SyncWithActiveDocument,LC
-{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:40:SolutionExplorer.PendingChangesFilter,LC
-{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17680:Team.ConnecttoTeamFoundationServer,PM
-{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17681:Team.DisconnectfromTeamFoundationServer,PM
-{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17686:Team.Connect,PM
-{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17714:Team.ProcessTemplateManager,
-{E8B06F44-6D01-11D2-AA7D-00C04F990343}:207:View.URL,U
-{FB41A027-57C5-4F83-9508-C326DCE6D943}:10386:ClassDiagram.AdjustShapesWidth,D
-{FB87333B-16C8-400E-BC8F-F6B890410582}:3:XML.StartXSLTWithoutDebugging,D
-{FB87333B-16C8-400E-BC8F-F6B890410582}:5:XML.StartXSLTDebugging,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:12289:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsManageWorkspaces,
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:12306:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextSwitchViewLayout,LC
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4612:View.TfsSourceControlExplorer,LC
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4646:File.TfsAnnotate,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4720:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.TfsContextPendingCheckinsPendingCheckinsView,LC
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4721:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.TfsContextPendingCheckinsPendingCheckinsUndo,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4738:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.Compare.TfsContextPendingCheckinsCompareWithLatestVersion,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4785:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryCompare,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4787:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryDetails,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4791:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryRollbackChangesInThisVersion,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4792:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryTrackChangeset,
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4793:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryFolderDiff,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4866:EditorContextMenus.CodeWindow.SourceControl.TfsAnnotateViewHistory,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4870:EditorContextMenus.CodeWindow.SourceControl.TfsAnnotateAnnotateThisLine,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:5251:TeamFoundationContextMenus.SourceControlPendingChangesConflicts.Compare.TfsContextPendingCheckinsConflictCompareLocalToServer,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6176:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerView,LC
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6182:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerDelete,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6184:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerRename,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6187:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerAdd,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6188:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerShelvePendingChanges,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6191:File.TfsContextExplorerBranch,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6192:File.TfsContextExplorerMerge,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6193:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerMove,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6195:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerNewFolder,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6200:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerCloak,LC
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6202:TeamFoundationContextMenus.SourceControlExplorer.Advanced.TfsContextExplorerUnmap,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6203:File.TfsViewBranchHierarchy,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6320:TeamFoundationContextMenus.Mappings.TfsContextMappingsCopy,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6322:TeamFoundationContextMenus.Mappings.TfsContextMappingsPaste,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6352:TeamFoundationContextMenus.PendingChangesPageChangestoExclude.TfsContextPendingChangesPageIncludeChanges,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6353:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageExcludeChanges,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6354:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageAnnotate,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6356:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageUndo,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6357:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageView,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6358:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageCompareWithWorkspaceVersion,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6359:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageCompareWithLatestVersion,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6360:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageCompareWithPreviousVersion,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6361:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageHistory,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6362:TeamFoundationContextMenus.PendingChangesPageWorkItems.TfsContextPendingChangesPageRemoveWorkItem,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6385:TeamFoundationContextMenus.MyWorkPageInProgress.AddtoInProgress,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8208:TeamFoundationContextMenus.FindShelvesetsPageResults.TfsContextFindShelvesetsPageViewShelvesetDetails,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8210:TeamFoundationContextMenus.FindShelvesetsPageResults.TfsContextFindShelvesetsPageUnshelve,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8224:TeamFoundationContextMenus.MergeContextMenu.AcceptMerge,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8256:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsContextPendingChangesFindShelvesets,D
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8261:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextPendingChangesFilterNone,U
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8262:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextPendingChangesFilterBySolution,U
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8263:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextPendingChangesFilterByText,U
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8264:TeamFoundationContextMenus.WorkItemActionLink.TfsContextPendingChangesPageWorkItemActionLinkAssociate,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8265:TeamFoundationContextMenus.WorkItemActionLink.TfsContextPendingChangesPageWorkItemActionLinkResolve,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8267:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageExcludeUnselectedChanges,PM
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8268:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageOpenInSCE,U
-{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8269:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsContextPendingChangesOpenSCE,LC
-About,
-About KaVE,
-About Microsoft Visual Studio,
-AboutBox,
-Accept Merge,
-Add,
-Add Comment,D
-Add Items to Folder...,D
-Add Parallel Watch,D
-Add Reference...,D
-Add Solution to Source Control...,PM
-Add to Favorites,
-Add to In Progress,
-Add to My Favorites,
-Add Watch,D
-Add-in Manager...,LC
-Add/Remove Columns...,LC
-Adjust Shapes Width,
-AltEnter,D
-Analyze Project DAFTest,
-Analyze Source Code of Solution,U
-AnalyzeReferences,U
-AnalyzeReferences.RemoveSelected,D
-Annotate,
-Associate,
-Attach to Process...,D
-Back,
-Backlog Item,PM
-BlockComment,D
-Bookmarks.GoToBookmark1,U
-Bookmarks.GoToBookmark2,U
-Bookmarks.ToggleBookmark1,D
-Bookmarks.ToggleBookmark2,D
-Bookmarks.ToggleBookmark7,D
-Branch...,PM
-Break All,D
-Break In Current Document,D
-Break on All CLR Exceptions,D
-Browse Definition,U
-Bug,PM
-Build,D
-Build Selection,D
-Build Solution,D
-BuildArchitectureGraph,D
-Builds,U
-Call Stack,U
-Cancel,
-Change Source Control...,PM
-Changeset Details,
-Changeset Details...,
-ChangeSignature,
-Check _In,PM
-Check In Pending Changes,PM
-Check In Pending Changes...,PM
-Check In...,PM
-Check Out for Edit...,D
-Class,D
-Class...,D
-Clean,D
-Clean Solution,D
-CleanupCode,D
-Clear,
-Clear All,
-Clear All Panes,
-Clear All Watches,
-Clear search,
-Cloak...,
-Close,U
-Close All But This,U
-Close All Documents,U
-Close Audit Project ...,U
-Close Solution,U
-Collapse All,LC
-Collapse to Definitions,LC
-Column Options...,LC
-Comment Selection,D
-Compare Local to Server,PM
-Compare with Latest Version,PM
-Compare with Previous Version,PM
-Compare with Unmodified Version,PM
-Compare with Workspace Version,PM
-Compare...,D
-CompleteCodeBasic,D
-CompleteCodeSmart,D
-CompleteCodeTypeName,D
-Condition...,
-Configuration Manager...,
-Configuration...,
-Connect,
-Connect to Team Foundation Server...,PM
-Connect to Team Projects,PM
-Connect to Team Projects...,PM
-Continue,D
-Copy,D
-Copy Expression,D
-Copy Full Path,D
-Copy Value,D
-Create Copy of Work Item...,D
-Create GUID,D
-Create New File...,D
-Cut,D
-Debug Selected Tests,D
-Debug Unit Tests,D
-Decompiled Sources,U
-Delete,D
-Delete All Breakpoints,D
-Delete Breakpoint,D
-Delete Clauses,D
-Delete Object ID,D
-Dev,
-DflToolsNRules.DaemonStages.CSharp.SpecifyJustificationBulbItem,
-Disable All Breakpoints,D
-Disable Breakpoint,D
-Disconnect from Team Foundation Server,PM
-Documents,
-DuplicateText,D
-Edit Build Definition,D
-Edit Build Definition...,D
-Edit Query,D
-Edit with Microsoft Test Manager,D
-EditSettingsLayerOptions,LC
-Enable Breakpoint,D
-Enable NuGet Package Restore,D
-EncapsulateField,D
-Error Lookup,
-ErrorsView.AnalysisOnOff,LC
-ErrorsView.IgnoreIssuesPopup,LC
-ErrorsView.PauseContinue,
-Events Solution,
-Exceptions...,
-Exclude,D
-Exclude From Project,D
-Exclude Unselected,D
-Existing Item...,D
-Existing Project...,D
-Exit,
-Export Audit Project ...,
-ExtensionManager,LC
-Extensions and Updates...,LC
-ExtractInter,D
-ExtractMethod,D
-Feedback exportieren...,
-Feedback Manager,
-File...,
-Filter...,
-Find by Wildcard...,U
-Find Code Dependent on Module,U
-Find in Files,U
-Find Results,U
-Find Shelvesets,U
-Find Symbols External to Scope,U
-Find Usages,U
-FindDependentCode,U
-FindReferencedCode,U
-FindUsages,U
-FindUsages.Update,U
-FindUsagesAdvanced,U
-Float,
-Format Document,D
-Format Selection,D
-Forward,
-Full Screen,LC
-Generate,D
-Generate Report ...,
-GenerateFileBesides,
-Get Latest Version,D
-Get Latest Version (Recursive),D
-Get Specific Version...,D
-Go to Declaration,U
-Go To Definition,U
-Go to Implementation,U
-Go to Next Message,
-Go to Work Item...,
-GotoBrace,
-GotoDeclaration,U
-GotoDeclarationShort,U
-GotoFile,U
-GotoFileMember,U
-GotoImplementation,U
-GotoImplementationShort,U
-GotoNextErrorInSolution,U
-GotoNextHighlight,U
-GotoNextMethod,U
-GotoPrevHighlight,U
-GotoRecentFiles,U
-GotoSymbol,U
-GotoType,U
-Group By Project,
-Group Clauses,
-Hexadecimal Display,
-Hide,
-Hierarchies,
-High,
-Home,
-HubButton,
-Implement Interface,D
-Import Test Results,
-ImportSettingsFromFile,LC
-In Source,
-In Suppression File,
-Include,
-Include In Project,D
-InjectExistingFileLayerIntoInjectedLayersHost,
-Inline mode,
-InlineVariable,D
-Insert Clause,
-Insert File As Text...,D
-Insert Snippet...,D
-InspectionResults.Update,U
-InspectThis,U
-Internet Explorer,
-IntroduceField,D
-IntroduceVariable,D
-IntroParameter,D
-Italic,D
-JetBrains.ReSharper.Features.StructuralSearch.CustomPatternQuickFix,D
-JetBrains.ReSharper.InplaceRefactorings.DoInplaceRefactoringContextActionBase+MyBulbItem,D
-JetBrains.ReSharper.Intentions.Bulk.BulkCodeCleanupActionBuilderBase+CodeCleanupInFileBulbAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.AddNamedArgumentAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.AutomaticToBackingFieldAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.BackingFieldToAutomaticAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.CatchToCatchExceptionAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.ChangeModifierAction+MyBulbAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.CheckParamNullAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.CheckReferenceNullAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.CoalescingToTernaryAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.CreateDerivedTypeAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.CreateOverloadAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.CSharpInitializeFieldAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.ForeachToForAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.FormatString.AddFormatItemAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.FromLinqContextAction+TransformInvocationBulbItem,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.IfAndMergeAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.IntroduceVariableAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.InvertIfAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.LambdaExpressionToReturnAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.LambdaToAnonymousAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.Misc.NegateAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.MoveToOuterScopeAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.MoveTypeToAnotherFileAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.NotifyPropertyChangeAction+NotifyPropertyChangeItem,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.ObjectInitializerToAssignmentsAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.Query.QueryToExtensionMethodActionItem,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.RemoveBracesAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.RemoveParenthesisAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.RemoveRegionAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.SplitAndInIfAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.SplitDeclarationAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.TernaryToIfAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.ToNamedMethodItem,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.TypeToVarAction,D
-JetBrains.ReSharper.Intentions.CSharp.ContextActions.VarToTypeAction,D
-JetBrains.ReSharper.Intentions.CSharp.DisableWarning.DisableByPragmaWarningAction,D
-JetBrains.ReSharper.Intentions.CSharp.DisableWarning.DisableOnceByCommentWarningAction,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.AddDocCommentFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.AddTypeArgListFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CastInAssignmentFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CastInInitializerFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CheckNullFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ChooseTypeFix+ChooseTypeFixItem,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateClassFromNewItem,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateFieldFromUsageAction,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateGetSetPropertyFromUsageItem,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateLocalVarFromUsageAction,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateMethodForDelegateAction,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateMethodFromUsageAction,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateParameterFromUsageAction,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateParameterFromUsageAndPullAction,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.EnumerateToArrayFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.EnumerateToListFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.FixFloatingPointComparingFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.FixStaticQualifierFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.GenerateConstructorFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.GenerateSwitchLabelsFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToCoalescing7Fix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernary2Fix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernary3Fix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernary4Fix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernaryFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ImplementMemberFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.IntroduceVariableFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.InvertIfFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.InvokeAsExtensionMethodFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.JoinDeclarationAndAssignmentFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.LinqTools.ConvertForeachFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.LinqTools.ConvertForeachPartlyFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.MakeNewFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.MoveToInnerScopeFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.OptimizeImportsFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReferenceModuleFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveAccessorModifiersFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveArgumentListFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveArgumentNameFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveAsFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveAssignmentFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveCastFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveFieldInitializerFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveInitializerFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveParamTypeSpecificationFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantArrayTypeFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantCatchClauseFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantDelegateCallFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantElseFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantEmptySwitchBranchFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantQualifierFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantTypeArgsFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveToStringFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveUnreachableCodeFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RenameLocalWrongRefFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.RenameParameterFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReplaceConditionWithRespectiveBranchFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReplaceWithBoolConstFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.SimplifyConditionalOperatorFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.SpecifyACultureInStringConversionExplicitlyFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToAutoProperty2Fix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToAutoPropertyFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToLambdaExpressionFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToMethodGroupFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToObjectCreationFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.UsageChecking.CSharpToConstFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.UsageChecking.InitializeAutoPropertyFromContructorsFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseBaseReturnTypeFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseCollectionInitializerFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseObjectInitializerFix,D
-JetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseVarFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.AddParameterFixBase+BulbItem,D
-JetBrains.ReSharper.Intentions.QuickFixes.ChangeTypeFixItem,D
-JetBrains.ReSharper.Intentions.QuickFixes.CheckNamespaceQuickFix+MoveToNamespaceAction,D
-JetBrains.ReSharper.Intentions.QuickFixes.ImportTypeItem,D
-JetBrains.ReSharper.Intentions.QuickFixes.MakeAbstractFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.MakeStaticFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.Naming.ChangeNameFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.ReferenceModuleAndTypeFixItem,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.FixParameterTypeFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.FixReturnTypeFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.InitializeAutoPropertyFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.InitializeFromConstructorsFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.IntroduceAutoPropertyFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.IntroduceFieldFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.MakeClassSealedFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.MakeReadonlyFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.MarkUsedImplicitlyFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.RemoveUnusedElementFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.RemoveUnusedVarFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.ToStaticFix,D
-JetBrains.ReSharper.Intentions.QuickFixes.VisibilityFixItem,D
-JetBrains.ReSharper.Intentions.SurroundItems.SurroundWithAction,D
-KaVE.VsFeedbackGenerator.About,
-KaVE.VsFeedbackGenerator.Options,
-KaVE.VsFeedbackGenerator.SessionManager,
-Load Symbols,
-LocateInSolutionExplorer,U
-Make Object ID,D
-Make Uppercase,D
-Manage NuGet Packages for Solution...,D
-Manage NuGet Packages...,D
-Manage Workspaces...,
-Meine WorkItems,PM
-Memory 1,
-Merge...,D
-Metrics...,U
-Modules,U
-Move,
-Move to Main Document Group,
-Move to Next Tab Group,
-Move to Previous Tab Group,
-Move...,
-MoveDown,
-MoveUp,
-My Sprint,PM
-My Work,PM
-My workitems,PM
-Navigate Backward,U
-Navigate Forward,
-NavigateBackwardApp,
-NavigateToDecompiledSources,U
-NavigateToPdb,U
-New Code Review,PM
-New Folder,D
-New Item...,D
-New Linked Work Item...,D
-New Profiler Session,U
-New Project...,D
-New Query,PM
-New Vertical Tab Group,
-New Web Site...,D
-New Window,
-Next Conflict (F9),U
-Next difference,U
-Next Difference (F8),U
-Not Closed (Assigned to Me),PM
-Object Browser,U
-OccurenceBrowser.Filter.ShowOnlyWrite,
-OnPremise,
-Open,
-Open Containing Folder,U
-Open Drop Folder,U
-Open File...,U
-Open Folder in File Explorer,U
-Open Folder in Windows Explorer,U
-Open from Source Control...,U
-Open in Browser,U
-Open in Source Control Explorer,U
-Open Project...,U
-Open Selection in Microsoft Excel,U
-Open Source Control Explorer,U
-Open Test,U
-Open With...,U
-Optionen,LC
-Options ...,LC
-Options...,LC
-Output,U
-P169565E0,
-Package Visualizer,U
-ParameterInfo.Show,U
-PART_MaxSecond,
-Paste,D
-PasteMultiple,D
-Peek Definition,U
-PeekDefinition,U
-Pending Changes,U
-Performance and Diagnostics,U
-Previous Bookmark,U
-Previous Conflict (Shift+F9),U
-Previous difference,U
-Process Template Manager...,
-Process:,
-Project Dependencies...,U
-Project...,
-Project/Solution...,
-Promote to Document,
-Properties,D
-Publish View,
-PullUp,D
-Queue New Build...,D
-Quick Find,U
-Quick Replace,D
-QuickWatch...,
-r,
-Rebuild,D
-Rebuild DaLogFileView,D
-Rebuild DaLogFileView_Test,D
-Rebuild Solution,D
-Reconcile Workspace...,
-Redo,D
-RefactorThis,D
-Reformat Selection,D
-Refresh,D
-Refresh (F5),D
-Reload Project,D
-Remove,D
-Remove and Sort,D
-Remove Expression,
-Remove Mapping...,
-Remove Split,
-Remove Work Item,
-Rename,D
-Repeat Last Run,D
-Reports,
-ReSharper_UnitTest_DebugContext,
-ReSharper_UnitTest_RunContext,
-Resolve,
-Restart,
-Retain Indefinitely,
-Rollback Entire Changeset,
-Run All Tests from Solution,D
-Run Details,
-Run Selected Tests,D
-Run StyleCop,U
-Run StyleCop (Rescan All),U
-Run Tests After Build,D
-Run Unit Tests,D
-Samples,
-Save All,D
-Save All my open BacklogItems [Results],D
-Save All not closed and assigned to me [Results],D
-Save Audit Project,D
-Save Closed (Assigned to Me) [Results],D
-Save packages.config,D
-Search,
-Security...,
-Send Selection to Microsoft Outlook,
-Send to Microsoft Outlook,
-Set as StartUp Project,LC
-Set Next Statement,
-Set StartUp Projects...,
-Settings,
-She_lve,
-Shelve Pending Changes,
-Show All,
-Show All Files,
-Show Byte Offsets,
-Show Code Coverage Results,
-Show Error Help,
-Show Filter,
-Show Module Names,
-Show Next Statement,
-Show Parameter Values,
-Show Solution Changes,
-ShowEnterLicense,
-ShowFindResults,
-ShowLiveTemplates,
-ShowOptions,
-ShowSettingsLayersDialog,
-ShowTodoExplorer,
-ShowUnitTestExplorer,
-ShowUnitTestSessions,
-Side-by-side mode,
-SilentCleanupCode,D
-Solution Configurations,D
-Solution Explorer,
-Solution Platforms,
-Source Control Explorer,
-Sources from Symbol Files,
-Split,
-Start,D
-Start Debugging,
-Start new instance,D
-Start Page,
-Start search,
-Start XSLT Debugging,
-Start XSLT Without Debugging,D
-Step Out,
-Step Over,
-Stop,
-Stop Build,
-Stop Debugging,D
-StructuralSearch.FindSimilarCode,
-StructuralSearch.Search,
-StyleCop.ReSharper800.BulbItems.Layout.SA1500CurlyBracketsForMultiLineStatementsMustNotShareLineBulbItem,
-StyleCop.ReSharper800.BulbItems.Layout.SA1506DocumentationHeaderLineMustNotBeFollowedByABlankLineBulbItem,
-StyleCop.ReSharper800.BulbItems.Layout.SA1507CodeMustNotContainMultipleBlankLinesInARowBulbItem,
-StyleCop.ReSharper800.BulbItems.Ordering.MoveUsings,
-StyleCop.ReSharper800.BulbItems.Ordering.OrderUsingsBulbItem,D
-StyleCop.ReSharper800.BulbItems.Readability.FormatLineBulbItem,
-StyleCop.ReSharper800.QuickFixes.Framework.ChangeStyleCopRuleAction,
-Submit _Request,
-SurroundWith,
-Suspend,
-Switch to Find in Files,
-Switch to List View,
-Switch to Replace in Files,
-Switch to Tree View,
-Sync with Active Document,
-Tabify,
-Template1,
-Terminate All,
-Test Explorer,
-Test Runs,
-TestClass,
-TextControl.Backspace,D
-TextControl.Copy,D
-TextControl.Cut,D
-TextControl.Delete,D
-TextControl.Down,U
-TextControl.Down.Selection,D
-TextControl.End,
-TextControl.Enter,D
-TextControl.Home,U
-TextControl.Home.Selection,
-TextControl.Left,U
-TextControl.Left.Selection,D
-TextControl.PageDown,U
-TextControl.PageDown.Selection,
-TextControl.PageUp,U
-TextControl.PageUp.Selection,
-TextControl.Paste,D
-TextControl.Right,U
-TextControl.Right.Selection,D
-TextControl.SelectAll,D
-TextControl.Tab,D
-TextControl.Up,U
-TextControl.Up.Selection,D
-Thread:,
-Toggle All Outlining,
-Toggle Bookmark,
-Toggle Completion Mode,
-Toggle Outlining Expansion,
-Toggle Word Wrap,
-Toggle word wrap,
-Track Changeset,
-TreeModelBrowser.CollapseAll,
-TreeModelBrowser.ExpandAll,
-TreeModelBrowser.NextOccurence,
-TypeHierarchy.Browse,
-TypeHierarchy.Update,
-Uncomment Selection,D
-Undo,D
-Undo Pending Changes...,D
-Undo...,D
-Unit Test Sessions,
-Unit Tests,
-UnitTest.RunSolution,
-UnitTestExplorer.Refresh,D
-UnitTestSession.Abort,
-UnitTestSession.AppendTests,
-UnitTestSession.RemoveSelectedNodes,
-UnitTestSession.RunAllAction1,
-UnitTestSession.TrackRunningTest,
-unknown button,
-Unload Project,U
-Unshelve,
-Untabify,
-User Control...,
-View,
-View All Results,
-View Builds,
-View Call Hierarchy,
-View Changeset...,
-View Code,U
-View Controller Queue,
-View Designer,
-View Help,
-View Hierarchy,
-View History,
-View Log,U
-View My Builds,
-View Project Dependencies,
-View Results by Result List,
-View Shelveset Details,
-View Shelveset...,
-View Summary,
-View Test Results Details,
-View With...,U
-Watch 1,
-WCF Service Configuration Editor,
-Windows...,
-With Latest Version...,
-WordDeleteToEnd,D
-WordDeleteToStart,D
-WordNext,U
-WordNextExtend,D
-WordPrev,U
-WordPrevExtend,D
-Work Items,
-Workspaces...,
+Command Id;Activity{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:278:Debug.LocationToolbar.ProcessCombo;DTextControl.Backspace;ETextControl.Enter;EUn-Minify document;E{E396B698-E00E-444B-9F5F-3DCB1EF74E61}:4185:EditorContextMenus.CodeWindow.WebEssentials.UnMinifydocument;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:17:Edit.Delete;E{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:280:Debug.LocationToolbar.ThreadCombo;DUn-minify;E{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:288:Debug.LocationToolbar.StackFrameCombo;D{F718CA06-CF4F-4A0C-9106-E79E9EE5E7CD}:16:OtherContextMenus.JSONContext.Unminify;ETextControl.Up;NTextControl.Down;NTextControl.Left;NTextControl.Right;NHTML Encode;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:23:Edit.LineEnd;N{E396B698-E00E-444B-9F5F-3DCB1EF74E41}:258:WebEssentials.HTMLEncode;ELabel With Local Scope;O{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:19:Edit.LineStart;N{1E58696E-C90F-11D2-AAB2-00C04F688DDE}:6:VSLabelAddIn.Connect.LabelWithLocalScope;O{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:103:Edit.SelectionCancel;ETextControl.Down.Selection;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:20:Edit.LineStartExtend;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6359:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageCompareWithLatestVersion;VCCheck _In;VCPending Changes;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:24:Edit.LineEndExtend;E{5BF14E63-E267-4787-B20B-B814FD043B38}:21010:File.TfsGetLatestVersion;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6356:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageUndo;VCTextControl.Left.Selection;ECompare...;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21508:File.TfsHistory;VCSource Control Explorer;VCTextControl.Right.Selection;E{5BF14E63-E267-4787-B20B-B814FD043B38}:21011:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextGetLatestVersion;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6358:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageCompareWithWorkspaceVersion;VCWith Latest Version...;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:96:Edit.WordNext;NTextControl.Up.Selection;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:93:Edit.WordPrevious;N{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4738:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.Compare.TfsContextPendingCheckinsCompareWithLatestVersion;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21507:ClassViewContextMenus.ClassViewItem.TfsContextCompare;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6353:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageExcludeChanges;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:97:Edit.WordNextExtend;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:94:Edit.WordPreviousExtend;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4785:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryCompare;VC{B371C497-6D81-4B13-9DB8-8E3E6ABAD0C3}:786:TSqlEditorDatabaseCombo;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6192:File.TfsContextExplorerMerge;VCUndo Pending Changes...;VCTextControl.Tab;EFind Shelvesets;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8256:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsContextPendingChangesFindShelvesets;VCWordNext;NWordPrev;NWordPrevExtend;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8264:TeamFoundationContextMenus.WorkItemActionLink.TfsContextPendingChangesPageWorkItemActionLinkAssociate;VCCheck In...;VCInclude;VCWordNextExtend;Eunknown button;O{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6352:TeamFoundationContextMenus.PendingChangesPageChangestoExclude.TfsContextPendingChangesPageIncludeChanges;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6360:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageCompareWithPreviousVersion;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:11157:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextCheckOutForEdit;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21501:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextGetSpecificVersion;VCCompare with Previous Version;VCConnect to Team Projects;VCShe_lve;VCHome;N{5BF14E63-E267-4787-B20B-B814FD043B38}:11155:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextCheckIn;VCAccept Merge;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8224:TeamFoundationContextMenus.MergeContextMenu.AcceptMerge;VC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:397:ClassViewContextMenus.ClassViewMultiselectProjectreferencesItems.Properties;E{5BF14E63-E267-4787-B20B-B814FD043B38}:21002:File.TfsCheckOut;VCProperties;E{5BF14E63-E267-4787-B20B-B814FD043B38}:21500:File.TfsGetSpecificVersion;VC{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8193:Team.Refresh;VC{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:258:Diff.NextDifference;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4612:View.TfsSourceControlExplorer;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:15:Edit.DocumentStart;N{5BF14E63-E267-4787-B20B-B814FD043B38}:21506:File.TfsCompare;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21014:File.TfsCheckIn;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:92:Edit.WordDeleteToStart;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4787:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryDetails;VCTextControl.Home;NChangeset Details;VCNext Conflict (F9);VC_Unshelve;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:91:Edit.WordDeleteToEnd;EPending Changes (VS2010 Style);VC{5BF14E63-E267-4787-B20B-B814FD043B38}:11155:ClassViewContextMenus.ClassViewProject.TfsContextCheckIn;VCCheck In Pending Changes;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6361:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageHistory;VC{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:40:SolutionExplorer.PendingChangesFilter;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4721:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.TfsContextPendingCheckinsPendingCheckinsUndo;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6182:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerDelete;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6354:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageAnnotate;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6176:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerView;VCExclude Unselected;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8267:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageExcludeUnselectedChanges;VCDuplicateText;ECloak...;VCConnect to Team Projects...;VCTextControl.PageDown;NUnshelve;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8210:TeamFoundationContextMenus.FindShelvesetsPageResults.TfsContextFindShelvesetsPageUnshelve;VCResolve;VCNext Difference (F8);VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6187:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerAdd;VCView Shelveset...;VC{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4120:TeamFoundationContextMenus.BuildQueueExplorer.ViewShelveset;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6200:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerCloak;VC{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1136:File.TfsContextViewWith;VCCheck In Pending Changes...;VCOpen in Source Control Explorer;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8268:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageOpenInSCE;VCConnect to Team Foundation Server...;VC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:31:Edit.SelectAll;EApply Label...;VCTextControl.PageUp;N{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6194:TeamFoundationContextMenus.SourceControlExplorer.Advanced.TfsContextExplorerApplyLabel;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4870:EditorContextMenus.CodeWindow.SourceControl.TfsAnnotateAnnotateThisLine;VC{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17680:Team.ConnecttoTeamFoundationServer;VCRemove Mapping...;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6202:TeamFoundationContextMenus.SourceControlExplorer.Advanced.TfsContextExplorerUnmap;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4786:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryView;VCDelete Shelveset;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8209:TeamFoundationContextMenus.FindShelvesetsPageResults.TfsContextFindShelvesetsPageDeleteShelveset;VCView Shelveset Details;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:61:Edit.LineCut;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:17:Edit.DocumentEnd;N{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8208:TeamFoundationContextMenus.FindShelvesetsPageResults.TfsContextFindShelvesetsPageViewShelvesetDetails;VCWordDeleteToStart;EPrevious Conflict (Shift+F9);VC{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1136:TeamFoundationContextMenus.SourceControlExplorer.TfsContextViewWith;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21526:File.TfsChangeSourceControl;VCTextControl.End;N{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4736:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.Compare.TfsContextPendingCheckinsCompareWithPreviousVersion;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6200:TeamFoundationContextMenus.SourceControlExplorer.Advanced.TfsContextExplorerCloak;VCCompare with Unmodified Version;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6198:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerFolderDiff;VCInline mode;VC{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:514:Diff.InlineView;VCSide-by-side mode;VC{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:513:Diff.SideBySideView;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4646:File.TfsAnnotate;VCView Changeset...;VCFind Label...;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21028:File.TfsFindLabel;VCRollback Entire Changeset;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6195:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerNewFolder;VCFind Changesets...;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:5:Edit.TabLeft;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4653:File.TfsFindChangesets;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6184:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerRename;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21537:TfsShellIntegration.OpenFromScc;VC{2A8866DC-7BDE-4DC8-A360-A60679534384}:2:File.OpenfromSourceControl;VCMove...;VCAssociate;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6193:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerMove;VCGet This Version;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4789:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryGetThisVersion;VCFind by Wildcard...;VC{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1056:File.TfsContextSceWildcardSearch;VCWith Unmodified Version...;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4793:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryFolderDiff;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8261:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextPendingChangesFilterNone;VCClass...;EBack;N{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4791:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryRollbackChangesInThisVersion;VC{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4119:TeamFoundationContextMenus.BuildQueueExplorer.ViewChangeset;VCCollapse All;LC{5D4C0442-C0A2-4BE8-9B4D-AB1C28450942}:257:Diff.PreviousDifference;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6196:TeamFoundationContextMenus.SourceControlExplorer.Advanced.TfsContextExplorerProperties;VCResolve Conflicts;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8257:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsContextPendingChangesResolveConflicts;VCPrevious Difference (Shift+F8);VCShow Solution Changes;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8262:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextPendingChangesFilterBySolution;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4737:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.Compare.TfsContextPendingCheckinsCompareWithWorkspaceVersion;VCOpen from Source Control...;VCMap to Local Folder...;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6199:TeamFoundationContextMenus.SourceControlExplorer.Advanced.TfsContextExplorerSetLocalFolder;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8737:TeamFoundationContextMenus.ShelvesetDetailsPageMoreLink.TfsContextShelvesetDetailsOpenInBrowser;VCWith Previous Version...;VCBranch...;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6191:File.TfsContextExplorerBranch;VCAdd Solution to Source Control...;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21016:File.TfsAddSolutionToSourceControl;VCUnshelve Changes...;VC{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4118:TeamFoundationContextMenus.BuildExplorer.UnshelveChanges;VCAdd files to Source Control;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:11162:File.TfsAddFilesToSourceControl;VCChangeset Details...;VC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:338:View.EditLabel;E{5BF14E63-E267-4787-B20B-B814FD043B38}:21011:ClassViewContextMenus.ClassViewProject.TfsContextGetLatestVersion;VCMerge;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4866:EditorContextMenus.CodeWindow.SourceControl.TfsAnnotateViewHistory;VCWith Workspace Version (sub_C3)...;VCRefresh (F5);E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:5378:TeamFoundationContextMenus.Label.TfsLabelHistory;VCCompare Files...;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6224:TeamFoundationContextMenus.FolderDifference.TfsContextFolderDiffCompareFiles;VC{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8200:Team.NewFolder;VCOpen Source Control Explorer;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8269:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsContextPendingChangesOpenSCE;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4720:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.TfsContextPendingCheckinsPendingCheckinsView;VCUndo All;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8258:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsContextPendingChangesUndoAll;VCShelve Pending Changes;VCCompare Local to Server;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:36:Edit.ScrollLineDown;NRollback...;VCHistory;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4848:TeamFoundationContextMenus.SourceControlPendingChangesConflicts.TfsContextPendingCheckinsConflictHistory;VCWordDeleteToEnd;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6373:TeamFoundationContextMenus.MyWorkPageUnfinishedWork.TfsContextMyWorkPageUnshelveTask;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6363:TeamFoundationContextMenus.PendingChangesPageWorkItems.TfsContextPendingChangesPageOpenWorkItem;VC{000AF700-CF09-4582-9E1C-2603403AB647}:2081:CommitAllEdits;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6320:TeamFoundationContextMenus.Mappings.TfsContextMappingsCopy;VC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:120:Edit.LineDownExtendColumn;E{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6322:TeamFoundationContextMenus.Mappings.TfsContextMappingsPaste;VCOpen from Source Control;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:1031:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryRollbackToThisVersion;VC{00000000-0000-0000-0000-313370000001}:37:EditorContextMenus.CodeWindow.VSCommands.LocateInTfs;VCSwitch to List View;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:12306:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextSwitchViewLayout;VCShow Filter;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8263:TeamFoundationContextMenus.PendingChangesFilterChangesLink.TfsContextPendingChangesFilterByText;VCWith Workspace Version (V0AP061)...;VCView Hierarchy;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6203:File.TfsViewBranchHierarchy;VCTrack Changeset;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4792:TeamFoundationContextMenus.SourceControlHistoryChangesets.TfsContextHistoryTrackChangeset;VC{3EC04835-C2D5-4978-B9F9-4E62AD5384D2}:8448:File.Undounchanged;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6355:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageFolderDiff;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4922:TeamFoundationContextMenus.SourceControlHistoryLabels.TfsContextHistoryLabelsFolderDiff;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4624:File.TfsUnshelvePendingChanges;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6188:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerShelvePendingChanges;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:5251:TeamFoundationContextMenus.SourceControlPendingChangesConflicts.Compare.TfsContextPendingCheckinsConflictCompareLocalToServer;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6207:TeamFoundationContextMenus.SourceControlExplorer.Advanced.TfsContextExplorerSecurity;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8240:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerRollback;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4851:TeamFoundationContextMenus.SourceControlPendingChangesConflicts.Compare.TfsContextPendingCheckinsConflictCompareLocalToServer;VCTake Right (F11);VCTake Left (F10);VCUncloak...;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6201:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerUncloak;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6196:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerProperties;VCUnshelve Changes;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4626:File.TfsShelvePendingChanges;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6197:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerAnnotate;VCFind by Status...;VC{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1072:File.TfsContextSceStatusSearch;VCWith Workspace Version (V0BN036)...;VC{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4723:TeamFoundationContextMenus.SourceControlPendingChangesSourceFiles.TfsContextPendingCheckinsPendingCheckinsProperties;VCCheck Out for Edit DATEV.Kommunal.Types.Component.config...;VCTypeHierarchy.Update;NTypeHierarchy.ClassHierarchy;NTreeModelBrowser.ExpandAll;NTreeModelBrowser.NextOccurence;NTreeModelBrowser.PreviousOccurence;NTreeModelBrowser.Preview.Toggle;NTreeModelBrowser.CollapseAll;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:42:View.Toolbox;EWork Items;PMMy Work;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20486:Team.NewLinkedWorkItem;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8208:TeamFoundationContextMenus.WorkItems.NewQuery;PMSubmit _Request;PM{2A8866DC-7BDE-4DC8-A360-A60679534384}:258:Edit.MoveSelectedLinesUp;EGo to Work Item...;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20483:Team.GotoWorkItem;PMAktuelle Iteration;PMCreate Copy of Work Item...;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20484:Edit.CreateCopyofWorkItem;PMRemove Work Item;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6362:TeamFoundationContextMenus.PendingChangesPageWorkItems.TfsContextPendingChangesPageRemoveWorkItem;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8265:TeamFoundationContextMenus.WorkItemActionLink.TfsContextPendingChangesPageWorkItemActionLinkResolve;PMMy WorkItems;PMBug;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:4608:Team.NewWorkItemBug;PMDelete Clauses;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:24578:Team.DeleteClauses;PMMy Sprint;PMInsert Clause;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:24577:Team.InsertClause;PMClear All Panes;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8209:Team.NewQuery;PMMy workitems;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:4625:Edit.RefreshWorkItem;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8224:TeamFoundationContextMenus.QueriesSection.AddtoMyFavorites;PM{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1872:TeamFoundationContextMenus.ResultsList.TfsCopyWorkItemFullPath;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:24579:Team.GroupClauses;PM1 New Bug...;PMMy open workitems in current sprint;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20488:TeamFoundationContextMenus.Commands.GoToWorkItems;PMBacklog Item;PMTask List;PM{2A8866DC-7BDE-4DC8-A360-A60679534384}:259:Edit.MoveSelectedLinesDown;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:236:View.TaskList;PMNot Closed (Assigned to Me);PMWork Item Search;PMMeine WorkItems;PMOpen Work Item;PMSave New Task 1;PMShowTodoExplorer;PMAdd to In Progress;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6385:TeamFoundationContextMenus.MyWorkPageInProgress.AddtoInProgress;PMNew Linked Work Item...;PMCreate Work Item;PMRemove from In Progress;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6386:TeamFoundationContextMenus.MyWorkPageInProgress.RemovefromInProgress;PMTask;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:4609:Team.NewWorkItemTask;PMSave New Bug 3;PM{5BF14E63-E267-4787-B20B-B814FD043B38}:21009:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextUndoCheckout;VC{5BF14E63-E267-4787-B20B-B814FD043B38}:21008:File.TfsUndoCheckout;VC{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20481:Team.ColumnOptions;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6357:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageView;VCConnect to Team Project;PM{23D49123-60AC-4D7E-939A-E01A4E176BEE}:6:File.ConnecttoTeamProject;PMConnect;PM{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17686:Team.Connect;PMTeam Explorer;PM{E234E66E-BA64-4D71-B304-16F0A4C793F5}:16400:View.TfsTeamExplorer;PM{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:119:Edit.LineUpExtendColumn;E{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8210:TeamFoundationContextMenus.QueriesSection.Security;PM{23D49123-60AC-4D7E-939A-E01A4E176BEE}:7:Team.ConnecttoTeamFoundationServer;PMWorkspaces...;PM{5EFC7975-14BC-11CF-9B2B-00AA00573819}:229:File.Exit;N{5BF14E63-E267-4787-B20B-B814FD043B38}:21026:File.TfsWorkspaces;PMConnect To Team Foundation Server;PMProject Alerts...;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20485:Team.ProjectAlerts;PM{E234E66E-BA64-4D71-B304-16F0A4C793F5}:16406:Team.TeamExplorerSearch;PMDisconnect from Team Foundation Server;PM{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17681:Team.DisconnectfromTeamFoundationServer;PMProcess Template Manager...;PM{E234E66E-BA64-4D71-B304-16F0A4C793F5}:17714:Team.ProcessTemplateManager;PMManage Workspaces...;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:12289:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsManageWorkspaces;PMNew Team Project...;PMSort Descending;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:36872:TeamFoundationContextMenus.ResultsListColumnSort.SortDescending;PMSort Ascending;PM{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:36871:TeamFoundationContextMenus.ResultsListColumnSort.SortAscending;PMGo Online;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4648:File.TfsOnline;PMDisconnect;PM{23D49123-60AC-4D7E-939A-E01A4E176BEE}:8:TeamFoundationContextMenus.TeamFoundationServer.Disconnect;PMAlerts Explorer;PM{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:776:Team.AlertsExplorer;PM{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:35:Edit.ScrollLineUp;NCapture Template...;PM{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:771:TeamFoundationContextMenus.ResultsList.TfsWITCaptureTemplate;PM{1E198C22-5980-4E7E-92F3-F73168D1FB63}:785:TestExplorer.RunSelectedTests;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:784:TestExplorer.RunAllTests;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:768:TestExplorer.OpenTest;TUnitTest.RunCurrentSession;TUnitTest.RunSolution;TReSharper_UnitTest_RunContext;TUnitTestSession.RunAllAction1;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:816:TestExplorer.CancelTests;TTest Explorer;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:512:TestExplorer.ShowTestExplorer;TAll Tests;TUnitTestSession.RepeatPreviousRun;TEdit with Microsoft Test Manager;TUnitTestSession.Abort;TAdd Fakes Assembly;T{6CAECD10-B51C-485C-997F-8C3D73C8AEC5}:8194:ProjectandSolutionContextMenus.ReferenceItem.AddFakesAssembly;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:4096:TestExplorer.GroupBy;TShowUnitTestExplorer;TRun Tests;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:885:TestExplorer.RunAllTestsInContext;TUnitTestSession.NewSession;TUnit Tests;TUnitTestSession.AppendTests;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13057:OtherContextMenus.TestResultsContextMenu.ViewTestResultsDetails;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13075:Test.TestView.RunSelection;TUnitTestExplorer.Refresh;TUnitTestSession.Filter.ShowOnlyFailed;TShowUnitTestSessions;TUnitTestSession.Filter.ShowOnlyIgnored;TUnitTestSession.RemoveSelectedNodes;TSelect Test Settings File;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:837:TestExplorer.SelectRunSettingsFile;TRun All Tests from Solution;TUnit Test Sessions;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:2457:TestExplorer.NextGroupBy;TCopy All;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:1024:TestExplorer.CopyDetails;TView Results by Result List;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13068:Test.TestResults.ViewResultsbyResultList;TRun Details;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13067:TestResults.ViewAllResults;TUnitTestSession.TrackRunningTest;TRun Not Run Tests;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:835:TestExplorer.RunNotRunTests;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13085:OtherContextMenus.TestResultsContextMenu.AddRemoveColumns;TCreate New Session;TRun Tests After Build;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:841:TestExplorer.ToggleRunTestsAfterBuild;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13067:Test.TestResults.ViewAllResults;TImport Test Results;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13090:Test.TestResults.ImportTestResults;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13110:TestResults.RunDetails;TTest Runs;T{B85579AA-8BE0-4C4F-A850-90902B317571}:12291:Test.TestRuns;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13110:Test.TestResults.RunDetails;TRepeat Last Run;T{1E198C22-5980-4E7E-92F3-F73168D1FB63}:836:TestExplorer.RepeatLastRun;TView Test Results Details;TOpen Test;TUnitTestSession.Filter.ShowAll;T{B85579AA-8BE0-4C4F-A850-90902B317571}:12288:Test.TestView;T{B85579AA-8BE0-4C4F-A850-90902B317571}:13072:Test.TestResults.StopTestRun;T{5EFC7975-14BC-11CF-9B2B-00AA00573819}:946:Project.AddClass;ETemplate1;ETextControl.PageDown.Selection;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:30:Edit.PageDownExtend;EClass;EUser Control...;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:412:Project.AddUserControl;ETestClass;EFileTemplates.QuickList.More;EShowLiveTemplates;ETemplate2;EUnit Test...;E{E3BC1C4F-9E6C-9709-A304-1B2BC6AF5D32}:4614:Project.AddUnitTest;ENew Web Site...;E{C7547851-4E3A-4E5B-9173-FA6E9C8BD82C}:45:File.AddNewWebSite;EJetBrains.ReSharper.LiveTemplates.ContextActions.SurroundWithAction;ELiveTemplates.EditTemplate;EEnum;ETemplate4;ELiveTemplates.Insert;EOrdered Test;E{E3BC1C4F-9E6C-9709-A304-1B2BC6AF5D32}:4619:Project.AddOrderedTest;EApply Template...;PM{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:773:TeamFoundationContextMenus.ResultsList.TfsWITApplyTemplate;PMStyleCop.ReSharper800.BulbItems.Readability.FormatLineBulbItem;ERun StyleCop;E{CE99DB75-E6A6-41C9-9091-434390724FAC}:304:EditorContextMenus.CodeWindow.RunStyleCop;EStyleCop.ReSharper800.BulbItems.Layout.SA1513ClosingCurlyBracketMustBeFollowedByBlankLineBulbItem;EStyleCop.ReSharper800.BulbItems.Maintainability.SA1119StatementMustNotUseUnnecessaryParenthesisBulbItem;EStyleCop.ReSharper800.BulbItems.Layout.SA1507CodeMustNotContainMultipleBlankLinesInARowBulbItem;EStyleCop.ReSharper800.BulbItems.Readability.UseStringEmptyForEmptyStrings;EStyleCop.ReSharper800.BulbItems.Maintainability.SA1400AccessModifierMustBeDeclaredBulbItem;EStyleCop.ReSharper800.QuickFixes.Framework.ChangeStyleCopRuleAction;EStyleCop.ReSharper800.BulbItems.Framework.SuppressMessageBulbItem;EStyleCop.ReSharper800.BulbItems.Layout.SA1515SingleLineCommentsMustBePrecededByBlankLineBulbItem;EStyleCop.ReSharper800.BulbItems.Layout.SA1512SingleLineCommentsMustNotBeFollowedByBlankLineBulbItem;EStyleCop.ReSharper800.BulbItems.Readability.SA1121UseBuiltInTypeAliasBulbItem;ERun StyleCop (Rescan All);E{CE99DB75-E6A6-41C9-9091-434390724FAC}:352:Tools.RunStyleCopRescanAll;EStyleCop.ReSharper800.BulbItems.Layout.SA1506DocumentationHeaderLineMustNotBeFollowedByABlankLineBulbItem;EStyleCop.ReSharper800.BulbItems.Layout.SA1510ChainedStatementBlocksMustNotBePrecededByBlankLineBulbItem;EStyleCop.ReSharper800.BulbItems.Spacing.SA1001CommasMustBeSpaceCorrectlyBulbItem;EStyleCop.ReSharper800.BulbItems.Ordering.MoveUsings;EStyleCop.ReSharper800.BulbItems.Readability.SA1108BlockStatementsMustNotContainEmbeddedCommentsBulbItem;EStyleCop.ReSharper800.BulbItems.Layout.SA1500CurlyBracketsForMultiLineStatementsMustNotShareLineBulbItem;EStyleCop.ReSharper800.BulbItems.Spacing.SA1025CodeMustNotContainMultipleWhitespaceInARowBulbItem;EStyleCop.ReSharper910.BulbItems.Layout.SA1507CodeMustNotContainMultipleBlankLinesInARowBulbItem;E{CE99DB75-E6A6-41C9-9091-434390724FAC}:256:ClassViewContextMenus.ClassViewProject.RunStyleCop;EStyleCop.ReSharper800.BulbItems.Readability.SA1109BlockStatementsMustNotContainEmbeddedRegionsBulbItem;EStyleCop.ReSharper800.BulbItems.Maintainability.SA1401FieldsMustBePrivateBulbItem;EStyleCop.ReSharper800.BulbItems.Documentation.SA1618GenericTypeParametersMustBeDocumentedBulbItem;EStyleCop.ReSharper800.BulbItems.Documentation.SA1611ElementParametersMustBeDocumentedBulbItem;EStyleCop.ReSharper800.BulbItems.Readability.CodeMustNotContainEmptyStatements;EStyleCop.ReSharper800.BulbItems.Readability.SA1120CommentsMustContainTextBulbItem;EStyleCop.ReSharper800.BulbItems.Readability.SA1100DoNotPrefixCallsWithBaseUnlessLocalImplementationExistsBulbItem;E{ADC1BC7B-958B-4548-9F9F-10FC49099825}:8205:DirectedGraph.Zoom;EIn Source;E{CBE1FEF1-D8E2-4041-A0A8-25D23EDA02DD}:258:OtherContextMenus.ErrorList.SuppressMessage.InSource;E{4A9B7E50-AA16-11D0-A8C5-00A0C921A4D2}:1:View.NextError;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2211:Warnings;E{CBE1FEF1-D8E2-4041-A0A8-25D23EDA02DD}:259:OtherContextMenus.ErrorList.SuppressMessage.InSuppressionFile;EAnalyzeReferences;EAnalyzeReferences.RemoveSelected;ECalculate Code Metrics;E{79989DD6-4C13-4D10-9872-73538668D037}:768:ClassViewContextMenus.ClassViewProject.Analyze.CalculateCodeMetrics;EInspectionResults.Update;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2210:Errors;E{9E545B2D-3892-4FFA-A47A-F8D456C5FB4A}:1280:Build.RunCodeAnalysisonSolution;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:320:View.ErrorList;ERun Code Analysis on Solution;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1648:ClassViewContextMenus.ClassViewProject.Analyze.RunCodeAnalysis;EError List;EBuildArchitectureGraph;ENext Error;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2212:Messages;EFind Code Issues;ERunInspection;E{79989DD6-4C13-4D10-9872-73538668D037}:1027:Analyze.CalculateCodeMetricsforSelectedProjects;EErrorsView.IgnoreIssuesPopup;EInspectThis;ECalculate Code Metrics for Selected Project(s);EJetBrains.ReSharper.Daemon.SolutionAnalysis.UI.RunInspection.FindSimilarIssuesProvider+FindSimilarIssuesAction;EFind Matching Clones in Solution;E{38FD587E-D4B7-4030-9A95-806FF0D5C2C6}:49:EditorContextMenus.CodeWindow.FindMatchingClonesinSolution;EAnalyze Source Code of Solution;E{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:256:FortifyToolMenu.AnalyzeSourceCodeofSolution;ECode Analysis;E{9E545B2D-3892-4FFA-A47A-F8D456C5FB4A}:1281:View.CodeAnalysis;EPackage Visualizer;E{C0D88179-5D25-4982-BFE6-EC5FD59AC103}:784:Tools.PackageVisualizer;EProject Hierarchy;ETextControl.PageUp.Selection;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:28:Edit.PageUpExtend;EProjectHierarchy.Browse;EErrorsView.AnalysisOnOff;EConfigure Code Analysis for Solution;E{9E545B2D-3892-4FFA-A47A-F8D456C5FB4A}:263:Analyze.ConfigureCodeAnalysisforSolution;ECode Issues in Solution;ERunInspection.Solution;EAnalyzeReferences.Update;ECalculate Code Metrics for Solution;E{79989DD6-4C13-4D10-9872-73538668D037}:1028:Analyze.CalculateCodeMetricsforSolution;ECalculate Code Metrics for BusinessCommon;ESolution Errors Window;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1647:Build.RunCodeAnalysisonSelection;E{000AF700-CF09-4582-9E1C-2603403AB647}:2822:QueryResultsMaxRows;E{B371C497-6D81-4B13-9DB8-8E3E6ABAD0C3}:772:SQL.TSqlEditorExecuteQuery;E{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:12291:Edit.EditQuery;EShow Table Data;EColumn;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1955:Data.Column;E{000AF700-CF09-4582-9E1C-2603403AB647}:2817:SQL.QueryResultsRefresh;EInsert Column;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:118:Edit.CharRightExtendColumn;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1968:Data.InsertColumn;E{B371C497-6D81-4B13-9DB8-8E3E6ABAD0C3}:773:SQL.TSqlEditorCancelQuery;E{000AF700-CF09-4582-9E1C-2603403AB647}:2824:OtherContextMenus.QueryResultsContextMenu.SortAndFilterDataSet;ESQL Server Object Explorer;E{03F46784-2F90-4122-91EC-72FF9E11D9A3}:257:View.SQLServerObjectExplorer;E{000AF700-CF09-4582-9E1C-2603403AB647}:2820:SQL.ScriptToEditor;EOpen Table Definition;EAdd SQL Server;E{000AF700-CF09-4582-9E1C-2603403AB647}:28929:Tools.SqlServerObjectExplorerAddSqlServer;EDataTable;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1951:Data.DataTable;E{B371C497-6D81-4B13-9DB8-8E3E6ABAD0C3}:776:SQL.TSqlEditorToggleSqlCmdMode;E{B371C497-6D81-4B13-9DB8-8E3E6ABAD0C3}:769:SQL.TSqlEditorDisconnect;E{B371C497-6D81-4B13-9DB8-8E3E6ABAD0C3}:768:SQL.TSqlEditorConnect;E{000AF700-CF09-4582-9E1C-2603403AB647}:2825:OtherContextMenus.QueryResultsContextMenu.DisableSortAndFilterDataSet;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:147:View.ShowSmartTag;NServer Explorer;ERun Code Analysis;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2260:View.ServerExplorer;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:277:Edit.FindinFiles;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:97:Edit.Find;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:370:Edit.FindNext;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:372:Edit.FindNextSelected;NLocateInSolutionExplorer;NGotoNextErrorInSolution;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1635:ProjectandSolutionContextMenus.Project.OpenFolderinFileExplorer;NOpen Folder in File Explorer;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:48:Edit.MakeUppercase;EOpen Containing Folder;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1642:File.OpenContainingFolder;N{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:36:SolutionExplorer.SyncWithActiveDocument;NSync with Active Document;NGotoNextHighlight;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:230:Edit.Replace;EGotoRecentFiles;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:231:Edit.GoTo;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:371:Edit.FindPrevious;NQuick Find;NGotoFileMember;NGotoPrevHighlight;NSearch;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:373:Edit.FindPreviousSelected;NGotoFile;NFind Results 1;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:433:View.FindResults1;NSwitch to Replace in Files;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:286:Edit.SwitchtoReplaceinFiles;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:279:Edit.GoToNextLocation;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:278:Edit.ReplaceinFiles;ESwitch to Find in Files;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:282:Edit.SwitchtoFindinFiles;NStart search;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:122:Edit.IncrementalSearch;NGotoRecentEdits;NFind;NReplace in Files;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1623:Edit.ClearFindResults2;NStops a background Find (Alt+F3, S);N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:355:Edit.StopSearch;NStructuralSearch.Search;NGo to the previous location in the list;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1622:Edit.GoToFindResults1PrevLocation;NClear search;NClear Search;NFind Results;NShowFindResults;NLocate In TFS;N{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:20:Window.ActivateSolutionExplorerSearch;NResultList.GoToNextLocation;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:280:Edit.GoToPrevLocation;NGo to the next location in the list;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1621:Edit.GoToFindResults1NextLocation;NFind Previous;NFind Next;NRequest Review;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:8259:TeamFoundationContextMenus.PendingChangesPageMoreLink.TfsContextPendingChangesRequestReview;PM{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6378:TeamFoundationContextMenus.MyWorkPageCodeReviews.TfsContextMyWorkPageOpenCodeReview;PMNew Code Review;PMExtractMethod;DIntroduceVariable;DJetBrains.ReSharper.InplaceRefactorings.DoInplaceRefactoringContextActionBase+MyBulbItem;DRefactorThis;D{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6435:Edit.RemoveAndSort;DIntroduceField;DInlineVariable;DEncapsulateField;DSurroundWith;DJetBrains.ReSharper.Intentions.SurroundItems.SurroundWithAction;DChangeSignature;DIntroParameter;DExtractInter;DRemove Unused References;DRemoveUnusedReferences;DSafeDelete;DImplement Interface;D{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6401:EditorContextMenus.CodeWindow.ImplementInterface.ImplementInterface;DPullUp;DStatic2ExtensionAction;DAnalyzeReferences.RemoveUnused;DExtractClass;DMakeMethodStatic;DRefactorings.AdjustNamespaces;DExtension2StaticAction;DMakeMethodNonStatic;DExtractSuper;D{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:116:Edit.QuickInfo;NQuick Info;NPublish Web Site;PMPublish View;PMStart Trace/Profiling;D{1E58696E-C90F-11D2-AAB2-00C04F688DDE}:1:Perfinity.SpeedTrace.VisualStudioAddin.Connect.ProfileProject;DPerformance and Diagnostics;DNew Profiler Session;D{7E0B03F9-66C3-40CD-B8AB-17C37849B355}:8324:Profiler.NewProfilerSession;DParameterInfo.Show;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:104:Edit.ParameterInfo;NParameter Information;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:237:View.Output;LCClear;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1615:Edit.ClearOutputWindow;LCOutput;LCGo to Next Message;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1617:Edit.GoToOutputWindowNextLocation;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:130:Edit.ToggleAllOutlining;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:133:Edit.CollapsetoDefinitions;LCToggle All Outlining;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:129:Edit.ToggleOutliningExpansion;LCClear All;LCCollapse to Definitions;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:239:View.DocumentOutline;LCDocument Outline;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:131:Edit.StopOutlining;LCToggle Outlining Expansion;LCClear all;LCShowCodeStructure;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:264:Tools.Options;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:235:View.PropertiesWindow;LCShowSettingsLayersDialog;LC{74D21313-2AEE-11D1-8BFB-00A0C90F26F7}:4097:OtherContextMenus.Selection.Properties;DEditSettingsLayerOptions;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1036:Tools.Customize;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:396:Project.Properties;LCSettings;LCResetAllSettings;LC{5DD0BB59-7076-4C59-88D3-DE36931F63F0}:500:Window.ShowDockMenu;LCCustomize...;LCProperties...;LCSecurity...;LCFull Screen;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:233:View.FullScreen;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:124:Edit.LineStartExtendColumn;EShowEnterLicense;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:263:Tools.CustomizeKeyboard;LCReset Window Layout;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1631:Window.ResetWindowLayout;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1600:ToggleOutputWindowWordWrap;LCImport and Export Settings...;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1612:Tools.ImportandExportSettings;LCCustomize Colors;LC{6A71C0F1-04A6-44B4-A5BC-996995E8DA2C}:257:Tools.CustomizeColors;LCShowOptions;LCSend Selection to Microsoft Outlook;N{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:16419:View.SendSelectiontoMicrosoftOutlook;NOpen Selection in Microsoft Excel;N{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:16417:View.OpenSelectioninMicrosoftExcel;NEmail Code Snippet;N{F359CFC9-D628-46B4-AA78-99893E4E056C}:15788:EditorContextMenus.CodeWindow.EmailCodeSnippet;NSend to Microsoft Outlook;N{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:16389:View.SendtoMicrosoftOutlook;NOpen List in Microsoft Excel;NOccurenceBrowser.Filter.ShowOnlyRead;NOccurenceBrowser.Filter.ShowAll;NOccurenceBrowser.Filter.ShowOther;NObject Browser;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1119:ClassViewContextMenus.ClassViewProjectReference.ViewinObjectBrowser;NView in Object Browser;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:238:View.ObjectBrowser;NNavigateToObjectBrowser;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1715:View.ObjectBrowserBack;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1734:View.ObjectBrowserClearSearch;N{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:256:Project.ManageNuGetPackages;E{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:512:Tools.ManageNuGetPackagesforSolution;EEnable NuGet Package Restore;E{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:768:ProjectandSolutionContextMenus.Solution.EnableNuGetPackageRestore;EMetrics...;T{5570EAB3-9D8E-4577-95B6-604B88ACE02E}:289:NCrunch.Metrics;TConfiguration...;T{5570EAB3-9D8E-4577-95B6-604B88ACE02E}:304:NCrunch.Configuration;TLicense Details;T{5570EAB3-9D8E-4577-95B6-604B88ACE02E}:1536:NCrunch.LicenseDetails;TDistributed Processing...;T{5570EAB3-9D8E-4577-95B6-604B88ACE02E}:544:NCrunch.DistributedProcessing;T{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:121:Edit.ToggleWordWrap;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:117:Edit.CharLeftExtendColumn;EEnable NCrunch;T{5570EAB3-9D8E-4577-95B6-604B88ACE02E}:259:NCrunch.EnableNCrunch;TFeedback exportieren...;OKaVE.VsFeedbackGenerator.SessionManager;OKaVE.VsFeedbackGenerator.Options;OExport Feedback...;OAbout KaVE;OKaVE.VsFeedbackGenerator.About;OFeedback Manager;OSave Model\Implementation\Geschaeftspartner.cs;DOpen IntelliTrace Settings;ESave ZipService.cs;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1124:Window.NextDocumentWindowNav;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:43:Edit.Undo;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:809:View.NavigateBackward;NNavigate Backward;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:223:File.Close;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:333:View.ViewCode;NUndo;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:189:View.Refresh;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1113:Project.AddReference;EAdd Reference...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:220:Project.AddNewItem;EAdd;EClose;NExit;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:29:Edit.Redo;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:219:File.CloseSolution;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:16:Edit.DocumentStartExtend;ETextControl.Home.Selection;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:18:Edit.DocumentEndExtend;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:222:File.OpenFile;NClose All Documents;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:150:File.Rename;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:57:Edit.OvertypeMode;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:244:Project.AddExistingItem;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1650:File.CloseAllButThis;NCopy Full Path;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:217:File.OpenProject;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:658:Window.CloseDocumentWindow;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1610:File.CopyFullPath;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:773:File.AddExistingProject;ERedo;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:245:Project.NewFolder;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:810:View.NavigateForward;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:772:File.AddNewProject;ESave Selected Items;ENavigate Forward;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:393:Window.MovetoPreviousTabGroup;NMove;O{5EFC7975-14BC-11CF-9B2B-00AA00573819}:412:Project.ReloadProject;EMove to Previous Tab Group;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:31:Edit.ViewTop;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:413:Project.UnloadProject;EPasteMultiple;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:384:Window.MovetoNextTabGroup;NWindows...;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:595:Window.Windows;LCMove to Next Tab Group;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:289:Window.ActivateDocumentWindow;NView With...;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:216:File.NewProject;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1632:OtherContextMenus.StubProject.EditProjectFile;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:221:File.NewFile;EAdd Items to Folder...;EProject Dependencies...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:657:Project.ProjectDependencies;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:318:Edit.ClearAll;EOpen in Browser;NCut;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:234:View.SolutionExplorer;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:600:Project.ShowAllFiles;NCollapseInSolutionExplorer;LCClose All But Pinned;N{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:22:OtherContextMenus.EasyMDIToolWindow.CloseAllButPinned;NSolution Explorer;N{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8224:Resources.AddExistingFile;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:269:Window.NewVerticalTabGroup;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1634:OtherContextMenus.SchemaExplorer.ViewCode;NView Project Dependencies;NExclude From Project;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1110:Project.ExcludeFromProject;EOpen Project...;NOpen In Browser;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:655:Edit.CycleClipboardRing;ECloseAll.CloseAll;N{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8217:Resources.Add;EDecrease Line Indent;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:70:Edit.DecreaseLineIndent;EAdd Service Reference...;EConfigure Service Reference...;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1132:Project.ConfigureServiceReference;EOpen With...;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:199:View.OpenWith;NNew Solution Folder;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1613:Project.AddNewSolutionFolder;ECloseAll.CloseAllButThis;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:226:File.SaveSelectedItemsAs;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:105:Edit.ViewWhiteSpace;LCIncrease Line Indent;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:69:Edit.IncreaseLineIndent;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1125:Window.PreviousDocumentWindowNav;NHide;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:285:Window.Hide;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:47:Edit.MakeLowercase;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:67:Edit.LineOpenAbove;EMake Uppercase;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1130:ProjectandSolutionContextMenus.Project.AddServiceReference;EMove All to Previous Tab Group;N{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:3:OtherContextMenus.EasyMDIToolWindow.MoveAlltoPreviousTabGroup;NPrint...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:27:File.Print;E{E4B9BB05-1963-4774-8CFC-518359E3FCE3}:12032:Edit.EditCell;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:138:Edit.OpenFile;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:62:Edit.LineDelete;ETextControl.End.Selection;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1109:Project.IncludeInProject;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1129:Project.AddServiceReference;ESplit;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:266:Window.Split;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:287:Window.PreviousTab;NReference...;E{2A8866DC-7BDE-4DC8-A360-A60679534384}:10:ProjectandSolutionContextMenus.Project.Add.AddReference;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1644:Window.NextToolWindowNav;NProject/Solution...;NNew Horizontal Tab Group;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:268:Window.NewHorizontalTabGroup;N{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:10:Window.MoveToMainDocumentGroup;LCPage Setup...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:227:File.PageSetup;EPin Tab;LC{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:7:Window.PinTab;LC{FB87333B-16C8-400E-BC8F-F6B890410582}:10:EditorContextMenus.CodeWindow.Properties;LCInsert File As Text...;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:114:Edit.InsertFileAsText;ECreate New File...;ENew Solution Explorer View;LC{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:34:ProjectandSolutionContextMenus.Project.NewSolutionExplorerView;LCDock;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:284:Window.Dock;LCClose All But This;N{184DD6C2-6301-49E8-A6C9-D8D026444172}:26237:Edit.UndoClose;NNew Window;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:265:Window.NewWindow;NFloat;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:291:Window.Float;LCUnload Projects in Solution Folder;EClear Recent References;E{8206E3A8-09D6-4F97-985F-7B980B672A97}:256:OtherContextMenus.StandardProviderRecentContextMenu.ClearRecentReferences;EMake Lowercase;ECopy XML-Doc ID to Clipboard;EUndock from Team Explorer;LCView Code;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:288:Window.CloseToolWindow;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:377:Help.F1Help;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:271:Help.About;NView Help;N{4A79114A-19E4-11D3-B86B-00C04F79F802}:256:Help.ViewHelp;NAboutBox;NAbout Microsoft Visual Studio;NShow Error Help;N{4A9B7E50-AA16-11D0-A8C5-00A0C921A4D2}:598:Help.ShowTaskHelp;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1227:Edit.MoveControlUp;EAbout...;NAbout;NExplore what's new in Team Foundation Service;NVisual C# Developer Center;NSamples;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:328:Help.Samples;NLaunch in Help Viewer;N{4A79114A-19E4-11D3-B86B-00C04F79F802}:287:Help.LaunchinHelpViewer;NPeek Help;N{7593CD3C-EF01-4047-BDCF-B61FAB9D1AD8}:256:Edit.PeekHelp;NEdit VertragMgmt.UnitTests.csproj;D{5AA8A2FD-A6CA-43FF-AB7B-79C4E55BCB68}:8194:Tools.SubMain.GhostDoc.DocumentThis;EQuickDoc;EDocument This;E{5AA8A2FD-A6CA-43FF-AB7B-79C4E55BCB68}:8192:EditorContextMenus.CodeWindow.SubMain.GhostDoc.DocumentThisCtx;E{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:273:FortifyToolMenu.LoadSavedProject;N{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:291:FortifyToolMenu.OpenAuditProject;N{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:260:FortifyToolMenu.GenerateReport;EOptions ...;LC{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:257:FortifyToolMenu.AnalyzeComponentProject;E{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:279:FortifyToolMenu.Options;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:143:Edit.FormatDocument;ECleanupCode;ESilentCleanupCode;ERemove and Sort;E{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6419:EditorContextMenus.CodeWindow.OrganizeUsings.RemoveAndSort;EFormat Document;ETabify;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:112:Edit.FormatSelection;ERemove Unused Usings;E{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6417:EditorContextMenus.CodeWindow.OrganizeUsings.RemoveUnusedUsings;EUntabify;EToggle word wrap;EFormat Selection;ESort Usings;E{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6418:EditorContextMenus.CodeWindow.OrganizeUsings.SortUsings;EToggle Word Wrap;EReformat Selection;ESend to Back;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:33:Format.SendtoBack;EBring to Front;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:11:Format.BringtoFront;EForeground Color...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:69:Format.ForegroundColor;ERemove and Sort Usings;E{453783B0-8DB7-4F1C-B7CE-5319D3915E8E}:3518:ProjectandSolutionContextMenus.Project.PowerCommands.RemoveandSortUsings;EItalic;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:70:Format.Italic;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:630:Tools.ExternalCommand1;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:635:Tools.ExternalCommand6;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:631:Tools.ExternalCommand2;EExternal Tools...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:654:Tools.ExternalTools;EExtensions and Updates...;LC{5DD0BB59-7076-4C59-88D3-DE36931F63F0}:3000:Tools.ExtensionsandUpdates;LCExtensionManager;LCAdd-in Manager...;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:297:Tools.AddinManager;LCOpen in Windows Explorer;N{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1024:File.TfsContextFileExplorerLaunch;N{5C199E63-E4F4-4B27-8955-75844A35066A}:14777:ProjectandSolutionContextMenus.Item.OpenContainingFolder;NOpen Folder in Windows Explorer;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1635:Project.OpenFolderinWindowsExplorer;NDflToolsNRules.DaemonStages.CSharp.SpecifyJustificationBulbItem;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:249:Debug.StepOver;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:179:Debug.StopDebugging;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:248:Debug.StepInto;D{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:368:Debug.StartWithoutDebugging;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:255:Debug.ToggleBreakpoint;DContinue;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:213:Debug.AttachtoProcess;D{1E198C22-5980-4E7E-92F3-F73168D1FB63}:801:TestExplorer.DebugSelectedTests;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:258:Debug.SetNextStatement;DReSharper_UnitTest_DebugContext;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:262:Debug.DetachAll;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:250:Debug.StepOut;D{3A680C5B-F815-414B-AA4A-0BE57DADB1AF}:512:Debug.ReAttach;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:339:Debug.Exceptions;DTerminate All;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:293:Debug.TerminateAll;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:375:EditorContextMenus.CodeWindow.Breakpoint.InsertBreakpoint;DBreak All;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:180:Debug.BreakAll;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:246:Project.SetasStartUpProject;LCDebug Unit Tests;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:296:Debug.Restart;DInsert Breakpoint;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:252:Debug.AddWatch;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:432:Debug.EvaluateStatement;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:254:Debug.QuickWatch;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1060:Tools.AttachtoProcess;DQuickWatch...;DBreak on All CLR Exceptions;D{9D55DA8F-2BE1-44DC-A94A-08154F98F634}:256:Debug.BreakonAllCLRExceptions;LC{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:323:EditorContextMenus.CodeWindow.Breakpoint.BreakpointCondition;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:376:Debug.EnableBreakpoint;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:259:Debug.ShowNextStatement;D{5289D302-2432-4761-8C45-051C64BD00C4}:283:DebuggerContextMenus.DataTipsContext.Clear;DStart XSLT Without Debugging;D{FB87333B-16C8-400E-BC8F-F6B890410582}:3:XML.StartXSLTWithoutDebugging;DShow Next Statement;NDisable Breakpoint;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:260:Debug.Modules;DStart new instance;D{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:356:ClassViewContextMenus.ClassViewProject.Debug.Startnewinstance;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:251:Debug.RunToCursor;DStart XSLT Debugging;D{FB87333B-16C8-400E-BC8F-F6B890410582}:5:XML.StartXSLTDebugging;DCopy Value;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:330:DebuggerContextMenus.DataTipWindow.CopyValue;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:311:Debug.BreakatFunction;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:256:Debug.DeleteAllBreakpoints;DSuspend;DDelete Breakpoint;DBase Symbols;NLoad Symbols;N{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:295:DebuggerContextMenus.AutosWindow.LoadSymbols;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:371:Debug.OptionsandSettings;LCReAttach to WINWORD.EXE (DATEV_MD\T08094A [administrator]);DBreakpoints;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:256:Debug.Breakpoints;DDisable All Breakpoints;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:290:Debug.DisableAllBreakpoints;D{3A680C5B-F815-414B-AA4A-0BE57DADB1AF}:513:Debug.ReAttachHistoryItem1;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:4099:DebuggerContextMenus.BreakpointsWindow.Delete;DReAttach to vstest.executionengine.x86.exe (DATEV_MD\T08094A [administrator]);DRun To Cursor;DCall Stack;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:243:Debug.CallStack;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:264:Debug.Output;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:430:Debug.Print;DStart;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:257:Debug.Disassembly;DAdd Parallel Watch;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:168:Edit.Remove;E{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:377:Debug.AddParallelWatch;DDebug Tests;D{1E198C22-5980-4E7E-92F3-F73168D1FB63}:896:TestExplorer.DebugAllTestsInContext;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:314:Debug.HexadecimalDisplay;DSwitch To Thread;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:313:DebuggerContextMenus.GPUThreadsWindowShortcutMenu.SwitchToThread;DHit Count...;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:324:EditorContextMenus.CodeWindow.Breakpoint.BreakpointHitCount;DFreeze;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:311:DebuggerContextMenus.GPUThreadsWindowShortcutMenu.Freeze;D{9B529DC2-A902-4EEA-9DCE-9E348551ABA6}:775:Debug.DiagnosticsHub.Launch;DHexadecimal Display;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:259:Debug.Registers;DShow Parameter Values;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:32770:DebuggerContextMenus.StacksWindowShortcutMenu.ShowParameterValues;DShow Module Names;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:32773:DebuggerContextMenus.StacksWindowShortcutMenu.ShowModuleNames;DShow Byte Offsets;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:32775:DebuggerContextMenus.StacksWindowShortcutMenu.ShowByteOffsets;DBreak In Current Document;D{00000000-0000-0000-0000-313370000001}:56:VSCommands.BreakInCurrentDocument;DCopy Expression;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:329:DebuggerContextMenus.DataTipWindow.CopyExpression;D{3A680C5B-F815-414B-AA4A-0BE57DADB1AF}:515:Debug.ReAttachHistoryItem3;DClear All Watches;D{CD203EB7-5920-47F9-8927-1804E7498464}:1792:OtherContextMenus.ParallelWatchWindowShortcutMenu.ClearAllWatches;DImmediate;D{5EFC7975-14BC-11CF-9B2B-00AA00573819}:240:Debug.Immediate;D{3A680C5B-F815-414B-AA4A-0BE57DADB1AF}:514:Debug.ReAttachHistoryItem2;DEdit Value;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:12368:DebuggerContextMenus.AutosWindow.EditValue;DMemory 1;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:16777728:Debug.Memory1;DSet StartUp Projects...;D{1E198C22-5980-4E7E-92F3-F73168D1FB63}:789:TestExplorer.DebugAllTests;DFilter...;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:325:EditorContextMenus.CodeWindow.Breakpoint.BreakpointFilter;DReAttach to Datev.Anwalt.PdfFormulargenerator.Launcher.exe (DATEV_MD\T08094A [administrator]);DSources from Symbol Files;DNavigateToPdb;NDecompiled Sources;NNavigateToDecompiledSources;NRemove Expression;D{5289D302-2432-4761-8C45-051C64BD00C4}:842:DebuggerContextMenus.WatchItemContext.RemoveExpression;DLocal Windows Debugger;DWhen Hit...;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:326:EditorContextMenus.CodeWindow.Breakpoint.BreakpointWhenHit;DRegisters;DDisassembly;DWatch 1;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:16777984:Debug.Watch1;DShow Threads in Source;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:346:DebuggerContextMenus.GPUThreadsWindowShortcutMenu.Debug.LocationToolbar.ShowThreadIpIndicators;DGo To Disassembly;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:263:Debug.GoToDisassembly;DDelete Object ID;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:331:DebuggerContextMenus.AutosWindow.DeleteObjectID;DEnable Breakpoint;D{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:8201:Debug.ToggleDisassembly;DParallel Stacks;D{CD203EB7-5920-47F9-8927-1804E7498464}:257:Debug.ParallelStacks;DStep Into new instance;D{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:357:ClassViewContextMenus.ClassViewProject.Debug.StepIntonewinstance;DStop Debugging;D{2311781F-1D8E-4B3B-AC78-E4D8DD322778}:268:Debug.Graphics.StartDiagnostics;DShow Code Coverage Coloring;D{B85579AA-8BE0-4C4F-A850-90902B317571}:12559:CodeCoverage.ShowCodeCoverageColoring;D{7AA1A7F4-56D9-4653-B67A-F915E05C0CA2}:1536:TestExplorer.AnalyzeCodeCoverage;DAnalyze Code Coverage for All Tests;DShow Code Coverage Results;DImport Results;D{B85579AA-8BE0-4C4F-A850-90902B317571}:12555:CodeCoverage.ImportResults;DAnalyze Code Coverage for Selected Tests;D{7AA1A7F4-56D9-4653-B67A-F915E05C0CA2}:1537:TestExplorer.AnalyzeSelectedCodeCoverage;DCode Coverage Results;D{1E198C22-5980-4E7E-92F3-F73168D1FB63}:20481:Test.CodeCoverageResults;DCompleteCodeBasic;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:136:Edit.CommentSelection;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:137:Edit.UncommentSelection;EAdd Comment;E{3174FE63-FB93-4A3A-82FD-4036F45CB1C2}:256:EditorContextMenus.CodeWindow.AddComment;ECompleteCodeSmart;EGenerate;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:323:Edit.InsertSnippet;E{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:16384:Edit.Addappropriateusingstatement;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1561:Edit.SurroundWith;EBlockComment;ECreate GUID;ECompleteCodeTypeName;EMake Object ID;E{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:327:DebuggerContextMenus.AutosWindow.MakeObjectID;ESurround With...;EInsert Snippet...;ELineComment;EMethod Stub;E{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:6400:EditorContextMenus.CodeWindow.Generate.GenerateMethodStub;EURL Encode;E{E396B698-E00E-444B-9F5F-3DCB1EF74E41}:262:WebEssentials.URLEncode;EToggle Completion Mode;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2303:Edit.ToggleCompletionMode;EInsert Guid Attribute;E{D99DE366-5426-4F39-A444-23698B9B5D89}:9818:EditorContextMenus.CodeWindow.InsertGuidAttribute;ECompleteStatement;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1557:Edit.GenerateMethod;E{5D7E7F65-A63F-46EE-84F1-990B2CAB23F9}:16385:Edit.Addappropriateusingstatement;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:154:Edit.InvokeSnippetFromShortcut;EClear Completed Items;E{000AF700-CF09-4582-9E1C-2603403AB647}:3073:ClearCompletedItems;E{D7618E4D-0770-4BC3-A42F-AACAA04F031E}:1296:CodeLens.LogShowOnCodeMap;OClean;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:895:ClassViewContextMenus.ClassViewProject.Clean;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:599:View.ClassView;EClass View;EPublish...;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2006:ClassViewContextMenus.ClassViewProject.Publish;EView Class Diagram;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1931:ClassViewContextMenus.ClassViewProject.View.ViewClassDiagram;EAdjust Shapes Width;E{FB41A027-57C5-4F83-9508-C326DCE6D943}:10386:ClassDiagram.AdjustShapesWidth;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:882:Build.BuildSolution;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:883:Build.RebuildSolution;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:892:ClassViewContextMenus.ClassViewProject.Build;ESolution Configurations;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:886:Build.BuildSelection;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4105:TeamFoundationContextMenus.TeamExplorerBuildDefinition.EditBuildDefinition;EEdit Build Definition...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:893:ClassViewContextMenus.ClassViewProject.Rebuild;EBuilds;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:890:Build.Cancel;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:885:Build.CleanSolution;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4097:Build.QueueNewBuild;EOpen Drop Folder;ESolution Platforms;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4113:TeamFoundationContextMenus.BuildExplorer.OpenDropFolder;EConfiguration Manager...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:771:Build.ConfigurationManager;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4098:TeamFoundationContextMenus.BuildQueueExplorer.Stop;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4104:Build.ViewBuilds;EReconcile Workspace...;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4115:TeamFoundationContextMenus.BuildExplorer.ReconcileWorkspace;EBuild Selection;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4131:TeamFoundationContextMenus.BuildExplorer.OpeninBrowser;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4128:TeamFoundationContextMenus.TeamExplorerBuildsPageBuildDefinition.AddToFavorites;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4130:Build.ViewControllerQueue;EShow Results;ERetain Indefinitely;EView My Builds;EView Builds;EView Controller Queue;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4103:TeamFoundationContextMenus.BuildExplorer.RetainIndefinitely;EProject Build Order...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:958:Project.ProjectBuildOrder;EExtendSelection;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4102:Build.ManageBuildControllers;ERebuild Solution;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:887:Build.RebuildSelection;EStop Build;E{5547E550-6D81-4F97-91ED-338926673EFA}:256:Build.vsSBE.Settings;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4119:TeamFoundationContextMenus.BuildExplorer.ViewChangeset;EEdit Build Definition;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4116:TeamFoundationContextMenus.TeamExplorerBuilds.Security;EManage Queue;EManage Build Controllers...;E{5547E550-6D81-4F97-91ED-338926673EFA}:256:Build.EventsSolution;EManage Build Qualities...;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4101:Build.ManageBuildQualities;EBatch Build...;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:891:Build.BatchBuild;EEdit Build Quality;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4100:TeamFoundationContextMenus.BuildExplorer.EditBuildQuality;ECancel build;EManage Build Controllers;EOpen Process File Location;E{5D1F73E6-77CD-4A05-8F7B-2C4557503939}:4117:TeamFoundationContextMenus.TeamExplorerBuildDefinition.OpenProcessFileLocation;E{E8B06F44-6D01-11D2-AA7D-00C04F990343}:207:View.URL;NView in Browser (Internet Explorer);N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:334:File.ViewinBrowser;NInternet Explorer;NView in Browser;N{E8B06F44-6D01-11D2-AA7D-00C04F990343}:4999:View.WebBrowser;NInternet Explorer (2);N{5863CAB2-776C-4FD0-B192-EE43E5476FF8}:1029:File.TfsContextWindowsExplorerLaunch;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:76:Edit.ToggleBookmark;NToggle Bookmark;NBookmarks.GoToBookmark1;NAdd to My Favorites;NBookmarks.ToggleBookmark1;NAdd to Favorites;NBookmarks.GoToBookmark2;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:77:Edit.NextBookmark;NRemove from Favorites;NNext Bookmark;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:75:Edit.ClearBookmarks;NBookmarks.GoToBookmark7;NToggle a bookmark on the current line.;NThread:;DToggle a bookmark on the current line. (Ctrl+K, Ctrl+K);NPrevious Bookmark;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:78:Edit.PreviousBookmark;N{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:8226:TeamFoundationContextMenus.QueriesSection.RemovefromFavorites;NBookmarks.ToggleBookmark2;NClear Bookmarks;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:559:OtherContextMenus.BookmarkWindow.Rename;NBookmarks.GoToBookmark0;NAdd/Remove Columns...;LCBookmarks.ToggleBookmark7;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:561:OtherContextMenus.BookmarkWindow.DeleteBookmark;NBookmark Window;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1122:View.BookmarkWindow;NBookmarks.GoToBookmark8;NBookmarks.ToggleBookmark8;NBookmarks.ToggleBookmark9;NBookmarks.BookmarksMenu;N{3F5A3E02-AF62-4C13-8D8A-A568ECAE238B}:1:Team.AddtoMyFavorites;NOpen Audit Project ...;E{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:265:FortifyToolMenu.ExportAuditProject;EClose Audit Project ...;ESave Audit Project;E{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:264:FortifyToolMenu.SaveAuditProject;EOpen Collaborative Audit ...;E{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:288:FortifyToolMenu.OpenCollaborativeAudit;EGotoDeclarationShort;NFindUsages;NFind Usages;NGotoImplementation;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:935:Edit.GoToDefinition;NGotoDeclaration;NGotoType;NPeekDefinition;NPeek Definition;NGotoImplementationShort;NFindUsages.Update;N{2A8866DC-7BDE-4DC8-A360-A60679534384}:4:Edit.PeekDefinition;NOccurenceBrowser.Filter.ShowOnlyWrite;NGo To Definition;NFindUsagesAdvanced;NFind Code Dependent on Module;NFindDependentCode;NGotoBase;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2400:Edit.NextHighlightedReference;NTypeHierarchy.Browse;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2401:Edit.PreviousHighlightedReference;NGotoNextMethod;NGo To Declaration;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:936:Edit.GoToDeclaration;NGotoInheritors;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2301:EditorContextMenus.CodeWindow.ViewCallHierarchy;NGotoBrace;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:53:Edit.GotoBrace;NGotoPrevMethod;NDerived Symbols;NGotoContainingDeclaration;NView Call Hierarchy;NBrowse Definition;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:937:View.BrowseDefinition;NFind Symbols External to Scope;NFindReferencedCode;NError Lookup;N{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1915:Edit.FindAllReferences;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1680:View.ClassViewGoToSearchCombo;NIncoming Calls;NCallHierarchy.ShowIncomingCalls;NNext Member;NGotoSymbol;NStructuralSearch.FindSimilarCode;NGo to Implementation;NUsages of Symbol;NGotoUsage;NOutgoing Calls;NCallHierarchy.ShowOutgoingCalls;NGotoRelatedFiles;NGo To Header File;N{6CD672F5-9C1A-11D1-ADE3-00C04FB6BE4C}:35110:EditorContextMenus.CodeWindow.GoToHeaderFile;NAltEnter;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.OptimizeImportsFix;EJetBrains.ReSharper.Intentions.QuickFixes.Naming.ChangeNameFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseVarFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.TypeToVarAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ImplementMemberFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateMethodFromUsageAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantQualifierFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.AddDocCommentFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.MoveTypeToAnotherFileAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateFieldFromUsageAction;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.MakeReadonlyFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ChangeModifierAction+MyBulbAction;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.RemoveUnusedElementFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CheckNullFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.IntroduceVariableAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.InvertIfFix;EStyleCop.ReSharper800.BulbItems.Ordering.OrderUsingsBulbItem;EJetBrains.ReSharper.Intentions.QuickFixes.ReferenceModuleAndTypeFixItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveInitializerFix;EJetBrains.ReSharper.Intentions.CSharp.DisableWarning.DisableOnceByCommentWarningAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantElseFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.VarToTypeAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseObjectInitializerFix;EJetBrains.ReSharper.Features.StructuralSearch.CustomPatternQuickFix;EJetBrains.ReSharper.Intentions.QuickFixes.CheckNamespaceQuickFix+MoveToNamespaceAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateClassFromNewItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveArgumentListFix;EJetBrains.ReSharper.Intentions.Bulk.BulkCodeCleanupActionBuilderBase+CodeCleanupInFileBulbAction;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.FixParameterTypeFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.LinqTools.ConvertForeachPartlyFix;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.RemoveUnusedVarFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.JoinDeclarationAndAssignmentFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UsageChecking.CSharpToConstFix;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.IntroduceFieldFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveToStringFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.AutomaticToBackingFieldAction;EJetBrains.ReSharper.Intentions.QuickFixes.VisibilityFixItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseCollectionInitializerFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.LinqTools.ConvertForeachFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateLocalVarFromUsageAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.RemoveBracesAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateGetSetPropertyFromUsageItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.MoveToInnerScopeFix;EJetBrains.ReSharper.Intentions.QuickFixes.ImportTypeItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.IfAndMergeAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.SpecifyACultureInStringConversionExplicitlyFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantTypeArgsFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernaryFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToMethodGroupFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveComparisonOfBoolFix;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.ToStaticFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.InvertIfAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveAsFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IntroduceVariableFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReplaceWithBoolConstFix;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.MakeClassSealedFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToCoalescing7Fix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveCastFix;EJetBrains.ReSharper.Intentions.CSharp.DisableWarning.DisableAndRestoreByCommentsWarningAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReferenceModuleFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantArrayTypeFix;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.InitializeFromConstructorsFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToLambdaExpressionFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.IfToTernaryAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.InitializeVarFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantDelegateCallFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernary2Fix;EJetBrains.ReSharper.Intentions.QuickFixes.AddParameterFixBase+BulbItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.RemoveRegionAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveFieldInitializerFix;EJetBrains.ReSharper.Intentions.QuickFixes.ChangeTypeFixItem;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.FixReturnTypeFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateMethodForDelegateAction;EJetBrains.ReSharper.Intentions.Xaml.QuickFixes.RemoveElementQuickFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.SplitDeclarationAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CheckReferenceNullAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.BackingFieldToAutomaticAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantJumpStatementFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.AddNamedArgumentAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.AddUsingAction;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.IntroduceAutoPropertyFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToAutoPropertyFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ImplementOrOverrideMember.ImplementAbstractMemberAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveEmptyConstructorFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.InvokeAsExtensionMethodFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToCoalescingFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.EnumerateToArrayFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.RemoveParenthesisAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToSwitchFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.SimplifyConditionalOperatorFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CSharpInitializeFieldAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveArgumentNameFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ChooseTypeFix+ChooseTypeFixItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernary3Fix;EJetBrains.ReSharper.Intentions.QuickFixes.Bulk.BulkQuickFixWithCommonPsiTransaction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UsageChecking.InitializeAutoPropertyFromContructorsFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveAssignmentFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.LambdaExpressionToReturnAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveUnreachableCodeFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ArrangeRedundantQualifierFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CheckParamNullAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.MoveToOuterScopeAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CastFixItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RenameWrongRefFix;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.InitializeAutoPropertyFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.AssertNotNullFix;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.MakeReturnTypeVoidFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CastInAssignmentFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToAutoProperty2Fix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ChangeParameterTypeInArgumentFix+ChangeTypeInParameterItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveDuplicateInterfaceFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.EnumerateToListFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveParamTypeSpecificationFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToDirectCastFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.FromLinqContextAction+TransformInvocationBulbItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.TernaryToIfAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToCoalescingFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IncreaseVisibilityFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.AddBreakFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CreateDerivedTypeAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.GenerateSwitchLabelsFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReplaceConditionWithRespectiveBranchFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UnmarkNullnessFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ChangeModifierAction+VisibilityBulbAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ForeachToForAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateParameterFromUsageAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReplaceWithIsFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToTernary4Fix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CastInInitializerFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.RenameFileToMatchTypeNameAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.SimplifyLinqExpressionFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CopyLocalFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantFieldNameFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.MoveInitializationAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CreateOverloadAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.FixStaticQualifierFix;EJetBrains.ReSharper.Intentions.QuickFixes.MakeAbstractFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RenameParameterFix;EJetBrains.ReSharper.Intentions.CSharp.DisableWarning.DisableByPragmaWarningAction;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.MarkUsedImplicitlyFix;EJetBrains.ReSharper.Daemon.InheritanceMarkOnGutterBase`1+<>c__DisplayClasse[JetBrains.ReSharper.Psi.ITypeMember];EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RenameVariableFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantCatchClauseFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ImportMethodFixItem;EJetBrains.ReSharper.Intentions.QuickFixes.UsageChecking.CommentUnusedMemberFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.TernarySwarpAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.GenerateConstructorFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantArrayCreationExpressionFix;EJetBrains.ReSharper.Intentions.QuickFixes.MakeStaticFix;EJetBrains.ReSharper.Intentions.QuickFixes.Bulk.BulkCodeCleanupQuickFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.MakeOverrideFix;EJetBrains.ReSharper.Feature.Services.Bulk.Items.ScopeBulkActionItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreatePropertyFromUsageItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.NotifyPropertyChangeAction+NotifyPropertyChangeItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ObjectInitializerToAssignmentsAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.MakeNewFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.AddTypeArgListFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.Misc.NegateAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CoalescingToTernaryAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ToNamedMethodItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.FormatString.AddFormatItemAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.Query.QueryToExtensionMethodActionItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateParameterFromUsageAndPullAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToStaticReadonlyFieldFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.EqualityOperatorToEqualsAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantStringFormatFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ImplementNotifyPropertyChangedFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ImplicitToExplicitMemberAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveEmptyStatementFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.InvertLogicalExpressionAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.AddSecondAccessorAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreatePropertyFromObjectCreationItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseExplicitArrayTypeFix+UseExplicitTypeItem;EJetBrains.ReSharper.Intentions.Xaml.QuickFixes.AddGridSpecificationFix;EJetBrains.ReSharper.Intentions.Xaml.QuickFixes.AddGridDefinitionsFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.AssertNotNullAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.FixBaseOverridableFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CastInReturnFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateConstructorFromUsageAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RenameMemberFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReturnValueFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToCoalescing3Fix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveExceptionFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.FixFloatingPointComparingFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseBaseReturnTypeFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveAccessorModifiersFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.SplitAndInIfAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToObjectCreationFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CatchToCatchExceptionAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.FormatString.UseFormatStringAction;EJetBrains.ReSharper.Intentions.QuickFixes.EncapsulateFieldRefactoringFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ChangeCreatedArrayTypeFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.SplitStringAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.EmbedInBlockFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.CopyCommentsAction;EJetBrains.ReSharper.Feature.Services.QuickFixes.Bulk.CodeCleanUp.BulkCodeCleanupItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.LambdaToAnonymousAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RenameLocalWrongRefFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantEmptySwitchBranchFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.LinqTools.ConvertForToForeachFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ChangeModifierAction+SetterBulbAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CommentAssignmentFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.AddSetAccessorFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.IfToCoalescing2Fix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.PassCancellationTokenFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ImplementInterface2Fix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.OverrideHiddenFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseNullOrEmptyFix;EJetBrains.ReSharper.Intentions.Xaml.QuickFixes.CreateTypeQuickFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantFinallyFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateClassFromQualifierAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.SplitOrInReturnAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseExplicitCastInForeachFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ToStringInAssignmentFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CreateStaticClassAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CSharpMakeNonStaticFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.MakeClassAbstractFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ConvertToLocalVariableFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.Misc.FlipOperatorArgumentsAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ExplicitToImplicitMemberAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.SimplifyNegativeEqualityExpressionFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.Annotations.MarkNotNullAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.WrapWithConstructorFix+WrapByConstructor;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.SpecifyFieldNameFixItem;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.SwitchToIfElseAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CopyToLocalVarFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.JoinDeclarationAction;EJetBrains.ReSharper.Intentions.Xaml.ContextActions.QualifyPropertyPathTypeFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveEmptyNamespaceFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantInitializerFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.UseNullableShortFormFix;EJetBrains.ReSharper.Intentions.Xml.ContextActions.RemoveTagAndKeepChildrenContextAction;EJetBrains.ReSharper.Intentions.SurroundItems.SurroundWithMoreAction;EJetBrains.ReSharper.Intentions.Xml.ContextActions.ExpandEmptyTagContextAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveDocCommentTagFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantParens2Fix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ChangeArgumentKindFix;EJetBrains.ReSharper.Intentions.Xml.QuickFixes.XmlSyntaxErrorQuickFix+MyBulbItem;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveExtendsListFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ReplaceConditionalTernaryByConditionFix;EJetBrains.ReSharper.Intentions.QuickFixes.MoveToFolderQuickFix+MoveToFolderItem;EJetBrains.ReSharper.I18n.Services.CSharp.QuickFixes.ConvertRegularStringToVerbatimFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ReturnValueAction;EJetBrains.ReSharper.Intentions.QuickFixes.ClrRemoveRedundantArgFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.IterateViaForeachAction;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveOverrideFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.NonI18n.CSharpSurroundWithQuotesAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.IfToSwitchAction;EJetBrains.ReSharper.Intentions.QuickFixes.MakeNonReadonlyFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.RemoveRedundantCommaFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.MakeTypeParameterVaraintFix;EJetBrains.ReSharper.Intentions.QuickFixes.Naming.AddAbbreviationFix+AddAbbreviationBulb;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.CallMethodFix;EJetBrains.ReSharper.Intentions.CSharp.QuickFixes.ChangeArgTypeInArgumentFix;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.ImplementEventAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.UseObjectInitializerAction;EJetBrains.ReSharper.Intentions.CSharp.ContextActions.MoveToAnotherPartAction;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:332:View.ViewDesigner;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2245:View.StartPage;N{501822E1-B5AF-11D0-B4DC-00A0C91506EF}:12384:OtherContextMenus.ObjectNode.RetrieveData;OView Log;OStart Page;OView Designer;EPART_MaxSecond;O{5EFC7975-14BC-11CF-9B2B-00AA00573819}:261:View.Open;NView;NCancel;OELV;OPromote to Document;E{501822E1-B5AF-11D0-B4DC-00A0C91506EF}:13608:OtherContextMenus.StaticNode.NewQuery;EMoveUp;EImportSettingsFromFile;LCHubButton;O{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8257:Resources.Images;EInjectExistingFileLayerIntoInjectedLayersHost;OSort Items Alphabetically;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:659:Tools.SortItemsAlphabetically;EView Summary;EForward;NValue Origin;ODfa.ReachingDefinitionsUp;O{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:33:Edit.ViewBottom;NShow All;NVisualizer_Button;O{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1225:Edit.MoveControlDown;EMoveDown;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1023:View.ResourceView;N{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8256:Resources.Strings;E{9478E63B-6975-4C39-A176-378A0C8F28B0}:45312:ViewFileInScriptPanel;NErrorsView.PauseContinue;LCHigh;ODocuments;NResource View;N{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8258:Resources.Icons;N{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8231:Resources.AddNewIcon;EEvents Solution;O{501822E1-B5AF-11D0-B4DC-00A0C91506EF}:12385:OtherContextMenus.ObjectNode.Edit;E{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1095:Tools.EditCustomComponentSet;Er;O{501822E1-B5AF-11D0-B4DC-00A0C91506EF}:12291:OtherContextMenus.ObjectNode.Design;ORefresh;DMoveInjectedLayerUp;LCProperties (Alt+Enter);EDeleteInjectedLayer;LC{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1226:Edit.MoveControlRight;ETab Order;LC{5EFC7975-14BC-11CF-9B2B-00AA00573819}:41:View.TabOrder;LCSokoAuftragsbearbeitung Properties...;OView All Results;EGenerate Report ...;E{5DD0BB59-7076-4C59-88D3-DE36931F63F0}:2100:View.ZoomIn;ONavigateBackwardApp;NView in Page Inspector;O{30947EBE-9147-45F9-96CF-401BFC671A82}:258:ClassViewContextMenus.ClassViewProject.View.ViewinPageInspector;OAdd Connection...;OPin To Source;LC{5289D302-2432-4761-8C45-051C64BD00C4}:840:EditorContextMenus.CodeWindow.PinToSource;LCApply Filter;LC{96119584-8C4B-4910-9211-71D48FA59FAF}:256:Tools.GuidancePackageManager;O{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:290:OtherContextMenus.Context.ViewCode;NOpenSettingsLayerContainingFolder;NSwitch to Tree View;LCGroup By Project;LCGenerateFileBesides;EReports;E{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8260:Resources.Files;EOnPremise;ODev;OWCF Service Configuration Editor;O{132320BA-BC11-4A1E-8E7A-6833DD4D4D39}:256:Tools.WCFServiceConfigurationEditor;OCode Map;OMoveIntoMatchingFiles;EView Markup;N{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:449:View.ViewMarkup;NGenerate Report;ERemove Split;LCMove to Main Document Group;LCProperties Window;EEnableDaemon;O101 Messages;OGuidance Package Manager;O_Cancel;OExport...;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1223:OtherContextMenus.ResourceView.Export;EController...;E{ABF9951D-5255-44C2-BDCC-B9231F81830C}:1280:ProjectandSolutionContextMenus.Project.Add.Controller;E{D63DB1F0-404E-4B21-9648-CA8D99245EC3}:18:Window.ActivateQuickLaunch;LCResume;DSwitch;OS_end Comments;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:108:Edit.ListMembers;EReset;E{5A51CF82-7619-4A5D-B054-47F438425AA7}:12288:OtherContextMenus.PropertyBrowser.Reset;EDAFTomLibrary Properties...;EFeatures;OIgnore for now;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1224:Edit.MoveControlLeft;E{66BD4C1D-3401-4BCC-A942-E4990827E6F7}:8272:Resources.ViewInList;NSelect All;EOpen View Definition;NExport Audit Project ...;E{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:90:Edit.SelectCurrentWord;EWindowManager.ActivateRecentTool;Nusing ;EBuild ;ESave ;ELoad ;NReattach to ;DBookmarks.;NAnalyze ;ECalculate Code Metrics;ECheck Out for Edit ;VCTemplate;EEdit ;EOpen Document;NRun Code Analysis ;ESave New ;PM

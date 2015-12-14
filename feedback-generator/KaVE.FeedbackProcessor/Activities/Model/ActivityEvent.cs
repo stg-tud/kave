@@ -23,6 +23,8 @@ namespace KaVE.FeedbackProcessor.Activities.Model
     {
         public Activity Activity { get; set; }
 
+        public IDEEvent Source { get; set; }
+
         protected bool Equals(ActivityEvent other)
         {
             return base.Equals(other) && Activity == other.Activity;

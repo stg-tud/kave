@@ -84,6 +84,8 @@ namespace KaVE.FeedbackProcessor.Database
                     cm.AutoMap();
                     cm.SetIdMember(cm.GetMemberMap(c => c.Id));
                     cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
+                    cm.SetIgnoreExtraElements(true);
+                    cm.SetIgnoreExtraElementsIsInherited(true);
                 });
             RegisterModelTypesFrom(typeof (IDEEvent).Assembly);
             RegisterModelTypesFrom(typeof (MongoDbFeedbackDatabase).Assembly);

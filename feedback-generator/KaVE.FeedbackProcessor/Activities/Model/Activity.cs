@@ -22,9 +22,13 @@ namespace KaVE.FeedbackProcessor.Activities.Model
 
         /* Some activity, but no inactivity. */
         Any,
-        /* Editing; Testing; Debugging; Building; Reloading/Refreshing; ... */
+        /* Editing; Building; Reloading/Refreshing; ... */
         Development,
+        /* Testing; Debugging; ... */
+        Debugging,
+        Testing,
         /* Version Control; Task Management; ... */
+        VersionControl,
         ProjectManagement,
         /* Opening, rearranging, closing windows; Editing options; Configure views; ... */
         LocalConfiguration,

@@ -43,7 +43,8 @@ namespace KaVE.FeedbackProcessor.Activities
         {
             var activityEvent = new ActivityEvent
             {
-                Activity = activity
+                Activity = activity,
+                Source = baseEvent
             };
             activityEvent.CopyIDEEventPropertiesFrom(baseEvent);
             return activityEvent;

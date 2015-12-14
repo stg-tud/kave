@@ -71,18 +71,20 @@ namespace KaVE.FeedbackProcessor
                     //LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
                     //LogIDEActivationEvents(OpenDatabase(importDatabase));
                     //LogOccuringNames(OpenDatabase(cleanDatabase));
+                    CollectCommandIdUsageStatistics(OpenDatabase(cleanDatabase));
+                    //CollectToolInteractionStatistics(OpenDatabase(cleanDatabase));
                     //LogCompletionStatistics(OpenDatabase(importDatabase));
                     //LogDevelopersPerDay(OpenDatabase(importDatabase));
                     //LogAverageBreakAfterEventsStatistic(OpenDatabase(cleanDatabase), "averageBreakAfterEvents.csv");
 
-                    RunActivityAnalysis(OpenDatabase(cleanDatabase), OpenDatabase(activityDatabase));
+                    //RunActivityAnalysis(OpenDatabase(cleanDatabase), OpenDatabase(activityDatabase));
                     //RunWindowUsageAnalysis(OpenDatabase(activityDatabase));
                 });
         }
 
         private void RunActivityAnalysis(IFeedbackDatabase cleanDatabase, IFeedbackDatabase activityDatabase)
         {
-            //MapToActivities(cleanDatabase, activityDatabase);
+            MapToActivities(cleanDatabase, activityDatabase);
             //LogActivityWindowStatistics(activityDatabase);
             LogActivityIntervalStatistics(activityDatabase);
         }
@@ -118,7 +120,7 @@ namespace KaVE.FeedbackProcessor
             cleaner.RegisterMapper(new ErrorFilterProcessor());
             cleaner.RegisterMapper(new UnnamedCommandFilterProcessor());
             cleaner.RegisterMapper(new DuplicateCommandFilterProcessor());
-            cleaner.RegisterMapper(new RedundantCommandFilter());
+            //cleaner.RegisterMapper(new RedundantCommandFilter());
             //cleaner.RegisterMapper(new AddFileProcessor());
             //cleaner.RegisterMapper(new EditFilterProcessor());
             cleaner.MapFeedback();
@@ -273,6 +275,43 @@ namespace KaVE.FeedbackProcessor
             Output("commandids.csv", commandIdCollector.AllCommandIds.EntryDictionary.ToCsv());
         }
 
+        private void CollectCommandIdUsageStatistics(IFeedbackDatabase database)
+        {
+            var collector1S = new CommandIdUsagePerPeriodCollector(TimeSpan.FromSeconds(1), TimeSpan.FromHours(3));
+            var collector1M = new CommandIdUsagePerPeriodCollector(TimeSpan.FromMinutes(1), TimeSpan.FromHours(3));
+            var collector10M = new CommandIdUsagePerPeriodCollector(TimeSpan.FromMinutes(10), TimeSpan.FromHours(3));
+            var collector30M = new CommandIdUsagePerPeriodCollector(TimeSpan.FromMinutes(30), TimeSpan.FromHours(3));
+            var collector1H = new CommandIdUsagePerPeriodCollector(TimeSpan.FromHours(1), TimeSpan.FromHours(3));
+            var collector1D = new CommandIdUsagePerPeriodCollector(TimeSpan.FromDays(1), TimeSpan.FromHours(3));
+
+            var processor = new FeedbackProcessor(database, _logger);
+            processor.Register(collector1S);
+            processor.Register(collector1M);
+            processor.Register(collector10M);
+            processor.Register(collector30M);
+            processor.Register(collector1H);
+            processor.Register(collector1D);
+            processor.ProcessFeedback();
+
+            Output("tools_per_1s.csv", collector1S.CommandIdsWithPeriodUsageFrequency.EntryDictionary.ToCsv() + collector1S.NumberOfPeriods);
+            Output("tools_per_1m.csv", collector1M.CommandIdsWithPeriodUsageFrequency.EntryDictionary.ToCsv() + collector1M.NumberOfPeriods);
+            Output("tools_per_10m.csv", collector10M.CommandIdsWithPeriodUsageFrequency.EntryDictionary.ToCsv() + collector10M.NumberOfPeriods);
+            Output("tools_per_30m.csv", collector30M.CommandIdsWithPeriodUsageFrequency.EntryDictionary.ToCsv() + collector30M.NumberOfPeriods);
+            Output("tools_per_1h.csv", collector1H.CommandIdsWithPeriodUsageFrequency.EntryDictionary.ToCsv() + collector1H.NumberOfPeriods);
+            Output("tools_per_1d.csv", collector1D.CommandIdsWithPeriodUsageFrequency.EntryDictionary.ToCsv() + collector1D.NumberOfPeriods);
+        }
+
+        private void CollectToolInteractionStatistics(IFeedbackDatabase database)
+        {
+            var collector = new ToolInteractionCollector(TimeSpan.FromHours(3));
+
+            var processor = new FeedbackProcessor(database, _logger);
+            processor.Register(collector);
+            processor.ProcessFeedback();
+
+            Output("tool_interaction.csv", collector.UsagesToCsv());
+        }
+
         private void LogIDEActivationEvents(IFeedbackDatabase database)
         {
             var calculator = new ParallelIDEInstancesStatisticCalculator();
@@ -292,7 +331,7 @@ namespace KaVE.FeedbackProcessor
             activityMapper.RegisterMapper(new AlwaysDropMapper()); // only generated events reach activity database
             activityMapper.RegisterMapper(new AnyToActivityMapper()); // map any event to a keep-alive
             activityMapper.RegisterMapper(new BuildEventToActivityMapper());
-            activityMapper.RegisterMapper(new CommandEventToActivityMapper());
+            activityMapper.RegisterMapper(new CommandEventToActivityMapper(_logger));
             activityMapper.RegisterMapper(new CompletionEventToActivityMapper());
             activityMapper.RegisterMapper(new DebuggerEventToActivityMapper());
             activityMapper.RegisterMapper(new DocumentEventToActivityMapper());
@@ -350,18 +389,19 @@ namespace KaVE.FeedbackProcessor
                         TimeSpan.FromSeconds(15),
                         TimeSpan.FromMinutes(5)));
 
-            /*Output(
+            Output(
                 "inactivity-separation-1-n.csv",
-                activityIntervalProcessor.InactivityStatisticToCsv(
+                intervalProcessor.InactivityStatisticToCsv(
                     TimeSpan.FromSeconds(1),
                     Enumerable.Range(2, 20).Select(i => TimeSpan.FromSeconds(i)).ToArray()));
 
             Output(
                 "inactivity-seperation-15-n.csv",
-                activityIntervalProcessor.InactivityStatisticToCsv(
+                intervalProcessor.InactivityStatisticToCsv(
                     TimeSpan.FromSeconds(15),
                     Enumerable.Range(1, 20).Select(i => TimeSpan.FromMinutes(i)).ToArray()));
 
+            /*
             foreach (var lostTime in activityIntervalProcessor.LostTimeStatistics)
             {
                 _logger.Info(

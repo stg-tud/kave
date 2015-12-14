@@ -149,6 +149,7 @@
     <Compile Include="Statistics\AnonymizationStatisticsLogger.cs" />
     <Compile Include="Statistics\AverageBreakAfterEventsCalculator.cs" />
     <Compile Include="Statistics\CommandIdCollector.cs" />
+    <Compile Include="Statistics\CommandIdUsagePerPeriodCollector.cs" />
     <Compile Include="Statistics\CompletionDurationStatistic.cs" />
     <Compile Include="Statistics\CompletionInvocationStatistic.cs" />
     <Compile Include="Statistics\DeveloperEventCounter.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Statistics\IsolatedEventBlocksCalculator.cs" />
     <Compile Include="Statistics\ManualCompletionsStatistic.cs" />
     <Compile Include="Statistics\ParallelIDEInstancesStatisticCalculator.cs" />
+    <Compile Include="Statistics\ToolInteractionCollector.cs" />
     <Compile Include="Statistics\WindowNameCollector.cs" />
     <Compile Include="TimeBudgetEvaluationApp.cs" />
     <Compile Include="Utils\EventMappingUtils.cs" />
@@ -185,6 +187,8 @@
     <None Include="Resources\commands_vs_bars_ids.de.csv" />
     <None Include="Resources\commands_vs_click_ids.de.csv" />
     <None Include="Resources\commands_vs_ids.csv" />
+    <None Include="Resources\CommandToolMapping.csv" />
+    <None Include="Resources\ExcludedDays.csv" />
     <None Include="Resources\windows.de.csv" />
   </ItemGroup>
   <ItemGroup>

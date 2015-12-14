@@ -44,17 +44,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldMapMoveToConfiguration()
-        {
-            var @event = new WindowEvent
-            {
-                Window = WindowName.Get("Type Caption"),
-                Action = WindowEvent.WindowAction.Move
-            };
-            AssertMapsToActivity(@event, Activity.LocalConfiguration);
-        }
-
-        [Test]
         public void ShouldMapCloseToConfiguration()
         {
             var @event = new WindowEvent
@@ -191,7 +180,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get("vsWindowTypeOutput Output"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.Development);
+            AssertMapsToActivities(@event, Activity.Debugging);
         }
 
         [Test]
@@ -235,7 +224,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get("vsWindowTypeToolWindow Unit Test Explorer"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivity(@event, Activity.Development);
+            AssertMapsToActivity(@event, Activity.Testing);
         }
 
         [Test]

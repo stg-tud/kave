@@ -6,7 +6,10 @@
 
 // aggregate duration per event type
 
-
+{ $group : {
+	_id : "$_t",
+	dur : { $sum : { $subtract : ["$TerminatedAt", "$TriggeredAt"] } }
+} }
 
 // aggregate duration per command id
 

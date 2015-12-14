@@ -300,15 +300,16 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 var numberOfInactivityPeriods = 0;
                 var longInactivity = TimeSpan.Zero;
                 var numberOfLongInactivityPeriods = 0;
+                var away = TimeSpan.Zero;
+                var numberOfAwayPeriods = 0;
                 var numberOfActivitySprees = 0;
                 var days = new HashSet<string>();
                 foreach (var intervalStream in GetIntervalsWithCorrectTimeouts(activityTimeout, shortInactivityTimeout))
                 {
+                    days.Add(intervalStream.Key.Id);
                     var lastWasInactivity = false;
                     foreach (var interval in intervalStream.Value)
                     {
-                        days.Add(string.Format("{0}-{1}", intervalStream.Key.Id, interval.Start.Date));
-
                         if (interval.Id == Activity.Inactive)
                         {
                             numberOfInactivityPeriods++;
@@ -319,6 +320,12 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                         {
                             numberOfLongInactivityPeriods++;
                             longInactivity += interval.Duration;
+                            lastWasInactivity = true;
+                        }
+                        else if (interval.Id == Activity.Away)
+                        {
+                            numberOfAwayPeriods++;
+                            away += interval.Duration;
                             lastWasInactivity = true;
                         }
                         else if (lastWasInactivity)
@@ -333,6 +340,8 @@ namespace KaVE.FeedbackProcessor.Activities.Intervals
                 builder["# of Inactivities"] = numberOfInactivityPeriods;
                 builder["Long Inactivity (s)"] = longInactivity.RoundedTotalSeconds();
                 builder["# of Long Inactivities"] = numberOfLongInactivityPeriods;
+                builder["Away (s)"] = away.RoundedTotalSeconds();
+                builder["# of Aways"] = numberOfAwayPeriods;
                 builder["# of activity sprees"] = numberOfActivitySprees;
                 builder["Days"] = days.Count;
             }

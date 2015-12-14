@@ -66,6 +66,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             return new ActivityEvent
             {
                 Activity = activity,
+                Source = @event,
                 IDESessionUUID = @event.IDESessionUUID,
                 KaVEVersion = @event.KaVEVersion,
                 TriggeredAt = @event.TriggeredAt,
