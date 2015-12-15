@@ -15,12 +15,10 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
 
@@ -28,55 +26,51 @@ namespace KaVE.FeedbackProcessor.Intervals
 {
     public class IntervalTransformer
     {
-        private readonly List<IEventToIntervalTransformer<Interval>> _transformers;
-        private Queue<Interval> _queue; 
-
-        public IntervalTransformer()
-        {
-            _transformers = new List<IEventToIntervalTransformer<Interval>>();
-            _queue = new Queue<Interval>();
-
-            RegisterTransformer(new VisualStudioOpenedTransformer());
-            RegisterTransformer(new UserActiveTransformer());
-        }
-
-        private void RegisterTransformer<T>(IEventToIntervalTransformer<T> transformer)
-            where T : Interval
-        {
-            transformer.IntervalCompleted += Transformer_IntervalCompleted;
-            _transformers.Add(transformer);
-        }
-
-        private void Transformer_IntervalCompleted(Interval interval)
-        {
-            _queue.Enqueue(interval);
-        }
-
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
             // Events are usually not saved in order (neither by trigger nor by termination time)
             // so we have to sort them before processing. Maybe there is a better solution ...
-            events = events.OrderBy(e => e.TriggeredAt);
+            //events = events.OrderBy(e => e.TriggeredAt);
 
-            // TODO: provide developer parameter?
-            _transformers.ForEach(t => t.OnStreamStarts(null));
+            foreach (var e in DoSingleTransformerRun(events, new VisualStudioOpenedTransformer()))
+            {
+                yield return e;
+            }
 
+            foreach (var e in DoSingleTransformerRun(events, new UserActiveTransformer()))
+            {
+                yield return e;
+            }
+        }
+
+        private IEnumerable<Interval> DoSingleTransformerRun(IEnumerable<IDEEvent> events, IEventToIntervalTransformer<Interval> transformer)
+        {
+            Console.WriteLine(@"Transforming event stream with {0} ...", transformer.GetType().Name);
+
+            var currentEventTime = DateTime.MinValue;
+            int i = 0;
             foreach (var e in events)
             {
-                _transformers.ForEach(t => t.OnEvent(e));
+                Console.Write("\rProcessed {0} events ...", ++i);
 
-                while (_queue.Count > 0)
+                if (TransformerUtils.EventHasNoTimeData(e))
                 {
-                    yield return _queue.Dequeue();
+                    continue;
                 }
+
+                if (e.TriggeredAt.GetValueOrDefault() < currentEventTime)
+                {
+                    throw new InvalidDataException("Event stream must be ordered by the 'TriggeredAt' property.");
+                }
+
+                currentEventTime = e.TriggeredAt.GetValueOrDefault();
+
+                transformer.ProcessEvent(e);
             }
 
-            _transformers.ForEach(t => t.OnStreamEnds());
+            Console.WriteLine();
 
-            while (_queue.Count > 0)
-            {
-                yield return _queue.Dequeue();
-            }
+            return transformer.SignalEndOfEventStream();
         }
     }
 }

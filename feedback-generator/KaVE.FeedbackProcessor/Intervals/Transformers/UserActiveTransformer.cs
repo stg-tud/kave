@@ -14,50 +14,44 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
-    internal class UserActiveTransformer : SingleIntervalTransformerBase<UserActiveInterval>
+    internal class UserActiveTransformer : IEventToIntervalTransformer<UserActiveInterval>
     {
-        private const int MaxInactivityTime = 16;
+        private readonly IList<UserActiveInterval> _intervals;
+        private readonly TimeSpan _maxInactivityTime;
 
-        public override void OnEvent(IDEEvent e)
+        public UserActiveTransformer(TimeSpan? maxInactivityTime = null)
         {
-            if (EventHasNoTimeData(e))
+            _intervals = new List<UserActiveInterval>();
+            _maxInactivityTime = maxInactivityTime ?? TimeSpan.FromSeconds(16);
+        }
+
+        public void ProcessEvent(IDEEvent e)
+        {
+            var lastInterval = _intervals.LastOrDefault();
+            var currentEventStartTime = e.TriggeredAt.GetValueOrDefault();
+            var currentEventEndTime = e.TerminatedAt.GetValueOrDefault();
+
+            if (lastInterval != null && lastInterval.EndTime +_maxInactivityTime >= currentEventStartTime)
             {
-                return;
+                lastInterval.Duration = currentEventEndTime - lastInterval.StartTime;
             }
-
-            if (_currentInterval != null)
+            else
             {
-                var currentIntervalEndTime = _currentInterval.StartTime + _currentInterval.Duration;
-                var currentEventStartTime = e.TriggeredAt.GetValueOrDefault();
-                var currentEventEndTime = e.TerminatedAt.GetValueOrDefault();
-
-                if (currentIntervalEndTime.AddSeconds(MaxInactivityTime) < currentEventStartTime)
-                {
-                    FireInterval();
-                }
-                else
-                {
-                    if (currentIntervalEndTime < currentEventEndTime)
-                    {
-                        _currentInterval.Duration = currentEventEndTime - _currentInterval.StartTime;
-                    }
-                }
-            }
-
-            if (_currentInterval == null)
-            {
-                CreateIntervalFromFirstEvent(e);
+                _intervals.Add(TransformerUtils.CreateIntervalFromFirstEvent<UserActiveInterval>(e));
             }
         }
 
-        public override void OnStreamEnds()
+        public IEnumerable<UserActiveInterval> SignalEndOfEventStream()
         {
-            FireInterval();
+            return _intervals;
         }
     }
 }

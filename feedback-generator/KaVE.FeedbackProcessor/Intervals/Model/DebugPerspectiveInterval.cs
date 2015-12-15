@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using KaVE.Commons.Model.Events;
-using KaVE.FeedbackProcessor.Intervals.Model;
-
-namespace KaVE.FeedbackProcessor.Intervals.Transformers
+namespace KaVE.FeedbackProcessor.Intervals.Model
 {
-    public interface IEventToIntervalTransformer<out TIntervalType>
-        where TIntervalType : Interval
-    {
-        void ProcessEvent(IDEEvent @event);
-        IEnumerable<TIntervalType> SignalEndOfEventStream();
-    }
+    public class DebugPerspectiveInterval : Interval {}
 }

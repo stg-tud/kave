@@ -27,10 +27,58 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         [NotNull]
         public TimeSpan Duration { get; set; }
 
+        public DateTime EndTime
+        {
+            get { return StartTime + Duration; }
+        }
+
         protected Interval()
         {
             StartTime = DateTime.MinValue;
             Duration = TimeSpan.Zero;
+        }
+
+        protected bool Equals(Interval other)
+        {
+            return StartTime.Equals(other.StartTime) && Duration.Equals(other.Duration);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+            return Equals((Interval) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (StartTime.GetHashCode()*397) ^ Duration.GetHashCode();
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "{0}: {1} ~ {2} ({3}d {4}h {5}m {6}s)",
+                GetType().Name,
+                StartTime,
+                EndTime,
+                Duration.Days,
+                Duration.Hours,
+                Duration.Minutes,
+                Duration.Seconds);
         }
     }
 }

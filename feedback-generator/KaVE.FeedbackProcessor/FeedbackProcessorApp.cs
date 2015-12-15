@@ -30,7 +30,7 @@ namespace KaVE.FeedbackProcessor
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
 
-            new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/events.zip");
+            new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a");
 
             Console.ReadKey();
         }

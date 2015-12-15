@@ -14,29 +14,46 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
-    internal class VisualStudioOpenedTransformer : SingleIntervalTransformerBase<VisualStudioOpenedInterval>
+    internal class VisualStudioOpenedTransformer : IEventToIntervalTransformer<VisualStudioOpenedInterval>
     {
-        public override void OnEvent(IDEEvent e)
-        {
-            if (EventHasNoTimeData(e))
-            {
-                return;
-            }
+        private readonly IDictionary<string, VisualStudioOpenedInterval> _intervals;
 
-            if (_currentInterval == null)
+        public VisualStudioOpenedTransformer()
+        {
+            _intervals = new Dictionary<string, VisualStudioOpenedInterval>();
+        }
+
+        public void ProcessEvent(IDEEvent e)
+        {
+            if (_intervals.ContainsKey(e.IDESessionUUID))
             {
-                CreateIntervalFromFirstEvent(e);
+                AdaptExistingInterval(_intervals[e.IDESessionUUID], e);
+            }
+            else
+            {
+                _intervals.Add(
+                    e.IDESessionUUID,
+                    TransformerUtils.CreateIntervalFromFirstEvent<VisualStudioOpenedInterval>(e));
             }
         }
 
-        public override void OnStreamEnds()
+        private void AdaptExistingInterval(VisualStudioOpenedInterval interval, IDEEvent ideEvent)
         {
-            FireInterval();
+            if (ideEvent.TerminatedAt.GetValueOrDefault() > interval.StartTime + interval.Duration)
+            {
+                interval.Duration = ideEvent.TerminatedAt.GetValueOrDefault() - interval.StartTime;
+            }
+        }
+
+        public IEnumerable<VisualStudioOpenedInterval> SignalEndOfEventStream()
+        {
+            return _intervals.Values;
         }
     }
 }

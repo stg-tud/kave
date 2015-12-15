@@ -15,7 +15,6 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
@@ -26,7 +25,7 @@ namespace KaVE.FeedbackProcessor
 {
     internal class IntervalTransformerApp
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public IntervalTransformerApp(ILogger logger)
         {
@@ -38,10 +37,10 @@ namespace KaVE.FeedbackProcessor
             var transformer = new IntervalTransformer();
             var events = GetAllEventsFromFile(eventArchiveFile);
 
+            _logger.Info("Transforming intervals from {0}.", eventArchiveFile);
             foreach (var interval in transformer.Transform(events))
             {
-                _logger.Info("{0}: {1} ~ {2} ({3:F2}s)", interval.GetType().Name, interval.StartTime, 
-                    interval.StartTime + interval.Duration, interval.Duration.TotalSeconds);
+                _logger.Info(interval.ToString());
             }
         }
 
