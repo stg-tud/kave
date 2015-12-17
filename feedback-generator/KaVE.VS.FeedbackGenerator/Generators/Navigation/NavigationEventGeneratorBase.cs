@@ -47,7 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         protected void FireNavigationEvent(
             [NotNull] IName target,
             [NotNull] IName location,
-            NavigationEvent.NavigationType typeOfNavigation,
+            NavigationType typeOfNavigation,
             IDEEvent.Trigger triggeredBy)
         {
             var navigationEvent = Create<NavigationEvent>();

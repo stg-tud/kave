@@ -47,7 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
                 FireNavigationEvent(
                     _navigationUtils.GetTarget(args.TextControl),
                     _navigationUtils.GetLocation(args.TextControl),
-                    NavigationEvent.NavigationType.CtrlClick,
+                    NavigationType.CtrlClick,
                     IDEEvent.Trigger.Click);
             }
         }

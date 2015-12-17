@@ -62,13 +62,13 @@ namespace KaVE.Commons.Model.Events
                 return hashCode;
             }
         }
+    }
 
-        public enum NavigationType
-        {
-            Unknown = 0,
-            CtrlClick,
-            Click,
-            Keyboard
-        }
+    public enum NavigationType
+    {
+        Unknown = 0,
+        CtrlClick,
+        Click,
+        Keyboard
     }
 }

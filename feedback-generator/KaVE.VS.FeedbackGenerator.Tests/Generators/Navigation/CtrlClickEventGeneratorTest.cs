@@ -31,8 +31,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
     {
         private CtrlClickEventGenerator _uut;
 
-        private Mock<ISignal<TextControlMouseEventArgs>> _mouseUpSignalMock;
-        private Mock<ITextControl> _textControlMock;
+        private ISignal<TextControlMouseEventArgs> _mouseUpSignal;
+        private ITextControl _textControl;
 
         private IName _testLocation;
         private IName _testTarget;
@@ -45,45 +45,44 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         [SetUp]
         public void Setup()
         {
-            _textControlMock = new Mock<ITextControl>();
-            var textControlManagerMock = new Mock<ITextControlManager>();
-            textControlManagerMock.Setup(tcManager => tcManager.TextControls)
-                                  .Returns(
-                                      new CollectionEvents<ITextControl>(
-                                          TestLifetime,
-                                          "this can't be empty")
-                                      {
-                                          _textControlMock.Object
-                                      });
+            _textControl = Mock.Of<ITextControl>();
+            var textControlManager = Mock.Of<ITextControlManager>();
+            Mock.Get(textControlManager).Setup(tcManager => tcManager.TextControls)
+                .Returns(
+                    new CollectionEvents<ITextControl>(
+                        TestLifetime,
+                        "this can't be empty")
+                    {
+                        _textControl
+                    });
 
-            var windowMock = new Mock<ITextControlWindow>();
-            _mouseUpSignalMock = new Mock<ISignal<TextControlMouseEventArgs>>();
-            windowMock.Setup(window => window.MouseUp).Returns(_mouseUpSignalMock.Object);
-            _textControlMock.Setup(tc => tc.Window).Returns(windowMock.Object);
+            var window = Mock.Of<ITextControlWindow>();
+            _mouseUpSignal = Mock.Of<ISignal<TextControlMouseEventArgs>>();
+            Mock.Get(window).Setup(w => w.MouseUp).Returns(_mouseUpSignal);
+            Mock.Get(_textControl).Setup(tc => tc.Window).Returns(window);
 
             _testTarget = TypeName.Get("System.Int32, mscore, 4.0.0.0");
-            _testLocation =
-                MethodName.Get("[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()");
+            _testLocation = MethodName.Get("[TR,P] [TD,P].M()");
 
-            var navigationUtilsMock = new Mock<INavigationUtils>();
-            navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetTarget(It.IsAny<ITextControl>()))
-                                .Returns(() => _testTarget);
-            navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetLocation(It.IsAny<ITextControl>()))
-                                .Returns(() => _testLocation);
+            var navigationUtils = Mock.Of<INavigationUtils>();
+            Mock.Get(navigationUtils).Setup(nu => nu.GetTarget(It.IsAny<ITextControl>()))
+                .Returns(() => _testTarget);
+            Mock.Get(navigationUtils).Setup(nu => nu.GetLocation(It.IsAny<ITextControl>()))
+                .Returns(() => _testLocation);
 
             _uut = new CtrlClickEventGenerator(
                 TestRSEnv,
                 TestMessageBus,
                 TestDateUtils,
-                textControlManagerMock.Object,
-                navigationUtilsMock.Object,
+                textControlManager,
+                navigationUtils,
                 TestLifetime);
         }
 
         [Test]
         public void ShouldAdviceOnClick()
         {
-            _mouseUpSignalMock.Verify(signal => signal.Advise(TestLifetime, _uut.OnClick));
+            Mock.Get(_mouseUpSignal).Verify(signal => signal.Advise(TestLifetime, _uut.OnClick));
         }
 
         [Test]
@@ -133,7 +132,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             var keyStateMasks = withCtrl ? KeyStateMasks.MK_CONTROL : KeyStateMasks.MK_LBUTTON;
             _uut.OnClick(
                 new TextControlMouseEventArgs(
-                    _textControlMock.Object,
+                    _textControl,
                     keyStateMasks,
                     new Point()));
         }
@@ -142,7 +141,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         {
             _uut.OnClick(
                 new TextControlMouseEventArgs(
-                    _textControlMock.Object,
+                    _textControl,
                     KeyStateMasks.MK_RBUTTON | KeyStateMasks.MK_CONTROL,
                     new Point()));
         }

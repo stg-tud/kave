@@ -23,6 +23,7 @@ using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
@@ -58,9 +59,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             if (_oldLocation != null && !Equals(newLocation, _oldLocation))
             {
                 FireNavigationEvent(
+                    Name.UnknownName,
                     newLocation,
-                    _oldLocation,
-                    NavigationEvent.NavigationType.Click,
+                    NavigationType.Click,
                     IDEEvent.Trigger.Click);
             }
 
@@ -76,9 +77,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
                 if (_oldLocation != null && !Equals(newLocation, _oldLocation))
                 {
                     FireNavigationEvent(
+                        Name.UnknownName,
                         newLocation,
-                        _oldLocation,
-                        NavigationEvent.NavigationType.Keyboard,
+                        NavigationType.Keyboard,
                         IDEEvent.Trigger.Typing);
                 }
             }

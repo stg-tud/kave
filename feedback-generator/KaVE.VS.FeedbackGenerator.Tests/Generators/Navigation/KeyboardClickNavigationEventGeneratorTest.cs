@@ -32,14 +32,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
     {
         private KeyboardClickNavigationEventGenerator _uut;
 
-        private Mock<ISignal<EventArgs<ITextControl>>> _keyboardSignalMock;
-        private Mock<ISignal<TextControlMouseEventArgs>> _mouseSignalMock;
-        private Mock<INavigationUtils> _navigationUtilsMock;
-        private Mock<ITextControl> _textControlMock;
+        private ISignal<EventArgs<ITextControl>> _keyboardSignal;
+        private ISignal<TextControlMouseEventArgs> _mouseSignal;
+        private INavigationUtils _navigationUtils;
+        private ITextControl _textControl;
 
-        private IName _testLocation;
-        private IName _testTarget;
         private bool _navigationKeyPressed;
+        private readonly IMethodName _method1 = MethodName.Get("[TR,P] [TD,P].M()");
+        private readonly IMethodName _method2 = MethodName.Get("[TR,P] [TD,P].M2()");
 
         private static Lifetime TestLifetime
         {
@@ -49,37 +49,36 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         [SetUp]
         public void Setup()
         {
-            _textControlMock = new Mock<ITextControl>();
-            var textControlManagerMock = new Mock<ITextControlManager>();
-            textControlManagerMock.Setup(tcManager => tcManager.TextControls)
-                                  .Returns(
-                                      new CollectionEvents<ITextControl>(
-                                          TestLifetime,
-                                          "this can't be empty")
-                                      {
-                                          _textControlMock.Object
-                                      });
+            // mouse + keyboard
+            _keyboardSignal = Mock.Of<ISignal<EventArgs<ITextControl>>>();
+            _mouseSignal = Mock.Of<ISignal<TextControlMouseEventArgs>>();
 
-            var windowMock = new Mock<ITextControlWindow>();
-            _keyboardSignalMock = new Mock<ISignal<EventArgs<ITextControl>>>();
-            windowMock.Setup(window => window.Keyboard).Returns(_keyboardSignalMock.Object);
-            _mouseSignalMock = new Mock<ISignal<TextControlMouseEventArgs>>();
-            windowMock.Setup(window => window.MouseDown).Returns(_mouseSignalMock.Object);
+            // window
+            var window = Mock.Of<ITextControlWindow>();
+            Mock.Get(window).Setup(w => w.Keyboard).Returns(_keyboardSignal);
+            Mock.Get(window).Setup(w => w.MouseDown).Returns(_mouseSignal);
 
-            _textControlMock.Setup(tc => tc.Window).Returns(windowMock.Object);
+            // textcontrol
+            _textControl = Mock.Of<ITextControl>();
+            var textControlManager = Mock.Of<ITextControlManager>();
+            Mock.Get(textControlManager).Setup(tcManager => tcManager.TextControls)
+                .Returns(
+                    new CollectionEvents<ITextControl>(
+                        TestLifetime,
+                        "this can't be empty")
+                    {
+                        _textControl
+                    });
+            Mock.Get(_textControl).Setup(tc => tc.Window).Returns(window);
 
-            _testTarget = TypeName.Get("System.Int32, mscore, 4.0.0.0");
-            _testLocation =
-                MethodName.Get("[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()");
+            // navigation utils
+            _navigationUtils = Mock.Of<INavigationUtils>();
+            Mock.Get(_navigationUtils).Setup(navigationUtils => navigationUtils.GetTarget(It.IsAny<ITextControl>()))
+                .Returns(Name.UnknownName);
+            SetLocation(_method1);
 
-            _navigationUtilsMock = new Mock<INavigationUtils>();
-            _navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetTarget(It.IsAny<ITextControl>()))
-                                .Returns(() => _testTarget);
-            _navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetLocation(It.IsAny<ITextControl>()))
-                                .Returns(() => _testLocation);
-
-            var keyUtilMock = new Mock<KeyboardClickNavigationEventGenerator.IKeyUtil>();
-            keyUtilMock.Setup(util => util.IsPressed(It.IsAny<Key>())).Returns(() => _navigationKeyPressed);
+            var keyUtil = Mock.Of<KeyboardClickNavigationEventGenerator.IKeyUtil>();
+            Mock.Get(keyUtil).Setup(util => util.IsPressed(It.IsAny<Key>())).Returns(() => _navigationKeyPressed);
 
             _navigationKeyPressed = true;
 
@@ -87,71 +86,22 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
                 TestRSEnv,
                 TestMessageBus,
                 TestDateUtils,
-                textControlManagerMock.Object,
-                _navigationUtilsMock.Object,
+                textControlManager,
+                _navigationUtils,
                 TestLifetime,
-                keyUtilMock.Object);
+                keyUtil);
         }
 
         [Test]
         public void ShouldAdviceOnKeyPress()
         {
-            _keyboardSignalMock.Verify(keyboard => keyboard.Advise(TestLifetime, _uut.OnKeyPress));
+            Mock.Get(_keyboardSignal).Verify(keyboard => keyboard.Advise(TestLifetime, _uut.OnKeyPress));
         }
 
         [Test]
-        public void ShouldNotFireOnFirstLocation()
+        public void ShouldAdviceOnClick()
         {
-            PressKey();
-            AssertNoEvent();
-        }
-
-        [Test]
-        public void ShouldFireEventOnLocationChange()
-        {
-            PressKey();
-            SetLocation(
-                MethodName.Get("static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()"));
-            PressKey();
-            GetSinglePublished<NavigationEvent>();
-        }
-
-        [Test]
-        public void ShouldSetLocationToOldLocation()
-        {
-            PressKey();
-            SetLocation(
-                MethodName.Get("static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()"));
-            PressKey();
-
-            var actualEvent = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(_testLocation, actualEvent.Location);
-        }
-
-        [Test]
-        public void ShouldSetTargetToNewLocation()
-        {
-            var newLocation =
-                MethodName.Get("static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()");
-            PressKey();
-            SetLocation(newLocation);
-            PressKey();
-
-            var actualEvent = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(newLocation, actualEvent.Target);
-        }
-
-        [Test]
-        public void ShouldSetTriggerAndTypeToKeyboard()
-        {
-            PressKey();
-            SetLocation(
-                MethodName.Get("static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()"));
-            PressKey();
-
-            var actualEvent = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(IDEEvent.Trigger.Typing, actualEvent.TriggeredBy);
-            Assert.AreEqual(NavigationEvent.NavigationType.Keyboard, actualEvent.TypeOfNavigation);
+            Mock.Get(_mouseSignal).Verify(signal => signal.Advise(TestLifetime, _uut.OnClick));
         }
 
         [Test]
@@ -160,100 +110,93 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             _navigationKeyPressed = false;
 
             PressKey();
-            SetLocation(
-                MethodName.Get("static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()"));
+            SetLocation(_method2);
             PressKey();
 
             AssertNoEvent();
         }
 
         [Test]
-        public void ShouldAdviceOnClick()
-        {
-            _mouseSignalMock.Verify(signal => signal.Advise(TestLifetime, _uut.OnClick));
-        }
-
-        [Test]
-        public void ShouldNotFireOnNonMouseEvents()
+        public void ShouldNotFireOnFirstLocation_Keyboard()
         {
             PressKey();
             AssertNoEvent();
         }
 
         [Test]
-        public void ShouldNotFireOnFirstNewLocation()
+        public void ShouldNotFireOnFirstLocation_Mouse()
         {
-            SetLocation(TypeName.Get("System.Int32, mscore, 4.0.0.0"));
-            Click();
             Click();
             AssertNoEvent();
         }
 
         [Test]
-        public void ShouldNotFireOnClickIfNoNewLocation()
+        public void ShouldNotFireIfNoChange_Keyboard()
         {
-            SetLocation(TypeName.Get("System.Int32, mscore, 4.0.0.0"));
+            PressKey();
+            SetLocation(_method1);
+            PressKey();
+            SetLocation(_method1);
+            PressKey();
+            AssertNoEvent();
+        }
+
+        [Test]
+        public void ShouldNotFireIfNoChange_Mouse()
+        {
             Click();
+            SetLocation(_method1);
             Click();
+            SetLocation(_method1);
             Click();
             AssertNoEvent();
         }
 
         [Test]
-        public void ShouldFireOnClickIfNewLocation()
+        public void ShouldFireEventOnLocationChange_Keyboard()
         {
-            SetLocation(TypeName.Get("System.Int32, mscore, 4.0.0.0"));
-            Click();
-            SetLocation(TypeName.Get("System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0"));
-            Click();
+            PressKey();
+            SetLocation(_method2);
+            PressKey();
 
-            GetSinglePublished<NavigationEvent>();
+            var actual = GetSinglePublished<NavigationEvent>();
+            Assert.AreEqual(_method2, actual.Location);
+            Assert.AreEqual(Name.UnknownName, actual.Target);
+            Assert.AreEqual(IDEEvent.Trigger.Typing, actual.TriggeredBy);
+            Assert.AreEqual(NavigationType.Keyboard, actual.TypeOfNavigation);
         }
 
         [Test]
-        public void ShouldSetLocationToOldLocationOnClick()
+        public void ShouldFireEventOnLocationChange_Mouse()
         {
-            var oldLocation = TypeName.Get("System.Int32, mscore, 4.0.0.0");
-            var newLocation = TypeName.Get("System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0");
-
-            SetLocation(oldLocation);
             Click();
-            SetLocation(newLocation);
+            SetLocation(_method2);
             Click();
 
-            Assert.AreEqual(oldLocation, GetSinglePublished<NavigationEvent>().Location);
+            var actual = GetSinglePublished<NavigationEvent>();
+            Assert.AreEqual(_method2, actual.Location);
+            Assert.AreEqual(Name.UnknownName, actual.Target);
+            Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
+            Assert.AreEqual(NavigationType.Click, actual.TypeOfNavigation);
         }
 
-        [Test]
-        public void ShouldSetTargetToNewLocationOnClick()
-        {
-            var oldLocation = TypeName.Get("System.Int32, mscore, 4.0.0.0");
-            var newLocation = TypeName.Get("System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0");
-
-            SetLocation(oldLocation);
-            Click();
-            SetLocation(newLocation);
-            Click();
-
-            Assert.AreEqual(newLocation, GetSinglePublished<NavigationEvent>().Target);
-        }
-        
         #region helpers
 
         private void Click()
         {
-            _uut.OnClick(new TextControlMouseEventArgs(_textControlMock.Object, KeyStateMasks.MK_LBUTTON, Point.Empty));
+            _uut.OnClick(new TextControlMouseEventArgs(_textControl, KeyStateMasks.MK_LBUTTON, Point.Empty));
         }
 
         private void PressKey()
         {
-            _uut.OnKeyPress(new EventArgs<ITextControl>(_textControlMock.Object));
+            _uut.OnKeyPress(new EventArgs<ITextControl>(_textControl));
         }
 
         private void SetLocation(IName value)
         {
-            _navigationUtilsMock.Setup(navigationUtils => navigationUtils.GetLocation(_textControlMock.Object))
-                                .Returns(value);
+            Mock.Get(_navigationUtils)
+                .Setup(navigationUtils => navigationUtils.GetLocation(_textControl))
+                .Returns(value);
         }
 
         #endregion
