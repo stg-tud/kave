@@ -39,9 +39,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
         [Test]
         public void ShouldFireOnMove()
         {
-            Raise(events => events.MouseMove += null);
+            MoveMouse();
             MakeUserInactive();
-            Raise(events => events.MouseMove += null);
+            MoveMouse();
 
             var actualEvent = GetSinglePublished<ActivityEvent>();
             Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
@@ -82,6 +82,56 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
             Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
         }
 
+        [Test]
+        public void CorrectStartAndDurationIsRegistered()
+        {
+            var now = TestDateUtils.Now;
+            MoveMouse();
+            TimePassed(1);
+            MoveMouse();
+            TimePassed(1);
+            MoveMouse();
+            MakeUserInactive();
+            MoveMouse();
+
+            var actual = GetSinglePublished<ActivityEvent>();
+            Assert.AreEqual(now, actual.TriggeredAt);
+            Assert.AreEqual(2, actual.Duration.Value.Seconds);
+        }
+
+        [Test]
+        public void MultipleEventsAreCorrect()
+        {
+            var start1 = TestDateUtils.Now;
+            MoveMouse();
+            TimePassed(1);
+            MoveMouse();
+            MakeUserInactive();
+            var start2 = TestDateUtils.Now;
+            MoveMouse();
+            TimePassed(2);
+            MoveMouse();
+            MakeUserInactive();
+            MoveMouse();
+
+            var actuals = GetPublishedEvents().GetEnumerator();
+            actuals.MoveNext();
+
+            var actual = actuals.Current;
+            Assert.AreEqual(start1, actual.TriggeredAt);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.AreEqual(1, actual.Duration.Value.Seconds);
+
+            actuals.MoveNext();
+            actual = actuals.Current;
+            Assert.AreEqual(start2, actual.TriggeredAt);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.AreEqual(2, actual.Duration.Value.Seconds);
+
+            actuals.MoveNext();
+            Assert.Null(actuals.Current);
+        }
+
         private void Raise(Action<IKaVEMouseEvents> mouseEvent)
         {
             _mouseEventsMock.Raise(
@@ -93,6 +143,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
         {
             TestDateUtils.Now += MouseActivityEventGenerator.InactivitySpanToBreakActivityPeriod +
                                  TimeSpan.FromMilliseconds(1);
+        }
+
+        private void TimePassed(int spanInSeconds)
+        {
+            TestDateUtils.Now += TimeSpan.FromSeconds(spanInSeconds);
+        }
+
+        private void MoveMouse()
+        {
+            Raise(events => events.MouseMove += null);
         }
     }
 }

@@ -28,17 +28,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
     public class MouseActivityEventGenerator : EventGeneratorBase
     {
         // TODO evaluate good threshold value
-        public static readonly TimeSpan InactivitySpanToBreakActivityPeriod = TimeSpan.FromSeconds(5);
+        public static readonly TimeSpan InactivitySpanToBreakActivityPeriod = TimeSpan.FromSeconds(3);
 
         private readonly IDateUtils _dateUtils;
 
         private ActivityEvent _currentEvent;
         private DateTime _lastActivity;
-
-        private bool InActivityPeriod
-        {
-            get { return _currentEvent != null; }
-        }
 
         public MouseActivityEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
@@ -57,13 +52,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
         {
             var now = _dateUtils.Now;
 
-            if (InActivityPeriod && UserIsInactive(now))
+            if (HasOpenPeriod() && IsInactive(now))
             {
                 _currentEvent.TerminatedAt = _lastActivity;
-                Fire(_currentEvent);
+                EndPeriod();
             }
 
-            if (!InActivityPeriod)
+            if (!HasOpenPeriod())
             {
                 _currentEvent = Create<ActivityEvent>();
                 _currentEvent.TriggeredBy = IDEEvent.Trigger.Click;
@@ -72,7 +67,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
             _lastActivity = now;
         }
 
-        private bool UserIsInactive(DateTime now)
+        private void EndPeriod()
+        {
+            Fire(_currentEvent);
+            _currentEvent = null;
+        }
+
+        private bool HasOpenPeriod()
+        {
+            return _currentEvent != null;
+        }
+
+        private bool IsInactive(DateTime now)
         {
             return (now - _lastActivity) > InactivitySpanToBreakActivityPeriod;
         }
