@@ -22,7 +22,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
-    internal class ExternalTestCaseProviderTest
+    internal class TestCaseProviderTest
     {
         private string _baseDirectory;
 
@@ -52,42 +52,42 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         [Test]
         public void ShouldFindTestCasesRecursively()
         {
-            var testCases = ExternalTestCaseProvider.GetTestCases(_baseDirectory);
+            var testCases = TestCaseProvider.GetTestCases(_baseDirectory);
             Assert.AreEqual(2, testCases.Count());
         }
 
         [Test]
         public void ShouldFindInput()
         {
-            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            var firstTestCase = TestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(ExpectedFirstInput, firstTestCase.Input);
         }
 
         [Test]
         public void ShouldFindCompactExpected()
         {
-            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            var firstTestCase = TestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(ExpectedCompact, firstTestCase.ExpectedCompact);
         }
 
         [Test]
         public void ShouldFindFormattedExpected()
         {
-            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            var firstTestCase = TestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(ExpectedFormatted, firstTestCase.ExpectedFormatted);
         }
 
         [Test]
         public void ShouldFindName()
         {
-            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            var firstTestCase = TestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(ExpectedFirstName, firstTestCase.Name);
         }
 
         [Test]
         public void ShouldGetSerializedTypeFromTypeHint()
         {
-            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            var firstTestCase = TestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(ExpectedSerializedType, firstTestCase.SerializedType);
         }
 
@@ -95,7 +95,7 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         public void SettingsFileShouldBeOptional()
         {
             File.Delete(Path.Combine(_testCasesDirectory, "settings.ini"));
-            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            var firstTestCase = TestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.AreEqual(typeof (object), firstTestCase.SerializedType);
         }
 
@@ -103,7 +103,7 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
         public void ExpectedFormattedFileShouldBeOptional()
         {
             File.Delete(Path.Combine(_testCasesDirectory, "expected-formatted.json"));
-            var firstTestCase = ExternalTestCaseProvider.GetTestCases(_baseDirectory).First();
+            var firstTestCase = TestCaseProvider.GetTestCases(_baseDirectory).First();
             Assert.IsNull(firstTestCase.ExpectedFormatted);
         }
 

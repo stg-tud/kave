@@ -23,7 +23,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
-    public static class ExternalTestCaseProvider
+    public static class TestCaseProvider
     {
         private const string ExpectedCompactFileName = "expected-compact.json";
         private const string ExpectedPrettyFileName = "expected-formatted.json";

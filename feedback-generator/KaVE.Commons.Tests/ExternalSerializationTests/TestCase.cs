@@ -51,7 +51,7 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
 
         public override string ToString()
         {
-            return Name;
+            return string.Format("[TestCase: {0}]", Name);
         }
     }
 }

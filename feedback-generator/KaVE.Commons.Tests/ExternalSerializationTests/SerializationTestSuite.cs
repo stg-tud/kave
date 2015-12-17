@@ -26,7 +26,7 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
 
         private static IEnumerable<TestCase> TestCases
         {
-            get { return ExternalTestCaseProvider.GetTestCases(TestSourceRootFolder); }
+            get { return TestCaseProvider.GetTestCases(TestSourceRootFolder); }
         }
 
         [TestCaseSource("TestCases")]

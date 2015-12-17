@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,5 +54,15 @@ namespace KaVE.Commons.Tests.ExternalSerializationTests
 
             return settings;
         }
+
+        public static ExternalTestSetting ToExternalTestSetting(this string value)
+        {
+            return (ExternalTestSetting) Enum.Parse(typeof (ExternalTestSetting), value);
+        }
+    }
+
+    public enum ExternalTestSetting
+    {
+        SerializedType
     }
 }

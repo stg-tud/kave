@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-using System;
+using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.ExternalSerializationTests
 {
-    public enum ExternalTestSetting
+    internal class TestCaseTest
     {
-        SerializedType
-    }
-
-    public static class ExternalTestSettingExtensions
-    {
-        public static ExternalTestSetting ToExternalTestSetting(this string value)
+        [Test]
+        public void ToStringIsImplemented()
         {
-            return (ExternalTestSetting) Enum.Parse(typeof (ExternalTestSetting), value);
+            var sut = new TestCase("x", GetType(), "", "", "");
+            Assert.AreEqual("[TestCase: x]", sut.ToString());
         }
     }
 }
