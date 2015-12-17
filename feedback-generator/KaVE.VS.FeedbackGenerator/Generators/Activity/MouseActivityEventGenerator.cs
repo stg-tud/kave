@@ -20,6 +20,7 @@ using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Activity
@@ -31,6 +32,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
         public static readonly TimeSpan InactivitySpanToBreakActivityPeriod = TimeSpan.FromSeconds(3);
 
         private readonly IDateUtils _dateUtils;
+        private readonly IFocusHelper _focusHelper;
 
         private ActivityEvent _currentEvent;
         private DateTime _lastActivity;
@@ -38,9 +40,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
         public MouseActivityEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
-            [NotNull] IKaVEMouseEvents mouseEvents) : base(env, messageBus, dateUtils)
+            [NotNull] IKaVEMouseEvents mouseEvents,
+            IFocusHelper focusHelper) : base(env, messageBus, dateUtils)
         {
             _dateUtils = dateUtils;
+            _focusHelper = focusHelper;
             mouseEvents.MouseMove += FireMouseActivity;
             mouseEvents.MouseClick += FireMouseActivity;
             mouseEvents.MouseWheel += FireMouseActivity;
@@ -58,13 +62,16 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
                 EndPeriod();
             }
 
-            if (!HasOpenPeriod())
+            if (_focusHelper.IsCurrentApplicationActive())
             {
-                _currentEvent = Create<ActivityEvent>();
-                _currentEvent.TriggeredBy = IDEEvent.Trigger.Click;
-            }
+                if (!HasOpenPeriod())
+                {
+                    _currentEvent = Create<ActivityEvent>();
+                    _currentEvent.TriggeredBy = IDEEvent.Trigger.Click;
+                }
 
-            _lastActivity = now;
+                _lastActivity = now;
+            }
         }
 
         private void EndPeriod()

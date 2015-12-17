@@ -18,6 +18,7 @@ using System;
 using System.Windows.Forms;
 using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.Generators.Activity;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
 using Moq;
 using NUnit.Framework;
 
@@ -26,14 +27,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
     internal class MouseActivityEventGeneratorTest : EventGeneratorTestBase
     {
         private Mock<IKaVEMouseEvents> _mouseEventsMock;
+        private bool _hasFocus;
 
         [SetUp]
         public void Setup()
         {
             _mouseEventsMock = new Mock<IKaVEMouseEvents>();
 
+            _hasFocus = true;
+            var focusHelper = Mock.Of<IFocusHelper>();
+            Mock.Get(focusHelper).Setup(fh => fh.IsCurrentApplicationActive()).Returns(() => _hasFocus);
+
             // ReSharper disable once ObjectCreationAsStatement
-            new MouseActivityEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _mouseEventsMock.Object);
+            new MouseActivityEventGenerator(
+                TestRSEnv,
+                TestMessageBus,
+                TestDateUtils,
+                _mouseEventsMock.Object,
+                focusHelper);
         }
 
         [Test]
@@ -96,7 +107,27 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
 
             var actual = GetSinglePublished<ActivityEvent>();
             Assert.AreEqual(now, actual.TriggeredAt);
+            // ReSharper disable once PossibleInvalidOperationException
             Assert.AreEqual(2, actual.Duration.Value.Seconds);
+        }
+
+        [Test]
+        public void ActivityOutsideIDEIsNotTracked()
+        {
+            var now = TestDateUtils.Now;
+            MoveMouse();
+            TimePassed(1);
+            MoveMouse();
+            _hasFocus = false;
+            TimePassed(1);
+            MoveMouse();
+            MakeUserInactive();
+            MoveMouse();
+
+            var actual = GetSinglePublished<ActivityEvent>();
+            Assert.AreEqual(now, actual.TriggeredAt);
+            // ReSharper disable once PossibleInvalidOperationException
+            Assert.AreEqual(1, actual.Duration.Value.Seconds);
         }
 
         [Test]

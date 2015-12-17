@@ -18,11 +18,11 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Timers;
+using JetBrains.Application;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
@@ -30,14 +30,17 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
     //[ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class VsFocusEventGenerator : EventGeneratorBase
     {
+        private readonly IFocusHelper _focusHelper;
+
         [UsedImplicitly]
         private Timer _timer;
 
         private bool _wasActive;
 
-        public VsFocusEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+        public VsFocusEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils, IFocusHelper focusHelper)
             : base(env, messageBus, dateUtils)
         {
+            _focusHelper = focusHelper;
             _timer = new Timer();
             _timer.Elapsed += OnTimerElapsed;
             _timer.Interval = 1000;
@@ -47,19 +50,28 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         private void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             _timer.Enabled = false;
-            var isActive = IsCurrentApplicationActive();
+            var isActive = _focusHelper.IsCurrentApplicationActive();
             if (isActive != _wasActive)
             {
                 var windowEvent = Create<WindowEvent>();
                 windowEvent.Action = isActive ? WindowEvent.WindowAction.Activate : WindowEvent.WindowAction.Deactivate;
-                windowEvent.Window = DTE.MainWindow.GetName();
+                // TODO unecessary?: windowEvent.Window = DTE.MainWindow.GetName();
                 FireNow(windowEvent);
             }
             _wasActive = isActive;
             _timer.Enabled = true;
         }
+    }
 
-        public static bool IsCurrentApplicationActive()
+    public interface IFocusHelper
+    {
+        bool IsCurrentApplicationActive();
+    }
+
+    [ShellComponent]
+    internal class FocusHelper : IFocusHelper
+    {
+        public bool IsCurrentApplicationActive()
         {
             var activeWindow = GetForegroundWindow();
 
