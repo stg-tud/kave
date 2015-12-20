@@ -25,5 +25,6 @@ namespace KaVE.Commons.Model.Names
         bool HasParameters { get; }
         bool IsConstructor { get; }
         ITypeName ReturnType { get; }
+        bool IsExtensionMethod { get; }
     }
 }
