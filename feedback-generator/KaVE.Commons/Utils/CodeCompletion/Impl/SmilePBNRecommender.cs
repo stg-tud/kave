@@ -27,6 +27,8 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
     public class SmilePBNRecommender : IPBNRecommender
     {
+        private const double MinimalProbability = 0.1;
+
         [NotNull]
         private readonly CoReTypeName _type;
 
@@ -105,6 +107,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
         public CoReProposal[] Query(Query query)
         {
             _network.ClearAllEvidence();
+            _queriedMethods.Clear();
 
             AddEvidenceIfAvailable(_classContextHandle, SmilePBNRecommenderConstants.NewClassContext(query.classCtx));
             AddEvidenceIfAvailable(_methodContextHandle, SmilePBNRecommenderConstants.NewMethodContext(query.methodCtx));
@@ -120,7 +123,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             return CollectProposals();
         }
 
-        private void AddEvidenceIfAvailable(int nodeHandle, String outcome)
+        private void AddEvidenceIfAvailable(int nodeHandle, string outcome)
         {
             var outcomeIds = _network.GetOutcomeIds(nodeHandle);
             var legalSmileState = ConvertToLegalSmileName(outcome);
@@ -156,7 +159,9 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
         private CoReProposal[] CollectProposals()
         {
             var unqueriedCallSites = _callNodes.Keys.Except(_queriedMethods);
-            var proposals = unqueriedCallSites.Select(cs => new CoReProposal(cs.method, GetProbability(cs))).Where(cp => cp.Probability > 0.1);
+            var proposals =
+                unqueriedCallSites.Select(cs => new CoReProposal(cs.method, GetProbability(cs)))
+                                  .Where(cp => cp.Probability > MinimalProbability);
 
             var sortedProposals = Sets.NewSortedSet(CreateProposalComparer());
 

@@ -57,13 +57,28 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
                 type = tStringBuilder,
                 classCtx = new CoReTypeName("LCC"),
                 methodCtx = new CoReMethodName("LMC.m()LV;"),
-                definition = DefinitionSites.CreateDefinitionByReturn("LABC.m()LV;"),
+                definition =
+                    DefinitionSites.CreateDefinitionByConstructor("LSystem/Text/StringBuilder.<init>()LSystem/Void;")
             };
-            var proposals = rec.Query(query);
+
+            var call = CallSites.CreateReceiverCallSite("LSystem/Text/StringBuilder.ToString()LSystem/String;");
+
+            PrintProposals("before", rec.Query(query));
+            query.sites.Add(call);
+            PrintProposals("added ToString", rec.Query(query));
+            query.sites.Remove(call);
+            PrintProposals("removed ToString", rec.Query(query));
+        }
+
+        private static void PrintProposals(string title, CoReProposal[] proposals)
+        {
+            Console.WriteLine("#### {0}", title);
             foreach (var p in proposals)
             {
-                Console.WriteLine(p);
+                var m = p.Name.ToString().Replace("LSystem/Text/StringBuilder.", "");
+                Console.Write("* {0} ({1})\n", m, p.FormattedProbability);
             }
+            Console.WriteLine();
         }
 
         [Test, Ignore]
@@ -265,6 +280,18 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             var actual = _uut.Query(query);
 
             CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void ShouldRemoveStoredCallsFromPreviousQueries()
+        {
+            // place a query that includes a call...
+            var query = Fix.CreateDefaultQuery();
+            query.sites.Add(CallSites.CreateReceiverCallSite("LType.Execute()LVoid;"));
+            _uut.Query(query);
+
+            // ...then fall back to a default case
+            ShouldProduceOrderedProposals();
         }
 
         [Test]
