@@ -61,13 +61,18 @@ namespace KaVE.RS.SolutionAnalysis
             //RunUserProfileExport();
             //RunStatisticsForPaperCreation();
 
-            var runner = new SortByUserRunner(
-                @"C:\Users\Andreas\Desktop\OSS-Events\source",
-                @"C:\Users\Andreas\Desktop\OSS-Events\target");
-            runner.Run();
+            //RunSortByUser();
+
 
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
+        }
+
+        private static void RunSortByUser()
+        {
+            var io = new SortByUserIo("", "");
+            var log = new SortByUserLogger();
+            new SortByUserRunner(io, log).Run();
         }
 
         private static void RunStatisticsForPaperCreation()

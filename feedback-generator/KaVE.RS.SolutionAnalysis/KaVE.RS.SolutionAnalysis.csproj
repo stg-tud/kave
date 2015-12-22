@@ -180,9 +180,10 @@
     <Compile Include="RelativeEditLocation.cs" />
     <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SolutionAnalysis.cs" />
+    <Compile Include="SortByUser\SortByUserIo.cs" />
+    <Compile Include="SortByUser\SortByUserLogger.cs" />
     <Compile Include="SortByUser\SortByUserRunner.cs" />
     <Compile Include="SortByUser\User.cs" />
-    <Compile Include="SortByUser\UserIdentifiers.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIo.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinter.cs" />
     <Compile Include="StatisticsForPapers\StatisticsForPaperRunner.cs" />

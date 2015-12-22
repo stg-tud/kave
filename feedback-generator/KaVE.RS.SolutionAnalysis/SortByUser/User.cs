@@ -13,49 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
+
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.RS.SolutionAnalysis.SortByUser
 {
     public class User
     {
-        public UserIdentifiers Identifiers { get; set; }
-        public ISet<string> Files { get; private set; }
+        public IKaVESet<string> Identifiers { get; set; }
+        public IKaVESet<string> Files { get; private set; }
 
         public User()
         {
-            Identifiers = new UserIdentifiers();
-            Files = new HashSet<string>();
+            Identifiers = Sets.NewHashSet<string>();
+            Files = Sets.NewHashSet<string>();
         }
 
-        protected bool Equals(User other)
+        private bool Equals(User other)
         {
-            return Equals(Identifiers, other.Identifiers) && Files.SetEquals(other.Files);
+            return Equals(Identifiers, other.Identifiers) && Files.Equals(other.Files);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-            return Equals((User) obj);
+            return this.Equals(obj, Equals);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Identifiers != null ? Identifiers.GetHashCode() : 0)*397) ^ (Files != null ? Files.GetHashCode() : 0);
+                return ((Identifiers != null ? Identifiers.GetHashCode() : 0)*397) ^
+                       (Files != null ? Files.GetHashCode() : 0);
             }
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

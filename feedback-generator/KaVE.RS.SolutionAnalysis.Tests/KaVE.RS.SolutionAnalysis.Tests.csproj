@@ -173,6 +173,9 @@
     <Compile Include="RelativeEditLocationTest.cs" />
     <Compile Include="SolutionAnalysisTest.cs" />
     <Compile Include="InjectableTestLogger.cs" />
+    <Compile Include="SortByUser\SortByUserIoTest.cs" />
+    <Compile Include="SortByUser\SortByUserLoggerTest.cs" />
+    <Compile Include="SortByUser\UserTest.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIoTest.cs" />
     <Compile Include="SortByUser\SortByUserRunnerTest.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinterTest.cs" />

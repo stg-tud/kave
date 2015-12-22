@@ -15,72 +15,90 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.SortByUser;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 {
     internal class SortByUserRunnerTest
     {
-        [Test]
-        public void MergesUsersWithSameProfileId()
+        #region test setup and helpers
+
+        private ISortByUserIo _io;
+        private ISortByUserLogger _log;
+        private SortByUserRunner _sut;
+
+        private Dictionary<string, IKaVESet<string>> _ids;
+        private List<IKaVESet<string>> _mergedFiles;
+
+        [SetUp]
+        public void Setup()
         {
-            var dictionary = new Dictionary<string, UserIdentifiers>
-            {
-                {"1.zip", new UserIdentifiers {UserProfileId = "abc"}},
-                {"2.zip", new UserIdentifiers {UserProfileId = "abc"}},
-                {"3.zip", new UserIdentifiers {UserProfileId = "def"}}
-            };
+            _ids = new Dictionary<string, IKaVESet<string>>();
+            _mergedFiles = new List<IKaVESet<string>>();
 
-            var actual = SortByUserRunner.AssembleUsers(dictionary);
+            _io = Mock.Of<ISortByUserIo>();
+            Mock.Get(_io).Setup(io => io.ScanArchivesForIdentifiers()).Returns(_ids);
+            Mock.Get(_io)
+                .Setup(io => io.MergeArchives(It.IsAny<IKaVESet<string>>()))
+                .Callback<IKaVESet<string>>(files => _mergedFiles.Add(files));
 
-            var expected = new[]
-            {
-                new User {Files = {"1.zip", "2.zip"}, Identifiers = new UserIdentifiers {UserProfileId = "abc"}},
-                new User {Files = {"3.zip"}, Identifiers = new UserIdentifiers {UserProfileId = "def"}}
-            };
+            _log = Mock.Of<ISortByUserLogger>();
+            _sut = new SortByUserRunner(_io, _log);
+        }
 
-            CollectionAssert.AreEquivalent(expected, actual);
+        private void AddFile(string fileName, params string[] ids)
+        {
+            _ids[fileName] = Sets.NewHashSetFrom(ids);
+        }
+
+        private void AssertMerge(params string[] files)
+        {
+            CollectionAssert.Contains(_mergedFiles, Sets.NewHashSetFrom(files));
+        }
+
+        #endregion
+
+        [Test]
+        public void MergesFilesWithOverlap()
+        {
+            AddFile("1.zip", "a", "x");
+            AddFile("2.zip", "a", "y");
+            AddFile("3.zip", "b", "z");
+
+            _sut.Run();
+
+            AssertMerge("1.zip", "2.zip");
+            AssertMerge("3.zip");
         }
 
         [Test]
-        public void MergesUsersWithOverlappingSessionIDs()
+        public void LoggerIsCalled()
         {
-            var dictionary = new Dictionary<string, UserIdentifiers>
+            AddFile("1.zip", "a", "x");
+            AddFile("2.zip", "a", "y");
+            AddFile("3.zip", "b", "z");
+
+            _sut.Run();
+
+            var u1 = new User
             {
-                {"1.zip", new UserIdentifiers {SessionsIDs = {"a", "b"}}},
-                {"2.zip", new UserIdentifiers {SessionsIDs = {"c", "d"}}},
-                {"3.zip", new UserIdentifiers {SessionsIDs = {"b", "c"}}}
+                Files = {"1.zip", "2.zip"},
+                Identifiers = {"a", "x", "y"}
+            };
+            var u2 = new User
+            {
+                Files = {"3.zip"},
+                Identifiers = {"b", "z"}
             };
 
-            var actual = SortByUserRunner.AssembleUsers(dictionary);
-
-            var expected = new[]
-            {
-                new User {Files = {"1.zip", "2.zip", "3.zip"}, Identifiers = new UserIdentifiers {SessionsIDs = {"a", "b", "c", "d"}}},
-            };
-
-            CollectionAssert.AreEquivalent(expected, actual);
-        }
-
-        [Test]
-        public void DoesNotMergeIfIdentifiersAreEmpty()
-        {
-            var dictionary = new Dictionary<string, UserIdentifiers>
-            {
-                {"1.zip", new UserIdentifiers()},
-                {"2.zip", new UserIdentifiers()},
-                {"3.zip", new UserIdentifiers()},
-            };
-
-            var actual = SortByUserRunner.AssembleUsers(dictionary);
-
-            var expected = new[]
-            {
-                new User {Files = {"1.zip"}}, new User {Files = {"2.zip"}}, new User {Files = {"3.zip"}}
-            };
-
-            CollectionAssert.AreEquivalent(expected, actual);
+            Mock.Get(_log).Verify(log => log.StartScanning());
+            Mock.Get(_log).Verify(log => log.FoundUsers(Sets.NewHashSet(u1, u2)));
+            Mock.Get(_log).Verify(log => log.Reassembling());
+            Mock.Get(_log).Verify(log => log.UserResult(u1));
+            Mock.Get(_log).Verify(log => log.UserResult(u2));
         }
     }
 }
