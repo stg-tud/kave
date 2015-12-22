@@ -55,6 +55,16 @@ namespace KaVE.Commons.Tests.Utils.Collections
         }
 
         [Test]
+        public void MultipleItemsCanBeAdded()
+        {
+            var a = Sets.NewHashSet<string>();
+            a.AddAll(new[] {"a", "b"});
+            var b = Sets.NewHashSet("a", "b");
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void TwoEmptySets()
         {
             var a = Sets.NewHashSet<string>();
@@ -188,6 +198,15 @@ namespace KaVE.Commons.Tests.Utils.Collections
         }
 
         [Test]
+        public void SortedSet_EqualityToHashSet()
+        {
+            var a = Sets.NewSortedSet(GetIntComparer());
+            var b = Sets.NewHashSet<int>();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void SortedSet_EqualityWithValues()
         {
             var a = Sets.NewSortedSet(GetIntComparer());
@@ -221,16 +240,12 @@ namespace KaVE.Commons.Tests.Utils.Collections
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
-        // TODO @seb: think again about equality guarantees...  eq/hc is currently broken when KaVEHashSet and KaVESortedSet is used together
-        [Test, Ignore]
-        public void Equality_MixOfHashAndSorted()
+        [Test]
+        public void SortedSet_MultipleItemsCanBeAdded()
         {
             var a = Sets.NewSortedSet(GetIntComparer());
-            a.Add(1);
-            a.Add(2);
-            var b = Sets.NewHashSet<int>();
-            b.Add(2);
-            b.Add(1);
+            a.AddAll(new[] {1, 2});
+            var b = Sets.NewHashSet(1, 2);
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }

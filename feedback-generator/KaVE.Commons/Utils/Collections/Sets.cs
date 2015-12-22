@@ -61,6 +61,14 @@ namespace KaVE.Commons.Utils.Collections
             return base.Add(item);
         }
 
+        public void AddAll(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Add(item);
+            }
+        }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
@@ -85,7 +93,7 @@ namespace KaVE.Commons.Utils.Collections
 
     public class KaVESortedSet<T> : SortedSet<T>, IKaVESet<T>
     {
-        private const int Seed = 1368;
+        private const int Seed = 1367;
 
         public KaVESortedSet(Func<T, T, ComparisonResult> comparer) : base(new SetComparer<T>(comparer)) {}
 
@@ -93,6 +101,14 @@ namespace KaVE.Commons.Utils.Collections
         {
             Asserts.NotNull(item);
             return base.Add(item);
+        }
+
+        public void AddAll(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Add(item);
+            }
         }
 
         public override bool Equals(object obj)
@@ -145,5 +161,6 @@ namespace KaVE.Commons.Utils.Collections
     public interface IKaVESet<T> : ISet<T>
     {
         new bool Add([NotNull] T item);
+        void AddAll(IEnumerable<T> items);
     }
 }
