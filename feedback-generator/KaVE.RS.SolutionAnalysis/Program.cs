@@ -31,7 +31,7 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private const string DirRoot = @"E:\";
         private const string DirEventsAll = DirRoot + @"Events\All\";
-        private const string DirEventsAll_SortedByUser = DirRoot + @"Events\All-SortedByUser";
+        private const string DirEventsAll_SortedByUser = DirRoot + @"Events\All-SortedByUser\";
         private const string DirEventsCompletion_KeepNoTrigger = DirRoot + @"Events\OnlyCompletion\";
         private const string DirEventsCompletion_KeepNoTriggerInlined = DirRoot + @"Events\OnlyCompletion-inlined\";
         private const string DirEventsCompletion_RemoveNoTrigger = DirRoot + @"Events\OnlyCompletionWithTriggerPoint\";

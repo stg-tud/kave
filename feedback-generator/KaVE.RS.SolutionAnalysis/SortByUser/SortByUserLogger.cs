@@ -24,7 +24,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         void StartScanning();
         void FoundUsers(IKaVESet<User> users);
         void StartMerging();
-        void UserResult(User user);
+        void StartProcessingUser(User user);
         void ReadingArchive(string fileName);
         void Progress();
         void WritingArchive(string fileName);
@@ -32,18 +32,52 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         void FinalStats(int numFilesBefore, int numFilesAfter);
         void CountInputEvent();
         void StoreOutputEvents(int count);
+        void StartUserIdentification();
+        void FoundNumArchives(int count);
+        void WorkingIn(string dirIn, string dirOut);
     }
 
     public class SortByUserLogger : ISortByUserLogger
     {
-        public void FoundUsers(IKaVESet<User> users)
+        private int _numUsers;
+        private int _currentUser;
+
+        public void StartUserIdentification()
         {
             Log("");
-            Log(@"### Found users ##########################");
+            Log(@"### User identification ##########################");
+        }
+
+        public void FoundNumArchives(int count)
+        {
+            _numFiles = count;
+            Log("");
+            Log("found {0} archives to process", count);
+        }
+
+        public void WorkingIn(string dirIn, string dirOut)
+        {
+            Log("dirIn: {0}", dirIn);
+            Log("dirOut: {0}", dirOut);
+        }
+
+        public void FoundUsers(IKaVESet<User> users)
+        {
+            _numUsers = users.Count;
+
+            var numUser = 0;
+
+            Log("");
+            Log(@"found {0} users:", users.Count);
             foreach (var user in users)
             {
                 Log("");
-                Log("* '{0}' -- {1} ids, {2} files:", user.GetHashCode(), user.Identifiers.Count, user.Files.Count);
+                Log(
+                    "user {3}: '{0}' -- {1} ids, {2} files:",
+                    user.GetHashCode(),
+                    user.Identifiers.Count,
+                    user.Files.Count,
+                    ++numUser);
                 Log(@"   ids:");
                 foreach (var id in user.Identifiers)
                 {
@@ -57,10 +91,10 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             }
         }
 
-        public void UserResult(User user)
+        public void StartProcessingUser(User user)
         {
             Log("");
-            Log("## Processing '{0}'", user.GetHashCode());
+            Log("## Processing '{0}' ({1}/{2})", user.GetHashCode(), ++_currentUser, _numUsers);
         }
 
         public void StartMerging()
@@ -71,13 +105,17 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
         public void StartScanning()
         {
+            Log("");
             Log(@"### Scanning archives ##########################");
         }
+
+        private int _numFiles;
+        private int _currentFileNum;
 
         public void ReadingArchive(string fileName)
         {
             Log("");
-            Log(@"Reading {0}...", fileName);
+            Log(@"Reading {0}... ({1}/{2})", fileName, ++_currentFileNum, _numFiles);
             Log("");
         }
 
@@ -94,6 +132,9 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
         public void Merging(IKaVESet<string> files)
         {
+            _numFiles = files.Count;
+            _currentFileNum = 0;
+
             Log("");
             Log(@"Merging {0}...", string.Join(", ", files));
         }

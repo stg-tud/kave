@@ -41,13 +41,18 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             _dirIn = dirIn;
             _dirOut = dirOut;
             _log = log;
+
+            _log.WorkingIn(dirIn, dirOut);
         }
 
         public IDictionary<string, IKaVESet<string>> ScanArchivesForIdentifiers()
         {
             var allIds = new Dictionary<string, IKaVESet<string>>();
 
-            foreach (var fileName in GetArchives())
+            var fileNames = GetArchives().ToList();
+            _log.FoundNumArchives(fileNames.Count);
+
+            foreach (var fileName in fileNames)
             {
                 _log.ReadingArchive(fileName);
                 var ids = Sets.NewHashSet<string>();

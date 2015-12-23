@@ -33,15 +33,17 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         [Test]
         public void IntegrationTest()
         {
+            _sut.WorkingIn("<in>", "<out>");
             _sut.StartScanning();
             ScanArchivesForIdentifiers();
 
+            _sut.StartUserIdentification();
             _sut.FoundUsers(CreateSomeUsers());
 
             _sut.StartMerging();
             foreach (var user in CreateSomeUsers())
             {
-                _sut.UserResult(user);
+                _sut.StartProcessingUser(user);
                 MergeArchives(user.Files);
             }
             _sut.FinalStats(100, 50);
@@ -49,6 +51,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
         private void ScanArchivesForIdentifiers()
         {
+            _sut.FoundNumArchives(17);
             foreach (var fileName in new[] {"1.zip", "2.zip"})
             {
                 _sut.ReadingArchive(fileName);

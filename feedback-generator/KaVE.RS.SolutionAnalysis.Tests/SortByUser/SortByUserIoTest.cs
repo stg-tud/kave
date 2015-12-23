@@ -239,6 +239,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             _sut.ScanArchivesForIdentifiers();
 
+            Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn, _dirOut));
+            Mock.Get(_log).Verify(l => l.FoundNumArchives(3));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"3.zip"));
@@ -256,6 +258,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             _sut.MergeArchives(Sets.NewHashSet(@"sub\1.zip", "2.zip"));
 
+            Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn, _dirOut));
             Mock.Get(_log).Verify(l => l.Merging(Sets.NewHashSet(@"sub\1.zip", "2.zip")));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));

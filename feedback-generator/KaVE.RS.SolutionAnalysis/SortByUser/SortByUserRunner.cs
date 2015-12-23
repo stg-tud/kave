@@ -36,6 +36,8 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             _log.StartScanning();
             var archivesWithIdentifiers = _io.ScanArchivesForIdentifiers();
 
+            _log.StartUserIdentification();
+
             var users = AssembleUsers(archivesWithIdentifiers);
 
             _log.FoundUsers(users);
@@ -46,7 +48,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             var numAfter = 0;
             foreach (var user in users)
             {
-                _log.UserResult(user);
+                _log.StartProcessingUser(user);
                 numAfter++;
                 numBefore += user.Files.Count;
 
