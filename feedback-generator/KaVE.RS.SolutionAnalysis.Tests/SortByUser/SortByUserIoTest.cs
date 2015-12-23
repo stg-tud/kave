@@ -157,6 +157,13 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         }
 
         [Test]
+        public void FindsArchivesAndReadsEvents_AlsoWorksWithTrailingSlashInPathes()
+        {
+            _sut = new SortByUserIo(_dirIn + @"\", _dirOut + @"\", _log);
+            FindsArchivesAndReadsEvents_HappyPath();
+        }
+
+        [Test]
         public void FindsArchivesAndReadsEvents_NoProfile()
         {
             AddFile(@"2.zip", Event(2));
@@ -225,6 +232,19 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         }
 
         [Test]
+        public void MergingDoesNotRemoveDuplicatesToMakeNumbersTraceable()
+        {
+            var e1 = Event(1);
+
+            AddFile("1.zip", e1);
+            AddFile("2.zip", e1);
+
+            _sut.MergeArchives(Sets.NewHashSet("1.zip", "2.zip"));
+
+            AssertEvents("1.zip", e1, e1);
+        }
+
+        [Test]
         public void Merging_NoFileSupplied()
         {
             _sut.MergeArchives(Sets.NewHashSet<string>());
@@ -239,7 +259,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             _sut.ScanArchivesForIdentifiers();
 
-            Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn, _dirOut));
+            Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn + @"\", _dirOut + @"\"));
             Mock.Get(_log).Verify(l => l.FoundNumArchives(3));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));
@@ -258,7 +278,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             _sut.MergeArchives(Sets.NewHashSet(@"sub\1.zip", "2.zip"));
 
-            Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn, _dirOut));
+            Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn + @"\", _dirOut + @"\"));
             Mock.Get(_log).Verify(l => l.Merging(Sets.NewHashSet(@"sub\1.zip", "2.zip")));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
             Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));

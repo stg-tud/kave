@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 
@@ -38,6 +39,14 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
         public SortByUserIo(string dirIn, string dirOut, ISortByUserLogger log)
         {
+            if (!dirIn.EndsWith(@"\"))
+            {
+                dirIn += @"\";
+            }
+            if (!dirOut.EndsWith(@"\"))
+            {
+                dirOut += @"\";
+            }
             _dirIn = dirIn;
             _dirOut = dirOut;
             _log = log;
@@ -54,6 +63,10 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
             foreach (var fileName in fileNames)
             {
+                Asserts.Not(
+                    fileName.Contains(":"),
+                    "fileName is absolute path. Aborted to prevent overwriting of data.");
+
                 _log.ReadingArchive(fileName);
                 var ids = Sets.NewHashSet<string>();
 
@@ -91,7 +104,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         {
             return
                 Directory.EnumerateFiles(_dirIn, "*.zip", SearchOption.AllDirectories)
-                         .Select(f => f.Replace(_dirIn + @"\", ""));
+                         .Select(f => f.Replace(_dirIn, ""));
         }
 
         public void MergeArchives(IKaVESet<string> files)
@@ -99,7 +112,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             if (files.Count > 0)
             {
                 _log.Merging(files);
-                var allEvents = Sets.NewHashSet<IDEEvent>();
+                var allEvents = Lists.NewList<IDEEvent>();
                 foreach (var file in files)
                 {
                     _log.ReadingArchive(file);
@@ -120,7 +133,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             }
         }
 
-        private void WriteEventsForNewUser(string fileName, IKaVESet<IDEEvent> events)
+        private void WriteEventsForNewUser(string fileName, IKaVEList<IDEEvent> events)
         {
             _log.StoreOutputEvents(events.Count);
             _log.WritingArchive(fileName);
