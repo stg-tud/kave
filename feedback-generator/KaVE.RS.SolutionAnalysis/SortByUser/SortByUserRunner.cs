@@ -40,12 +40,20 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
             _log.FoundUsers(users);
 
-            _log.Reassembling();
+            _log.StartMerging();
+
+            var numBefore = 0;
+            var numAfter = 0;
             foreach (var user in users)
             {
                 _log.UserResult(user);
+                numAfter++;
+                numBefore += user.Files.Count;
+
                 _io.MergeArchives(user.Files);
             }
+
+            _log.FinalStats(numBefore, numAfter);
         }
 
         private static IKaVESet<User> AssembleUsers(IDictionary<string, IKaVESet<string>> archivesWithIdentifiers)

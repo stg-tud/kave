@@ -23,41 +23,118 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
     {
         void StartScanning();
         void FoundUsers(IKaVESet<User> users);
-        void Reassembling();
+        void StartMerging();
         void UserResult(User user);
+        void ReadingArchive(string fileName);
+        void Progress();
+        void WritingArchive(string fileName);
+        void Merging(IKaVESet<string> files);
+        void FinalStats(int numFilesBefore, int numFilesAfter);
+        void CountInputEvent();
+        void StoreOutputEvents(int count);
     }
 
     public class SortByUserLogger : ISortByUserLogger
     {
         public void FoundUsers(IKaVESet<User> users)
         {
-            Console.WriteLine(@"=== Found users ===");
+            Log("");
+            Log(@"### Found users ##########################");
             foreach (var user in users)
             {
-                Console.WriteLine(
-                    @"{0}, {1} sessions: {2}",
-                    user.Identifiers.Count,
-                    string.Join(", ", user.Files));
+                Log("");
+                Log("* '{0}' -- {1} ids, {2} files:", user.GetHashCode(), user.Identifiers.Count, user.Files.Count);
+                Log(@"   ids:");
+                foreach (var id in user.Identifiers)
+                {
+                    Log(@"      - {0}", id);
+                }
+                Log(@"   files:");
+                foreach (var id in user.Files)
+                {
+                    Log(@"      - {0}", id);
+                }
             }
         }
 
         public void UserResult(User user)
         {
-            Console.WriteLine();
-            Console.WriteLine(
-                @" {0} ...",
-                string.Join(", ", user.Files));
+            Log("");
+            Log("## Processing '{0}'", user.GetHashCode());
         }
 
-        public void Reassembling()
+        public void StartMerging()
         {
-            Console.WriteLine();
-            Console.WriteLine(@"=== Reassembling archives ===");
+            Log("");
+            Log(@"### Merging archives ##########################");
         }
 
         public void StartScanning()
         {
-            Console.WriteLine(@"=== Scanning archives ===");
+            Log(@"### Scanning archives ##########################");
+        }
+
+        public void ReadingArchive(string fileName)
+        {
+            Log("");
+            Log(@"Reading {0}...", fileName);
+            Log("");
+        }
+
+        public void Progress()
+        {
+            Append(".");
+        }
+
+        public void WritingArchive(string fileName)
+        {
+            Log("");
+            Log(@"Writing {0}...", fileName);
+        }
+
+        public void Merging(IKaVESet<string> files)
+        {
+            Log("");
+            Log(@"Merging {0}...", string.Join(", ", files));
+        }
+
+        private long _numEventsBefore;
+        private long _numEventsAfter;
+
+        public void CountInputEvent()
+        {
+            _numEventsBefore++;
+        }
+
+        public void StoreOutputEvents(int count)
+        {
+            _numEventsAfter += count;
+        }
+
+        public void FinalStats(int numFilesBefore, int numFilesAfter)
+        {
+            Log("");
+            Log(@"### Results ##########################");
+            Log("");
+            Log(@"{0} files before, {1} files after...", numFilesBefore, numFilesAfter);
+            Log(
+                @"{0} evenst before, {1} events after (delta: {2})...",
+                _numEventsBefore,
+                _numEventsAfter,
+                (_numEventsAfter - _numEventsBefore));
+        }
+
+        private static void Log(string text, params object[] args)
+        {
+            var content = string.Format(text, args);
+            var date = DateTime.Now;
+            Console.WriteLine();
+            Console.Write(@"{0} {1}", date, content);
+        }
+
+        private static void Append(string text, params object[] args)
+        {
+            Console.Write(text, args);
         }
     }
 }

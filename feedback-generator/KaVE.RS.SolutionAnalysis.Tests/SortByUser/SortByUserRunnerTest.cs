@@ -96,9 +96,10 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             Mock.Get(_log).Verify(log => log.StartScanning());
             Mock.Get(_log).Verify(log => log.FoundUsers(Sets.NewHashSet(u1, u2)));
-            Mock.Get(_log).Verify(log => log.Reassembling());
+            Mock.Get(_log).Verify(log => log.StartMerging());
             Mock.Get(_log).Verify(log => log.UserResult(u1));
             Mock.Get(_log).Verify(log => log.UserResult(u2));
+            Mock.Get(_log).Verify(log => log.FinalStats(3, 2));
         }
     }
 }

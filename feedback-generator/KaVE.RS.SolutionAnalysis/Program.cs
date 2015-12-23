@@ -31,6 +31,7 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private const string DirRoot = @"E:\";
         private const string DirEventsAll = DirRoot + @"Events\All\";
+        private const string DirEventsAll_SortedByUser = DirRoot + @"Events\All-SortedByUser";
         private const string DirEventsCompletion_KeepNoTrigger = DirRoot + @"Events\OnlyCompletion\";
         private const string DirEventsCompletion_KeepNoTriggerInlined = DirRoot + @"Events\OnlyCompletion-inlined\";
         private const string DirEventsCompletion_RemoveNoTrigger = DirRoot + @"Events\OnlyCompletionWithTriggerPoint\";
@@ -47,6 +48,7 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine(@"{0} start", DateTime.Now);
 
             /* data preparation */
+            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
@@ -61,17 +63,15 @@ namespace KaVE.RS.SolutionAnalysis
             //RunUserProfileExport();
             //RunStatisticsForPaperCreation();
 
-            //RunSortByUser();
-
-
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
         }
 
-        private static void RunSortByUser()
+        private static void RunSortByUser(string dirIn, string dirOut)
         {
-            var io = new SortByUserIo("", "");
+            CleanDirs(dirOut);
             var log = new SortByUserLogger();
+            var io = new SortByUserIo(dirIn, dirOut, log);
             new SortByUserRunner(io, log).Run();
         }
 

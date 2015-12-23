@@ -34,11 +34,13 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
     {
         private readonly string _dirIn;
         private readonly string _dirOut;
+        private readonly ISortByUserLogger _log;
 
-        public SortByUserIo(string dirIn, string dirOut)
+        public SortByUserIo(string dirIn, string dirOut, ISortByUserLogger log)
         {
             _dirIn = dirIn;
             _dirOut = dirOut;
+            _log = log;
         }
 
         public IDictionary<string, IKaVESet<string>> ScanArchivesForIdentifiers()
@@ -47,10 +49,13 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
             foreach (var fileName in GetArchives())
             {
+                _log.ReadingArchive(fileName);
                 var ids = Sets.NewHashSet<string>();
 
                 foreach (var e in GetEventsFromArchive(fileName))
                 {
+                    _log.CountInputEvent();
+
                     var upe = e as UserProfileEvent;
                     if (upe != null)
                     {
@@ -88,7 +93,13 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         {
             if (files.Count > 0)
             {
-                var allEvents = files.SelectMany(GetEventsFromArchive);
+                _log.Merging(files);
+                var allEvents = Sets.NewHashSet<IDEEvent>();
+                foreach (var file in files)
+                {
+                    _log.ReadingArchive(file);
+                    allEvents.AddAll(GetEventsFromArchive(file));
+                }
                 WriteEventsForNewUser(files.First(), allEvents);
             }
         }
@@ -99,12 +110,15 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             var ra = new ReadingArchive(fullPath);
             while (ra.HasNext())
             {
+                _log.Progress();
                 yield return ra.GetNext<IDEEvent>();
             }
         }
 
-        private void WriteEventsForNewUser(string fileName, IEnumerable<IDEEvent> events)
+        private void WriteEventsForNewUser(string fileName, IKaVESet<IDEEvent> events)
         {
+            _log.StoreOutputEvents(events.Count);
+            _log.WritingArchive(fileName);
             var fullName = Path.Combine(_dirOut, fileName);
             var dir = Path.GetDirectoryName(fullName);
             if (dir != null)

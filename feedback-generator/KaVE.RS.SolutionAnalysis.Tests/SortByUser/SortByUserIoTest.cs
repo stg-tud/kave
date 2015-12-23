@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.RS.SolutionAnalysis.SortByUser;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
@@ -35,13 +36,15 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         private SortByUserIo _sut;
         private string _dirIn;
         private string _dirOut;
+        private ISortByUserLogger _log;
 
         [SetUp]
         public void Setup()
         {
+            _log = Mock.Of<ISortByUserLogger>();
             _dirIn = CreateTempDir();
             _dirOut = CreateTempDir();
-            _sut = new SortByUserIo(_dirIn, _dirOut);
+            _sut = new SortByUserIo(_dirIn, _dirOut, _log);
         }
 
         [TearDown]
@@ -225,6 +228,40 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         public void Merging_NoFileSupplied()
         {
             _sut.MergeArchives(Sets.NewHashSet<string>());
+        }
+
+        [Test]
+        public void LoggerIsCalled_ScanArchives()
+        {
+            AddFile(@"sub\1.zip", Event(1), Event(2), Event(3));
+            AddFile(@"2.zip", Event(4), Event(5));
+            AddFile(@"3.zip", Event(6));
+
+            _sut.ScanArchivesForIdentifiers();
+
+            Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
+            Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));
+            Mock.Get(_log).Verify(l => l.ReadingArchive(@"3.zip"));
+
+            var numEvents = Times.Exactly(6);
+            Mock.Get(_log).Verify(l => l.Progress(), numEvents);
+            Mock.Get(_log).Verify(l => l.CountInputEvent(), numEvents);
+        }
+
+        [Test]
+        public void LoggerIsCalled_Merge()
+        {
+            AddFile(@"sub\1.zip", Event(1), Event(2), Event(3));
+            AddFile(@"2.zip", Event(4), Event(5));
+
+            _sut.MergeArchives(Sets.NewHashSet(@"sub\1.zip", "2.zip"));
+
+            Mock.Get(_log).Verify(l => l.Merging(Sets.NewHashSet(@"sub\1.zip", "2.zip")));
+            Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
+            Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));
+            Mock.Get(_log).Verify(l => l.Progress(), Times.Exactly(5));
+            Mock.Get(_log).Verify(l => l.StoreOutputEvents(5));
+            Mock.Get(_log).Verify(l => l.WritingArchive(@"sub\1.zip"));
         }
     }
 }
