@@ -51,6 +51,16 @@ namespace KaVE.Commons.Tests.Utils.Collections
         }
 
         [Test]
+        public void MultipleItemsCanBeAdded()
+        {
+            var a = Lists.NewList<string>();
+            a.AddAll(new []{"a","b"});
+            var b = Lists.NewList("a", "b");
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void TwoEmptyLists()
         {
             var a = Lists.NewList<string>();

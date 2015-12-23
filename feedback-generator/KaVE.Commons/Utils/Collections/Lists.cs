@@ -55,6 +55,14 @@ namespace KaVE.Commons.Utils.Collections
             base.Add(item);
         }
 
+        public void AddAll(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Add(item);
+            }
+        }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
@@ -81,5 +89,6 @@ namespace KaVE.Commons.Utils.Collections
     public interface IKaVEList<T> : IList<T>
     {
         new void Add([NotNull] T item);
+        void AddAll([NotNull] IEnumerable<T> items);
     }
 }
