@@ -67,7 +67,6 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
                     fileName.Contains(":"),
                     "fileName is absolute path. Aborted to prevent overwriting of data.");
 
-                _log.ReadingArchive(fileName);
                 var ids = Sets.NewHashSet<string>();
 
                 foreach (var e in GetEventsFromArchive(fileName))
@@ -125,6 +124,8 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         private IEnumerable<IDEEvent> GetEventsFromArchive(string file)
         {
             var fullPath = Path.Combine(_dirIn, file);
+            _log.ReadingArchive(fullPath);
+
             var ra = new ReadingArchive(fullPath);
             while (ra.HasNext())
             {
@@ -136,8 +137,8 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         private void WriteEventsForNewUser(string fileName, IKaVEList<IDEEvent> events)
         {
             _log.StoreOutputEvents(events.Count);
-            _log.WritingArchive(fileName);
             var fullName = Path.Combine(_dirOut, fileName);
+            _log.WritingArchive(fullName);
             var dir = Path.GetDirectoryName(fullName);
             if (dir != null)
             {

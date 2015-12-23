@@ -63,6 +63,8 @@ namespace KaVE.RS.SolutionAnalysis
             //RunUserProfileExport();
             //RunStatisticsForPaperCreation();
 
+            Console.WriteLine();
+            Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
         }
