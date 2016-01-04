@@ -136,7 +136,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             _currentFileNum = 0;
 
             Log("");
-            Log(@"Merging {0}...", string.Join(", ", files));
+            Log(@"Merging {0} files: {1}", files.Count, string.Join(", ", files));
         }
 
         private long _numEventsBefore;
@@ -159,7 +159,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             Log("");
             Log(@"{0} files before, {1} files after...", numFilesBefore, numFilesAfter);
             Log(
-                @"{0} evenst before, {1} events after (delta: {2})...",
+                @"{0} events before, {1} events after (delta: {2})...",
                 _numEventsBefore,
                 _numEventsAfter,
                 (_numEventsAfter - _numEventsBefore));

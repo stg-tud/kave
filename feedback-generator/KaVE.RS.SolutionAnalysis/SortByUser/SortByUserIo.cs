@@ -114,7 +114,6 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
                 var allEvents = Lists.NewList<IDEEvent>();
                 foreach (var file in files)
                 {
-                    _log.ReadingArchive(file);
                     allEvents.AddAll(GetEventsFromArchive(file));
                 }
                 WriteEventsForNewUser(files.First(), allEvents);

@@ -38,6 +38,9 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         private string _dirOut;
         private ISortByUserLogger _log;
 
+        private List<string> _actualFilesRead;
+        private List<string> _actualFilesWritten;
+
         [SetUp]
         public void Setup()
         {
@@ -45,6 +48,17 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             _dirIn = CreateTempDir();
             _dirOut = CreateTempDir();
             _sut = new SortByUserIo(_dirIn, _dirOut, _log);
+
+            _actualFilesRead = new List<string>();
+            _actualFilesWritten = new List<string>();
+
+            Mock.Get(_log)
+                .Setup(l => l.ReadingArchive(It.IsAny<string>()))
+                .Callback<string>(f => _actualFilesRead.Add(f));
+
+            Mock.Get(_log)
+                .Setup(l => l.WritingArchive(It.IsAny<string>()))
+                .Callback<string>(f => _actualFilesWritten.Add(f));
         }
 
         [TearDown]
@@ -261,9 +275,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn + @"\", _dirOut + @"\"));
             Mock.Get(_log).Verify(l => l.FoundNumArchives(3));
-            Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
-            Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));
-            Mock.Get(_log).Verify(l => l.ReadingArchive(@"3.zip"));
+            AssertReadFiles(@"sub\1.zip", @"2.zip", @"3.zip");
 
             var numEvents = Times.Exactly(6);
             Mock.Get(_log).Verify(l => l.Progress(), numEvents);
@@ -278,13 +290,37 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             _sut.MergeArchives(Sets.NewHashSet(@"sub\1.zip", "2.zip"));
 
+
             Mock.Get(_log).Verify(l => l.WorkingIn(_dirIn + @"\", _dirOut + @"\"));
             Mock.Get(_log).Verify(l => l.Merging(Sets.NewHashSet(@"sub\1.zip", "2.zip")));
-            Mock.Get(_log).Verify(l => l.ReadingArchive(@"sub\1.zip"));
-            Mock.Get(_log).Verify(l => l.ReadingArchive(@"2.zip"));
+            AssertReadFiles(@"sub\1.zip", @"2.zip");
             Mock.Get(_log).Verify(l => l.Progress(), Times.Exactly(5));
             Mock.Get(_log).Verify(l => l.StoreOutputEvents(5));
-            Mock.Get(_log).Verify(l => l.WritingArchive(@"sub\1.zip"));
+            AssertWrittenFiles(@"sub\1.zip");
+        }
+
+        private void AssertReadFiles(params string[] expectedFiles)
+        {
+            Assert.AreEqual(expectedFiles.Length, _actualFilesRead.Count);
+            Mock.Get(_log).Verify(l => l.ReadingArchive(It.IsAny<string>()), Times.Exactly(expectedFiles.Length));
+
+            foreach (var expectedFile in expectedFiles)
+            {
+                var fullExpectedFile = Path.Combine(_dirIn, expectedFile);
+                Assert.That(_actualFilesRead.Contains(fullExpectedFile));
+            }
+        }
+
+        private void AssertWrittenFiles(params string[] expectedFiles)
+        {
+            Assert.AreEqual(expectedFiles.Length, _actualFilesWritten.Count);
+            Mock.Get(_log).Verify(l => l.WritingArchive(It.IsAny<string>()), Times.Exactly(expectedFiles.Length));
+
+            foreach (var expectedFile in expectedFiles)
+            {
+                var fullExpectedFile = Path.Combine(_dirOut, expectedFile);
+                Assert.That(_actualFilesWritten.Contains(fullExpectedFile));
+            }
         }
     }
 }
