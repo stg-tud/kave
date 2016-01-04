@@ -166,6 +166,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CleanUp\CleanUpIo.cs" />
+    <Compile Include="CleanUp\CleanUpLogger.cs" />
+    <Compile Include="CleanUp\CleanUpRunner.cs" />
     <Compile Include="CommandLineLogger.cs" />
     <Compile Include="CompletionEventFilter.cs" />
     <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunner.cs" />

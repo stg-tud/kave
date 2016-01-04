@@ -163,6 +163,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CleanUp\CleanUpIoTest.cs" />
+    <Compile Include="CleanUp\CleanUpLoggerTest.cs" />
+    <Compile Include="CleanUp\CleanUpRunnerTest.cs" />
     <Compile Include="CompletionEventFilterTest.cs" />
     <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunnerTest.cs" />
     <Compile Include="CompletionEventToMicroCommits\IoHelperTest.cs" />
