@@ -21,7 +21,7 @@ using KaVE.Commons.Model.Events;
 
 namespace KaVE.RS.SolutionAnalysis.CleanUp
 {
-    internal class CleanUpRunner
+    public class CleanUpRunner
     {
         private readonly ICleanUpIo _io;
         private readonly ICleanUpLogger _log;
@@ -43,14 +43,14 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
 
         public void Run()
         {
-            _counts = new Dictionary<string, int>(); // TODO wrong! move inside for loop after having a test!
-
             var zips = _io.GetZips();
 
             _log.FoundZips(zips);
 
             foreach (var zip in zips)
             {
+                _counts = new Dictionary<string, int>();
+
                 var events = ReadEvents(zip);
 
                 events = ApplyFilters(events);
@@ -77,7 +77,7 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
             {
                 _log.ApplyingFilter(filter.Name);
                 events = events.Where(filter.Func);
-                events = AddCounter(events, " after applying " + filter.Name);
+                events = AddCounter(events, string.Format("after applying '{0}'", filter.Name));
             }
             return events;
         }
@@ -94,14 +94,15 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
         {
             _log.OrderingEvents();
             events = events.OrderBy(e => e.TriggeredAt);
-            events = AddCounter(events, "after ordering events");
+            events = AddCounter(events, "after ordering");
             return events;
         }
 
         private void WriteResults(IEnumerable<IDEEvent> events, string zip)
         {
+            _log.WritingEvents();
             _io.WriteZip(events, zip);
-            _log.IntermediateResult(_counts);
+            _log.IntermediateResult(zip, _counts);
         }
 
         private IEnumerable<IDEEvent> AddCounter(IEnumerable<IDEEvent> events, string name)

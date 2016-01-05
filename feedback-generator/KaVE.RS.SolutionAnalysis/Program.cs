@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
+using KaVE.RS.SolutionAnalysis.CleanUp;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
@@ -32,6 +33,7 @@ namespace KaVE.RS.SolutionAnalysis
         private const string DirRoot = @"E:\";
         private const string DirEventsAll = DirRoot + @"Events\All\";
         private const string DirEventsAll_SortedByUser = DirRoot + @"Events\All-SortedByUser\";
+        private const string DirEventsAll_Clean = DirRoot + @"Events\All-Clean\";
         private const string DirEventsCompletion_KeepNoTrigger = DirRoot + @"Events\OnlyCompletion\";
         private const string DirEventsCompletion_KeepNoTriggerInlined = DirRoot + @"Events\OnlyCompletion-inlined\";
         private const string DirEventsCompletion_RemoveNoTrigger = DirRoot + @"Events\OnlyCompletionWithTriggerPoint\";
@@ -48,7 +50,8 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine(@"{0} start", DateTime.Now);
 
             /* data preparation */
-            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
+            //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
+            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
@@ -67,6 +70,14 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
+        }
+
+        private static void RunCleanUp(string dirIn, string dirOut)
+        {
+            CleanDirs(dirOut);
+            var log = new CleanUpLogger();
+            var io = new CleanUpIo(dirIn, dirOut);
+            new CleanUpRunner(io, log).Run();
         }
 
         private static void RunSortByUser(string dirIn, string dirOut)

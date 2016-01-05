@@ -14,7 +14,50 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using KaVE.Commons.Utils.Collections;
+using KaVE.RS.SolutionAnalysis.CleanUp;
+using NUnit.Framework;
+
 namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
 {
-    internal class CleanUpLoggerTest {}
+    internal class CleanUpLoggerTest
+    {
+        [Test]
+        public void IntegrationTest()
+        {
+            var sut = new CleanUpLogger();
+
+            sut.FoundZips(Lists.NewList("a", "b", "c"));
+
+            sut.ReadingZip("f1");
+
+            sut.ApplyingFilters();
+
+            sut.ApplyingFilter("f1");
+            sut.ApplyingFilter("f2");
+
+            sut.RemovingDuplicates();
+            sut.OrderingEvents();
+            sut.WritingEvents();
+
+            sut.IntermediateResult(
+                "aaaa",
+                new Dictionary<string, int>
+                {
+                    {"a", 1},
+                    {"b", 2}
+                });
+
+            sut.IntermediateResult(
+                "bbb",
+                new Dictionary<string, int>
+                {
+                    {"b", 4},
+                    {"c", 8}
+                });
+
+            sut.Finish();
+        }
+    }
 }

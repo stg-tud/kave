@@ -14,33 +14,66 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.RS.SolutionAnalysis.CleanUp
 {
-    public class CleanUpIo //: ICleanUpIo
+    public interface ICleanUpIo
     {
-        public List<string> GetZips()
+        IList<string> GetZips();
+        IEnumerable<IDEEvent> ReadZip(string zip);
+        void WriteZip(IEnumerable<IDEEvent> events, string zip);
+    }
+
+    public class CleanUpIo : ICleanUpIo
+    {
+        private readonly string _dirIn;
+        private readonly string _dirOut;
+
+        public CleanUpIo(string dirIn, string dirOut)
         {
-            throw new System.NotImplementedException();
+            if (!dirIn.EndsWith(@"\"))
+            {
+                dirIn += @"\";
+            }
+            if (!dirOut.EndsWith(@"\"))
+            {
+                dirOut += @"\";
+            }
+            _dirIn = dirIn;
+            _dirOut = dirOut;
+
+            Console.WriteLine(@"working directories:");
+            Console.WriteLine(@"- in:  {0}", dirIn);
+            Console.WriteLine(@"- out: {0}", dirOut);
+        }
+
+        public IList<string> GetZips()
+        {
+            return
+                Directory.EnumerateFiles(_dirIn, "*.zip", SearchOption.AllDirectories)
+                         .Select(f => f.Replace(_dirIn, "")).ToList();
         }
 
         public IEnumerable<IDEEvent> ReadZip(string zip)
         {
-            throw new System.NotImplementedException();
+            var fullName = Path.Combine(_dirIn, zip);
+            var ra = new ReadingArchive(fullName);
+            return ra.GetAll<IDEEvent>();
         }
 
-        public void WriteZip(IEnumerable<IDEEvent> outEvents, string zip)
+        public void WriteZip(IEnumerable<IDEEvent> events, string zip)
         {
-            throw new System.NotImplementedException();
+            var fullName = Path.Combine(_dirOut, zip);
+            using (var wa = new WritingArchive(fullName))
+            {
+                wa.AddAll(events);
+            }
         }
-    }
-
-    public interface ICleanUpIo
-    {
-        List<string> GetZips();
-        IEnumerable<IDEEvent> ReadZip(string zip);
-        void WriteZip(IEnumerable<IDEEvent> outEvents, string zip);
     }
 }
