@@ -20,6 +20,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.CleanUp;
+using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
 using Moq;
 using NUnit.Framework;
 
@@ -87,7 +88,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
         public void NoFiltersByDefault()
         {
             Assert.NotNull(_sut.Filters);
-            CollectionAssert.AreEqual(new ICleanUpFilter[] {}, _sut.Filters);
+            CollectionAssert.AreEqual(new IFilter[] {}, _sut.Filters);
         }
 
         [Test]
@@ -167,7 +168,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
             };
         }
 
-        private class TestFilter : ICleanUpFilter
+        private class TestFilter : IFilter
         {
             private readonly string _filterId;
 

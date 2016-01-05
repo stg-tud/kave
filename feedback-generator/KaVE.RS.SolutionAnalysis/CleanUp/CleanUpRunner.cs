@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
 
 namespace KaVE.RS.SolutionAnalysis.CleanUp
 {
@@ -27,16 +27,16 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
         private readonly ICleanUpLogger _log;
         private Dictionary<string, int> _counts;
 
-        public ISet<ICleanUpFilter> Filters { get; private set; }
+        public ISet<IFilter> Filters { get; private set; }
 
         public CleanUpRunner(ICleanUpIo io, ICleanUpLogger log)
         {
             _io = io;
             _log = log;
-            Filters = new HashSet<ICleanUpFilter>();
+            Filters = new HashSet<IFilter>();
         }
 
-        public void AddFilter(ICleanUpFilter filter)
+        public void AddFilter(IFilter filter)
         {
             // TODO
         }
@@ -126,11 +126,5 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
                 _counts[filterName] = 1;
             }
         }
-    }
-
-    public interface ICleanUpFilter
-    {
-        Func<IDEEvent, bool> Func { get; }
-        string Name { get; }
     }
 }
