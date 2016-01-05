@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.RS.SolutionAnalysis.CleanUp
@@ -70,9 +71,22 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
         public void WriteZip(IEnumerable<IDEEvent> events, string zip)
         {
             var fullName = Path.Combine(_dirOut, zip);
+
+            CreateParentIfNecessary(fullName);
+
             using (var wa = new WritingArchive(fullName))
             {
                 wa.AddAll(events);
+            }
+        }
+
+        private static void CreateParentIfNecessary(string fullName)
+        {
+            var parent = Path.GetDirectoryName(fullName);
+            Asserts.NotNull(parent);
+            if (!Directory.Exists(parent))
+            {
+                Directory.CreateDirectory(parent);
             }
         }
     }

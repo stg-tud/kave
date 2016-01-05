@@ -159,5 +159,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
             SetupWithSlashes();
             WriteZip();
         }
+
+        [Test]
+        public void WriteZipInSubfolder()
+        {
+            _sut.WriteZip(Es(1, 2), @"sub\1.zip");
+            AssertEvents(@"sub\1.zip", E(1), E(2));
+        }
     }
 }
