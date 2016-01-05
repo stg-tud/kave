@@ -36,11 +36,6 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
             Filters = new HashSet<IFilter>();
         }
 
-        public void AddFilter(IFilter filter)
-        {
-            // TODO
-        }
-
         public void Run()
         {
             var zips = _io.GetZips();

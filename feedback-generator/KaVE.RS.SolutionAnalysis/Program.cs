@@ -19,6 +19,7 @@ using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.RS.SolutionAnalysis.CleanUp;
+using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
@@ -77,7 +78,15 @@ namespace KaVE.RS.SolutionAnalysis
             CleanDirs(dirOut);
             var log = new CleanUpLogger();
             var io = new CleanUpIo(dirIn, dirOut);
-            new CleanUpRunner(io, log).Run();
+            var runner = new CleanUpRunner(io, log)
+            {
+                Filters =
+                {
+                    new NoTimeFilter(),
+                    new InvalidCompletionEventFilter()
+                }
+            };
+            runner.Run();
         }
 
         private static void RunSortByUser(string dirIn, string dirOut)
