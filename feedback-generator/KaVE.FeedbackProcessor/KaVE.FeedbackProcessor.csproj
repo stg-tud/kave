@@ -106,6 +106,7 @@
     <Compile Include="Cleanup\Processors\CommandFollowupProcessor.cs" />
     <Compile Include="Cleanup\Processors\ToConcurrentEventMapper.cs" />
     <Compile Include="Cleanup\Processors\ErrorFilterProcessor.cs" />
+    <Compile Include="EventStreamFilterApp.cs" />
     <Compile Include="FeedbackMapper.cs" />
     <Compile Include="FeedbackProcessor.cs" />
     <Compile Include="IEventMapper.cs" />

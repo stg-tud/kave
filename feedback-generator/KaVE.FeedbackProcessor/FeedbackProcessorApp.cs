@@ -30,7 +30,10 @@ namespace KaVE.FeedbackProcessor
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
 
-            new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a");
+            EventStreamFilterApp.CreateIntervalFilter(DateTime.Parse("05.10.2015 15:10:03"), DateTime.Parse("18.10.2015 15:48:08"))
+                .Run("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip");
+
+            //new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip");
 
             Console.ReadKey();
         }
