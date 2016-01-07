@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
@@ -28,28 +29,28 @@ namespace KaVE.FeedbackProcessor.Intervals
     {
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
-            foreach (var e in DoSingleTransformerRun(events, new VisualStudioOpenedTransformer()))
+            foreach (var e in TransformWithCustomTransformer(events, new VisualStudioOpenedTransformer()))
             {
                 yield return e;
             }
 
-            //foreach (var e in DoSingleTransformerRun(events, new UserActiveTransformer()))
+            //foreach (var e in TransformWithCustomTransformer(events, new UserActiveTransformer()))
             //{
             //    yield return e;
             //}
 
-            //foreach (var e in DoSingleTransformerRun(events, new DebugPerspectiveTransformer()))
+            //foreach (var e in TransformWithCustomTransformer(events, new DebugPerspectiveTransformer()))
             //{
             //    yield return e;
             //}
 
-            //foreach (var e in DoSingleTransformerRun(events, new FileOpenTransformer()))
+            //foreach (var e in TransformWithCustomTransformer(events, new FileOpenTransformer()))
             //{
             //    yield return e;
             //}
         }
 
-        private IEnumerable<Interval> DoSingleTransformerRun(IEnumerable<IDEEvent> events, IEventToIntervalTransformer<Interval> transformer)
+        public static IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events, IEventToIntervalTransformer<Interval> transformer)
         {
             Console.WriteLine(@"Transforming event stream with {0} ...", transformer.GetType().Name);
 
@@ -76,7 +77,12 @@ namespace KaVE.FeedbackProcessor.Intervals
 
             Console.WriteLine();
 
-            return transformer.SignalEndOfEventStream();
+            return FilterZeroLengthIntervals(transformer.SignalEndOfEventStream());
+        }
+
+        private static IEnumerable<Interval> FilterZeroLengthIntervals(IEnumerable<Interval> intervals)
+        {
+            return intervals.Where(i => i.Duration > TimeSpan.Zero);
         }
     }
 }
