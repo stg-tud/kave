@@ -28,19 +28,25 @@ namespace KaVE.FeedbackProcessor.Intervals
     {
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
-            // Events are usually not saved in order (neither by trigger nor by termination time)
-            // so we have to sort them before processing. Maybe there is a better solution ...
-            //events = events.OrderBy(e => e.TriggeredAt);
-
             foreach (var e in DoSingleTransformerRun(events, new VisualStudioOpenedTransformer()))
             {
                 yield return e;
             }
 
-            foreach (var e in DoSingleTransformerRun(events, new UserActiveTransformer()))
-            {
-                yield return e;
-            }
+            //foreach (var e in DoSingleTransformerRun(events, new UserActiveTransformer()))
+            //{
+            //    yield return e;
+            //}
+
+            //foreach (var e in DoSingleTransformerRun(events, new DebugPerspectiveTransformer()))
+            //{
+            //    yield return e;
+            //}
+
+            //foreach (var e in DoSingleTransformerRun(events, new FileOpenTransformer()))
+            //{
+            //    yield return e;
+            //}
         }
 
         private IEnumerable<Interval> DoSingleTransformerRun(IEnumerable<IDEEvent> events, IEventToIntervalTransformer<Interval> transformer)

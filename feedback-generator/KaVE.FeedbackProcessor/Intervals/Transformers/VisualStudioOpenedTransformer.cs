@@ -33,21 +33,13 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         {
             if (_intervals.ContainsKey(e.IDESessionUUID))
             {
-                AdaptExistingInterval(_intervals[e.IDESessionUUID], e);
+                TransformerUtils.AdaptIntervalTimeData(_intervals[e.IDESessionUUID], e);
             }
             else
             {
                 _intervals.Add(
                     e.IDESessionUUID,
                     TransformerUtils.CreateIntervalFromFirstEvent<VisualStudioOpenedInterval>(e));
-            }
-        }
-
-        private void AdaptExistingInterval(VisualStudioOpenedInterval interval, IDEEvent ideEvent)
-        {
-            if (ideEvent.TerminatedAt.GetValueOrDefault() > interval.StartTime + interval.Duration)
-            {
-                interval.Duration = ideEvent.TerminatedAt.GetValueOrDefault() - interval.StartTime;
             }
         }
 

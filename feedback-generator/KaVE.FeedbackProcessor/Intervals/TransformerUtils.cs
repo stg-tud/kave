@@ -37,5 +37,13 @@ namespace KaVE.FeedbackProcessor.Intervals
                 Duration = ideEvent.Duration.GetValueOrDefault()
             };
         }
+
+        public static void AdaptIntervalTimeData(Interval interval, IDEEvent ideEvent)
+        {
+            if (ideEvent.TerminatedAt.GetValueOrDefault() > interval.StartTime + interval.Duration)
+            {
+                interval.Duration = ideEvent.TerminatedAt.GetValueOrDefault() - interval.StartTime;
+            }
+        }
     }
 }

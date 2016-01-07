@@ -113,8 +113,11 @@
     <Compile Include="IEventProcessor.cs" />
     <Compile Include="Import\FeedbackImporter.cs" />
     <Compile Include="Import\FeedbackArchiveReader.cs" />
-    <Compile Include="Intervals\Model\DebugPerspectiveInterval.cs" />
+    <Compile Include="Intervals\Model\FileOpenInterval.cs" />
+    <Compile Include="Intervals\Model\PerspectiveInterval.cs" />
     <Compile Include="Intervals\Model\UserActiveInterval.cs" />
+    <Compile Include="Intervals\Transformers\DebugPerspectiveTransformer.cs" />
+    <Compile Include="Intervals\Transformers\FileOpenTransformer.cs" />
     <Compile Include="Intervals\Transformers\IEventToIntervalTransformer.cs" />
     <Compile Include="Intervals\IntervalTransformer.cs" />
     <Compile Include="Intervals\Model\Interval.cs" />
