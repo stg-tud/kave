@@ -23,28 +23,23 @@ using KaVE.FeedbackProcessor.Import;
 
 namespace KaVE.FeedbackProcessor
 {
-    internal class EventStreamFilterApp
+    internal class EventStreamFilter
     {
         private readonly Predicate<IDEEvent> _eventFilter;
 
-        public EventStreamFilterApp(Predicate<IDEEvent> eventFilter)
+        public EventStreamFilter(Predicate<IDEEvent> eventFilter)
         {
             _eventFilter = eventFilter;
         }
 
-        public void Run(IEnumerable<IDEEvent> events)
+        public IEnumerable<IDEEvent> Filter(IEnumerable<IDEEvent> events)
         {
-            var filteredEvents = events.Where(e => _eventFilter(e));
-
-            foreach (var e in filteredEvents)
-            {
-                Console.WriteLine(@"{0} - {1} - {2}", e.TriggeredAt.GetValueOrDefault(), e.GetType().Name, e.IDESessionUUID);
-            }
+            return events.Where(e => _eventFilter(e));
         }
 
-        public void Run(string filename)
+        public IEnumerable<IDEEvent> Filter(string filename)
         {
-            Run(GetAllEventsFromFile(filename));
+            return Filter(GetAllEventsFromFile(filename));
         }
 
         private IEnumerable<IDEEvent> GetAllEventsFromFile(string file)
@@ -54,9 +49,9 @@ namespace KaVE.FeedbackProcessor
             return fileLoader.ReadAllEvents(zip);
         }
 
-        public static EventStreamFilterApp CreateIntervalFilter(DateTime from, DateTime to)
+        public static EventStreamFilter CreateIntervalFilter(DateTime from, DateTime to)
         {
-            return new EventStreamFilterApp(e => from <= e.TriggeredAt && e.TriggeredAt <= to);
+            return new EventStreamFilter(e => from <= e.TriggeredAt && e.TriggeredAt <= to);
         }
     }
 }

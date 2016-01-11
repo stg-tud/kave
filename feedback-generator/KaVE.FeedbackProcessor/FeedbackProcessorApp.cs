@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.FeedbackProcessor
@@ -30,8 +31,8 @@ namespace KaVE.FeedbackProcessor
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
 
-            EventStreamFilterApp.CreateIntervalFilter(DateTime.Parse("05.10.2015 15:10:03"), DateTime.Parse("18.10.2015 15:48:08"))
-                .Run("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip");
+            var events = EventStreamFilter.CreateIntervalFilter(DateTime.Parse("24.08.2015 21:41:34"), DateTime.Parse("25.08.2015 10:22:10"))
+                .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
             //new IntervalTransformerApp(Logger).Run("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip");
 
