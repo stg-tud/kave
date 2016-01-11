@@ -21,40 +21,51 @@ using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
-    internal class DebugPerspectiveTransformer : IEventToIntervalTransformer<PerspectiveInterval>
+    internal class PerspectiveTransformer : IEventToIntervalTransformer<PerspectiveInterval>
     {
         private readonly IList<PerspectiveInterval> _intervals;
         private PerspectiveInterval _currentInterval;
 
-        public DebugPerspectiveTransformer()
+        public PerspectiveTransformer()
         {
             _intervals = new List<PerspectiveInterval>();
         }
 
         public void ProcessEvent(IDEEvent @event)
         {
-            if (MarksStartOfDebugSession(@event) && _currentInterval == null)
+            if (_currentInterval != null && 
+                _currentInterval.Perspective == PerspectiveType.Production &&
+                MarksStartOfDebugSession(@event))
+            {
+                _currentInterval = null;
+            }
+
+            if (_currentInterval == null)
             {
                 _currentInterval =
                     TransformerUtils.CreateIntervalFromFirstEvent<PerspectiveInterval>(@event);
-                _currentInterval.Perspective = PerspectiveType.Debug;
-            }
-            else if (MarksEndOfDebugSession(@event) && _currentInterval != null)
-            {
-                _currentInterval.Duration = @event.TerminatedAt.GetValueOrDefault() -
-                                            _currentInterval.StartTime;
                 _intervals.Add(_currentInterval);
-                _currentInterval = null;
+
+                _currentInterval.Perspective = MarksStartOfDebugSession(@event)
+                    ? PerspectiveType.Debug
+                    : PerspectiveType.Production;
+            }
+            else
+            {
+                TransformerUtils.AdaptIntervalTimeData(_currentInterval, @event);
+
+                if (MarksEndOfDebugSession(@event))
+                {
+                    _currentInterval = null;
+                }
             }
         }
 
         private static bool MarksStartOfDebugSession(IDEEvent @event)
         {
-            return @event is DebuggerEvent;
-
             var debuggerEvent = @event as DebuggerEvent;
             return debuggerEvent != null &&
-                   debuggerEvent.Mode == DebuggerEvent.DebuggerMode.Run;
+                   debuggerEvent.Mode != DebuggerEvent.DebuggerMode.Design;
         }
 
         private static bool MarksEndOfDebugSession(IDEEvent @event)

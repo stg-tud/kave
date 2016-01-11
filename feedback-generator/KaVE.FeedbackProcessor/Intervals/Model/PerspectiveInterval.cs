@@ -28,6 +28,36 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
     {
         public PerspectiveType Perspective { get; set; }
 
+        protected bool Equals(PerspectiveInterval other)
+        {
+            return base.Equals(other) && Perspective == other.Perspective;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+            return Equals((PerspectiveInterval) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode()*397) ^ (int) Perspective;
+            }
+        }
+
         public override string ToString()
         {
             var str = base.ToString();

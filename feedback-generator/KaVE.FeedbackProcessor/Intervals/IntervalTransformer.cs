@@ -29,20 +29,20 @@ namespace KaVE.FeedbackProcessor.Intervals
     {
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
-            foreach (var e in TransformWithCustomTransformer(events, new VisualStudioOpenedTransformer()))
-            {
-                yield return e;
-            }
+            //foreach (var e in TransformWithCustomTransformer(events, new VisualStudioOpenedTransformer()))
+            //{
+            //    yield return e;
+            //}
 
             //foreach (var e in TransformWithCustomTransformer(events, new UserActiveTransformer()))
             //{
             //    yield return e;
             //}
 
-            //foreach (var e in TransformWithCustomTransformer(events, new DebugPerspectiveTransformer()))
-            //{
-            //    yield return e;
-            //}
+            foreach (var e in TransformWithCustomTransformer(events, new PerspectiveTransformer()))
+            {
+                yield return e;
+            }
 
             //foreach (var e in TransformWithCustomTransformer(events, new FileOpenTransformer()))
             //{

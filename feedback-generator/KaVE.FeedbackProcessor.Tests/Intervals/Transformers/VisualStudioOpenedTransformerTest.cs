@@ -28,8 +28,8 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         {
             var sut = new VisualStudioOpenedTransformer();
 
-            sut.ProcessEvent(TestIDEEvent("a", -3, -2));
-            sut.ProcessEvent(TestIDEEvent("b", -1, 0));
+            sut.ProcessEvent(TestIDEEvent(-3, -2, "a"));
+            sut.ProcessEvent(TestIDEEvent(-1, 0, "b"));
 
             var intervals = sut.SignalEndOfEventStream().ToList();
 
@@ -42,8 +42,8 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         {
             var sut = new VisualStudioOpenedTransformer();
 
-            sut.ProcessEvent(TestIDEEvent("a", -3, -2));
-            sut.ProcessEvent(TestIDEEvent("a", -1, 0));
+            sut.ProcessEvent(TestIDEEvent(-3, -2, "a"));
+            sut.ProcessEvent(TestIDEEvent(-1, 0, "a"));
 
             var intervals = sut.SignalEndOfEventStream().ToList();
 

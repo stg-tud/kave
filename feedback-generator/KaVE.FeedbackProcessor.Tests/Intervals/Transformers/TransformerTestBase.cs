@@ -23,9 +23,14 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
     internal class TransformerTestBase<TIntervalType>
         where TIntervalType : Interval, new()
     {
-        protected DateTime _referenceTime = DateTime.Now;
+        private DateTime _referenceTime = DateTime.Now.Date;
 
-        protected TestIDEEvent TestIDEEvent(string sessionId, int startOffsetInMinutes, int endOffsetInMinutes)
+        protected virtual DateTime TestTime(int timeOffsetInMinutes)
+        {
+            return _referenceTime.AddMinutes(timeOffsetInMinutes);
+        }
+
+        protected virtual TestIDEEvent TestIDEEvent(int startOffsetInMinutes, int endOffsetInMinutes, string sessionId = "")
         {
             return new TestIDEEvent
             {
@@ -35,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             };
         }
 
-        protected TIntervalType ExpectedInterval(int startOffsetInMinutes, int endOffsetInMinutes)
+        protected virtual TIntervalType ExpectedInterval(int startOffsetInMinutes, int endOffsetInMinutes)
         {
             return new TIntervalType
             {
