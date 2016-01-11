@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using JetBrains.Application;
 using JetBrains.DataFlow;
+using JetBrains.Interop.WinApi;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
@@ -35,7 +31,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
     public class KeyboardClickNavigationEventGenerator : NavigationEventGeneratorBase
     {
         private readonly INavigationUtils _navigationUtils;
-        private readonly IKeyUtil _keyUtil;
 
         [CanBeNull]
         private IName _oldLocation;
@@ -45,22 +40,21 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             [NotNull] IDateUtils dateUtils,
             [NotNull] ITextControlManager textControlManager,
             [NotNull] INavigationUtils navigationUtils,
-            [NotNull] Lifetime lifetime,
-            [NotNull] IKeyUtil keyUtil) : base(env, messageBus, dateUtils, textControlManager, lifetime)
+            [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils, textControlManager, lifetime)
         {
             _navigationUtils = navigationUtils;
-            _keyUtil = keyUtil;
         }
 
         public void OnClick(TextControlMouseEventArgs args)
         {
             var newLocation = _navigationUtils.GetLocation(args.TextControl);
 
-            if (_oldLocation != null && !Equals(newLocation, _oldLocation))
+            if (_oldLocation != null && !Equals(newLocation, _oldLocation) &&
+                args.KeysAndButtons != KeyStateMasks.MK_CONTROL)
             {
                 FireNavigationEvent(
-                    Name.UnknownName,
                     newLocation,
+                    _oldLocation,
                     NavigationType.Click,
                     IDEEvent.Trigger.Click);
             }
@@ -72,16 +66,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         {
             var newLocation = _navigationUtils.GetLocation(args.Value);
 
-            if (NavigationKeys.Any(key => _keyUtil.IsPressed(key)))
+            if (_oldLocation != null && !Equals(newLocation, _oldLocation))
             {
-                if (_oldLocation != null && !Equals(newLocation, _oldLocation))
-                {
-                    FireNavigationEvent(
-                        Name.UnknownName,
-                        newLocation,
-                        NavigationType.Keyboard,
-                        IDEEvent.Trigger.Typing);
-                }
+                FireNavigationEvent(
+                    newLocation,
+                    _oldLocation,
+                    NavigationType.Keyboard,
+                    IDEEvent.Trigger.Typing);
             }
 
             _oldLocation = newLocation;
@@ -92,33 +83,5 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             textControlWindow.MouseDown.Advise(lifetime, OnClick);
             textControlWindow.Keyboard.Advise(lifetime, OnKeyPress);
         }
-
-        #region keyboard helpers
-
-        private static readonly ISet<Key> NavigationKeys = new HashSet<Key>
-        {
-            Key.Up,
-            Key.Down,
-            Key.Left,
-            Key.Right,
-            Key.PageUp,
-            Key.PageDown
-        };
-
-        public interface IKeyUtil
-        {
-            bool IsPressed(Key key);
-        }
-
-        [ShellComponent]
-        public class KeyUtil : IKeyUtil
-        {
-            public bool IsPressed(Key key)
-            {
-                return key.IsPressed();
-            }
-        }
-
-        #endregion
     }
 }

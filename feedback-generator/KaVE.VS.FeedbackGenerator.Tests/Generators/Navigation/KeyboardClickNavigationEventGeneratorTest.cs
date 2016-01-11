@@ -36,8 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         private ISignal<TextControlMouseEventArgs> _mouseSignal;
         private INavigationUtils _navigationUtils;
         private ITextControl _textControl;
-
-        private bool _navigationKeyPressed;
+        
         private readonly IMethodName _method1 = MethodName.Get("[TR,P] [TD,P].M()");
         private readonly IMethodName _method2 = MethodName.Get("[TR,P] [TD,P].M2()");
 
@@ -77,19 +76,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
                 .Returns(Name.UnknownName);
             SetLocation(_method1);
 
-            var keyUtil = Mock.Of<KeyboardClickNavigationEventGenerator.IKeyUtil>();
-            Mock.Get(keyUtil).Setup(util => util.IsPressed(It.IsAny<Key>())).Returns(() => _navigationKeyPressed);
-
-            _navigationKeyPressed = true;
-
             _uut = new KeyboardClickNavigationEventGenerator(
                 TestRSEnv,
                 TestMessageBus,
                 TestDateUtils,
                 textControlManager,
                 _navigationUtils,
-                TestLifetime,
-                keyUtil);
+                TestLifetime);
         }
 
         [Test]
@@ -102,18 +95,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         public void ShouldAdviceOnClick()
         {
             Mock.Get(_mouseSignal).Verify(signal => signal.Advise(TestLifetime, _uut.OnClick));
-        }
-
-        [Test]
-        public void ShouldNotFireIfNoNavigationKeyIsPressed()
-        {
-            _navigationKeyPressed = false;
-
-            PressKey();
-            SetLocation(_method2);
-            PressKey();
-
-            AssertNoEvent();
         }
 
         [Test]
@@ -180,11 +161,26 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             Assert.AreEqual(NavigationType.Click, actual.TypeOfNavigation);
         }
 
+        [Test]
+        public void ShouldNotFireClickOnCtrlClick()
+        {
+            Click();
+            SetLocation(_method2);
+            CtrlClick();
+
+            AssertNoEvent();
+        }
+
         #region helpers
 
         private void Click()
         {
             _uut.OnClick(new TextControlMouseEventArgs(_textControl, KeyStateMasks.MK_LBUTTON, Point.Empty));
+        }
+
+        private void CtrlClick()
+        {
+            _uut.OnClick(new TextControlMouseEventArgs(_textControl, KeyStateMasks.MK_CONTROL, Point.Empty));
         }
 
         private void PressKey()

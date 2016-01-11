@@ -30,16 +30,16 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
     public interface INavigationUtils
     {
         [NotNull]
-        IName GetTarget(ITextControl textControl);
+        IName GetTarget([NotNull] ITextControl textControl);
 
         [NotNull]
-        IName GetLocation(ITextControl textControl);
+        IName GetLocation([NotNull] ITextControl textControl);
 
         [NotNull]
-        IName GetTarget(ITreeNode psiNode);
+        IName GetTarget([NotNull] ITreeNode psiNode);
 
         [NotNull]
-        IName GetLocation(ITreeNode psiNode);
+        IName GetLocation([NotNull] ITreeNode psiNode);
     }
 
     [SolutionComponent]
@@ -68,27 +68,16 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         [Pure]
         public IName GetTarget(ITreeNode psiNode)
         {
-            IDeclaredElement declaredElement = null;
-            var parent = psiNode.Parent;
+            var declaredElement = TryGetDeclaredElement(psiNode);
 
-            var declaration = parent as IDeclaration;
-            if (declaration != null)
+            if (declaredElement == null && psiNode.Parent != null)
             {
-                declaredElement = declaration.DeclaredElement;
+                declaredElement = TryGetDeclaredElement(psiNode.Parent);
             }
 
-            var referenceName = parent as IReferenceName;
-            if (referenceName != null)
+            if (declaredElement == null && psiNode.PrevSibling != null)
             {
-                var resolvedReference = referenceName.Reference.Resolve();
-                declaredElement = resolvedReference.DeclaredElement;
-            }
-
-            var referenceExpression = parent as IReferenceExpression;
-            if (referenceExpression != null)
-            {
-                var resolvedReference = referenceExpression.Reference.Resolve();
-                declaredElement = resolvedReference.DeclaredElement;
+                declaredElement = TryGetDeclaredElement(psiNode.PrevSibling);
             }
 
             return declaredElement == null
@@ -119,9 +108,42 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         }
 
         [Pure]
-        private ITreeNode GetTreeNode(ITextControl textControl)
+        private ITreeNode GetTreeNode([NotNull] ITextControl textControl)
         {
             return TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
+        }
+
+        [Pure]
+        private static IDeclaredElement TryGetDeclaredElement([NotNull] ITreeNode psiNode)
+        {
+            var declaration = psiNode as IDeclaration;
+            if (declaration != null)
+            {
+                return declaration.DeclaredElement;
+            }
+
+            var referenceName = psiNode as IReferenceName;
+            if (referenceName != null)
+            {
+                var resolvedReference = referenceName.Reference.Resolve();
+                return resolvedReference.DeclaredElement;
+            }
+
+            var referenceExpression = psiNode as IReferenceExpression;
+            if (referenceExpression != null)
+            {
+                var resolvedReference = referenceExpression.Reference.Resolve();
+                return resolvedReference.DeclaredElement;
+            }
+
+            var invocationInfo = psiNode as IInvocationInfo;
+            if (invocationInfo != null && invocationInfo.Reference != null)
+            {
+                var resolvedReference = invocationInfo.Reference.Resolve();
+                return resolvedReference.DeclaredElement;
+            }
+
+            return null;
         }
     }
 }

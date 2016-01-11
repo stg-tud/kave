@@ -17,6 +17,7 @@
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
 using JetBrains.Application;
+using System;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Activity
 {
@@ -29,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
     }
 
     [ShellComponent]
-    internal class KaVEMouseEvents : IKaVEMouseEvents
+    internal class KaVEMouseEvents : IKaVEMouseEvents, IDisposable
     {
         private readonly IKeyboardMouseEvents _mouseEvents = Hook.GlobalEvents();
 
@@ -49,6 +50,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
         {
             add { _mouseEvents.MouseWheel += value; }
             remove { _mouseEvents.MouseWheel -= value; }
+        }
+
+        public void Dispose()
+        {
+            _mouseEvents.Dispose();
         }
     }
 }
