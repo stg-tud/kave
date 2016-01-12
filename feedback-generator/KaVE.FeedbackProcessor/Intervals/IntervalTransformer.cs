@@ -39,15 +39,15 @@ namespace KaVE.FeedbackProcessor.Intervals
             //    yield return e;
             //}
 
-            foreach (var e in TransformWithCustomTransformer(events, new PerspectiveTransformer()))
-            {
-                yield return e;
-            }
-
-            //foreach (var e in TransformWithCustomTransformer(events, new FileOpenTransformer()))
+            //foreach (var e in TransformWithCustomTransformer(events, new PerspectiveTransformer()))
             //{
             //    yield return e;
             //}
+
+            foreach (var e in TransformWithCustomTransformer(events, new FileOpenTransformer()))
+            {
+                yield return e;
+            }
         }
 
         public static IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events, IEventToIntervalTransformer<Interval> transformer)

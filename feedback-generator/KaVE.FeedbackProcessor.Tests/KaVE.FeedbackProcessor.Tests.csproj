@@ -111,6 +111,7 @@
     <Compile Include="Import\FeedbackImporterWithoutTriggerTimesTest.cs" />
     <Compile Include="Intervals\IntervalTransformerTest.cs" />
     <Compile Include="Intervals\TestInterval.cs" />
+    <Compile Include="Intervals\Transformers\FileOpenTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\PerspectiveTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\TransformerTestBase.cs" />
     <Compile Include="Intervals\Transformers\UserActiveTransformerTest.cs" />

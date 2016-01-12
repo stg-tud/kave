@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.FeedbackProcessor.Import;
 
 namespace KaVE.FeedbackProcessor
@@ -49,9 +50,25 @@ namespace KaVE.FeedbackProcessor
             return fileLoader.ReadAllEvents(zip);
         }
 
-        public static EventStreamFilter CreateIntervalFilter(DateTime from, DateTime to)
+        public static Predicate<IDEEvent> TimeBoxFilter(DateTime from, DateTime to)
         {
-            return new EventStreamFilter(e => from <= e.TriggeredAt && e.TriggeredAt <= to);
+            return e => from <= e.TriggeredAt && e.TriggeredAt <= to;
+        }
+
+        public static Predicate<IDEEvent> DocumentEventFilter(string documentFileName)
+        {
+            return e =>
+            {
+                var documentEvent = e as DocumentEvent;
+                return documentEvent != null && documentEvent.Document != null &&
+                       documentEvent.Document.FileName == documentFileName;
+            };
+        }
+
+        public static Predicate<IDEEvent> ActiveDocumentFilter(string documentFileName)
+        {
+            return e => e.ActiveDocument != null &&
+                        e.ActiveDocument.FileName == documentFileName;
         }
     }
 }
