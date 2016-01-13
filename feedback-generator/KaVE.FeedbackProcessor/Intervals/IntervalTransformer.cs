@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
@@ -28,11 +27,13 @@ namespace KaVE.FeedbackProcessor.Intervals
     {
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
-            var transformer = new AggregateTransformer(
-                new VisualStudioOpenedTransformer(),
-                new UserActiveTransformer(),
-                new PerspectiveTransformer(),
-                new FileOpenTransformer());
+            var transformer = 
+                new ZeroLengthIntervalFilterTransformer(
+                    new AggregateTransformer(
+                        new VisualStudioOpenedTransformer(),
+                        new UserActiveTransformer(),
+                        new PerspectiveTransformer(),
+                        new FileOpenTransformer()));
             return TransformWithCustomTransformer(events, transformer);
 
             //foreach (var e in TransformWithCustomTransformer(events, new VisualStudioOpenedTransformer()))
@@ -89,12 +90,7 @@ namespace KaVE.FeedbackProcessor.Intervals
 
             Console.WriteLine();
 
-            return FilterZeroLengthIntervals(transformer.SignalEndOfEventStream());
-        }
-
-        private static IEnumerable<Interval> FilterZeroLengthIntervals(IEnumerable<Interval> intervals)
-        {
-            return intervals.Where(i => i.Duration > TimeSpan.Zero);
+            return transformer.SignalEndOfEventStream();
         }
     }
 }

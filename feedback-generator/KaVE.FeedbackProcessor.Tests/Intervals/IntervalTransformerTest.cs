@@ -22,7 +22,6 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Intervals;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
-using KaVE.JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 
@@ -60,22 +59,6 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
             var mockTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
 
             IntervalTransformer.TransformWithCustomTransformer(unorderedEvents, mockTransformer);
-        }
-
-        [Test]
-        public void FiltersZeroLengthIntervals()
-        {
-            var goodInterval = new TestInterval {StartTime = DateTime.Now, Duration = TimeSpan.FromMinutes(1)};
-            var badInterval = new TestInterval {StartTime = DateTime.Now, Duration = TimeSpan.Zero};
-
-            var mockTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
-            Mock.Get(mockTransformer)
-                .Setup(t => t.SignalEndOfEventStream())
-                .Returns(new [] {goodInterval, badInterval});
-
-            var actual = IntervalTransformer.TransformWithCustomTransformer(new List<IDEEvent>(), mockTransformer);
-
-            CollectionAssert.AreEqual(new[] { goodInterval }, actual);
         }
     }
 }

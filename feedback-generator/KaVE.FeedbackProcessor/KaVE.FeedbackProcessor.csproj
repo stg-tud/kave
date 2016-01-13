@@ -123,6 +123,7 @@
     <Compile Include="Intervals\IntervalTransformer.cs" />
     <Compile Include="Intervals\Model\Interval.cs" />
     <Compile Include="Intervals\Model\VisualStudioOpenedInterval.cs" />
+    <Compile Include="Intervals\Transformers\ZeroLengthIntervalFilterTransformer.cs" />
     <Compile Include="Intervals\TransformerUtils.cs" />
     <Compile Include="Intervals\Transformers\UserActiveTransformer.cs" />
     <Compile Include="Intervals\Transformers\VisualStudioOpenedTransformer.cs" />
