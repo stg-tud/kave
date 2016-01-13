@@ -109,6 +109,7 @@
     <Compile Include="Import\FeedbackImporterTestBase.cs" />
     <Compile Include="Import\FeedbackImporterWithoutSessionIdsTest.cs" />
     <Compile Include="Import\FeedbackImporterWithoutTriggerTimesTest.cs" />
+    <Compile Include="Intervals\Transformers\AggregateTransformerTest.cs" />
     <Compile Include="Intervals\IntervalTransformerTest.cs" />
     <Compile Include="Intervals\TestInterval.cs" />
     <Compile Include="Intervals\Transformers\FileOpenTransformerTest.cs" />

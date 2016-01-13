@@ -55,6 +55,11 @@ namespace KaVE.FeedbackProcessor
             return e => from <= e.TriggeredAt && e.TriggeredAt <= to;
         }
 
+        public static Predicate<IDEEvent> TimeBoxFilter(string from, string to)
+        {
+            return e => DateTime.Parse(from) <= e.TriggeredAt && e.TriggeredAt <= DateTime.Parse(to);
+        }
+
         public static Predicate<IDEEvent> DocumentEventFilter(string documentFileName)
         {
             return e =>

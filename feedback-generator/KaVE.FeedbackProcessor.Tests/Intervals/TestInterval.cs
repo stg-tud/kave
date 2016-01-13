@@ -18,5 +18,5 @@ using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Tests.Intervals
 {
-    internal class TestInterval : Interval {}
+    public class TestInterval : Interval {}
 }

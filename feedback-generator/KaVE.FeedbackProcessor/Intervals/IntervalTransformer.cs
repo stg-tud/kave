@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
@@ -29,6 +28,13 @@ namespace KaVE.FeedbackProcessor.Intervals
     {
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
+            var transformer = new AggregateTransformer(
+                new VisualStudioOpenedTransformer(),
+                new UserActiveTransformer(),
+                new PerspectiveTransformer(),
+                new FileOpenTransformer());
+            return TransformWithCustomTransformer(events, transformer);
+
             //foreach (var e in TransformWithCustomTransformer(events, new VisualStudioOpenedTransformer()))
             //{
             //    yield return e;
@@ -44,13 +50,19 @@ namespace KaVE.FeedbackProcessor.Intervals
             //    yield return e;
             //}
 
-            foreach (var e in TransformWithCustomTransformer(events, new FileOpenTransformer()))
-            {
-                yield return e;
-            }
+            //foreach (var e in TransformWithCustomTransformer(events, new FileOpenTransformer()))
+            //{
+            //    yield return e;
+            //}
+
+            //foreach (var e in TransformWithCustomTransformer(events, new FileInteractionTransformer()))
+            //{
+            //    yield return e;
+            //}
         }
 
-        public static IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events, IEventToIntervalTransformer<Interval> transformer)
+        public static IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events,
+            IEventToIntervalTransformer<Interval> transformer)
         {
             Console.WriteLine(@"Transforming event stream with {0} ...", transformer.GetType().Name);
 
