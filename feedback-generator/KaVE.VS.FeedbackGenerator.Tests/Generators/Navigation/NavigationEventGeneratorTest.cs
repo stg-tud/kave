@@ -161,6 +161,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             Assert.AreEqual(_method1, actualEvent.Location);
         }
 
+        [Test]
+        public void ShouldNotFireKeyboardNavigationDirectlyAfterCtrlClick()
+        {
+            CtrlClick();
+            DropAllEvents();
+            PressKey();
+            AssertNoEvent();
+        }
+
         #region helpers
 
         private void Click()
