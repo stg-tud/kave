@@ -181,11 +181,10 @@
   <ItemGroup>
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
-    <Compile Include="Generators\Navigation\CtrlClickEventGeneratorTest.cs" />
     <Compile Include="Generators\Git\GitEventGeneratorIntegrationTest.cs" />
     <Compile Include="Generators\Git\GitEventGeneratorUnitTest.cs" />
     <Compile Include="Generators\Git\GitLogFileChangedRegistrationTest.cs" />
-    <Compile Include="Generators\Navigation\KeyboardClickNavigationEventGeneratorTest.cs" />
+    <Compile Include="Generators\Navigation\NavigationEventGeneratorTest.cs" />
     <Compile Include="Generators\Activity\MouseActivityEventGeneratorTest.cs" />
     <Compile Include="Generators\ReSharper\ActionEventGeneratorTest.cs" />
     <Compile Include="Menu\UploadWizardActionTest.cs" />

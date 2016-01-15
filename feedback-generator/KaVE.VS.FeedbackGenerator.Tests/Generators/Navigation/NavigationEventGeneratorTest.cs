@@ -15,7 +15,6 @@
  */
 
 using System.Drawing;
-using System.Windows.Input;
 using JetBrains.DataFlow;
 using JetBrains.Interop.WinApi;
 using JetBrains.TextControl;
@@ -28,15 +27,17 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
 {
-    internal class KeyboardClickNavigationEventGeneratorTest : EventGeneratorTestBase
+    internal class NavigationEventGeneratorTest : EventGeneratorTestBase
     {
-        private KeyboardClickNavigationEventGenerator _uut;
+        private NavigationEventGenerator _uut;
 
         private ISignal<EventArgs<ITextControl>> _keyboardSignal;
         private ISignal<TextControlMouseEventArgs> _mouseSignal;
         private INavigationUtils _navigationUtils;
         private ITextControl _textControl;
-        
+
+        private IName _testTarget;
+
         private readonly IMethodName _method1 = MethodName.Get("[TR,P] [TD,P].M()");
         private readonly IMethodName _method2 = MethodName.Get("[TR,P] [TD,P].M2()");
 
@@ -52,10 +53,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             _keyboardSignal = Mock.Of<ISignal<EventArgs<ITextControl>>>();
             _mouseSignal = Mock.Of<ISignal<TextControlMouseEventArgs>>();
 
+            // ctrl click
+            _testTarget = TypeName.Get("System.Int32, mscore, 4.0.0.0");
+
             // window
             var window = Mock.Of<ITextControlWindow>();
             Mock.Get(window).Setup(w => w.Keyboard).Returns(_keyboardSignal);
-            Mock.Get(window).Setup(w => w.MouseDown).Returns(_mouseSignal);
+            Mock.Get(window).Setup(w => w.MouseUp).Returns(_mouseSignal);
 
             // textcontrol
             _textControl = Mock.Of<ITextControl>();
@@ -73,10 +77,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             // navigation utils
             _navigationUtils = Mock.Of<INavigationUtils>();
             Mock.Get(_navigationUtils).Setup(navigationUtils => navigationUtils.GetTarget(It.IsAny<ITextControl>()))
-                .Returns(Name.UnknownName);
+                .Returns(() => _testTarget);
             SetLocation(_method1);
 
-            _uut = new KeyboardClickNavigationEventGenerator(
+            _uut = new NavigationEventGenerator(
                 TestRSEnv,
                 TestMessageBus,
                 TestDateUtils,
@@ -98,27 +102,38 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         }
 
         [Test]
-        public void ShouldNotFireOnFirstLocation_Keyboard()
+        public void ShouldFireOnNewLocation_Keyboard()
         {
             PressKey();
-            AssertNoEvent();
+
+            var actual = GetSinglePublished<NavigationEvent>();
+            Assert.AreEqual(Name.UnknownName, actual.Location);
+            Assert.AreEqual(_method1, actual.Target);
+            Assert.AreEqual(IDEEvent.Trigger.Typing, actual.TriggeredBy);
+            Assert.AreEqual(NavigationType.Keyboard, actual.TypeOfNavigation);
         }
 
         [Test]
-        public void ShouldNotFireOnFirstLocation_Mouse()
+        public void ShouldFireOnNewLocation_Mouse()
         {
             Click();
-            AssertNoEvent();
+
+            var actual = GetSinglePublished<NavigationEvent>();
+            Assert.AreEqual(Name.UnknownName, actual.Location);
+            Assert.AreEqual(_method1, actual.Target);
+            Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
+            Assert.AreEqual(NavigationType.Click, actual.TypeOfNavigation);
         }
 
         [Test]
         public void ShouldNotFireIfNoChange_Keyboard()
         {
             PressKey();
+            DropAllEvents();
+
             SetLocation(_method1);
             PressKey();
-            SetLocation(_method1);
-            PressKey();
+
             AssertNoEvent();
         }
 
@@ -126,49 +141,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         public void ShouldNotFireIfNoChange_Mouse()
         {
             Click();
+            DropAllEvents();
+
             SetLocation(_method1);
             Click();
-            SetLocation(_method1);
-            Click();
+
             AssertNoEvent();
         }
 
         [Test]
-        public void ShouldFireEventOnLocationChange_Keyboard()
+        public void ShouldFireEventOnCtrlClick()
         {
-            PressKey();
-            SetLocation(_method2);
-            PressKey();
-
-            var actual = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(_method2, actual.Location);
-            Assert.AreEqual(Name.UnknownName, actual.Target);
-            Assert.AreEqual(IDEEvent.Trigger.Typing, actual.TriggeredBy);
-            Assert.AreEqual(NavigationType.Keyboard, actual.TypeOfNavigation);
-        }
-
-        [Test]
-        public void ShouldFireEventOnLocationChange_Mouse()
-        {
-            Click();
-            SetLocation(_method2);
-            Click();
-
-            var actual = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(_method2, actual.Location);
-            Assert.AreEqual(Name.UnknownName, actual.Target);
-            Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
-            Assert.AreEqual(NavigationType.Click, actual.TypeOfNavigation);
-        }
-
-        [Test]
-        public void ShouldNotFireClickOnCtrlClick()
-        {
-            Click();
-            SetLocation(_method2);
             CtrlClick();
 
-            AssertNoEvent();
+            var actualEvent = GetSinglePublished<NavigationEvent>();
+            Assert.AreEqual(NavigationType.CtrlClick, actualEvent.TypeOfNavigation);
+            Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
+            Assert.AreEqual(_testTarget, actualEvent.Target);
+            Assert.AreEqual(_method1, actualEvent.Location);
         }
 
         #region helpers

@@ -189,12 +189,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generators\Navigation\KeyboardClickNavigationEventGenerator.cs" />
+    <Compile Include="Generators\Navigation\NavigationEventGenerator.cs" />
     <Compile Include="Generators\Activity\IKaVEMouseEvents.cs" />
-    <Compile Include="Generators\Navigation\CtrlClickEventGenerator.cs" />
     <Compile Include="Generators\Git\GitEventGenerator.cs" />
     <Compile Include="Generators\Git\GitLogFileChangedRegistration.cs" />
-    <Compile Include="Generators\Navigation\NavigationEventGeneratorBase.cs" />
     <Compile Include="Generators\Activity\MouseActivityEventGenerator.cs" />
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
