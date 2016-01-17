@@ -17,6 +17,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Css.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
@@ -78,6 +79,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             if (declaredElement == null && psiNode.PrevSibling != null)
             {
                 declaredElement = TryGetDeclaredElement(psiNode.PrevSibling);
+            }
+
+            if (declaredElement == null && psiNode.Parent != null &&
+                psiNode.Parent.PrevSibling != null)
+            {
+                declaredElement = TryGetDeclaredElement(psiNode.Parent.PrevSibling);
             }
 
             return declaredElement == null
