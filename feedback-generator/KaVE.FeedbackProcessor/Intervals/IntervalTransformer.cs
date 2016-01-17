@@ -27,13 +27,19 @@ namespace KaVE.FeedbackProcessor.Intervals
     {
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
-            var transformer = 
+            var transformer =
                 new ZeroLengthIntervalFilterTransformer(
                     new AggregateTransformer(
                         new VisualStudioOpenedTransformer(),
-                        new UserActiveTransformer(),
-                        new PerspectiveTransformer(),
-                        new FileOpenTransformer()));
+                        new SessionIdSortingTransformer<Interval>(() => 
+                            new AggregateTransformer(
+                                new UserActiveTransformer(),
+                                new PerspectiveTransformer(),
+                                new FileOpenTransformer()
+                            )
+                        )
+                    )
+                );
             return TransformWithCustomTransformer(events, transformer);
 
             //foreach (var e in TransformWithCustomTransformer(events, new VisualStudioOpenedTransformer()))

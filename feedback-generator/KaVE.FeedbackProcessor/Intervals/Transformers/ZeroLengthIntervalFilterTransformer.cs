@@ -24,7 +24,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
     public class ZeroLengthIntervalFilterTransformer : IEventToIntervalTransformer<Interval>
     {
-        private IEventToIntervalTransformer<Interval> _subTransformer;
+        private readonly IEventToIntervalTransformer<Interval> _subTransformer;
 
         public ZeroLengthIntervalFilterTransformer(IEventToIntervalTransformer<Interval> subTransformer)
         {

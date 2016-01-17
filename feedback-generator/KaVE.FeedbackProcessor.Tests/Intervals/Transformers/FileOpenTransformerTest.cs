@@ -84,19 +84,16 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         }
 
         [Test]
-        public void CreatesNewIntervalForNewIdeSession()
+        public void CreatesIntervalIfCloseIsMissing()
         {
             var sut = new FileOpenTransformer();
 
-            sut.ProcessEvent(TestDocumentEvent(0, 1, "File1.cs", true, "a")); 
+            sut.ProcessEvent(TestDocumentEvent(0, 1, "File1.cs", true, "a"));
             // missing close!
-            sut.ProcessEvent(TestDocumentEvent(8, 8, "File1.cs", true, "b"));
-            sut.ProcessEvent(TestDocumentEvent(10, 10, "File1.cs", false, "b"));
 
             var expected = new[]
             {
-                ExpectedInterval(0, 1, "File1.cs"),
-                ExpectedInterval(8, 10, "File1.cs")
+                ExpectedInterval(0, 1, "File1.cs")
             };
 
             CollectionAssert.AreEquivalent(expected, sut.SignalEndOfEventStream());

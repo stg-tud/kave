@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
@@ -25,48 +24,42 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
     internal class FileOpenTransformer : IEventToIntervalTransformer<FileOpenInterval>
     {
-        private IList<FileOpenInterval> _intervals; 
-
-        /// <summary>
-        /// Key is IDE Session ID + DocumentName.
-        /// </summary>
-        private readonly IDictionary<Tuple<string, DocumentName>, FileOpenInterval> _currentIntervals;
+        private readonly IList<FileOpenInterval> _intervals;
+        private readonly IDictionary<DocumentName, FileOpenInterval> _currentIntervals;
 
         public FileOpenTransformer()
         {
             _intervals = new List<FileOpenInterval>();
-            _currentIntervals = new Dictionary<Tuple<string, DocumentName>, FileOpenInterval>();
+            _currentIntervals = new Dictionary<DocumentName, FileOpenInterval>();
         }
 
         public void ProcessEvent(IDEEvent @event)
         {
-            var key = new Tuple<string, DocumentName>(@event.IDESessionUUID, @event.ActiveDocument);
-            if (@event.ActiveDocument != null && _currentIntervals.ContainsKey(key))
+            if (@event.ActiveDocument != null && _currentIntervals.ContainsKey(@event.ActiveDocument))
             {
-                TransformerUtils.AdaptIntervalTimeData(_currentIntervals[key], @event);
+                TransformerUtils.AdaptIntervalTimeData(_currentIntervals[@event.ActiveDocument], @event);
             }
 
             var documentEvent = @event as DocumentEvent;
             if (documentEvent != null && documentEvent.Document != null)
             {
-                var key2 = new Tuple<string, DocumentName>(@event.IDESessionUUID, documentEvent.Document);
-                if (_currentIntervals.ContainsKey(key2))
+                if (_currentIntervals.ContainsKey(documentEvent.Document))
                 {
-                    TransformerUtils.AdaptIntervalTimeData(_currentIntervals[key2], @event);
+                    TransformerUtils.AdaptIntervalTimeData(_currentIntervals[documentEvent.Document], @event);
 
                     if (documentEvent.Action == DocumentEvent.DocumentAction.Closing)
                     {
-                        _intervals.Add(_currentIntervals[key2]);
-                        _currentIntervals.Remove(key2);
+                        _intervals.Add(_currentIntervals[documentEvent.Document]);
+                        _currentIntervals.Remove(documentEvent.Document);
                     }
                 }
                 else
                 {
                     if (documentEvent.Action == DocumentEvent.DocumentAction.Opened)
                     {
-                        _currentIntervals[key2] =
+                        _currentIntervals[documentEvent.Document] =
                             TransformerUtils.CreateIntervalFromFirstEvent<FileOpenInterval>(@event);
-                        _currentIntervals[key2].Filename = documentEvent.Document.FileName;
+                        _currentIntervals[documentEvent.Document].Filename = documentEvent.Document.FileName;
                     }
                 }
             }
