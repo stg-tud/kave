@@ -43,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         private FileOpenInterval ExpectedInterval(int startOffset, int endOffset, string filename)
         {
             var interval = ExpectedInterval(startOffset, endOffset);
-            interval.Filename = filename;
+            interval.FileName = filename;
             return interval;
         }
 

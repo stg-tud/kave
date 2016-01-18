@@ -33,14 +33,22 @@ namespace KaVE.FeedbackProcessor.Intervals
                         new VisualStudioOpenedTransformer(),
                         new SessionIdSortingTransformer<Interval>(() => 
                             new AggregateTransformer(
-                                new UserActiveTransformer(),
-                                new PerspectiveTransformer(),
-                                new FileOpenTransformer()
+                                //new UserActiveTransformer(),
+                                //new PerspectiveTransformer(),
+                                //new FileOpenTransformer()
                             )
                         )
                     )
                 );
-            return TransformWithCustomTransformer(events, transformer);
+
+            var transformer2 = 
+                new ZeroLengthIntervalFilterTransformer(
+                    new SessionIdSortingTransformer<Interval>(() =>
+                        new FileInteractionTransformer()
+                    )
+                );
+
+            return TransformWithCustomTransformer(events, transformer2);
 
             //foreach (var e in TransformWithCustomTransformer(events, new VisualStudioOpenedTransformer()))
             //{

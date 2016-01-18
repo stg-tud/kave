@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
                     {
                         _currentIntervals[documentEvent.Document] =
                             TransformerUtils.CreateIntervalFromFirstEvent<FileOpenInterval>(@event);
-                        _currentIntervals[documentEvent.Document].Filename = documentEvent.Document.FileName;
+                        _currentIntervals[documentEvent.Document].FileName = documentEvent.Document.FileName;
                     }
                 }
             }

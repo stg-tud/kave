@@ -13,20 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace KaVE.FeedbackProcessor.Intervals.Model
 {
-    public class FileOpenInterval : Interval
-    {
-        public string Filename { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("{0} ({1})", base.ToString(), Filename);
-        }
-    }
+    public class FileOpenInterval : FileInterval {}
 }
