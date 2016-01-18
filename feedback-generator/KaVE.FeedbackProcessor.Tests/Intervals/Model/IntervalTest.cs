@@ -22,6 +22,14 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Model
     internal class IntervalTest
     {
         [Test]
+        public void EndTimeIsCorrect()
+        {
+            var i = new TestInterval {StartTime = DateTime.Today, Duration = TimeSpan.FromMinutes(1)};
+
+            Assert.AreEqual(DateTime.Today.AddMinutes(1), i.EndTime);
+        }
+
+        [Test]
         public void Equality_Default()
         {
             var i1 = new TestInterval();

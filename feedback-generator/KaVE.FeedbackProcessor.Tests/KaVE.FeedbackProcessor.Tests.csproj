@@ -124,6 +124,7 @@
     <Compile Include="Intervals\Transformers\TransformerTestBase.cs" />
     <Compile Include="Intervals\Transformers\UserActiveTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\VisualStudioOpenedTransformerTest.cs" />
+    <Compile Include="Intervals\TransformerUtilsTest.cs" />
     <Compile Include="Model\DeveloperTest.cs" />
     <Compile Include="Model\EventUtilsTest.cs" />
     <Compile Include="Model\TestFactory.cs" />
