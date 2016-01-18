@@ -76,8 +76,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
 
             // navigation utils
             _navigationUtils = Mock.Of<INavigationUtils>();
-            Mock.Get(_navigationUtils).Setup(navigationUtils => navigationUtils.GetTarget(It.IsAny<ITextControl>()))
-                .Returns(() => _testTarget);
+            SetTarget(_method1);
             SetLocation(_method1);
 
             _uut = new NavigationEventGenerator(
@@ -107,8 +106,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             PressKey();
 
             var actual = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(Name.UnknownName, actual.Location);
-            Assert.AreEqual(_method1, actual.Target);
+            Assert.AreEqual(Name.UnknownName, actual.Target);
+            Assert.AreEqual(_method1, actual.Location);
             Assert.AreEqual(IDEEvent.Trigger.Typing, actual.TriggeredBy);
             Assert.AreEqual(NavigationType.Keyboard, actual.TypeOfNavigation);
         }
@@ -119,8 +118,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             Click();
 
             var actual = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(Name.UnknownName, actual.Location);
-            Assert.AreEqual(_method1, actual.Target);
+            Assert.AreEqual(Name.UnknownName, actual.Target);
+            Assert.AreEqual(_method1, actual.Location);
             Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
             Assert.AreEqual(NavigationType.Click, actual.TypeOfNavigation);
         }
@@ -162,11 +161,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         }
 
         [Test]
-        public void ShouldNotFireKeyboardNavigationDirectlyAfterCtrlClick()
+        public void ShouldNotFireKeyboardEventAfterCtrlClick()
         {
+            SetTarget(_method2);
             CtrlClick();
             DropAllEvents();
+
+            SetLocation(_method2);
             PressKey();
+
             AssertNoEvent();
         }
 
@@ -191,6 +194,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
         {
             Mock.Get(_navigationUtils)
                 .Setup(navigationUtils => navigationUtils.GetLocation(_textControl))
+                .Returns(value);
+        }
+
+        private void SetTarget(IName value)
+        {
+            Mock.Get(_navigationUtils)
+                .Setup(navigationUtils => navigationUtils.GetTarget(_textControl))
                 .Returns(value);
         }
 

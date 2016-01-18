@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Specialized;
 using System.Linq;
 using JetBrains.DataFlow;
@@ -34,16 +33,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
     public class NavigationEventGenerator : NavigationEventGeneratorEventSubscriber
     {
         [NotNull]
-        private readonly IDateUtils _dateUtils;
-
-        [NotNull]
         private readonly INavigationUtils _navigationUtils;
 
         [NotNull]
-        private IName _oldLocation = Name.UnknownName;
-        
-        private DateTime _lastCtrlClick = DateTime.MinValue;
-        
+        private IName _currentLocation = Name.UnknownName;
+
         public NavigationEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
@@ -51,61 +45,57 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             [NotNull] INavigationUtils navigationUtils,
             [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils, textControlManager, lifetime)
         {
-            _dateUtils = dateUtils;
             _navigationUtils = navigationUtils;
         }
 
         public void OnClick(TextControlMouseEventArgs args)
         {
-            var currentLocation = _navigationUtils.GetLocation(args.TextControl);
+            var oldLocation = _currentLocation;
+            var newLocation = _currentLocation = _navigationUtils.GetLocation(args.TextControl);
 
             var ctrlIsPressed = args.KeysAndButtons == KeyStateMasks.MK_CONTROL;
             if (ctrlIsPressed)
             {
-                _lastCtrlClick = _dateUtils.Now;
                 var ctrlClickEvent = Create<NavigationEvent>();
                 ctrlClickEvent.Target = _navigationUtils.GetTarget(args.TextControl);
-                ctrlClickEvent.Location = currentLocation;
+                ctrlClickEvent.Location = newLocation;
                 ctrlClickEvent.TypeOfNavigation = NavigationType.CtrlClick;
                 ctrlClickEvent.TriggeredBy = IDEEvent.Trigger.Click;
+
+                _currentLocation = ctrlClickEvent.Target;
+
                 Fire(ctrlClickEvent);
             }
-            else if (IsNewLocation(currentLocation))
+            else if (IsNewLocation(oldLocation, newLocation))
             {
                 var clickNavigationEvent = Create<NavigationEvent>();
-                clickNavigationEvent.Target = currentLocation;
+                clickNavigationEvent.Location = newLocation;
                 clickNavigationEvent.TypeOfNavigation = NavigationType.Click;
                 clickNavigationEvent.TriggeredBy = IDEEvent.Trigger.Click;
                 Fire(clickNavigationEvent);
             }
-
-            _oldLocation = currentLocation;
         }
 
         public void OnKeyPress(EventArgs<ITextControl> args)
         {
-            var currentLocation = _navigationUtils.GetLocation(args.Value);
+            var oldLocation = _currentLocation;
+            var newLocation = _currentLocation = _navigationUtils.GetLocation(args.Value);
 
-            if (IsNewLocation(currentLocation) && IsNotCtrlUpAfterCtrlClickEvent())
+            if (!IsNewLocation(oldLocation, newLocation))
             {
-                var keyboardNavigationEvent = Create<NavigationEvent>();
-                keyboardNavigationEvent.Target = currentLocation;
-                keyboardNavigationEvent.TypeOfNavigation = NavigationType.Keyboard;
-                keyboardNavigationEvent.TriggeredBy = IDEEvent.Trigger.Typing;
-                Fire(keyboardNavigationEvent);
+                return;
             }
 
-            _oldLocation = currentLocation;
+            var keyboardNavigationEvent = Create<NavigationEvent>();
+            keyboardNavigationEvent.Location = newLocation;
+            keyboardNavigationEvent.TypeOfNavigation = NavigationType.Keyboard;
+            keyboardNavigationEvent.TriggeredBy = IDEEvent.Trigger.Typing;
+            Fire(keyboardNavigationEvent);
         }
 
-        private bool IsNewLocation(IName location)
+        private static bool IsNewLocation(IName location, IName newLocation)
         {
-            return !_oldLocation.Equals(location);
-        }
-
-        private bool IsNotCtrlUpAfterCtrlClickEvent()
-        {
-            return _dateUtils.Now - _lastCtrlClick > TimeSpan.FromSeconds(2);
+            return !newLocation.Equals(location);
         }
 
         protected override void Advice(ITextControlWindow textControlWindow, Lifetime lifetime)
