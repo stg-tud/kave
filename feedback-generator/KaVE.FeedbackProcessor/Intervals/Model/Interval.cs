@@ -32,15 +32,24 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
             get { return StartTime + Duration; }
         }
 
+        [NotNull]
+        public string UserId { get; set; }
+
+        [NotNull]
+        public string IDESessionId { get; set; }
+
         protected Interval()
         {
             StartTime = DateTime.MinValue;
             Duration = TimeSpan.Zero;
+            UserId = string.Empty;
+            IDESessionId = string.Empty;
         }
 
         protected bool Equals(Interval other)
         {
-            return StartTime.Equals(other.StartTime) && Duration.Equals(other.Duration);
+            return StartTime.Equals(other.StartTime) && Duration.Equals(other.Duration) &&
+                   string.Equals(UserId, other.UserId) && string.Equals(IDESessionId, other.IDESessionId);
         }
 
         public override bool Equals(object obj)
@@ -64,7 +73,11 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         {
             unchecked
             {
-                return (StartTime.GetHashCode()*397) ^ Duration.GetHashCode();
+                var hashCode = StartTime.GetHashCode();
+                hashCode = (hashCode*397) ^ Duration.GetHashCode();
+                hashCode = (hashCode*397) ^ UserId.GetHashCode();
+                hashCode = (hashCode*397) ^ IDESessionId.GetHashCode();
+                return hashCode;
             }
         }
 

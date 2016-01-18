@@ -33,8 +33,8 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 
             var intervals = sut.SignalEndOfEventStream().ToList();
 
-            CollectionAssert.Contains(intervals, ExpectedInterval(-3, -2));
-            CollectionAssert.Contains(intervals, ExpectedInterval(-1, 0));
+            CollectionAssert.Contains(intervals, ExpectedInterval(-3, -2, "a"));
+            CollectionAssert.Contains(intervals, ExpectedInterval(-1, 0, "b"));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 
             var intervals = sut.SignalEndOfEventStream().ToList();
 
-            CollectionAssert.Contains(intervals, ExpectedInterval(-3, 0));
+            CollectionAssert.Contains(intervals, ExpectedInterval(-3, 0, "a"));
         }
     }
 }

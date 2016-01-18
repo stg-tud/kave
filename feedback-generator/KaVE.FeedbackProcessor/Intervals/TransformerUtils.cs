@@ -32,7 +32,8 @@ namespace KaVE.FeedbackProcessor.Intervals
             return new TIntervalType
             {
                 StartTime = ideEvent.TriggeredAt.GetValueOrDefault(),
-                Duration = ideEvent.Duration.GetValueOrDefault()
+                Duration = ideEvent.Duration.GetValueOrDefault(),
+                IDESessionId = ideEvent.IDESessionUUID
             };
         }
 

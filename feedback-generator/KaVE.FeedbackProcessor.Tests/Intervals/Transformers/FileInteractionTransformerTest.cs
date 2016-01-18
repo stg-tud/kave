@@ -86,7 +86,8 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 
             var expected = new[] { ExpectedInterval(0, 1, "File1.cs", false), ExpectedInterval(1, 2, "File1.cs", true) };
 
-            Assert.AreEqual(expected, sut.SignalEndOfEventStream());
+            var actual = sut.SignalEndOfEventStream();
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]

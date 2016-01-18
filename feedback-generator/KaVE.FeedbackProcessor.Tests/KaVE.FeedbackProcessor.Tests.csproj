@@ -109,6 +109,11 @@
     <Compile Include="Import\FeedbackImporterTestBase.cs" />
     <Compile Include="Import\FeedbackImporterWithoutSessionIdsTest.cs" />
     <Compile Include="Import\FeedbackImporterWithoutTriggerTimesTest.cs" />
+    <Compile Include="Intervals\Model\FileInteractionIntervalTest.cs" />
+    <Compile Include="Intervals\Model\FileOpenIntervalTest.cs" />
+    <Compile Include="Intervals\Model\IntervalTest.cs" />
+    <Compile Include="Intervals\Model\PerspectiveIntervalTest.cs" />
+    <Compile Include="Intervals\Transformers\FileInteractionTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\SessionIdSortingTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\ZeroLengthIntervalFilterTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\AggregateTransformerTest.cs" />

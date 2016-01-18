@@ -30,7 +30,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 
             sut.ProcessEvent(TestIDEEvent(0, 5, "a"));
 
-            CollectionAssert.AreEqual(new[] { ExpectedInterval(0, 5) }, sut.SignalEndOfEventStream());
+            CollectionAssert.AreEqual(new[] { ExpectedInterval(0, 5, "a") }, sut.SignalEndOfEventStream());
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(TestIDEEvent(9, 10, "a"));
             sut.ProcessEvent(TestIDEEvent(26, 30, "a"));
 
-            CollectionAssert.AreEqual(new[] {ExpectedInterval(0, 30)}, sut.SignalEndOfEventStream());
+            CollectionAssert.AreEqual(new[] {ExpectedInterval(0, 30, "a")}, sut.SignalEndOfEventStream());
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(TestIDEEvent(0, 10, "a"));
             sut.ProcessEvent(TestIDEEvent(27, 30, "a"));
 
-            CollectionAssert.AreEqual(new[] { ExpectedInterval(0, 10), ExpectedInterval(27, 30) }, sut.SignalEndOfEventStream());
+            CollectionAssert.AreEqual(new[] { ExpectedInterval(0, 10, "a"), ExpectedInterval(27, 30, "a") }, sut.SignalEndOfEventStream());
         }
     }
 }

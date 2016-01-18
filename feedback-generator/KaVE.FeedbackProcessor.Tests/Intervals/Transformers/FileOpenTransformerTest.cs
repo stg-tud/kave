@@ -28,7 +28,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             int endOffset,
             string filename,
             bool isFileOpen,
-            string sessionId = "")
+            string sessionId = null)
         {
             return new DocumentEvent
             {
@@ -40,9 +40,9 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             };
         }
 
-        private FileOpenInterval ExpectedInterval(int startOffset, int endOffset, string filename)
+        private FileOpenInterval ExpectedInterval(int startOffset, int endOffset, string filename, string sessionId = null)
         {
-            var interval = ExpectedInterval(startOffset, endOffset);
+            var interval = base.ExpectedInterval(startOffset, endOffset, sessionId);
             interval.FileName = filename;
             return interval;
         }
@@ -93,7 +93,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 
             var expected = new[]
             {
-                ExpectedInterval(0, 1, "File1.cs")
+                ExpectedInterval(0, 1, "File1.cs", "a")
             };
 
             CollectionAssert.AreEquivalent(expected, sut.SignalEndOfEventStream());

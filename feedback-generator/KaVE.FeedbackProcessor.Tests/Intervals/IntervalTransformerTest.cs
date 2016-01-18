@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Intervals;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
@@ -42,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
                 .Setup(t => t.ProcessEvent(It.IsAny<IDEEvent>()))
                 .Callback<IDEEvent>(processedEvents.Add);
 
-            IntervalTransformer.TransformWithCustomTransformer(new[] {goodEvent, badEvent}, mockTransformer);
+            new IntervalTransformer(new NullLogger()).TransformWithCustomTransformer(new[] {goodEvent, badEvent}, mockTransformer);
 
             CollectionAssert.AreEqual(new[] {goodEvent}, processedEvents);
         }
@@ -58,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
 
             var mockTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
 
-            IntervalTransformer.TransformWithCustomTransformer(unorderedEvents, mockTransformer);
+            new IntervalTransformer(new NullLogger()).TransformWithCustomTransformer(unorderedEvents, mockTransformer);
         }
     }
 }

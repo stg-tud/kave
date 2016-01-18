@@ -131,7 +131,6 @@
     <Compile Include="Intervals\TransformerUtils.cs" />
     <Compile Include="Intervals\Transformers\UserActiveTransformer.cs" />
     <Compile Include="Intervals\Transformers\VisualStudioOpenedTransformer.cs" />
-    <Compile Include="IntervalTransformerApp.cs" />
     <Compile Include="Model\ConcurrentEvent.cs" />
     <Compile Include="Model\Developer.cs" />
     <Compile Include="Model\DevelopmentHistory\SSTSnapshot.cs" />

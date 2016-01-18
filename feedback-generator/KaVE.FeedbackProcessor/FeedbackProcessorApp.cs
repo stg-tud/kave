@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.FeedbackProcessor.Intervals;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -31,18 +32,10 @@ namespace KaVE.FeedbackProcessor
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
 
-            //var documentEventFilter =
-            //    EventStreamFilter.DocumentEventFilter(@"\KaVE.Commons\Utils\ObjectUsageExport\ScopedEnclosings.cs");
-            //var activeDocumentFilter =
-            //    EventStreamFilter.ActiveDocumentFilter(@"\KaVE.Commons\Utils\ObjectUsageExport\ScopedEnclosings.cs");
-
-            //var events = new EventStreamFilter(e => documentEventFilter(e) || activeDocumentFilter(e))
+            //var events = new EventStreamFilter(EventStreamFilter.TimeBoxFilter("30.07.2015 02:30:20", "30.07.2015 02:34:06"))
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
-            //var events = new EventStreamFilter(EventStreamFilter.TimeBoxFilter("02.11.2015 11:03:31", "02.11.2015 11:03:59"))
-            //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
-
-            new IntervalTransformerApp(Logger).Run(
+            var intervals = new IntervalTransformer(Logger).TransformFile(
                 "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip");
 
             Console.ReadKey();
