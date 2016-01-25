@@ -91,6 +91,20 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         }
 
         [Test]
+        public void CreatesNewIntervalWhenBothCriteriaChange()
+        {
+            var sut = new FileInteractionTransformer(_context);
+
+            sut.ProcessEvent(TestReadingEvent(0, 1, "File1.cs"));
+            sut.ProcessEvent(TestTypingEvent(1, 2, "File2.cs"));
+
+            var expected = new[] { ExpectedInterval(0, 1, "File1.cs", false), ExpectedInterval(1, 2, "File2.cs", true) };
+
+            var actual = sut.SignalEndOfEventStream();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void ResultingIntervalsDontOverlap()
         {
             var sut = new FileInteractionTransformer(_context);
