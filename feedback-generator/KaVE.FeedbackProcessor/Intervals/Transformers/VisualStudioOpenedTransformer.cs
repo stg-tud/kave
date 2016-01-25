@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             {
                 _intervals.Add(
                     e.IDESessionUUID,
-                    TransformerUtils.CreateIntervalFromFirstEvent<VisualStudioOpenedInterval>(e));
+                    TransformerUtils.CreateIntervalFromEvent<VisualStudioOpenedInterval>(e));
             }
         }
 

@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test]
         public void CreatesIntervalCorrectly()
         {
-            var i = TransformerUtils.CreateIntervalFromFirstEvent<TestInterval>(TestIDEEvent(0, 1, "a"));
+            var i = TransformerUtils.CreateIntervalFromEvent<TestInterval>(TestIDEEvent(0, 1, "a"));
             Assert.AreEqual(TestTime(0), i.StartTime);
             Assert.AreEqual(TimeSpan.FromMinutes(1), i.Duration);
             Assert.AreEqual("a", i.IDESessionId);

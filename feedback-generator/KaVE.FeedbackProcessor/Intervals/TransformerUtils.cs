@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Intervals
             return !ideEvent.TriggeredAt.HasValue || !ideEvent.TerminatedAt.HasValue;
         }
 
-        public static TIntervalType CreateIntervalFromFirstEvent<TIntervalType>(IDEEvent ideEvent)
+        public static TIntervalType CreateIntervalFromEvent<TIntervalType>(IDEEvent ideEvent)
             where TIntervalType : Interval, new()
         {
             return new TIntervalType

@@ -81,5 +81,16 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Model
             Assert.AreEqual(i1, i2);
             Assert.AreNotEqual(i2, i3);
         }
+
+        [Test]
+        public void Equality_Project()
+        {
+            var i1 = new TestInterval {Project = "a"};
+            var i2 = new TestInterval { Project = "a" };
+            var i3 = new TestInterval { Project = "b" };
+
+            Assert.AreEqual(i1, i2);
+            Assert.AreNotEqual(i2, i3);
+        }
     }
 }

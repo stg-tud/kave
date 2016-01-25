@@ -27,47 +27,54 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
     {
         private readonly IList<FileInteractionInterval> _intervals;
         private FileInteractionInterval _currentInterval;
-        private DateTime _currentReferenceTime;
+        private DateTime _referenceTime;
 
         public FileInteractionTransformer()
         {
             _intervals = new List<FileInteractionInterval>();
-            _currentReferenceTime = DateTime.MinValue;
+            _referenceTime = DateTime.MinValue;
         }
 
         public void ProcessEvent(IDEEvent @event)
         {
-            if (@event.ActiveDocument == null || @event.TerminatedAt.GetValueOrDefault() < _currentReferenceTime)
+            if (@event.ActiveDocument == null || @event.TerminatedAt.GetValueOrDefault() < _referenceTime)
             {
                 return;
             }
 
             var classification = ClassifyEventType(@event);
 
-            if (_currentInterval != null && classification != null &&
-                (_currentInterval.FileName != @event.ActiveDocument.FileName ||
-                 _currentInterval.Type != classification))
+            if (_currentInterval != null)
             {
-                _currentInterval = null;
+                var activeDocumentChanged = _currentInterval.FileName != @event.ActiveDocument.FileName;
+                var classificationChanged = classification != null && _currentInterval.Type != classification;
+               
+                if (activeDocumentChanged || classificationChanged)
+                {
+                    _currentInterval = null;
+                }
             }
 
-            if (_currentInterval == null)
+            if (_currentInterval == null && classification != null)
             {
-                _currentInterval = TransformerUtils.CreateIntervalFromFirstEvent<FileInteractionInterval>(@event);
+                _currentInterval = TransformerUtils.CreateIntervalFromEvent<FileInteractionInterval>(@event);
                 _intervals.Add(_currentInterval);
 
-                if (_currentInterval.StartTime < _currentReferenceTime)
+                if (_currentInterval.StartTime < _referenceTime)
                 {
-                    _currentInterval.Duration -= _currentReferenceTime - _currentInterval.StartTime;
-                    _currentInterval.StartTime = _currentReferenceTime;
+                    _currentInterval.Duration -= _referenceTime - _currentInterval.StartTime;
+                    _currentInterval.StartTime = _referenceTime;
                 }
 
                 _currentInterval.FileName = @event.ActiveDocument.FileName;
                 _currentInterval.Type = classification.GetValueOrDefault();
             }
 
-            TransformerUtils.AdaptIntervalTimeData(_currentInterval, @event);
-            _currentReferenceTime = @event.TerminatedAt.GetValueOrDefault();
+            if (_currentInterval != null)
+            {
+                TransformerUtils.AdaptIntervalTimeData(_currentInterval, @event);
+                _referenceTime = @event.TerminatedAt.GetValueOrDefault();
+            }
         }
 
         // The debugger creates EditEvents for some reason. We want to ignore these EditEvents

@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             }
             else
             {
-                _intervals.Add(TransformerUtils.CreateIntervalFromFirstEvent<UserActiveInterval>(e));
+                _intervals.Add(TransformerUtils.CreateIntervalFromEvent<UserActiveInterval>(e));
             }
         }
 

@@ -112,5 +112,23 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 
             CollectionAssert.AreEqual(expected, sut.SignalEndOfEventStream());
         }
+
+        [Test]
+        public void IntervalsDontOverlap()
+        {
+            var sut = new PerspectiveTransformer();
+
+            sut.ProcessEvent(TestDebuggerEvent(0, 2, true));
+            sut.ProcessEvent(TestDebuggerEvent(4, 6, false));
+            sut.ProcessEvent(TestIDEEvent(5, 7));
+
+            var expected = new[]
+            {
+                ExpectedInterval(0, 6, PerspectiveType.Debug),
+                ExpectedInterval(6, 7, PerspectiveType.Production)
+            };
+
+            CollectionAssert.AreEqual(expected, sut.SignalEndOfEventStream());
+        }
     }
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
@@ -25,10 +26,12 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
     {
         private readonly IList<PerspectiveInterval> _intervals;
         private PerspectiveInterval _currentInterval;
+        private DateTime _referenceTime;
 
         public PerspectiveTransformer()
         {
             _intervals = new List<PerspectiveInterval>();
+            _referenceTime = DateTime.MinValue;
         }
 
         public void ProcessEvent(IDEEvent @event)
@@ -43,7 +46,14 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             if (_currentInterval == null)
             {
                 _currentInterval =
-                    TransformerUtils.CreateIntervalFromFirstEvent<PerspectiveInterval>(@event);
+                    TransformerUtils.CreateIntervalFromEvent<PerspectiveInterval>(@event);
+
+                if (_currentInterval.StartTime < _referenceTime)
+                {
+                    _currentInterval.Duration -= _referenceTime - _currentInterval.StartTime;
+                    _currentInterval.StartTime = _referenceTime;
+                }
+
                 _intervals.Add(_currentInterval);
 
                 _currentInterval.Perspective = MarksStartOfDebugSession(@event)
@@ -53,6 +63,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             else
             {
                 TransformerUtils.AdaptIntervalTimeData(_currentInterval, @event);
+                _referenceTime = @event.TerminatedAt.GetValueOrDefault();
 
                 if (MarksEndOfDebugSession(@event))
                 {

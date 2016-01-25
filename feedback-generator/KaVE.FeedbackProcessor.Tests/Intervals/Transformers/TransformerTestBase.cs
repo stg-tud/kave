@@ -30,7 +30,9 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             return _referenceTime.AddMinutes(timeOffsetInMinutes);
         }
 
-        protected virtual TestIDEEvent TestIDEEvent(int startOffsetInMinutes, int endOffsetInMinutes, string sessionId = null)
+        protected virtual TestIDEEvent TestIDEEvent(int startOffsetInMinutes,
+            int endOffsetInMinutes,
+            string sessionId = null)
         {
             return new TestIDEEvent
             {
@@ -40,7 +42,9 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             };
         }
 
-        protected virtual TIntervalType ExpectedInterval(int startOffsetInMinutes, int endOffsetInMinutes, string sessionId = null)
+        protected virtual TIntervalType ExpectedInterval(int startOffsetInMinutes,
+            int endOffsetInMinutes,
+            string sessionId = null)
         {
             return new TIntervalType
             {

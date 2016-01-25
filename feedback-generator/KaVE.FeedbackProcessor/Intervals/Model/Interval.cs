@@ -21,10 +21,8 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
 {
     public abstract class Interval
     {
-        [NotNull]
         public DateTime StartTime { get; set; }
 
-        [NotNull]
         public TimeSpan Duration { get; set; }
 
         public DateTime EndTime
@@ -38,18 +36,26 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         [NotNull]
         public string IDESessionId { get; set; }
 
+        [NotNull]
+        public string Project { get; set; }
+
+        public DateTime CreationTime { get; set; }
+
         protected Interval()
         {
             StartTime = DateTime.MinValue;
             Duration = TimeSpan.Zero;
             UserId = string.Empty;
             IDESessionId = string.Empty;
+            Project = string.Empty;
+            CreationTime = DateTime.Now;
         }
 
         protected bool Equals(Interval other)
         {
             return StartTime.Equals(other.StartTime) && Duration.Equals(other.Duration) &&
-                   string.Equals(UserId, other.UserId) && string.Equals(IDESessionId, other.IDESessionId);
+                   string.Equals(UserId, other.UserId) && string.Equals(IDESessionId, other.IDESessionId) &&
+                   string.Equals(Project, other.Project);
         }
 
         public override bool Equals(object obj)
@@ -77,6 +83,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
                 hashCode = (hashCode*397) ^ Duration.GetHashCode();
                 hashCode = (hashCode*397) ^ UserId.GetHashCode();
                 hashCode = (hashCode*397) ^ IDESessionId.GetHashCode();
+                hashCode = (hashCode*397) ^ Project.GetHashCode();
                 return hashCode;
             }
         }
