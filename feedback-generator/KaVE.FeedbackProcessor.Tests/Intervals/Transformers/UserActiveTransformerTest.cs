@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesIntervalWithIdenticalTimeDataForSingleEvent()
         {
-            var sut = new UserActiveTransformer(TimeSpan.FromMinutes(16));
+            var sut = new UserActiveTransformer(_context, TimeSpan.FromMinutes(16));
 
             sut.ProcessEvent(TestIDEEvent(0, 5, "a"));
 
@@ -36,7 +36,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesMergedIntervalsForCloseEvents()
         {
-            var sut = new UserActiveTransformer(TimeSpan.FromMinutes(16));
+            var sut = new UserActiveTransformer(_context, TimeSpan.FromMinutes(16));
 
             sut.ProcessEvent(TestIDEEvent(0, 5, "a"));
             sut.ProcessEvent(TestIDEEvent(3, 6, "a"));
@@ -49,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesSeperateIntervalsForEventsThatAreFurtherApart()
         {
-            var sut = new UserActiveTransformer(TimeSpan.FromMinutes(16));
+            var sut = new UserActiveTransformer(_context, TimeSpan.FromMinutes(16));
 
             sut.ProcessEvent(TestIDEEvent(0, 10, "a"));
             sut.ProcessEvent(TestIDEEvent(27, 30, "a"));

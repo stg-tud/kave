@@ -23,23 +23,25 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
     internal class VisualStudioOpenedTransformer : IEventToIntervalTransformer<VisualStudioOpenedInterval>
     {
         private readonly IDictionary<string, VisualStudioOpenedInterval> _intervals;
+        private readonly TransformerContext _context;
 
-        public VisualStudioOpenedTransformer()
+        public VisualStudioOpenedTransformer(TransformerContext context)
         {
             _intervals = new Dictionary<string, VisualStudioOpenedInterval>();
+            _context = context;
         }
 
         public void ProcessEvent(IDEEvent e)
         {
             if (_intervals.ContainsKey(e.IDESessionUUID))
             {
-                TransformerUtils.AdaptIntervalTimeData(_intervals[e.IDESessionUUID], e);
+                _context.AdaptIntervalTimeData(_intervals[e.IDESessionUUID], e);
             }
             else
             {
                 _intervals.Add(
                     e.IDESessionUUID,
-                    TransformerUtils.CreateIntervalFromEvent<VisualStudioOpenedInterval>(e));
+                    _context.CreateIntervalFromEvent<VisualStudioOpenedInterval>(e));
             }
         }
 

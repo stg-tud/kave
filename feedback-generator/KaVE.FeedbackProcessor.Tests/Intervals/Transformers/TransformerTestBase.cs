@@ -17,6 +17,7 @@
 using System;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Intervals.Model;
+using KaVE.FeedbackProcessor.Intervals.Transformers;
 
 namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 {
@@ -24,6 +25,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         where TIntervalType : Interval, new()
     {
         private DateTime _referenceTime = DateTime.Now.Date;
+        protected TransformerContext _context = new TransformerContext();
 
         protected virtual DateTime TestTime(int timeOffsetInMinutes)
         {
@@ -50,7 +52,8 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             {
                 StartTime = _referenceTime.AddMinutes(startOffsetInMinutes),
                 Duration = TimeSpan.FromMinutes(endOffsetInMinutes - startOffsetInMinutes),
-                IDESessionId = sessionId
+                IDESessionId = sessionId,
+                Project = string.Empty
             };
         }
     }

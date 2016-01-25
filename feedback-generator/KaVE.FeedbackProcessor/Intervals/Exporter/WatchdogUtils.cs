@@ -17,6 +17,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Exporter
@@ -67,6 +69,15 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             File.WriteAllLines(Path.Combine(outputFolder, "intervals.json"), data.Intervals.Select(o => o.ToString()));
             File.WriteAllLines(Path.Combine(outputFolder, "projects.json"), data.Projects.Select(o => o.ToString()));
             File.WriteAllLines(Path.Combine(outputFolder, "users.json"), data.Users.Select(o => o.ToString()));
+        }
+
+        public static string Sha1Hash(string input)
+        {
+            using (var sha1 = new SHA1Managed())
+            {
+                var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
+                return string.Join(string.Empty, hash.Select(b => b.ToString("x2")));
+            }
         }
     }
 }

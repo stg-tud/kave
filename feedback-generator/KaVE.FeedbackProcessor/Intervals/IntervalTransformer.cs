@@ -38,17 +38,19 @@ namespace KaVE.FeedbackProcessor.Intervals
 
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
         {
+            var context = new TransformerContext();
             var transformer =
                 new ZeroLengthIntervalFilterTransformer(
                     new AggregateTransformer(
-                        new VisualStudioOpenedTransformer(),
+                        context,
+                        new VisualStudioOpenedTransformer(context),
                         new SessionIdSortingTransformer<Interval>(
                             () =>
                                 new AggregateTransformer(
-                                    new UserActiveTransformer(),
-                                    new PerspectiveTransformer(),
-                                    new FileOpenTransformer(),
-                                    new FileInteractionTransformer()
+                                    new UserActiveTransformer(context),
+                                    new PerspectiveTransformer(context),
+                                    new FileOpenTransformer(context),
+                                    new FileInteractionTransformer(context)
                                     )
                             )
                         )
@@ -117,7 +119,7 @@ namespace KaVE.FeedbackProcessor.Intervals
         {
             var zip = ZipFile.Read(file);
             var fileLoader = new FeedbackArchiveReader();
-            return fileLoader.ReadAllEvents(zip).Take(1000);
+            return fileLoader.ReadAllEvents(zip);
         }
     }
 }

@@ -15,18 +15,18 @@
  */
 
 using System;
-using KaVE.FeedbackProcessor.Intervals;
-using KaVE.FeedbackProcessor.Tests.Intervals.Transformers;
+using KaVE.FeedbackProcessor.Intervals.Transformers;
 using NUnit.Framework;
 
-namespace KaVE.FeedbackProcessor.Tests.Intervals
+namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 {
-    internal class TransformerUtilsTest : TransformerTestBase<TestInterval>
+    internal class TransformerContextTest : TransformerTestBase<TestInterval>
     {
         [Test]
         public void CreatesIntervalCorrectly()
         {
-            var i = TransformerUtils.CreateIntervalFromEvent<TestInterval>(TestIDEEvent(0, 1, "a"));
+            var sut = new TransformerContext();
+            var i = sut.CreateIntervalFromEvent<TestInterval>(TestIDEEvent(0, 1, "a"));
             Assert.AreEqual(TestTime(0), i.StartTime);
             Assert.AreEqual(TimeSpan.FromMinutes(1), i.Duration);
             Assert.AreEqual("a", i.IDESessionId);
@@ -35,8 +35,9 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test]
         public void AdaptsIntervalCorrectly()
         {
+            var sut = new TransformerContext();
             var i = new TestInterval {StartTime = TestTime(0), Duration = TimeSpan.FromMinutes(1)};
-            TransformerUtils.AdaptIntervalTimeData(i, TestIDEEvent(1, 2));
+            sut.AdaptIntervalTimeData(i, TestIDEEvent(1, 2));
 
             Assert.AreEqual(TestTime(0), i.StartTime);
             Assert.AreEqual(TimeSpan.FromMinutes(2), i.Duration);
@@ -45,8 +46,9 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test]
         public void DoesNotMakeIntervalShorter()
         {
-            var i = new TestInterval { StartTime = TestTime(0), Duration = TimeSpan.FromMinutes(5) };
-            TransformerUtils.AdaptIntervalTimeData(i, TestIDEEvent(1, 2));
+            var sut = new TransformerContext();
+            var i = new TestInterval {StartTime = TestTime(0), Duration = TimeSpan.FromMinutes(5)};
+            sut.AdaptIntervalTimeData(i, TestIDEEvent(1, 2));
 
             Assert.AreEqual(TestTime(0), i.StartTime);
             Assert.AreEqual(TimeSpan.FromMinutes(5), i.Duration);

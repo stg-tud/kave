@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.Events;
-using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals
 {
@@ -24,25 +23,6 @@ namespace KaVE.FeedbackProcessor.Intervals
         public static bool EventHasNoTimeData(IDEEvent ideEvent)
         {
             return !ideEvent.TriggeredAt.HasValue || !ideEvent.TerminatedAt.HasValue;
-        }
-
-        public static TIntervalType CreateIntervalFromEvent<TIntervalType>(IDEEvent ideEvent)
-            where TIntervalType : Interval, new()
-        {
-            return new TIntervalType
-            {
-                StartTime = ideEvent.TriggeredAt.GetValueOrDefault(),
-                Duration = ideEvent.Duration.GetValueOrDefault(),
-                IDESessionId = ideEvent.IDESessionUUID
-            };
-        }
-
-        public static void AdaptIntervalTimeData(Interval interval, IDEEvent ideEvent)
-        {
-            if (ideEvent.TerminatedAt.GetValueOrDefault() > interval.StartTime + interval.Duration)
-            {
-                interval.Duration = ideEvent.TerminatedAt.GetValueOrDefault() - interval.StartTime;
-            }
         }
     }
 }

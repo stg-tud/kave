@@ -26,18 +26,20 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
     {
         private readonly IList<FileOpenInterval> _intervals;
         private readonly IDictionary<DocumentName, FileOpenInterval> _currentIntervals;
+        private TransformerContext _context;
 
-        public FileOpenTransformer()
+        public FileOpenTransformer(TransformerContext context)
         {
             _intervals = new List<FileOpenInterval>();
             _currentIntervals = new Dictionary<DocumentName, FileOpenInterval>();
+            _context = context;
         }
 
         public void ProcessEvent(IDEEvent @event)
         {
             if (@event.ActiveDocument != null && _currentIntervals.ContainsKey(@event.ActiveDocument))
             {
-                TransformerUtils.AdaptIntervalTimeData(_currentIntervals[@event.ActiveDocument], @event);
+                _context.AdaptIntervalTimeData(_currentIntervals[@event.ActiveDocument], @event);
             }
 
             var documentEvent = @event as DocumentEvent;
@@ -45,7 +47,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             {
                 if (_currentIntervals.ContainsKey(documentEvent.Document))
                 {
-                    TransformerUtils.AdaptIntervalTimeData(_currentIntervals[documentEvent.Document], @event);
+                    _context.AdaptIntervalTimeData(_currentIntervals[documentEvent.Document], @event);
 
                     if (documentEvent.Action == DocumentEvent.DocumentAction.Closing)
                     {
@@ -58,7 +60,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
                     if (documentEvent.Action == DocumentEvent.DocumentAction.Opened)
                     {
                         _currentIntervals[documentEvent.Document] =
-                            TransformerUtils.CreateIntervalFromFirstEvent<FileOpenInterval>(@event);
+                            _context.CreateIntervalFromEvent<FileOpenInterval>(@event);
                         _currentIntervals[documentEvent.Document].FileName = documentEvent.Document.FileName;
                     }
                 }

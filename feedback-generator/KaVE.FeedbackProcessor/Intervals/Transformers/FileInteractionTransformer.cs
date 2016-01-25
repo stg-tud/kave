@@ -28,11 +28,13 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         private readonly IList<FileInteractionInterval> _intervals;
         private FileInteractionInterval _currentInterval;
         private DateTime _referenceTime;
+        private TransformerContext _context;
 
-        public FileInteractionTransformer()
+        public FileInteractionTransformer(TransformerContext context)
         {
             _intervals = new List<FileInteractionInterval>();
             _referenceTime = DateTime.MinValue;
+            _context = context;
         }
 
         public void ProcessEvent(IDEEvent @event)
@@ -57,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
             if (_currentInterval == null && classification != null)
             {
-                _currentInterval = TransformerUtils.CreateIntervalFromEvent<FileInteractionInterval>(@event);
+                _currentInterval = _context.CreateIntervalFromEvent<FileInteractionInterval>(@event);
                 _intervals.Add(_currentInterval);
 
                 if (_currentInterval.StartTime < _referenceTime)
@@ -72,7 +74,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
             if (_currentInterval != null)
             {
-                TransformerUtils.AdaptIntervalTimeData(_currentInterval, @event);
+                _context.AdaptIntervalTimeData(_currentInterval, @event);
                 _referenceTime = @event.TerminatedAt.GetValueOrDefault();
             }
         }

@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesDebugPerspectiveInterval()
         {
-            var sut = new PerspectiveTransformer();
+            var sut = new PerspectiveTransformer(_context);
 
             sut.ProcessEvent(TestDebuggerEvent(0, 0, true));
             sut.ProcessEvent(TestIDEEvent(1, 2));
@@ -60,7 +60,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesMultipleDebugPerspectiveIntervals()
         {
-            var sut = new PerspectiveTransformer();
+            var sut = new PerspectiveTransformer(_context);
 
             sut.ProcessEvent(TestDebuggerEvent(0, 0, true));
             sut.ProcessEvent(TestDebuggerEvent(1, 1, false));
@@ -79,7 +79,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesProductionPerspectiveInterval()
         {
-            var sut = new PerspectiveTransformer();
+            var sut = new PerspectiveTransformer(_context);
 
             sut.ProcessEvent(TestIDEEvent(0, 1));
             sut.ProcessEvent(TestIDEEvent(2, 3));
@@ -92,7 +92,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesInterleavedPerspectiveIntervals()
         {
-            var sut = new PerspectiveTransformer();
+            var sut = new PerspectiveTransformer(_context);
 
             sut.ProcessEvent(TestDebuggerEvent(0, 0, true));
             sut.ProcessEvent(TestDebuggerEvent(1, 1, false));
@@ -116,7 +116,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void IntervalsDontOverlap()
         {
-            var sut = new PerspectiveTransformer();
+            var sut = new PerspectiveTransformer(_context);
 
             sut.ProcessEvent(TestDebuggerEvent(0, 2, true));
             sut.ProcessEvent(TestDebuggerEvent(4, 6, false));

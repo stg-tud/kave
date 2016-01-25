@@ -114,6 +114,7 @@
     <Compile Include="Intervals\Model\FileOpenIntervalTest.cs" />
     <Compile Include="Intervals\Model\IntervalTest.cs" />
     <Compile Include="Intervals\Model\PerspectiveIntervalTest.cs" />
+    <Compile Include="Intervals\Transformers\TransformerContextTest.cs" />
     <Compile Include="Intervals\Transformers\FileInteractionTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\SessionIdSortingTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\ZeroLengthIntervalFilterTransformerTest.cs" />
@@ -125,7 +126,6 @@
     <Compile Include="Intervals\Transformers\TransformerTestBase.cs" />
     <Compile Include="Intervals\Transformers\UserActiveTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\VisualStudioOpenedTransformerTest.cs" />
-    <Compile Include="Intervals\TransformerUtilsTest.cs" />
     <Compile Include="Model\DeveloperTest.cs" />
     <Compile Include="Model\EventUtilsTest.cs" />
     <Compile Include="Model\TestFactory.cs" />

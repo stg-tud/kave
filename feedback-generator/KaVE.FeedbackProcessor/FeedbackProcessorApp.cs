@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Intervals;
+using KaVE.FeedbackProcessor.Intervals.Exporter;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -32,11 +33,23 @@ namespace KaVE.FeedbackProcessor
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
 
-            //var events = new EventStreamFilter(EventStreamFilter.TimeBoxFilter("30.07.2015 02:30:20", "30.07.2015 02:34:06"))
+            //var events = new EventStreamFilter(
+            //    e =>
+            //    {
+            //        var se = e as SolutionEvent;
+            //        return se != null && se.Action == SolutionEvent.SolutionAction.OpenSolution &&
+            //               string.IsNullOrWhiteSpace(se.Target.Identifier);
+            //    })
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
             var intervals = new IntervalTransformer(Logger).TransformFile(
-                "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip");
+                "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
+
+            Logger.Info(@"Got {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
+
+            WatchdogExporter.Convert(intervals).WriteToFiles("C:/Users/Andreas/Desktop/wd-test");
+
+            Logger.Info("Done!");
 
             Console.ReadKey();
         }

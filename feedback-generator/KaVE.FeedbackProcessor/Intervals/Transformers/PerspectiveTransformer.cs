@@ -27,10 +27,12 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         private readonly IList<PerspectiveInterval> _intervals;
         private PerspectiveInterval _currentInterval;
         private DateTime _referenceTime;
+        private TransformerContext _context;
 
-        public PerspectiveTransformer()
+        public PerspectiveTransformer(TransformerContext context)
         {
             _intervals = new List<PerspectiveInterval>();
+            _context = context;
             _referenceTime = DateTime.MinValue;
         }
 
@@ -45,8 +47,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
             if (_currentInterval == null)
             {
-                _currentInterval =
-                    TransformerUtils.CreateIntervalFromEvent<PerspectiveInterval>(@event);
+                _currentInterval = _context.CreateIntervalFromEvent<PerspectiveInterval>(@event);
 
                 if (_currentInterval.StartTime < _referenceTime)
                 {
@@ -62,7 +63,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             }
             else
             {
-                TransformerUtils.AdaptIntervalTimeData(_currentInterval, @event);
+                _context.AdaptIntervalTimeData(_currentInterval, @event);
                 _referenceTime = @event.TerminatedAt.GetValueOrDefault();
 
                 if (MarksEndOfDebugSession(@event))

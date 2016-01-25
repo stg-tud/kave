@@ -50,7 +50,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void SingleInterval()
         {
-            var sut = new FileOpenTransformer();
+            var sut = new FileOpenTransformer(_context);
 
             sut.ProcessEvent(TestDocumentEvent(0, 0, "File1.cs", true));
             sut.ProcessEvent(TestDocumentEvent(1, 1, "File1.cs", false));
@@ -62,7 +62,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void MultipleIntervalsWithOverlaps()
         {
-            var sut = new FileOpenTransformer();
+            var sut = new FileOpenTransformer(_context);
 
             sut.ProcessEvent(TestDocumentEvent(0, 0, "File1.cs", true));
             sut.ProcessEvent(TestDocumentEvent(4, 4, "File1.cs", false));
@@ -86,7 +86,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesIntervalIfCloseIsMissing()
         {
-            var sut = new FileOpenTransformer();
+            var sut = new FileOpenTransformer(_context);
 
             sut.ProcessEvent(TestDocumentEvent(0, 1, "File1.cs", true, "a"));
             // missing close!

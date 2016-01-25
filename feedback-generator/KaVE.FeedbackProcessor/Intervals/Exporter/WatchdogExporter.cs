@@ -40,11 +40,29 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
         public static WatchdogData Convert(IList<Interval> intervals)
         {
-            return new WatchdogData
+            var data = new WatchdogData();
+            var createdProjectObjects = new HashSet<string>();
+            data.Users.Add(CreateUserObject(intervals.First().UserId));
+
+            foreach (var interval in intervals)
             {
-                Intervals = intervals.Select(Convert).ToList(),
-                Users = new[] {CreateUserObject(intervals.First().UserId)}
-            };
+                try
+                {
+                    data.Intervals.Add(Convert(interval));
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (!createdProjectObjects.Contains(interval.Project))
+                {
+                    data.Projects.Add(CreateProjectObject(interval.UserId, interval.Project));
+                    createdProjectObjects.Add(interval.Project);
+                }
+            }
+
+            return data;
         }
 
         private static WatchdogWrappedValue Wrapped(string wrapper, object value)
@@ -77,7 +95,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));
             obj.Properties.Add("userId", String(interval.UserId));
-            obj.Properties.Add("projectId", String(interval.Project.GetHashCode().ToString()));
+            obj.Properties.Add("projectId", String(WatchdogUtils.Sha1Hash(interval.Project)));
             obj.Properties.Add("ip", String("0.0.0.0"));
             obj.Properties.Add("regDate", Wrapped("ISODate", interval.CreationTime.ToString("o")));
             return obj;
@@ -103,11 +121,11 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             return obj;
         }
 
-        private static WatchdogObject CreateProjectObject()
+        private static WatchdogObject CreateProjectObject(string userId, string projectName)
         {
             var obj = new WatchdogObject();
             obj.Properties.Add("_id", Wrapped("ObjectId", Guid.NewGuid().ToString("N")));
-            obj.Properties.Add("name", String("asdf")); // TODO: fetch name
+            obj.Properties.Add("name", String(projectName));
             obj.Properties.Add("belongToASingleSoftware", Literal("true"));
             obj.Properties.Add("usesContinuousIntegration", String("Unknown"));
             obj.Properties.Add("usesJunit", String("No"));
@@ -116,12 +134,12 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("productionPercentage", Int(0));
             obj.Properties.Add("useJunitOnlyForUnitTesting", String("No"));
             obj.Properties.Add("followTestDrivenDesign", String("Unknown"));
-            obj.Properties.Add("localRegistrationDate", String("Nov 4, 2015 1:09:58 AM"));
-            obj.Properties.Add("userId", String("")); // TODO: fetch id
+            obj.Properties.Add("localRegistrationDate", String("Nov 4, 2015 1:09:58 AM")); // TODO: what to do with this?
+            obj.Properties.Add("userId", String(userId));
             obj.Properties.Add("website", String(""));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));
-            obj.Properties.Add("id", String("?????")); // TODO: create
+            obj.Properties.Add("id", String(WatchdogUtils.Sha1Hash(projectName)));
             obj.Properties.Add("ip", String("0.0.0.0"));
             obj.Properties.Add("regDate", Wrapped("ISODate", DateTime.Now.ToString("o")));
             return obj;
@@ -135,7 +153,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("organization", String("Unknown"));
             obj.Properties.Add("programmingExperience", String("Unknown"));
             obj.Properties.Add("maxContactUser", Literal("false"));
-            obj.Properties.Add("localRegistrationDate", Wrapped("NumberLong", DateTime.MaxValue.ToJavaTimestamp()));
+            obj.Properties.Add("localRegistrationDate", Wrapped("NumberLong", DateTime.MinValue.ToJavaTimestamp()));
             obj.Properties.Add("operatingSystem", String("Unknown"));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));

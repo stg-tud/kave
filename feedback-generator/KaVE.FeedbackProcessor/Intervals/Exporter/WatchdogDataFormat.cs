@@ -17,13 +17,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Intervals.Exporter
 {
     public class WatchdogData
     {
+        [NotNull]
         public IList<WatchdogObject> Intervals { get; set; }
+
+        [NotNull]
         public IList<WatchdogObject> Projects { get; set; }
+
+        [NotNull]
         public IList<WatchdogObject> Users { get; set; }
 
         public WatchdogData()
@@ -101,7 +107,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
                     sb.Append(",");
                 }
             }
-            
+
             sb.Append("}");
             return sb.ToString();
         }

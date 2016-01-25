@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesIntervalForEachSessionId()
         {
-            var sut = new VisualStudioOpenedTransformer();
+            var sut = new VisualStudioOpenedTransformer(_context);
 
             sut.ProcessEvent(TestIDEEvent(-3, -2, "a"));
             sut.ProcessEvent(TestIDEEvent(-1, 0, "b"));
@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void IntervalsAreExpandedCorrectly()
         {
-            var sut = new VisualStudioOpenedTransformer();
+            var sut = new VisualStudioOpenedTransformer(_context);
 
             sut.ProcessEvent(TestIDEEvent(-3, -2, "a"));
             sut.ProcessEvent(TestIDEEvent(-1, 0, "a"));

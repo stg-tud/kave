@@ -26,10 +26,12 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
     {
         private readonly IList<UserActiveInterval> _intervals;
         private readonly TimeSpan _maxInactivityTime;
+        private TransformerContext _context;
 
-        public UserActiveTransformer(TimeSpan? maxInactivityTime = null)
+        public UserActiveTransformer(TransformerContext context, TimeSpan? maxInactivityTime = null)
         {
             _intervals = new List<UserActiveInterval>();
+            _context = context;
             _maxInactivityTime = maxInactivityTime ?? TimeSpan.FromSeconds(16);
         }
 
@@ -45,7 +47,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             }
             else
             {
-                _intervals.Add(TransformerUtils.CreateIntervalFromEvent<UserActiveInterval>(e));
+                _intervals.Add(_context.CreateIntervalFromEvent<UserActiveInterval>(e));
             }
         }
 

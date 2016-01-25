@@ -66,7 +66,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesNewTypingIntervalWhenFileChanges()
         {
-            var sut = new FileInteractionTransformer();
+            var sut = new FileInteractionTransformer(_context);
 
             sut.ProcessEvent(TestTypingEvent(0, 1, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 2, "File2.cs"));
@@ -79,7 +79,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void CreatesNewIntervalWhenTypeChanges()
         {
-            var sut = new FileInteractionTransformer();
+            var sut = new FileInteractionTransformer(_context);
 
             sut.ProcessEvent(TestReadingEvent(0, 1, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 2, "File1.cs"));
@@ -93,7 +93,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void ResultingIntervalsDontOverlap()
         {
-            var sut = new FileInteractionTransformer();
+            var sut = new FileInteractionTransformer(_context);
 
             sut.ProcessEvent(TestReadingEvent(0, 2, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 3, "File1.cs"));
@@ -106,7 +106,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void ResultingIntervalsDontOverlap2()
         {
-            var sut = new FileInteractionTransformer();
+            var sut = new FileInteractionTransformer(_context);
 
             sut.ProcessEvent(TestReadingEvent(0, 2, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 3, "File2.cs"));
@@ -119,7 +119,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         [Test]
         public void IgnoresEditEventsWhileDebugging()
         {
-            var sut = new FileInteractionTransformer();
+            var sut = new FileInteractionTransformer(_context);
 
             sut.ProcessEvent(TestDebuggerEvent(0, 1, "File1.cs", true));
             sut.ProcessEvent(TestTypingEvent(1, 2, "File1.cs"));
