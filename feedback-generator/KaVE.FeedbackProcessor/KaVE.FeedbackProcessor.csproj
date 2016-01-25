@@ -113,6 +113,9 @@
     <Compile Include="IEventProcessor.cs" />
     <Compile Include="Import\FeedbackImporter.cs" />
     <Compile Include="Import\FeedbackArchiveReader.cs" />
+    <Compile Include="Intervals\Exporter\WatchdogDataFormat.cs" />
+    <Compile Include="Intervals\Exporter\WatchdogExporter.cs" />
+    <Compile Include="Intervals\Exporter\WatchdogUtils.cs" />
     <Compile Include="Intervals\Model\FileInteractionInterval.cs" />
     <Compile Include="Intervals\Model\FileInterval.cs" />
     <Compile Include="Intervals\Model\FileOpenInterval.cs" />
