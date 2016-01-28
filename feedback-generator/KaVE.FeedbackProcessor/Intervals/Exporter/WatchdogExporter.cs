@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
@@ -26,7 +27,8 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         public static WatchdogObject Convert(Interval interval)
         {
             if (interval is VisualStudioOpenedInterval ||
-                interval is UserActiveInterval)
+                interval is UserActiveInterval ||
+                interval is TestRunInterval)
             {
                 return ConvertBasicInterval(interval);
             }
@@ -34,6 +36,18 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             if (perspectiveInterval != null)
             {
                 return ConvertPerspectiveInterval(perspectiveInterval);
+            }
+            var fileInteractionInterval = interval as FileInteractionInterval;
+            if (fileInteractionInterval != null)
+            {
+                if (fileInteractionInterval.Type == FileInteractionType.Reading)
+                {
+                    return ConvertReadingInterval(fileInteractionInterval);
+                }
+                if (fileInteractionInterval.Type == FileInteractionType.Typing)
+                {
+                    return ConvertTypingInterval(fileInteractionInterval);
+                }
             }
             throw new NotImplementedException("Unsupported interval type.");
         }
@@ -118,6 +132,33 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
                     throw new ArgumentOutOfRangeException();
             }
             obj.Properties.Add("pet", String(type));
+            return obj;
+        }
+
+        private static WatchdogObject CreateFileRepresentationObject(FileInteractionInterval fileInteractionInterval)
+        {
+            var doc = new WatchdogObject();
+            doc.Properties.Add("pn", String(WatchdogUtils.Sha1Hash(fileInteractionInterval.Project)));
+            doc.Properties.Add("fn", String(WatchdogUtils.Sha1Hash(Path.GetFileName(fileInteractionInterval.FileName))));
+            doc.Properties.Add("sloc", Int(-1));
+            doc.Properties.Add("dt", String(WatchdogUtils.GetSerializedDocumentTypeName(fileInteractionInterval.FileType)));
+            return doc;
+        }
+
+        private static WatchdogObject ConvertReadingInterval(FileInteractionInterval fileInteractionInterval)
+        {
+            var obj = ConvertBasicInterval(fileInteractionInterval);
+            obj.Properties.Add("doc", CreateFileRepresentationObject(fileInteractionInterval));
+            return obj;
+        }
+
+        private static WatchdogObject ConvertTypingInterval(FileInteractionInterval fileInteractionInterval)
+        {
+            var obj = ConvertBasicInterval(fileInteractionInterval);
+            var fileRepresentationObject = CreateFileRepresentationObject(fileInteractionInterval);
+            obj.Properties.Add("doc", fileRepresentationObject);
+            obj.Properties.Add("endingDoc", fileRepresentationObject);
+            obj.Properties.Add("diff", Int(-1));
             return obj;
         }
 

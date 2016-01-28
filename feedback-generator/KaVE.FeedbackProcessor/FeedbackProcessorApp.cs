@@ -46,18 +46,18 @@ namespace KaVE.FeedbackProcessor
             var intervals = new IntervalTransformer(Logger).TransformFile(
                 "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
-            foreach (var interval in intervals)
-            {
-                var fi = interval as FileInteractionInterval;
-                if (fi != null)
-                {
-                    Logger.Info("{0} {1}", fi.FileName, Enum.GetName(typeof(DocumentType), fi.FileType));
-                }
-            }
+            //foreach (var interval in intervals)
+            //{
+            //    var fi = interval as FileInteractionInterval;
+            //    if (fi != null)
+            //    {
+            //        Logger.Info("{0} {1}", fi.FileName, Enum.GetName(typeof(DocumentType), fi.FileType));
+            //    }
+            //}
 
-            //Logger.Info(@"Got {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
+            Logger.Info(@"Got {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
 
-            //WatchdogExporter.Convert(intervals).WriteToFiles("C:/Users/Andreas/Desktop/wd-test");
+            WatchdogExporter.Convert(intervals).WriteToFiles("C:/Users/Andreas/Desktop/wd-test");
 
             Logger.Info("Done!");
 

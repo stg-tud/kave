@@ -39,6 +39,10 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             {
                 return "pe";
             }
+            if (t is TestRunInterval)
+            {
+                return "ju";
+            }
 
             var re = t as FileInteractionInterval;
             if (re != null)
@@ -57,11 +61,30 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             throw new ArgumentException();
         }
 
+        public static string GetSerializedDocumentTypeName(DocumentType type)
+        {
+            switch (type)
+            {
+                case DocumentType.Undefined:
+                    return "un";
+                case DocumentType.Production:
+                    return "pr";
+                case DocumentType.FilenameTest:
+                    return "lt";
+                case DocumentType.PathnameTest:
+                    return "pf";
+                case DocumentType.Test:
+                    return "te";
+                default:
+                    throw new ArgumentOutOfRangeException("type", type, null);
+            }
+        }
+
         public static long ToJavaTimestamp(this DateTime date)
         {
             long unixTimestamp = date.Ticks - new DateTime(1970, 1, 1).Ticks;
             unixTimestamp /= TimeSpan.TicksPerSecond;
-            return unixTimestamp * 1000;
+            return unixTimestamp*1000;
         }
 
         public static void WriteToFiles(this WatchdogData data, string outputFolder)

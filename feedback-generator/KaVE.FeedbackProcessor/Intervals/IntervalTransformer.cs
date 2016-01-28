@@ -43,19 +43,19 @@ namespace KaVE.FeedbackProcessor.Intervals
                 new ZeroLengthIntervalFilterTransformer(
                     new AggregateTransformer(
                         context,
-                        //new VisualStudioOpenedTransformer(context),
-                        new TestRunIntervalTransformer(context)//,
-                        //new SessionIdSortingTransformer<Interval>(
-                        //    () =>
-                        //        new AggregateTransformer(
-                        //            new UserActiveTransformer(context),
-                        //            new PerspectiveTransformer(context),
-                        //            //new FileOpenTransformer(context),
-                        //            new FileInteractionTransformer(context)
-                        //            )
-                        //    )
-                        //)
-                    ));
+                        new VisualStudioOpenedTransformer(context),
+                        new TestRunIntervalTransformer(context),
+                        new SessionIdSortingTransformer<Interval>(
+                            () =>
+                                new AggregateTransformer(
+                                    new UserActiveTransformer(context),
+                                    new PerspectiveTransformer(context),
+                                    //new FileOpenTransformer(context),
+                                    new FileInteractionTransformer(context)
+                                    )
+                            )
+                        )
+                    );
 
             return TransformWithCustomTransformer(events, transformer);
         }
