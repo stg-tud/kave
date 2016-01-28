@@ -30,11 +30,22 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Model
         }
 
         [Test]
-        public void Equality_Filename()
+        public void Equality_FileName()
         {
             var i1 = new FileOpenInterval {FileName = "a"};
             var i2 = new FileOpenInterval {FileName = "a"};
             var i3 = new FileOpenInterval {FileName = "b"};
+
+            Assert.AreEqual(i1, i2);
+            Assert.AreNotEqual(i2, i3);
+        }
+
+        [Test]
+        public void Equality_FileType()
+        {
+            var i1 = new FileOpenInterval {FileType = DocumentType.Production};
+            var i2 = new FileOpenInterval { FileType = DocumentType.Production };
+            var i3 = new FileOpenInterval { FileType = DocumentType.Test };
 
             Assert.AreEqual(i1, i2);
             Assert.AreNotEqual(i2, i3);

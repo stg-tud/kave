@@ -16,13 +16,24 @@
 
 namespace KaVE.FeedbackProcessor.Intervals.Model
 {
+    public enum DocumentType
+    {
+        Undefined,
+        Production,
+        FilenameTest,
+        PathnameTest,
+        Test
+    }
+
     public abstract class FileInterval : Interval
     {
         public string FileName { get; set; }
 
+        public DocumentType FileType { get; set; }
+
         protected bool Equals(FileInterval other)
         {
-            return base.Equals(other) && string.Equals(FileName, other.FileName);
+            return base.Equals(other) && string.Equals(FileName, other.FileName) && FileType == other.FileType;
         }
 
         public override bool Equals(object obj)
@@ -35,7 +46,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
             {
                 return true;
             }
-            if (obj.GetType() != this.GetType())
+            if (obj.GetType() != GetType())
             {
                 return false;
             }
@@ -46,7 +57,10 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         {
             unchecked
             {
-                return (base.GetHashCode()*397) ^ (FileName != null ? FileName.GetHashCode() : 0);
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ (FileName != null ? FileName.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (int) FileType;
+                return hashCode;
             }
         }
 

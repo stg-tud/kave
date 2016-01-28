@@ -59,6 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         {
             var interval = base.ExpectedInterval(startOffset, endOffset);
             interval.FileName = filename;
+            interval.FileType = DocumentType.Production;
             interval.Type = isTyping ? FileInteractionType.Typing : FileInteractionType.Reading;
             return interval;
         }

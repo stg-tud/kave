@@ -19,6 +19,7 @@ using System.Linq;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Intervals;
 using KaVE.FeedbackProcessor.Intervals.Exporter;
+using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -45,9 +46,18 @@ namespace KaVE.FeedbackProcessor
             var intervals = new IntervalTransformer(Logger).TransformFile(
                 "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
-            Logger.Info(@"Got {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
+            foreach (var interval in intervals)
+            {
+                var fi = interval as FileInteractionInterval;
+                if (fi != null)
+                {
+                    Logger.Info("{0} {1}", fi.FileName, Enum.GetName(typeof(DocumentType), fi.FileType));
+                }
+            }
 
-            WatchdogExporter.Convert(intervals).WriteToFiles("C:/Users/Andreas/Desktop/wd-test");
+            //Logger.Info(@"Got {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
+
+            //WatchdogExporter.Convert(intervals).WriteToFiles("C:/Users/Andreas/Desktop/wd-test");
 
             Logger.Info("Done!");
 

@@ -49,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Intervals
                                 new AggregateTransformer(
                                     new UserActiveTransformer(context),
                                     new PerspectiveTransformer(context),
-                                    new FileOpenTransformer(context),
+                                    //new FileOpenTransformer(context),
                                     new FileInteractionTransformer(context)
                                     )
                             )

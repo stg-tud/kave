@@ -76,6 +76,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             {
                 _context.AdaptIntervalTimeData(_currentInterval, @event);
                 _referenceTime = @event.TerminatedAt.GetValueOrDefault();
+                TransformerUtils.SetDocumentTypeIfNecessary(_currentInterval, @event);
             }
         }
 
