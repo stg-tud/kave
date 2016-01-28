@@ -134,6 +134,65 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
         }
 
+        public override void VisitDeclarationStatement(IDeclarationStatement decl, IList<IStatement> body)
+        {
+            if (IsTargetMatch(decl, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+
+            VisitNode(decl.Declaration, body);
+
+            if (decl == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitLocalConstantDeclaration(ILocalConstantDeclaration decl, IList<IStatement> body)
+        {
+            if (IsTargetMatch(decl, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+
+            var id = decl.DeclaredName;
+            ITypeName type;
+            try
+            {
+                type = decl.Type.GetName();
+            }
+            catch (AssertException)
+            {
+                // TODO this is an intermediate "fix"... the analysis sometimes fails here ("cannot create name for anonymous type")
+                type = TypeName.UnknownName;
+            }
+            body.Add(SSTUtil.Declare(id, type));
+
+            IAssignableExpression initializer = null;
+            if (decl.ValueExpression != null)
+            {
+                initializer = _exprVisitor.ToAssignableExpr(decl.ValueExpression, body);
+            }
+            else if (_marker.AffectedNode == decl && _marker.Case == CompletionCase.Undefined)
+            {
+                initializer = new CompletionExpression();
+            }
+
+            if (initializer != null)
+            {
+                if (!IsSelfAssign(id, initializer))
+                {
+                    body.Add(SSTUtil.AssignmentToLocal(id, initializer));
+                }
+            }
+
+            if (decl == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
         private bool IsTargetMatch(ICSharpTreeNode o, CompletionCase completionCase)
         {
             var isValid = _marker.AffectedNode != null;

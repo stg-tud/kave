@@ -180,6 +180,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\UncheckedBlockAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\UsingBlockAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\ConstAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\CurrentlyBrokenTests.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\ConstructorDeclarationAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\PropertyDeclarationAnalysisTest.cs" />
