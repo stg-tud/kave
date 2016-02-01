@@ -110,6 +110,7 @@
     <Compile Include="Import\FeedbackImporterWithoutSessionIdsTest.cs" />
     <Compile Include="Import\FeedbackImporterWithoutTriggerTimesTest.cs" />
     <Compile Include="Intervals\Exporter\WatchdogDataFormatTest.cs" />
+    <Compile Include="Intervals\Exporter\WatchdogExporterTest.cs" />
     <Compile Include="Intervals\Model\FileInteractionIntervalTest.cs" />
     <Compile Include="Intervals\Model\FileOpenIntervalTest.cs" />
     <Compile Include="Intervals\Model\IntervalTest.cs" />
