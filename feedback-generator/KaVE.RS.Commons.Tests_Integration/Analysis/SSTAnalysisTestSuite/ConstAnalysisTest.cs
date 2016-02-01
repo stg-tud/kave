@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -50,6 +53,38 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 VarDecl("j", Fix.Int),
                 Assign("j", Const("2")),
                 ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void ConstantField()
+        {
+            CompleteInClass(@"const int SomeConstant = 1; $");
+
+            var expected =
+                Sets.NewHashSet(
+                    new FieldDeclaration
+                    {
+                        Name = FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
+                    });
+            Assert.AreEqual(expected, ResultSST.Fields);
+        }
+
+        [Test]
+        public void MultipleConstantFields()
+        {
+            CompleteInClass(@"const int SomeConstant = 1, OtherConstant = 2; $");
+
+            var expected =
+                Sets.NewHashSet(
+                    new FieldDeclaration
+                    {
+                        Name = FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
+                    },
+                    new FieldDeclaration
+                    {
+                        Name = FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].OtherConstant")
+                    });
+            Assert.AreEqual(expected, ResultSST.Fields);
         }
     }
 }

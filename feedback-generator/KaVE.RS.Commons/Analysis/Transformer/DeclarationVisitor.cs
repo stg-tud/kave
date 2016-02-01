@@ -111,6 +111,21 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
         }
 
+        public override void VisitConstantDeclaration(IConstantDeclaration decl, SST context)
+        {
+            if (decl.DeclaredElement != null)
+            {
+                var name = decl.DeclaredElement.GetName<IFieldName>();
+
+                if (IsNestedDeclaration(name, context))
+                {
+                    return;
+                }
+
+                context.Fields.Add(new FieldDeclaration { Name = name });
+            }
+        }
+
         public override void VisitConstructorDeclaration(IConstructorDeclaration decl, SST context)
         {
             _cancellationToken.ThrowIfCancellationRequested();
