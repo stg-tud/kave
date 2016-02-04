@@ -16,6 +16,7 @@
 
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -28,11 +29,25 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
 {
     internal class TransformerUtilsTest
     {
-        [Test]
-        public void GuessDocumentType_Test()
+        // Method parameters were omitted.
+        private const string NUnitTestMethod =
+            "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, nunit.framework, 2.6.4.14350].AreEqual()";
+
+        private const string NUnitTestMethod2 =
+            "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, OtherFramework, 2.6.4.14350].AreEqual()";
+
+        private const string NUnitTestMethod3 =
+            "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, nunit.framework, 2.6.4.14350].AreEqual()";
+
+        private const string NotNUnit =
+            "static [System.Void, mscorlib, 4.0.0.0] [SomeProject.Assert, SomeProject, 2.6.4.14350].AreEqual()";
+
+        private const string NotNUnit2 =
+            "static [System.Void, mscorlib, 4.0.0.0] [SomeProject.Helpers, SomeProject, 2.6.4.14350].Assert()";
+
+        private ISST PrepareSST(string testMethod)
         {
-            var docName = DocumentName.Get("CSharp /TestProject/Test.cs");
-            var sst = new SST
+            return new SST
             {
                 Methods =
                 {
@@ -46,16 +61,33 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
                                 {
                                     MethodName =
                                         MethodName.Get(
-                                            "[System.Bool, mscorlib, 4.0.0.0] [TestFramework.Assert, TestFramework, 1.0.0.0].AreEqual()")
+                                            testMethod)
                                 }
                             }
                         }
                     }
                 }
             };
+        }
+
+        [Test, TestCase(NUnitTestMethod), TestCase(NUnitTestMethod2), TestCase(NUnitTestMethod3)]
+        public void GuessDocumentType_Test(string methodName)
+        {
+            var docName = DocumentName.Get("CSharp /TestProject/Test.cs");
+            var sst = PrepareSST(methodName);
 
             var actual = TransformerUtils.GuessDocumentType(docName, sst);
             Assert.AreEqual(DocumentType.Test, actual);
+        }
+
+        [Test, TestCase(NotNUnit), TestCase(NotNUnit2)]
+        public void GuessDocumentType_NotTest(string methodName)
+        {
+            var docName = DocumentName.Get("CSharp /TestProject/Test.cs");
+            var sst = PrepareSST(methodName);
+
+            var actual = TransformerUtils.GuessDocumentType(docName, sst);
+            Assert.AreNotEqual(DocumentType.Test, actual);
         }
 
         [Test]

@@ -95,8 +95,8 @@ namespace KaVE.FeedbackProcessor.Intervals
     {
         public override void Visit(IInvocationExpression entity, ValueTypeWrapper<bool> context)
         {
-            if (entity.MethodName.DeclaringType.Name.Contains("Assert", CompareOptions.IgnoreCase) ||
-                entity.MethodName.Name.Contains("Assert", CompareOptions.IgnoreCase))
+            if (entity.MethodName.DeclaringType.Assembly.Name.Contains("nunit", CompareOptions.IgnoreCase) ||
+                entity.MethodName.DeclaringType.FullName.Contains("nunit", CompareOptions.IgnoreCase))
             {
                 context.Value = true;
             }
