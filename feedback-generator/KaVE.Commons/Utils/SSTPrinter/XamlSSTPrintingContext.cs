@@ -21,37 +21,42 @@ namespace KaVE.Commons.Utils.SSTPrinter
 {
     public class XamlSSTPrintingContext : SSTPrintingContext
     {
+        public override SSTPrintingContext Text(string text)
+        {
+            return base.Text(text.EncodeSpecialChars());
+        }
+
         public override SSTPrintingContext LeftAngleBracket()
         {
-            return Text("&lt;");
+            return RawText("&lt;");
         }
 
         public override SSTPrintingContext RightAngleBracket()
         {
-            return Text("&gt;");
+            return RawText("&gt;");
         }
 
         public override SSTPrintingContext Keyword(string keyword)
         {
-            Text("<Span Foreground=\"Blue\">");
+            RawText("<Span Foreground=\"Blue\">");
             base.Keyword(keyword);
-            Text("</Span>");
+            RawText("</Span>");
             return this;
         }
 
         public override SSTPrintingContext UnknownMarker()
         {
-            Text("<Span Foreground=\"Blue\">");
+            RawText("<Span Foreground=\"Blue\">");
             base.UnknownMarker();
-            Text("</Span>");
+            RawText("</Span>");
             return this;
         }
 
         public override SSTPrintingContext CursorPosition()
         {
-            Text("<Bold>");
+            RawText("<Bold>");
             base.CursorPosition();
-            Text("</Bold>");
+            RawText("</Bold>");
             return this;
         }
 
@@ -68,33 +73,33 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 color = "Blue";
             }
 
-            Text(String.Format("<Span Foreground=\"{0}\">", color));
+            RawText(String.Format("<Span Foreground=\"{0}\">", color));
             base.TypeNameOnly(typeName);
-            Text("</Span>");
+            RawText("</Span>");
             return this;
         }
 
         protected override SSTPrintingContext TypeParameterShortName(string typeParameterShortName)
         {
-            Text("<Bold>");
+            RawText("<Bold>");
             base.TypeParameterShortName(typeParameterShortName);
-            Text("</Bold>");
+            RawText("</Bold>");
             return this;
         }
 
         public override SSTPrintingContext StringLiteral(string value)
         {
-            Text("<Span Foreground=\"#A31515\">");
+            RawText("<Span Foreground=\"#A31515\">");
             base.StringLiteral(value);
-            Text("</Span>");
+            RawText("</Span>");
             return this;
         }
 
         public override SSTPrintingContext Comment(string commentText)
         {
-            Text("<Span Foreground=\"#8F8F8F\">");
+            RawText("<Span Foreground=\"#8F8F8F\">");
             base.Comment(commentText);
-            Text("</Span>");
+            RawText("</Span>");
             return this;
         }
     }

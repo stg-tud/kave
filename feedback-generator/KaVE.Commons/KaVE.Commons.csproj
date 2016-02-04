@@ -138,6 +138,7 @@
     <Compile Include="Utils\ObjectUsageExport\QueryExtractor.cs" />
     <Compile Include="Utils\ObjectUsageExport\ScopedNameResolver.cs" />
     <Compile Include="Utils\RandomizationUtils.cs" />
+    <Compile Include="Utils\SSTPrinter\OperatorStringUtils.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingContext.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingUtils.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitor.cs" />

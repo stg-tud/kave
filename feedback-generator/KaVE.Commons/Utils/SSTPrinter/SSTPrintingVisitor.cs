@@ -609,16 +609,22 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IUnaryExpression expr, SSTPrintingContext c)
         {
-            // TODO improve visualization
-            c.Text(expr.Operator.ToString()).Space();
-            expr.Operand.Accept(this, c);
+            if (expr.Operator == UnaryOperator.PostIncrement || expr.Operator == UnaryOperator.PostDecrement)
+            {
+                expr.Operand.Accept(this, c);
+                c.Text(expr.Operator.ToPrettyString());
+            }
+            else
+            {
+                c.Text(expr.Operator.ToPrettyString());
+                expr.Operand.Accept(this, c);
+            }
         }
 
         public void Visit(IBinaryExpression expr, SSTPrintingContext c)
         {
-            // TODO improve visualization
             expr.LeftOperand.Accept(this, c);
-            c.Space().Text(expr.Operator.ToString()).Space();
+            c.Space().Text(expr.Operator.ToPrettyString()).Space();
             expr.RightOperand.Accept(this, c);
         }
 

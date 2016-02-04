@@ -56,6 +56,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
             _seenNamespaces = Sets.NewHashSet<INamespaceName>();
         }
 
+        protected virtual SSTPrintingContext RawText(string text)
+        {
+            _sb.Append(text);
+            return this;
+        }
+
         /// <summary>
         ///     Appends a string to the context.
         /// </summary>

@@ -362,7 +362,31 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 Operand = new ConstantValueExpression()
             };
 
-            AssertPrint(sst, "Not \"...\"");
+            AssertPrint(sst, "!\"...\"");
+        }
+
+        [Test]
+        public void UnaryExpression_Postfix()
+        {
+            var sst = new UnaryExpression
+            {
+                Operator = UnaryOperator.PostDecrement,
+                Operand = new ConstantValueExpression()
+            };
+
+            AssertPrint(sst, "\"...\"--");
+        }
+
+        [Test]
+        public void UnaryExpression_Postfix2()
+        {
+            var sst = new UnaryExpression
+            {
+                Operator = UnaryOperator.PostIncrement,
+                Operand = new ConstantValueExpression()
+            };
+
+            AssertPrint(sst, "\"...\"++");
         }
 
         [Test]
@@ -375,7 +399,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 RightOperand = new ReferenceExpression {Reference = new VariableReference {Identifier = "x"}}
             };
 
-            AssertPrint(sst, "\"...\" And x");
+            AssertPrint(sst, "\"...\" && x");
         }
 
         private static INullExpression Null()
