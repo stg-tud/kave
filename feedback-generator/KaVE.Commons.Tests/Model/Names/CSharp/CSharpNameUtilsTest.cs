@@ -61,5 +61,21 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
 
             Assert.AreEqual("System.Int64[]", arrayTypeName);
         }
+
+        [Test]
+        public void TranslatesTypeBackToAlias()
+        {
+            var alias = CSharpNameUtils.GetTypeAliasFromFullTypeName("System.Int32");
+
+            Assert.AreEqual("int", alias);
+        }
+
+        [Test]
+        public void DoesNotTranslateTypesWithoutAlias()
+        {
+            var notAnAlias = CSharpNameUtils.GetTypeAliasFromFullTypeName("System.NotAnInt");
+
+            Assert.AreEqual("System.NotAnInt", notAnAlias);
+        }
     }
 }

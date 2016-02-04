@@ -75,7 +75,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 FieldName = FieldName.Get("static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Empty"),
             };
 
-            AssertPrint(sst, "String.Empty");
+            AssertPrint(sst, "string.Empty");
         }
 
         [Test]

@@ -442,7 +442,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 
             AssertPrint(
                 sst,
-                "ReturnType M(ref Int32 p) { }");
+                "ReturnType M(ref int p) { }");
         }
 
         [Test]
@@ -525,6 +525,14 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = SSTUtil.Declare("var", TypeName.Get("T,P"));
 
             AssertPrint(sst, "T var;");
+        }
+
+        [Test]
+        public void VariableDeclaration_TranslatesSimpleTypeBackToAlias()
+        {
+            var sst = SSTUtil.Declare("var", TypeName.Get("System.Int32, mscore, 4.0.0.0"));
+
+            AssertPrint(sst, "int var;");
         }
     }
 }

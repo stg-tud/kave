@@ -39,6 +39,16 @@ namespace KaVE.Commons.Model.Names.CSharp
             {"string","System.String"}
         };
 
+        private static readonly IDictionary<string, string> FullNameToSimpleTypeMap = new Dictionary<string, string>();
+
+        static CSharpNameUtils()
+        {
+            foreach (var entry in SimpleTypeToFullNameMap)
+            {
+                FullNameToSimpleTypeMap.Add(entry.Value, entry.Key);
+            }
+        }
+
         /// <summary>
         ///     Translates type aliases, like <code>int</code>, <code>object</code>, or <code>short?</code> to the
         ///     respective, fully-qualified type names. All type aliases refer to types from the mscore assembly.
@@ -67,6 +77,21 @@ namespace KaVE.Commons.Model.Names.CSharp
             }
 
             return alias;
+        }
+
+        /// <summary>
+        /// Translates fully qualified type names of simple types (e.g. "System.Int32") back to their alias.
+        /// </summary>
+        /// <param name="typeName">Fully qualified type name.</param>
+        /// <returns>The alias, if it exists.</returns>
+        public static string GetTypeAliasFromFullTypeName(string typeName)
+        {
+            if (FullNameToSimpleTypeMap.ContainsKey(typeName))
+            {
+                return FullNameToSimpleTypeMap[typeName];
+            }
+
+            return typeName;
         }
     }
 }

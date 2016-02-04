@@ -174,7 +174,8 @@ namespace KaVE.Commons.Utils.SSTPrinter
         /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext TypeNameOnly(ITypeName typeName)
         {
-            return Text(typeName.Name);
+            var translatedTypeName = CSharpNameUtils.GetTypeAliasFromFullTypeName(typeName.FullName);
+            return Text(translatedTypeName == typeName.FullName ? typeName.Name : translatedTypeName);
         }
 
         protected virtual SSTPrintingContext TypeParameterShortName(string typeParameterShortName)

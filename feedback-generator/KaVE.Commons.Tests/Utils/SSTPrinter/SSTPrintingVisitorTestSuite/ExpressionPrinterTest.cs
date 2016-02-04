@@ -314,7 +314,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 
             AssertPrint(
                 sst,
-                "(Int32) i");
+                "(int) i");
         }
 
         [Test]
@@ -350,7 +350,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 Reference = VarRef("i")
             };
 
-            AssertPrint(sst, "i is Int32");
+            AssertPrint(sst, "i is int");
         }
 
         [Test]
