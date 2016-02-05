@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,12 +91,15 @@ namespace KaVE.Commons.Utils
                     parameterDeclaration.Type.TypeName.Identifier,
                     parameterDeclaration.Name.Name);
 
-                if (!parameterDeclaration.Equals(parameterDeclarationList.Last()))
-                {
-                    sb.Append(", ");
-                }
+                sb.Append(", ");
             }
-            return sb.ToString();
+
+            var parameterString = sb.ToString();
+            if (parameterDeclarationList.Count != 0)
+            {
+                parameterString = parameterString.Remove(parameterString.LastIndexOf(", ", StringComparison.Ordinal));
+            }
+            return parameterString;
         }
 
         public static IFieldName CreateFieldName(this IFieldDeclaration fieldDeclaration)
