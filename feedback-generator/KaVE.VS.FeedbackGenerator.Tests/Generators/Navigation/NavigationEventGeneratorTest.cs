@@ -76,7 +76,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
 
             // navigation utils
             _navigationUtils = Mock.Of<INavigationUtils>();
-            SetTarget(_method1);
+            SetTarget(_testTarget);
             SetLocation(_method1);
 
             _uut = new NavigationEventGenerator(
