@@ -195,6 +195,7 @@
     <Compile Include="Generators\Git\GitLogFileChangedRegistration.cs" />
     <Compile Include="Generators\Activity\MouseActivityEventGenerator.cs" />
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
+    <Compile Include="Generators\VisualStudio\SystemEventGenerator.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>
     </Compile>
