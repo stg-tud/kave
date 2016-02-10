@@ -124,7 +124,7 @@
     <value>If you don't want to provide all generated information, you can remove specific parts of it.</value>
   </data>
   <data name="Label_RemoveCodeNames" xml:space="preserve">
-    <value>Remove identifier that originate in the project</value>
+    <value>Remove identifier that originate in the project (Please note: Selecting this options limits the usefulness of your feedback for us)</value>
   </data>
   <data name="Label_RemoveDurations" xml:space="preserve">
     <value>Remove duration of events</value>

@@ -118,47 +118,46 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ContinueInBackground" xml:space="preserve">
-    <value>Der Export wird im Hintergrund fortgeführt.</value>
+    <value>The export continues in the background.</value>
   </data>
   <data name="Export_BusyMessage" xml:space="preserve">
-    <value>Exportiere Events</value>
+    <value>Exporting Events</value>
   </data>
   <data name="export_upload_button" xml:space="preserve">
-    <value>Direktupload</value>
+    <value>Direct Upload</value>
   </data>
   <data name="export_zip_button" xml:space="preserve">
     <value>ZIP-Export...</value>
   </data>
   <data name="NothingToExport" xml:space="preserve">
-    <value>Es gibt nichts zu exportieren.</value>
+    <value>There is nothing to export.</value>
   </data>
   <data name="review_link" xml:space="preserve">
-    <value>Feedback einsehen</value>
+    <value>Review Feedback</value>
   </data>
   <data name="ExportFail" xml:space="preserve">
-    <value>Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!</value>
+    <value>An error occurred during the export/upload of the feedback!</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
-    <value>Das Exportieren/Versenden von {0} Events war erfolgreich.</value>
+    <value>Sucessfully exported/uploaded {0} events.</value>
   </data>
   <data name="ExportSuccessLinkDescription" xml:space="preserve">
-    <value>Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite:</value>
+    <value>Head to the following web site to manually upload your feedback:</value>
   </data>
   <data name="CompressingEvents" xml:space="preserve">
-    <value>3/4: Komprimieren</value>
+    <value>3/4: Compression</value>
   </data>
   <data name="FetchingEvents" xml:space="preserve">
-    <value>1/4: Laden</value>
+    <value>1/4: Loading</value>
   </data>
   <data name="PublishingEvents" xml:space="preserve">
-    <value>4/4: Speichern</value>
+    <value>4/4: Saving</value>
   </data>
   <data name="WritingEvents" xml:space="preserve">
-    <value>2/4: Schreiben - {0}%</value>
+    <value>2/4: Writing - {0}%</value>
   </data>
   <data name="CloseWizardDuringExportHint" xml:space="preserve">
-    <value>Sie können den Dialog jederzeit schließen.
-Der Export wird im Hintergrund fortgesetzt.</value>
+    <value>You can close the dialog anytime, the export continues in the background.</value>
   </data>
   <data name="anonymization_link" xml:space="preserve">
     <value>Anonymization</value>

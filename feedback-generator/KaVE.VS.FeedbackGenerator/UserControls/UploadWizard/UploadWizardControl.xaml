@@ -40,33 +40,94 @@ limitations under the License.
     <Grid>
         <StackPanel Margin="5" Grid.Column="0">
 
-            <!-- intro and feedback box-->
-            <TextBlock TextWrapping="Wrap" Text="{x:Static uploadWizard:UploadWizardMessages.Intro}" />
-            <GroupBox Margin="0,5,0,10" Header="{x:Static uploadWizard:UploadWizardMessages.Label_CommentHeader}">
+
+            <TextBlock TextWrapping="Wrap">
+                You are now ready to upload your generated events! What does the data you upload contain? In short, it contains X, Y, and Z. You will also find a
+                <Hyperlink Click="OnClickEventDetails">detailed explanation</Hyperlink> of the events we collect on the
+                <Hyperlink Click="OnClickWebsite">website of the project</Hyperlink>. Want to see the content yourself? No problem! You can
+                <Hyperlink Click="OnClickReview">review the content</Hyperlink> yourself. Also note that you have the option to
+                <Hyperlink Click="OnClickAnonymization">anonymize your events</Hyperlink>.
+            </TextBlock>
+
+            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+                We love to learn more about our users. It would be great if you can
+                <Hyperlink Click="OnClickUserProfile">provide some basic information</Hyperlink> about yourself.
+                This also helps us understand habits of different user groups. This is a totally optional step, but you would contribute to advancing research and we would highly appreciate it!
+            </TextBlock>
+
+            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+                You are almost done now! You have two options to provide your feedback:
+                <StackPanel Margin="15,3,0,3">
+                    <TextBlock TextWrapping="Wrap">
+                        <Italic>ZIP-Export:</Italic> the feedback is locally exported to a compressed file. You can review its contents before you manually
+                        upload it to the URL that is presented to you after the successful export.
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" Margin="0,2,0,0">
+                        <Italic>Direct upload:</Italic> your feedback is directly send to our server. It is more convenient, because you don't
+                        need to manually upload a file.
+                    </TextBlock>
+                </StackPanel>
+                <TextBlock>
+                    In both cases, the uploaded data is the same and the feedback will be deleted locally.
+                </TextBlock>
+            </TextBlock>
+
+            <GroupBox Margin="0,10,0,0" Header="Declaration">
+                <StackPanel Margin="0,1,0,1">
+                    <TextBlock TextWrapping="Wrap" Margin="0,2,0,0">
+                        The uploaded feedback is anonymous and we cannot identify feedback provided by individuals.
+                        As a direct result, we cannot remove your feedback once it is uploaded, so before you can provide your feedback,
+                        we need to make sure that you know what you are doing! :)
+                    </TextBlock>
+                    <CheckBox Margin="0,10,0,0">
+                        <Bold>I hereby confirm that...</Bold>
+                    </CheckBox>
+                    <StackPanel Margin="19,0,0,0">
+                        <TextBlock>&#x2022; I understand which data is contained in the events.</TextBlock>
+                        <TextBlock>&#x2022; I reviewed my generated events.</TextBlock>
+                        <TextBlock>&#x2022; I grant permission that my events may be published as part of scientific publications.</TextBlock>
+                        <TextBlock>&#x2022; I am allowed to make this declaration.</TextBlock>
+                        <TextBlock>&#x2022; This declaration is irrevocable.</TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+                If you have questions about any of this, please
+                <Hyperlink Click="OnClickContact">directly get in contact with us</Hyperlink>.
+                We would love to hear from you and help with anything!
+                You can also use our <Hyperlink Click="OnClickFeedback">anonymous feedback form</Hyperlink>.
+            </TextBlock>
+
+            <!--<GroupBox Margin="0,5,0,10" Header="{x:Static uploadWizard:UploadWizardMessages.Label_CommentHeader}">
                 <Grid>
+                    <TextBlock TextWrapping="Wrap">
+                        Is
+                        You can use the following form to provide your comment or suggestion.
+                    </TextBlock>
                     <TextBox AcceptsReturn="True" TextWrapping="Wrap" MaxLines="3" MinLines="3"
                              VerticalScrollBarVisibility="Visible" Text="{Binding Comment}" />
                 </Grid>
-            </GroupBox>
+            </GroupBox>-->
 
-            <!-- setting windows -->
+            <!-- setting windows
             <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
-              <StackPanel Margin="10">
-                <TextBlock VerticalAlignment="Center">
-                  <Hyperlink Click="On_Anonymization_Click">
-                    <TextBlock Text="{x:Static root:Properties.UploadWizard.anonymization_link}" />
-                  </Hyperlink>
-                </TextBlock>
-                <TextBlock VerticalAlignment="Center" Margin="0,5,0,0">
-                  <Hyperlink Click="On_UserProfile_Click">
-                    <TextBlock Text="{x:Static root:Properties.UploadWizard.userprofile_link}" />
-                  </Hyperlink>
-                </TextBlock>
-              </StackPanel>
-            </Expander>
-          
-          <!-- buttons-->
-            <Grid HorizontalAlignment="Stretch">
+                <StackPanel Margin="10">
+                    <TextBlock VerticalAlignment="Center">
+                        <Hyperlink Click="On_Anonymization_Click">
+                            <TextBlock Text="{x:Static root:Properties.UploadWizard.anonymization_link}" />
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Center" Margin="0,5,0,0">
+                        <Hyperlink Click="On_UserProfile_Click">
+                            <TextBlock Text="{x:Static root:Properties.UploadWizard.userprofile_link}" />
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </Expander> -->
+
+            <!-- buttons-->
+            <Grid HorizontalAlignment="Stretch" Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -74,23 +135,15 @@ limitations under the License.
                 <Image Grid.Column="0" Visibility="Hidden" HorizontalAlignment="Left"
                        VerticalAlignment="Center" Source="{StaticResource Icon}"
                        Height="25" Width="25" />
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock VerticalAlignment="Center">
-                        <Hyperlink Click="On_Review_Click">
-                            <TextBlock Text="{x:Static root:Properties.UploadWizard.review_link}" />
-                        </Hyperlink>
-                    </TextBlock>
-                    <!-- TODO perhaps: include the old pics (in comments) in the button's Content -->
-                    <Button ToolTip="{x:Static properties:SessionManager.Export}" Margin="5" MinWidth="93"
-                            Content="{x:Static root:Properties.UploadWizard.export_zip_button}"
-                            Click="ZipButtonClicked">
-                        <!--<Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/export.png" />-->
-                    </Button>
-                    <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93"
-                            Content="{x:Static root:Properties.UploadWizard.export_upload_button}"
-                            Click="UploadButtonClicked">
-                        <!--<Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/send.png" /> -->
-                    </Button>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Foreground="Red" TextAlignment="Right" Margin="0,0,0,1">(Buttons are deactivated, because the declaration is not confirmed)</TextBlock>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock VerticalAlignment="Center" Margin="2">
+                            <Hyperlink Click="OnClickReview">Review Feedback...</Hyperlink>
+                        </TextBlock>
+                        <Button MinWidth="93" Content="ZIP-Export..." Click="OnClickZipExport" />
+                        <Button MinWidth="93" Content="Direct Upload" Click="OnClickDirectUpload" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </StackPanel>
@@ -103,7 +156,7 @@ limitations under the License.
                         VerticalAlignment="Center" Width="Auto">
                 <TextBlock Text="{Binding BusyMessageAnimated}"
                            FontWeight="Bold" FontSize="24" />
-                <TextBlock Text="{x:Static root:Properties.UploadWizard.CloseWizardDuringExportHint}"
+                <TextBlock Text="{x:Static properties:UploadWizard.CloseWizardDuringExportHint}"
                            FontSize="18" />
             </StackPanel>
         </Border>

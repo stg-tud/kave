@@ -124,13 +124,13 @@ TU Darmstadt
 </value>
   </data>
   <data name="About_Title" xml:space="preserve">
-    <value>Ueber KaVE</value>
+    <value>About KaVE</value>
   </data>
   <data name="Confirmation_Cancel" xml:space="preserve">
-    <value>Nein</value>
+    <value>Cancel</value>
   </data>
   <data name="Confirmation_OK" xml:space="preserve">
-    <value>Ja</value>
+    <value>Ok</value>
   </data>
   <data name="DisableWarning" xml:space="preserve">
     <value>Das Deaktivieren des Plugins wird aktuell nicht unterstützt. Um Fehlverhalten zu vermeiden, starten Sie bitte Ihre IDE neu.

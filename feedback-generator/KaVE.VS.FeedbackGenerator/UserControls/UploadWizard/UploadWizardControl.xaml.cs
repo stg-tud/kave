@@ -54,25 +54,25 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             MyDataContext.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
         }
 
-        private void StoreSettings()		
-        {		
-            MyDataContext.SetSettings();		
+        private void StoreSettings()
+        {
+            MyDataContext.SetSettings();
         }
 
-        private void On_Review_Click(object sender, RoutedEventArgs e)
+        private void OnClickReview(object sender, RoutedEventArgs e)
         {
             StoreSettings();
             Close();
             Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
         }
 
-        private void UploadButtonClicked(object sender, RoutedEventArgs e)
+        private void OnClickDirectUpload(object sender, RoutedEventArgs e)
         {
             ExportAndUpdateSettings(ExportType.HttpUpload);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
-        private void ZipButtonClicked(object sender, RoutedEventArgs e)
+        private void OnClickZipExport(object sender, RoutedEventArgs e)
         {
             ExportAndUpdateSettings(ExportType.ZipFile);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
@@ -103,16 +103,36 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             }
         }
 
-        private void On_UserProfile_Click(object sender, RoutedEventArgs e)
+        private void OnClickUserProfile(object sender, RoutedEventArgs e)
         {
             var userProfileWindow = new UserProfileWindow(_settingsStore);
             userProfileWindow.Show();
         }
 
-        private void On_Anonymization_Click(object sender, RoutedEventArgs e)
+        private void OnClickAnonymization(object sender, RoutedEventArgs e)
         {
             var anonymizationWindow = new AnonymizationWindow(_settingsStore);
             anonymizationWindow.Show();
+        }
+
+        private void OnClickFeedback(object sender, RoutedEventArgs e)
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        private void OnClickWebsite(object sender, RoutedEventArgs e)
+        {
+            // throw new System.NotImplementedException();
+        }
+
+        private void OnClickEventDetails(object sender, RoutedEventArgs e)
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        private void OnClickContact(object sender, RoutedEventArgs e)
+        {
+            //throw new System.NotImplementedException();
         }
     }
 }

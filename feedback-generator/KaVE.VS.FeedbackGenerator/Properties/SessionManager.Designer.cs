@@ -61,7 +61,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext..
+        ///   Looks up a localized string similar to The export options determine, which feedback details are exported. Locally, the feedback is stored in its original form, to make it easier for you to review it. You can export a ZIP archive to see the anonymization in effect, the archive will contain only the exported information (as JSON). You will have to upload it manually afterwards..
         /// </summary>
         public static string Desc_AnonymizationDisclaimer {
             get {
@@ -214,7 +214,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ausgewählt.
+        ///   Looks up a localized string similar to Selection.
         /// </summary>
         public static string EventSelection {
             get {
@@ -268,7 +268,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lade Feedback.
+        ///   Looks up a localized string similar to Load feedback.
         /// </summary>
         public static string Loading {
             get {

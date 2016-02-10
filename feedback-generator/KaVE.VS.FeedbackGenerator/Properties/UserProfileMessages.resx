@@ -127,7 +127,7 @@
     <value>Email</value>
   </data>
   <data name="EmailValidationErrorMessage" xml:space="preserve">
-    <value>Please input a valid email address!</value>
+    <value>Please enter a valid email address!</value>
   </data>
   <data name="EmailValidationErrorTitle" xml:space="preserve">
     <value>Invalid Email </value>

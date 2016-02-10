@@ -30,8 +30,9 @@ limitations under the License.
 
         <CheckBox Name="RemoveCodeNamesCheckBox"
                   IsChecked="{Binding Path=RemoveCodeNames}"
-                  Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveCodeNames}"
-                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0" />
+                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0">
+            <TextBlock Text="{x:Static anonymization:AnonymizationMessages.Label_RemoveCodeNames}" TextWrapping="Wrap" />
+        </CheckBox>
 
         <CheckBox Name="RemoveStartTimesCheckBox"
                   IsChecked="{Binding RemoveStartTimes}"

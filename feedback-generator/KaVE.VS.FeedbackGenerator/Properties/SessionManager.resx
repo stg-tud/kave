@@ -232,7 +232,7 @@
     <value>Select session for more details</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Lade Feedback</value>
+    <value>Load feedback</value>
   </data>
   <data name="OptionPageInvalidUploadInfoMessage" xml:space="preserve">
     <value>Invalid url, only HTTP- oder HTTPS are supported.</value>
@@ -256,7 +256,7 @@
     <value>Proposals</value>
   </data>
   <data name="EventSelection" xml:space="preserve">
-    <value>Ausgewählt</value>
+    <value>Selection</value>
   </data>
   <data name="Session" xml:space="preserve">
     <value>Day</value>
@@ -268,6 +268,6 @@
     <value>Path to Usage Models</value>
   </data>
   <data name="Desc_AnonymizationDisclaimer" xml:space="preserve">
-    <value>Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext.</value>
+    <value>The export options determine, which feedback details are exported. Locally, the feedback is stored in its original form, to make it easier for you to review it. You can export a ZIP archive to see the anonymization in effect, the archive will contain only the exported information (as JSON). You will have to upload it manually afterwards.</value>
   </data>
 </root>
