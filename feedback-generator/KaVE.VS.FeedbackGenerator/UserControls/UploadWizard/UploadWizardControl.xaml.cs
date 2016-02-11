@@ -21,6 +21,7 @@ using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfile;
 using MessageBox = JetBrains.Util.MessageBox;
@@ -115,24 +116,30 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             anonymizationWindow.Show();
         }
 
-        private void OnClickFeedback(object sender, RoutedEventArgs e)
-        {
-            //throw new System.NotImplementedException();
-        }
-
         private void OnClickWebsite(object sender, RoutedEventArgs e)
         {
-            // throw new System.NotImplementedException();
+            OpenWebsite("http://www.kave.cc/");
         }
 
         private void OnClickEventDetails(object sender, RoutedEventArgs e)
         {
-            //throw new System.NotImplementedException();
+            OpenWebsite("http://www.kave.cc/documentation/event-generation");
         }
 
         private void OnClickContact(object sender, RoutedEventArgs e)
         {
-            //throw new System.NotImplementedException();
+            OpenWebsite("http://www.kave.cc/community");
+        }
+
+        private void OnClickFeedback(object sender, RoutedEventArgs e)
+        {
+            OpenWebsite("http://www.kave.cc/feedback");
+        }
+
+        private void OpenWebsite(string url)
+        {
+            var prefix = _settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
+            System.Diagnostics.Process.Start(prefix + url);
         }
     }
 }

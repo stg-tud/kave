@@ -87,6 +87,24 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
                 progressChangedEventArgs.UserState);
         }
 
+        private bool _hasCheckedDeclaration;
+
+        public bool HasCheckedDeclaration
+        {
+            get { return _hasCheckedDeclaration; }
+            set
+            {
+                _hasCheckedDeclaration = value;
+                RaisePropertyChanged(self => self.HasCheckedDeclaration);
+                RaisePropertyChanged(self => self.IsShowingDeclarationWarning);
+            }
+        }
+
+        public bool IsShowingDeclarationWarning
+        {
+            get { return !_hasCheckedDeclaration; }
+        }
+
         public string Comment
         {
             get { return UserProfileSettings.Comment; }
@@ -110,7 +128,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             var worker = (BackgroundWorker) sender;
             _exportType = (UploadWizardControl.ExportType) args.Argument;
 
-            Action<int> reportExportStatusChange = percentage => worker.ReportProgress(percentage, string.Format("{0}%", percentage));
+            Action<int> reportExportStatusChange =
+                percentage => worker.ReportProgress(percentage, string.Format("{0}%", percentage));
             _exporter.ExportProgressChanged += reportExportStatusChange;
 
             try
