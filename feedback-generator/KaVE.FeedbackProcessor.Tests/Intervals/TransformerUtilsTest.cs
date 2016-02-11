@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
             "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, OtherFramework, 2.6.4.14350].AreEqual()";
 
         private const string NUnitTestMethod3 =
-            "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, nunit.framework, 2.6.4.14350].AreEqual()";
+            "static [System.Void, mscorlib, 4.0.0.0] [OtherFramework.Assert, nunit.framework, 2.6.4.14350].AreEqual()";
 
         private const string NotNUnit =
             "static [System.Void, mscorlib, 4.0.0.0] [SomeProject.Assert, SomeProject, 2.6.4.14350].AreEqual()";
@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         private const string NotNUnit2 =
             "static [System.Void, mscorlib, 4.0.0.0] [SomeProject.Helpers, SomeProject, 2.6.4.14350].Assert()";
 
-        private ISST PrepareSST(string testMethod)
+        private static ISST PrepareSST(string testMethod)
         {
             return new SST
             {

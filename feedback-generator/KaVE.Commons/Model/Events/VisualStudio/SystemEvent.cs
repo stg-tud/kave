@@ -23,7 +23,9 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         public enum SystemEventType
         {
             Suspend,
-            Resume
+            Resume,
+            Lock,
+            Unlock
         }
 
         [DataMember]

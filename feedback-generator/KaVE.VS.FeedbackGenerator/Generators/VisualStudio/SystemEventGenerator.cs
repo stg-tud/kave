@@ -31,22 +31,44 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             [NotNull] IDateUtils dateUtils) : base(env, messageBus, dateUtils)
         {
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        }
+
+        ~SystemEventGenerator()
+        {
+            SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+            SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        }
+
+        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason == SessionSwitchReason.SessionLock)
+            {
+                FireSystemEvent(SystemEvent.SystemEventType.Lock);
+            }
+            else if (e.Reason == SessionSwitchReason.SessionUnlock)
+            {
+                FireSystemEvent(SystemEvent.SystemEventType.Unlock);
+            }
         }
 
         void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
             if (e.Mode == PowerModes.Suspend)
             {
-                var se = Create<SystemEvent>();
-                se.Type = SystemEvent.SystemEventType.Suspend;
-                FireNow(se);
+                FireSystemEvent(SystemEvent.SystemEventType.Suspend);
             }
             else if (e.Mode == PowerModes.Resume)
             {
-                var se = Create<SystemEvent>();
-                se.Type = SystemEvent.SystemEventType.Resume;
-                FireNow(se);
+                FireSystemEvent(SystemEvent.SystemEventType.Resume);
             }
+        }
+
+        private void FireSystemEvent(SystemEvent.SystemEventType type)
+        {
+            var se = Create<SystemEvent>();
+            se.Type = type;
+            FireNow(se);
         }
     }
 }
