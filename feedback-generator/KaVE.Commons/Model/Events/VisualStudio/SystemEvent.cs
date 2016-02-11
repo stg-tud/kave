@@ -25,7 +25,9 @@ namespace KaVE.Commons.Model.Events.VisualStudio
             Suspend,
             Resume,
             Lock,
-            Unlock
+            Unlock,
+            RemoteConnect,
+            RemoteDisconnect
         }
 
         [DataMember]

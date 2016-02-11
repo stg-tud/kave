@@ -50,6 +50,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             {
                 FireSystemEvent(SystemEvent.SystemEventType.Unlock);
             }
+            else if (e.Reason == SessionSwitchReason.RemoteConnect)
+            {
+                FireSystemEvent(SystemEvent.SystemEventType.RemoteConnect);
+            }
+            else if (e.Reason == SessionSwitchReason.RemoteDisconnect)
+            {
+                FireSystemEvent(SystemEvent.SystemEventType.RemoteDisconnect);
+            }
         }
 
         void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
