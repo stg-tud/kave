@@ -41,37 +41,12 @@ limitations under the License.
             selected proposal. Note that <Italic>we do not capture any personal information!</Italic>
             If you want, you may also <Hyperlink Click="OnClickReview">review</Hyperlink> or
             <Hyperlink Click="OnClickAnonymization">anonymize</Hyperlink> your feedback.
-            <!--
-                You are now ready to upload your generated events! What does the data you upload contain? In short, it contains X, Y, and Z. You will also find a
-                <Hyperlink Click="OnClickEventDetails">detailed explanation</Hyperlink> of the events we collect on the
-                <Hyperlink Click="OnClickWebsite">website of the project</Hyperlink>. Want to see the content yourself? No problem! You can
-                <Hyperlink Click="OnClickReview">review the content</Hyperlink> yourself. Also note that you have the option to
-                <Hyperlink Click="OnClickAnonymization">anonymize your events</Hyperlink>.-->
         </TextBlock>
 
         <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
             We love to learn more about our users, to understand the habits of different user groups. This is totally optional, but if you want to support our research,
             please  <Hyperlink Click="OnClickUserProfile">provide some basic information</Hyperlink> about yourself. We highly appreciate it!
         </TextBlock>
-
-        <!--
-            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
-                You are almost done now! You have two options to provide your feedback:
-                <StackPanel Margin="15,3,0,3">
-                    <TextBlock TextWrapping="Wrap">
-                        <Italic>ZIP-Export:</Italic> the feedback is locally exported to a compressed file. You can review its contents before you manually
-                        upload it to the URL that is presented to you after the successful export.
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap" Margin="0,2,0,0">
-                        <Italic>Direct upload:</Italic> your feedback is directly send to our server. It is more convenient, because you don't
-                        need to manually upload a file.
-                    </TextBlock>
-                </StackPanel>
-                <TextBlock>
-                    In both cases, the uploaded data is the same and the feedback will be deleted locally.
-                </TextBlock>
-            </TextBlock>
-            -->
 
         <GroupBox Margin="0,10,0,0" Header="Disclaimer">
             <StackPanel Margin="0,1,0,1">
@@ -103,33 +78,6 @@ limitations under the License.
                 </CheckBox>
             </StackPanel>
         </GroupBox>
-
-        <!--<GroupBox Margin="0,5,0,10" Header="{x:Static uploadWizard:UploadWizardMessages.Label_CommentHeader}">
-                <Grid>
-                    <TextBlock TextWrapping="Wrap">
-                        Is
-                        You can use the following form to provide your comment or suggestion.
-                    </TextBlock>
-                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" MaxLines="3" MinLines="3"
-                             VerticalScrollBarVisibility="Visible" Text="{Binding Comment}" />
-                </Grid>
-            </GroupBox>-->
-
-        <!-- setting windows
-            <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
-                <StackPanel Margin="10">
-                    <TextBlock VerticalAlignment="Center">
-                        <Hyperlink Click="On_Anonymization_Click">
-                            <TextBlock Text="{x:Static root:Properties.UploadWizard.anonymization_link}" />
-                        </Hyperlink>
-                    </TextBlock>
-                    <TextBlock VerticalAlignment="Center" Margin="0,5,0,0">
-                        <Hyperlink Click="On_UserProfile_Click">
-                            <TextBlock Text="{x:Static root:Properties.UploadWizard.userprofile_link}" />
-                        </Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-            </Expander> -->
 
         <StackPanel Margin="0,15,0,0">
             <TextBlock TextWrapping="Wrap" Margin="0,0,0,3">
