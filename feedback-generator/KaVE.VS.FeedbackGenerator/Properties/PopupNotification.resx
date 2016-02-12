@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InformationHardpopup" xml:space="preserve">
-    <value>You should upload your feedback to the KaVE server. Currently, it takes {0:0.#} on your hard drive.</value>
+    <value>Please consider uploading your feedback to the KaVE server. Currently, it takes {0:0.#} on your hard drive.</value>
   </data>
   <data name="InformationSoftpopup" xml:space="preserve">
-    <value>It's been some tiem since you last uploaded your feedback to the KaVE server. You should do that once in a while!</value>
+    <value>Some time has passed since you last uploaded your feedback to the KaVE server. You should do that once in a while!</value>
   </data>
   <data name="NotificationTitel" xml:space="preserve">
-    <value>Export-Reminder</value>
+    <value>KaVE Export Reminder</value>
   </data>
   <data name="WizardButton" xml:space="preserve">
     <value>Start Upload Wizard...</value>

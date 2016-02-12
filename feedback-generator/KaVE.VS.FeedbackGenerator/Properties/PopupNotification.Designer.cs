@@ -61,7 +61,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You should upload your feedback to the KaVE server. Currently, it takes {0:0.#} on your hard drive..
+        ///   Looks up a localized string similar to Please consider uploading your feedback to the KaVE server. Currently, it takes {0:0.#} on your hard drive..
         /// </summary>
         public static string InformationHardpopup {
             get {
@@ -70,7 +70,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It&apos;s been some tiem since you last uploaded your feedback to the KaVE server. You should do that once in a while!.
+        ///   Looks up a localized string similar to Some time has passed since you last uploaded your feedback to the KaVE server. You should do that once in a while!.
         /// </summary>
         public static string InformationSoftpopup {
             get {
@@ -79,7 +79,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export-Reminder.
+        ///   Looks up a localized string similar to KaVE Export Reminder.
         /// </summary>
         public static string NotificationTitel {
             get {
