@@ -71,7 +71,7 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp
             foreach (var filter in Filters)
             {
                 _log.ApplyingFilter(filter.Name);
-                events = events.Where(filter.Func);
+                events = events.Where(filter.Func2);
                 events = AddCounter(events, string.Format("after applying '{0}'", filter.Name));
             }
             return events;

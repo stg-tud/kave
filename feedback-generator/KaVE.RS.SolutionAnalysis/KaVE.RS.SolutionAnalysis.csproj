@@ -173,6 +173,7 @@
     <Compile Include="CleanUp\Filters\IFilter.cs" />
     <Compile Include="CleanUp\Filters\InvalidCompletionEventFilter.cs" />
     <Compile Include="CleanUp\Filters\NoTimeFilter.cs" />
+    <Compile Include="CleanUp\Filters\VersionFilter.cs" />
     <Compile Include="CommandLineLogger.cs" />
     <Compile Include="CompletionEventFilter.cs" />
     <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunner.cs" />

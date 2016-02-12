@@ -21,11 +21,16 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp.Filters
 {
     public abstract class BaseFilter : IFilter
     {
-        public string Name
+        public virtual string Name
         {
             get { return GetType().Name; }
         }
 
         public abstract Func<IDEEvent, bool> Func { get; }
+
+        public bool Func2(IDEEvent e)
+        {
+            return Func(e);
+        }
     }
 }

@@ -51,8 +51,8 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine(@"{0} start", DateTime.Now);
 
             /* data preparation */
-            //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
-            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
+            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
+            //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
@@ -82,6 +82,7 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 Filters =
                 {
+                    new VersionFilter(900),
                     new NoTimeFilter(),
                     new InvalidCompletionEventFilter()
                 }

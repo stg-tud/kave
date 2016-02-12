@@ -23,5 +23,7 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp.Filters
     {
         string Name { get; }
         Func<IDEEvent, bool> Func { get; }
+
+        bool Func2(IDEEvent e);
     }
 }

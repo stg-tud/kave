@@ -168,7 +168,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
             };
         }
 
-        private class TestFilter : IFilter
+        private class TestFilter : BaseFilter
         {
             private readonly string _filterId;
 
@@ -177,12 +177,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
                 _filterId = filterId;
             }
 
-            public string Name
+            public override string Name
             {
                 get { return "command filter: " + _filterId; }
             }
 
-            public Func<IDEEvent, bool> Func
+            public override Func<IDEEvent, bool> Func
             {
                 get
                 {
