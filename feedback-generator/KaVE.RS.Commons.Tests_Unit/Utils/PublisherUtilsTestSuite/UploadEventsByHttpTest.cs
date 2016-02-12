@@ -82,9 +82,9 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.PublisherUtilsTestSuite
             Assert.AreEqual(FileContent, actual);
         }
 
-        private const string TransferFailMessage = "Transfer war nicht möglich";
+        private const string TransferFailMessage = "Error XYZ";
 
-        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = TransferFailMessage)]
+        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = TransferFailMessage)]
         public void ShouldFailIfTransferFails()
         {
             _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri))
@@ -93,8 +93,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.PublisherUtilsTestSuite
         }
 
         [Test,
-         ExpectedException(typeof(AssertException),
-             ExpectedMessage = "Antwort des Servers enthält keine verwertbaren Informationen")]
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage = "Server response was empty")]
         public void ShouldFailIfMessageIsEmpty()
         {
             var resp = new HttpResponseMessage
@@ -107,8 +107,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.PublisherUtilsTestSuite
         }
 
         [Test,
-         ExpectedException(typeof(InvalidResponseException),
-             ExpectedMessage = "Antwort des Servers entspricht nicht dem erwarteten Format:\r\nXYZ")]
+         ExpectedException(typeof (InvalidResponseException),
+             ExpectedMessage = "Server response did not follow the expected format:\r\nXYZ")]
         public void ShouldFailIfMessageCannotBeParsed()
         {
             var resp = new HttpResponseMessage
@@ -120,7 +120,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.PublisherUtilsTestSuite
             _uut.UploadEventsByHttp(_ioUtilsMock.Object, ValidUri, _stream);
         }
 
-        [Test, ExpectedException(typeof(InvalidResponseException))]
+        [Test, ExpectedException(typeof (InvalidResponseException))]
         public void ShouldFailIfMessageCannotBeParsed_verifyLog()
         {
             var resp = new HttpResponseMessage
@@ -133,8 +133,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.PublisherUtilsTestSuite
         }
 
         [Test,
-         ExpectedException(typeof(AssertException),
-             ExpectedMessage = "Server meldet eine fehlerhafte Anfrage:\r\nXYZ")]
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage = "Server complains about invalid request:\r\nXYZ")]
         public void ShouldFailIfStateIsNotOk()
         {
             var resp = CreateResponse(false, "XYZ");

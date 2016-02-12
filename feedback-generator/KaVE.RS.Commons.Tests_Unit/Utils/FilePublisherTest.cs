@@ -51,7 +51,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils
             uut.Publish(_userProfileEvent, TestEventSource(1), () => { });
         }
 
-        private const string CopyFailureMessage = "Datei-Export fehlgeschlagen: XYZ";
+        private const string CopyFailureMessage = "File export failed: XYZ";
 
         [Test, ExpectedException(typeof (AssertException), ExpectedMessage = CopyFailureMessage)]
         public void ShouldThrowExceptionIfSomething()

@@ -26,7 +26,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils
     internal class InjectableIoUtilsTest
     {
         [Test,
-         ExpectedException(typeof (AssertException), ExpectedMessage = "Http-Upload erwartet Http- oder Https-Adresse")]
+         ExpectedException(typeof (AssertException), ExpectedMessage = "Upload only supports http(s) protocol")]
         public void ShouldFailOnDifferentScheme()
         {
             new InjectableIoUtils().TransferByHttp(new Mock<HttpContent>().Object, new Uri("ftp://www.google.de"));
