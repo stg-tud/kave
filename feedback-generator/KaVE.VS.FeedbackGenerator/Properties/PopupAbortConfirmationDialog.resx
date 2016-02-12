@@ -121,7 +121,7 @@
     <value>Remember my choice and don't show this dialog again.</value>
   </data>
   <data name="MessageText" xml:space="preserve">
-    <value>Wenn Sie abbrechen, werden auf ihrer Festplatte weiter Daten geschrieben, Wizard abbrechen?</value>
+    <value>If you cancel, more data will be written on your hard drive. Cancel wizard?</value>
   </data>
   <data name="No_Button" xml:space="preserve">
     <value>No</value>

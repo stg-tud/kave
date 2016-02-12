@@ -118,33 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NoFileGiven" xml:space="preserve">
-    <value>Keine Datei angegeben</value>
+    <value>No file provided</value>
   </data>
   <data name="PublishingFileFailed" xml:space="preserve">
-    <value>Datei-Export fehlgeschlagen: {0}</value>
+    <value>File export failed: {0}</value>
   </data>
   <data name="ServerRequestNotAvailable" xml:space="preserve">
-    <value>Der Server ist nicht erreichbar ("{0}")</value>
+    <value>Server not reachable ("{0}")</value>
   </data>
   <data name="ServerRequestWrongScheme" xml:space="preserve">
-    <value>Http-Upload erwartet Http- oder Https-Adresse</value>
+    <value>Upload only supports http(s) protocol</value>
   </data>
   <data name="ServerResponseEmpty" xml:space="preserve">
-    <value>Antwort des Servers enthält keine verwertbaren Informationen</value>
+    <value>Server response was empty</value>
   </data>
   <data name="ServerResponseFailure" xml:space="preserve">
-    <value>Fehler bei der Anfrage an den Server "{0}":
+    <value>Server request failed ("{0}"):
 {1}</value>
   </data>
   <data name="ServerResponseIncompatible" xml:space="preserve">
-    <value>Inkompatible Antwort des Server</value>
+    <value>Server response was invalid</value>
   </data>
   <data name="ServerResponseIncorrentFormat" xml:space="preserve">
-    <value>Antwort des Servers entspricht nicht dem erwarteten Format:
+    <value>Server response did not follow the expected format:
 {0}</value>
   </data>
   <data name="ServerResponseRequestFailure" xml:space="preserve">
-    <value>Server meldet eine fehlerhafte Anfrage:
+    <value>Server complains about invalid request:
 {0}</value>
   </data>
 </root>

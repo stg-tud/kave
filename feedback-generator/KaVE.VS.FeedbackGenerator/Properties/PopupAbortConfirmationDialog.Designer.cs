@@ -70,7 +70,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wenn Sie abbrechen, werden auf ihrer Festplatte weiter Daten geschrieben, Wizard abbrechen?.
+        ///   Looks up a localized string similar to If you cancel, more data will be written on your hard drive. Cancel wizard?.
         /// </summary>
         public static string MessageText {
             get {
