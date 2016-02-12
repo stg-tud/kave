@@ -30,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValueConverter
                 var x = bool.Parse(value.ToString());
                 if (!x)
                 {
-                    return Visibility.Hidden;
+                    return Visibility.Collapsed;
                 }
             }
             catch (Exception)

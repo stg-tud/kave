@@ -42,7 +42,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.ValueConverter
         public void ConversionOfFalse()
         {
             var actual = _sut.Convert("False", null, null, null);
-            var expected = Visibility.Hidden;
+            var expected = Visibility.Collapsed;
             Assert.AreEqual(expected, actual);
         }
 

@@ -19,43 +19,42 @@ limitations under the License.
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties"
         xmlns:uploadWizard="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UploadWizard"
         xmlns:converters="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValueConverter"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         SizeToContent="Height"
-        Width="550"
+        Width="600"
         ResizeMode="NoResize"
         WindowStyle="SingleBorderWindow"
         Title="{x:Static uploadWizard:UploadWizardMessages.Title}">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <BitmapImage x:Key="Icon" UriSource="/KaVE.VS.FeedbackGenerator;Component/Resources/question.png" />
-            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        </ResourceDictionary>
-    </Window.Resources>
+    <StackPanel Margin="5">
+        <StackPanel.Resources>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+        </StackPanel.Resources>
 
 
-    <Grid>
-        <StackPanel Margin="5" Grid.Column="0">
-
-
-            <TextBlock TextWrapping="Wrap">
+        <TextBlock TextWrapping="Wrap">
+            You are now ready to hand in your feedback! What data does this contain? In short, we monitor how you use Visual Studio and capture
+            some information to explain your actions. For example, when you trigger IntelliSense, we capture information about the surrounding source code and your
+            selected proposal. Note that <Italic>we do not capture any personal information!</Italic>
+            If you want, you may also <Hyperlink Click="OnClickReview">review</Hyperlink> or
+            <Hyperlink Click="OnClickAnonymization">anonymize</Hyperlink> your feedback.
+            <!--
                 You are now ready to upload your generated events! What does the data you upload contain? In short, it contains X, Y, and Z. You will also find a
                 <Hyperlink Click="OnClickEventDetails">detailed explanation</Hyperlink> of the events we collect on the
                 <Hyperlink Click="OnClickWebsite">website of the project</Hyperlink>. Want to see the content yourself? No problem! You can
                 <Hyperlink Click="OnClickReview">review the content</Hyperlink> yourself. Also note that you have the option to
-                <Hyperlink Click="OnClickAnonymization">anonymize your events</Hyperlink>.
-            </TextBlock>
+                <Hyperlink Click="OnClickAnonymization">anonymize your events</Hyperlink>.-->
+        </TextBlock>
 
-            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
-                We love to learn more about our users. It would be great if you can
-                <Hyperlink Click="OnClickUserProfile">provide some basic information</Hyperlink> about yourself.
-                This also helps us understand habits of different user groups. This is a totally optional step, but you would contribute to advancing research and we would highly appreciate it!
-            </TextBlock>
+        <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+            We love to learn more about our users, to understand the habits of different user groups. This is totally optional, but if you want to support our research,
+            please  <Hyperlink Click="OnClickUserProfile">provide some basic information</Hyperlink> about yourself. We highly appreciate it!
+        </TextBlock>
 
+        <!--
             <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
                 You are almost done now! You have two options to provide your feedback:
                 <StackPanel Margin="15,3,0,3">
@@ -72,35 +71,40 @@ limitations under the License.
                     In both cases, the uploaded data is the same and the feedback will be deleted locally.
                 </TextBlock>
             </TextBlock>
+            -->
 
-            <GroupBox Margin="0,10,0,0" Header="Declaration">
-                <StackPanel Margin="0,1,0,1">
-                    <TextBlock TextWrapping="Wrap" Margin="0,2,0,0">
-                        The uploaded feedback is anonymous and we cannot identify feedback provided by individuals.
-                        As a direct result, we cannot remove your feedback once it is uploaded, so before you can provide your feedback,
-                        we need to make sure that you know what you are doing! :)
-                    </TextBlock>
-                    <CheckBox Margin="0,10,0,0" IsChecked="{Binding HasCheckedDeclaration}">
-                        <Bold>I hereby confirm that...</Bold>
-                    </CheckBox>
-                    <StackPanel Margin="19,0,0,0">
-                        <TextBlock>&#x2022; I understand which data is contained in the events.</TextBlock>
-                        <TextBlock>&#x2022; I reviewed my generated events.</TextBlock>
-                        <TextBlock>&#x2022; I grant permission that my events may be published as part of scientific publications.</TextBlock>
-                        <TextBlock>&#x2022; I am allowed to make this declaration.</TextBlock>
-                        <TextBlock>&#x2022; This declaration is irrevocable.</TextBlock>
-                    </StackPanel>
-                </StackPanel>
-            </GroupBox>
+        <GroupBox Margin="0,10,0,0" Header="Disclaimer">
+            <StackPanel Margin="0,1,0,1">
+                <TextBlock TextWrapping="Wrap" Margin="0,2,0,0">
+                    We are super happy that you want to provide feedback, but we need to make sure that you fully understand the following:
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+                    &#x2022;
+                    We provide a <Hyperlink Click="OnClickEventDetails">detailed explanation</Hyperlink> of everything we capture and you can
+                    <Hyperlink Click="OnClickReview">review</Hyperlink> your feedback. It is your responsibility to verify that your feedback
+                    does not contain anything you don't want to share. We cannot identify your submission after the upload and you have no way of revoking any of it.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+                    &#x2022; We plan to include your feedback in a public dataset that is part of scientific publications.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+                    &#x2022; We do not include any personal information in our feedback, but we cannot guarantee that third parties will
+                    try to match the data with other publicly available information.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+                    &#x2022;
+                    <Bold>
+                        Your submitted feedback contains a simplified version of the source code you were working on. Make sure that you
+                        did not work on source code that must stay non-disclosed.
+                    </Bold>
+                </TextBlock>
+                <CheckBox Margin="0,10,0,0" IsChecked="{Binding HasCheckedDeclaration}">
+                    I carefully read the disclaimer, fully understand its implications, and confirm my agreement to it.
+                </CheckBox>
+            </StackPanel>
+        </GroupBox>
 
-            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
-                If you have questions about any of this, please
-                <Hyperlink Click="OnClickContact">directly get in contact with us</Hyperlink>.
-                We would love to hear from you and help with anything!
-                You can also use our <Hyperlink Click="OnClickFeedback">anonymous feedback form</Hyperlink>.
-            </TextBlock>
-
-            <!--<GroupBox Margin="0,5,0,10" Header="{x:Static uploadWizard:UploadWizardMessages.Label_CommentHeader}">
+        <!--<GroupBox Margin="0,5,0,10" Header="{x:Static uploadWizard:UploadWizardMessages.Label_CommentHeader}">
                 <Grid>
                     <TextBlock TextWrapping="Wrap">
                         Is
@@ -111,7 +115,7 @@ limitations under the License.
                 </Grid>
             </GroupBox>-->
 
-            <!-- setting windows
+        <!-- setting windows
             <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
                 <StackPanel Margin="10">
                     <TextBlock VerticalAlignment="Center">
@@ -127,12 +131,60 @@ limitations under the License.
                 </StackPanel>
             </Expander> -->
 
-            <!-- buttons-->
-            <Grid HorizontalAlignment="Stretch" Margin="0,20,0,0">
-                <Grid.Resources>
-                    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
-                </Grid.Resources>
+        <StackPanel Margin="0,15,0,0">
+            <TextBlock TextWrapping="Wrap" Margin="0,0,0,3">
+                You are almost done now! You have two options to provide your feedback:
+            </TextBlock>
+            <TextBlock Foreground="Red"
+                       Visibility="{Binding IsShowingDeclarationWarning, Converter={StaticResource BooleanToVisibility}}">
+                (Buttons are deactivated, because you did not confirm your agreement to the disclaimer.)
+            </TextBlock>
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100px" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <!-- -->
+                <Button Width="90" Height="25px" HorizontalAlignment="Left"
+                        Grid.Row="0" Grid.Column="0"
+                        Content="ZIP-Export..." Click="OnClickZipExport"
+                        IsEnabled="{Binding HasCheckedDeclaration}" />
+                <!-- -->
+                <TextBlock TextWrapping="Wrap" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"
+                           HorizontalAlignment="Left">
+                    The feedback is locally exported to a compressed file, so you can review it. Afterward, you have to
+                    <Hyperlink Click="OnClickManualUpload">manually upload the file</Hyperlink>.
+                </TextBlock>
+                <!-- -->
+                <Button Width="90" Height="25px" HorizontalAlignment="Left" Margin="0,5,0,0"
+                        Grid.Row="1" Grid.Column="0"
+                        Content="Direct Upload" Click="OnClickDirectUpload"
+                        IsEnabled="{Binding HasCheckedDeclaration}" />
+                <!-- -->
+                <TextBlock TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                           Margin="0,4,0,0"
+                           HorizontalAlignment="Left">
+                    The feedback is directly sent to our server. One click. Done.
+                </TextBlock>
+            </Grid>
+            <TextBlock Margin="0,5,0,0">
+                In both cases, the uploaded data is the same and the feedback will be deleted locally.
+            </TextBlock>
+        </StackPanel>
 
+        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">
+            If you have questions about any of this, please
+            <Hyperlink Click="OnClickContact">directly get in contact with us</Hyperlink>.
+            We would love to hear from you and help with anything!
+            You can also use our <Hyperlink Click="OnClickFeedback">anonymous feedback form</Hyperlink>.
+        </TextBlock>
+
+        <!-- buttons
+            <Grid HorizontalAlignment="Stretch" Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -155,10 +207,10 @@ limitations under the License.
                                 IsEnabled="{Binding HasCheckedDeclaration}" />
                     </StackPanel>
                 </StackPanel>
-            </Grid>
-        </StackPanel>
+            </Grid>-->
+    </StackPanel>
 
-        <!-- EXPORT OVERLAY -->
+    <!-- EXPORT OVERLAY
         <Border Background="LightGray" Opacity=".9"
                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                 Grid.Column="0">
@@ -170,5 +222,5 @@ limitations under the License.
                            FontSize="18" />
             </StackPanel>
         </Border>
-    </Grid>
+    </Grid>-->
 </Window>

@@ -136,6 +136,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             OpenWebsite("http://www.kave.cc/feedback");
         }
 
+        private void OnClickManualUpload(object sender, RoutedEventArgs e)
+        {
+            OpenWebsite("http://kave.st.informatik.tu-darmstadt.de/");
+        }
+
         private void OpenWebsite(string url)
         {
             var prefix = _settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
