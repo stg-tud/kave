@@ -59,6 +59,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp.Filters
         }
 
         [Test]
+        public void OptionalQualifier()
+        {
+            AssertTrue("0.4");
+        }
+
+        [Test]
         public void NonDefault()
         {
             AssertFalse("0.4-feature");

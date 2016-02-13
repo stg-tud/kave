@@ -23,7 +23,7 @@ namespace KaVE.RS.SolutionAnalysis.CleanUp.Filters
     public class VersionFilter : IFilter
     {
         private readonly int _firstVersionIncluded;
-        private readonly Regex _regex = new Regex("0\\.(\\d+)-default");
+        private readonly Regex _regex = new Regex("^0\\.(\\d+)(?:-default)?$");
 
         public string Name
         {
