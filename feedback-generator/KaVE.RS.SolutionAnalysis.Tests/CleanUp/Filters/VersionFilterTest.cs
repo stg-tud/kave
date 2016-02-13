@@ -59,6 +59,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp.Filters
         }
 
         [Test]
+        public void QualifierIsCaseIndependent()
+        {
+            AssertTrue("0.4-DefAult");
+        }
+
+        [Test]
         public void OptionalQualifier()
         {
             AssertTrue("0.4");
