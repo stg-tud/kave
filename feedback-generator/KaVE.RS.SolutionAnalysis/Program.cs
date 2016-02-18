@@ -33,7 +33,9 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private const string DirRoot = @"E:\";
         private const string DirEventsAll = DirRoot + @"Events\All\";
+
         private const string DirEventsAll_SortedByUser = DirRoot + @"Events\All-SortedByUser\";
+
         private const string DirEventsAll_Clean = DirRoot + @"Events\All-Clean\";
         private const string DirEventsCompletion_KeepNoTrigger = DirRoot + @"Events\OnlyCompletion\";
         private const string DirEventsCompletion_KeepNoTriggerInlined = DirRoot + @"Events\OnlyCompletion-inlined\";
@@ -41,6 +43,7 @@ namespace KaVE.RS.SolutionAnalysis
         private const string DirMicroCommits = DirRoot + @"MicroCommits\";
         private const string DirMicroCommits_Inlined = DirRoot + @"MicroCommits-inlined\";
         private const string DirContexts = DirRoot + @"Contexts\";
+        private const string DirContexts_Github = DirContexts + @"Github\";
         private const string DirContexts_Inlined = DirRoot + @"Contexts-inlined\";
         private const string DirUsages = DirRoot + @"Usages\";
         private const string DirUsages_Inlined = DirRoot + @"Usages-inlined\";
@@ -51,8 +54,9 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine(@"{0} start", DateTime.Now);
 
             /* data preparation */
-            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
+            //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
             //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
+            RunFailingRepoFinder();
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
@@ -71,6 +75,12 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
+        }
+
+        private static void RunFailingRepoFinder()
+        {
+            var log = new FailingRepoLogger();
+            new FailingRepoFinder(log).Run(DirContexts_Github);
         }
 
         private static void RunCleanUp(string dirIn, string dirOut)

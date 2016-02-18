@@ -183,6 +183,7 @@
     <Compile Include="Episodes\Event.cs" />
     <Compile Include="Episodes\EventStreamGenerator.cs" />
     <Compile Include="EventsExportRunner.cs" />
+    <Compile Include="FailingRepoFinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelativeEditLocation.cs" />
