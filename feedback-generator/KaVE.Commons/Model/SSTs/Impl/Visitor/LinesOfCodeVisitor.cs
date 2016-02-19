@@ -324,7 +324,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 
         public int Visit(IUnknownStatement unknownStmt, int context)
         {
-            throw new NotImplementedException();
+            return 1;
         }
     }
 }
