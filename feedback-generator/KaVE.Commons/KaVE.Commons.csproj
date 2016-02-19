@@ -86,6 +86,7 @@
     <Compile Include="Model\SSTs\Impl\Visitor\CompletionPrefixVisitor.cs" />
     <Compile Include="Model\SSTs\Impl\Statements\EventSubscriptionStatement.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\HasCompletionExpressionVisitor.cs" />
+    <Compile Include="Model\SSTs\Impl\Visitor\LinesOfCodeVisitor.cs" />
     <Compile Include="Model\SSTs\References\IIndexAccessReference.cs" />
     <Compile Include="Model\SSTs\Statements\IEventSubscriptionStatement.cs" />
     <Compile Include="Properties\JetBrainsAnnotations.cs" />

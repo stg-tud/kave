@@ -56,7 +56,8 @@ namespace KaVE.RS.SolutionAnalysis
             /* data preparation */
             //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
             //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
-            RunFailingRepoFinder();
+            //RunFailingRepoFinder();
+            RunApiStatisticsRunner();
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
@@ -75,6 +76,12 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
+        }
+
+        private static void RunApiStatisticsRunner()
+        {
+            //new ApiStatisticsRunner().Run(DirContexts_Github);
+            new LocCounter().Run(DirContexts_Github);
         }
 
         private static void RunFailingRepoFinder()

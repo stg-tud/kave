@@ -166,6 +166,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiStatisticsRunner.cs" />
     <Compile Include="CleanUp\CleanUpIo.cs" />
     <Compile Include="CleanUp\CleanUpLogger.cs" />
     <Compile Include="CleanUp\CleanUpRunner.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Episodes\EventStreamGenerator.cs" />
     <Compile Include="EventsExportRunner.cs" />
     <Compile Include="FailingRepoFinder.cs" />
+    <Compile Include="LocCounter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelativeEditLocation.cs" />

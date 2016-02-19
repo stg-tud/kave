@@ -88,8 +88,13 @@ namespace KaVE.RS.SolutionAnalysis
         private string _curUser;
         private string _curRepo;
 
+        private bool _hasRepo = true;
+
         public void User(string user)
         {
+            CheckRepoFound();
+            CheckZipFound();
+            _hasRepo = false;
             _curUser = user;
             Console.WriteLine();
             Console.WriteLine("###### {0} #######################", user);
@@ -103,8 +108,21 @@ namespace KaVE.RS.SolutionAnalysis
 
             _curRepo = repo;
             _hasZips = false;
+            _hasRepo = true;
             Console.WriteLine();
             Console.WriteLine("== {0} ==", repo);
+        }
+
+        private readonly ISet<string> _noRepos = new HashSet<string>();
+
+        private void CheckRepoFound()
+        {
+            if (!_hasRepo)
+            {
+                _noRepos.Add(_curUser);
+                Console.WriteLine("No Repo found for user {0}!!", _curUser);
+                _hasRepo = true;
+            }
         }
 
         private readonly ISet<string> _noZips = new HashSet<string>();
@@ -115,6 +133,7 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 _noZips.Add(_curUser + "/" + _curRepo);
                 Console.WriteLine("No ZIP found in {0}/{1}!!", _curUser, _curRepo);
+                _hasZips = true;
             }
         }
 
@@ -127,11 +146,25 @@ namespace KaVE.RS.SolutionAnalysis
         public void End()
         {
             CheckZipFound();
-
+            Console.WriteLine();
             Console.WriteLine("no zips found for:");
             foreach (var s in _noZips)
             {
                 Console.WriteLine("* {0}", s);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("delete commands:");
+            foreach (var s in _noZips)
+            {
+                Console.WriteLine("rm Repositories/Github/{0}/ -Rf && rm Contexts/Github/{0}/ -Rf", s);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("empty user folders:");
+            foreach (var s in _noRepos)
+            {
+                Console.WriteLine("rm Repositories/Github/{0}/ -Rf && rm Contexts/Github/{0}/ -Rf", s);
             }
         }
     }
