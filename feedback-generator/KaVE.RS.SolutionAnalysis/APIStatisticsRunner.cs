@@ -46,7 +46,12 @@ namespace KaVE.RS.SolutionAnalysis
                 foreach (var repo in GetSubdirs(Path.Combine(rootDir, user)))
                 {
                     numRepos++;
-                    Console.Write("({2}) ##### {0}/{1} ############################## ", user, repo, DateTime.Now);
+                    Console.Write(
+                        "({2}) ##### {0}/{1} (repo #{3}) ############################## ",
+                        user,
+                        repo,
+                        DateTime.Now,
+                        numRepos);
 
                     var repoApis = new HashSet<IAssemblyName>();
                     var repoPath = Path.Combine(rootDir, user, repo);
@@ -55,7 +60,7 @@ namespace KaVE.RS.SolutionAnalysis
                     {
                         numSolutions++;
                         Console.WriteLine();
-                        Console.WriteLine("({1}) @@ {0} @@", zip, DateTime.Now);
+                        Console.WriteLine("({1}) @@ {0} (sln #{2}) @@", zip, DateTime.Now, numSolutions);
                         var slnApis = new HashSet<IAssemblyName>();
                         var zipPath = Path.Combine(repoPath, zip);
                         var ra = new ReadingArchive(zipPath);
