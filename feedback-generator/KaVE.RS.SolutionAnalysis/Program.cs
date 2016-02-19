@@ -80,8 +80,8 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void RunApiStatisticsRunner()
         {
-            //new ApiStatisticsRunner().Run(DirContexts_Github);
-            new LocCounter().Run(DirContexts_Github);
+            new ApiStatisticsRunner().Run(DirContexts_Github);
+            //new LocCounter().Run(DirContexts_Github);
         }
 
         private static void RunFailingRepoFinder()

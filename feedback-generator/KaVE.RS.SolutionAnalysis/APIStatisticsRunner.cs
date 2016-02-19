@@ -32,39 +32,41 @@ namespace KaVE.RS.SolutionAnalysis
     {
         public void Run(string rootDir)
         {
+            int numRepos = 0;
+            int numSolutions = 0;
+            int numSSTs = 0;
+            long loc = 0;
+
             var repoCounts = new Dictionary<IAssemblyName, int>();
             var slnCounts = new Dictionary<IAssemblyName, int>();
             var sstCounts = new Dictionary<IAssemblyName, int>();
 
-            int i = 0;
             foreach (var user in GetSubdirs(rootDir))
             {
                 foreach (var repo in GetSubdirs(Path.Combine(rootDir, user)))
                 {
-                    Console.Write("##### {0}/{1} ##############################", user, repo);
+                    numRepos++;
+                    Console.Write("({2}) ##### {0}/{1} ############################## ", user, repo, DateTime.Now);
 
                     var repoApis = new HashSet<IAssemblyName>();
                     var repoPath = Path.Combine(rootDir, user, repo);
 
                     foreach (var zip in GetArchives(repoPath))
                     {
-                        if (i++ >= 20)
-                        {
-                            Console.WriteLine("fancy abort via goto :D");
-                            goto ENDE;
-                        }
-
+                        numSolutions++;
                         Console.WriteLine();
-                        Console.WriteLine("@@ {0} @@", zip);
+                        Console.WriteLine("({1}) @@ {0} @@", zip, DateTime.Now);
                         var slnApis = new HashSet<IAssemblyName>();
                         var zipPath = Path.Combine(repoPath, zip);
                         var ra = new ReadingArchive(zipPath);
 
                         while (ra.HasNext())
                         {
+                            numSSTs++;
                             Console.Write('.');
                             var ctx = ra.GetNext<Context>();
-
+                            var sstloc = CountLoc(ctx.SST);
+                            loc += sstloc;
                             var apis = FindAPIs(ctx.SST);
 
                             foreach (var api in apis)
@@ -82,14 +84,14 @@ namespace KaVE.RS.SolutionAnalysis
                 }
             }
 
-            ENDE:
-            Log(repoCounts, slnCounts, sstCounts);
-        }
-
-        private void Log(Dictionary<IAssemblyName, int> repoCounts,
-            Dictionary<IAssemblyName, int> slnCounts,
-            Dictionary<IAssemblyName, int> sstCounts)
-        {
+            Console.WriteLine();
+            Console.WriteLine("## RESULTS ##");
+            Console.WriteLine();
+            Console.WriteLine("#repos: {0}", numRepos);
+            Console.WriteLine("#solutions: {0}", numSolutions);
+            Console.WriteLine("#ssts: {0}", numSSTs);
+            Console.WriteLine("loc: {0}", loc);
+            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Name\tVersion\t#repo\t#sln\t#sst");
 
@@ -103,6 +105,13 @@ namespace KaVE.RS.SolutionAnalysis
                     slnCounts[api],
                     sstCounts[api]);
             }
+        }
+
+        private readonly LinesOfCodeVisitor _locVisitor = new LinesOfCodeVisitor();
+
+        private int CountLoc(ISST sst)
+        {
+            return sst.Accept(_locVisitor, 0);
         }
 
         private static void CountApis(ISet<IAssemblyName> apis, Dictionary<IAssemblyName, int> counts)

@@ -34,7 +34,6 @@ namespace KaVE.RS.SolutionAnalysis
             int numSSTs = 0;
             long loc = 0;
 
-            int i = 0;
             foreach (var user in GetSubdirs(rootDir))
             {
                 foreach (var repo in GetSubdirs(Path.Combine(rootDir, user)))
@@ -48,12 +47,6 @@ namespace KaVE.RS.SolutionAnalysis
                     foreach (var zip in GetArchives(repoPath))
                     {
                         numSolutions++;
-
-                        if (i++ >= 20)
-                        {
-                            Console.WriteLine("fancy abort via goto :D");
-                            goto ENDE;
-                        }
 
                         Console.WriteLine();
                         Console.WriteLine("@@ {0} @@", zip);
@@ -73,7 +66,7 @@ namespace KaVE.RS.SolutionAnalysis
                 }
             }
 
-            ENDE:
+            Console.WriteLine("## RESULTS ##");
             Console.WriteLine("#repos: {0}", numRepos);
             Console.WriteLine("#solutions: {0}", numSolutions);
             Console.WriteLine("#types: {0}", numSSTs);
