@@ -37,6 +37,8 @@ namespace KaVE.RS.SolutionAnalysis
             int numSSTs = 0;
             long loc = 0;
 
+            var repoSizes = new Dictionary<string, long>();
+
             var repoCounts = new Dictionary<IAssemblyName, int>();
             var slnCounts = new Dictionary<IAssemblyName, int>();
             var sstCounts = new Dictionary<IAssemblyName, int>();
@@ -45,6 +47,7 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 foreach (var repo in GetSubdirs(Path.Combine(rootDir, user)))
                 {
+                    var repoLoc = 0;
                     numRepos++;
                     Console.Write(
                         "({2}) ##### {0}/{1} (repo #{3}) ############################## ",
@@ -71,7 +74,7 @@ namespace KaVE.RS.SolutionAnalysis
                             Console.Write('.');
                             var ctx = ra.GetNext<Context>();
                             var sstloc = CountLoc(ctx.SST);
-                            loc += sstloc;
+                            repoLoc += sstloc;
                             var apis = FindAPIs(ctx.SST);
 
                             foreach (var api in apis)
@@ -84,6 +87,8 @@ namespace KaVE.RS.SolutionAnalysis
                         }
                         CountApis(slnApis, slnCounts);
                     }
+                    repoSizes[user + "/" + repo] = repoLoc;
+                    loc += repoLoc;
                     Console.WriteLine();
                     CountApis(repoApis, repoCounts);
                 }
@@ -96,6 +101,15 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine("#solutions: {0}", numSolutions);
             Console.WriteLine("#ssts: {0}", numSSTs);
             Console.WriteLine("loc: {0}", loc);
+            Console.WriteLine();
+            Console.WriteLine();
+
+            Console.WriteLine("Repo\tLoc");
+            foreach (var repo in repoSizes.Keys)
+            {
+                Console.WriteLine("{0}\t{1}", repo, repoSizes[repo]);
+            }
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Name\tVersion\t#repo\t#sln\t#sst");
