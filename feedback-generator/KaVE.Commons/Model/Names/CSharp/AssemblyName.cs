@@ -15,7 +15,7 @@
  */
 
 using System;
-using System.Linq;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.CSharp
@@ -24,6 +24,8 @@ namespace KaVE.Commons.Model.Names.CSharp
     {
         private static readonly WeakNameCache<AssemblyName> Registry =
             WeakNameCache<AssemblyName>.Get(id => new AssemblyName(id));
+
+        private readonly Regex _isValidVersionRegex = new Regex("^\\d\\.\\d\\.\\d\\.\\d$");
 
         public new static IAssemblyName UnknownName
         {
@@ -76,9 +78,20 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return GetFragments()[0]; }
         }
 
-        private String[] GetFragments()
+        private string[] GetFragments()
         {
-            return Identifier.Split(',').Select(f => f.Trim()).ToArray();
+            var split = Identifier.LastIndexOf(",", StringComparison.Ordinal);
+            if (split == -1)
+            {
+                return new[] {Identifier};
+            }
+            var name = Identifier.Substring(0, split).Trim();
+            var version = Identifier.Substring(split + 1).Trim();
+
+
+            return _isValidVersionRegex.IsMatch(version)
+                ? new[] {name, version}
+                : new[] {Identifier};
         }
     }
 }
