@@ -68,7 +68,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         public Context GetCurrentContext([NotNull] TextPoint startPoint)
         {
-            return ComputeNewContextByFilePath(startPoint.DTE.ActiveDocument.FullName);
+            // activeDocument is sometimes null, e.g., when IDE shuts down
+            var activeDocument = startPoint.DTE.ActiveDocument;
+            return activeDocument != null ? ComputeNewContextByFilePath(activeDocument.FullName) : new Context();
         }
 
         private Context ComputeNewContextByFilePath([NotNull] string filePath)

@@ -17,10 +17,11 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Css.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.JetBrains.Annotations;
@@ -57,13 +58,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         [Pure]
         public IName GetTarget(ITextControl textControl)
         {
-            return GetTarget(GetTreeNode(textControl));
+            var treeNode = GetTreeNode(textControl);
+            return treeNode != null ? GetTarget(treeNode) : Name.UnknownName;
         }
 
         [Pure]
         public IName GetLocation(ITextControl textControl)
         {
-            return GetLocation(GetTreeNode(textControl));
+            var treeNode = GetTreeNode(textControl);
+            return treeNode != null ? GetLocation(treeNode) : Name.UnknownName;
         }
 
         [Pure]
@@ -114,10 +117,21 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             return locationName;
         }
 
-        [Pure]
+        [Pure, CanBeNull]
         private ITreeNode GetTreeNode([NotNull] ITextControl textControl)
         {
-            return TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
+            ITreeNode treeNode = null;
+
+            if (ReentrancyGuard.Current.CanExecuteNow)
+            {
+                ReadLockCookie.GuardedExecute(
+                    () =>
+                    {
+                        treeNode = TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
+                    });
+            }
+
+            return treeNode;
         }
 
         [Pure]
