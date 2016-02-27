@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Utils.Collections;
@@ -109,7 +110,19 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public IList<IParameterName> Parameters
         {
-            get { return Identifier.GetParameterNames(); }
+            get
+            {
+                try
+                {
+                    return Identifier.GetParameterNames();
+                }
+                catch (Exception e)
+                {
+                    // TODO improve handling in NameUtils
+                    Console.WriteLine("Error getting params for '{0}', falling back to none", Identifier);
+                    return new List<IParameterName>();
+                }
+            }
         }
 
         public bool HasParameters

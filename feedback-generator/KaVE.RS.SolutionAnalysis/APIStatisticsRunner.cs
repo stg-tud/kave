@@ -219,11 +219,18 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void Visit(IMethodName m, ISet<IAssemblyName> apis)
         {
-            AddIf(m.ReturnType, apis);
-            AddIf(m.DeclaringType, apis);
-            foreach (var p in m.Parameters)
+            try
             {
-                AddIf(p.ValueType, apis);
+                AddIf(m.ReturnType, apis);
+                AddIf(m.DeclaringType, apis);
+                foreach (var p in m.Parameters)
+                {
+                    AddIf(p.ValueType, apis);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("not handling '{0}', because of error", m);
             }
         }
 
