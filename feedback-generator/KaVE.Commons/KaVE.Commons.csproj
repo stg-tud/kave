@@ -68,7 +68,7 @@
     <Compile Include="Model\Events\UserProfiles\Positions.cs" />
     <Compile Include="Model\Events\UserProfiles\UserProfileEvent.cs" />
     <Compile Include="Model\Events\UserProfiles\YesNoUnknown.cs" />
-    <Compile Include="Model\Events\VisualStudio\SystemEvent.cs" />
+    <Compile Include="Model\Events\SystemEvent.cs" />
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />

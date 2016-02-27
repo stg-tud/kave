@@ -15,44 +15,23 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Commons.Model.Events.VisualStudio
+namespace KaVE.Commons.Model.Events
 {
     public class SystemEvent : IDEEvent
     {
-        public enum SystemEventType
-        {
-            Suspend,
-            Resume,
-            Lock,
-            Unlock,
-            RemoteConnect,
-            RemoteDisconnect
-        }
-
         [DataMember]
         public SystemEventType Type { get; set; }
 
-        protected bool Equals(SystemEvent other)
+        private bool Equals(SystemEvent other)
         {
             return base.Equals(other) && Type == other.Type;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((SystemEvent) obj);
+            return this.Equals(obj, Equals);
         }
 
         public override int GetHashCode()
@@ -62,5 +41,16 @@ namespace KaVE.Commons.Model.Events.VisualStudio
                 return (base.GetHashCode()*397) ^ (int) Type;
             }
         }
+    }
+
+    public enum SystemEventType
+    {
+        Unknown,
+        Suspend,
+        Resume,
+        Lock,
+        Unlock,
+        RemoteConnect,
+        RemoteDisconnect
     }
 }

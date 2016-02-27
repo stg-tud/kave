@@ -15,7 +15,7 @@
  */
 
 using JetBrains.Application;
-using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -40,39 +40,39 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
         }
 
-        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            if (e.Reason == SessionSwitchReason.SessionLock)
+            switch (e.Reason)
             {
-                FireSystemEvent(SystemEvent.SystemEventType.Lock);
-            }
-            else if (e.Reason == SessionSwitchReason.SessionUnlock)
-            {
-                FireSystemEvent(SystemEvent.SystemEventType.Unlock);
-            }
-            else if (e.Reason == SessionSwitchReason.RemoteConnect)
-            {
-                FireSystemEvent(SystemEvent.SystemEventType.RemoteConnect);
-            }
-            else if (e.Reason == SessionSwitchReason.RemoteDisconnect)
-            {
-                FireSystemEvent(SystemEvent.SystemEventType.RemoteDisconnect);
+                case SessionSwitchReason.SessionLock:
+                    FireSystemEvent(SystemEventType.Lock);
+                    break;
+                case SessionSwitchReason.SessionUnlock:
+                    FireSystemEvent(SystemEventType.Unlock);
+                    break;
+                case SessionSwitchReason.RemoteConnect:
+                    FireSystemEvent(SystemEventType.RemoteConnect);
+                    break;
+                case SessionSwitchReason.RemoteDisconnect:
+                    FireSystemEvent(SystemEventType.RemoteDisconnect);
+                    break;
             }
         }
 
-        void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
-            if (e.Mode == PowerModes.Suspend)
+            switch (e.Mode)
             {
-                FireSystemEvent(SystemEvent.SystemEventType.Suspend);
-            }
-            else if (e.Mode == PowerModes.Resume)
-            {
-                FireSystemEvent(SystemEvent.SystemEventType.Resume);
+                case PowerModes.Suspend:
+                    FireSystemEvent(SystemEventType.Suspend);
+                    break;
+                case PowerModes.Resume:
+                    FireSystemEvent(SystemEventType.Resume);
+                    break;
             }
         }
 
-        private void FireSystemEvent(SystemEvent.SystemEventType type)
+        private void FireSystemEvent(SystemEventType type)
         {
             var se = Create<SystemEvent>();
             se.Type = type;
