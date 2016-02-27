@@ -17,16 +17,15 @@
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
-using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfile;
-using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
+using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.Anonymization;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfile
+namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.AnonymizationDialogs
 {
     [RequiresSTA]
-    internal class UserProfileWindowTest : BaseUserControlTest
+    internal class AnonymizationWindowTest : BaseUserControlTest
     {
         private Mock<ISettingsStore> _mockSettingsStore;
 
@@ -34,24 +33,20 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfile
         public void SetUp()
         {
             _mockSettingsStore = new Mock<ISettingsStore>();
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
-                  .Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(new UserProfileSettings());
         }
 
-        private UserProfileWindow Open()
+        private AnonymizationWindow Open()
         {
-            var userProfileWindow = new UserProfileWindow(_mockSettingsStore.Object);
-            userProfileWindow.Show();
-            return userProfileWindow;
+            var anonymizationWindow = new AnonymizationWindow(_mockSettingsStore.Object);
+            anonymizationWindow.Show();
+            return anonymizationWindow;
         }
 
         [Test]
         public void DataContextIsSetCorrectly()
         {
             var sut = Open();
-            Assert.IsInstanceOf<UserProfileContext>(sut.DataContext);
+            Assert.IsInstanceOf<AnonymizationContext>(sut.DataContext);
         }
 
         [Test]
@@ -61,7 +56,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfile
 
             UserControlTestUtils.Click(sut.OkButton);
 
-            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<UserProfileSettings>()));
+            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<AnonymizationSettings>()));
         }
 
         [Test]
@@ -71,7 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfile
 
             UserControlTestUtils.Click(sut.CloseButton);
 
-            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<UserProfileSettings>()), Times.Never);
+            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<AnonymizationSettings>()), Times.Never);
         }
     }
 }

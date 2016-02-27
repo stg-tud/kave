@@ -24,11 +24,8 @@ namespace KaVE.VS.FeedbackGenerator.Settings
     // WARNING: Do not change classname, as it is used to identify settings
     public class UserProfileSettings
     {
-        [SettingsEntry(false, "UserProfile: HasBeenAskedtoProvideProfile")]
-        public bool HasBeenAskedtoProvideProfile;
-
-        [SettingsEntry(false, "UserProfile: IsProvidingProfile")]
-        public bool IsProvidingProfile;
+        [SettingsEntry(false, "UserProfile: HasBeenAskedToFillProfile")]
+        public bool HasBeenAskedToFillProfile;
 
         [SettingsEntry("", "UserProfile: ProfileId")]
         public string ProfileId;
@@ -74,8 +71,5 @@ namespace KaVE.VS.FeedbackGenerator.Settings
 
         [SettingsEntry(Likert7Point.Unknown, "UserProfile: ProgrammingCSharp")]
         public Likert7Point ProgrammingCSharp;
-
-        [SettingsEntry("", "UserProfile: Comment")]
-        public string Comment;
     }
 }

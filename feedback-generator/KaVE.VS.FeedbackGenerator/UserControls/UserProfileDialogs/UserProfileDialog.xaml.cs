@@ -44,7 +44,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminde
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
 
             var userProfileContext = new UserProfileContext(
-                settingsStore.GetSettings<ExportSettings>(),
                 _userProfileSettings,
                 new RandomizationUtils());
             DataContext = userProfileContext;
@@ -52,21 +51,19 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminde
             userProfileContext.GenerateNewProfileId();
         }
 
-        private void On_No_Participation_Click(object sender, RoutedEventArgs e)
+        private void OnClickAbort(object sender, RoutedEventArgs e)
         {
-            _userProfileSettings.IsProvidingProfile = false;
             Close();
         }
 
-        private void On_Participation_Click(object sender, RoutedEventArgs e)
+        private void OnClickFinish(object sender, RoutedEventArgs e)
         {
-            _userProfileSettings.IsProvidingProfile = true;
+            _userProfileSettings.HasBeenAskedToFillProfile = true;
             Close();
         }
 
         private void UserProfileReminderWindow_OnClosed(object sender, EventArgs e)
         {
-            _userProfileSettings.HasBeenAskedtoProvideProfile = true;
             OpenUploadWizard();
         }
 

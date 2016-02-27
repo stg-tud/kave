@@ -36,8 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         {
             _userSettings = new UserProfileSettings
             {
-                HasBeenAskedtoProvideProfile = false,
-                IsProvidingProfile = true,
+                HasBeenAskedToFillProfile = false,
                 ProfileId = "",
                 Education = Educations.Unknown,
                 Position = Positions.Unknown,
@@ -52,8 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
                 TeamsLarge = false,
                 CodeReviews = YesNoUnknown.Unknown,
                 ProgrammingGeneral = Likert7Point.Unknown,
-                ProgrammingCSharp = Likert7Point.Unknown,
-                Comment = ""
+                ProgrammingCSharp = Likert7Point.Unknown
             };
 
             _settingsStore = Mock.Of<ISettingsStore>();
@@ -256,95 +254,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
                 {
                     ProgrammingCSharp = Likert7Point.Negative1
                 });
-        }
-
-        [Test]
-        public void CopiesComment()
-        {
-            _userSettings.Comment = "C";
-            AssertEvent(
-                new UserProfileEvent
-                {
-                    Comment = "C"
-                });
-        }
-
-        [Test]
-        public void OnlyCommentIsCopiedIfNotEnabled()
-        {
-            // all non-default values, except "IsProviding" which is disabled
-            _userSettings.HasBeenAskedtoProvideProfile = false;
-            _userSettings.IsProvidingProfile = false;
-            _userSettings.ProfileId = "p";
-            _userSettings.Education = Educations.Autodidact;
-            _userSettings.Position = Positions.ResearcherAcademic;
-            _userSettings.ProjectsCourses = true;
-            _userSettings.ProjectsPersonal = true;
-            _userSettings.ProjectsSharedSmall = true;
-            _userSettings.ProjectsSharedMedium = true;
-            _userSettings.ProjectsSharedLarge = true;
-            _userSettings.TeamsSolo = true;
-            _userSettings.TeamsSmall = true;
-            _userSettings.TeamsMedium = true;
-            _userSettings.TeamsLarge = true;
-            _userSettings.CodeReviews = YesNoUnknown.Yes;
-            _userSettings.ProgrammingGeneral = Likert7Point.Positive1;
-            _userSettings.ProgrammingCSharp = Likert7Point.Negative1;
-            _userSettings.Comment = "C";
-
-            AssertEvent(
-                new UserProfileEvent
-                {
-                    Comment = "C"
-                });
-        }
-
-        [Test]
-        public void ShouldNotCreateEvent_DisabledAndNoComment()
-        {
-            _userSettings.IsProvidingProfile = false;
-            _userSettings.Comment = "";
-            Assert.False(_sut.ShouldCreateEvent());
-        }
-
-        [Test]
-        public void ShouldNotCreateEvent_DisabledAndComment()
-        {
-            _userSettings.IsProvidingProfile = false;
-            _userSettings.Comment = "c";
-            Assert.True(_sut.ShouldCreateEvent());
-        }
-
-        [Test]
-        public void ShouldCreateEvent_EnabledAndNoComment()
-        {
-            _userSettings.IsProvidingProfile = true;
-            _userSettings.Comment = "";
-            Assert.True(_sut.ShouldCreateEvent());
-        }
-
-        [Test]
-        public void ShouldNotCreateEvent_EnabledAndComment()
-        {
-            _userSettings.IsProvidingProfile = true;
-            _userSettings.Comment = "c";
-            Assert.True(_sut.ShouldCreateEvent());
-        }
-
-        [Test]
-        public void ShouldCreateEvent_ChecksUserProfileSettings()
-        {
-            _sut.ShouldCreateEvent();
-            Mock.Get(_settingsStore).Verify(s => s.GetSettings<UserProfileSettings>());
-        }
-
-        [Test]
-        public void CommentIsReset()
-        {
-            _userSettings.Comment = "C";
-            _sut.ResetComment();
-            _userSettings.Comment = "";
-            Mock.Get(_settingsStore).Verify(s => s.SetSettings(_userSettings));
         }
     }
 }

@@ -21,14 +21,14 @@ limitations under the License.
              xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
              xmlns:userProfileOptions="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="800" d:DesignWidth="600">
   <ScrollViewer>
     <Grid Margin="5,5,5,5">
       <Grid.RowDefinitions>
         <RowDefinition Height="auto" />
         <RowDefinition Height="auto" />
       </Grid.RowDefinitions>
-      <userProfile:CheckedUserProfileControl x:Name="UserProfile" Grid.Row="0"/>
+      <userProfile:UserProfileControl x:Name="UserProfile" Grid.Row="0"/>
       <!-- reset button-->
       <DockPanel Margin="10,45,10,6" Grid.Row="1">
         <Button Name="ResetButton" Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnResetSettings"

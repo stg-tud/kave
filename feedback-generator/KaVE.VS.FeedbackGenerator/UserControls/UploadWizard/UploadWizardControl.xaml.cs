@@ -23,7 +23,7 @@ using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.Anonymization;
-using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfile;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
@@ -42,12 +42,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         }
 
         private readonly ISettingsStore _settingsStore;
+        private readonly IActionExecutor _actionExec;
 
-        public UploadWizardControl(UploadWizardContext dataContext, ISettingsStore settingsStore)
+        public UploadWizardControl(UploadWizardContext dataContext,
+            ISettingsStore settingsStore,
+            IActionExecutor actionExec)
         {
             InitializeComponent();
 
             _settingsStore = settingsStore;
+            _actionExec = actionExec;
 
             DataContext = dataContext;
             MyDataContext.PropertyChanged += OnViewModelPropertyChanged;
@@ -55,14 +59,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             MyDataContext.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
         }
 
-        private void StoreSettings()
-        {
-            MyDataContext.SetSettings();
-        }
-
         private void OnClickReview(object sender, RoutedEventArgs e)
         {
-            StoreSettings();
             Close();
             Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
         }
@@ -81,7 +79,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void ExportAndUpdateSettings(ExportType exportType)
         {
-            StoreSettings();
             MyDataContext.Export(exportType);
         }
 
@@ -106,8 +103,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void OnClickUserProfile(object sender, RoutedEventArgs e)
         {
-            var userProfileWindow = new UserProfileWindow(_settingsStore);
-            userProfileWindow.Show();
+            new UserProfileReminderWindow(_actionExec, _settingsStore).Show();
         }
 
         private void OnClickAnonymization(object sender, RoutedEventArgs e)

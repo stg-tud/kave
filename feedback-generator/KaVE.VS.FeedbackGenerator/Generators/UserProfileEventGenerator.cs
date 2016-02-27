@@ -26,9 +26,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 {
     public interface IUserProfileEventGenerator
     {
-        bool ShouldCreateEvent();
         UserProfileEvent CreateEvent();
-        void ResetComment();
     }
 
     [ShellComponent]
@@ -46,51 +44,32 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 
         public UserProfileEvent CreateEvent()
         {
-            var @event = Create<UserProfileEvent>();
             var s = _settingsStore.GetSettings<UserProfileSettings>();
 
-            if (s.IsProvidingProfile)
-            {
-                @event.ProfileId = s.ProfileId;
+            var @event = Create<UserProfileEvent>();
 
-                @event.Education = s.Education;
-                @event.Position = s.Position;
+            @event.ProfileId = s.ProfileId;
 
-                @event.ProjectsCourses = s.ProjectsCourses;
-                @event.ProjectsPersonal = s.ProjectsPersonal;
-                @event.ProjectsSharedSmall = s.ProjectsSharedSmall;
-                @event.ProjectsSharedMedium = s.ProjectsSharedMedium;
-                @event.ProjectsSharedLarge = s.ProjectsSharedLarge;
+            @event.Education = s.Education;
+            @event.Position = s.Position;
 
-                @event.TeamsSolo = s.TeamsSolo;
-                @event.TeamsSmall = s.TeamsSmall;
-                @event.TeamsMedium = s.TeamsMedium;
-                @event.TeamsLarge = s.TeamsLarge;
+            @event.ProjectsCourses = s.ProjectsCourses;
+            @event.ProjectsPersonal = s.ProjectsPersonal;
+            @event.ProjectsSharedSmall = s.ProjectsSharedSmall;
+            @event.ProjectsSharedMedium = s.ProjectsSharedMedium;
+            @event.ProjectsSharedLarge = s.ProjectsSharedLarge;
 
-                @event.CodeReviews = s.CodeReviews;
+            @event.TeamsSolo = s.TeamsSolo;
+            @event.TeamsSmall = s.TeamsSmall;
+            @event.TeamsMedium = s.TeamsMedium;
+            @event.TeamsLarge = s.TeamsLarge;
 
-                @event.ProgrammingGeneral = s.ProgrammingGeneral;
-                @event.ProgrammingCSharp = s.ProgrammingCSharp;
-            }
+            @event.CodeReviews = s.CodeReviews;
 
-            @event.Comment = s.Comment;
+            @event.ProgrammingGeneral = s.ProgrammingGeneral;
+            @event.ProgrammingCSharp = s.ProgrammingCSharp;
 
             return @event;
-        }
-
-        public void ResetComment()
-        {
-            var s = _settingsStore.GetSettings<UserProfileSettings>();
-            s.Comment = "";
-            _settingsStore.SetSettings(s);
-        }
-
-        public bool ShouldCreateEvent()
-        {
-            var s = _settingsStore.GetSettings<UserProfileSettings>();
-            var isProviding = s.IsProvidingProfile;
-            var hasComment = s.Comment.Length > 0;
-            return isProviding || hasComment;
         }
     }
 }

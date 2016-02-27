@@ -66,7 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
             {
                 var events = LoadEventsToExport(to);
                 var numEvents = EstimateNumberEventsToExport();
-                var upe = CreateUserProfileEvent();
+                var upe = _profileEventGenerator.CreateEvent();
                 var progressReporter = CreateProgressReporter(numEvents);
 
                 var lastEventNumber = 0;
@@ -142,11 +142,6 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
         private int EstimateNumberEventsToExport()
         {
             return _logManager.Logs.Sum(l => l.ApproximateNumberOfEvents);
-        }
-
-        private UserProfileEvent CreateUserProfileEvent()
-        {
-            return _profileEventGenerator.ShouldCreateEvent() ? _profileEventGenerator.CreateEvent() : null;
         }
 
         private Action<int> CreateProgressReporter(int totalEvents)

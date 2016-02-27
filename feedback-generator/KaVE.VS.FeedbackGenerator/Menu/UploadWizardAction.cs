@@ -22,7 +22,6 @@ using JetBrains.UI.ActionsRevised;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 
@@ -36,7 +35,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         private readonly ISettingsStore _settingsStore;
         private readonly IUploadWizardWindowCreator _uploadWizardWindowCreator;
         private readonly ILogManager _logManager;
-        
+
         public UploadWizardAction()
         {
             _settingsStore = Registry.GetComponent<ISettingsStore>();
@@ -73,7 +72,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
             try
             {
                 var logs = _logManager.Logs.ToList();
-                var noLogs = EnumerableExtensions.IsEmpty(logs);
+                var noLogs = logs.IsEmpty();
                 var singleEmptyLog = logs.Count == 1 && logs[0].IsEmpty();
                 return !noLogs && !singleEmptyLog;
             }
@@ -87,8 +86,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         private bool ShouldShowUserProfileReminder()
         {
             var userProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
-            var exportSettings= _settingsStore.GetSettings<ExportSettings>();
-            return !userProfileSettings.HasBeenAskedtoProvideProfile && !userProfileSettings.IsProvidingProfile && !exportSettings.IsDatev;
+            return !userProfileSettings.HasBeenAskedToFillProfile;
         }
     }
 }

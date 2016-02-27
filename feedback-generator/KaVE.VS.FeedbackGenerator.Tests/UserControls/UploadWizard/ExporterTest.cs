@@ -85,7 +85,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             _userProfileEvent = new UserProfileEvent {ProfileId = "p"};
 
             _userProfileEventGenerator = Mock.Of<IUserProfileEventGenerator>();
-            Mock.Get(_userProfileEventGenerator).Setup(e => e.ShouldCreateEvent()).Returns(false);
             Mock.Get(_userProfileEventGenerator).Setup(e => e.CreateEvent()).Returns(_userProfileEvent);
 
             _sut = new Exporter(_logManager, _anonymizer, _userProfileEventGenerator);
@@ -130,7 +129,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void PublishesProfileEvent()
         {
-            Mock.Get(_userProfileEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
             var logEntries = TestEventFactory.SomeEvents(25);
             _logManager.Add(SomeDate, logEntries);
 
@@ -144,8 +142,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test, Ignore]
         public void PublishesProfileEventIfNoEvents()
         {
-            Mock.Get(_userProfileEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
-
+          
             var numberOfEvents = WhenEverythingIsExported();
 
             AssertPublishedEvents(_userProfileEvent);
@@ -155,7 +152,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [Test]
         public void AppendsProfileEvent()
         {
-            Mock.Get(_userProfileEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
             _logManager.Add(SomeDate, TestEventFactory.SomeEvents(3));
 
             WhenEverythingIsExported();

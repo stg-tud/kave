@@ -28,7 +28,6 @@ using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.Utils;
@@ -71,10 +70,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
             InitializeComponent();
 
-            var exportSettings = settingsStore.GetSettings<ExportSettings>();
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
 
-            _userProfileContext = new UserProfileContext(exportSettings, _userProfileSettings, rnd);
+            _userProfileContext = new UserProfileContext(_userProfileSettings, rnd);
             _userProfileContext.PropertyChanged += UserProfileContextOnPropertyChanged;
 
             DataContext = _userProfileContext;
@@ -93,7 +91,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
         public bool ValidatePage()
         {
-            return true;
+            return _userProfileContext.Error == null;
         }
 
         public EitherControl Control
@@ -127,18 +125,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
         private void BindToUserProfileChanges()
         {
-            // IsProviding
-            _ctx.SetBinding(
-                _lifetime,
-                (UserProfileSettings s) => (bool?) s.IsProvidingProfile,
-                UserProfile.IsProvidingProfileCheckBox,
-                ToggleButton.IsCheckedProperty);
-
             // ProfileId
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => s.ProfileId,
-                UserProfile.UserSettingsGrid.ProfileIdTextBox,
+                UserProfile.ProfileIdTextBox,
                 TextBox.TextProperty);
 
             _ctx.SetBinding(
@@ -180,27 +171,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.ProjectsCourses,
-                UserProfile.UserSettingsGrid.ProjectsCoursesCheckBox,
+                UserProfile.ProjectsCoursesCheckBox,
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.ProjectsPersonal,
-                UserProfile.UserSettingsGrid.ProjectsPersonalCheckBox,
+                UserProfile.ProjectsPersonalCheckBox,
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.ProjectsSharedSmall,
-                UserProfile.UserSettingsGrid.ProjectsSharedSmallCheckBox,
+                UserProfile.ProjectsSharedSmallCheckBox,
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.ProjectsSharedMedium,
-                UserProfile.UserSettingsGrid.ProjectsSharedMediumCheckBox,
+                UserProfile.ProjectsSharedMediumCheckBox,
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.ProjectsSharedLarge,
-                UserProfile.UserSettingsGrid.ProjectsSharedLargeCheckBox,
+                UserProfile.ProjectsSharedLargeCheckBox,
                 ToggleButton.IsCheckedProperty);
         }
 
@@ -209,22 +200,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.TeamsSolo,
-                UserProfile.UserSettingsGrid.TeamsSoloCheckBox,
+                UserProfile.TeamsSoloCheckBox,
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.TeamsSmall,
-                UserProfile.UserSettingsGrid.TeamsSmallCheckBox,
+                UserProfile.TeamsSmallCheckBox,
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.TeamsMedium,
-                UserProfile.UserSettingsGrid.TeamsMediumCheckBox,
+                UserProfile.TeamsMediumCheckBox,
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.TeamsLarge,
-                UserProfile.UserSettingsGrid.TeamsLargeCheckBox,
+                UserProfile.TeamsLargeCheckBox,
                 ToggleButton.IsCheckedProperty);
         }
 

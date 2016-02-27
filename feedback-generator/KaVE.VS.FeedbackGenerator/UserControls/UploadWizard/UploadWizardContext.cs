@@ -105,17 +105,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             get { return !_hasCheckedDeclaration; }
         }
 
-        public string Comment
-        {
-            get { return UserProfileSettings.Comment; }
-            set { UserProfileSettings.Comment = value; }
-        }
-
-        public void SetSettings()
-        {
-            _settingsStore.UpdateSettings<UserProfileSettings>(s => s.Comment = UserProfileSettings.Comment);
-        }
-
         public void Export(UploadWizardControl.ExportType exportType)
         {
             SetBusy(Properties.UploadWizard.Export_BusyMessage);
@@ -137,18 +126,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
                 var publisher = CreatePublisher();
                 args.Result = _exporter.Export(_exportTime, publisher);
                 _logManager.DeleteLogsOlderThan(_exportTime);
-                ResetUserComment();
             }
             finally
             {
                 _exporter.ExportProgressChanged -= reportExportStatusChange;
             }
-        }
-
-        private void ResetUserComment()
-        {
-            UserProfileSettings.Comment = "";
-            _settingsStore.SetSettings(UserProfileSettings);
         }
 
         private IPublisher CreatePublisher()

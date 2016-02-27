@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.TestUtils.UserControls;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Menu;
@@ -25,10 +24,10 @@ using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileReminder
+namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfileDialogs
 {
     [RequiresSTA]
-    internal class UserProfileReminderWindowTest : BaseUserControlTest
+    internal class UserProfileDialogTest : BaseUserControlTest
     {
         private Mock<ISettingsStore> _mockSettingsStore;
         private UserProfileReminderWindow _sut;
@@ -66,22 +65,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
         }
 
         [Test]
-        public void ShouldSetIsProvidingProfileTrueOnParticipationClick()
-        {
-            UserControlTestUtils.Click(_sut.ParticipationButton);
-
-            Assert.True(_userProfileSettings.IsProvidingProfile);
-        }
-
-        [Test]
-        public void ShouldSetIsProvidingProfileFalseOnNoParticipationClick()
-        {
-            UserControlTestUtils.Click(_sut.NoParticipationHyperlink);
-
-            Assert.False(_userProfileSettings.IsProvidingProfile);
-        }
-
-        [Test]
         public void ShouldSaveSettingsOnClose()
         {
             _sut.Close();
@@ -90,11 +73,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
         }
 
         [Test]
-        public void ShouldSetHasBeenAskedtoProvideProfileOnClose()
+        public void ShouldSetHasBeenAskedtoFillProfileOnClose()
         {
             _sut.Close();
 
-            Assert.True(_userProfileSettings.HasBeenAskedtoProvideProfile);
+            Assert.True(_userProfileSettings.HasBeenAskedToFillProfile);
         }
 
         [Test]

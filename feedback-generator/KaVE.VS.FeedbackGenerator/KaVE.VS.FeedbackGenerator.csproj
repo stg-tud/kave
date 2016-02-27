@@ -322,8 +322,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserProfileOptionsMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\UploadWizard\Anonymization\AnonymizationWindow.xaml.cs">
-      <DependentUpon>AnonymizationWindow.xaml</DependentUpon>
+    <Compile Include="UserControls\AnonymizationDialogs\AnonymizationDialog.xaml.cs">
+      <DependentUpon>AnonymizationDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UploadWizard\UploadWizardMessages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -335,14 +335,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserProfileMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderDialog.xaml.cs">
-      <DependentUpon>UserProfileReminderDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderWindow.xaml.cs">
-      <DependentUpon>UserProfileReminderWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\UploadWizard\UserProfile\UserProfileWindow.xaml.cs">
-      <DependentUpon>UserProfileWindow.xaml</DependentUpon>
+    <Compile Include="UserControls\UserProfileDialogs\UserProfileDialog.xaml.cs">
+      <DependentUpon>UserProfileDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UserProfile\UserProfileControl.xaml.cs">
       <DependentUpon>UserProfileControl.xaml</DependentUpon>
@@ -358,9 +352,6 @@
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\Presentation\UriValidation.cs" />
-    <Compile Include="UserControls\UserProfile\CheckedUserProfileControl.xaml.cs">
-      <DependentUpon>CheckedUserProfileControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\UserProfile\UserProfileContext.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\UploadUrlValidationRule.cs" />
@@ -543,25 +534,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\UploadWizard\Anonymization\AnonymizationWindow.xaml">
+    <Page Include="UserControls\AnonymizationDialogs\AnonymizationDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderWindow.xaml">
+    <Page Include="UserControls\UserProfileDialogs\UserProfileDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UserControls\UploadWizard\UserProfile\UserProfileWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UserControls\UserProfile\CheckedUserProfileControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\TrayNotification\HardBalloonPopup.xaml">
       <Generator>MSBuild:Compile</Generator>

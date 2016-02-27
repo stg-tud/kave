@@ -21,45 +21,25 @@ using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {
-    public class UserProfileContext : INotifyPropertyChanged
+    public class UserProfileContext : INotifyPropertyChanged, IDataErrorInfo
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private readonly ExportSettings _exportSettings;
         private readonly UserProfileSettings _userProfileSettings;
         private readonly IRandomizationUtils _rnd;
 
-        public UserProfileContext(ExportSettings exportSettings,
-            UserProfileSettings userProfileSettings,
+        public UserProfileContext(UserProfileSettings userProfileSettings,
             IRandomizationUtils rnd)
         {
-            _exportSettings = exportSettings;
             _userProfileSettings = userProfileSettings;
             _rnd = rnd;
-        }
 
-        public bool IsDatev
-        {
-            get { return _exportSettings.IsDatev; }
-        }
-
-        public bool IsProvidingProfile
-        {
-            get { return _userProfileSettings.IsProvidingProfile && !_exportSettings.IsDatev; }
-            set
+            if ("".Equals(_userProfileSettings.ProfileId))
             {
-                if (!_userProfileSettings.HasBeenAskedtoProvideProfile)
-                {
-                    _userProfileSettings.ProfileId = _rnd.GetRandomGuid().ToString();
-                    _userProfileSettings.HasBeenAskedtoProvideProfile = true;
-                    OnPropertyChanged("ProfileId");
-                }
-                _userProfileSettings.IsProvidingProfile = value;
-                OnPropertyChanged("IsProvidingProfile");
+                _userProfileSettings.ProfileId = _rnd.GetRandomGuid().ToString();
             }
         }
 
@@ -246,6 +226,32 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public string this[string prop]
+        {
+            get
+            {
+                return "ProfileId".Equals(prop)
+                    ? ValidateProfileId()
+                    : null;
+            }
+        }
+
+        private string ValidateProfileId()
+        {
+            const int minChars = 5;
+            if (ProfileId == null || ProfileId != null && ProfileId.Length < minChars)
+            {
+                return string.Format("profile id is too short (<{0} chars)", minChars);
+            }
+
+            return null;
+        }
+
+        public string Error
+        {
+            get { return ValidateProfileId(); }
         }
     }
 }

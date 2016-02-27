@@ -60,19 +60,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         {
             var userProfileSettings = new UserProfileSettings
             {
-                HasBeenAskedtoProvideProfile = false,
-                IsProvidingProfile = false
+                HasBeenAskedToFillProfile = false
             };
             var exportSettings = new ExportSettings
             {
                 IsDatev = false
             };
             _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(exportSettings);
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>()).Returns(userProfileSettings);
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+                              .Returns(userProfileSettings);
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(), Times.Once);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
+                Times.Once);
         }
 
         [Test]
@@ -83,11 +85,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
                 IsDatev = true
             };
             _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(exportSettings);
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>()).Returns(new UserProfileSettings());
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+                              .Returns(new UserProfileSettings());
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(), Times.Never);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
+                Times.Never);
         }
 
         [Test]
@@ -95,31 +100,36 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         {
             var userProfileSettings = new UserProfileSettings
             {
-                HasBeenAskedtoProvideProfile = true,
+                HasBeenAskedToFillProfile = true
             };
 
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>()).Returns(userProfileSettings);
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
+                              .Returns(new ExportSettings());
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+                              .Returns(userProfileSettings);
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(), Times.Never);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
+                Times.Never);
         }
 
         [Test]
         public void ShouldNotOpenUserProfileReminderWhenUserAlreadyProvidesUserProfile()
         {
-            var userProfileSettings = new UserProfileSettings
-            {
-                IsProvidingProfile = true
-            };
+            var userProfileSettings = new UserProfileSettings();
 
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>()).Returns(userProfileSettings);
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
+                              .Returns(new ExportSettings());
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+                              .Returns(userProfileSettings);
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(), Times.Never);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
+                Times.Never);
         }
 
         [Test]
@@ -127,11 +137,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         {
             var userProfileSettings = new UserProfileSettings
             {
-                HasBeenAskedtoProvideProfile = true 
+                HasBeenAskedToFillProfile = true
             };
 
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>()).Returns(userProfileSettings);
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
+                              .Returns(new ExportSettings());
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+                              .Returns(userProfileSettings);
 
             var logs = new List<ILog>
             {
@@ -142,8 +154,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(), Times.Never);
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUploadWizardControl(), Times.Once);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
+                Times.Never);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUploadWizardControl(),
+                Times.Once);
         }
 
         [Test]
@@ -151,19 +167,27 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         {
             var userProfileSettings = new UserProfileSettings
             {
-                HasBeenAskedtoProvideProfile = true
+                HasBeenAskedToFillProfile = true
             };
 
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>()).Returns(userProfileSettings);
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
+                              .Returns(new ExportSettings());
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+                              .Returns(userProfileSettings);
 
             _mockLogManager.Setup(logManager => logManager.Logs).Returns(new List<ILog>());
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(), Times.Never);
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUploadWizardControl(), Times.Never);
-            _mockUploadWizardWindowCreator.Verify(uploadWizardWindowCreator => uploadWizardWindowCreator.OpenNothingToExportDialog(), Times.Once);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
+                Times.Never);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUploadWizardControl(),
+                Times.Never);
+            _mockUploadWizardWindowCreator.Verify(
+                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenNothingToExportDialog(),
+                Times.Once);
         }
     }
 }

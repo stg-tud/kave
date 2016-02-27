@@ -30,15 +30,13 @@ limitations under the License.
     <Grid Margin="5,5,5,5">
         <StackPanel>
             <userProfile:UserProfileControl x:Name="UserSettingsGrid" Margin="0,5,0,5" />
-            <DockPanel Margin="0,5,0,5" HorizontalAlignment="Right">
-                <TextBlock VerticalAlignment="Center" Margin="0,5,0,0">
-                    <Hyperlink Name="NoParticipationHyperlink" Click="On_No_Participation_Click">
-                        <TextBlock Text="{x:Static uploadWizard:UploadWizardMessages.NoParticipationButton_Content}" />
-                    </Hyperlink>
-                </TextBlock>
-                <Button Name="ParticipationButton" Click="On_Participation_Click" HorizontalAlignment="Center"
-                        Content="{x:Static uploadWizard:UploadWizardMessages.ParticipationButton_Content}"
-                        MinWidth="93" Margin="5,0,5,0" MinHeight="30" />
+            <DockPanel HorizontalAlignment="Right">
+                <Button Name="AbortButton" Click="OnClickAbort" HorizontalAlignment="Center"
+                        Content="Abort"
+                        MinWidth="60" Margin="5,0,5,0" MinHeight="20" />
+                <Button Name="ParticipationButton" Click="OnClickFinish" HorizontalAlignment="Center"
+                        Content="Ok"
+                        MinWidth="60" Margin="5,0,5,0" MinHeight="20" />
             </DockPanel>
         </StackPanel>
     </Grid>

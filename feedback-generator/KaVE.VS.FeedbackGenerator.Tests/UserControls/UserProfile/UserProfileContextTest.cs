@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using Moq;
 using NUnit.Framework;
@@ -30,7 +29,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
     {
         private string _someGuid;
 
-        private ExportSettings _exportSettings;
         private UserProfileSettings _userSettings;
         private List<string> _updatedProperties;
 
@@ -41,11 +39,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         {
             _userSettings = new UserProfileSettings
             {
-                ProfileId = "",
-                Comment = "",
-                HasBeenAskedtoProvideProfile = true
+                ProfileId = ""
             };
-            _exportSettings = new ExportSettings();
             _updatedProperties = new List<string>();
 
             var newGuid = Guid.NewGuid();
@@ -53,75 +48,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             var rnd = Mock.Of<IRandomizationUtils>();
             Mock.Get(rnd).Setup(r => r.GetRandomGuid()).Returns(newGuid);
 
-            _sut = new UserProfileContext(_exportSettings, _userSettings, rnd);
+            _sut = new UserProfileContext(_userSettings, rnd);
 
             _sut.PropertyChanged += (sender, args) => { _updatedProperties.Add(args.PropertyName); };
-        }
-
-        [Test]
-        public void IsDatev()
-        {
-            _exportSettings.IsDatev = false;
-            Assert.False(_sut.IsDatev);
-
-            _exportSettings.IsDatev = true;
-            Assert.True(_sut.IsDatev);
-        }
-
-        [Test]
-        public void IsProviding_PropagationFromCode()
-        {
-            _userSettings.IsProvidingProfile = false;
-            Assert.False(_sut.IsProvidingProfile);
-
-            _userSettings.IsProvidingProfile = true;
-            Assert.True(_sut.IsProvidingProfile);
-        }
-
-        [Test]
-        public void IsProviding_PropagationToCode()
-        {
-            _sut.IsProvidingProfile = false;
-            Assert.False(_userSettings.IsProvidingProfile);
-
-            _sut.IsProvidingProfile = true;
-            Assert.True(_userSettings.IsProvidingProfile);
-        }
-
-        [Test]
-        public void IsProviding_PropertyChange()
-        {
-            _sut.IsProvidingProfile = false;
-            AssertNotifications("IsProvidingProfile");
-        }
-
-        [Test]
-        public void IsProviding_DisabledForDatev()
-        {
-            _userSettings.IsProvidingProfile = true;
-            _exportSettings.IsDatev = true;
-            _sut = new UserProfileContext(_exportSettings, _userSettings, new RandomizationUtils());
-            Assert.False(_sut.IsProvidingProfile);
-        }
-
-        [Test]
-        public void IsProviding_SetsUidOnFirstAccess()
-        {
-            _userSettings.HasBeenAskedtoProvideProfile = false;
-            _sut.IsProvidingProfile = true;
-            Assert.True(_userSettings.HasBeenAskedtoProvideProfile);
-            Assert.AreEqual(_someGuid, _sut.ProfileId);
-            AssertNotifications("ProfileId", "IsProvidingProfile");
-        }
-
-        [Test]
-        public void IsProviding_DoesNotSetUidOnSecondAccess()
-        {
-            _userSettings.HasBeenAskedtoProvideProfile = true;
-            _sut.IsProvidingProfile = true;
-            Assert.True(_userSettings.HasBeenAskedtoProvideProfile);
-            Assert.AreEqual("", _sut.ProfileId);
-            AssertNotifications("IsProvidingProfile");
         }
 
         [Test]

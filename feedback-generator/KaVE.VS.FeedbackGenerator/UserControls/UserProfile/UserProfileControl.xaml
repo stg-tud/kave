@@ -16,214 +16,219 @@ limitations under the License.
 <UserControl x:Class="KaVE.VS.FeedbackGenerator.UserControls.UserProfile.UserProfileControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
              xmlns:model="clr-namespace:KaVE.Commons.Model.Events.UserProfiles;assembly=KaVE.Commons"
              xmlns:valueConverter="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValueConverter"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="550">
 
-  <UserControl.Resources>
-    <valueConverter:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
-    <valueConverter:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
-  </UserControl.Resources>
-  
+    <UserControl.Resources>
+        <valueConverter:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <valueConverter:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
+    </UserControl.Resources>
+
     <Grid>
-      <StackPanel Margin="5">
+        <StackPanel Margin="5">
 
-        <TextBlock TextWrapping="Wrap" Margin="0,0,0,5" FontSize="12" FontStyle="Italic">
-          What is the highest degree that you currently hold and that is related to software engineering?
-        </TextBlock>
-        <ComboBox ItemsSource="{Binding EducationOptions}"
-                  SelectedItem="{Binding Education}"
-                  Name="EducationComboBox">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
+            <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">
+                We love to learn more about our users in order to understand the habits of different user groups. This is totally optional, but if you want to support our research, please provide some basic information about yourself. We highly appreciate it!
+            </TextBlock>
 
-        <!-- %%%%%-->
-        <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
-          Which of the following best describes your current situation when it comes to programming?
-        </TextBlock>
-        <ComboBox ItemsSource="{Binding PositionOptions}"
-                  SelectedItem="{Binding Position}"
-                  Name="PositionComboBox">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
 
-        <!-- %%%%%-->
-                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
-                           Text="{x:Static userProfile:UserProfileMessages.Projects_Question}" />
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
+                What is the highest degree that you currently hold and that is related to software engineering?
+            </TextBlock>
+            <ComboBox ItemsSource="{Binding EducationOptions}"
+                      SelectedItem="{Binding Education}"
+                      Name="EducationComboBox">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-                <CheckBox Name="ProjectsCoursesCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.ProjectsCourses}" />
-                </CheckBox>
+            <!-- %%%%%-->
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
+                Which of the following best describes your current situation when it comes to programming?
+            </TextBlock>
+            <ComboBox ItemsSource="{Binding PositionOptions}"
+                      SelectedItem="{Binding Position}"
+                      Name="PositionComboBox">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-                <CheckBox Name="ProjectsPersonalCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=ProjectsPersonal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.ProjectsPersonal}" />
-                </CheckBox>
+            <!-- %%%%%-->
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
+                       Text="{x:Static userProfile:UserProfileMessages.Projects_Question}" />
 
-                <CheckBox Name="ProjectsSharedSmallCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=ProjectsSharedSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedSmall}" />
-                </CheckBox>
+            <CheckBox Name="ProjectsCoursesCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.ProjectsCourses}" />
+            </CheckBox>
 
-                <CheckBox Name="ProjectsSharedMediumCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=ProjectsSharedMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedMedium}" />
-                </CheckBox>
+            <CheckBox Name="ProjectsPersonalCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=ProjectsPersonal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.ProjectsPersonal}" />
+            </CheckBox>
 
-                <CheckBox Name="ProjectsSharedLargeCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=ProjectsSharedLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedLarge}" />
-                </CheckBox>
+            <CheckBox Name="ProjectsSharedSmallCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=ProjectsSharedSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedSmall}" />
+            </CheckBox>
 
-        <!-- %%%%%-->
-                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
-                           Text="{x:Static userProfile:UserProfileMessages.Teams_Question}" />
+            <CheckBox Name="ProjectsSharedMediumCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=ProjectsSharedMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedMedium}" />
+            </CheckBox>
 
-                <CheckBox Name="TeamsSoloCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=TeamsSolo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="{x:Static userProfile:UserProfileMessages.TeamsSolo}" />
-                </CheckBox>
+            <CheckBox Name="ProjectsSharedLargeCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=ProjectsSharedLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedLarge}" />
+            </CheckBox>
 
-                <CheckBox Name="TeamsSmallCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=TeamsSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="{x:Static userProfile:UserProfileMessages.TeamsSmall}" />
-                </CheckBox>
+            <!-- %%%%%-->
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
+                       Text="{x:Static userProfile:UserProfileMessages.Teams_Question}" />
 
-                <CheckBox Name="TeamsMediumCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=TeamsMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="{x:Static userProfile:UserProfileMessages.TeamsMedium}" />
-                </CheckBox>
+            <CheckBox Name="TeamsSoloCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=TeamsSolo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{x:Static userProfile:UserProfileMessages.TeamsSolo}" />
+            </CheckBox>
 
-                <CheckBox Name="TeamsLargeCheckBox"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="{x:Static userProfile:UserProfileMessages.TeamsLarge}" />
-                </CheckBox>
+            <CheckBox Name="TeamsSmallCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=TeamsSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{x:Static userProfile:UserProfileMessages.TeamsSmall}" />
+            </CheckBox>
 
-        <!-- %%%%%-->
-                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
-                           Text="{x:Static userProfile:UserProfileMessages.CodeReviews_Question}" />
+            <CheckBox Name="TeamsMediumCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=TeamsMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{x:Static userProfile:UserProfileMessages.TeamsMedium}" />
+            </CheckBox>
 
-        <ComboBox ItemsSource="{Binding YesNoOptions}"
-                  SelectedItem="{Binding CodeReviews}"
-                  Name="CodeReviewComboBox">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
+            <CheckBox Name="TeamsLargeCheckBox"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{x:Static userProfile:UserProfileMessages.TeamsLarge}" />
+            </CheckBox>
 
-        <!-- %%%%%-->
-        <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
-          How would you rate your general programming skills?
-        </TextBlock>
-        <StackPanel Orientation="Horizontal">
-          <Label Content="Low" Padding="0" Margin="0,0,5,0" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative3}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative2}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative1}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Neutral}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive1}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive2}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive3}}" />
-          <Label Content="High" Padding="0" Margin="5,0,0,0" />
-          <Label Content="-" Padding="0" Margin="7,0" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Unknown}}" />
-          <Label Content="No answer" Padding="0" />
+            <!-- %%%%%-->
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
+                       Text="{x:Static userProfile:UserProfileMessages.CodeReviews_Question}" />
+
+            <ComboBox ItemsSource="{Binding YesNoOptions}"
+                      SelectedItem="{Binding CodeReviews}"
+                      Name="CodeReviewComboBox">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!-- %%%%%-->
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
+                How would you rate your general programming skills?
+            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Low" Padding="0" Margin="0,0,5,0" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative3}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative2}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative1}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Neutral}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive1}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive2}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive3}}" />
+                <Label Content="High" Padding="0" Margin="5,0,0,0" />
+                <Label Content="-" Padding="0" Margin="7,0" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingGeneral, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Unknown}}" />
+                <Label Content="No answer" Padding="0" />
+            </StackPanel>
+
+            <!-- %%%%%-->
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
+                How would you rate your programming skills in C#?
+            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Low" Padding="0" Margin="0,0,5,0" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative3}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative2}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative1}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Neutral}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive1}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive2}}" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive3}}" />
+                <Label Content="High" Padding="0" Margin="5,0,0,0" />
+                <Label Content="-" Padding="0" Margin="7,0" />
+                <RadioButton Margin="2,3"
+                             IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Unknown}}" />
+                <Label Content="No answer" Padding="0" />
+            </StackPanel>
+
+            <!-- %%%%%-->
+            <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
+                Profile ID
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                All events that you generate are anonymous, the only thing that we store is a random id.
+                You can freely choose an id or conveniently generate another one by clicking the button.
+                Please note that you can also change your id at any time.
+            </TextBlock>
+            <Grid Margin="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="24px" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0"
+                         Name="ProfileIdTextBox"
+                         Text="{Binding Path=ProfileId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                <Button Grid.Column="1" Content="&#8634;" Padding="0,0,0,0"
+                        Name="RefreshProfileIdButton"
+                        Width="20px" Height="20px" Margin="0,0,0,0"
+                        VerticalAlignment="Center" HorizontalAlignment="Right"
+                        ToolTip="Generate new profile ID"
+                        Click="OnClick_RefreshProfileId" />
+            </Grid>
+            <TextBlock TextWrapping="Wrap">
+                We encourage you to write down this id and to use the same id when working on different machines or when switching to a new computer.
+            </TextBlock>
+
         </StackPanel>
-
-        <!-- %%%%%-->
-        <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
-          How would you rate your programming skills in C#?
-        </TextBlock>
-        <StackPanel Orientation="Horizontal">
-          <Label Content="Low" Padding="0" Margin="0,0,5,0" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative3}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative2}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Negative1}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Neutral}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive1}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive2}}" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Positive3}}" />
-          <Label Content="High" Padding="0" Margin="5,0,0,0" />
-          <Label Content="-" Padding="0" Margin="7,0" />
-          <RadioButton Margin="2,3"
-                       IsChecked="{Binding Path=ProgrammingCSharp, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static model:Likert7Point.Unknown}}" />
-          <Label Content="No answer" Padding="0" />
-        </StackPanel>
-
-        <!-- %%%%%-->
-        <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
-          Profile ID
-        </TextBlock>
-        <TextBlock TextWrapping="Wrap">
-          We would like to add the following unique ID to your events and merge all your feedback.
-          The ID is anonymous and cannot be used to identify you personally.
-        </TextBlock>
-        <Grid Margin="3">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="24px" />
-          </Grid.ColumnDefinitions>
-          <TextBox Grid.Column="0"
-                   Name="ProfileIdTextBox"
-                   Text="{Binding Path=ProfileId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-          <Button Grid.Column="1" Content="&#8634;" Padding="0,0,0,0"
-                  Name="RefreshProfileIdButton"
-                  Width="20px" Height="20px" Margin="0,0,0,0"
-                  VerticalAlignment="Center" HorizontalAlignment="Right"
-                  ToolTip="Generate new profile ID"
-                  Click="OnClick_RefreshProfileId" />
-        </Grid>
-        <TextBlock TextWrapping="Wrap">
-          You can freely choose a profile ID or simply generate a random one by clicking the button.
-          Leave the field empty if you do not want to provide this information.
-        </TextBlock>
-
-      </StackPanel>
     </Grid>
 </UserControl>

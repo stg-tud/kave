@@ -108,30 +108,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             Registry.Clear();
         }
 
-        // TODO @Seb: re-enable
-        [Test, Ignore]
-        public void ShouldGetUserSettingsFeedback()
-        {
-            var expected = "Good Feedback";
-            _userSettings.Comment = expected;
-
-            var actual = _uut.Comment;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void ShouldSetUserSettingsFeedbackAfterSetSettingsIsCalled()
-        {
-            var expected = "Good Feedback";
-            _userSettings.Comment = expected;
-
-            _uut.SetSettings();
-
-            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<UserProfileSettings>>()));
-            Assert.AreEqual(expected, _userSettings.Comment);
-        }
-
         [Test]
         public void ShouldSetExportBusyMessage()
         {
