@@ -22,7 +22,7 @@ using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Properties;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
-using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder;
+using KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs;
 using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
@@ -61,7 +61,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void OpenUserProfileReminderDialog()
         {
-            new UserProfileReminderWindow(_actionExecutor, _settingsStore).Show();
+            new UserProfileDialog(_actionExecutor, _settingsStore).Show();
         }
 
         public void OpenUploadWizardControl()

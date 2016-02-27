@@ -23,7 +23,7 @@ using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.Anonymization;
-using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder;
+using KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
@@ -103,7 +103,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void OnClickUserProfile(object sender, RoutedEventArgs e)
         {
-            new UserProfileReminderWindow(_actionExec, _settingsStore).Show();
+            new UserProfileDialog(_actionExec, _settingsStore).Show();
         }
 
         private void OnClickAnonymization(object sender, RoutedEventArgs e)

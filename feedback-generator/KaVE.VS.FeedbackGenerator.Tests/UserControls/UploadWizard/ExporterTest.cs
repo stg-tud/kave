@@ -46,6 +46,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
         private IPublisher _publisher;
         private Exporter _sut;
+        private IUserProfileEvent _publishedUpe;
         private IList<IDEEvent> _publishedEvents;
         private IDataExportAnonymizer _anonymizer;
         private IUserProfileEventGenerator _userProfileEventGenerator;
@@ -66,12 +67,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
                 .Callback<UserProfileEvent, IEnumerable<IDEEvent>, Action>(
                     (upe, events, callback) =>
                     {
+                        _publishedUpe = upe;
+
                         _publishedEvents = new List<IDEEvent>();
-                        // TODO: maybe make this a bit nicer with the prepend function
-                        if (upe != null)
-                        {
-                            _publishedEvents.Add(upe);
-                        }
                         foreach (var e in events)
                         {
                             _publishedEvents.Add(e);
@@ -122,6 +120,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             var numberOfEvents = _sut.Export(dateTime.AddMinutes(-1), _publisher);
 
+            Assert.AreSame(_userProfileEvent, _publishedUpe);
             AssertPublishedEvents(olderEvent);
             Assert.AreEqual(1, numberOfEvents);
         }
@@ -134,29 +133,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             var numberOfEvents = WhenEverythingIsExported();
 
-            AssertPublishedEvents(new[] {_userProfileEvent}.Union(logEntries));
+            AssertPublishedEvents(logEntries);
             Assert.AreEqual(25, numberOfEvents);
-        }
-
-        // TODO: Is this useful?
-        [Test, Ignore]
-        public void PublishesProfileEventIfNoEvents()
-        {
-          
-            var numberOfEvents = WhenEverythingIsExported();
-
-            AssertPublishedEvents(_userProfileEvent);
-            Assert.AreEqual(1, numberOfEvents);
-        }
-
-        [Test]
-        public void AppendsProfileEvent()
-        {
-            _logManager.Add(SomeDate, TestEventFactory.SomeEvents(3));
-
-            WhenEverythingIsExported();
-
-            CollectionAssert.Contains(_publishedEvents, _userProfileEvent);
         }
 
         [Test]
@@ -204,20 +182,22 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             WhenEverythingIsExported();
 
-            var actual = _publishedEvents.Single();
+            var ee = new ErrorEvent
+            {
+                Content = "An error occured during anonymization of KaVE.Commons.TestUtils.Model.Events.TestIDEEvent.",
+                StackTrace = new string[0],
+                TriggeredAt = original.TriggeredAt,
+                TerminatedAt = original.TerminatedAt,
+                Duration = original.Duration,
+                IDESessionUUID = original.IDESessionUUID,
+                ActiveDocument = original.ActiveDocument,
+                ActiveWindow = original.ActiveWindow,
+                Id = original.Id,
+                KaVEVersion = original.KaVEVersion,
+                TriggeredBy = original.TriggeredBy
+            };
 
-            Assert.IsInstanceOf<ErrorEvent>(actual);
-            Assert.AreEqual("An error occured during anonymization of KaVE.Commons.TestUtils.Model.Events.TestIDEEvent.", ((ErrorEvent)actual).Content);
-            Assert.NotNull(((ErrorEvent)actual).StackTrace);
-            Assert.AreEqual(original.TriggeredAt, actual.TriggeredAt);
-            Assert.AreEqual(original.TerminatedAt, actual.TerminatedAt);
-            Assert.AreEqual(original.Duration, actual.Duration);
-            Assert.AreEqual(original.IDESessionUUID, actual.IDESessionUUID);
-            Assert.AreEqual(original.ActiveDocument, actual.ActiveDocument);
-            Assert.AreEqual(original.ActiveWindow, actual.ActiveWindow);
-            Assert.AreEqual(original.Id, actual.Id);
-            Assert.AreEqual(original.KaVEVersion, actual.KaVEVersion);
-            Assert.AreEqual(original.TriggeredBy, actual.TriggeredBy);
+            AssertPublishedEvents(ee);
         }
 
         [Test]
@@ -230,10 +210,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             WhenEverythingIsExported();
 
-            var actual = _publishedEvents.Single();
-
-            Assert.IsInstanceOf<ErrorEvent>(actual);
-            Assert.AreEqual("An unrecoverable error occured during anonymization of KaVE.Commons.TestUtils.Model.Events.TestIDEEvent.", ((ErrorEvent)actual).Content);
+            Assert.AreSame(_userProfileEvent, _publishedUpe);
+            var errorEvent = (ErrorEvent) _publishedEvents.Single();
+            Assert.AreEqual(
+                "An unrecoverable error occured during anonymization of KaVE.Commons.TestUtils.Model.Events.TestIDEEvent.",
+                errorEvent.Content);
         }
 
         [Test]
@@ -305,11 +286,20 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
         private void AssertPublishedEvents(params IDEEvent[] expectedEvents)
         {
+            Assert.AreEqual(_userProfileEvent, _publishedUpe);
             AssertPublishedEvents(expectedEvents.ToList());
         }
 
         private void AssertPublishedEvents(IEnumerable<IDEEvent> expectedEvents)
         {
+            foreach (var e in _publishedEvents)
+            {
+                var ee = e as ErrorEvent;
+                if (ee != null)
+                {
+                    ee.StackTrace = new string[0];
+                }
+            }
             CollectionAssert.AreEquivalent(expectedEvents, _publishedEvents);
         }
 

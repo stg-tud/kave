@@ -25,7 +25,6 @@ using JetBrains.Util;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
-using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
@@ -111,7 +110,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private const string StartedMarker = ".started";
         private const string EndMarker = ".ended";
 
-        [TestCaseSource("FindSolutionFiles")]
+        //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string shortenedSolution)
         {
             _currentSolution = shortenedSolution;

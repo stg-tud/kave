@@ -19,8 +19,8 @@ using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Menu;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
-using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
+using KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs;
 using Moq;
 using NUnit.Framework;
 
@@ -30,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfileDialogs
     internal class UserProfileDialogTest : BaseUserControlTest
     {
         private Mock<ISettingsStore> _mockSettingsStore;
-        private UserProfileReminderWindow _sut;
+        private UserProfileDialog _sut;
         private UserProfileSettings _userProfileSettings;
         private Mock<IActionExecutor> _mockActionExecutor;
 
@@ -48,10 +48,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfileDialogs
             _sut = Open();
         }
 
-        private UserProfileReminderWindow Open()
+        private UserProfileDialog Open()
         {
             _mockActionExecutor = new Mock<IActionExecutor>();
-            var userProfileReminderWindow = new UserProfileReminderWindow(
+            var userProfileReminderWindow = new UserProfileDialog(
                 _mockActionExecutor.Object,
                 _mockSettingsStore.Object);
             userProfileReminderWindow.Show();

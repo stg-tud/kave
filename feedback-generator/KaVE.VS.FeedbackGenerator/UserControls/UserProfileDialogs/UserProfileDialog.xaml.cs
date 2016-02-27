@@ -20,20 +20,19 @@ using KaVE.Commons.Utils;
 using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Menu;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder
+namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs
 {
-    public partial class UserProfileReminderWindow
+    public partial class UserProfileDialog
     {
         private readonly UserProfileSettings _userProfileSettings;
         private readonly IActionExecutor _actionExec;
         private readonly KaVEISettingsStore _settingsStore;
 
-        public UserProfileReminderWindow(IActionExecutor actionExec,
+        public UserProfileDialog(IActionExecutor actionExec,
             KaVEISettingsStore settingsStore)
         {
             _actionExec = actionExec;
@@ -58,12 +57,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminde
 
         private void OnClickFinish(object sender, RoutedEventArgs e)
         {
-            _userProfileSettings.HasBeenAskedToFillProfile = true;
             Close();
         }
 
         private void UserProfileReminderWindow_OnClosed(object sender, EventArgs e)
         {
+            _userProfileSettings.HasBeenAskedToFillProfile = true;
             OpenUploadWizard();
         }
 

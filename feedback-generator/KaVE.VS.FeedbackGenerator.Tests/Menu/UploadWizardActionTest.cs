@@ -34,13 +34,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         private Mock<ILogManager> _mockLogManager;
 
         private UploadWizardAction _uut;
+        private UserProfileSettings _userProfileSettings;
+        private ExportSettings _exportSettings;
 
         [SetUp]
         public void Setup()
         {
+            _userProfileSettings = new UserProfileSettings();
+
             _mockSettingsStore = new Mock<ISettingsStore>();
             _mockUploadWizardWindowCreator = new Mock<IUploadWizardWindowCreator>();
             _mockLogManager = new Mock<ILogManager>();
+
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+                              .Returns(_userProfileSettings);
+            _exportSettings = new ExportSettings();
+            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
+                              .Returns(_exportSettings);
+
 
             Registry.RegisterComponent(_mockSettingsStore.Object);
             Registry.RegisterComponent(_mockUploadWizardWindowCreator.Object);
@@ -58,17 +69,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         [Test]
         public void ShouldOpenUserProfileReminderOnFirstUpload()
         {
-            var userProfileSettings = new UserProfileSettings
-            {
-                HasBeenAskedToFillProfile = false
-            };
-            var exportSettings = new ExportSettings
-            {
-                IsDatev = false
-            };
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(exportSettings);
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(userProfileSettings);
+            _userProfileSettings.HasBeenAskedToFillProfile = false;
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
@@ -78,15 +79,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         }
 
         [Test]
-        public void ShouldNotOpenUserProfileReminderWhenDatevUser()
+        public void ShouldNotOpenUserProfileDialogWhenAskedBefore()
         {
-            var exportSettings = new ExportSettings
-            {
-                IsDatev = true
-            };
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>()).Returns(exportSettings);
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(new UserProfileSettings());
+            _userProfileSettings.HasBeenAskedToFillProfile = true;
+
 
             _uut.Execute(new Mock<IDataContext>().Object, null);
 
@@ -96,54 +92,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         }
 
         [Test]
-        public void ShouldNotOpenUserProfileReminderWhenAskedBefore()
+        public void ShouldShowUploadDialogWhenContentToExportAndUserProfileHasBeenAsked()
         {
-            var userProfileSettings = new UserProfileSettings
-            {
-                HasBeenAskedToFillProfile = true
-            };
-
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
-                              .Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(userProfileSettings);
-
-            _uut.Execute(new Mock<IDataContext>().Object, null);
-
-            _mockUploadWizardWindowCreator.Verify(
-                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
-                Times.Never);
-        }
-
-        [Test]
-        public void ShouldNotOpenUserProfileReminderWhenUserAlreadyProvidesUserProfile()
-        {
-            var userProfileSettings = new UserProfileSettings();
-
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
-                              .Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(userProfileSettings);
-
-            _uut.Execute(new Mock<IDataContext>().Object, null);
-
-            _mockUploadWizardWindowCreator.Verify(
-                uploadWizardWindowCreator => uploadWizardWindowCreator.OpenUserProfileReminderDialog(),
-                Times.Never);
-        }
-
-        [Test]
-        public void ShouldShowUploadWizardWhenContentToExportAndUserProfileHasBeenAsked()
-        {
-            var userProfileSettings = new UserProfileSettings
-            {
-                HasBeenAskedToFillProfile = true
-            };
-
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
-                              .Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(userProfileSettings);
+            _userProfileSettings.HasBeenAskedToFillProfile = true;
 
             var logs = new List<ILog>
             {
@@ -165,15 +116,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Menu
         [Test]
         public void ShouldShowNothingToExportDialogWhenNoContentToExport()
         {
-            var userProfileSettings = new UserProfileSettings
-            {
-                HasBeenAskedToFillProfile = true
-            };
-
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
-                              .Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(userProfileSettings);
+            _userProfileSettings.HasBeenAskedToFillProfile = true;
 
             _mockLogManager.Setup(logManager => logManager.Logs).Returns(new List<ILog>());
 
