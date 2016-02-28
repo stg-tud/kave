@@ -35,11 +35,11 @@ limitations under the License.
         <StackPanel>
             <userProfile:UserProfileControl x:Name="UserSettingsGrid" Margin="0,0,0,5" />
             <DockPanel HorizontalAlignment="Right" Margin="0,0,0,5">
-                <Button Name="AbortButton" Click="OnClickAbort" HorizontalAlignment="Center"
+                <Button Name="ButtonAbort" Click="OnClickAbort" HorizontalAlignment="Center"
                         Content="Abort"
                         MinWidth="60" Margin="5,0,5,0" MinHeight="20"
                         Visibility="{Binding Path=HasBeenAskedToFillProfile, Converter={StaticResource BoolToVisibility}}"/>
-                <Button Name="ParticipationButton" Click="OnClickFinish" HorizontalAlignment="Center"
+                <Button Name="ButtonOk" Click="OnClickFinish" HorizontalAlignment="Center"
                         Content="Ok"
                         MinWidth="60" Margin="5,0,5,0" MinHeight="20"
                         IsEnabled="{Binding IsValid}"/>

@@ -44,12 +44,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             };
             _updatedProperties = new List<string>();
 
-            _userSettingsUtil = Mock.Of<IUserProfileSettingsUtils>();
 
             var newGuid = Guid.NewGuid();
             _someGuid = newGuid.ToString();
             var rnd = Mock.Of<IRandomizationUtils>();
             Mock.Get(rnd).Setup(r => r.GetRandomGuid()).Returns(newGuid);
+
+            _userSettingsUtil = Mock.Of<IUserProfileSettingsUtils>();
+            Mock.Get(_userSettingsUtil).Setup(u => u.CreateNewProfileId()).Returns(_someGuid);
 
             _sut = new UserProfileContext(_userSettings, _userSettingsUtil);
 

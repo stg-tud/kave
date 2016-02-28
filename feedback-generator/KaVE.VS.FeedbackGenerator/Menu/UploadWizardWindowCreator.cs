@@ -47,9 +47,15 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         private readonly ILogger _logger;
         private readonly IDateUtils _dateUtils;
         private readonly ActionExecutor _actionExecutor;
+        private readonly IUserProfileSettingsUtils _userSettingsUtil;
 
-        public UploadWizardWindowCreator(ISettingsStore settingsStore, IExporter exporter, ILogManager logManager, ILogger logger,
-            IDateUtils dateUtils, ActionExecutor actionExecutor)
+        public UploadWizardWindowCreator(ISettingsStore settingsStore,
+            IExporter exporter,
+            ILogManager logManager,
+            ILogger logger,
+            IDateUtils dateUtils,
+            ActionExecutor actionExecutor,
+            IUserProfileSettingsUtils userSettingsUtil)
         {
             _settingsStore = settingsStore;
             _exporter = exporter;
@@ -57,24 +63,26 @@ namespace KaVE.VS.FeedbackGenerator.Menu
             _logger = logger;
             _dateUtils = dateUtils;
             _actionExecutor = actionExecutor;
+            _userSettingsUtil = userSettingsUtil;
         }
 
         public void OpenUserProfile()
         {
-            new UserProfileDialog(_actionExecutor, _settingsStore,
-                UploadWizardPolicy.OpenUploadWizardOnFinish).Show();
+            new UserProfileDialog(_actionExecutor, UploadWizardPolicy.OpenUploadWizardOnFinish, _userSettingsUtil).Show(
+                
+                );
         }
 
         public void OpenUploadWizard()
         {
             var actExec = Registry.GetComponent<IActionExecutor>();
             var viewModel = new UploadWizardContext(
-                        _exporter,
-                        _logManager,
-                        _settingsStore,
-                        _dateUtils,
-                        _logger);
-            new UploadWizardControl(viewModel, _settingsStore, actExec).ShowDialog();
+                _exporter,
+                _logManager,
+                _settingsStore,
+                _dateUtils,
+                _logger);
+            new UploadWizardControl(viewModel, _settingsStore, actExec, _userSettingsUtil).ShowDialog();
         }
 
         public void OpenNothingToExport()

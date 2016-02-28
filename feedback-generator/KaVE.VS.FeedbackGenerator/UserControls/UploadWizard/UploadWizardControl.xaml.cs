@@ -43,15 +43,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private readonly ISettingsStore _settingsStore;
         private readonly IActionExecutor _actionExec;
+        private readonly IUserProfileSettingsUtils _userProfileUtil;
 
         public UploadWizardControl(UploadWizardContext dataContext,
             ISettingsStore settingsStore,
-            IActionExecutor actionExec)
+            IActionExecutor actionExec,
+            IUserProfileSettingsUtils userProfileUtil)
         {
             InitializeComponent();
 
             _settingsStore = settingsStore;
             _actionExec = actionExec;
+            _userProfileUtil = userProfileUtil;
 
             DataContext = dataContext;
             MyDataContext.PropertyChanged += OnViewModelPropertyChanged;
@@ -103,7 +106,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void OnClickUserProfile(object sender, RoutedEventArgs e)
         {
-            new UserProfileDialog(_actionExec, _settingsStore, UploadWizardPolicy.DoNotOpenUploadWizardOnFinish).Show();
+            new UserProfileDialog(_actionExec, UploadWizardPolicy.DoNotOpenUploadWizardOnFinish, _userProfileUtil).Show(
+                );
         }
 
         private void OnClickAnonymization(object sender, RoutedEventArgs e)

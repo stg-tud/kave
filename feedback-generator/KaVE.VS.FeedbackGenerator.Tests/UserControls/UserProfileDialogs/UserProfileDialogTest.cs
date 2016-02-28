@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.TestUtils.UserControls;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Menu;
-using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs;
 using Moq;
@@ -29,64 +28,85 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfileDialogs
     [RequiresSTA]
     internal class UserProfileDialogTest : BaseUserControlTest
     {
-        private Mock<ISettingsStore> _mockSettingsStore;
         private UserProfileDialog _sut;
-        private UserProfileSettings _userProfileSettings;
-        private Mock<IActionExecutor> _mockActionExecutor;
+        private UserProfileSettings _settings;
+        private IUserProfileSettingsUtils _util;
+        private IActionExecutor _actionExecutor;
+        private UploadWizardPolicy _uploadWizardPolicy;
 
         [SetUp]
         public void SetUp()
         {
-            _userProfileSettings = new UserProfileSettings();
+            _settings = new UserProfileSettings();
+            _util = Mock.Of<IUserProfileSettingsUtils>();
+            Mock.Get(_util).Setup(u => u.GetSettings()).Returns(_settings);
 
-            _mockSettingsStore = new Mock<ISettingsStore>();
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
-                              .Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(_userProfileSettings);
-
-            _sut = Open();
+            _actionExecutor = Mock.Of<IActionExecutor>();
+            _uploadWizardPolicy = UploadWizardPolicy.OpenUploadWizardOnFinish;
         }
 
         private UserProfileDialog Open()
         {
-            _mockActionExecutor = new Mock<IActionExecutor>();
-            var userProfileReminderWindow = new UserProfileDialog(
-                _mockActionExecutor.Object,
-                _mockSettingsStore.Object,
-                UploadWizardPolicy.OpenUploadWizardOnFinish);
-            userProfileReminderWindow.Show();
-            return userProfileReminderWindow;
+            _sut = new UserProfileDialog(
+                _actionExecutor,
+                _uploadWizardPolicy,
+                _util);
+            _sut.Show();
+            return _sut;
         }
 
         [Test]
         public void DataContextIsSetCorrectly()
         {
+            Open();
             Assert.IsInstanceOf<UserProfileContext>(_sut.DataContext);
         }
 
         [Test]
-        public void ShouldSaveSettingsOnClose()
+        public void NothingIsSavedOnClose()
         {
+            _sut = Open();
+            Mock.Get(_util).Verify(u => u.GetSettings());
             _sut.Close();
-
-            _mockSettingsStore.Verify(settingsStore => settingsStore.SetSettings(_userProfileSettings));
+            Mock.Get(_util).Verify(u => u.StoreSettings(It.IsAny<UserProfileSettings>()), Times.Never);
         }
 
         [Test]
-        public void ShouldSetHasBeenAskedtoFillProfileOnClose()
+        public void NothingIsSavedOnAbort()
         {
-            _sut.Close();
-
-            Assert.True(_userProfileSettings.HasBeenAskedToFillProfile);
+            _sut = Open();
+            Mock.Get(_util).Verify(u => u.GetSettings());
+            UserControlTestUtils.Click(_sut.ButtonAbort);
+            Mock.Get(_util).Verify(u => u.StoreSettings(It.IsAny<UserProfileSettings>()), Times.Never);
         }
 
         [Test]
-        public void ShouldOpenUploadWizardOnClose()
+        public void ProfileIsSavedOnFinish()
         {
-            _sut.Close();
+            _sut = Open();
+            _sut.UserSettingsGrid.ProjectsCoursesCheckBox.Toggle();
+            UserControlTestUtils.Click(_sut.ButtonOk);
 
-            _mockActionExecutor.Verify(actionExecutor => actionExecutor.ExecuteActionGuarded<UploadWizardAction>());
+            Assert.True(_settings.ProjectsCourses);
+            Mock.Get(_util).Verify(u => u.StoreSettings(_settings), Times.Once);
+        }
+
+        [Test]
+        public void UploadWizardIsOpenedWhenRequested()
+        {
+            _uploadWizardPolicy = UploadWizardPolicy.OpenUploadWizardOnFinish;
+            _sut = Open();
+            UserControlTestUtils.Click(_sut.ButtonOk);
+            Mock.Get(_actionExecutor).Verify(a => a.ExecuteActionGuarded<UploadWizardAction>(), Times.Once);
+        }
+
+        [Test]
+        public void UploadWizardIsNotOpenedWhenNotRequested()
+        {
+            _uploadWizardPolicy = UploadWizardPolicy.DoNotOpenUploadWizardOnFinish;
+            _sut = Open();
+            UserControlTestUtils.Click(_sut.ButtonOk);
+            Mock.Get(_actionExecutor).Verify(a => a.ExecuteActionGuarded<UploadWizardAction>(), Times.Never);
         }
     }
 }

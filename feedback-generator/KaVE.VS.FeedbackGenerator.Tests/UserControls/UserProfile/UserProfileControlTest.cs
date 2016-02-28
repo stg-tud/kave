@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.TestUtils.UserControls;
-using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using Moq;
@@ -30,18 +28,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         private UserProfileSettings _userProfileSettings;
         private IUserProfileSettingsUtils _userProfileSettingsUtil;
         private UserProfileContext _dataContext;
-        private IRandomizationUtils _randomizationUtils;
 
-        private Guid _rndGuid;
+        private string _rndGuid;
 
         [SetUp]
         public void SetUp()
         {
+            _rndGuid = "xyz";
+
             _userProfileSettings = new UserProfileSettings();
             _userProfileSettingsUtil = Mock.Of<IUserProfileSettingsUtils>();
-            _randomizationUtils = Mock.Of<IRandomizationUtils>();
-            _rndGuid = Guid.NewGuid();
-            Mock.Get(_randomizationUtils).Setup(r => r.GetRandomGuid()).Returns(_rndGuid);
+            Mock.Get(_userProfileSettingsUtil).Setup(u => u.CreateNewProfileId()).Returns(_rndGuid);
+
             _dataContext = new UserProfileContext(_userProfileSettings, _userProfileSettingsUtil);
         }
 
@@ -68,7 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             var sut = Open();
             UserControlTestUtils.Click(sut.RefreshProfileIdButton);
 
-            var expected = _rndGuid.ToString();
+            var expected = _rndGuid;
             Assert.AreEqual(expected, sut.ProfileIdTextBox.Text);
             Assert.AreEqual(expected, _userProfileSettings.ProfileId);
         }
