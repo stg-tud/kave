@@ -20,23 +20,29 @@ limitations under the License.
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
         xmlns:uploadWizard="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UploadWizard"
-        mc:Ignorable="d"
+              xmlns:valueConverter="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValueConverter"
+       mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        Width="680px"
         SizeToContent="Height"
         WindowStyle="SingleBorderWindow"
-        Closed="UserProfileReminderWindow_OnClosed"
         ResizeMode="NoResize"
         Title="{x:Static uploadWizard:UploadWizardMessages.UserProfileReminderWindow_Title}">
     <Grid Margin="5,5,5,5">
+        <Grid.Resources>
+            <valueConverter:BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        </Grid.Resources>
         <StackPanel>
-            <userProfile:UserProfileControl x:Name="UserSettingsGrid" Margin="0,5,0,5" />
-            <DockPanel HorizontalAlignment="Right">
+            <userProfile:UserProfileControl x:Name="UserSettingsGrid" Margin="0,0,0,5" />
+            <DockPanel HorizontalAlignment="Right" Margin="0,0,0,5">
                 <Button Name="AbortButton" Click="OnClickAbort" HorizontalAlignment="Center"
                         Content="Abort"
-                        MinWidth="60" Margin="5,0,5,0" MinHeight="20" />
+                        MinWidth="60" Margin="5,0,5,0" MinHeight="20"
+                        Visibility="{Binding Path=HasBeenAskedToFillProfile, Converter={StaticResource BoolToVisibility}}"/>
                 <Button Name="ParticipationButton" Click="OnClickFinish" HorizontalAlignment="Center"
                         Content="Ok"
-                        MinWidth="60" Margin="5,0,5,0" MinHeight="20" />
+                        MinWidth="60" Margin="5,0,5,0" MinHeight="20"
+                        IsEnabled="{Binding IsValid}"/>
             </DockPanel>
         </StackPanel>
     </Grid>

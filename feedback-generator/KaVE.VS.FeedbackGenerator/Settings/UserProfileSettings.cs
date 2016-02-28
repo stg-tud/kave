@@ -16,7 +16,10 @@
 
 using JetBrains.Application.Settings;
 using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Utils;
+using ISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
@@ -71,5 +74,28 @@ namespace KaVE.VS.FeedbackGenerator.Settings
 
         [SettingsEntry(Likert7Point.Unknown, "UserProfile: ProgrammingCSharp")]
         public Likert7Point ProgrammingCSharp;
+
+        public static void EnsureProfileId()
+        {
+            // TODO seb: move this functionality to "injectable" util
+            var settingsStore = Registry.GetComponent<ISettingsStore>();
+            var userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
+            if (!userProfileSettings.HasProfileId)
+            {
+                userProfileSettings.GenerateNewProfileId();
+                settingsStore.SetSettings(userProfileSettings);
+            }
+        }
+
+        private bool HasProfileId
+        {
+            get { return !"".Equals(ProfileId); }
+        }
+
+        public void GenerateNewProfileId()
+        {
+            var rnd = Registry.GetComponent<IRandomizationUtils>();
+            ProfileId = rnd.GetRandomGuid().ToString();
+        }
     }
 }

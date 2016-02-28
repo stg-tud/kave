@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using KaVE.Commons.Model.Events.UserProfiles;
-using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Settings;
 
@@ -29,20 +28,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly UserProfileSettings _userProfileSettings;
-        private readonly IRandomizationUtils _rnd;
 
         private string _profileIdError;
 
-        public UserProfileContext(UserProfileSettings userProfileSettings,
-            IRandomizationUtils rnd)
+        public UserProfileContext(UserProfileSettings userProfileSettings)
         {
             _userProfileSettings = userProfileSettings;
-            _rnd = rnd;
-
-            if ("".Equals(_userProfileSettings.ProfileId))
-            {
-                _userProfileSettings.ProfileId = _rnd.GetRandomGuid().ToString();
-            }
         }
 
         public string ProfileId
@@ -55,6 +46,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             }
         }
 
+        public bool HasBeenAskedToFillProfile
+        {
+            get { return _userProfileSettings.HasBeenAskedToFillProfile; }
+        }
+
         public string ProfileIdError
         {
             get { return _profileIdError; }
@@ -62,12 +58,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _profileIdError = value;
                 OnPropertyChanged("ProfileIdError");
+                IsValid = value == null;
             }
         }
 
         public void GenerateNewProfileId()
         {
-            ProfileId = _rnd.GetRandomGuid().ToString();
+            _userProfileSettings.GenerateNewProfileId();
+            ProfileId = _userProfileSettings.ProfileId;
         }
 
         public Educations Education
@@ -240,14 +238,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             }
         }
 
+        private bool _isValid;
+
+        public bool IsValid
+        {
+            get { return _isValid; }
+            private set
+            {
+                _isValid = value;
+                OnPropertyChanged("IsValid");
+            }
+        }
+
         public string this[string prop]
         {
-            get
-            {
-                return "ProfileId".Equals(prop)
-                    ? ProfileIdError = ValidateProfileId()
-                    : null;
-            }
+            get { return "ProfileId".Equals(prop) ? ProfileIdError = ValidateProfileId() : null; }
         }
 
         private string ValidateProfileId()

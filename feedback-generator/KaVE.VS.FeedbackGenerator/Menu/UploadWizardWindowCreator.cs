@@ -61,7 +61,8 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void OpenUserProfileReminderDialog()
         {
-            new UserProfileDialog(_actionExecutor, _settingsStore).Show();
+            new UserProfileDialog(_actionExecutor, _settingsStore,
+                UploadWizardPolicy.OpenUploadWizardOnFinish).Show();
         }
 
         public void OpenUploadWizardControl()

@@ -43,7 +43,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             _randomizationUtils = Mock.Of<IRandomizationUtils>();
             _rndGuid = Guid.NewGuid();
             Mock.Get(_randomizationUtils).Setup(r => r.GetRandomGuid()).Returns(_rndGuid);
-            _dataContext = new UserProfileContext(_userProfileSettings, _randomizationUtils);
+            _dataContext = new UserProfileContext(_userProfileSettings);
         }
 
         private UserProfileControl Open()

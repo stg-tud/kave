@@ -70,9 +70,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
             InitializeComponent();
 
+            UserProfileSettings.EnsureProfileId();
+
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
 
-            _userProfileContext = new UserProfileContext(_userProfileSettings, rnd);
+            _userProfileContext = new UserProfileContext(_userProfileSettings);
             _userProfileContext.PropertyChanged += UserProfileContextOnPropertyChanged;
 
             DataContext = _userProfileContext;

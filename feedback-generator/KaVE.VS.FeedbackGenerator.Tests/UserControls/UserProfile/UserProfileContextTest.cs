@@ -48,7 +48,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             var rnd = Mock.Of<IRandomizationUtils>();
             Mock.Get(rnd).Setup(r => r.GetRandomGuid()).Returns(newGuid);
 
-            _sut = new UserProfileContext(_userSettings, rnd);
+            _sut = new UserProfileContext(_userSettings);
 
             _sut.PropertyChanged += (sender, args) => { _updatedProperties.Add(args.PropertyName); };
         }

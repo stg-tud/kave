@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using System;
 using System.Windows;
-using KaVE.Commons.Utils;
 using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Menu;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -31,23 +29,28 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs
         private readonly UserProfileSettings _userProfileSettings;
         private readonly IActionExecutor _actionExec;
         private readonly KaVEISettingsStore _settingsStore;
+        private readonly UploadWizardPolicy _policy;
 
         public UserProfileDialog(IActionExecutor actionExec,
-            KaVEISettingsStore settingsStore)
+            KaVEISettingsStore settingsStore,
+            UploadWizardPolicy policy)
         {
             _actionExec = actionExec;
             _settingsStore = settingsStore;
+            _policy = policy;
 
             InitializeComponent();
 
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
 
-            var userProfileContext = new UserProfileContext(
-                _userProfileSettings,
-                new RandomizationUtils());
+            var userProfileContext = new UserProfileContext(_userProfileSettings);
             DataContext = userProfileContext;
+        }
 
-            userProfileContext.GenerateNewProfileId();
+        private void UpdateUserProfileSettings()
+        {
+            _userProfileSettings.HasBeenAskedToFillProfile = true;
+            _settingsStore.SetSettings(_userProfileSettings);
         }
 
         private void OnClickAbort(object sender, RoutedEventArgs e)
@@ -58,18 +61,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs
         private void OnClickFinish(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void UserProfileReminderWindow_OnClosed(object sender, EventArgs e)
-        {
-            _userProfileSettings.HasBeenAskedToFillProfile = true;
-            OpenUploadWizard();
+            UpdateUserProfileSettings();
+            if (_policy == UploadWizardPolicy.OpenUploadWizardOnFinish)
+            {
+                OpenUploadWizard();
+            }
         }
 
         private void OpenUploadWizard()
         {
-            _settingsStore.SetSettings(_userProfileSettings);
             _actionExec.ExecuteActionGuarded<UploadWizardAction>();
         }
+    }
+
+    public enum UploadWizardPolicy
+    {
+        OpenUploadWizardOnFinish,
+        DoNotOpenUploadWizardOnFinish
     }
 }

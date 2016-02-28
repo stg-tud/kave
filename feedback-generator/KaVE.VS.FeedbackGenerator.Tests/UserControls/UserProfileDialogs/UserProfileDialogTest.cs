@@ -53,7 +53,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfileDialogs
             _mockActionExecutor = new Mock<IActionExecutor>();
             var userProfileReminderWindow = new UserProfileDialog(
                 _mockActionExecutor.Object,
-                _mockSettingsStore.Object);
+                _mockSettingsStore.Object,
+                UploadWizardPolicy.OpenUploadWizardOnFinish);
             userProfileReminderWindow.Show();
             return userProfileReminderWindow;
         }

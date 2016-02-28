@@ -50,6 +50,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
+            UserProfileSettings.EnsureProfileId();
             if (ShouldShowUserProfileReminder())
             {
                 _uploadWizardWindowCreator.OpenUserProfileReminderDialog();

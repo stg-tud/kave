@@ -103,7 +103,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void OnClickUserProfile(object sender, RoutedEventArgs e)
         {
-            new UserProfileDialog(_actionExec, _settingsStore).Show();
+            new UserProfileDialog(_actionExec, _settingsStore, UploadWizardPolicy.DoNotOpenUploadWizardOnFinish).Show();
         }
 
         private void OnClickAnonymization(object sender, RoutedEventArgs e)
