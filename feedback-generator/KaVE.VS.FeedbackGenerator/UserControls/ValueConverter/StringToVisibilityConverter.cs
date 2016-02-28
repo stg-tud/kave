@@ -20,22 +20,21 @@ using System.Windows.Data;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.ValueConverter
 {
-    internal class BooleanToVisibilityConverter : IValueConverter
+    internal class StringToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            try
+            var s = value as string;
+            if (s == null)
             {
-                var x = bool.Parse(value.ToString());
-                if (!x)
-                {
-                    return Visibility.Collapsed;
-                }
+                return Visibility.Collapsed;
             }
-            catch (Exception)
+
+            if ("".Equals(s))
             {
-                // ignored
+                return Visibility.Collapsed;
             }
+
             return Visibility.Visible;
         }
 
@@ -44,7 +43,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.ValueConverter
             object parameter,
             System.Globalization.CultureInfo culture)
         {
-            return value;
+            throw new NotImplementedException();
         }
     }
 }

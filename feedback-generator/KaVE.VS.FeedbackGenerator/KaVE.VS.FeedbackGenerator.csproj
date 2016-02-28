@@ -297,6 +297,7 @@
       <DependentUpon>AnonymizationOptionsMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ValueConverter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="UserControls\ValueConverter\StringToVisibilityConverter.cs" />
     <Compile Include="Utils\Logging\LogFileUtils.cs" />
     <Compile Include="Utils\MessageBoxCreator.cs" />
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsMessages.Designer.cs">
