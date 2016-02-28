@@ -37,58 +37,67 @@ limitations under the License.
 
         <StackPanel Margin="5">
             <TextBlock TextWrapping="Wrap">
-                You are now ready to hand in your feedback! What data does this contain? In short, we monitor how you use Visual Studio and capture
-                some information to explain your actions. For example, when you trigger IntelliSense, we capture information about the surrounding source code and your
-                selected proposal. Note that <Italic>we do not capture any personal information!</Italic>
-                If you want, you may also <Hyperlink Click="OnClickReview">review</Hyperlink> or
-                <Hyperlink Click="OnClickAnonymization">anonymize</Hyperlink> your feedback.
+                You are now ready to hand in your captured IDE interactions! What data does this contain?
+                In short, we monitor how you use Visual Studio and capture some information to explain your actions.
+                For example, when you trigger IntelliSense, we capture information about the surrounding source code and your selected proposal.
+                Note that <Italic>we do not capture any personal information!</Italic> If you want, you may also
+                <Hyperlink Click="OnClickReview">review</Hyperlink> or
+                <Hyperlink Click="OnClickAnonymization">selectively remove information</Hyperlink> from your interactions.
             </TextBlock>
 
             <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
-                We love to learn more about our users, to understand the habits of different user groups. This is totally optional, but if you want to support our research,
-                please  <Hyperlink Click="OnClickUserProfile">provide some basic information</Hyperlink> about yourself. We highly appreciate it!
+                We love to learn more about our users in order to understand the habits of different user groups.
+                This is totally optional, but if you want to support our research, please
+                <Hyperlink Click="OnClickUserProfile">provide some basic information</Hyperlink> about yourself.
+                We highly appreciate it!
             </TextBlock>
 
-            <GroupBox Margin="0,10,0,0" Header="Disclaimer">
-                <StackPanel Margin="0,1,0,1">
+            <Expander Margin="0,10,0,0" Header="Disclaimer" IsExpanded="False" BorderBrush="DarkGray"
+                      Background="LightGray">
+                <StackPanel Margin="3,1,3,1">
                     <TextBlock TextWrapping="Wrap" Margin="0,2,0,0">
-                        We are super happy that you want to provide feedback, but we need to make sure that you fully understand the following:
+                        We are super happy that you want to upload your IDE interactions, but we need to make sure that you fully understand the following:
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022;
                         We provide a <Hyperlink Click="OnClickEventDetails">detailed explanation</Hyperlink> of everything we capture and you can
-                        <Hyperlink Click="OnClickReview">review</Hyperlink> your feedback. It is your responsibility to verify that your feedback
-                        does not contain anything you don't want to share. We cannot identify your submission after the upload and you have no way of revoking any of it.
+                        <Hyperlink Click="OnClickReview">review</Hyperlink> your interactions. It is your responsibility to verify that the interactions you upload
+                        do not contain anything you don't want to share. We cannot identify your submission after the upload and so you have no way of revoking any of it.
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+                        &#x2022; We will group your subsequent submissions, e.g., by matching your
+                        <Hyperlink Click="OnClickReview">profile id</Hyperlink>.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022; We plan to include your feedback in a public dataset that is part of scientific publications.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
-                        &#x2022; We do not include any personal information in our feedback, but we cannot guarantee that third parties will
+                        &#x2022; We do not include any personal information in our feedback, but we cannot guarantee that third parties will not
                         try to match the data with other publicly available information.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022;
                         <Bold>
-                            Your submitted feedback contains a simplified version of the source code you were working on. Make sure that you
-                            did not work on source code that must stay non-disclosed.
+                            Your submitted interactions dataset contains a simplified version of the source code you were working on.
+                            Make sure that you did not work on source code that must stay non-disclosed.
                         </Bold>
                     </TextBlock>
-                    <CheckBox Margin="0,10,0,0" IsChecked="{Binding HasCheckedDeclaration}">
-                        I carefully read the disclaimer, fully understand its implications, and confirm my agreement to it.
-                    </CheckBox>
                 </StackPanel>
-            </GroupBox>
+            </Expander>
+
+            <CheckBox Margin="0,10,0,0" IsChecked="{Binding HasCheckedDeclaration}">
+                I carefully read the disclaimer, fully understand its implications, and confirm my agreement to it.
+            </CheckBox>
+            <TextBlock Foreground="Red"
+                       Visibility="{Binding IsShowingDeclarationWarning, Converter={StaticResource BooleanToVisibility}}">
+                (Buttons are deactivated, because you did not confirm your agreement to the disclaimer.)
+            </TextBlock>
 
             <StackPanel Margin="0,15,0,0">
-                <TextBlock TextWrapping="Wrap" Margin="0,0,0,3">
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">
                     You are almost done now! You have two options to provide your feedback:
                 </TextBlock>
-                <TextBlock Foreground="Red"
-                           Visibility="{Binding IsShowingDeclarationWarning, Converter={StaticResource BooleanToVisibility}}">
-                    (Buttons are deactivated, because you did not confirm your agreement to the disclaimer.)
-                </TextBlock>
-                <Grid Margin="2">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100px" />
                         <ColumnDefinition Width="1*" />
