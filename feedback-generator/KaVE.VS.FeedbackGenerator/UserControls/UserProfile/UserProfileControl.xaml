@@ -27,6 +27,7 @@ limitations under the License.
     <UserControl.Resources>
         <valueConverter:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
         <valueConverter:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
+        <valueConverter:StringToVisibilityConverter x:Key="StringToVisibility" />
     </UserControl.Resources>
 
     <Grid>
@@ -210,6 +211,9 @@ limitations under the License.
                 You can freely choose an id or conveniently generate another one by clicking the button.
                 Please note that you can also change your id at any time.
             </TextBlock>
+            <TextBlock TextWrapping="Wrap" Foreground="Red"
+                       Text="{Binding Path=ProfileIdError, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       Visibility="{Binding Path=ProfileIdError, Converter={StaticResource StringToVisibility}}"/>
             <Grid Margin="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

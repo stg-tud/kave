@@ -85,8 +85,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
         public bool OnOk()
         {
-            _settingsStore.SetSettings(_userProfileSettings);
-            return true;
+            if (ValidatePage())
+            {
+                _settingsStore.SetSettings(_userProfileSettings);
+                return true;
+            }
+            return false;
         }
 
         public bool ValidatePage()

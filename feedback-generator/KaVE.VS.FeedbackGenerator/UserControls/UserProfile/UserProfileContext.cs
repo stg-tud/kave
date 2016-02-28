@@ -31,6 +31,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
         private readonly UserProfileSettings _userProfileSettings;
         private readonly IRandomizationUtils _rnd;
 
+        private string _profileIdError;
+
         public UserProfileContext(UserProfileSettings userProfileSettings,
             IRandomizationUtils rnd)
         {
@@ -50,6 +52,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.ProfileId = value;
                 OnPropertyChanged("ProfileId");
+            }
+        }
+
+        public string ProfileIdError
+        {
+            get { return _profileIdError; }
+            set
+            {
+                _profileIdError = value;
+                OnPropertyChanged("ProfileIdError");
             }
         }
 
@@ -233,7 +245,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             get
             {
                 return "ProfileId".Equals(prop)
-                    ? ValidateProfileId()
+                    ? ProfileIdError = ValidateProfileId()
                     : null;
             }
         }
