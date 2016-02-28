@@ -91,8 +91,6 @@ namespace KaVE.RS.Commons.Tests_Unit.Settings
         public void StoreSettings()
         {
             _sut.StoreSettings(_settings);
-
-            Assert.True(_settings.HasBeenAskedToFillProfile);
             Mock.Get(_settingsStore).Verify(ss => ss.SetSettings(_settings));
         }
     }

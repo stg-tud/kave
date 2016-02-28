@@ -55,6 +55,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs
         private void OnClickFinish(object sender, RoutedEventArgs e)
         {
             Close();
+            _userProfileSettings.HasBeenAskedToFillProfile = true;
             _userProfileSettingsUtils.StoreSettings(_userProfileSettings);
             if (_policy == UploadWizardPolicy.OpenUploadWizardOnFinish)
             {

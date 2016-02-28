@@ -62,6 +62,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             IUserProfileSettingsUtils userProfileUtils)
         {
             _messageBoxCreator = messageBoxCreator;
+            _userProfileUtils = userProfileUtils;
             _lifetime = lifetime;
             _ctx = ctx;
             _settingsStore = settingsStore;
@@ -72,7 +73,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
             userProfileUtils.EnsureProfileId();
 
-            _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
+            _userProfileSettings = userProfileUtils.GetSettings();
 
             _userProfileContext = new UserProfileContext(_userProfileSettings, userProfileUtils);
             _userProfileContext.PropertyChanged += UserProfileContextOnPropertyChanged;
@@ -89,7 +90,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
         {
             if (ValidatePage())
             {
-                _settingsStore.SetSettings(_userProfileSettings);
+                _userProfileSettings.HasBeenAskedToFillProfile = true;
+                _userProfileUtils.StoreSettings(_userProfileSettings);
                 return true;
             }
             return false;
@@ -284,6 +286,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             );
 
         private readonly IMessageBoxCreator _messageBoxCreator;
+        private readonly IUserProfileSettingsUtils _userProfileUtils;
 
         public Educations Education
         {

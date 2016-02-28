@@ -46,7 +46,7 @@ namespace KaVE.RS.Commons.Settings
             if (!HasProfileId)
             {
                 settings.ProfileId = CreateNewProfileId();
-                _settingsStore.SetSettings(settings);
+                StoreSettings(settings);
             }
         }
 
@@ -76,7 +76,6 @@ namespace KaVE.RS.Commons.Settings
 
         public void StoreSettings(UserProfileSettings settings)
         {
-            settings.HasBeenAskedToFillProfile = true;
             _settingsStore.SetSettings(settings);
         }
     }
