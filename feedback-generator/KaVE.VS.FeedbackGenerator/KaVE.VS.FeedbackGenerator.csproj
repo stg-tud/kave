@@ -278,7 +278,6 @@
     <Compile Include="Settings\SettingDataContextCreator.cs" />
     <Compile Include="Settings\SettingResetType.cs" />
     <Compile Include="Settings\SettingsCleaner.cs" />
-    <Compile Include="Settings\UserProfileSettings.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContext.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationControl.xaml.cs">
       <DependentUpon>AnonymizationControl.xaml</DependentUpon>

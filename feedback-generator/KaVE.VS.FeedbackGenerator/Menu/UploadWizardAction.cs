@@ -21,7 +21,6 @@ using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 
@@ -35,11 +34,13 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         private readonly ISettingsStore _settingsStore;
         private readonly IUploadWizardWindowCreator _uploadWizardWindowCreator;
         private readonly ILogManager _logManager;
+        private readonly IUserProfileSettingsUtils _userProfileSettingsUtils;
 
         public UploadWizardAction()
         {
             _settingsStore = Registry.GetComponent<ISettingsStore>();
             _uploadWizardWindowCreator = Registry.GetComponent<IUploadWizardWindowCreator>();
+            _userProfileSettingsUtils = Registry.GetComponent<IUserProfileSettingsUtils>();
             _logManager = Registry.GetComponent<ILogManager>();
         }
 
@@ -50,8 +51,9 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            UserProfileSettings.EnsureProfileId();
-            if (ShouldShowUserProfileReminder())
+            _userProfileSettingsUtils.EnsureProfileId();
+
+            if (!_userProfileSettingsUtils.HasBeenAskedToFillProfile())
             {
                 _uploadWizardWindowCreator.OpenUserProfileReminderDialog();
             }
@@ -82,12 +84,6 @@ namespace KaVE.VS.FeedbackGenerator.Menu
                 // directly after the reset, before any event is generated
                 return false;
             }
-        }
-
-        private bool ShouldShowUserProfileReminder()
-        {
-            var userProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
-            return !userProfileSettings.HasBeenAskedToFillProfile;
         }
     }
 }

@@ -16,8 +16,9 @@
 
 using System.Windows;
 using KaVE.RS.Commons;
+using KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Menu;
-using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
@@ -30,6 +31,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs
         private readonly IActionExecutor _actionExec;
         private readonly KaVEISettingsStore _settingsStore;
         private readonly UploadWizardPolicy _policy;
+        private readonly IUserProfileSettingsUtils _userProfileSettingsUtils;
 
         public UserProfileDialog(IActionExecutor actionExec,
             KaVEISettingsStore settingsStore,
@@ -41,16 +43,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs
 
             InitializeComponent();
 
-            _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
+            _userProfileSettingsUtils = Registry.GetComponent<IUserProfileSettingsUtils>();
+            _userProfileSettings = _userProfileSettingsUtils.GetSettings();
 
-            var userProfileContext = new UserProfileContext(_userProfileSettings);
+            var userProfileContext = new UserProfileContext(_userProfileSettings, _userProfileSettingsUtils);
             DataContext = userProfileContext;
-        }
-
-        private void UpdateUserProfileSettings()
-        {
-            _userProfileSettings.HasBeenAskedToFillProfile = true;
-            _settingsStore.SetSettings(_userProfileSettings);
         }
 
         private void OnClickAbort(object sender, RoutedEventArgs e)
@@ -61,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfileDialogs
         private void OnClickFinish(object sender, RoutedEventArgs e)
         {
             Close();
-            UpdateUserProfileSettings();
+            _userProfileSettingsUtils.StoreSettings(_userProfileSettings);
             if (_policy == UploadWizardPolicy.OpenUploadWizardOnFinish)
             {
                 OpenUploadWizard();

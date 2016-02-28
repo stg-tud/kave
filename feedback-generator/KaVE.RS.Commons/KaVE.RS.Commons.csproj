@@ -192,6 +192,8 @@
     <Compile Include="Settings\KaVESettings.cs" />
     <Compile Include="Settings\ModelStoreSettings.cs" />
     <Compile Include="Settings\SettingsStore.cs" />
+    <Compile Include="Settings\UserProfileSettings.cs" />
+    <Compile Include="Settings\UserProfileSettingsUtils.cs" />
     <Compile Include="Utils\BackgroundWorker.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="Utils\FilePublisher.cs" />

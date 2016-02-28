@@ -16,6 +16,7 @@
 
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions;
@@ -28,11 +29,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UserProfileOpt
     [RequiresSTA]
     internal class UserProfileOptionsControlTest : BaseOptionPageUserControlTest
     {
+        private IUserProfileSettingsUtils upUtil;
         private UserProfileOptionsControl _sut;
 
         [SetUp]
         public void Setup()
         {
+            upUtil = Mock.Of<IUserProfileSettingsUtils>();
             MockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
                               .Returns(new ExportSettings());
             MockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
@@ -52,7 +55,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UserProfileOpt
                         MockActionExecutor.Object,
                         TestDataContexts,
                         MockMessageBoxCreator.Object,
-                        new RandomizationUtils()));
+                        upUtil));
         }
 
         [Test]

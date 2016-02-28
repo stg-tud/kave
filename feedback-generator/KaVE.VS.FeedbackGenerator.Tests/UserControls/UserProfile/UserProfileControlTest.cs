@@ -17,8 +17,7 @@
 using System;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using Moq;
 using NUnit.Framework;
@@ -28,8 +27,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
     [RequiresSTA]
     internal class UserProfileControlTest : BaseUserControlTest
     {
-        private ExportSettings _exportSettings;
         private UserProfileSettings _userProfileSettings;
+        private IUserProfileSettingsUtils _userProfileSettingsUtil;
         private UserProfileContext _dataContext;
         private IRandomizationUtils _randomizationUtils;
 
@@ -38,12 +37,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         [SetUp]
         public void SetUp()
         {
-            _exportSettings = new ExportSettings();
             _userProfileSettings = new UserProfileSettings();
+            _userProfileSettingsUtil = Mock.Of<IUserProfileSettingsUtils>();
             _randomizationUtils = Mock.Of<IRandomizationUtils>();
             _rndGuid = Guid.NewGuid();
             Mock.Get(_randomizationUtils).Setup(r => r.GetRandomGuid()).Returns(_rndGuid);
-            _dataContext = new UserProfileContext(_userProfileSettings);
+            _dataContext = new UserProfileContext(_userProfileSettings, _userProfileSettingsUtil);
         }
 
         private UserProfileControl Open()

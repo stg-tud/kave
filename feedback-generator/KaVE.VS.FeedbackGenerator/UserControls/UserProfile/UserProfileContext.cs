@@ -19,7 +19,7 @@ using System.Collections;
 using System.ComponentModel;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.JetBrains.Annotations;
-using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.RS.Commons.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {
@@ -28,12 +28,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly UserProfileSettings _userProfileSettings;
+        private readonly IUserProfileSettingsUtils _util;
 
         private string _profileIdError;
 
-        public UserProfileContext(UserProfileSettings userProfileSettings)
+        public UserProfileContext(UserProfileSettings userProfileSettings, IUserProfileSettingsUtils util)
         {
             _userProfileSettings = userProfileSettings;
+            _util = util;
         }
 
         public string ProfileId
@@ -64,8 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 
         public void GenerateNewProfileId()
         {
-            _userProfileSettings.GenerateNewProfileId();
-            ProfileId = _userProfileSettings.ProfileId;
+            ProfileId = _util.CreateNewProfileId();
         }
 
         public Educations Education

@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using Moq;
 using NUnit.Framework;
@@ -30,6 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         private string _someGuid;
 
         private UserProfileSettings _userSettings;
+        private IUserProfileSettingsUtils _userSettingsUtil;
         private List<string> _updatedProperties;
 
         private UserProfileContext _sut;
@@ -43,12 +44,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             };
             _updatedProperties = new List<string>();
 
+            _userSettingsUtil = Mock.Of<IUserProfileSettingsUtils>();
+
             var newGuid = Guid.NewGuid();
             _someGuid = newGuid.ToString();
             var rnd = Mock.Of<IRandomizationUtils>();
             Mock.Get(rnd).Setup(r => r.GetRandomGuid()).Returns(newGuid);
 
-            _sut = new UserProfileContext(_userSettings);
+            _sut = new UserProfileContext(_userSettings, _userSettingsUtil);
 
             _sut.PropertyChanged += (sender, args) => { _updatedProperties.Add(args.PropertyName); };
         }

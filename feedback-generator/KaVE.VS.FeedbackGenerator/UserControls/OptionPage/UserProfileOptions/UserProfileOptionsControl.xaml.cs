@@ -25,8 +25,8 @@ using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
 using KaVE.Commons.Model.Events.UserProfiles;
-using KaVE.Commons.Utils;
 using KaVE.RS.Commons;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
@@ -59,7 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             IActionExecutor actionExecutor,
             DataContexts dataContexts,
             IMessageBoxCreator messageBoxCreator,
-            IRandomizationUtils rnd)
+            IUserProfileSettingsUtils userProfileUtils)
         {
             _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
@@ -70,11 +70,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
             InitializeComponent();
 
-            UserProfileSettings.EnsureProfileId();
+            userProfileUtils.EnsureProfileId();
 
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
 
-            _userProfileContext = new UserProfileContext(_userProfileSettings);
+            _userProfileContext = new UserProfileContext(_userProfileSettings, userProfileUtils);
             _userProfileContext.PropertyChanged += UserProfileContextOnPropertyChanged;
 
             DataContext = _userProfileContext;
