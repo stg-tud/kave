@@ -80,6 +80,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
+        public void HasBeenAskedToFillProfile_PropagationFromCode()
+        {
+            _userSettings.HasBeenAskedToFillProfile = true;
+            Assert.AreEqual(true, _sut.HasBeenAskedToFillProfile);
+        }
+
+        [Test]
         public void Education_PropagationFromCode()
         {
             _userSettings.Education = Educations.Training;
@@ -448,6 +455,41 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             _sut.ProfileId = "";
             _sut.GenerateNewProfileId();
             Assert.AreEqual(_someGuid, _sut.ProfileId);
+        }
+
+        [Test]
+        public void Validation_ByIndexer()
+        {
+            _sut.ProfileId = "1234567";
+            Assert.NotNull(_sut["ProfileId"]);
+            Assert.False(_sut.IsValid);
+        }
+
+        [Test]
+        public void Validation_ByError()
+        {
+            _sut.ProfileId = "1234567";
+            Assert.NotNull(_sut.Error);
+            Assert.False(_sut.IsValid);
+        }
+
+        [Test]
+        public void Validation_InvalidChars()
+        {
+            foreach (var c in new[] {'!', '?', '*'})
+            {
+                _sut.ProfileId = "12345678" + c;
+                Assert.NotNull(_sut.Error, string.Format("invalid character '{0}' was not detected", c));
+            }
+        }
+
+        [Test]
+        public void Validation_ValidExamples()
+        {
+            _sut.ProfileId = "azAZ09_-";
+            Assert.Null(_sut["ProfileId"]);
+            Assert.Null(_sut.Error);
+            Assert.True(_sut.IsValid);
         }
 
         private void AssertNotifications(params string[] expecteds)

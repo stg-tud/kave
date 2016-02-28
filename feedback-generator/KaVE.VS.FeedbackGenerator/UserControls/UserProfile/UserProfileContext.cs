@@ -17,6 +17,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings;
@@ -51,17 +52,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
         public bool HasBeenAskedToFillProfile
         {
             get { return _userProfileSettings.HasBeenAskedToFillProfile; }
-        }
-
-        public string ProfileIdError
-        {
-            get { return _profileIdError; }
-            set
-            {
-                _profileIdError = value;
-                OnPropertyChanged("ProfileIdError");
-                IsValid = value == null;
-            }
         }
 
         public void GenerateNewProfileId()
@@ -239,6 +229,48 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             }
         }
 
+        #region validation
+
+        public string this[string prop]
+        {
+            get { return "ProfileId".Equals(prop) ? ProfileIdError = ValidateProfileId() : null; }
+        }
+
+        private readonly Regex _validProfileIdMatcher = new Regex("^[a-zA-Z0-9_-]+$");
+
+        private string ValidateProfileId()
+        {
+            const int minChars = 8;
+            if (ProfileId == null || ProfileId != null && ProfileId.Length < minChars)
+            {
+                return string.Format("Profile id is too short (<{0} chars).", minChars);
+            }
+
+            if (!_validProfileIdMatcher.IsMatch(ProfileId))
+            {
+                return
+                    "Profile id contains invalid characters, only alpha-numeric characters as well as '_' and '-' are allowed.";
+            }
+
+            return null;
+        }
+
+        public string Error
+        {
+            get { return ValidateProfileId(); }
+        }
+
+        public string ProfileIdError
+        {
+            get { return _profileIdError; }
+            set
+            {
+                _profileIdError = value;
+                OnPropertyChanged("ProfileIdError");
+                IsValid = value == null;
+            }
+        }
+
         private bool _isValid;
 
         public bool IsValid
@@ -251,25 +283,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             }
         }
 
-        public string this[string prop]
-        {
-            get { return "ProfileId".Equals(prop) ? ProfileIdError = ValidateProfileId() : null; }
-        }
-
-        private string ValidateProfileId()
-        {
-            const int minChars = 5;
-            if (ProfileId == null || ProfileId != null && ProfileId.Length < minChars)
-            {
-                return string.Format("profile id is too short (<{0} chars)", minChars);
-            }
-
-            return null;
-        }
-
-        public string Error
-        {
-            get { return ValidateProfileId(); }
-        }
+        #endregion
     }
 }

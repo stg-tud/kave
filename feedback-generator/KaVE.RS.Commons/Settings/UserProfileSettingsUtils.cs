@@ -34,8 +34,6 @@ namespace KaVE.RS.Commons.Settings
         private readonly ISettingsStore _settingsStore;
         private readonly IRandomizationUtils _rnd;
 
-        private UserProfileSettings _userProfileSettings;
-
         public UserProfileSettingsUtils(ISettingsStore settingsStore, IRandomizationUtils rnd)
         {
             _settingsStore = settingsStore;
@@ -44,11 +42,11 @@ namespace KaVE.RS.Commons.Settings
 
         public void EnsureProfileId()
         {
-            _userProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
+            var settings = GetSettings();
             if (!HasProfileId)
             {
-                _userProfileSettings.ProfileId = CreateNewProfileId();
-                _settingsStore.SetSettings(_userProfileSettings);
+                settings.ProfileId = CreateNewProfileId();
+                _settingsStore.SetSettings(settings);
             }
         }
 
@@ -59,7 +57,11 @@ namespace KaVE.RS.Commons.Settings
 
         private bool HasProfileId
         {
-            get { return !"".Equals(_userProfileSettings.ProfileId); }
+            get
+            {
+                var profileId = GetSettings().ProfileId;
+                return !"".Equals(profileId);
+            }
         }
 
         public string CreateNewProfileId()
@@ -72,10 +74,10 @@ namespace KaVE.RS.Commons.Settings
             return _settingsStore.GetSettings<UserProfileSettings>();
         }
 
-        public void StoreSettings(UserProfileSettings userProfileSettings)
+        public void StoreSettings(UserProfileSettings settings)
         {
-            userProfileSettings.HasBeenAskedToFillProfile = true;
-            _settingsStore.SetSettings(_userProfileSettings);
+            settings.HasBeenAskedToFillProfile = true;
+            _settingsStore.SetSettings(settings);
         }
     }
 }

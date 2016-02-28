@@ -163,6 +163,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Settings\UserProfileSettingsUtilsTest.cs" />
     <Compile Include="Utils\FilePublisherTest.cs" />
     <Compile Include="Injectables\InjectablePBNRecommenderStoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
