@@ -55,17 +55,17 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
             if (!_userProfileSettingsUtils.HasBeenAskedToFillProfile())
             {
-                _uploadWizardWindowCreator.OpenUserProfileReminderDialog();
+                _uploadWizardWindowCreator.OpenUserProfile();
             }
             else
             {
                 if (HasContentToExport())
                 {
-                    _uploadWizardWindowCreator.OpenUploadWizardControl();
+                    _uploadWizardWindowCreator.OpenUploadWizard();
                 }
                 else
                 {
-                    _uploadWizardWindowCreator.OpenNothingToExportDialog();
+                    _uploadWizardWindowCreator.OpenNothingToExport();
                 }
             }
         }

@@ -31,11 +31,11 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 {
     public interface IUploadWizardWindowCreator
     {
-        void OpenUserProfileReminderDialog();
+        void OpenUserProfile();
 
-        void OpenUploadWizardControl();
+        void OpenUploadWizard();
 
-        void OpenNothingToExportDialog();
+        void OpenNothingToExport();
     }
 
     [ShellComponent]
@@ -59,13 +59,13 @@ namespace KaVE.VS.FeedbackGenerator.Menu
             _actionExecutor = actionExecutor;
         }
 
-        public void OpenUserProfileReminderDialog()
+        public void OpenUserProfile()
         {
             new UserProfileDialog(_actionExecutor, _settingsStore,
                 UploadWizardPolicy.OpenUploadWizardOnFinish).Show();
         }
 
-        public void OpenUploadWizardControl()
+        public void OpenUploadWizard()
         {
             var actExec = Registry.GetComponent<IActionExecutor>();
             var viewModel = new UploadWizardContext(
@@ -77,7 +77,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
             new UploadWizardControl(viewModel, _settingsStore, actExec).ShowDialog();
         }
 
-        public void OpenNothingToExportDialog()
+        public void OpenNothingToExport()
         {
             MessageBox.ShowInfo(UploadWizard.NothingToExport, UploadWizardMessages.Title);
         }
