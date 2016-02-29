@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="css/reset.css" />
 <link rel="stylesheet" type="text/css" href="css/growl/jquery.growl.css" />
 <link rel="stylesheet" type="text/css" href="css/feedback.css" />
-<title>Feedback Hochladen</title>
+<title>Uploading Captured IDE Interactions</title>
 </head>
 <body>
 	<noscript>
