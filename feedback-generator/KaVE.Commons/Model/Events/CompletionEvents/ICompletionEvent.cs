@@ -57,6 +57,9 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [NotNull]
         IKaVEList<IProposalSelection> Selections { get; }
 
+        [CanBeNull]
+        IProposal LastSelectedProposal { get; }
+
         /// <summary>
         ///     The kind of interaction that termined the completion, e.g., by a mouse click.
         /// </summary>

@@ -17,11 +17,9 @@
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using KaVE.Commons.Model.SSTs.Impl.Visitor;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.CompletionEvents
 {
@@ -36,6 +34,16 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
 
         [DataMember]
         public IKaVEList<IProposalSelection> Selections { get; set; }
+
+        public IProposal LastSelectedProposal
+        {
+            get
+            {
+                return Selections.Count > 0
+                    ? Selections.Last().Proposal
+                    : ProposalCollection.Proposals.FirstOrDefault();
+            }
+        }
 
         [DataMember]
         public Trigger TerminatedBy { get; set; }
@@ -58,13 +66,13 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         public void AddSelection([NotNull] IProposal proposal, int index = -1)
         {
             var selectedAfter = DateTime.Now - TriggeredAt;
-            Selections.Add(new ProposalSelection {Proposal = proposal, SelectedAfter = selectedAfter, Index = index });
+            Selections.Add(new ProposalSelection {Proposal = proposal, SelectedAfter = selectedAfter, Index = index});
         }
 
         private bool Equals(CompletionEvent other)
         {
             return base.Equals(other) && Equals(Context2, other.Context2) &&
-                   Equals(ProposalCollection, other.ProposalCollection) && 
+                   Equals(ProposalCollection, other.ProposalCollection) &&
                    Selections.SequenceEqual(other.Selections) && TerminatedBy == other.TerminatedBy &&
                    TerminatedState == other.TerminatedState;
         }

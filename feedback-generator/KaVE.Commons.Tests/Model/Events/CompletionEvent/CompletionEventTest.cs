@@ -158,5 +158,33 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
+
+        [Test]
+        public void GetLastSelectedProposal()
+        {
+            var pX = new Proposal {Name = Name.Get("3")};
+            var pY = new Proposal {Name = Name.Get("4")};
+
+            var p1 = new Proposal {Name = Name.Get("1")};
+            var p2 = new Proposal {Name = Name.Get("2")};
+            var s1 = new ProposalSelection {Proposal = p1};
+            var s2 = new ProposalSelection {Proposal = p2};
+
+            var sut = new ComplEvent();
+
+            // null by default
+            Assert.Null(sut.LastSelectedProposal);
+
+            sut.ProposalCollection = new ProposalCollection {pX, pY};
+
+            // sometime there is no selection, when the first proposal is directly applied
+            Assert.AreEqual(pX, sut.LastSelectedProposal);
+
+            sut.Selections = Lists.NewList<IProposalSelection>(s1);
+            Assert.AreEqual(p1, sut.LastSelectedProposal);
+
+            sut.Selections = Lists.NewList<IProposalSelection>(s1, s2);
+            Assert.AreEqual(p2, sut.LastSelectedProposal);
+        }
     }
 }
