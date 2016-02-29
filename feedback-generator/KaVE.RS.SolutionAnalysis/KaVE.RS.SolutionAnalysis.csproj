@@ -177,6 +177,9 @@
     <Compile Include="CleanUp\Filters\VersionFilter.cs" />
     <Compile Include="CommandLineLogger.cs" />
     <Compile Include="CompletionEventFilter.cs" />
+    <Compile Include="CompletionEventStatistics\CompletionEventStatisticsIo.cs" />
+    <Compile Include="CompletionEventStatistics\CompletionEventStatisticsLogger.cs" />
+    <Compile Include="CompletionEventStatistics\CompletionEventStatisticsRunner.cs" />
     <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunner.cs" />
     <Compile Include="CompletionEventToMicroCommits\IoHelper.cs" />
     <Compile Include="CompletionEventToMicroCommits\MicroCommitGenerator.cs" />

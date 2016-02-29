@@ -168,6 +168,9 @@
     <Compile Include="CleanUp\CleanUpRunnerTest.cs" />
     <Compile Include="CleanUp\Filters\VersionFilterTest.cs" />
     <Compile Include="CompletionEventFilterTest.cs" />
+    <Compile Include="CompletionEventStatistics\CompletionEventStatisticsIoTest.cs" />
+    <Compile Include="CompletionEventStatistics\CompletionEventStatisticsLoggerTest.cs" />
+    <Compile Include="CompletionEventStatistics\CompletionEventStatisticsRunnerTest.cs" />
     <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunnerTest.cs" />
     <Compile Include="CompletionEventToMicroCommits\IoHelperTest.cs" />
     <Compile Include="CompletionEventToMicroCommits\MicroCommitGeneratorTest.cs" />
