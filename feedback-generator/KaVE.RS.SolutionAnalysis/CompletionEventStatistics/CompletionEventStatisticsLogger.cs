@@ -96,10 +96,23 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventStatistics
             Console.WriteLine("How often was a method selected that was declared in each of the following types?");
             Console.WriteLine();
             Console.WriteLine("type\tassembly\tcount");
+
+            var totalApplies = 0;
+            var totalTypes = 0;
+
             foreach (var t in _counts.Keys)
             {
-                Console.WriteLine("{0}\t{1}\t{2}", t.FullName, t.Assembly, _counts[t]);
+                totalTypes++;
+                var numApplies = _counts[t];
+                totalApplies += numApplies;
+                Console.WriteLine("{0}\t{1}\t{2}", t.FullName, t.Assembly, numApplies);
             }
+
+            Console.WriteLine();
+            Console.WriteLine(
+                "overall, we have {0} applied completions that span over {1} different types",
+                totalApplies,
+                totalTypes);
         }
     }
 }

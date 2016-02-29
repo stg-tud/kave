@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Application;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using NUnit.Framework;
@@ -36,7 +34,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
         [Test]
         public void HappyPath()
         {
-            var zips = new [] {"a","b"}.ToList();
+            var zips = new[] {"a", "b"}.ToList();
             _sut.FoundZips(zips);
 
             foreach (var zip in zips)
