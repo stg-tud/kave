@@ -66,7 +66,7 @@ limitations under the License.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022; We will group your subsequent submissions, e.g., by matching your
-                        <Hyperlink Click="OnClickReview">profile id</Hyperlink>.
+                        <Hyperlink Click="OnClickUserProfile">profile id</Hyperlink>.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022; We plan to include your feedback in a public dataset that is part of scientific publications.
