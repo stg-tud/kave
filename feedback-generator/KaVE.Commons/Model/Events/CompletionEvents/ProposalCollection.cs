@@ -29,6 +29,11 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [DataMember]
         public IKaVEList<IProposal> Proposals { get; private set; }
 
+        public int Count
+        {
+            get { return Proposals.Count; }
+        }
+
         public ProposalCollection()
         {
             Proposals = Lists.NewList<IProposal>();

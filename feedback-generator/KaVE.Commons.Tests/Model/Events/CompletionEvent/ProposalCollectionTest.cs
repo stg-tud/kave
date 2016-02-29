@@ -27,6 +27,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         {
             var sut = new ProposalCollection();
             Assert.AreEqual(Lists.NewList<Proposal>(), sut.Proposals);
+            Assert.AreEqual(0, sut.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -39,6 +40,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
                 Proposals = {new Proposal()}
             };
             Assert.AreEqual(Lists.NewList(new Proposal()), sut.Proposals);
+            Assert.AreEqual(1, sut.Count);
         }
 
         [Test]

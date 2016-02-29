@@ -33,6 +33,8 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [NotNull]
         IKaVEList<IProposal> Proposals { get; }
 
+        int Count { get; }
+
         /// <summary>
         ///     Convenience method for collection initialization.
         /// </summary>
