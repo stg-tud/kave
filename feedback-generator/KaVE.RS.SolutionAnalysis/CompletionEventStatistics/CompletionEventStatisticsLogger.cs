@@ -43,23 +43,23 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventStatistics
         public void FoundZips(IList<string> zips)
         {
             _numTotal = zips.Count;
-            Console.WriteLine("Found {0} zips", _numTotal);
+            Log("Found {0} zips", _numTotal);
         }
 
         public void StartingZip(string zip)
         {
-            Console.WriteLine();
-            Console.WriteLine(
+            Log();
+            Log(
                 "### ({1}/{2}) Processing '{0}' -- {3:0.0}% #####################",
                 zip,
                 ++_current,
                 _numTotal,
-                _current/(0.01*_numTotal));
+                (_current - 1)/(0.01*_numTotal));
         }
 
         public void FoundAppliedCompletionEvents(IList<ICompletionEvent> ces)
         {
-            Console.Write("{0} applied proposals: ", ces.Count);
+            Log("{0} applied proposals: ", ces.Count);
         }
 
         private readonly Dictionary<ITypeName, int> _counts = new Dictionary<ITypeName, int>();
@@ -76,21 +76,23 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventStatistics
                 _counts[t] = 1;
             }
 
-            Console.Write('x');
+            Append("x");
         }
 
         public void FoundOtherProposal()
         {
-            Console.Write('.');
+            Append(".");
         }
 
         public void DoneWithZip()
         {
-            Console.WriteLine();
+            Log();
         }
 
         public void Done()
         {
+            Log("### done (100%) #####################");
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("How often was a method selected that was declared in each of the following types?");
@@ -113,6 +115,23 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventStatistics
                 "overall, we have {0} applied completions that span over {1} different types",
                 totalApplies,
                 totalTypes);
+        }
+
+        private static void Log()
+        {
+            Console.WriteLine();
+        }
+
+        private static void Log(string s, params object[] args)
+        {
+            Console.Write(DateTime.Now);
+            Console.Write(' ');
+            Console.WriteLine(s, args);
+        }
+
+        private static void Append(string s, params object[] args)
+        {
+            Console.Write(s, args);
         }
     }
 }

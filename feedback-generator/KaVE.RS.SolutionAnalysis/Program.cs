@@ -20,6 +20,7 @@ using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.RS.SolutionAnalysis.CleanUp;
 using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
@@ -55,9 +56,10 @@ namespace KaVE.RS.SolutionAnalysis
 
             /* data preparation */
             //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
-            //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
+            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunFailingRepoFinder();
-            RunApiStatisticsRunner();
+            //RunApiStatisticsRunner();
+            //RunCompletionEventStatistics();
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
@@ -76,6 +78,13 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
+        }
+
+        private static void RunCompletionEventStatistics()
+        {
+            var io = new CompletionEventStatisticsIo(DirEventsAll_SortedByUser);
+            var log = new CompletionEventStatisticsLogger();
+            new CompletionEventStatisticsRunner(io, log).Run();
         }
 
         private static void RunApiStatisticsRunner()
