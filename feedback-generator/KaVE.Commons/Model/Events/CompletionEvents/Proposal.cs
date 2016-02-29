@@ -47,5 +47,10 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
                 return 129487 + ((Name != null ? Name.GetHashCode() : 0)*397) ^ hcRelevance;
             }
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }

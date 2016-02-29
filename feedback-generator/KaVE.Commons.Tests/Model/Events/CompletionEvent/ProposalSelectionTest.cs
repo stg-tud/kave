@@ -16,6 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
@@ -112,10 +113,16 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         [Test]
         public void Equality_DifferentIndices()
         {
-            var a = new ProposalSelection { Index = 1 };
+            var a = new ProposalSelection {Index = 1};
             var b = new ProposalSelection();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new ProposalSelection());
         }
     }
 }

@@ -16,6 +16,7 @@
 
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
@@ -75,7 +76,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         {
             var a = new Proposal
             {
-                Name = Name.Get("a"),
+                Name = Name.Get("a")
             };
             var b = new Proposal();
             Assert.AreNotEqual(a, b);
@@ -101,6 +102,12 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             var b = new Proposal();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new Proposal());
         }
     }
 }
