@@ -9,9 +9,17 @@ form {
 	padding: 0;
 }
 
+.space{
+	margin-top: 10px;	
+}
+
+.it {
+	font-style: italic;
+}
+
 #content {
 	background:white;
-	width: 600px;
+	width: 720px;
 	padding: 20px;
 	border: 1px solid grey;	
 	-moz-border-radius: 15px;
@@ -30,29 +38,32 @@ h1 {
 	padding: 0;
 }
 
+p {
+	margin: 5px 0;
+}
+
+.spinner {
+	display: none;
+}
+
 #file {
 	margin-bottom: 10px;
 }
 
-#confirm {
-	float: left;
-}
-
 #hint {
-	float:left;
 	padding-left: 3px;
 	width: 95%;
-	fint-size:80%;
 }
 
 #submit-upload {
-	clear: left;
-	margin-top: 20px;
+	margin-top: 10px;
 }
 
 #footer {
 	margin:10px 0px 0px 0px;
 	font-size:80%;
+	border: 1px solid lightgray;
+	border-width: 1px 0 0 0;
 }
 
 #footer dt {
@@ -65,4 +76,22 @@ h1 {
 	float:left;
 	width:55%;
 	margin: 2px 0;
+}
+
+fieldset {
+	border: 1px solid lightgray;
+	margin: 10px 0 30px 0;
+	padding: 0 10px;
+}
+
+fieldset legend {
+	color: gray;
+	font-size: 80%;
+}
+
+
+li {
+	list-style-type: disc;
+	list-style-position: outside;
+	margin: 8px 0 8px 15px;
 }

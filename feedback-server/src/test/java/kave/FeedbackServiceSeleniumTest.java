@@ -83,7 +83,7 @@ public class FeedbackServiceSeleniumTest {
         whenConfirmationIsSelected();
         whenFormIsSubmitted();
 
-        thenResponseIs(growlNoticeLocator, "Die Datei wurde erfolgreich hochgeladen.");
+        thenResponseIs(growlNoticeLocator, "File upload was successful.");
         String fileName = findUploadedFileName();
         FeedbackServiceTest.assertDirectoryContainsZipFile(dataDir, fileName, fileToUpload);
     }
@@ -129,7 +129,7 @@ public class FeedbackServiceSeleniumTest {
         whenFormIsSubmitted();
 
         thenResponseIs(growlErrorLocator,
-                "Bitte stimmen Sie der Einverständniserklärung zu, bevor Sie die Datei hochladen.");
+                "Please confirm the disclaimer before submitting a file.");
     }
 
     @Test
@@ -139,7 +139,7 @@ public class FeedbackServiceSeleniumTest {
         whenFormIsSubmitted();
 
         thenResponseIs(growlErrorLocator,
-                "Bitte stimmen Sie der Einverständniserklärung zu, bevor Sie die Datei hochladen.");
+                "Please confirm the disclaimer before submitting a file.");
     }
 
     @Test
@@ -149,7 +149,7 @@ public class FeedbackServiceSeleniumTest {
         whenConfirmationIsSelected();
         whenFormIsSubmitted();
 
-        thenResponseIs(growlErrorLocator, "Es wurde keine Datei zum Hochladen ausgewählt. Bitte wählen Sie eine Datei.");
+        thenResponseIs(growlErrorLocator, "No file was selected.");
     }
 
     private void givenPageIsLoaded() {

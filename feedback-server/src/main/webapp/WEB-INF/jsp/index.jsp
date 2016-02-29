@@ -21,38 +21,63 @@
 				alt="KaVE-Projekt" src="images/kave_logo_with_title.png" />
 			</a>
 		</div>
-		<h1>Hochladen des Feedbacks</h1>
+	
+		<p>
+			You are now ready to hand in your captured IDE interactions! What data does this contain?
+                In short, we monitor how you use Visual Studio and capture some information to explain your actions.
+                For example, when you trigger IntelliSense, we capture information about the surrounding source code and your selected proposal.
+                Note that <span class="it">we do not capture any personal information!</span>
+		</p>
+		
+		<p>We are super happy that you want to upload your IDE interactions, but we need to make sure that you fully understand the following:</p>
 
-		<p>Diese Seite dient zum Hochladen von Benutzungsfeedback, das mit
-			dem &ldquo;KaVE Feedback Generator&rdquo; erzeugt und exportiert
-			wurde. Bitte w&auml;hlen Sie eine Feedback-Exportdatei aus,
-			best&auml;tigen Sie, dass Sie den Datenschutzhinweis gelesen haben
-			und klicken Sie auf &ldquo;Hochladen&rdquo;.</p>
+		 <fieldset>
+			<legend>Disclaimer</legend>
+		
+            <ul>
+                <li>We provide a <a href="http://www.kave.cc/documentation/event-generation">detailed explanation</a> of everything we capture and you can review the contents of the file you are about to upload.
+                	It is your responsibility to verify that the interactions you upload do not contain anything you don't want to share.
+                	We cannot identify your submission after the upload and so you have no way of revoking any of it.
+                 </li>
+                
+				<li>We will group your subsequent submissions, e.g., by matching your profile id.</li>
 
+                <li>We plan to include your feedback in a public dataset that is part of scientific publications.</li>
+
+                <li> We do not include any personal information in our feedback, but we cannot guarantee that third parties will not
+                        try to match the data with other publicly available information.</li>
+
+                <li class="important">Your submitted interactions dataset contains a simplified version of the source code you were working on.
+                            Make sure that you did not work on source code that must stay non-disclosed.</li>
+            </ul>
+        </fieldset>
+		
+	 	<h1>Uploading Captured IDE Interactions</h1>
+    
+       <p>You are almost done now! Select the file for upload and confirm the disclaimer:</p>
+
+
+		<img src="images/spinner.gif" class="spinner" />
 		<form id="file-upload-form" enctype="multipart/form-data">
-			<input type="file" id="file" name="file" /><br /> <input
-				type="checkbox" id="confirm" />
-			<div id="hint">
-				Mir ist bewusst, dass mein Feedback nach dem Klick auf "Hochladen"
-				auf dem Server hinterlegt wird. Das Feedback hat keinerlei
-				Personenbezug, weshalb auch ich anschlie&szlig;end nicht mehr darauf
-				zugreifen kann.<br />
-				<br />Das eingereichte Feedback kann nicht zu mir
-				zur&uuml;ckverfolgt werden.
-			</div>
-			<button id="submit-upload" disabled="disabled">Hochladen</button>
+			<input type="file" id="file" name="file" /><br />
+			<input type="checkbox" id="confirm" /><span> I carefully read the disclaimer, fully understand its implications, and confirm my agreement to it.</span><br />
+			<button id="submit-upload" disabled="disabled">Submit</button>
 		</form>
-		<hr />
-		<dl id="footer" class="cf">
-			<dt>Projektleiter:</dt>
-			<dd><a href="mailto:proksch@st.informatik.tu-darmstadt.de">Sebastian Proksch</a> (TU Darmstadt)</dd>
-			<dt>Allgemeiner Ansprechpartner:</dt>
-			<dd><a href="mailto:andreas-chr.fischer@datev.de">Andreas Fischer</a> (DATEV)</dd>
-			<dt>Administrativer Ansprechpartner:</dt>
-			<dd><a href="mailto:martin.kutter@datev.de">Martin Kutter</a> (DATEV)</dd>
-			<dt>Informationen zum KaVE-Projekt:</dt>
-			<dd><a href="http://www3.bk.datev.de/eprtl/dyn.ica?www.kave.cc" title="KaVE-Projekt-Webseite">KaVE Projekt Webseite</a></dd>
+
+
+		<div id="footer">
+
+		<p>If you have questions about any of this, please <a href="http://www.kave.cc/community">directly get in contact with us</a>.
+                We would love to hear from you and help with anything!
+                You can also use our <a href="http://www.kave.cc/feedback">anonymous feedback form</a>.</p>
+
+		<dl class="cf space">
+			<dt>Project lead / legal contact:</dt>
+			<dd><a href="http://www.stg.tu-darmstadt.de/staff/sebastian_proksch/">Sebastian Proksch</a></dd>
+			<dt>More Information:</dt>
+			<dd><a href="http://www.kave.cc">KaVE Project Website</a></dd>
 		</dl>
+		</div>
 	</div>
 </body>
 </html>

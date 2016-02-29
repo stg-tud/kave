@@ -10,10 +10,20 @@ require([], function() {
 	
 	function cbOk(msg) {
 		$.growl.notice({
-			"title":"Die Datei wurde erfolgreich hochgeladen.",
+			"title":msg,
 			"message":"",
 			"location":"tl"
 		})
+	}
+
+	function enableSpinner() {
+		$("#file-upload-form").hide()
+		$(".spinner").show()
+	}
+
+	function disableSpinner() {
+		$(".spinner").hide()
+		$("#file-upload-form").show()
 	}
 
 	$("#submit-upload").removeAttr("disabled")
@@ -24,21 +34,21 @@ require([], function() {
 		
 		var confirmation = $("#confirm")[0]
 		if (!confirmation.checked) {
-			cbFail("Bitte stimmen Sie der Einverständniserklärung zu, bevor Sie die Datei hochladen.")
+			cbFail("Please confirm the disclaimer before submitting a file.")
 			return
 		}
 		
 		var fileInput = $("#file")[0]
 		var files = fileInput.files
 		if (files.length == 0) {
-			cbFail("Es wurde keine Datei zum Hochladen ausgewählt. Bitte wählen Sie eine Datei.");
+			cbFail("No file was selected.");
 			return
 		} else if (files.length > 1) {
-			cbFail("Bitte nur eine Datei gleichzeitig auswählen.")
+			cbFail("Please select only one file at a time.")
 			return
 		}
 		
-		// TODO start a spinner here, for upload may take some time
+		enableSpinner()
 
 		var file = files[0]
 		var data = new FormData()
@@ -53,13 +63,15 @@ require([], function() {
 			processData: false,
 			contentType: false
 		}).done(function(r) {
+			disableSpinner()
 			if (r.status == "OK") {
-				cbOk("Die Datei wurde erfolgreich hochgeladen.")
+				cbOk("File upload was successful.")
 				$("#file-upload-form")[0].reset()
 			} else {
 				cbFail(r.message)
 			}
 		}).fail(function(r) {
+			disableSpinner()
 			cbFail(r.message)
 		})
 	})
