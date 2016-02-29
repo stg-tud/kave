@@ -38,8 +38,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class UploadCleanser {
 
-    public static final String EMPTY_FILE = "Die Datei ist leer oder enthält kein valides Feedback.";
-    public static final String NO_ZIP = "Keine valide Zip Datei";
+    public static final String EMPTY_FILE = "File is empty or does not contain valid interactions.";
+    public static final String NO_ZIP = "No valid .zip file provided";
 
     private UniqueFileCreator ufc;
     private ObjectMapper mapper;

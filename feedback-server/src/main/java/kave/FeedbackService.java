@@ -38,8 +38,8 @@ import com.sun.jersey.multipart.MultiPart;
 @Path("/")
 public class FeedbackService {
 
-    public static final String NO_SINGLE_UPLOAD = "Es muss eine einzelne Datei ausgewählt werden!";
-    public static final String UPLOAD_FAILED = "Der Upload ist fehlgeschlagen!";
+    public static final String NO_SINGLE_UPLOAD = "You can only upload one file at a time!";
+    public static final String UPLOAD_FAILED = "Upload failed!";
 
     private final File dataFolder;
     private final File tmpFolder;
