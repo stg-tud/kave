@@ -26,5 +26,12 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         {
             Assert.That(Name.UnknownName.IsUnknown);
         }
+
+        [Test]
+        public void ShouldImplementIsHashed()
+        {
+            Assert.IsFalse(TypeName.Get("System.Int32, mscore, 4.0.0.0").IsHashed);
+            Assert.IsTrue(TypeName.Get("pNX6Dym0JEkqjiMC-A8XnQ==.J5Ork5yYgIPYJrg19qjg5A==, 72launbJW34oSO9wR5XBdw==").IsHashed);
+        }
     }
 }

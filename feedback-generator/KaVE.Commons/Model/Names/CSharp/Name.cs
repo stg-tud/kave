@@ -36,6 +36,17 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return Equals(this, UnknownName); }
         }
 
+        public virtual bool IsHashed
+        {
+            // The hash of a substring of the name is the Base64-encoded MD5 hash of the original substring.
+            // Base64 works by encoding groups of 3 bytes. If the length of the input string is not divisible
+            // by three, Base64 will add padding bytes and add one '=' to the result string for each padded byte.
+            // Since MD5 produces strings of 16 bytes, there will always be two '=' at the end of a hashed substring.
+            // Because '==' can not be part of a valid unhashed name, we can then assume that a name containing '=='
+            // has been hashed by the anonymizer.
+            get { return Identifier.Contains("=="); }
+        }
+
         public static Name Get(string identifier)
         {
             return NameRegistry.GetOrCreate(identifier);

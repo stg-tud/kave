@@ -104,6 +104,11 @@ namespace KaVE.Commons.Tests.Utils.Collections
             {
                 get { return false; }
             }
+
+            public bool IsHashed
+            {
+                get { return false; }
+            }
         }
     }
 }

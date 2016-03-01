@@ -33,5 +33,10 @@ namespace KaVE.Commons.Model.Names
         ///     Tells if this instance refers to an unknown name.
         /// </summary>
         bool IsUnknown { get; }
+
+        /// <summary>
+        ///     True if parts of the identifier have been hashed by the anonymizer.
+        /// </summary>
+        bool IsHashed { get; }
     }
 }
