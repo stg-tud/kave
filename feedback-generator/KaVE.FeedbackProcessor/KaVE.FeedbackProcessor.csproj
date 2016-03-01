@@ -141,6 +141,8 @@
     <Compile Include="Model\Developer.cs" />
     <Compile Include="Model\DevelopmentHistory\SSTSnapshot.cs" />
     <Compile Include="Model\EventUtils.cs" />
+    <Compile Include="Names\NameScrapingUtils.cs" />
+    <Compile Include="Names\NameScrapingVisitor.cs" />
     <Compile Include="Properties\Configuration.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -210,6 +212,10 @@
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.VS.FeedbackGenerator\KaVE.VS.FeedbackGenerator.csproj">
+      <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
+      <Name>KaVE.VS.FeedbackGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
