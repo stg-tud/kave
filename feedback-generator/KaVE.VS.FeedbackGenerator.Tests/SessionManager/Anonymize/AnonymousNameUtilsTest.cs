@@ -535,7 +535,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             AssertAnonymizedEquals(original, expected);
         }
 
-        [Test]
+        // TODO: does this test make sense?
+        [Test, Ignore]
         public void ShouldAnonymizeMethodParametersIfDeclaringTypeIsFromEnclosingProject()
         {
             var original =
@@ -578,6 +579,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             var expected = LambdaName.Get("[TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] ()");
 
             AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldNotAnonymizeMethodsOrTheirParametersFromOtherAssemblies()
+        {
+            var original =
+                MethodName.Get("[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M([System.String, mscorlib, 4.0.0.0] p)");
+
+            AssertAnonymizedEquals(original, original);
         }
 
         private static void AssertAnonymizedEquals([NotNull] IName original, [NotNull] IName expected)

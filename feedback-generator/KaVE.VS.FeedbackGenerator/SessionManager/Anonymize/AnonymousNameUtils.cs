@@ -86,7 +86,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
         {
             var identifier = new StringBuilder();
             identifier.AppendFormat("[{0}] ", lambda.ReturnType.ToAnonymousName())
-                      .AppendParameters(lambda.Parameters);
+                      .AppendParameters(lambda.Parameters, true);
             return LambdaName.Get(identifier.ToString());
         }
 
@@ -96,18 +96,23 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.AppendAnonymousMemberName(method, method.ReturnType);
             identifier.AppendIf(method.HasTypeParameters, "`" + method.TypeParameters.Count);
             identifier.AppendTypeParameters(method);
-            identifier.AppendParameters(method.Parameters);
+            identifier.AppendParameters(method.Parameters, method.DeclaringType.IsDeclaredInEnclosingProjectOrUnknown());
             return MethodName.Get(identifier.ToString());
         }
 
-        private static void AppendParameters(this StringBuilder identifier, IEnumerable<IParameterName> parameterNames)
+        private static void AppendParameters(this StringBuilder identifier, IEnumerable<IParameterName> parameterNames, bool anonymizeNames)
         {
             identifier.Append("(");
-            identifier.Append(string.Join(", ", parameterNames.Select(p => p.ToAnonymousName())));
+            identifier.Append(string.Join(", ", parameterNames.Select(p => ToAnonymousName(p, anonymizeNames))));
             identifier.Append(")");
         }
 
         private static IParameterName ToAnonymousName(IParameterName parameter)
+        {
+            return ToAnonymousName(parameter, true);
+        }
+
+        private static IParameterName ToAnonymousName(IParameterName parameter, bool anonymizeName)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier + " ");
@@ -115,7 +120,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier + " ");
             identifier.AppendIf(parameter.HasPassByReferenceModifier(), ParameterName.PassByReferenceModifier + " ");
             identifier.AppendAnonymousTypeName(parameter.ValueType).Append(' ');
-            identifier.Append(parameter.Name.ToHash());
+            identifier.Append(anonymizeName ? parameter.Name.ToHash() : parameter.Name);
             return ParameterName.Get(identifier.ToString());
         }
 
@@ -207,7 +212,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.Append("] [");
             identifier.Append(type.DelegateType.ToAnonymousName());
             identifier.Append("].");
-            identifier.AppendParameters(type.Parameters);
+            identifier.AppendParameters(type.Parameters, true);
 
             return (DelegateTypeName) TypeName.Get(identifier.ToString());
         }
