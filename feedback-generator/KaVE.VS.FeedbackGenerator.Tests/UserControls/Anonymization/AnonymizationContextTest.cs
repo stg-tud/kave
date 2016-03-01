@@ -16,7 +16,6 @@
 
 using System.Collections.Generic;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using NUnit.Framework;
 
@@ -67,31 +66,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         {
             _sut.RemoveCodeNames = true;
             AssertNotifications("RemoveCodeNames");
-        }
-
-        [Test]
-        public void RemoveSessionIDs_PropagationFromCode()
-        {
-            _anonymizationSettings.RemoveSessionIDs = false;
-            Assert.False(_sut.RemoveSessionIDs);
-            _anonymizationSettings.RemoveSessionIDs = true;
-            Assert.True(_sut.RemoveSessionIDs);
-        }
-
-        [Test]
-        public void RemoveSessionIDs_PropagationToCode()
-        {
-            _sut.RemoveSessionIDs = false;
-            Assert.False(_anonymizationSettings.RemoveSessionIDs);
-            _sut.RemoveSessionIDs = true;
-            Assert.True(_anonymizationSettings.RemoveSessionIDs);
-        }
-
-        [Test]
-        public void RemoveSessionIDs_PropertyChange()
-        {
-            _sut.RemoveSessionIDs = true;
-            AssertNotifications("RemoveSessionIDs");
         }
 
         [Test]

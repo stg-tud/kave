@@ -37,7 +37,7 @@ limitations under the License.
 
         <StackPanel Margin="5">
             <TextBlock TextWrapping="Wrap">
-                You are now ready to hand in your captured IDE interactions! What data does this contain?
+                You are now ready to hand in the captured interactions with your IDE! What data does this contain?
                 In short, we monitor how you use Visual Studio and capture some information to explain your actions.
                 For example, when you trigger IntelliSense, we capture information about the surrounding source code and your selected proposal.
                 Note that <Italic>we do not capture any personal information!</Italic> If you want, you may also
@@ -56,29 +56,29 @@ limitations under the License.
                       Background="LightGray">
                 <StackPanel Margin="3,1,3,1">
                     <TextBlock TextWrapping="Wrap" Margin="0,2,0,0">
-                        We are super happy that you want to upload your IDE interactions, but we need to make sure that you fully understand the following:
+                        We are super happy that you want to submit your interactions, but we need to make sure that you fully understand the following:
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022;
                         We provide a <Hyperlink Click="OnClickEventDetails">detailed explanation</Hyperlink> of everything we capture and you can
-                        <Hyperlink Click="OnClickReview">review</Hyperlink> your interactions. It is your responsibility to verify that the interactions you upload
-                        do not contain anything you don't want to share. We cannot identify your submission after the upload and so you have no way of revoking any of it.
+                        <Hyperlink Click="OnClickReview">review</Hyperlink> the captured interactions. It is your responsibility to verify that the interactions you submit
+                        do not contain anything you don't want to share. We cannot identify your interactions after the submission and so you have no way of revoking any of it.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022; We will group your subsequent submissions, e.g., by matching your
                         <Hyperlink Click="OnClickUserProfile">profile id</Hyperlink>.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
-                        &#x2022; We plan to include your feedback in a public dataset that is part of scientific publications.
+                        &#x2022; We plan to include your interactions in a public dataset that is part of scientific publications.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
-                        &#x2022; We do not include any personal information in our feedback, but we cannot guarantee that third parties will not
+                        &#x2022; We do not include any personal information in the interactions, but we cannot guarantee that third parties will not
                         try to match the data with other publicly available information.
                     </TextBlock>
                     <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
                         &#x2022;
                         <Bold>
-                            Your submitted interactions dataset contains a simplified version of the source code you were working on.
+                            Some interactions contain a simplified version of the source code you were working on.
                             Make sure that you did not work on source code that must stay non-disclosed.
                         </Bold>
                     </TextBlock>
@@ -95,7 +95,7 @@ limitations under the License.
 
             <StackPanel Margin="0,15,0,0">
                 <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">
-                    You are almost done now! You have two options to provide your feedback:
+                    You are almost done now! You have two options to submit your interactions:
                 </TextBlock>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -114,7 +114,7 @@ limitations under the License.
                     <!-- -->
                     <TextBlock TextWrapping="Wrap" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"
                                HorizontalAlignment="Left">
-                        The feedback is locally exported to a compressed file, so you can review it. Afterward, you have to
+                        Interactions are exported to a local file, so you can review it. Afterward, you have to
                         <Hyperlink Click="OnClickManualUpload">manually upload the file</Hyperlink>.
                     </TextBlock>
                     <!-- -->
@@ -126,11 +126,11 @@ limitations under the License.
                     <TextBlock TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
                                Margin="0,4,0,0"
                                HorizontalAlignment="Left">
-                        The feedback is directly sent to our server. One click. Done.
+                        The interactions are directly sent to our server. One click. Done.
                     </TextBlock>
                 </Grid>
                 <TextBlock Margin="0,5,0,0">
-                    In both cases, the uploaded data is the same and the feedback will be deleted locally.
+                    In both cases, the uploaded data is the same and the interactions will be deleted locally.
                 </TextBlock>
             </StackPanel>
 

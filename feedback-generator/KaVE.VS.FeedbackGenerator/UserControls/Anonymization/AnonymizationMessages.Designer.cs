@@ -79,7 +79,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove identifier that originate in the currently opened solution (Please note: Selecting this options limits the usefulness of your feedback for us).
+        ///   Looks up a localized string similar to Remove identifier that originate in the currently opened solution (Please note: Selecting this option limits the usefulness of your feedback for us).
         /// </summary>
         public static string Label_RemoveCodeNames {
             get {

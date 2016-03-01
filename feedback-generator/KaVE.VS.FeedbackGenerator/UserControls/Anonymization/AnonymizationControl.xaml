@@ -28,26 +28,31 @@ limitations under the License.
         <TextBlock TextWrapping="Wrap" Text="{x:Static anonymization:AnonymizationMessages.Desc_Before}"
                    Margin="0,0,0,5" />
 
-        <CheckBox Name="RemoveCodeNamesCheckBox"
-                  IsChecked="{Binding Path=RemoveCodeNames}"
-                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0">
-            <TextBlock Text="{x:Static anonymization:AnonymizationMessages.Label_RemoveCodeNames}" TextWrapping="Wrap" />
-        </CheckBox>
+        <StackPanel Margin="5,0,0,0">
 
-        <CheckBox Name="RemoveStartTimesCheckBox"
-                  IsChecked="{Binding RemoveStartTimes}"
-                  Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveStartTimes}"
-                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0" />
+            <CheckBox Name="RemoveCodeNamesCheckBox"
+                      IsChecked="{Binding Path=RemoveCodeNames}"
+                      VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,6,0,0">
+                <TextBlock Text="{x:Static anonymization:AnonymizationMessages.Label_RemoveCodeNames}"
+                           TextWrapping="Wrap" />
+            </CheckBox>
 
-        <CheckBox Name="RemoveDurationsCheckBox"
-                  IsChecked="{Binding Path=RemoveDurations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveDurations}"
-                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0" />
 
-        <CheckBox Name="RemoveSessionIDsCheckBox"
+            <CheckBox Name="RemoveStartTimesCheckBox"
+                      IsChecked="{Binding RemoveStartTimes}"
+                      Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveStartTimes}"
+                      VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,6,0,0" />
+
+            <CheckBox Name="RemoveDurationsCheckBox"
+                      IsChecked="{Binding Path=RemoveDurations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveDurations}"
+                      VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,6,0,0" />
+
+            <!-- <CheckBox Name="RemoveSessionIDsCheckBox"
                   IsChecked="{Binding Path=RemoveSessionIDs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveSessionIDs}"
-                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0" />
+                  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0" /> -->
+        </StackPanel>
 
         <TextBlock TextWrapping="Wrap" Text="{x:Static anonymization:AnonymizationMessages.Desc_After}"
                    Margin="0,5,0,0" />

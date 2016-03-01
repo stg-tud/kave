@@ -16,7 +16,6 @@
 
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using NUnit.Framework;
 
@@ -35,7 +34,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
             {
                 RemoveStartTimes = false,
                 RemoveDurations = false,
-                RemoveSessionIDs = false,
                 RemoveCodeNames = false
             };
             _context = new AnonymizationContext(_anonymizationSettings);
@@ -52,7 +50,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
             var sut = OpenWindow();
             UserControlAssert.IsNotChecked(sut.RemoveStartTimesCheckBox);
             UserControlAssert.IsNotChecked(sut.RemoveDurationsCheckBox);
-            UserControlAssert.IsNotChecked(sut.RemoveSessionIDsCheckBox);
             UserControlAssert.IsNotChecked(sut.RemoveCodeNamesCheckBox);
         }
 
@@ -61,12 +58,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         {
             _anonymizationSettings.RemoveStartTimes = true;
             _anonymizationSettings.RemoveDurations = true;
-            _anonymizationSettings.RemoveSessionIDs = true;
             _anonymizationSettings.RemoveCodeNames = true;
             var sut = OpenWindow();
             UserControlAssert.IsChecked(sut.RemoveStartTimesCheckBox);
             UserControlAssert.IsChecked(sut.RemoveDurationsCheckBox);
-            UserControlAssert.IsChecked(sut.RemoveSessionIDsCheckBox);
             UserControlAssert.IsChecked(sut.RemoveCodeNamesCheckBox);
         }
 
@@ -77,7 +72,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
             _context.RemoveStartTimes = true;
             UserControlAssert.IsChecked(sut.RemoveStartTimesCheckBox);
             UserControlAssert.IsNotChecked(sut.RemoveDurationsCheckBox);
-            UserControlAssert.IsNotChecked(sut.RemoveSessionIDsCheckBox);
             UserControlAssert.IsNotChecked(sut.RemoveCodeNamesCheckBox);
         }
 
@@ -88,18 +82,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
             _context.RemoveDurations = true;
             UserControlAssert.IsNotChecked(sut.RemoveStartTimesCheckBox);
             UserControlAssert.IsChecked(sut.RemoveDurationsCheckBox);
-            UserControlAssert.IsNotChecked(sut.RemoveSessionIDsCheckBox);
-            UserControlAssert.IsNotChecked(sut.RemoveCodeNamesCheckBox);
-        }
-
-        [Test]
-        public void CheckboxesFromCode_RemoveSessionIDs()
-        {
-            var sut = OpenWindow();
-            _context.RemoveSessionIDs = true;
-            UserControlAssert.IsNotChecked(sut.RemoveStartTimesCheckBox);
-            UserControlAssert.IsNotChecked(sut.RemoveDurationsCheckBox);
-            UserControlAssert.IsChecked(sut.RemoveSessionIDsCheckBox);
             UserControlAssert.IsNotChecked(sut.RemoveCodeNamesCheckBox);
         }
 
@@ -110,7 +92,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
             _context.RemoveCodeNames = true;
             UserControlAssert.IsNotChecked(sut.RemoveStartTimesCheckBox);
             UserControlAssert.IsNotChecked(sut.RemoveDurationsCheckBox);
-            UserControlAssert.IsNotChecked(sut.RemoveSessionIDsCheckBox);
             UserControlAssert.IsChecked(sut.RemoveCodeNamesCheckBox);
         }
 
@@ -133,17 +114,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
             Assert.False(_anonymizationSettings.RemoveStartTimes);
             Assert.True(_anonymizationSettings.RemoveDurations);
             Assert.False(_anonymizationSettings.RemoveSessionIDs);
-            Assert.False(_anonymizationSettings.RemoveCodeNames);
-        }
-
-        [Test]
-        public void CheckboxesToCode_RemoveSessionIDs()
-        {
-            var sut = OpenWindow();
-            sut.RemoveSessionIDsCheckBox.Toggle();
-            Assert.False(_anonymizationSettings.RemoveStartTimes);
-            Assert.False(_anonymizationSettings.RemoveDurations);
-            Assert.True(_anonymizationSettings.RemoveSessionIDs);
             Assert.False(_anonymizationSettings.RemoveCodeNames);
         }
 

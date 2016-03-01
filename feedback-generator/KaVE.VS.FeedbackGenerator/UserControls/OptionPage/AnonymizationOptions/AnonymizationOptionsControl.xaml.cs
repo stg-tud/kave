@@ -133,12 +133,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions
 
             _ctx.SetBinding(
                 _lifetime,
-                (AnonymizationSettings s) => (bool?) s.RemoveSessionIDs,
-                Anonymization.RemoveSessionIDsCheckBox,
-                ToggleButton.IsCheckedProperty);
-
-            _ctx.SetBinding(
-                _lifetime,
                 (AnonymizationSettings s) => (bool?) s.RemoveStartTimes,
                 Anonymization.RemoveStartTimesCheckBox,
                 ToggleButton.IsCheckedProperty);

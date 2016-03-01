@@ -65,16 +65,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization
             }
         }
 
-        public bool RemoveSessionIDs
-        {
-            get { return _anonymizationSettings.RemoveSessionIDs; }
-            set
-            {
-                _anonymizationSettings.RemoveSessionIDs = value;
-                OnPropertyChanged("RemoveSessionIDs");
-            }
-        }
-
         public AnonymizationContext(AnonymizationSettings anonymizationSettings)
         {
             _anonymizationSettings = anonymizationSettings;
