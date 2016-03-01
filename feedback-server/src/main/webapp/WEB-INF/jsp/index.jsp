@@ -23,38 +23,38 @@
 		</div>
 	
 		<p>
-			You are now ready to hand in your captured IDE interactions! What data does this contain?
+			You are now ready to hand in the captured interactions with your IDE! What data does this contain?
                 In short, we monitor how you use Visual Studio and capture some information to explain your actions.
                 For example, when you trigger IntelliSense, we capture information about the surrounding source code and your selected proposal.
                 Note that <span class="it">we do not capture any personal information!</span>
 		</p>
 		
-		<p>We are super happy that you want to upload your IDE interactions, but we need to make sure that you fully understand the following:</p>
+		<p>We are super happy that you want to submit your interactions, but we need to make sure that you fully understand the following:</p>
 
 		 <fieldset>
 			<legend>Disclaimer</legend>
 		
             <ul>
-                <li>We provide a <a href="http://www.kave.cc/documentation/event-generation">detailed explanation</a> of everything we capture and you can review the contents of the file you are about to upload.
-                	It is your responsibility to verify that the interactions you upload do not contain anything you don't want to share.
-                	We cannot identify your submission after the upload and so you have no way of revoking any of it.
+                <li>We provide a <a href="http://www.kave.cc/documentation/event-generation">detailed explanation</a> of everything we capture and you can review the contents of the file you are about to submit.
+                	It is your responsibility to verify that the interactions you submit do not contain anything you don't want to share.
+                	We cannot identify your interactions after the submission and so you have no way of revoking any of it.
                  </li>
                 
 				<li>We will group your subsequent submissions, e.g., by matching your profile id.</li>
 
-                <li>We plan to include your feedback in a public dataset that is part of scientific publications.</li>
+                <li>We plan to include your interactions in a public dataset that is part of scientific publications.</li>
 
-                <li> We do not include any personal information in our feedback, but we cannot guarantee that third parties will not
+                <li> We do not include any personal information in the interactions, but we cannot guarantee that third parties will not
                         try to match the data with other publicly available information.</li>
 
-                <li class="important">Your submitted interactions dataset contains a simplified version of the source code you were working on.
+                <li class="important">Some interactions contain a simplified version of the source code you were working on.
                             Make sure that you did not work on source code that must stay non-disclosed.</li>
             </ul>
         </fieldset>
 		
-	 	<h1>Uploading Captured IDE Interactions</h1>
+	 	<h1>Submitting Captured IDE Interactions</h1>
     
-       <p>You are almost done now! Select the file for upload and confirm the disclaimer:</p>
+       <p>You are almost done now! Select the file for submission and confirm the disclaimer:</p>
 
 
 		<img src="images/spinner.gif" class="spinner" />

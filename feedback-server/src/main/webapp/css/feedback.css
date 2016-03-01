@@ -17,6 +17,10 @@ form {
 	font-style: italic;
 }
 
+.important {
+	font-weight: bold;
+}
+
 #content {
 	background:white;
 	width: 720px;
