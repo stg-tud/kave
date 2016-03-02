@@ -27,6 +27,7 @@ using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.AspectLook
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.RS.Commons.Utils.LookupItems;
 using KaVE.RS.Commons.Utils.Names;
 
 namespace KaVE.RS.Commons.Utils
@@ -64,12 +65,21 @@ namespace KaVE.RS.Commons.Utils
 
         private static IName GetName([NotNull] this ILookupItem lookupItem)
         {
-            return TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem) ??
+            return TryGetNameFromPBNProposal(lookupItem) ??
+                   TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem) ??
                    TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem) ??
                    TryGetNameFromLookupItem<MethodsInfo>(lookupItem) ??
                    TryGetNameFromConstructorInfoLookupItem(lookupItem) ??
                    TryGetNameFromCombinedLookupItem(lookupItem) ??
                    GetNameFromLookupItemIdentity(lookupItem);
+        }
+
+        private static IName TryGetNameFromPBNProposal(ILookupItem lookupItem)
+        {
+            var pbnItem = lookupItem as PBNProposalWrappedLookupItem;
+            return pbnItem != null
+                ? Name.Get(pbnItem.ToString())
+                : null;
         }
 
         private static IName TryGetNameFromLookupItem<T>(ILookupItem lookupItem) where T : class, ILookupItemInfo

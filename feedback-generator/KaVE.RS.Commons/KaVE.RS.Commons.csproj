@@ -135,6 +135,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
@@ -202,7 +203,9 @@
     <Compile Include="Injectables\InjectableIoUtils.cs" />
     <Compile Include="Utils\InvalidResponseException.cs" />
     <Compile Include="Utils\IPublisher.cs" />
-    <Compile Include="Utils\LookupItemUtils.cs" />
+    <Compile Include="Utils\LookupItems\AbstractWrappedLookupItem.cs" />
+    <Compile Include="Utils\LookupItems\LookupItemUtils.cs" />
+    <Compile Include="Utils\LookupItems\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />

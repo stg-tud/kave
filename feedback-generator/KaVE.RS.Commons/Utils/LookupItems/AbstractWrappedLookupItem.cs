@@ -24,7 +24,7 @@ using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 
-namespace KaVE.VS.FeedbackGenerator.CodeCompletion
+namespace KaVE.RS.Commons.Utils.LookupItems
 {
     public abstract class AbstractWrappedLookupItem : IWrappedLookupItem
     {

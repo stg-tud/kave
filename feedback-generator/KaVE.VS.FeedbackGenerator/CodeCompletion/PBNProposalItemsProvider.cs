@@ -25,14 +25,17 @@ using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Analysis;
 using KaVE.RS.Commons.Utils;
+using KaVE.RS.Commons.Utils.LookupItems;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
@@ -130,14 +133,14 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             }
         }
 
-        private static void WrapNewItems(GroupedItemsCollector collector, IEnumerable<CoReProposal> proposals)
+        private static void WrapNewItems(GroupedItemsCollector collector, CoReProposal[] proposals)
         {
             collector.ItemAdded +=
                 (candidate => ConditionallyAddWrappedLookupItem(collector, proposals, candidate));
         }
 
         private static void ConditionallyAddWrappedLookupItem(GroupedItemsCollector collector,
-            IEnumerable<CoReProposal> proposals,
+            CoReProposal[] proposals,
             ILookupItem candidate)
         {
             if (candidate is PBNProposalWrappedLookupItem)
@@ -159,33 +162,52 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         [CanBeNull]
         private static PBNProposalWrappedLookupItem GetWrappedLookupItemForMethods(
             LookupItem<MethodsInfo> candidate,
-            IEnumerable<CoReProposal> proposals)
+            CoReProposal[] coreProposals)
         {
-            var probabilities = candidate.ToProposals()
-                                         .Select(
-                                             candidateProposal =>
-                                                 proposals.FirstOrDefault(
-                                                     p => p.Name.Equals(candidateProposal.ToCoReName())))
-                                         .Where(matchingProposal => matchingProposal != null)
-                                         .Select(matchingProposal => matchingProposal.Probability);
+            var proposals = candidate.ToProposals();
+            var matches = Lists.NewList<IName>();
+            var probabilities2 = Lists.NewList<double>();
 
-            var presentedProbability = probabilities.GetPresentedProbability();
+            // for all proposals
+            foreach (var p in proposals)
+            {
+                // find the first prediction with matching name
+                var coreP = coreProposals.FirstOrDefault(NameMatches(p));
+                if (coreP != null)
+                {
+                    // remember the IName of the proposal
+                    if (p.Name != null)
+                    {
+                        matches.Add(p.Name);
+                    }
+                    // as well as the probability
+                    probabilities2.Add(coreP.Probability);
+                }
+            }
+
+            var presentedProbability = probabilities2.GetPresentedProbability();
             return presentedProbability.IsValidProbability()
-                ? new PBNProposalWrappedLookupItem(candidate, presentedProbability)
+                ? new PBNProposalWrappedLookupItem(candidate, presentedProbability, matches.FirstOrDefault())
                 : null;
+        }
+
+        private static Func<CoReProposal, bool> NameMatches(Proposal candidateProposal)
+        {
+            return p => p.Name.Equals(candidateProposal.ToCoReName());
         }
 
         [CanBeNull]
         private static PBNProposalWrappedLookupItem GetWrappedLookupItem(ILookupItem candidate,
             IEnumerable<CoReProposal> proposals)
         {
-            var representation = candidate.ToProposal().ToCoReName();
+            var proposal = candidate.ToProposal();
+            var representation = proposal.ToCoReName();
             if (representation != null)
             {
                 var matchingProposal = proposals.FirstOrDefault(p => p.Name.Equals(representation));
                 if (matchingProposal != null)
                 {
-                    return new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability);
+                    return new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability, proposal.Name);
                 }
             }
 

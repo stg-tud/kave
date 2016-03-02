@@ -21,15 +21,18 @@ using JetBrains.UI.Icons;
 using JetBrains.UI.Icons.ColorIcons;
 using JetBrains.UI.Icons.ComposedIcons;
 using JetBrains.UI.RichText;
+using KaVE.Commons.Model.Names;
 
-namespace KaVE.VS.FeedbackGenerator.CodeCompletion
+namespace KaVE.RS.Commons.Utils.LookupItems
 {
-    internal class PBNProposalWrappedLookupItem : AbstractWrappedLookupItem
+    public class PBNProposalWrappedLookupItem : AbstractWrappedLookupItem
     {
+        private readonly IName _name;
         private readonly int _probability;
 
-        public PBNProposalWrappedLookupItem(ILookupItem wrappedItem, double probability)
+        public PBNProposalWrappedLookupItem(ILookupItem wrappedItem, double probability, IName name)
         {
+            _name = name;
             Item = wrappedItem;
             _probability = (int) (probability*100);
         }
@@ -76,6 +79,11 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
                 var probStyle = new TextStyle {ForegroundColor = Color.Gray};
                 return original.Append(" (" + _probability + "%)", probStyle);
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("rec({0}%):{1}", _probability, _name.Identifier);
         }
     }
 }

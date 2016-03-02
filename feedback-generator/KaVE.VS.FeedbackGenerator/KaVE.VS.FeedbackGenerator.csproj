@@ -199,7 +199,6 @@
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CodeCompletion\AbstractWrappedLookupItem.cs" />
     <Compile Include="Generators\ReSharper\ActionEventGenerator.cs" />
     <Compile Include="Generators\UserProfileEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\EditEventGenerator.cs" />
@@ -208,7 +207,6 @@
     <Compile Include="Generators\VisualStudio\EditEventGenerators\RetryRunner.cs" />
     <Compile Include="Generators\OldEventLogAutoResubmitter.cs" />
     <Compile Include="Menu\AboutAction.cs" />
-    <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGenerator.cs" />
