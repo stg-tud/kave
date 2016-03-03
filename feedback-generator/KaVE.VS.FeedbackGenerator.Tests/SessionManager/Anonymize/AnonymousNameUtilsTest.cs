@@ -259,7 +259,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
                 TypeName.Get("MyTypeFromEnclosingProject`1[[T -> System.Int32, mscorlib, 4.0.0.0]], EnclosingProject");
             var expected =
                 TypeName.Get(
-                    "yqUUbRFTqfCBIMxMRH-qDA==`1[[T -> System.Int32, mscorlib, 4.0.0.0]], qfFVtSOtve-XEFJXWTbfXw==");
+                    "yqUUbRFTqfCBIMxMRH-qDA==`1[[TM6pgLI0nE5n0EEgAKIIFw== -> System.Int32, mscorlib, 4.0.0.0]], qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -535,20 +535,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             AssertAnonymizedEquals(original, expected);
         }
 
-        // TODO: does this test make sense?
-        [Test, Ignore]
-        public void ShouldAnonymizeMethodParametersIfDeclaringTypeIsFromEnclosingProject()
-        {
-            var original =
-                MethodName.Get(
-                    "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M(out [PT, EP] param, [System.Int32, mscorlib, 1.2.3.4] i)");
-            var expected =
-                MethodName.Get(
-                    "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M(out [pEEvI7rARBUkjhWn3Z2_iA==, vW8RYxLbF7t21szDOJMe_w==] VXJVO3bbssiJPh7IxnsH9Q==, [System.Int32, mscorlib, 1.2.3.4] I02GyMpYQW3zeQjZfIDckw==)");
-
-            AssertAnonymizedEquals(original, expected);
-        }
-
         [Test]
         public void ShouldAnonymizeMethodTypeParametersIfDeclaredInEnclosingProject()
         {
@@ -589,6 +575,94 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 
             AssertAnonymizedEquals(original, original);
         }
+
+        [Test]
+        public void AnonymizedMethodsHaveParametersWithHashedNamesButUnhashedTypes()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [T,P].M([T, A, 1.2.3.4] p)");
+            var expected =
+                MethodName.Get(
+                    "[T, A, 1.2.3.4] [TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==([T, A, 1.2.3.4] xBzbwjgZ_3fD0cNcmbedKA==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldOnlyAnonymizeParameterTypeInMethodFromOtherAssembly()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [T, A, 1.2.3.4].M([T,P] p)");
+            var expected =
+                MethodName.Get(
+                    "[T, A, 1.2.3.4] [T, A, 1.2.3.4].M([TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==] p)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldNotAnonymizeConstructorName()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [DT, P]..ctor([T,P] p, [T,A,4.0.0.0] p2)");
+            var expected =
+                MethodName.Get(
+                    "[T, A, 1.2.3.4] [UP5Ipka5g2hTcMU6LNvz2A==, aUaDMpYpDqsiSh5nQjiWFw==]..ctor([TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==] xBzbwjgZ_3fD0cNcmbedKA==, [T, A,4.0.0.0] UIuXc44R1FaeNKJ8ldQB7A==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldNotAnonymizeStaticConstructorName()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [DT, P]..cctor([T,P] p, [T,A,4.0.0.0] p2)");
+            var expected =
+                MethodName.Get(
+                    "[T, A, 1.2.3.4] [UP5Ipka5g2hTcMU6LNvz2A==, aUaDMpYpDqsiSh5nQjiWFw==]..cctor([TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==] xBzbwjgZ_3fD0cNcmbedKA==, [T, A,4.0.0.0] UIuXc44R1FaeNKJ8ldQB7A==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        #region anonymization of generic type parameters
+
+        [Test]
+        public void ShouldAnonymizeGenericTypeParameter_UnboundGenericInEnclosingProject()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [C`1[[G2]], P].M([G2] p)");
+            var expected =
+                MethodName.Get(
+                    "[T, A, 1.2.3.4] [3Rx860ySZTppa3kHpN1N8Q==`1[[HAqGEOJc_-qPti2JYHwR3Q==]], aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==([HAqGEOJc_-qPti2JYHwR3Q==] xBzbwjgZ_3fD0cNcmbedKA==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeGenericTypeParameter_UnboundGenericAssignedToPlaceholder()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> G2]], A, 0.0.0.0].M([G1] p)");
+            var expected = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> HAqGEOJc_-qPti2JYHwR3Q==]], A, 0.0.0.0].M([G1] p)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeGenericTypeParameter_BoundGenericInEnclosingProject()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [C`1[[G2 -> T, A, 0.0.0.0]], P].M([G2] p)");
+            var expected =
+                MethodName.Get(
+                    "[T, A, 1.2.3.4] [3Rx860ySZTppa3kHpN1N8Q==`1[[HAqGEOJc_-qPti2JYHwR3Q== -> T, A, 0.0.0.0]], aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==([HAqGEOJc_-qPti2JYHwR3Q==] xBzbwjgZ_3fD0cNcmbedKA==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeGenericTypeParameter_BoundGenericInAssembly()
+        {
+            var original = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> T, A, 0.0.0.0]], A, 0.0.0.0].M([G1] p)");
+            var expected = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> T, A, 0.0.0.0]], A, 0.0.0.0].M([G1] p)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        #endregion
 
         private static void AssertAnonymizedEquals([NotNull] IName original, [NotNull] IName expected)
         {
