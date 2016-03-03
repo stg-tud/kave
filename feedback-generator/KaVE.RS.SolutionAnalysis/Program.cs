@@ -82,7 +82,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void RunCompletionEventStatistics()
         {
-            var io = new CompletionEventStatisticsIo(DirEventsAll_SortedByUser);
+            var io = new CompletionEventStatisticsIo(DirEventsAll_Clean);
             var log = new CompletionEventStatisticsLogger();
             new CompletionEventStatisticsRunner(io, log).Run();
         }
@@ -109,6 +109,7 @@ namespace KaVE.RS.SolutionAnalysis
                 Filters =
                 {
                     new VersionFilter(900),
+                    new NoSessionIdFilter(),
                     new NoTimeFilter(),
                     new InvalidCompletionEventFilter()
                 }

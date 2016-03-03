@@ -166,6 +166,7 @@
     <Compile Include="CleanUp\CleanUpIoTest.cs" />
     <Compile Include="CleanUp\CleanUpLoggerTest.cs" />
     <Compile Include="CleanUp\CleanUpRunnerTest.cs" />
+    <Compile Include="CleanUp\Filters\NoSessionIdFilterTest.cs" />
     <Compile Include="CleanUp\Filters\VersionFilterTest.cs" />
     <Compile Include="CompletionEventFilterTest.cs" />
     <Compile Include="CompletionEventStatistics\CompletionEventStatisticsIoTest.cs" />
