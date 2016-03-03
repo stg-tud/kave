@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
@@ -456,13 +457,18 @@ namespace KaVE.RS.Commons.Utils.Names
             {
                 assembly = containingAssembly.AssemblyName;
             }
-            return assembly != null ? assembly.NameAndVersion() : module.Name;
+            return assembly != null ? assembly.NameAndVersion() : SanitizeAssemblyName(module.Name);
         }
 
         [NotNull]
         private static string NameAndVersion([NotNull] this AssemblyNameInfo assemblyName)
         {
-            return string.Format("{0}, {1}", assemblyName.Name, assemblyName.Version);
+            return string.Format("{0}, {1}", SanitizeAssemblyName(assemblyName.Name), assemblyName.Version);
+        }
+
+        public static string SanitizeAssemblyName(string input)
+        {
+            return Regex.Replace(input, "[^a-zA-Z0-9._-]", "_");
         }
 
         private static void AppendParameters(this StringBuilder identifier,

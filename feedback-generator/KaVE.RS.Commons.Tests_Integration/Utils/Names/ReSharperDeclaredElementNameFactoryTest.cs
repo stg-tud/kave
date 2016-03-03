@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite;
+using KaVE.RS.Commons.Utils.Names;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -100,6 +101,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Names
                 VarDecl("n", TypeName.Get(type)),
                 Assign("n", InvokeCtor(MethodName.Get(ctor))),
                 ExprStmt(new CompletionExpression()));
+        }
+
+        [TestCase("KaVE.Commons", "KaVE.Commons"), TestCase("0123456789_-", "0123456789_-"),
+         TestCase("()[]{}=, ", "_________"), TestCase("äöü", "___")]
+        public void SanitizeAssemblyName(string input, string expected)
+        {
+            Assert.AreEqual(expected, ReSharperDeclaredElementNameFactory.SanitizeAssemblyName(input));
         }
     }
 }
