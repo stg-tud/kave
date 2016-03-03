@@ -60,10 +60,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             var clone = ideEvent.ToCompactJson().ParseJsonTo<IDEEvent>();
             var settings = _settingsStore.GetSettings<AnonymizationSettings>();
             var anonymizer = GetAnonymizerFor(ideEvent.GetType());
-            if (settings.RemoveSessionIDs)
-            {
-                anonymizer.AnonymizeSessionUUID(clone);
-            }
             if (settings.RemoveStartTimes)
             {
                 anonymizer.AnonymizeStartTimes(clone);

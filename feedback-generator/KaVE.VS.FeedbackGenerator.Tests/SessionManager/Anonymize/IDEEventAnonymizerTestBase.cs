@@ -92,13 +92,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ShouldRemoveSessionUUIDWhenRespectiveOptionIsSet()
+        public void ShouldNotRemoveSessionUUIDWhenRespectiveOptionIsSet()
         {
+            // we removed this option in March 2016, but left it in the options to show a warning dialog that also disables the option.
+            // this test ensures that the session id is in fact never removed on export, even if a developers hacks the settings file.
+
             AnonymizationSettings.RemoveSessionIDs = true;
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.IsNull(actual.IDESessionUUID);
+            Assert.NotNull(actual.IDESessionUUID);
+            Assert.AreEqual(OriginalEvent.IDESessionUUID, actual.IDESessionUUID);
         }
 
         [Test]

@@ -20,11 +20,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {
     internal class IDEEventAnonymizer
     {
-        public void AnonymizeSessionUUID(IDEEvent ideEvent)
-        {
-            ideEvent.IDESessionUUID = null;
-        }
-
         public virtual void AnonymizeStartTimes(IDEEvent ideEvent)
         {
             ideEvent.TriggeredAt = null;
