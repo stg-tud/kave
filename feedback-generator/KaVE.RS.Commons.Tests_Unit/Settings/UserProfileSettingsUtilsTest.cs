@@ -46,7 +46,17 @@ namespace KaVE.RS.Commons.Tests_Unit.Settings
         }
 
         [Test]
-        public void EnsureIdCreatesInitialValue()
+        public void EnsureIdCreatesInitialValue_Null()
+        {
+            _settings.ProfileId = null;
+            _sut.EnsureProfileId();
+
+            Assert.AreEqual(_rndGuid.ToString(), _settings.ProfileId);
+            Mock.Get(_settingsStore).Verify(ss => ss.SetSettings(_settings));
+        }
+
+        [Test]
+        public void EnsureIdCreatesInitialValue_Empty()
         {
             _settings.ProfileId = "";
             _sut.EnsureProfileId();

@@ -60,7 +60,7 @@ namespace KaVE.RS.Commons.Settings
             get
             {
                 var profileId = GetSettings().ProfileId;
-                return !"".Equals(profileId);
+                return !string.IsNullOrEmpty(profileId);
             }
         }
 
