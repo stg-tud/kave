@@ -196,7 +196,7 @@
     <Compile Include="Generators\Activity\MouseActivityEventGenerator.cs" />
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
     <Compile Include="Generators\VisualStudio\SystemEventGenerator.cs" />
-    <Compile Include="Settings\SessionIdAnonymizationSettingsDisabler.cs" />
+    <Compile Include="Settings\ForcedSettingUpdateNotificator.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>
     </Compile>
@@ -294,8 +294,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnonymizationOptionsMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\SessionAnonymizationUpdate\SessionAnonymizationUpdate.xaml.cs">
-      <DependentUpon>SessionAnonymizationUpdate.xaml</DependentUpon>
+    <Compile Include="UserControls\ForcedSettingUpdateNotifications\ForcedSettingUpdateNotifications.xaml.cs">
+      <DependentUpon>ForcedSettingUpdateNotifications.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ValueConverter\BooleanToVisibilityConverter.cs" />
     <Compile Include="UserControls\ValueConverter\StringToVisibilityConverter.cs" />
@@ -540,7 +540,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\SessionAnonymizationUpdate\SessionAnonymizationUpdate.xaml">
+    <Page Include="UserControls\ForcedSettingUpdateNotifications\ForcedSettingUpdateNotifications.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

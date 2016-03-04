@@ -22,23 +22,28 @@ using NUnit.Framework;
 namespace KaVE.VS.FeedbackGenerator.Tests.Settings
 {
     [RequiresSTA]
-    internal class SessionIdAnonymizationSettingsDisablerTest
+    internal class ForcedSettingUpdateNotificatorTest
     {
         private ISettingsStore _store;
+        private IUserProfileSettingsUtils _profileUtils;
         private AnonymizationSettings _settings;
+        private UserProfileSettings _profile;
 
         [SetUp]
         public void SetUp()
         {
             _store = Mock.Of<ISettingsStore>();
+            _profileUtils = Mock.Of<IUserProfileSettingsUtils>();
             _settings = new AnonymizationSettings();
+            _profile = new UserProfileSettings();
             Mock.Get(_store).Setup(s => s.GetSettings<AnonymizationSettings>()).Returns(_settings);
+            Mock.Get(_store).Setup(s => s.GetSettings<UserProfileSettings>()).Returns(_profile);
         }
 
         private void Init()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new SessionIdAnonymizationSettingsDisabler(_store);
+            new ForcedSettingUpdateNotificator(_store, _profileUtils);
         }
 
         [Test]
@@ -62,6 +67,41 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
             Assert.False(_settings.RemoveSessionIDs);
             Mock.Get(_store).Verify(s => s.GetSettings<AnonymizationSettings>());
             Mock.Get(_store).Verify(s => s.SetSettings(_settings));
+        }
+
+        [Test]
+        public void NothinHappensIfProfileIdIsSet()
+        {
+            _profile.ProfileId = "x";
+
+            Init();
+
+            Assert.AreEqual("x", _profile.ProfileId);
+            Mock.Get(_store).Verify(s => s.GetSettings<UserProfileSettings>());
+            Mock.Get(_store).Verify(s => s.SetSettings(_settings), Times.Never);
+            Mock.Get(_profileUtils).Verify(s => s.EnsureProfileId(), Times.Never);
+        }
+
+        [Test]
+        public void EnsuresProfileIdIfNotSet_Null()
+        {
+            _profile.ProfileId = null;
+
+            Init();
+
+            Mock.Get(_store).Verify(s => s.GetSettings<UserProfileSettings>());
+            Mock.Get(_profileUtils).Verify(s => s.EnsureProfileId());
+        }
+
+        [Test]
+        public void EnsuresProfileIdIfNotSet_Empty()
+        {
+            _profile.ProfileId = "";
+
+            Init();
+
+            Mock.Get(_store).Verify(s => s.GetSettings<UserProfileSettings>());
+            Mock.Get(_profileUtils).Verify(s => s.EnsureProfileId());
         }
     }
 }
