@@ -25,41 +25,128 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
     [RequiresSTA]
     internal class FirstStartNotificatorTest
     {
-        private KaVESettings _settings;
-        private ISettingsStore _settingsStore;
+        private KaVESettings _kaveSettings;
         private ISimpleWindowOpener _windows;
+        private ISettingsStore _store;
+        private IUserProfileSettingsUtils _profileUtils;
+        private UserProfileSettings _profileSettings;
+        private AnonymizationSettings _anonSettings;
+
 
         [SetUp]
         public void Setup()
         {
-            _settings = new KaVESettings();
+            _kaveSettings = new KaVESettings();
+            _anonSettings = new AnonymizationSettings();
+            _profileSettings = new UserProfileSettings();
+            _profileUtils = Mock.Of<IUserProfileSettingsUtils>();
 
-            _settingsStore = Mock.Of<ISettingsStore>();
-            Mock.Get(_settingsStore).Setup(ss => ss.GetSettings<KaVESettings>()).Returns(_settings);
+            _store = Mock.Of<ISettingsStore>();
+            Mock.Get(_store).Setup(ss => ss.GetSettings<KaVESettings>()).Returns(_kaveSettings);
+            Mock.Get(_store).Setup(s => s.GetSettings<AnonymizationSettings>()).Returns(_anonSettings);
+            Mock.Get(_store).Setup(s => s.GetSettings<UserProfileSettings>()).Returns(_profileSettings);
 
             _windows = Mock.Of<ISimpleWindowOpener>();
+
+            // setting valid values that should not be notified
+            _anonSettings.RemoveSessionIDs = false;
+            _profileSettings.ProfileId = "x";
+        }
+
+        private void Init()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new FirstStartNotificator(_windows, _store, _profileUtils);
         }
 
         [Test]
         public void SettingIsSetOnFirstStart()
         {
-            _settings.IsFirstStart = true;
-            // ReSharper disable once ObjectCreationAsStatement
-            new FirstStartNotificator(_settingsStore, _windows);
-            Mock.Get(_settingsStore).Verify(ss => ss.SetSettings(_settings));
-            Assert.False(_settings.IsFirstStart);
-            Mock.Get(_windows).Verify(w => w.OpenFirstStartWindow());
+            _kaveSettings.IsFirstStart = true;
+            _anonSettings.RemoveSessionIDs = true;
+            _profileSettings.ProfileId = null;
+
+            Init();
+
+            AssertIsFirstStart(true, true);
+            AssertProfileId(true, false);
+            AssertSessionId(true, false);
         }
 
         [Test]
-        public void SettingIsNotChangedOnSecondStart()
+        public void NothingIsDoneIfEverythingIsCorrect()
         {
-            _settings.IsFirstStart = false;
-            // ReSharper disable once ObjectCreationAsStatement
-            new FirstStartNotificator(_settingsStore, _windows);
-            Mock.Get(_settingsStore).Verify(ss => ss.SetSettings(_settings), Times.Never);
-            Assert.False(_settings.IsFirstStart);
-            Mock.Get(_windows).Verify(w => w.OpenFirstStartWindow(), Times.Never);
+            Init();
+
+            AssertIsFirstStart(false, false);
+            AssertProfileId(false, false);
+            AssertSessionId(false, false);
+        }
+
+
+        [Test]
+        public void SessionIdIsSetAndReminded()
+        {
+            _anonSettings.RemoveSessionIDs = true;
+
+            Init();
+
+            AssertIsFirstStart(false, false);
+            AssertProfileId(false, false);
+            AssertSessionId(true, true);
+        }
+
+        [Test]
+        public void ProfileIdIsSetAndReminded_null()
+        {
+            _profileSettings.ProfileId = null;
+
+            Init();
+
+            AssertIsFirstStart(false, false);
+            AssertProfileId(true, true);
+            AssertSessionId(false, false);
+        }
+
+        [Test]
+        public void ProfileIdIsSetAndReminded_empty()
+        {
+            _profileSettings.ProfileId = "";
+
+            Init();
+
+            AssertIsFirstStart(false, false);
+            AssertProfileId(true, true);
+            AssertSessionId(false, false);
+        }
+
+        private void AssertIsFirstStart(bool shouldSet, bool shouldOpen)
+        {
+            var timesSet = shouldSet ? Times.Once() : Times.Never();
+            var timesOpen = shouldOpen ? Times.Once() : Times.Never();
+            Mock.Get(_store).Verify(ss => ss.SetSettings(_kaveSettings), timesSet);
+            Mock.Get(_windows).Verify(w => w.OpenFirstStartWindow(), timesOpen);
+            Assert.False(_kaveSettings.IsFirstStart);
+        }
+
+
+        private void AssertSessionId(bool shouldSet, bool shouldOpen)
+        {
+            var timesSet = shouldSet ? Times.Once() : Times.Never();
+            var timesOpen = shouldOpen ? Times.Once() : Times.Never();
+            Mock.Get(_store).Verify(ss => ss.SetSettings(_anonSettings), timesSet);
+            Mock.Get(_windows)
+                .Verify(w => w.OpenForcedSettingUpdateWindow(FirstStartNotificator.SessionIdText), timesOpen);
+            Assert.False(_anonSettings.RemoveSessionIDs);
+        }
+
+        private void AssertProfileId(bool shouldSet, bool shouldOpen)
+        {
+            var timesSet = shouldSet ? Times.Once() : Times.Never();
+            var timesOpen = shouldOpen ? Times.Once() : Times.Never();
+            Mock.Get(_profileUtils).Verify(u => u.EnsureProfileId(), timesSet);
+            Mock.Get(_windows)
+                .Verify(w => w.OpenForcedSettingUpdateWindow(FirstStartNotificator.ProfileIdText), timesOpen);
         }
     }
 }

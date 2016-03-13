@@ -18,7 +18,7 @@ using JetBrains.Application.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
-    [SettingsKey(typeof(FeedbackSettings), "Kave Feedback-Anonymization Settings")]
+    [SettingsKey(typeof (FeedbackSettings), "Kave Feedback-Anonymization Settings")]
     public class AnonymizationSettings
     {
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveCodeNames")]

@@ -197,7 +197,6 @@
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
     <Compile Include="Generators\VisualStudio\SystemEventGenerator.cs" />
     <Compile Include="Settings\FirstStartNotificator.cs" />
-    <Compile Include="Settings\ForcedSettingUpdateNotificator.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>
     </Compile>
