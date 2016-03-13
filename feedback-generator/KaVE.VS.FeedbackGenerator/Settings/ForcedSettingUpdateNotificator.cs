@@ -16,7 +16,7 @@
 
 using JetBrains.Application;
 using KaVE.RS.Commons.Settings;
-using KaVE.VS.FeedbackGenerator.UserControls.ForcedSettingUpdateNotifications;
+using KaVE.VS.FeedbackGenerator.UserControls;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
@@ -43,22 +43,27 @@ namespace KaVE.VS.FeedbackGenerator.Settings
                                              "Please visit the KaVE options now and update your profile.";
 
         public ForcedSettingUpdateNotificator(ISettingsStore settingsStore,
-            IUserProfileSettingsUtils profileUtils)
+            IUserProfileSettingsUtils profileUtils,
+            ISimpleWindowOpener windows)
         {
             var anonSettings = settingsStore.GetSettings<AnonymizationSettings>();
             if (anonSettings.RemoveSessionIDs)
             {
-                new ForcedSettingUpdateNotifications(SessionIdText).Show();
+                windows.OpenForcedSettingUpdateWindow(SessionIdText);
 
                 anonSettings.RemoveSessionIDs = false;
                 settingsStore.SetSettings(anonSettings);
             }
 
+            var kaveSettings = settingsStore.GetSettings<KaVESettings>();
             var profileSettings = settingsStore.GetSettings<UserProfileSettings>();
             if (string.IsNullOrEmpty(profileSettings.ProfileId))
             {
                 profileUtils.EnsureProfileId();
-                new ForcedSettingUpdateNotifications(ProfileIdText).Show();
+                if (!kaveSettings.IsFirstStart)
+                {
+                    windows.OpenForcedSettingUpdateWindow(SessionIdText);
+                }
             }
         }
     }

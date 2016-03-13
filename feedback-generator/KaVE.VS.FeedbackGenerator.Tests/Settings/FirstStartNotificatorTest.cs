@@ -16,6 +16,7 @@
 
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls;
 using Moq;
 using NUnit.Framework;
 
@@ -26,6 +27,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
     {
         private KaVESettings _settings;
         private ISettingsStore _settingsStore;
+        private ISimpleWindowOpener _windows;
 
         [SetUp]
         public void Setup()
@@ -34,6 +36,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
 
             _settingsStore = Mock.Of<ISettingsStore>();
             Mock.Get(_settingsStore).Setup(ss => ss.GetSettings<KaVESettings>()).Returns(_settings);
+
+            _windows = Mock.Of<ISimpleWindowOpener>();
         }
 
         [Test]
@@ -41,9 +45,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
         {
             _settings.IsFirstStart = true;
             // ReSharper disable once ObjectCreationAsStatement
-            new FirstStartNotificator(_settingsStore);
+            new FirstStartNotificator(_settingsStore, _windows);
             Mock.Get(_settingsStore).Verify(ss => ss.SetSettings(_settings));
             Assert.False(_settings.IsFirstStart);
+            Mock.Get(_windows).Verify(w => w.OpenFirstStartWindow());
         }
 
         [Test]
@@ -51,9 +56,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
         {
             _settings.IsFirstStart = false;
             // ReSharper disable once ObjectCreationAsStatement
-            new FirstStartNotificator(_settingsStore);
+            new FirstStartNotificator(_settingsStore, _windows);
             Mock.Get(_settingsStore).Verify(ss => ss.SetSettings(_settings), Times.Never);
             Assert.False(_settings.IsFirstStart);
+            Mock.Get(_windows).Verify(w => w.OpenFirstStartWindow(), Times.Never);
         }
     }
 }

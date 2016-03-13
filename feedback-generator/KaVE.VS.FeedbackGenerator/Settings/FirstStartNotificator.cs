@@ -16,14 +16,14 @@
 
 using JetBrains.Application;
 using KaVE.RS.Commons.Settings;
-using KaVE.VS.FeedbackGenerator.UserControls.FirstStartWindows;
+using KaVE.VS.FeedbackGenerator.UserControls;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
     [ShellComponent]
     internal class FirstStartNotificator
     {
-        public FirstStartNotificator(ISettingsStore settingsStore)
+        public FirstStartNotificator(ISettingsStore settingsStore, ISimpleWindowOpener windows)
         {
             var s = settingsStore.GetSettings<KaVESettings>();
             if (s.IsFirstStart)
@@ -31,7 +31,7 @@ namespace KaVE.VS.FeedbackGenerator.Settings
                 s.IsFirstStart = false;
                 settingsStore.SetSettings(s);
 
-                new FirstStartWindow().Show();
+                windows.OpenFirstStartWindow();
             }
         }
     }
