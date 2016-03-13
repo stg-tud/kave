@@ -28,7 +28,7 @@ limitations under the License.
         Width="600"
         ResizeMode="NoResize"
         WindowStyle="SingleBorderWindow"
-        Title="{x:Static uploadWizard:UploadWizardMessages.Title}">
+        Title="Submitting Captured Interactions">
 
     <Grid>
         <Grid.Resources>
