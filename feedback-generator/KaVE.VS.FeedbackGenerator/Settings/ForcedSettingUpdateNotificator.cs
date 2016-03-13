@@ -46,23 +46,26 @@ namespace KaVE.VS.FeedbackGenerator.Settings
             IUserProfileSettingsUtils profileUtils,
             ISimpleWindowOpener windows)
         {
+            var kaveSettings = settingsStore.GetSettings<KaVESettings>();
             var anonSettings = settingsStore.GetSettings<AnonymizationSettings>();
             if (anonSettings.RemoveSessionIDs)
             {
-                windows.OpenForcedSettingUpdateWindow(SessionIdText);
+                if (!kaveSettings.IsFirstStart)
+                {
+                    windows.OpenForcedSettingUpdateWindow(SessionIdText);
+                }
 
                 anonSettings.RemoveSessionIDs = false;
                 settingsStore.SetSettings(anonSettings);
             }
 
-            var kaveSettings = settingsStore.GetSettings<KaVESettings>();
             var profileSettings = settingsStore.GetSettings<UserProfileSettings>();
             if (string.IsNullOrEmpty(profileSettings.ProfileId))
             {
                 profileUtils.EnsureProfileId();
                 if (!kaveSettings.IsFirstStart)
                 {
-                    windows.OpenForcedSettingUpdateWindow(SessionIdText);
+                    windows.OpenForcedSettingUpdateWindow(ProfileIdText);
                 }
             }
         }

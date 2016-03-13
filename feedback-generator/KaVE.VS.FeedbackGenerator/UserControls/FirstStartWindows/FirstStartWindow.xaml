@@ -20,13 +20,21 @@ limitations under the License.
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     mc:Ignorable="d"
-    Title="Thanks!"
-    Width="600px"
+    Title="Installation Completed"
+    Width="400px"
     WindowStartupLocation="CenterScreen"
     SizeToContent="Height"
     d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel Margin="5">
-        <TextBlock TextWrapping="Wrap">You are using KaVE, thanks!</TextBlock>
+        <TextBlock TextWrapping="Wrap">You have successfully installed the KaVE plugin!</TextBlock>
+        <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+            The tools can be found in the Visual Studio menu located at ReSharper > KaVE.
+            You can configure many settings in the option dialog that you will find under ReSharper > Options... > Tools > KaVE Project.
+        </TextBlock>
+        <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+            Thank you very much for supporting our research!
+            If you have questions about any part, please visit us at http://www.kave.cc/.
+        </TextBlock>
         <DockPanel HorizontalAlignment="Right" Margin="0,10,0,0">
             <Button Width="100px" Click="OnOk">Ok</Button>
         </DockPanel>
