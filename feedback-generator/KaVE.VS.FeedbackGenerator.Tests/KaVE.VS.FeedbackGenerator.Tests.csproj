@@ -189,6 +189,7 @@
     <Compile Include="Generators\ReSharper\ActionEventGeneratorTest.cs" />
     <Compile Include="Menu\UploadWizardActionTest.cs" />
     <Compile Include="PropertiesTests\EnumLocalizationTest.cs" />
+    <Compile Include="Settings\FirstStartNotificatorTest.cs" />
     <Compile Include="Settings\ForcedSettingUpdateNotificatorTest.cs" />
     <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContextTest.cs" />

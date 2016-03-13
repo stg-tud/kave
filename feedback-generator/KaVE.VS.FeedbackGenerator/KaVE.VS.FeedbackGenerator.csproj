@@ -196,6 +196,7 @@
     <Compile Include="Generators\Activity\MouseActivityEventGenerator.cs" />
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
     <Compile Include="Generators\VisualStudio\SystemEventGenerator.cs" />
+    <Compile Include="Settings\FirstStartNotificator.cs" />
     <Compile Include="Settings\ForcedSettingUpdateNotificator.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>
@@ -285,6 +286,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AnonymizationMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\FirstStartWindows\FirstStartWindow.xaml.cs">
+      <DependentUpon>FirstStartWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsControl.xaml.cs">
       <DependentUpon>AnonymizationOptionsControl.xaml</DependentUpon>
@@ -521,6 +525,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\Anonymization\AnonymizationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\FirstStartWindows\FirstStartWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

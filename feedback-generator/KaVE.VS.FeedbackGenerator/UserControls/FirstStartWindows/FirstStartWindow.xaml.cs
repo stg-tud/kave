@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-using JetBrains.Application.Settings;
+using System.Windows;
 
-namespace KaVE.RS.Commons.Settings
+namespace KaVE.VS.FeedbackGenerator.UserControls.FirstStartWindows
 {
-    [SettingsKey(typeof (EnvironmentSettings), "Root node of all settings of KaVE extensions")]
-    // WARNING: Do not change classname, as it is used to identify settings
-    public class KaVESettings
+    public partial class FirstStartWindow
     {
-        [SettingsEntry(true, "is first start?")]
-        public bool IsFirstStart;
+        public FirstStartWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void OnOk(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

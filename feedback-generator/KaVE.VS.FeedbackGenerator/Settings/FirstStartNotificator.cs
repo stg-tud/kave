@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-using JetBrains.Application.Settings;
+using JetBrains.Application;
+using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls.FirstStartWindows;
 
-namespace KaVE.RS.Commons.Settings
+namespace KaVE.VS.FeedbackGenerator.Settings
 {
-    [SettingsKey(typeof (EnvironmentSettings), "Root node of all settings of KaVE extensions")]
-    // WARNING: Do not change classname, as it is used to identify settings
-    public class KaVESettings
+    [ShellComponent]
+    internal class FirstStartNotificator
     {
-        [SettingsEntry(true, "is first start?")]
-        public bool IsFirstStart;
+        public FirstStartNotificator(ISettingsStore settingsStore)
+        {
+            var s = settingsStore.GetSettings<KaVESettings>();
+            if (s.IsFirstStart)
+            {
+                s.IsFirstStart = false;
+                settingsStore.SetSettings(s);
+
+                new FirstStartWindow().Show();
+            }
+        }
     }
 }
