@@ -301,6 +301,7 @@
     <Compile Include="UserControls\ForcedSettingUpdateNotifications\ForcedSettingUpdateNotifications.xaml.cs">
       <DependentUpon>ForcedSettingUpdateNotifications.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SimpleWindowOpener.cs" />
     <Compile Include="UserControls\ValueConverter\BooleanToVisibilityConverter.cs" />
     <Compile Include="UserControls\ValueConverter\StringToVisibilityConverter.cs" />
     <Compile Include="Utils\Logging\LogFileUtils.cs" />

@@ -201,6 +201,7 @@
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsViewModelTest.cs" />
     <Compile Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsControlTest.cs" />
     <Compile Include="UserControls\AnonymizationDialogs\AnonymizationDialogTest.cs" />
+    <Compile Include="UserControls\SimpleWindowOpenerTest.cs" />
     <Compile Include="UserControls\UploadWizard\ExporterTest.cs" />
     <Compile Include="UserControls\BaseUserControlTest.cs" />
     <Compile Include="UserControls\UserProfileDialogs\UserProfileDialogTest.cs" />
