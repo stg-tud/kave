@@ -56,7 +56,7 @@ namespace KaVE.RS.SolutionAnalysis
 
             /* data preparation */
             //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
-            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
+            //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunFailingRepoFinder();
             //RunApiStatisticsRunner();
             //RunCompletionEventStatistics();
@@ -67,7 +67,7 @@ namespace KaVE.RS.SolutionAnalysis
             //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirMicroCommits);
             //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTriggerInlined, DirMicroCommits_Inlined);
             //RunEventStreamExport(DirContexts, DirEventStream);
-
+            RunQuickSanityCheck();
             /* evaluations */
             //new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
             //new EditLocationRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
@@ -78,6 +78,11 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
             Console.ReadKey();
+        }
+
+        private static void RunQuickSanityCheck()
+        {
+            new SanityCheck(DirEventsCompletion_KeepNoTrigger).Run();
         }
 
         private static void RunCompletionEventStatistics()
@@ -141,7 +146,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption noTriggerPointOption)
         {
-            const string dirIn = DirEventsAll;
+            const string dirIn = DirEventsAll_Clean;
             var dirOut = noTriggerPointOption == CompletionEventFilter.NoTriggerPointOption.Keep
                 ? DirEventsCompletion_KeepNoTrigger
                 : DirEventsCompletion_RemoveNoTrigger;
