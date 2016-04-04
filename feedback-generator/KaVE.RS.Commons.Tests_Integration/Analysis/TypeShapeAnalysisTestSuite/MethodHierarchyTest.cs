@@ -25,7 +25,60 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
     internal class MethodHierarchyTest : BaseCSharpCodeCompletionTest
     {
         [Test]
-        public void ImplementedMethodsAreCaptured()
+        public void NoSuperMembers()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    class C
+                    {
+                        public void M()
+                        {
+                            $
+                        }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
+            {
+                Decl("N.C", null, null)
+            };
+
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void SuperClass()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    class C2 
+                    {
+                        public virtual void M() { }
+                    }
+
+                    class C1 : C2
+                    {
+                        public override void M()
+                        {
+                            $
+                        }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
+            {
+                Decl("N.C1", "N.C2", null)
+            };
+
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void FirstInterface()
         {
             CompleteInCSharpFile(@"
                 namespace N
@@ -48,15 +101,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                // TODO: super = null or first = null?
-                Decl("N.C", "i:N.I", null)
+                Decl("N.C", null, "i:N.I")
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
-        public void TwoEquivalentSupermembers()
+        public void EquivalentSupermembers_InterfaceBeforeClass()
         {
             CompleteInCSharpFile(@"
                 namespace N
@@ -80,37 +132,207 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                Decl("N.C", "N.S", null)
+                Decl("N.C", null, "i:N.I")
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
-        public void OverriddendMethodsAreCaptured()
+        public void EquivalentSupermembers_TwoInterfaces1()
         {
             CompleteInCSharpFile(@"
                 namespace N
                 {
-                    class C1
+                    interface I1
                     {
-                        virtual void M() {}
+                        void M();
                     }
 
-                    class C2 : C1
+                    interface I2
                     {
-                        override public void M()
-                        {
-                            $
-                        }
+                        void M();
                     }
-                }               
-            ");
+
+                    class C : I1, I2
+                    {
+                        public void M() { $ }
+                    }
+                }");
 
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                Decl("N.C2", "N.C1", null)
+                Decl("N.C", null, "i:N.I1")
+            };
+
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void EquivalentSupermembers_TwoInterfaces2()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    interface I1
+                    {
+                        void M();
+                    }
+
+                    interface I2
+                    {
+                        void M();
+                    }
+
+                    class C : I2, I1
+                    {
+                        public void M() { $ }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
+            {
+                Decl("N.C", null, "i:N.I2")
+            };
+
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void EquivalentSupermembers_ThreeInterfaces1()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    interface I1
+                    {
+                        void M();
+                    }
+
+                    interface I2
+                    {
+                        void M();
+                    }
+
+                    interface I3 : I2 { }
+
+                    class C : I3, I1
+                    {
+                        public void M() { $ }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
+            {
+                Decl("N.C", null, "i:N.I2")
+            };
+
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void EquivalentSupermembers_ThreeInterfaces2()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    interface I1
+                    {
+                        void M();
+                    }
+
+                    interface I2
+                    {
+                        void M();
+                    }
+
+                    interface I3 : I2 { }
+
+                    class C : I1, I3
+                    {
+                        public void M() { $ }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
+            {
+                Decl("N.C", null, "i:N.I1")
+            };
+
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void EquivalentSupermembers_ClassAndInterfaceBeforeInterface()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    interface I1
+                    {
+                        void M();
+                    }
+
+                    public class S : I1
+                    {
+                        public virtual void M() { }
+                    }
+
+                    interface I2
+                    {
+                        void M();
+                    }
+
+                    class C : S, I2
+                    {
+                        public override void M() { $ }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
+            {
+                Decl("N.C", "N.S", "i:N.I1")
+            };
+
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [Test]
+        public void EquivalentSupermembers_InterfaceBeforeClass2()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    interface I
+                    {
+                        void M();
+                    }
+
+                    public class S1
+                    {
+                        public virtual void M() { }
+                    }
+
+                    public class S2 : S1
+                    {
+                        public override void M() { }
+                    }
+
+                    class C : S2, I
+                    {
+                        public override void M() { $ }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
+            {
+                Decl("N.C", null, "i:N.I")
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
@@ -132,7 +354,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                         override void M() {}
                     }
 
-                    class C2 : C1
+                    class C3 : C2
                     {
                         $
                     }
@@ -140,13 +362,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             ");
 
             var actual = ResultContext.TypeShape.MethodHierarchies;
+            // ReSharper disable once CollectionNeverUpdated.Local
             var expected = new HashSet<MethodHierarchy>();
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
-        public void MoreComplexHierarchy()
+        public void SuperClassAndFirstInterface()
         {
             CompleteInCSharpFile(@"
                 namespace N
@@ -156,12 +379,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                         void M();
                     }
 
-                    public class S : I
+                    public class C2 : I
                     {
                         public virtual void M() {}
                     }
 
-                    public class C : S
+                    public class C1 : C2
                     {
                         public override void M() {}
                         $
@@ -172,7 +395,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                Decl("N.C", "N.S", "i:N.I")
+                Decl("N.C1", "N.C2", "i:N.I")
             };
 
             CollectionAssert.AreEquivalent(expected, actual);

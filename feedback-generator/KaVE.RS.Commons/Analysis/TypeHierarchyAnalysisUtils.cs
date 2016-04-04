@@ -17,6 +17,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Util;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.RS.Commons.Utils.Names;
@@ -29,22 +30,40 @@ namespace KaVE.RS.Commons.Analysis
         {
             var decl = new MethodHierarchy(name);
 
-            var immediate = method.GetImmediateSuperMembers().FirstOrDefault().Cast<IMethod>();
-            if (immediate != null)
+            OverridableMemberInstance superMethod = null;
+
+            foreach (var super in method.GetImmediateSuperMembers())
             {
-                decl.Super = immediate.GetName<IMethodName>();
+                superMethod = super;
+
+                if (super.DeclaringType.IsInterfaceType() ||
+                    super.GetRootSuperMembers(false).Any(m => m.DeclaringType.IsInterfaceType()))
+                {
+                    break;
+                }
             }
 
-            var root = method.GetRootSuperMembers().FirstOrDefault().Cast<IMethod>();
-            if (root != null)
+            if (superMethod != null)
             {
-                decl.First = root.GetName<IMethodName>();
+                decl.Super = superMethod.GetName<IMethodName>();
+
+                var firstMethod = superMethod.GetRootSuperMembers(false).FirstOrDefault() ?? superMethod;
+
+                decl.First = firstMethod.GetName<IMethodName>();
             }
 
-            if (decl.First != null && decl.First.Equals(decl.Super))
+            if (decl.First != null && decl.Super != null && decl.First.Equals(decl.Super))
             {
-                decl.First = null;
+                if (decl.Super.DeclaringType.IsInterfaceType)
+                {
+                    decl.Super = null;
+                }
+                else
+                {
+                    decl.First = null;
+                }
             }
+
             return decl;
         }
     }

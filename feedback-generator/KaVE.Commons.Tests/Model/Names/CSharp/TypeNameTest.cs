@@ -467,6 +467,22 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         }
 
         [Test]
+        public void TypeParameterTypeShouldBeConcreteType()
+        {
+            var uut = TypeName.Get("T -> System.String, mscorlib, 4.0.0.0");
+
+            Assert.AreEqual(false, uut.TypeParameterType.IsTypeParameter);
+        }
+
+        [Test]
+        public void TypeParameterTypeShouldBeShortName()
+        {
+            var uut = TypeName.Get("T -> T");
+
+            Assert.AreEqual(true, uut.TypeParameterType.IsTypeParameter);
+        }
+
+        [Test]
         public void ShouldNotHaveTypeParameterShortName()
         {
             var uut = TypeName.Get("Non.Parameter.Type, As, 1.2.3.4");
