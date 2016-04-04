@@ -51,6 +51,21 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
         }
 
         [Test]
+        public void ShouldOmitPlaceholderOnRightHandSide()
+        {
+            var type = TypeMockUtils.MockIType(
+                "System.Nullable`1",
+                new Dictionary<string, IType>
+                {
+                    {"T", TypeMockUtils.MockTypeParamIType("U")}
+                },
+                "mscore",
+                "4.0.0.0");
+
+            AssertNameIdentifier(type, "System.Nullable`1[[T]], mscore, 4.0.0.0");
+        }
+
+        [Test]
         public void ShouldGetNameForITypeWithTwoTypeParameters()
         {
             var type = TypeMockUtils.MockIType(

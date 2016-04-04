@@ -233,7 +233,10 @@ namespace KaVE.RS.Commons.Utils.Names
             if (substitution.Domain.Contains(typeParameter))
             {
                 var type = substitution[typeParameter];
-                return type.GetName(seenElements).Identifier;
+                if (type.Classify != TypeClassification.UNKNOWN)
+                {
+                    return type.GetName(seenElements).Identifier;
+                }
             }
             return UnknownTypeName.Identifier;
         }

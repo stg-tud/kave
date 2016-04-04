@@ -505,9 +505,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                CompleteDecl("[System.Void, mscorlib, 4.0.0.0] [N.C`1[[T -> T]], TestProject].M([T] p)", 
-                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[U -> T]], TestProject].M([U] p)", 
-                    "[System.Void, mscorlib, 4.0.0.0] [i:N.I`1[[V -> T]], TestProject].M([V] p)")
+                CompleteDecl("[System.Void, mscorlib, 4.0.0.0] [N.C`1[[T]], TestProject].M([T] p)", 
+                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[U]], TestProject].M([U] p)", 
+                    "[System.Void, mscorlib, 4.0.0.0] [i:N.I`1[[V]], TestProject].M([V] p)")
             };
 
             CollectionAssert.AreEquivalent(expected, actual);

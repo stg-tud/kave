@@ -16,15 +16,10 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Application;
-using JetBrains.Application.changes;
-using JetBrains.Application.platforms;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
-using JetBrains.ProjectModel.Impl;
 using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
-using JetBrains.ProjectModel.Properties;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
@@ -32,8 +27,6 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.JetBrains.Annotations;
-using KaVE.RS.Commons.Utils;
 using Moq;
 
 namespace KaVE.RS.Commons.Tests_Unit.TestFactories
@@ -72,6 +65,7 @@ namespace KaVE.RS.Commons.Tests_Unit.TestFactories
             string assemblyVersion)
         {
             var typeMock = new Mock<IDeclaredType>();
+            typeMock.Setup(t => t.Classify).Returns(TypeClassification.REFERENCE_TYPE);
             var fqn = CSharpNameUtils.GetFullTypeNameFromTypeAlias(fqnOrAlias);
             var mockTypeElement = MockTypeElement(fqn, assemblyName, assemblyVersion);
             mockTypeElement.TypeParameters.AddRange(substitution.Domain);
@@ -81,6 +75,13 @@ namespace KaVE.RS.Commons.Tests_Unit.TestFactories
             var mockResolveResult = new Mock<IResolveResult>();
             mockResolveResult.Setup(rr => rr.Substitution).Returns(substitution);
             typeMock.Setup(t => t.Resolve()).Returns(mockResolveResult.Object);
+            return typeMock.Object;
+        }
+
+        public static IType MockTypeParamIType(string name)
+        {
+            var typeMock = new Mock<IDeclaredType>();
+            typeMock.Setup(t => t.Classify).Returns(TypeClassification.UNKNOWN);
             return typeMock.Object;
         }
 
