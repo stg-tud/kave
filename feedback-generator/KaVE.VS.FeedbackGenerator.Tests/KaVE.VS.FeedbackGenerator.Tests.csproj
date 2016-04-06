@@ -188,6 +188,7 @@
     <Compile Include="Generators\Navigation\NavigationEventGeneratorTest.cs" />
     <Compile Include="Generators\Activity\MouseActivityEventGeneratorTest.cs" />
     <Compile Include="Generators\ReSharper\ActionEventGeneratorTest.cs" />
+    <Compile Include="Generators\ReSharper\TestRunEventGeneratorTest.cs" />
     <Compile Include="Menu\UploadWizardActionTest.cs" />
     <Compile Include="PropertiesTests\EnumLocalizationTest.cs" />
     <Compile Include="Settings\FirstStartNotificatorTest.cs" />
