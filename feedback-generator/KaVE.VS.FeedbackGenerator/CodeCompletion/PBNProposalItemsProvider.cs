@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.BaseInfrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Info;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
@@ -43,18 +44,20 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
     public class PBNProposalItemsProvider : CSharpItemsProviderBasic
     {
         private readonly ILogger _logger;
+        private readonly RandomizedModelEnabler _randomizedEnabler;
         private readonly IPBNRecommenderStore _store;
         private readonly QueryExtractor _queryGen;
         private readonly Dictionary<CoReTypeName, IPBNRecommender> _models;
 
         private Query _currentQuery;
 
-        public PBNProposalItemsProvider(IPBNRecommenderStore store, ILogger logger)
+        public PBNProposalItemsProvider(IPBNRecommenderStore store, ILogger logger, RandomizedModelEnabler randomizedEnabler)
         {
             _models = new Dictionary<CoReTypeName, IPBNRecommender>();
             _store = store;
             _queryGen = new QueryExtractor();
             _logger = logger;
+            _randomizedEnabler = randomizedEnabler;
         }
 
         protected override bool IsAvailable(CSharpCodeCompletionContext csContext)
@@ -65,7 +68,8 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         private bool IsAvailable()
         {
             // written this way to prevent unnecessary file read
-            return _models.ContainsKey(_currentQuery.type) || _store.IsAvailable(_currentQuery.type);
+            return _randomizedEnabler.IsEnabled(_currentQuery.type.Name) &&
+                (_models.ContainsKey(_currentQuery.type) || _store.IsAvailable(_currentQuery.type));
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)

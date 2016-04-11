@@ -189,6 +189,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeCompletion\RandomizedModelEnabler.cs" />
     <Compile Include="Generators\Navigation\NavigationEventGenerator.cs" />
     <Compile Include="Generators\Activity\IKaVEMouseEvents.cs" />
     <Compile Include="Generators\Git\GitEventGenerator.cs" />
