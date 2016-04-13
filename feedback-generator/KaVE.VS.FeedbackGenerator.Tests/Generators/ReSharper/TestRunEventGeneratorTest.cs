@@ -22,7 +22,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
     internal class TestRunEventGeneratorTest : EventGeneratorBaseTest
     {
         [TestCase("NoParameters", ""),
-         TestCase("SomeParameters(\"a string\", 1, 2)", "\"a string\", 1, 2")]
+         TestCase("SomeParameters(\"a string\", 1, 2)", "\"a string\", 1, 2"),
+         TestCase("M(\"()\")", "\"()\"")]
         public void RetrievedParameterStringIsCorrect(string shortName, string expected)
         {
             Assert.AreEqual(expected, TestRunEventGenerator.GetParameterSubstringFromShortName(shortName));

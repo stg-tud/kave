@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.ReSharper.UnitTestFramework;
@@ -106,6 +107,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                         switch (args.New)
                         {
                             case UnitTestSessionState.Building:
+                            case UnitTestSessionState.Starting:
+                            case UnitTestSessionState.Running:
                                 aborted = false;
                                 break;
                             case UnitTestSessionState.Stopping:
@@ -155,13 +158,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                     continue;
                 }
 
-                var methodName = declaredElement.GetName(EmptySubstitution.INSTANCE) as IMethodName;
+                var substitution = declaredElement.GetIdSubstitutionSafe();
+                var methodName = declaredElement.GetName(substitution) as IMethodName;
                 if (methodName == null)
                 {
                     continue;
                 }
 
-                var singleTestResult = new SingleTestRun
+                var singleTestResult = new TestCaseResult
                 {
                     TestMethod = methodName,
                     Duration = result.Value.Duration,
@@ -177,7 +181,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public static string GetParameterSubstringFromShortName(string shortName)
         {
-            var beginning = shortName.LastIndexOf("(", StringComparison.Ordinal) + 1;
+            var beginning = shortName.IndexOf("(", StringComparison.Ordinal) + 1;
             if (beginning == 0)
             {
                 return "";

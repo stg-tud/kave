@@ -28,11 +28,11 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         public bool WasAborted { get; set; }
 
         [DataMember]
-        public IKaVEList<SingleTestRun> Tests { get; private set; }
+        public IKaVEList<TestCaseResult> Tests { get; private set; }
 
         public TestRunEvent()
         {
-            Tests = Lists.NewList<SingleTestRun>();
+            Tests = Lists.NewList<TestCaseResult>();
         }
 
         protected bool Equals(TestRunEvent other)
@@ -69,7 +69,7 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         }
     }
 
-    public class SingleTestRun
+    public class TestCaseResult
     {
         [DataMember]
         public IMethodName TestMethod { get; set; }
@@ -83,13 +83,13 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         [DataMember]
         public TestResult Result { get; set; }
 
-        public SingleTestRun()
+        public TestCaseResult()
         {
             TestMethod = MethodName.UnknownName;
             Parameters = "";
         }
 
-        protected bool Equals(SingleTestRun other)
+        protected bool Equals(TestCaseResult other)
         {
             return Equals(TestMethod, other.TestMethod) && string.Equals(Parameters, other.Parameters) &&
                    Duration.Equals(other.Duration) && Result == other.Result;
@@ -109,7 +109,7 @@ namespace KaVE.Commons.Model.Events.VisualStudio
             {
                 return false;
             }
-            return Equals((SingleTestRun) obj);
+            return Equals((TestCaseResult) obj);
         }
 
         public override int GetHashCode()
