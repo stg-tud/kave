@@ -55,6 +55,11 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             string typeName,
             int availabilityChanceInPercent)
         {
+            if (typeName.Contains("StringBuilder"))
+            {
+                return true;
+            }
+
             var seed = userProfileId.GetHashCode() ^ typeName.GetHashCode();
             var random = new Random(seed);
             return random.Next(100) < availabilityChanceInPercent;

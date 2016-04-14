@@ -71,10 +71,33 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             Assert.IsFalse(RandomizedModelEnabler.IsEnabledForUserAndType(profileId, typeName, 0));
         }
 
-        [Test, TestCaseSource("TestCases"), Ignore]
-        public void HalfShouldFail(string profileId, string typeName)
+        [Test]
+        public void ArbitraryTypesAreRandomlyActivated()
         {
-            Assert.IsTrue(RandomizedModelEnabler.IsEnabledForUserAndType(profileId, typeName, 50));
+            var count = CountEnabled(1000, "SomeType, P");
+            Assert.True(count > 450);
+            Assert.True(count < 550);
+        }
+
+        [Test]
+        public void StringBuilderIsAlwaysActive()
+        {
+            Assert.AreEqual(100, CountEnabled(100, "System.Text.StringBuilder, mscorlib, 4.0.0.0"));
+        }
+
+        private static int CountEnabled(int reps, string type)
+        {
+            var numEnabled = 0;
+            for (var i = 0; i < reps; i++)
+            {
+                var profileId = "pid" + i;
+
+                if (RandomizedModelEnabler.IsEnabledForUserAndType(profileId, type, 50))
+                {
+                    numEnabled++;
+                }
+            }
+            return numEnabled;
         }
 
         [Test]
