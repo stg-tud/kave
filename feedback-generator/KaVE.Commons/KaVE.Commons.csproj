@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Model\Events\NavigationEvent.cs" />
     <Compile Include="Model\Events\ActivityEvent.cs" />
+    <Compile Include="Model\Events\TestRunEvents\TestCaseResult.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlAction.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlActionType.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlEvent.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Model\Events\UserProfiles\UserProfileEvent.cs" />
     <Compile Include="Model\Events\UserProfiles\YesNoUnknown.cs" />
     <Compile Include="Model\Events\SystemEvent.cs" />
-    <Compile Include="Model\Events\VisualStudio\TestRunEvent.cs" />
+    <Compile Include="Model\Events\TestRunEvents\TestRunEvent.cs" />
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />

@@ -83,6 +83,8 @@
     <Compile Include="Model\Events\ErrorEventTest.cs" />
     <Compile Include="Model\Events\NavigationEventTest.cs" />
     <Compile Include="Model\Events\SystemEventTest.cs" />
+    <Compile Include="Model\Events\TestRunEvents\TestCaseResultTest.cs" />
+    <Compile Include="Model\Events\TestRunEvents\TestRunEventTest.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlActionTest.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlActionTypeTest.cs" />
     <Compile Include="Model\Events\VersionControlEvents\VersionControlEventTest.cs" />
