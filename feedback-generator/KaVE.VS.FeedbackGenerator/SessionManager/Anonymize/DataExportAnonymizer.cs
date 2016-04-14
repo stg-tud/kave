@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Json;
 using KaVE.RS.Commons.Settings;
@@ -45,7 +46,8 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             {typeof (ErrorEvent), new ErrorEventAnonymizer()},
             {typeof (InfoEvent), new InfoEventAnonymizer()},
             {typeof (IDEStateEvent), new IDEStateEventAnonymizer()},
-            {typeof (CompletionEvent), new CompletionEventAnonymizer()}
+            {typeof (CompletionEvent), new CompletionEventAnonymizer()},
+            {typeof (TestRunEvent), new TestRunEventAnonymizer()}
         };
 
         private readonly ISettingsStore _settingsStore;

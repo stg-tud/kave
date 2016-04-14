@@ -198,6 +198,7 @@
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
     <Compile Include="Generators\ReSharper\TestRunEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\SystemEventGenerator.cs" />
+    <Compile Include="SessionManager\Anonymize\TestRunEventAnonymizer.cs" />
     <Compile Include="Settings\FirstStartNotificator.cs" />
     <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
       <DependentUpon>AboutWindowControl.xaml</DependentUpon>

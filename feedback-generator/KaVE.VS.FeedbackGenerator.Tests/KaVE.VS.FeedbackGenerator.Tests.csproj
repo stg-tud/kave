@@ -191,6 +191,7 @@
     <Compile Include="Generators\ReSharper\TestRunEventGeneratorTest.cs" />
     <Compile Include="Menu\UploadWizardActionTest.cs" />
     <Compile Include="PropertiesTests\EnumLocalizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\TestRunEventAnonymizerTest.cs" />
     <Compile Include="Settings\FirstStartNotificatorTest.cs" />
     <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContextTest.cs" />
