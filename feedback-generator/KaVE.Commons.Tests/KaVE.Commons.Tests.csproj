@@ -245,6 +245,7 @@
     <Compile Include="Utils\Json\JsonSerializationSuite\NamesSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\SerializationTestBase.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\SolutionEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\TestRunEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\UpdateEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\UserProvileEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\WindowEventSerializationTest.cs" />
