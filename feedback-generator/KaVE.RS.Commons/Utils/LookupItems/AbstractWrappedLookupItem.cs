@@ -111,13 +111,6 @@ namespace KaVE.RS.Commons.Utils.LookupItems
         public bool IgnoreSoftOnSpace
         {
             get { return Item.IgnoreSoftOnSpace; }
-            set { Item.IgnoreSoftOnSpace = value; }
-        }
-
-        public bool IsStable
-        {
-            get { return Item.IsStable; }
-            set { Item.IsStable = value; }
         }
 
         public int Identity
