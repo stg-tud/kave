@@ -21,6 +21,8 @@ using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.ReSharper.UnitTestExplorer.Session;
+using JetBrains.ReSharper.UnitTestExplorer.Session.ViewModels;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.Threading;
 using KaVE.Commons.Model.Events.TestRunEvents;
@@ -40,7 +42,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         private readonly IThreading _threading;
 
         public TestRunEventGenerator(Lifetime lifetime,
-            IUnitTestSessionManager sessionManager,
+            IUnitTestSessionConductor sessionManager,
             IUnitTestResultManager resultManager,
             IThreading threading,
             IRSEnv env,
@@ -51,27 +53,27 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _resultManager = resultManager;
             _threading = threading;
 
-            var testSessions = new Dictionary<IUnitTestSession, LifetimeDefinition>();
+            var testSessionLifetimes = new Dictionary<IUnitTestSessionTreeViewModel, LifetimeDefinition>();
 
-            sessionManager.SessionCreated.Advise(
+            sessionManager.SessionOpened.Advise(
                 lifetime,
-                session =>
+                sessionView =>
                 {
                     var sessionLifetimeDefinition = Lifetimes.Define(lifetime, "KaVE::TestRunEventGenerator");
-                    testSessions.Add(session, sessionLifetimeDefinition);
+                    testSessionLifetimes.Add(sessionView, sessionLifetimeDefinition);
 
-                    SubscribeToSessionLaunch(sessionLifetimeDefinition.Lifetime, session);
+                    SubscribeToSessionLaunch(sessionLifetimeDefinition.Lifetime, sessionView.Session);
                 });
 
             sessionManager.SessionClosed.Advise(
                 lifetime,
-                session =>
+                sessionView =>
                 {
                     LifetimeDefinition sessionLifetimeDefinition;
-                    if (testSessions.TryGetValue(session, out sessionLifetimeDefinition))
+                    if (testSessionLifetimes.TryGetValue(sessionView, out sessionLifetimeDefinition))
                     {
                         sessionLifetimeDefinition.Terminate();
-                        testSessions.Remove(session);
+                        testSessionLifetimes.Remove(sessionView);
                     }
                 });
         }
