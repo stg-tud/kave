@@ -10,11 +10,11 @@
         <projectUrl>http://kave.cc/</projectUrl>
         <iconUrl>https://lh4.googleusercontent.com/eUYdTeTXLDws2B9od2fBbeYORcers-v1lAaQgrBrgU7D2J4p7Boi0MYGiqJ2r1Iaz54HEksYSdzumw=w1498-h774</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Observes how you use Visual Studio and creates usage feedback.</description>
+        <description>Intelligent Code Completion for Visual Studio. Support research and share information about how you use Visual Studio.</description>
         <releaseNotes></releaseNotes>
         <copyright>Copyright 2013, 2014</copyright>
         <dependencies>
-            <dependency id="Wave" version="[3.0]" />
+            <dependency id="Wave" version="[4.0]" />
         </dependencies>
     </metadata>
     <files>
