@@ -115,6 +115,7 @@
     <Compile Include="Intervals\Model\FileOpenIntervalTest.cs" />
     <Compile Include="Intervals\Model\IntervalTest.cs" />
     <Compile Include="Intervals\Model\PerspectiveIntervalTest.cs" />
+    <Compile Include="Intervals\Model\TestRunIntervalTest.cs" />
     <Compile Include="Intervals\Transformers\TestRunTransformerTest.cs" />
     <Compile Include="Intervals\Transformers\TransformerContextTest.cs" />
     <Compile Include="Intervals\Transformers\FileInteractionTransformerTest.cs" />

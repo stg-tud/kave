@@ -22,6 +22,14 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Exporter
     internal class WatchdogDataFormatTest
     {
         [Test]
+        public void WatchdogStringValuesAreEscapedCorrectly()
+        {
+            var str = new WatchdogStringValue {Value = "\\ \""};
+
+            Assert.AreEqual("\"\\\\ \\\"\"", str.ToString());
+        }
+
+        [Test]
         public void WatchdogWrappedValueFormatsCorrectly()
         {
             var wrap = new WatchdogWrappedValue {Wrapper = "ObjectId", Value = "abc"};
@@ -39,6 +47,18 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Exporter
 
             obj.Properties.Add("b", new WatchdogIntValue {Value = 2});
             Assert.AreEqual("{\"a\":1,\"b\":2}", obj.ToString());
+        }
+
+        [Test]
+        public void WatchdogArrayFormatsCorrectly()
+        {
+            var arr = new WatchdogArray();
+
+            arr.Elements.Add(new WatchdogStringValue {Value = "a"});
+            Assert.AreEqual("[\"a\"]", arr.ToString());
+
+            arr.Elements.Add(new WatchdogObject {Properties = {{"k", new WatchdogIntValue {Value = 42}}}});
+            Assert.AreEqual("[\"a\",{\"k\":42}]", arr.ToString());
         }
     }
 }

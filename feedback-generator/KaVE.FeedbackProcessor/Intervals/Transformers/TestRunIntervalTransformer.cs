@@ -16,7 +16,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Transformers
@@ -34,13 +36,54 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
         public void ProcessEvent(IDEEvent @event)
         {
-            var commandEvent = @event as CommandEvent;
-            if (commandEvent != null && commandEvent.CommandId == "UnitTest_RunContext")
+            var testRunEvent = @event as TestRunEvent;
+            if (testRunEvent != null)
             {
-                var interval = _context.CreateIntervalFromEvent<TestRunInterval>(@event);
-                interval.Duration = TimeSpan.FromSeconds(1);
-                _currentIntervals.Add(interval);
+                var testsByProject = testRunEvent.Tests.GroupBy(t => t.TestMethod.DeclaringType.Assembly.Name);
+                foreach (var testProject in testsByProject)
+                {
+                    var interval = _context.CreateIntervalFromEvent<TestRunInterval>(@event);
+                    interval.ProjectName = testProject.Key;
+
+                    foreach (var testClass in testProject.GroupBy(p => p.TestMethod.DeclaringType.FullName))
+                    {
+                        var testClassResult = new TestRunInterval.TestClassResult {TestClassName = testClass.Key};
+
+                        foreach (var testMethod in testClass)
+                        {
+                            var testMethodResult = new TestRunInterval.TestMethodResult
+                            {
+                                TestMethodName = testMethod.TestMethod.Name + testMethod.Parameters,
+                                Result = testMethod.Result
+                            };
+
+                            testClassResult.TestMethods.Add(testMethodResult);
+
+                            testClassResult.Result = UpdateCumulativeTestResult(
+                                testClassResult.Result,
+                                testMethod.Result);
+
+                            interval.Result = UpdateCumulativeTestResult(
+                                testClassResult.Result,
+                                testMethod.Result);
+                        }
+
+                        interval.TestClasses.Add(testClassResult);
+                    }
+
+                    _currentIntervals.Add(interval);
+                }
             }
+        }
+
+        private static TestResult UpdateCumulativeTestResult(TestResult current, TestResult newResult)
+        {
+            if (newResult == TestResult.Ignored)
+            {
+                return current;
+            }
+
+            return (TestResult) Math.Max((int) current, (int) newResult);
         }
 
         public IEnumerable<TestRunInterval> SignalEndOfEventStream()

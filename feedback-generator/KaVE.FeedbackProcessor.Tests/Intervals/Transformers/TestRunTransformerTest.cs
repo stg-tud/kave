@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-using System;
-using KaVE.Commons.Model.Events;
+using System.Linq;
+using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
 using NUnit.Framework;
@@ -24,20 +26,91 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 {
     internal class TestRunTransformerTest : TransformerTestBase<TestRunInterval>
     {
+        private static readonly IMethodName TestMethod1 =
+            MethodName.Get("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj1, 1.0.0.0].Test()");
+
+        private static readonly IMethodName TestMethod2 =
+            MethodName.Get("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj1, 1.0.0.0].Test2()");
+
+        private static readonly IMethodName TestMethodInOtherProject =
+            MethodName.Get("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj2, 1.0.0.0].Test()");
+
         [Test]
-        public void CreatesInterval()
+        public void TransformsTestResultCorrectly()
         {
-            var commandEvent = new CommandEvent {CommandId = "UnitTest_RunContext", TriggeredAt = TestTime(0), TerminatedAt = TestTime(10)};
+            var testEvent = new TestRunEvent
+            {
+                Tests = {new TestCaseResult {TestMethod = TestMethod1}}
+            };
 
             var sut = new TestRunIntervalTransformer(_context);
-            sut.ProcessEvent(commandEvent);
+            sut.ProcessEvent(testEvent);
+
+            var actual = sut.SignalEndOfEventStream().First();
+            Assert.AreEqual("TestProj1", actual.ProjectName);
+            Assert.AreEqual(1, actual.TestClasses.Count);
+            Assert.AreEqual("Test.TestClass", actual.TestClasses[0].TestClassName);
+            Assert.AreEqual(1, actual.TestClasses[0].TestMethods.Count);
+            Assert.AreEqual("Test", actual.TestClasses[0].TestMethods[0].TestMethodName);
+        }
+
+        [Test]
+        public void SplitsUpEventsWithMultipleProjects()
+        {
+            var testEvent = new TestRunEvent
+            {
+                Tests =
+                {
+                    new TestCaseResult {TestMethod = TestMethod1},
+                    new TestCaseResult {TestMethod = TestMethodInOtherProject}
+                }
+            };
+
+            var sut = new TestRunIntervalTransformer(_context);
+            sut.ProcessEvent(testEvent);
 
             var actual = sut.SignalEndOfEventStream();
-            var expectedInterval = ExpectedInterval(0, 1);
-            expectedInterval.Duration = TimeSpan.FromSeconds(1);
-            var expected = new[] {expectedInterval};
+            Assert.AreEqual(2, actual.Count());
+        }
 
-            CollectionAssert.AreEquivalent(expected, actual);
+        [Test]
+        public void ResultsAreSetAndPropagatedCorrectly()
+        {
+            var testEvent = new TestRunEvent
+            {
+                Tests =
+                {
+                    new TestCaseResult {TestMethod = TestMethod1, Result = TestResult.Success},
+                    new TestCaseResult {TestMethod = TestMethod2, Result = TestResult.Failed}
+                }
+            };
+
+            var sut = new TestRunIntervalTransformer(_context);
+            sut.ProcessEvent(testEvent);
+
+            var actual = sut.SignalEndOfEventStream().First();
+            Assert.AreEqual("TestProj1", actual.ProjectName);
+            Assert.AreEqual(1, actual.TestClasses.Count);
+            Assert.AreEqual(TestResult.Failed, actual.Result);
+            Assert.AreEqual("Test.TestClass", actual.TestClasses[0].TestClassName);
+            Assert.AreEqual(2, actual.TestClasses[0].TestMethods.Count);
+            Assert.AreEqual(TestResult.Failed, actual.TestClasses[0].Result);
+
+            foreach (var method in actual.TestClasses[0].TestMethods)
+            {
+                if (method.TestMethodName == "Test")
+                {
+                    Assert.AreEqual(TestResult.Success, method.Result);
+                }
+                else if (method.TestMethodName == "Test2")
+                {
+                    Assert.AreEqual(TestResult.Failed, method.Result);
+                }
+                else
+                {
+                    Assert.Fail();
+                }
+            }
         }
     }
 }

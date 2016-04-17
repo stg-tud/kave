@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using KaVE.JetBrains.Annotations;
+using Newtonsoft.Json;
 
 namespace KaVE.FeedbackProcessor.Intervals.Exporter
 {
@@ -51,7 +52,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
         public override string ToString()
         {
-            return string.Format("\"{0}\"", Value);
+            return JsonConvert.ToString(Value);
         }
     }
 
@@ -109,6 +110,32 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             }
 
             sb.Append("}");
+            return sb.ToString();
+        }
+    }
+
+    public class WatchdogArray : WatchdogValue
+    {
+        public IList<WatchdogValue> Elements { get; private set; }
+
+        public WatchdogArray()
+        {
+            Elements = new List<WatchdogValue>();
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append("[");
+            foreach (var element in Elements)
+            {
+                sb.Append(element);
+                if (!Equals(element, Elements.Last()))
+                {
+                    sb.Append(",");
+                }
+            }
+            sb.Append("]");
             return sb.ToString();
         }
     }

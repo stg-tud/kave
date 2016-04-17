@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Exporter
@@ -27,8 +28,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         public static WatchdogObject Convert(Interval interval)
         {
             if (interval is VisualStudioOpenedInterval ||
-                interval is UserActiveInterval ||
-                interval is TestRunInterval)
+                interval is UserActiveInterval)
             {
                 return ConvertBasicInterval(interval);
             }
@@ -36,6 +36,11 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             if (perspectiveInterval != null)
             {
                 return ConvertPerspectiveInterval(perspectiveInterval);
+            }
+            var testRunInterval = interval as TestRunInterval;
+            if (testRunInterval != null)
+            {
+                return ConvertTestRunInterval(testRunInterval);
             }
             var fileInteractionInterval = interval as FileInteractionInterval;
             if (fileInteractionInterval != null)
@@ -54,6 +59,8 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
         public static WatchdogData Convert(IList<Interval> intervals)
         {
+            intervals = intervals.OrderBy(i => i.StartTime).ToList();
+
             var data = new WatchdogData();
             var createdProjectObjects = new HashSet<string>();
             var createdUserObjects = new HashSet<string>();
@@ -112,10 +119,10 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("it", String(WatchdogUtils.GetSerializedIntervalTypeName(interval)));
             obj.Properties.Add("ts", Wrapped("NumberLong", interval.StartTime.ToJavaTimestamp()));
             obj.Properties.Add("te", Wrapped("NumberLong", (interval.StartTime + interval.Duration).ToJavaTimestamp()));
-            obj.Properties.Add("ss", String(interval.IDESessionId));
+            obj.Properties.Add("ss", String(WatchdogUtils.Sha1Hash(interval.IDESessionId)));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));
-            obj.Properties.Add("userId", String(interval.UserId));
+            obj.Properties.Add("userId", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("projectId", String(WatchdogUtils.Sha1Hash(interval.Project)));
             obj.Properties.Add("ip", String("0.0.0.0"));
             obj.Properties.Add("regDate", Wrapped("ISODate", interval.CreationTime.ToString("o")));
@@ -171,6 +178,45 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             return obj;
         }
 
+        private static WatchdogObject ConvertTestRunInterval(TestRunInterval testRunInterval)
+        {
+            var obj = ConvertBasicInterval(testRunInterval);
+
+            var projectObject = new WatchdogObject();
+            obj.Properties.Add("testExecution", projectObject);
+
+            projectObject.Properties.Add("projectHash", String(WatchdogUtils.Sha1Hash(testRunInterval.ProjectName)));
+            projectObject.Properties.Add("result", String(testRunInterval.Result.ToSerializedName()));
+
+            var testClassArray = new WatchdogArray();
+            projectObject.Properties.Add("childrenExecutions", testClassArray);
+
+            foreach (var testClass in testRunInterval.TestClasses)
+            {
+                var testClassObject = new WatchdogObject();
+                testClassArray.Elements.Add(testClassObject);
+
+                testClassObject.Properties.Add("testClassHash", String(WatchdogUtils.Sha1Hash(testClass.TestClassName)));
+                testClassObject.Properties.Add("result", String(testClass.Result.ToSerializedName()));
+
+                var testMethodArray = new WatchdogArray();
+                testClassObject.Properties.Add("childrenExecutions", testMethodArray);
+
+                foreach (var testMethod in testClass.TestMethods)
+                {
+                    var testMethodObject = new WatchdogObject();
+                    testMethodArray.Elements.Add(testMethodObject);
+
+                    testMethodObject.Properties.Add(
+                        "testMethodHash",
+                        String(WatchdogUtils.Sha1Hash(testMethod.TestMethodName)));
+                    testMethodObject.Properties.Add("result", String(testMethod.Result.ToSerializedName()));
+                }
+            }
+
+            return obj;
+        }
+
         private static WatchdogObject CreateProjectObject(Interval interval)
         {
             var obj = new WatchdogObject();
@@ -188,7 +234,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add(
                 "localRegistrationDate",
                 String(interval.CreationTime.ToString("MMM d, yyyy h:mm:ss tt", CultureInfo.InvariantCulture)));
-            obj.Properties.Add("userId", String(interval.UserId));
+            obj.Properties.Add("userId", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("website", String(""));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));
@@ -205,12 +251,12 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("email", String("unknown@example.org"));
             obj.Properties.Add("organization", String("Unknown"));
             obj.Properties.Add("programmingExperience", String("Unknown"));
-            obj.Properties.Add("maxContactUser", Literal("false"));
-            obj.Properties.Add("localRegistrationDate", Wrapped("NumberLong", DateTime.MinValue.ToJavaTimestamp()));
+            obj.Properties.Add("mayContactUser", Literal("false"));
+            obj.Properties.Add("localRegistrationDate", Wrapped("NumberLong", interval.StartTime.ToJavaTimestamp()));
             obj.Properties.Add("operatingSystem", String("Unknown"));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));
-            obj.Properties.Add("id", String(interval.UserId));
+            obj.Properties.Add("id", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("country", String("Unknown"));
             obj.Properties.Add("city", String("Unknown"));
             obj.Properties.Add("postCode", Literal(null));

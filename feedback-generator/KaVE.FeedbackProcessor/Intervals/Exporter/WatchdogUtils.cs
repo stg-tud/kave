@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Exporter
@@ -77,6 +78,25 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
                     return "te";
                 default:
                     throw new ArgumentOutOfRangeException("type", type, null);
+            }
+        }
+
+        public static string ToSerializedName(this TestResult result)
+        {
+            switch (result)
+            {
+                case TestResult.Unknown:
+                    return "U";
+                case TestResult.Success:
+                    return "O";
+                case TestResult.Failed:
+                    return "F";
+                case TestResult.Error:
+                    return "E";
+                case TestResult.Ignored:
+                    return "I";
+                default:
+                    throw new ArgumentOutOfRangeException("result", result, null);
             }
         }
 
