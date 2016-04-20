@@ -32,7 +32,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
     [ShellComponent]
     internal class KaVEMouseEvents : IKaVEMouseEvents, IDisposable
     {
-        private readonly IKeyboardMouseEvents _mouseEvents = Hook.GlobalEvents();
+        private readonly IKeyboardMouseEvents _mouseEvents = Hook.AppEvents();
 
         public event MouseEventHandler MouseMove
         {
