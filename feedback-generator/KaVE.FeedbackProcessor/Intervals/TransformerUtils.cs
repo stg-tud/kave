@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using KaVE.Commons.Model.Events;
@@ -36,6 +38,24 @@ namespace KaVE.FeedbackProcessor.Intervals
             return !ideEvent.TriggeredAt.HasValue || !ideEvent.TerminatedAt.HasValue;
         }
 
+        private static readonly IList<string> TestNamespaces = new List<string>
+        {
+            "NUnit.Framework",
+            "xunit",
+            "Microsoft.VisualStudio.TestTools.UnitTesting",
+            "csUnit",
+            "MbUnit",
+            "PetaTest"
+        };
+
+        private static readonly IList<string> TestFrameworkNamespaces = new List<string>
+        {
+            "moq",
+            "Rhino.Mocks",
+            "NSubstitute",
+            "Simple.Mocking",
+        };
+
         public static DocumentType GuessDocumentType(DocumentName docName, ISST context)
         {
             if (docName.Language != "CSharp")
@@ -43,13 +63,22 @@ namespace KaVE.FeedbackProcessor.Intervals
                 return DocumentType.Undefined;
             }
 
-            var finder = new AssertFinderVisitor();
-            var assertWasFound = new ValueTypeWrapper<bool>(false);
-            finder.Visit(context, assertWasFound);
+            var finder = new NamespaceFinderVisitor(TestNamespaces);
+            var testWasFound = new ValueTypeWrapper<bool>(false);
+            finder.Visit(context, testWasFound);
 
-            if (assertWasFound)
+            if (testWasFound)
             {
                 return DocumentType.Test;
+            }
+
+            finder = new NamespaceFinderVisitor(TestFrameworkNamespaces);
+            var testFrameworkWasFound = new ValueTypeWrapper<bool>(false);
+            finder.Visit(context, testFrameworkWasFound);
+
+            if (testFrameworkWasFound)
+            {
+                return DocumentType.TestFramework;
             }
 
             if (Path.GetFileNameWithoutExtension(docName.FileName).Contains("test", CompareOptions.IgnoreCase))
@@ -91,12 +120,20 @@ namespace KaVE.FeedbackProcessor.Intervals
         }
     }
 
-    internal class AssertFinderVisitor : AbstractNodeVisitor<ValueTypeWrapper<bool>>
+    internal class NamespaceFinderVisitor : AbstractNodeVisitor<ValueTypeWrapper<bool>>
     {
+        private readonly IList<string> _namespacePrefixes;
+
+        public NamespaceFinderVisitor(IList<string> namespacePrefixes)
+        {
+            _namespacePrefixes = namespacePrefixes;
+        }
+
         public override void Visit(IInvocationExpression entity, ValueTypeWrapper<bool> context)
         {
-            if (entity.MethodName.DeclaringType.Assembly.Name.Contains("nunit", CompareOptions.IgnoreCase) ||
-                entity.MethodName.DeclaringType.FullName.Contains("nunit", CompareOptions.IgnoreCase))
+            if (entity.MethodName.DeclaringType.Namespace.Identifier.StartsWithAny(
+                _namespacePrefixes,
+                StringComparison.OrdinalIgnoreCase))
             {
                 context.Value = true;
             }

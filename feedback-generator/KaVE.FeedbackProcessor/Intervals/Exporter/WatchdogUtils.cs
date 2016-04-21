@@ -76,6 +76,8 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
                     return "pf";
                 case DocumentType.Test:
                     return "te";
+                case DocumentType.TestFramework:
+                    return "tf";
                 default:
                     throw new ArgumentOutOfRangeException("type", type, null);
             }

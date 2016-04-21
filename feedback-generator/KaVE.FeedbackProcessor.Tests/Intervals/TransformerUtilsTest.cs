@@ -34,16 +34,16 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
             "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, nunit.framework, 2.6.4.14350].AreEqual()";
 
         private const string NUnitTestMethod2 =
-            "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, OtherFramework, 2.6.4.14350].AreEqual()";
-
-        private const string NUnitTestMethod3 =
-            "static [System.Void, mscorlib, 4.0.0.0] [OtherFramework.Assert, nunit.framework, 2.6.4.14350].AreEqual()";
+            "static [System.Void, mscorlib, 4.0.0.0] [NUnit.Framework.Assert, other.framework, 2.6.4.14350].AreEqual()";
 
         private const string NotNUnit =
             "static [System.Void, mscorlib, 4.0.0.0] [SomeProject.Assert, SomeProject, 2.6.4.14350].AreEqual()";
 
         private const string NotNUnit2 =
             "static [System.Void, mscorlib, 4.0.0.0] [SomeProject.Helpers, SomeProject, 2.6.4.14350].Assert()";
+
+        private const string MoqMethod =
+            "static [T] [Moq.Mock, Moq, 4.2.1507.118].Of`1[[T -> T]]()";
 
         private static ISST PrepareSST(string testMethod)
         {
@@ -70,7 +70,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
             };
         }
 
-        [Test, TestCase(NUnitTestMethod), TestCase(NUnitTestMethod2), TestCase(NUnitTestMethod3)]
+        [Test, TestCase(NUnitTestMethod), TestCase(NUnitTestMethod2)]
         public void GuessDocumentType_Test(string methodName)
         {
             var docName = DocumentName.Get("CSharp /TestProject/Test.cs");
@@ -88,6 +88,16 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
 
             var actual = TransformerUtils.GuessDocumentType(docName, sst);
             Assert.AreNotEqual(DocumentType.Test, actual);
+        }
+
+        [Test, TestCase(MoqMethod)]
+        public void GuessDocumentType_TestFramework(string methodName)
+        {
+            var docName = DocumentName.Get("CSharp /TestProject/MockHelpers.cs");
+            var sst = PrepareSST(methodName);
+
+            var actual = TransformerUtils.GuessDocumentType(docName, sst);
+            Assert.AreEqual(DocumentType.TestFramework, actual);
         }
 
         [Test]

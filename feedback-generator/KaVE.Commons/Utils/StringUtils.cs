@@ -15,6 +15,8 @@
  */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -47,6 +49,11 @@ namespace KaVE.Commons.Utils
         public static bool ContainsAny(this string value, params string[] needles)
         {
             return needles.Any(value.Contains);
+        }
+
+        public static bool StartsWithAny(this string value, IList<string> needles, StringComparison options)
+        {
+            return needles.Any(n => n.StartsWith(value, options));
         }
     }
 }

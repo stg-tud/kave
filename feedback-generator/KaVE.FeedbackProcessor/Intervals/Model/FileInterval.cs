@@ -22,6 +22,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         Production,
         FilenameTest,
         PathnameTest,
+        TestFramework,
         Test
     }
 
