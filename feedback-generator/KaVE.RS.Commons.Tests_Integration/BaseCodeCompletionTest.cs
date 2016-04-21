@@ -77,7 +77,6 @@ namespace KaVE.RS.Commons.Tests_Integration
             ITextControl textControl,
             IntellisenseManager intellisenseManager,
             bool automatic,
-            string documentText,
             IContextBoundSettingsStore settingsStore)
         {
             ResultProposalCollection = new ProposalCollection();

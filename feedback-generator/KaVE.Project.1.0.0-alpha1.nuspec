@@ -8,13 +8,12 @@
         <owners>Technische Universitaet Darmstadt</owners>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
         <projectUrl>http://kave.cc/</projectUrl>
-        <iconUrl>https://lh4.googleusercontent.com/eUYdTeTXLDws2B9od2fBbeYORcers-v1lAaQgrBrgU7D2J4p7Boi0MYGiqJ2r1Iaz54HEksYSdzumw=w1498-h774</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Intelligent Code Completion for Visual Studio. Support research and share information about how you use Visual Studio.</description>
         <releaseNotes></releaseNotes>
         <copyright>Copyright 2013, 2014</copyright>
         <dependencies>
-            <dependency id="Wave" version="[4.0]" />
+            <dependency id="Wave" version="[5.0]" />
         </dependencies>
     </metadata>
     <files>

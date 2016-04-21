@@ -80,10 +80,9 @@ namespace KaVE.RS.Commons.Tests_Integration
             ITextControl textControl,
             IntellisenseManager intellisenseManager,
             bool automatic,
-            string documentText,
             IContextBoundSettingsStore settingsStore)
         {
-            base.ExecuteCodeCompletion(suffix, textControl, intellisenseManager, automatic, documentText, settingsStore);
+            base.ExecuteCodeCompletion(suffix, textControl, intellisenseManager, automatic, settingsStore);
 
             if (TestAnalysisComponent.HasFailed)
             {
