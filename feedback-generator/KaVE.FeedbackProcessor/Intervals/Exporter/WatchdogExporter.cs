@@ -115,7 +115,6 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         private static WatchdogObject ConvertBasicInterval(Interval interval)
         {
             var obj = new WatchdogObject();
-            obj.Properties.Add("_id", Wrapped("ObjectId", interval.GetHashCode().ToString()));
             obj.Properties.Add("it", String(WatchdogUtils.GetSerializedIntervalTypeName(interval)));
             obj.Properties.Add("ts", Wrapped("NumberLong", interval.StartTime.ToJavaTimestamp()));
             obj.Properties.Add("te", Wrapped("NumberLong", (interval.StartTime + interval.Duration).ToJavaTimestamp()));
@@ -220,7 +219,6 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         private static WatchdogObject CreateProjectObject(Interval interval)
         {
             var obj = new WatchdogObject();
-            obj.Properties.Add("_id", Wrapped("ObjectId", Guid.NewGuid().ToString("N")));
             obj.Properties.Add("name", String(interval.Project));
             obj.Properties.Add("belongToASingleSoftware", Literal("true"));
             obj.Properties.Add("usesContinuousIntegration", String("Unknown"));
@@ -247,8 +245,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         private static WatchdogObject CreateUserObject(Interval interval)
         {
             var obj = new WatchdogObject();
-            obj.Properties.Add("_id", Wrapped("ObjectId", Guid.NewGuid().ToString("N")));
-            obj.Properties.Add("email", String("unknown@example.org"));
+            obj.Properties.Add("email", String(""));
             obj.Properties.Add("organization", String("Unknown"));
             obj.Properties.Add("programmingExperience", String("Unknown"));
             obj.Properties.Add("mayContactUser", Literal("false"));
@@ -259,7 +256,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("id", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("country", String("Unknown"));
             obj.Properties.Add("city", String("Unknown"));
-            obj.Properties.Add("postCode", Literal(null));
+            obj.Properties.Add("postCode", Literal("null"));
             obj.Properties.Add("ip", String("0.0.0.0"));
             obj.Properties.Add("regDate", Wrapped("ISODate", DateTime.Now.ToString("o")));
             return obj;
