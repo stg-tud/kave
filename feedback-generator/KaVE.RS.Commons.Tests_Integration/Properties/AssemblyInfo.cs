@@ -21,6 +21,8 @@ using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
 using NUnit.Framework;
 
+[assembly: RequiresSTA]
+
 // ReSharper disable once CheckNamespace
 
 namespace KaVE.RS.Commons.Tests_Integration
@@ -28,7 +30,7 @@ namespace KaVE.RS.Commons.Tests_Integration
     [ZoneDefinition]
     public interface IThisTestZone : ITestsZone, IRequire<PsiFeatureTestZone> {}
 
-    [SetUpFixture]
+    [SetUpFixture, RequiresSTA]
     public class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IThisTestZone>
     {
         public override void TearDown()
