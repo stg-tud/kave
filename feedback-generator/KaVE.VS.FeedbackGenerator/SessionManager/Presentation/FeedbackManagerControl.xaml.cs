@@ -107,5 +107,25 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
         {
             _actionExec.ExecuteActionGuarded<ShowOptionsAction>();
         }
+
+        private void PossiblyInvisibleTabItem_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var tabItem = sender as TabItem;
+            if (tabItem == null)
+            {
+                return;
+            }
+
+            if (tabItem.IsSelected && tabItem.DataContext == null)
+            {
+                var tabControl = tabItem.Parent as TabControl;
+                if (tabControl == null)
+                {
+                    return;
+                }
+
+                tabControl.SelectedItem = tabControl.Items[0];
+            }
+        }
     }
 }

@@ -258,7 +258,8 @@ limitations under the License.
                         <!-- CONTEXT TAB -->
                         <TabItem Header="{x:Static root:Properties.SessionManager.EventContext}"
                                  DataContext="{Binding XamlContextRepresentation}"
-                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}"
+                                 DataContextChanged="PossiblyInvisibleTabItem_OnDataContextChanged">
                             <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
                                                                   BorderThickness="0"
                                                                   HorizontalAlignment="Stretch"
@@ -270,7 +271,8 @@ limitations under the License.
                         <!-- PROPOSALS TAB -->
                         <TabItem Header="{x:Static root:Properties.SessionManager.EventProposals}"
                                  DataContext="{Binding XamlProposalsRepresentation}"
-                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}"
+                                 DataContextChanged="PossiblyInvisibleTabItem_OnDataContextChanged">
                             <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
                                                                   BorderThickness="0"
                                                                   HorizontalAlignment="Stretch"
@@ -281,7 +283,8 @@ limitations under the License.
                         <!-- SELECTIONS TAB -->
                         <TabItem Header="{x:Static root:Properties.SessionManager.EventSelection}"
                                  DataContext="{Binding XamlSelectionsRepresentation}"
-                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}"
+                                 DataContextChanged="PossiblyInvisibleTabItem_OnDataContextChanged">
                             <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
                                                                   BorderThickness="0"
                                                                   HorizontalAlignment="Stretch"
