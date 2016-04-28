@@ -50,13 +50,14 @@ namespace KaVE.FeedbackProcessor
             //    })
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
+            var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
             //var file = "C:/Users/Andreas/Desktop/testrunevents.zip";
-            var intervals = new IntervalTransformer(Logger).TransformFile(file).ToList();
+            var intervals = new IntervalTransformer(Logger).TransformFolder(folder).ToList();
 
             Logger.Info(@"Got {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
 
-            WatchdogExporter.Convert(intervals).WriteToFiles("C:/Users/Andreas/Desktop/wd-test");
+            WatchdogExporter.Convert(intervals).WriteToFiles("C:/Users/Andreas/Desktop/wd-test/test");
 
             Logger.Info("Done!");
 

@@ -111,6 +111,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
         public static void WriteToFiles(this WatchdogData data, string outputFolder)
         {
+            Directory.CreateDirectory(outputFolder);
             File.WriteAllLines(Path.Combine(outputFolder, "intervals.json"), data.Intervals.Select(o => o.ToString()));
             File.WriteAllLines(Path.Combine(outputFolder, "projects.json"), data.Projects.Select(o => o.ToString()));
             File.WriteAllLines(Path.Combine(outputFolder, "users.json"), data.Users.Select(o => o.ToString()));

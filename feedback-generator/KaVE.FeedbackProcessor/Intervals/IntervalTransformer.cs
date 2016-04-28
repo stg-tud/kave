@@ -66,6 +66,11 @@ namespace KaVE.FeedbackProcessor.Intervals
                 Transform(GetAllEventsFromFile(filename)).Select(SetUserId(Path.GetFileNameWithoutExtension(filename)));
         }
 
+        public IEnumerable<Interval> TransformFolder(string path)
+        {
+            return Directory.EnumerateFiles(path).SelectMany(TransformFile);
+        }
+
         public IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events,
             IEventToIntervalTransformer<Interval> transformer)
         {
