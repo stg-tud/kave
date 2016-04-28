@@ -39,6 +39,18 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void SSTDeclaration_PartialClass()
+        {
+            var sst = new SST { EnclosingType = TypeName.Get("TestClass,TestProject"), PartialClassIdentifier = "TestClass_1.cs" };
+
+            AssertPrint(
+                sst,
+                "partial class TestClass",
+                "{",
+                "}");
+        }
+
+        [Test]
         public void SSTDeclaration_WithSupertypes()
         {
             var thisType = TypeName.Get("TestClass,P");

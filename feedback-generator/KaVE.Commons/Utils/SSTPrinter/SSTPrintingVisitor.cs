@@ -36,6 +36,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             c.Indentation();
 
+            if (!string.IsNullOrEmpty(sst.PartialClassIdentifier))
+            {
+                c.Keyword("partial").Space();
+            }
+
             if (sst.EnclosingType.IsInterfaceType)
             {
                 c.Keyword("interface");
