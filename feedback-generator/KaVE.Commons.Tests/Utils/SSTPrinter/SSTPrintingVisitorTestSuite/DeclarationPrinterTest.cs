@@ -445,6 +445,19 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void MethodDeclaration_ExtensionMethod()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M(this [ParameterType,P] p)")
+            };
+
+            AssertPrint(
+                sst,
+                "static ReturnType M(this ParameterType p) { }");
+        }
+
+        [Test]
         public void MethodDeclaration_ParameterModifiers_PassedByReference()
         {
             var sst = new MethodDeclaration

@@ -265,6 +265,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
                     Keyword("params").Space();
                 }
 
+                if (parameter.IsExtensionMethodParameter)
+                {
+                    Keyword("this").Space();
+                }
+
                 Type(parameter.ValueType).Space().Text(parameter.Name);
 
                 if (!ReferenceEquals(parameter, parameters.Last()))
