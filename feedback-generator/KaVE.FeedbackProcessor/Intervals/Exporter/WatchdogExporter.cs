@@ -124,7 +124,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("ts", Wrapped("$numberLong", interval.StartTime.ToJavaTimestamp()));
             obj.Properties.Add("te", Wrapped("$numberLong", (interval.StartTime + interval.Duration).ToJavaTimestamp()));
             obj.Properties.Add("ss", String(WatchdogUtils.Sha1Hash(interval.IDESessionId)));
-            obj.Properties.Add("wdv", String("KaVE"));
+            obj.Properties.Add("wdv", String("KaVE " + (interval.KaVEVersion ?? "?")));
             obj.Properties.Add("ide", String("vs"));
             obj.Properties.Add("userId", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("projectId", String(WatchdogUtils.Sha1Hash(interval.Project)));

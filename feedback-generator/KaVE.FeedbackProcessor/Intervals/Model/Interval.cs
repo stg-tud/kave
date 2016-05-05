@@ -36,6 +36,9 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         [NotNull]
         public string IDESessionId { get; set; }
 
+        [CanBeNull]
+        public string KaVEVersion { get; set; }
+
         [NotNull]
         public string Project { get; set; }
 
@@ -47,6 +50,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
             Duration = TimeSpan.Zero;
             UserId = string.Empty;
             IDESessionId = string.Empty;
+            KaVEVersion = null;
             Project = string.Empty;
             CreationTime = DateTime.Now;
         }
@@ -55,23 +59,14 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         {
             return StartTime.Equals(other.StartTime) && Duration.Equals(other.Duration) &&
                    string.Equals(UserId, other.UserId) && string.Equals(IDESessionId, other.IDESessionId) &&
-                   string.Equals(Project, other.Project);
+                   string.Equals(KaVEVersion, other.KaVEVersion) && string.Equals(Project, other.Project);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Interval) obj);
         }
 
@@ -83,6 +78,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
                 hashCode = (hashCode*397) ^ Duration.GetHashCode();
                 hashCode = (hashCode*397) ^ UserId.GetHashCode();
                 hashCode = (hashCode*397) ^ IDESessionId.GetHashCode();
+                hashCode = (hashCode*397) ^ (KaVEVersion != null ? KaVEVersion.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ Project.GetHashCode();
                 return hashCode;
             }

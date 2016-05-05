@@ -72,6 +72,17 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Model
         }
 
         [Test]
+        public void Equality_KaVEVersion()
+        {
+            var i1 = new TestInterval { KaVEVersion = "a" };
+            var i2 = new TestInterval { KaVEVersion = "a" };
+            var i3 = new TestInterval { KaVEVersion = "b" };
+
+            Assert.AreEqual(i1, i2);
+            Assert.AreNotEqual(i2, i3);
+        }
+
+        [Test]
         public void Equality_IDESessionId()
         {
             var i1 = new TestInterval {IDESessionId = "a"};

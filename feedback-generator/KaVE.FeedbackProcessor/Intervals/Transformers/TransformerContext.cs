@@ -38,6 +38,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             {
                 StartTime = ideEvent.TriggeredAt.GetValueOrDefault(),
                 Duration = ideEvent.Duration.GetValueOrDefault(),
+                KaVEVersion = ideEvent.KaVEVersion,
                 IDESessionId = ideEvent.IDESessionUUID,
                 Project = CurrentProject
             };
