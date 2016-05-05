@@ -233,10 +233,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("productionPercentage", Int(0));
             obj.Properties.Add("useJunitOnlyForUnitTesting", String("No"));
             obj.Properties.Add("followTestDrivenDesign", String("Unknown"));
-            // "Nov 4, 2015 1:09:58 AM"
-            obj.Properties.Add(
-                "localRegistrationDate",
-                String(interval.CreationTime.ToString("MMM d, yyyy h:mm:ss tt", CultureInfo.InvariantCulture)));
+            obj.Properties.Add("localRegistrationDate", Wrapped("$numberLong", interval.CreationTime.ToJavaTimestamp()));
             obj.Properties.Add("userId", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("website", String(""));
             obj.Properties.Add("wdv", String("KaVE"));
