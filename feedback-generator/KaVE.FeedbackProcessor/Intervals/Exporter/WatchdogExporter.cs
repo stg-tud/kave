@@ -92,9 +92,14 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             return data;
         }
 
-        private static WatchdogWrappedValue Wrapped(string wrapper, object value)
+        private static WatchdogObject Wrapped(string wrapper, WatchdogValue value)
         {
-            return new WatchdogWrappedValue {Wrapper = wrapper, Value = value.ToString()};
+            return new WatchdogObject {Properties = {{wrapper, value}}};
+        }
+
+        private static WatchdogObject Wrapped(string wrapper, object value)
+        {
+            return Wrapped(wrapper, new WatchdogStringValue {Value = value.ToString()});
         }
 
         private static WatchdogStringValue String(string value)
@@ -116,15 +121,15 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         {
             var obj = new WatchdogObject();
             obj.Properties.Add("it", String(WatchdogUtils.GetSerializedIntervalTypeName(interval)));
-            obj.Properties.Add("ts", Wrapped("NumberLong", interval.StartTime.ToJavaTimestamp()));
-            obj.Properties.Add("te", Wrapped("NumberLong", (interval.StartTime + interval.Duration).ToJavaTimestamp()));
+            obj.Properties.Add("ts", Wrapped("$numberLong", interval.StartTime.ToJavaTimestamp()));
+            obj.Properties.Add("te", Wrapped("$numberLong", (interval.StartTime + interval.Duration).ToJavaTimestamp()));
             obj.Properties.Add("ss", String(WatchdogUtils.Sha1Hash(interval.IDESessionId)));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));
             obj.Properties.Add("userId", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("projectId", String(WatchdogUtils.Sha1Hash(interval.Project)));
             obj.Properties.Add("ip", String("0.0.0.0"));
-            obj.Properties.Add("regDate", Wrapped("ISODate", interval.CreationTime.ToString("o")));
+            obj.Properties.Add("regDate", Wrapped("$date", interval.CreationTime.ToIsoDate()));
             return obj;
         }
 
@@ -238,7 +243,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("ide", String("vs"));
             obj.Properties.Add("id", String(WatchdogUtils.Sha1Hash(interval.Project)));
             obj.Properties.Add("ip", String("0.0.0.0"));
-            obj.Properties.Add("regDate", Wrapped("ISODate", DateTime.Now.ToString("o")));
+            obj.Properties.Add("regDate", Wrapped("$date", DateTime.Now.ToIsoDate()));
             return obj;
         }
 
@@ -249,7 +254,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("organization", String("Unknown"));
             obj.Properties.Add("programmingExperience", String("Unknown"));
             obj.Properties.Add("mayContactUser", Literal("false"));
-            obj.Properties.Add("localRegistrationDate", Wrapped("NumberLong", interval.StartTime.ToJavaTimestamp()));
+            obj.Properties.Add("localRegistrationDate", Wrapped("$numberLong", interval.StartTime.ToJavaTimestamp()));
             obj.Properties.Add("operatingSystem", String("Unknown"));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));
@@ -258,7 +263,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             obj.Properties.Add("city", String("Unknown"));
             obj.Properties.Add("postCode", Literal("null"));
             obj.Properties.Add("ip", String("0.0.0.0"));
-            obj.Properties.Add("regDate", Wrapped("ISODate", DateTime.Now.ToString("o")));
+            obj.Properties.Add("regDate", Wrapped("$date", DateTime.Now.ToIsoDate()));
             return obj;
         }
     }

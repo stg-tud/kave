@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -107,6 +108,11 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             long unixTimestamp = date.Ticks - new DateTime(1970, 1, 1).Ticks;
             unixTimestamp /= TimeSpan.TicksPerSecond;
             return unixTimestamp*1000;
+        }
+
+        public static string ToIsoDate(this DateTime date)
+        {
+            return date.ToString("s", CultureInfo.InvariantCulture);
         }
 
         public static void WriteToFiles(this WatchdogData data, string outputFolder)
