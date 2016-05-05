@@ -158,7 +158,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             var doc = new WatchdogObject();
             doc.Properties.Add("pn", String(WatchdogUtils.Sha1Hash(fileInteractionInterval.Project)));
             doc.Properties.Add("fn", String(WatchdogUtils.Sha1Hash(Path.GetFileName(fileInteractionInterval.FileName))));
-            doc.Properties.Add("sloc", Int(-1));
+            doc.Properties.Add("sloc", Int(0));
             doc.Properties.Add(
                 "dt",
                 String(WatchdogUtils.GetSerializedDocumentTypeName(fileInteractionInterval.FileType)));
@@ -178,7 +178,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             var fileRepresentationObject = CreateFileRepresentationObject(fileInteractionInterval);
             obj.Properties.Add("doc", fileRepresentationObject);
             obj.Properties.Add("endingDoc", fileRepresentationObject);
-            obj.Properties.Add("diff", Int(-1));
+            obj.Properties.Add("diff", Int(0));
             return obj;
         }
 
