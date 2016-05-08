@@ -36,6 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
         public LogFileManager([NotNull] string baseLocation)
         {
             BaseLocation = baseLocation;
+            Directory.CreateDirectory(BaseLocation);
             _ioUtils = Registry.GetComponent<IIoUtils>();
             _logs = new Dictionary<string, ILog>();
         }

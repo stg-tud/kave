@@ -17,6 +17,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using JetBrains.Application;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -28,23 +30,34 @@ namespace KaVE.VS.FeedbackGenerator.Generators
     [ShellComponent]
     public class OldEventLogAutoResubmitter
     {
-        private static readonly string OldEventLogPath = Path.Combine(
+        private static readonly string OldEventLogBasePath = Path.Combine(
             IDEEventLogFileManager.AppDataPath,
             IDEEventLogFileManager.ProjectName,
-            "KaVE.VsFeedbackGenerator");
+            "KaVE.VS.FeedbackGenerator");
 
-        public OldEventLogAutoResubmitter([NotNull] IMessageBus messageBus, [NotNull] ILogger logger)
+        public OldEventLogAutoResubmitter([NotNull] IMessageBus messageBus,
+            // Dependency on EventLogger is necessary to make sure it has already been
+            // created and is subscribed to the message bus.
+            [NotNull] EventLogger eventLogger,
+            [NotNull] ILogger logger,
+            [NotNull] VersionUtil versionUtil)
         {
-            Task.Factory.StartNew(() => Execute(messageBus, logger));
+            Task.Factory.StartNew(
+                () =>
+                    Execute(
+                        Path.Combine(OldEventLogBasePath, versionUtil.GetCurrentVariant().ToString()),
+                        messageBus,
+                        logger));
         }
 
-        private static void Execute(IMessageBus messageBus, ILogger logger)
+        private static void Execute(string oldEventLogPath, IMessageBus messageBus, ILogger logger)
         {
-            if (Directory.Exists(OldEventLogPath))
+            if (Directory.Exists(oldEventLogPath))
             {
-                var count = LogFileUtils.ResubmitLogs(new LogFileManager(OldEventLogPath), messageBus);
+                var count = LogFileUtils.ResubmitLogs(new LogFileManager(oldEventLogPath), messageBus);
                 logger.Info("Migrated {0} events from old to new event log path.", count);
-                Directory.Delete(OldEventLogPath, true);
+                messageBus.Publish(new InfoEvent {Info = "wat?"});
+                Directory.Delete(oldEventLogPath, true);
             }
         }
     }

@@ -30,13 +30,19 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
         public static readonly string AppDataPath = Environment.GetFolderPath(
             Environment.SpecialFolder.ApplicationData);
 
+        /// <summary>
+        ///     Usually something like "C:\Users\%USERNAME%\AppData\Local\"
+        /// </summary>
+        public static readonly string LocalAppDataPath = Environment.GetFolderPath(
+            Environment.SpecialFolder.LocalApplicationData);
+
         public const string ProjectName = "KaVE";
         public static readonly string EventLogsScope = typeof (IDEEventLogFileManager).Assembly.GetName().Name;
 
         /// <summary>
-        ///     E.g., "C:\Users\%USERNAME%\AppData\Roaming\KaVE\KaVE.VS.FeedbackGenerator\%VARIANT%\"
+        ///     E.g., "C:\Users\%USERNAME%\AppData\Local\KaVE\KaVE.VS.FeedbackGenerator\%VARIANT%\"
         /// </summary>
-        public static readonly string EventLogsPath = Path.Combine(AppDataPath, ProjectName, EventLogsScope);
+        public static readonly string EventLogsPath = Path.Combine(LocalAppDataPath, ProjectName, EventLogsScope);
 
         public IDEEventLogFileManager(VersionUtil versionUtil)
             : base(Path.Combine(EventLogsPath, versionUtil.GetCurrentVariant().ToString())) {}

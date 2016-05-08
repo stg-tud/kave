@@ -31,7 +31,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
                 targetBus.Publish(@event);
             }
 
-            return events.Count();
+            return events.Length;
         }
     }
 }
