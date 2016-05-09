@@ -18,6 +18,8 @@ using System.IO;
 using System.Threading;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.FeaturesTestFramework.Completion;
 using JetBrains.ReSharper.TestFramework;
@@ -81,9 +83,15 @@ namespace KaVE.RS.Commons.Tests_Integration
         {
             ResultProposalCollection = new ProposalCollection();
 
-            var single = CodeCompletionParameters.CreateSingle(CodeCompletionType.BasicCompletion);
-            single.EvaluationMode = EvaluationMode.LightAndFull;
-            var result = intellisenseManager.GetCompletionResult(single, textControl);
+            var parameters = CodeCompletionParameters.CreateSingle(CodeCompletionType.BasicCompletion);
+            parameters.EvaluationMode = EvaluationMode.LightAndFull;
+            FilteredLookupItems filteredItems;
+            var result = GetCompletionResult(
+                textControl,
+                intellisenseManager,
+                parameters,
+                LookupListSorting.ByRelevance,
+                out filteredItems);
 
             if (result != null)
             {
