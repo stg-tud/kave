@@ -24,8 +24,18 @@ namespace KaVE.RS.SolutionAnalysis.UserProfileExports
         public static string ToStringExt(this UserProfileEvent e)
         {
             var sb = new StringBuilder();
-            sb.Open().Field("ProfileId", e.ProfileId).Field("Position", e.Position).Field("date", e.TriggeredAt);
+            sb.Open()
+              .Field("ProfileId", Quote(e.ProfileId))
+              .Field("Education", e.Education)
+              .Field("Position", e.Position)
+              .Field("date", e.TriggeredAt.HasValue ? e.TriggeredAt.ToString() : "-")
+              .Close();
             return sb.ToString();
+        }
+
+        private static string Quote(object o)
+        {
+            return string.Format("\"{0}\"", o);
         }
 
         public static StringBuilder Open(this StringBuilder sb)

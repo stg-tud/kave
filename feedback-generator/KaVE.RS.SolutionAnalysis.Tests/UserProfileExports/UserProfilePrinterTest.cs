@@ -25,8 +25,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests.UserProfileExports
         [Test]
         public void Default()
         {
-            var expected = new UserProfileEvent().ToStringExt();
-            var actual = "{\n\tProfileId: \"\"\n\tEducation: Unknown,\n\tPosition: Unknown }";
+            var actual = new UserProfileEvent().ToStringExt();
+            var expected = "{\n\tProfileId: \"\"\n\tEducation: Unknown\n\tPosition: Unknown\n\tdate: -\n}";
             Assert.AreEqual(expected, actual);
         }
     }
