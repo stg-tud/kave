@@ -195,6 +195,8 @@
     <Compile Include="StatisticsForPapers\StatisticsPrinterTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportHelperTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportRunnerTest.cs" />
+    <Compile Include="UserProfileExports\UserProfilePrinterTest.cs" />
+    <Compile Include="UserStatistics\UserStatsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">

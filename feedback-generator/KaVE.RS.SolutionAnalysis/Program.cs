@@ -25,6 +25,7 @@ using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using KaVE.RS.SolutionAnalysis.UserProfileExports;
+using KaVE.RS.SolutionAnalysis.UserStatistics;
 
 // ReSharper disable InconsistentNaming
 
@@ -67,13 +68,15 @@ namespace KaVE.RS.SolutionAnalysis
             //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirMicroCommits);
             //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTriggerInlined, DirMicroCommits_Inlined);
             //RunEventStreamExport(DirContexts, DirEventStream);
-            RunQuickSanityCheck();
+            //RunQuickSanityCheck();
             /* evaluations */
             //new EditLocationRunner(DirEventsCompletion_KeepNoTrigger).Run();
             //new EditLocationRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
             //RunUserProfileExport();
             //RunStatisticsForPaperCreation();
 
+
+            new UserStatsRunner(new UserStatsIo(DirEventsAll_Clean, "")).Run();
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
@@ -113,7 +116,7 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 Filters =
                 {
-                    new VersionFilter(900),
+                    new VersionFilter(723),
                     new NoSessionIdFilter(),
                     new NoTimeFilter(),
                     new InvalidCompletionEventFilter()

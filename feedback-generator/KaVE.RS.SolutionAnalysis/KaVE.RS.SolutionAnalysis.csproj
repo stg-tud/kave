@@ -210,6 +210,10 @@
     <Compile Include="UsageExportRunner.cs" />
     <Compile Include="UserProfileExports\UserProfileExportHelper.cs" />
     <Compile Include="UserProfileExports\UserProfileExportRunner.cs" />
+    <Compile Include="UserProfileExports\UserProfilePrinter.cs" />
+    <Compile Include="UserStatistics\UserStats.cs" />
+    <Compile Include="UserStatistics\UserStatsIo.cs" />
+    <Compile Include="UserStatistics\UserStatsRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
