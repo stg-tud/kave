@@ -20,14 +20,17 @@ package kave;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public class UniqueFileCreator {
 
     private File root;
     private String extension;
-    private int numberOfFilesInRoot;
+    private Map<LocalDate, Integer> numberOfFiles;
 
     @Inject
     public UniqueFileCreator(File root, String extension) {
@@ -39,10 +42,11 @@ public class UniqueFileCreator {
             throw new KaVEException("root folder does not exist");
         }
         this.root = root;
-        this.numberOfFilesInRoot = root.list().length;
+        numberOfFiles = Maps.newHashMap();
     }
 
     public synchronized File createNextUniqueFile() throws IOException {
+
         File nextFile = getNextFile();
         while (nextFile.exists()) {
             nextFile = getNextFile();
@@ -51,7 +55,22 @@ public class UniqueFileCreator {
     }
 
     private File getNextFile() {
-        String nextFileName = (numberOfFilesInRoot++) + "." + extension;
-        return new File(root, nextFileName);
+        LocalDate date = LocalDate.now();
+
+        Integer num = numberOfFiles.get(date);
+        if (num == null) {
+            num = 0;
+        } else {
+            num++;
+        }
+        numberOfFiles.put(date, num);
+
+        File dateFolder = new File(root, date.toString());
+        if (!dateFolder.exists()) {
+            dateFolder.mkdir();
+        }
+
+        String nextFileName = num + "." + extension;
+        return new File(dateFolder, nextFileName);
     }
 }

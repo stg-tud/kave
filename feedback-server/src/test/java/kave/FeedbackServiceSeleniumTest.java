@@ -34,6 +34,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/*
+ * make sure you run this test via Maven. If you would like to run it from
+ * within Eclipse (e.g., to debug it), you have to manually start the server
+ */
 public class FeedbackServiceSeleniumTest {
 
     private static final By growlNoticeLocator = By.className("growl-notice");
@@ -84,13 +88,15 @@ public class FeedbackServiceSeleniumTest {
         whenFormIsSubmitted();
 
         thenResponseIs(growlNoticeLocator, "File upload was successful.");
-        String fileName = findUploadedFileName();
-        FeedbackServiceTest.assertDirectoryContainsZipFile(dataDir, fileName, fileToUpload);
+        File fileName = findUploadedFileName();
+        FeedbackServiceTest.assertDirectoryContainsZipFile(fileName.getParentFile(), fileName.getName(), fileToUpload);
     }
 
-    private String findUploadedFileName() {
-        String[] files = dataDir.list();
-        return files[0];
+    private File findUploadedFileName() {
+        String[] dates = dataDir.list();
+        File subFolder = new File(dataDir, dates[0]);
+        String[] zips = subFolder.list();
+        return new File(subFolder, zips[0]);
     }
 
     @Test
@@ -128,8 +134,7 @@ public class FeedbackServiceSeleniumTest {
         whenFileIsSelected(fileToUpload);
         whenFormIsSubmitted();
 
-        thenResponseIs(growlErrorLocator,
-                "Please confirm the disclaimer before submitting a file.");
+        thenResponseIs(growlErrorLocator, "Please confirm the disclaimer before submitting a file.");
     }
 
     @Test
@@ -138,8 +143,7 @@ public class FeedbackServiceSeleniumTest {
 
         whenFormIsSubmitted();
 
-        thenResponseIs(growlErrorLocator,
-                "Please confirm the disclaimer before submitting a file.");
+        thenResponseIs(growlErrorLocator, "Please confirm the disclaimer before submitting a file.");
     }
 
     @Test
