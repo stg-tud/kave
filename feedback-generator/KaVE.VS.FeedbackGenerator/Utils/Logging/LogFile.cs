@@ -33,6 +33,8 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 {
     public class LogFile : ILog
     {
+        private static readonly object ConcurrentLogAccess = new object();
+
         private readonly IIoUtils _ioUtils;
 
         public event LogEntryEventHandler EntryAppended = delegate { };
@@ -63,11 +65,14 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 
         public IEnumerable<IDEEvent> ReadAll()
         {
-            using (var reader = NewLogReader())
+            lock (ConcurrentLogAccess)
             {
-                foreach (var e in reader.ReadAll())
+                using (var reader = NewLogReader())
                 {
-                    yield return e;
+                    foreach (var e in reader.ReadAll())
+                    {
+                        yield return e;
+                    }
                 }
             }
         }
@@ -127,18 +132,24 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 
         public bool IsEmpty()
         {
-            using (var reader = NewLogReader())
+            lock (ConcurrentLogAccess)
             {
-                return reader.ReadNext() == null;
+                using (var reader = NewLogReader())
+                {
+                    return reader.ReadNext() == null;
+                }
             }
         }
 
         public void Append(IDEEvent entry)
         {
-            using (var writer = NewLogWriter())
+            lock (ConcurrentLogAccess)
             {
-                writer.Write(entry);
-                EntryAppended(entry);
+                using (var writer = NewLogWriter())
+                {
+                    writer.Write(entry);
+                    EntryAppended(entry);
+                }
             }
         }
 

@@ -39,7 +39,7 @@ namespace KaVE.Commons.Utils.Collections
 
                 if (dispatcherObject != null && !dispatcherObject.CheckAccess())
                 {
-                    dispatcherObject.Dispatcher.Invoke(DispatcherPriority.DataBind, handler, this, e);
+                    dispatcherObject.Dispatcher.BeginInvoke(DispatcherPriority.DataBind, handler, this, e);
                 }
                 else
                 {
