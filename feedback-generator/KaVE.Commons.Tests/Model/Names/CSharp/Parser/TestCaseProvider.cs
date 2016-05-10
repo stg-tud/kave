@@ -25,8 +25,6 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             foreach (var line in lines)
             {
                 var fields = line.Split('\t');
-                Console.WriteLine(line);
-                Console.WriteLine(fields.Length);
                 var t = new TypeNameTestCase(fields[0], fields[1], fields[2]);
                 testcases.Add(t);
             }

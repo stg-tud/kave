@@ -36,7 +36,11 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
         public bool IsConstructor
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return IsUnknown &&
+                       (ctx.regularMethod().staticCctor() != null || ctx.regularMethod().nonStaticCtor() != null);
+            }
         }
 
         public ITypeName ReturnType
@@ -51,7 +55,18 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
         public ITypeName DeclaringType
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                if (IsUnknown)
+                {
+                    return new CsTypeName(ctx.UNKNOWN().GetText());
+                }
+                else if (IsConstructor)
+                {
+                    return new CsTypeName(ctx.regularMethod().staticCctor() != null ? ctx.regularMethod().staticCctor().type() : ctx.regularMethod().nonStaticCtor().type());
+                }
+                return new CsTypeName(ctx.regularMethod().customMethod().type(1));
+            }
         }
 
         public bool IsStatic
@@ -71,7 +86,7 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
         public bool IsUnknown
         {
-            get { throw new NotImplementedException(); }
+            get { return ctx.UNKNOWN() != null; }
         }
 
         public bool IsHashed

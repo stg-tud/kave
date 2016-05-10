@@ -37,7 +37,23 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 	
     public IAssemblyName Assembly
     {
-        get { throw new NotImplementedException(); }
+        get
+        {
+            String identifier = "???";
+            if (ctx.regularType() != null)
+            {
+                identifier = ctx.regularType().assembly().GetText();
+            }
+            else if (ctx.arrayType() != null)
+            {
+                return new CsTypeName(ctx.arrayType().type()).Assembly;
+            }
+            else if (ctx.delegateType() != null)
+            {
+                return new CsMethodName(ctx.delegateType().method()).DeclaringType.Assembly;
+            }
+            return AssemblyName.Get(identifier);
+        }
     }
 
     public INamespaceName Namespace
@@ -162,7 +178,7 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
     public string Identifier
     {
-        get { throw new NotImplementedException(); }
+        get { return ctx.GetText(); }
     }
 
     bool IName.IsUnknown

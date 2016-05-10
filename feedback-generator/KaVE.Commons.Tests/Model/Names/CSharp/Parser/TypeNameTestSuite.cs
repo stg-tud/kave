@@ -28,6 +28,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             {
                 Assert.DoesNotThrow(delegate { new CsTypeName(typeNameTestCase.GetIdentifier()); });
                 var type = new CsTypeName(typeNameTestCase.GetIdentifier());
+                Assert.AreEqual(typeNameTestCase.GetIdentifier(), type.Identifier);
+                Assert.AreEqual(typeNameTestCase.GetAssembly(), type.Assembly.Identifier);
             }
         }
 
