@@ -39,5 +39,12 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         {
             Assert.DoesNotThrow(delegate { TypeNameParseUtil.ValidateTypeName("n.T,a"); });
         }
+
+        [Test]
+        public void HandleOldNames()
+        {
+            Assert.AreEqual("n:n.T+T1,a", TypeNameParseUtil.HandleOldTypeNames("n.T+T1,a"));
+            Assert.AreEqual("n:n:n.T+T1+T2,a", TypeNameParseUtil.HandleOldTypeNames("n.T+T1+T2,a"));
+        }
     }
 }

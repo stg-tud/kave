@@ -115,7 +115,10 @@
     <Compile Include="Model\Names\CSharp\NameTest.cs" />
     <Compile Include="Model\Names\CSharp\ParameterNameTest.cs" />
     <Compile Include="Model\Names\CSharp\NameUtilsTest.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNameTestSuite.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TestCaseProvider.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameParseUtilTest.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCase.cs" />
     <Compile Include="Model\Names\CSharp\SimpleType.cs" />
     <Compile Include="Model\Names\CSharp\TypeNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\DocumentNameTest.cs" />
@@ -314,6 +317,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\Names\CSharp\Parser\Data\valid-typenames.tsv" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\Names\CSharp\Parser\Data\invalid-typenames.tsv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

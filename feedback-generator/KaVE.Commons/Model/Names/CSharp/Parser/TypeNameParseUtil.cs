@@ -73,5 +73,40 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             return parser;
         }
 
+        public ITypeName ParseTypeName(string input)
+        {
+            try
+            {
+                var ctx = TypeNameParseUtil.ValidateTypeName(input);
+                return new CsTypeName(ctx);
+            }
+            catch (AssertException e)
+            {
+                return new CsTypeName(HandleOldTypeNames(input));
+            }
+        }
+
+        public static string HandleOldTypeNames(string input)
+        {
+            ITypeName typeName = TypeName.Get(input);
+            string result = "";
+            if (typeName.IsNestedType)
+            {
+                int nestedCount = input.Split('+').Length - 1;
+                for (int i = 0; i < nestedCount; i++)
+                {
+                    result += "n:";
+                }
+                result += input;
+            }
+            return result;
+        }
+
+
+
+        internal static TypeNamingParser.MethodContext ValidateMethodName(string input)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
