@@ -12,6 +12,7 @@
     <AssemblyName>KaVE.Commons</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>e78578e9</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr4.Runtime, Version=4.5.0.0, Culture=neutral, PublicKeyToken=e9931a4108ef2354, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr4.Runtime.4.5-alpha003\lib\net40-client\Antlr4.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=25313d96c538ed3d, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.JetBrains.Stripped.0.86.20150204.1\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
@@ -73,6 +78,13 @@
     <Compile Include="Model\Events\TestRunEvents\TestRunEvent.cs" />
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNameParseUtil.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNamingBaseListener.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNamingBaseVisitor.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNamingLexer.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNamingListener.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNamingParser.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNamingVisitor.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />
     <Compile Include="Model\Names\ILambdaName.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IBinaryExpression.cs" />
@@ -379,6 +391,18 @@
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
+    <Antlr4 Include="Model\Names\CSharp\Parser\TypeNaming.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>KaVE.Commons.Model.Names.CSharp.Parser</CustomToolNamespace>
+    </Antlr4>
+    <AntlrTokens Include="Model\Names\CSharp\Parser\TypeNaming.tokens">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>KaVE.Commons.Model.Names.CSharp.Parser</CustomToolNamespace>
+    </AntlrTokens>
+    <AntlrTokens Include="Model\Names\CSharp\Parser\TypeNamingLexer.tokens">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>KaVE.Commons.Model.Names.CSharp.Parser</CustomToolNamespace>
+    </AntlrTokens>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

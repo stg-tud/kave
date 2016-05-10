@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr4.Runtime, Version=4.5.0.0, Culture=neutral, PublicKeyToken=e9931a4108ef2354, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr4.Runtime.4.5-alpha003\lib\net40-client\Antlr4.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
@@ -111,6 +115,7 @@
     <Compile Include="Model\Names\CSharp\NameTest.cs" />
     <Compile Include="Model\Names\CSharp\ParameterNameTest.cs" />
     <Compile Include="Model\Names\CSharp\NameUtilsTest.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeNameParseUtilTest.cs" />
     <Compile Include="Model\Names\CSharp\SimpleType.cs" />
     <Compile Include="Model\Names\CSharp\TypeNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\DocumentNameTest.cs" />
