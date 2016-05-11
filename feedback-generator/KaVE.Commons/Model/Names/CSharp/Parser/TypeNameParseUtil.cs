@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using Antlr4.Runtime;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.Commons.Model.Names.CSharp.Parser
 {
@@ -55,10 +56,7 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             MyErrorListener el = new MyErrorListener();
             TypeNamingParser parser = SetupParser(input, el);
             var typeEOL = parser.typeEOL();
-            if(el.HasError)
-            {
-                throw new AssertException("Wrong Syntax: " + input);
-            }
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
             return typeEOL.type();
         }
 
@@ -82,7 +80,15 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             }
             catch (AssertException e)
             {
-                return new CsTypeName(HandleOldTypeNames(input));
+                try
+                {
+                    var ctx = TypeNameParseUtil.ValidateTypeName(HandleOldTypeNames(input));
+                    return new CsTypeName(ctx);
+                }
+                catch (AssertException e2)
+                {
+                    return new CsTypeName("?");
+                }
             }
         }
 
@@ -98,6 +104,14 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
                     result += "n:";
                 }
                 result += input;
+            }
+            else if (typeName.IsGenericEntity)
+            {
+                if (result.Equals(""))
+                {
+                    result = input;
+                }
+                result = result.Replace("`", "'");
             }
             return result;
         }

@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Names.CSharp.Parser;
 using Antlr4.Runtime;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
@@ -28,23 +29,25 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
     [TestFixture]
     class TypeNameParseUtilTest
     {
-        [Test]
-        public void ValidateWrongTypeName()
+        [TestCase("?.?")]
+        public void ValidateWrongTypeName(string input)
         {
-            Assert.Catch(delegate { TypeNameParseUtil.ValidateTypeName("?.?"); });
+            Assert.Catch(delegate { TypeNameParseUtil.ValidateTypeName(input); });
         }
 
-        [Test]
-        public void ValidateTypeName()
+        [TestCase("n.T,a")]
+        public void ValidateTypeName(string input)
         {
-            Assert.DoesNotThrow(delegate { TypeNameParseUtil.ValidateTypeName("n.T,a"); });
+            Assert.DoesNotThrow(delegate { TypeNameParseUtil.ValidateTypeName(input); });
         }
 
-        [Test]
-        public void HandleOldNames()
+        [TestCase("n.T+T1,a", "n:n.T+T1,a"),
+         TestCase("n.T+T1+T2,a", "n:n:n.T+T1+T2,a"),
+         TestCase("T`1[[T1 -> i:T`1[[T -> T]], a, 4.0.0.0]], a, 4.0.0.0",
+             "T'1[[T1 -> i:T'1[[T -> T]], a, 4.0.0.0]], a, 4.0.0.0")]
+        public void HandleOldNamesSimpleNested(string input, string expected)
         {
-            Assert.AreEqual("n:n.T+T1,a", TypeNameParseUtil.HandleOldTypeNames("n.T+T1,a"));
-            Assert.AreEqual("n:n:n.T+T1+T2,a", TypeNameParseUtil.HandleOldTypeNames("n.T+T1+T2,a"));
+            Assert.AreEqual(expected, TypeNameParseUtil.HandleOldTypeNames(input));
         }
     }
 }
