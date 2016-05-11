@@ -27,26 +27,25 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
     [TestFixture]
     class TypeNameTestSuite
     {
-        private IKaVEList<TypeNameTestCase> testcases;
-        private IKaVEList<string> invalidTypes;
-
-        [SetUp]
-        public void Init()
+        private static IEnumerable<TypeNameTestCase> TestCases
         {
-            testcases = TestCaseProvider.ValidTypeNames();
-            invalidTypes = TestCaseProvider.InvalidTypeNames();
+            get { return TypeNameTestCaseProvider.ValidTypeNames(); }
+        }
+        private static IEnumerable<string> InvalidTestCases
+        {
+            get { return TypeNameTestCaseProvider.InvalidTypeNames(); }
         }
 
-        [TestCaseSource("testcases")]
-        public void ValidTypeName(TypeNameTestCase typeNameTestCase)
+        [Test, TestCaseSource("TestCases")]
+        public void ValidTypeName(TypeNameTestCase testCase)
         {
-            Assert.DoesNotThrow(delegate { new CsTypeName(typeNameTestCase.GetIdentifier()); });
-            var type = new CsTypeName(typeNameTestCase.GetIdentifier());
-            Assert.AreEqual(typeNameTestCase.GetIdentifier(), type.Identifier);
-            Assert.AreEqual(typeNameTestCase.GetAssembly(), type.Assembly.Identifier);
+            Assert.DoesNotThrow(delegate { new CsTypeName(testCase.Identifier); });
+            var type = new CsTypeName(testCase.Identifier);
+            Assert.AreEqual(testCase.Identifier, type.Identifier);
+            Assert.AreEqual(testCase.Assembly, type.Assembly.Identifier);
         }
 
-        [TestCaseSource("invalidTypes")]
+        [Test, TestCaseSource("InvalidTestCases")]
         public void InvalidTypeName(string invalidType)
         {
             Assert.Catch(delegate { new CsTypeName(invalidType); });

@@ -22,7 +22,7 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
 {
-    class TestCaseProvider
+    class TypeNameTestCaseProvider
     {
         private const string TestSourceRootFolder = @"..\..\Model\Names\CSharp\Parser\Data";
         private const string ValidTypeFile = "\\valid-typenames.tsv";
@@ -40,7 +40,12 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             foreach (var line in lines)
             {
                 var fields = line.Split('\t');
-                var t = new TypeNameTestCase(fields[0], fields[1], fields[2]);
+                var t = new TypeNameTestCase()
+                {
+                    Identifier = fields[0],
+                    Namespace = fields[1],
+                    Assembly = fields[2]
+                };
                 testcases.Add(t);
             }
             return testcases;
