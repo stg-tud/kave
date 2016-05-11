@@ -64,13 +64,6 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
                 {
                     Identifier = fields[0],
                     DeclaringType = fields[1],
-                    ReturnType = fields[2],
-                    SimpleName = fields[3],
-                    IsStatic = GetBoolean(fields[4]),
-                    IsGeneric = GetBoolean(fields[5]),
-                    Parameters = GetList(fields[7]),
-                    TypeParameters = GetList(fields[8])
-
                 };
                 testcases.Add(t);
             }

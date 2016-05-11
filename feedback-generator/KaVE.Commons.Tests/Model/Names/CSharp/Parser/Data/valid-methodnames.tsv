@@ -11,10 +11,10 @@
 [?] [?].M'2[[T],[T1]]([T,P] p1, [?] p2 )	?	?	M	[T,P] p1;[?] p2	[T];[T1]	f	t
 [?] [?].M'2[[T->P],[T2->P2]]([?] p1 )	?	?	M	[?] p1	[T->P];[T2->P2]	f	t
 # static methods
-[?] static [?].M()	?	?	M			t	f
-[?] static [?].M'1[[T]]()	?	?	M		[T]	t	t
-[?] static [?].M([?] p1)	?	?	M	[?] p1		t	f
-[?] static [?].M'2[[T],[T1]]([?] p1, [?] p2)	?	?	M	[?] p1;[?] p2	[T];[T1]	t	t
+static [?] [?].M()	?	?	M			t	f
+static [?] [?].M'1[[T]]()	?	?	M		[T]	t	t
+static [?] [?].M([?] p1)	?	?	M	[?] p1		t	f
+static [?] [?].M'2[[T],[T1]]([?] p1, [?] p2)	?	?	M	[?] p1;[?] p2	[T];[T1]	t	t
 # methods with parameter modifiers
 [?] [?].M(params [?] p1,[?] p2)	?	?	M	params [?] p1;[?] p2		f	f
 [?] [?].M([?] p1,params [?] p2)	?	?	M	[?] p1;params [?] p2		f	f

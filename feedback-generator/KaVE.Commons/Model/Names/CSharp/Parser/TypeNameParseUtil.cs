@@ -120,7 +120,11 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
         internal static TypeNamingParser.MethodContext ValidateMethodName(string input)
         {
-            throw new NotImplementedException();
+            MyErrorListener el = new MyErrorListener();
+            TypeNamingParser parser = SetupParser(input, el);
+            var methodEol= parser.methodEOL();
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
+            return methodEol.method();
         }
     }
 }
