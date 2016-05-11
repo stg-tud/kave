@@ -43,6 +43,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             var type = new CsTypeName(testCase.Identifier);
             Assert.AreEqual(testCase.Identifier, type.Identifier);
             Assert.AreEqual(testCase.Assembly, type.Assembly.Identifier);
+            Console.WriteLine(testCase.Identifier);
+            Assert.AreEqual(testCase.Namespace, type.Namespace.Identifier);
         }
 
         [Test, TestCaseSource("InvalidTestCases")]

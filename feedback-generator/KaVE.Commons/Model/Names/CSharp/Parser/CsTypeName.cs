@@ -39,7 +39,7 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
     {
         get
         {
-            String identifier = "???";
+            var identifier = "???";
             if (ctx.regularType() != null)
             {
                 identifier = ctx.regularType().assembly().GetText();
@@ -58,10 +58,36 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
     public INamespaceName Namespace
     {
-        get { throw new NotImplementedException(); }
+        get
+        {
+            var identifier = "???";
+            if (ctx.regularType() != null && ctx.regularType().resolvedType() != null &&
+                ctx.regularType().resolvedType().@namespace() != null)
+            {
+                identifier = ctx.regularType().resolvedType().@namespace().GetText();
+            }
+            else if (ctx.regularType() != null && ctx.regularType().nestedType() != null)
+            {
+                identifier = RecursiveNested(ctx.regularType().nestedType().nestedTypeName());
+            }
+            else if (ctx.delegateType() != null)
+            {
+                return new CsMethodName(ctx.delegateType().method()).DeclaringType.Namespace;
+            }
+            return NamespaceName.Get(identifier);
+        }
     }
 
-    public ITypeName DeclaringType
+        private string RecursiveNested(TypeNamingParser.NestedTypeNameContext nestedTypeNameContext)
+        {
+            while (nestedTypeNameContext.resolvedType() == null)
+            {
+                nestedTypeNameContext = nestedTypeNameContext.nestedType().nestedTypeName();
+            }
+            return nestedTypeNameContext.resolvedType().@namespace() != null ? nestedTypeNameContext.resolvedType().@namespace().GetText() : UNKNOWN_IDENTIFIER;
+        }
+
+        public ITypeName DeclaringType
     {
         get { throw new NotImplementedException(); }
     }
