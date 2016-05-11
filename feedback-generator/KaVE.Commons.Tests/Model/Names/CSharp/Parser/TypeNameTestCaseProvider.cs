@@ -27,7 +27,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         private const string TestSourceRootFolder = @"..\..\Model\Names\CSharp\Parser\Data";
         private const string ValidTypeFile = "\\valid-typenames.tsv";
         private const string InvalidTypeFile = "\\invalid-typenames.tsv";
-       
+        private const string ValidMethodFile = "\\valid-methodnames.tsv";
+        private const string InvalidMethodFile = "\\invalid-typenames.tsv";
+
         public static string[] LoadTestFile(string file)
         {
             return File.ReadAllLines(file).Where(s => !s.Equals("") && !s.StartsWith("#") && !s.StartsWith("identifier")).ToArray();
@@ -51,6 +53,41 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             return testcases;
         }
 
+        public static IKaVEList<MethodNameTestCase> LoadMethodNameTestCases(string path)
+        {
+            var testcases = new KaVEList<MethodNameTestCase>();
+            var lines = LoadTestFile(path);
+            foreach (var line in lines)
+            {
+                var fields = line.Split('\t');
+                var t = new MethodNameTestCase()
+                {
+                    Identifier = fields[0],
+                    DeclaringType = fields[1],
+                    ReturnType = fields[2],
+                    SimpleName = fields[3],
+                    IsStatic = GetBoolean(fields[4]),
+                    IsGeneric = GetBoolean(fields[5]),
+                    Parameters = GetList(fields[7]),
+                    TypeParameters = GetList(fields[8])
+
+                };
+                testcases.Add(t);
+            }
+            return testcases;
+        }
+
+        private static Boolean GetBoolean(string s)
+        {
+            return s.Equals("t");
+        }
+
+        private static IKaVEList<string> GetList(string s)
+        {
+            return s.Equals("") ? Lists.NewList<string>() : Lists.NewList(s.Split(';'));
+        }
+
+
         public static IKaVEList<TypeNameTestCase> ValidTypeNames()
         {
             return LoadTypeNameTestCase(TestSourceRootFolder + ValidTypeFile);
@@ -59,6 +96,16 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         internal static IKaVEList<string> InvalidTypeNames()
         {
             return KaVE.Commons.Utils.Collections.Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidTypeFile));
+        }
+
+        public static IKaVEList<MethodNameTestCase> ValidMethodNames()
+        {
+            return LoadMethodNameTestCases(TestSourceRootFolder + ValidMethodFile);
+        }
+
+        public static IKaVEList<string> InvalidMethodNames()
+        {
+            return KaVE.Commons.Utils.Collections.Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidMethodFile));
         }
     }
 }

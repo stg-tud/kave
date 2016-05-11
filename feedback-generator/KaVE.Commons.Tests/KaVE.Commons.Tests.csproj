@@ -115,6 +115,8 @@
     <Compile Include="Model\Names\CSharp\NameTest.cs" />
     <Compile Include="Model\Names\CSharp\ParameterNameTest.cs" />
     <Compile Include="Model\Names\CSharp\NameUtilsTest.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\MethodNameTestCase.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\MethodNameTestSuite.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCaseProvider.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCaseProviderTest.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameTestSuite.cs" />
@@ -324,6 +326,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Model\Names\CSharp\Parser\Data\invalid-typenames.tsv" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\Names\CSharp\Parser\Data\invalid-methodnames.tsv" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\Names\CSharp\Parser\Data\valid-methodnames.tsv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
