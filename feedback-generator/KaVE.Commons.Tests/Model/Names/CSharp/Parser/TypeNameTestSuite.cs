@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,25 +37,19 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             invalidTypes = TestCaseProvider.InvalidTypeNames();
         }
 
-        [Test]
-        public void ValidTypeName()
+        [TestCaseSource("testcases")]
+        public void ValidTypeName(TypeNameTestCase typeNameTestCase)
         {
-            foreach (var typeNameTestCase in testcases)
-            {
-                Assert.DoesNotThrow(delegate { new CsTypeName(typeNameTestCase.GetIdentifier()); });
-                var type = new CsTypeName(typeNameTestCase.GetIdentifier());
-                Assert.AreEqual(typeNameTestCase.GetIdentifier(), type.Identifier);
-                Assert.AreEqual(typeNameTestCase.GetAssembly(), type.Assembly.Identifier);
-            }
+            Assert.DoesNotThrow(delegate { new CsTypeName(typeNameTestCase.GetIdentifier()); });
+            var type = new CsTypeName(typeNameTestCase.GetIdentifier());
+            Assert.AreEqual(typeNameTestCase.GetIdentifier(), type.Identifier);
+            Assert.AreEqual(typeNameTestCase.GetAssembly(), type.Assembly.Identifier);
         }
 
-        [Test]
-        public void InvalidTypeName()
+        [TestCaseSource("invalidTypes")]
+        public void InvalidTypeName(string invalidType)
         {
-            foreach (var identifier in invalidTypes)
-            {
-                Assert.Catch(delegate { new CsTypeName(identifier); });   
-            }
+            Assert.Catch(delegate { new CsTypeName(invalidType); });
         }
     }
 }
