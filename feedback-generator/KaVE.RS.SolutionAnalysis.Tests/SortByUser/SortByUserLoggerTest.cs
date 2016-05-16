@@ -52,6 +52,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         private void ScanArchivesForIdentifiers()
         {
             _sut.FoundNumArchives(17);
+            _sut.CachedArchive("chached.zip");
             foreach (var fileName in new[] {"1.zip", "2.zip"})
             {
                 _sut.ReadingArchive(fileName);

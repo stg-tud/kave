@@ -333,6 +333,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             AssertArchivesFound(2);
 
+            Mock.Get(_log).Verify(l => l.CachedArchive("a.zip"), Times.Never);
+
             Assert.True(File.Exists(indexFileA));
             Assert.True(File.Exists(indexFileB));
         }
@@ -346,6 +348,10 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             AddIndex("a.ids", "pid:3", "sid:4");
 
             var actuals = AssertArchivesFound(1);
+
+            Mock.Get(_log).Verify(l => l.CachedArchive("a.zip"));
+
+
             AssertIdentifiers(actuals, @"a.zip", "pid:3", "sid:4");
         }
 

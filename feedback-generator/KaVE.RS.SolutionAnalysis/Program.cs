@@ -25,7 +25,6 @@ using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using KaVE.RS.SolutionAnalysis.UserProfileExports;
-using KaVE.RS.SolutionAnalysis.UserStatistics;
 
 // ReSharper disable InconsistentNaming
 
@@ -56,7 +55,7 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine(@"{0} start", DateTime.Now);
 
             /* data preparation */
-            //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
+            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
             //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunFailingRepoFinder();
             //RunApiStatisticsRunner();
@@ -76,7 +75,7 @@ namespace KaVE.RS.SolutionAnalysis
             //RunStatisticsForPaperCreation();
 
 
-            new UserStatsRunner(new UserStatsIo(DirEventsAll_Clean, "")).Run();
+            //new UserStatsRunner(new UserStatsIo(DirEventsAll_Clean, "")).Run();
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
@@ -129,7 +128,7 @@ namespace KaVE.RS.SolutionAnalysis
         {
             CleanDirs(dirOut);
             var log = new SortByUserLogger();
-            var io = new SortByUserIo(dirIn, dirOut, log);
+            var io = new IndexCreatingSortByUserIo(dirIn, dirOut, log);
             new SortByUserRunner(io, log).Run();
         }
 

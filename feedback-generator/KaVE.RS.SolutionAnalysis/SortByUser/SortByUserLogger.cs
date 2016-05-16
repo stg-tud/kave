@@ -26,6 +26,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         void StartMerging();
         void StartProcessingUser(User user);
         void ReadingArchive(string fileName);
+        void CachedArchive(string fileName);
         void Progress();
         void WritingArchive(string fileName);
         void Merging(IKaVESet<string> files);
@@ -122,6 +123,13 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
         public void Progress()
         {
             Append(".");
+        }
+
+        public void CachedArchive(string fileName)
+        {
+            Log("");
+            Log(@"Reading {0}... ({1}/{2}) -- not read, index exists", fileName, ++_currentFileNum, _numFiles);
+            Log("");
         }
 
         public void WritingArchive(string fileName)

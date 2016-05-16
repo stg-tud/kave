@@ -170,7 +170,12 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
     public class IndexCreatingSortByUserIo : SortByUserIo
     {
-        public IndexCreatingSortByUserIo(string dirIn, string dirOut, ISortByUserLogger log) : base(dirIn, dirOut, log) {}
+        private readonly ISortByUserLogger _log;
+
+        public IndexCreatingSortByUserIo(string dirIn, string dirOut, ISortByUserLogger log) : base(dirIn, dirOut, log)
+        {
+            _log = log;
+        }
 
         protected override IKaVESet<string> GetIdsFromArchive(string fileName)
         {
@@ -179,6 +184,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
 
             if (File.Exists(idxFile))
             {
+                _log.CachedArchive(fileName);
                 var jsonIn = File.ReadAllText(idxFile);
                 return jsonIn.ParseJsonTo<KaVEHashSet<string>>();
             }
