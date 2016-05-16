@@ -314,7 +314,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
 
             var actuals = AssertArchivesFound(1);
 
-            AssertIdentifiers(actuals, @"1.zip", "pid:1", "sid:2");
+            AssertIdentifiers(actuals, @"a.zip", "pid:1", "sid:2");
         }
 
         [Test]
@@ -322,12 +322,19 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
         {
             SetupIndexedSut();
 
-            AddFile("a.zip", Profile(1), Event(2));
+            AddFile(@"a.zip", Profile(1), Event(2));
+            AddFile(@"b\c.zip", Profile(3), Event(4));
 
-            var indexFile = Path.Combine(_dirIn, "a.ids");
-            Assert.False(File.Exists(indexFile));
-            AssertArchivesFound(1);
-            Assert.True(File.Exists(indexFile));
+            var indexFileA = Path.Combine(_dirIn, "a.ids");
+            var indexFileB = Path.Combine(_dirIn, @"b\c.ids");
+
+            Assert.False(File.Exists(indexFileA));
+            Assert.False(File.Exists(indexFileB));
+
+            AssertArchivesFound(2);
+
+            Assert.True(File.Exists(indexFileA));
+            Assert.True(File.Exists(indexFileB));
         }
 
         [Test]
@@ -339,7 +346,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             AddIndex("a.ids", "pid:3", "sid:4");
 
             var actuals = AssertArchivesFound(1);
-            AssertIdentifiers(actuals, @"1.zip", "pid:1", "sid:2");
+            AssertIdentifiers(actuals, @"a.zip", "pid:3", "sid:4");
         }
 
         private void AddIndex(string indexFile, params string[] ids)
@@ -347,7 +354,19 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             var fullIndexFile = Path.Combine(_dirIn, indexFile);
 
             var sb = new StringBuilder();
+            sb.Append("[");
+            var isFirst = true;
+            foreach (var id in ids)
+            {
+                if (!isFirst)
+                {
+                    sb.Append(',');
+                }
+                isFirst = false;
 
+                sb.Append('\"').Append(id).Append('\"');
+            }
+            sb.Append("]");
             File.WriteAllText(fullIndexFile, sb.ToString());
         }
 

@@ -17,11 +17,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.Commons.Utils.Json;
 
 namespace KaVE.RS.SolutionAnalysis.SortByUser
 {
@@ -67,36 +69,40 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
                     fileName.Contains(":"),
                     "fileName is absolute path. Aborted to prevent overwriting of data.");
 
-                var ids = Sets.NewHashSet<string>();
-
-                foreach (var e in GetEventsFromArchive(fileName))
-                {
-                    _log.CountInputEvent();
-
-                    var upe = e as UserProfileEvent;
-                    if (upe != null)
-                    {
-                        var pid = upe.ProfileId.Trim();
-                        if (!"".Equals(pid))
-                        {
-                            ids.Add("pid:" + pid);
-                        }
-                    }
-
-                    if (e.IDESessionUUID != null)
-                    {
-                        var sid = e.IDESessionUUID.Trim();
-                        if (!"".Equals(sid))
-                        {
-                            ids.Add("sid:" + sid);
-                        }
-                    }
-                }
-
-                allIds[fileName] = ids;
+                allIds[fileName] = GetIdsFromArchive(fileName);
             }
 
             return allIds;
+        }
+
+        protected virtual IKaVESet<string> GetIdsFromArchive(string fileName)
+        {
+            var ids = Sets.NewHashSet<string>();
+
+            foreach (var e in GetEventsFromArchive(fileName))
+            {
+                _log.CountInputEvent();
+
+                var upe = e as UserProfileEvent;
+                if (upe != null)
+                {
+                    var pid = upe.ProfileId.Trim();
+                    if (!"".Equals(pid))
+                    {
+                        ids.Add("pid:" + pid);
+                    }
+                }
+
+                if (e.IDESessionUUID != null)
+                {
+                    var sid = e.IDESessionUUID.Trim();
+                    if (!"".Equals(sid))
+                    {
+                        ids.Add("sid:" + sid);
+                    }
+                }
+            }
+            return ids;
         }
 
         private IEnumerable<string> GetArchives()
@@ -120,7 +126,7 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             }
         }
 
-        protected virtual IEnumerable<IDEEvent> GetEventsFromArchive(string file)
+        protected IEnumerable<IDEEvent> GetEventsFromArchive(string file)
         {
             var fullPath = GetFullPathIn(file);
             _log.ReadingArchive(fullPath);
@@ -166,12 +172,21 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
     {
         public IndexCreatingSortByUserIo(string dirIn, string dirOut, ISortByUserLogger log) : base(dirIn, dirOut, log) {}
 
-        protected override IEnumerable<IDEEvent> GetEventsFromArchive(string file)
+        protected override IKaVESet<string> GetIdsFromArchive(string fileName)
         {
-            var zip = GetFullPathIn(file);
-            var idxFile = zip.Replace(".zip", "-index.json");
+            var zip = GetFullPathIn(fileName);
+            var idxFile = zip.Replace(".zip", ".ids");
 
-            return base.GetEventsFromArchive(file);
+            if (File.Exists(idxFile))
+            {
+                var jsonIn = File.ReadAllText(idxFile);
+                return jsonIn.ParseJsonTo<KaVEHashSet<string>>();
+            }
+
+            var ids = base.GetIdsFromArchive(fileName);
+            var jsonOut = ids.ToCompactJson();
+            File.WriteAllText(idxFile, jsonOut, Encoding.UTF8);
+            return ids;
         }
     }
 }
