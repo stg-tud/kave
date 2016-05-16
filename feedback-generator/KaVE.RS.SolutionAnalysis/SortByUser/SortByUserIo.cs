@@ -120,9 +120,9 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
             }
         }
 
-        private IEnumerable<IDEEvent> GetEventsFromArchive(string file)
+        protected virtual IEnumerable<IDEEvent> GetEventsFromArchive(string file)
         {
-            var fullPath = Path.Combine(_dirIn, file);
+            var fullPath = GetFullPathIn(file);
             _log.ReadingArchive(fullPath);
 
             var ra = new ReadingArchive(fullPath);
@@ -131,6 +131,12 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
                 _log.Progress();
                 yield return ra.GetNext<IDEEvent>();
             }
+        }
+
+        protected string GetFullPathIn(string file)
+        {
+            var fullPath = Path.Combine(_dirIn, file);
+            return fullPath;
         }
 
         private void WriteEventsForNewUser(string fileName, IKaVEList<IDEEvent> events)
@@ -153,6 +159,19 @@ namespace KaVE.RS.SolutionAnalysis.SortByUser
                     wa.Add(e);
                 }
             }
+        }
+    }
+
+    public class IndexCreatingSortByUserIo : SortByUserIo
+    {
+        public IndexCreatingSortByUserIo(string dirIn, string dirOut, ISortByUserLogger log) : base(dirIn, dirOut, log) {}
+
+        protected override IEnumerable<IDEEvent> GetEventsFromArchive(string file)
+        {
+            var zip = GetFullPathIn(file);
+            var idxFile = zip.Replace(".zip", "-index.json");
+
+            return base.GetEventsFromArchive(file);
         }
     }
 }

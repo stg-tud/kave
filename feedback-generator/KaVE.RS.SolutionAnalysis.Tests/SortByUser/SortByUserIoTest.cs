@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Model.Names.VisualStudio;
@@ -59,6 +60,11 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             Mock.Get(_log)
                 .Setup(l => l.WritingArchive(It.IsAny<string>()))
                 .Callback<string>(f => _actualFilesWritten.Add(f));
+        }
+
+        public void SetupIndexedSut()
+        {
+            _sut = new IndexCreatingSortByUserIo(_dirIn, _dirOut, _log);
         }
 
         [TearDown]
@@ -298,6 +304,53 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             Mock.Get(_log).Verify(l => l.StoreOutputEvents(5));
             AssertWrittenFiles(@"sub\1.zip");
         }
+
+        [Test]
+        public void Indexed_ReadingStillWorks()
+        {
+            SetupIndexedSut();
+
+            AddFile("a.zip", Profile(1), Event(2));
+
+            var actuals = AssertArchivesFound(1);
+
+            AssertIdentifiers(actuals, @"1.zip", "pid:1", "sid:2");
+        }
+
+        [Test]
+        public void Indexed_IndexWillBeCreated()
+        {
+            SetupIndexedSut();
+
+            AddFile("a.zip", Profile(1), Event(2));
+
+            var indexFile = Path.Combine(_dirIn, "a.ids");
+            Assert.False(File.Exists(indexFile));
+            AssertArchivesFound(1);
+            Assert.True(File.Exists(indexFile));
+        }
+
+        [Test]
+        public void Indexed_IndexUsedIfPresent()
+        {
+            SetupIndexedSut();
+
+            AddFile("a.zip", Profile(1), Event(2));
+            AddIndex("a.ids", "pid:3", "sid:4");
+
+            var actuals = AssertArchivesFound(1);
+            AssertIdentifiers(actuals, @"1.zip", "pid:1", "sid:2");
+        }
+
+        private void AddIndex(string indexFile, params string[] ids)
+        {
+            var fullIndexFile = Path.Combine(_dirIn, indexFile);
+
+            var sb = new StringBuilder();
+
+            File.WriteAllText(fullIndexFile, sb.ToString());
+        }
+
 
         private void AssertReadFiles(params string[] expectedFiles)
         {
