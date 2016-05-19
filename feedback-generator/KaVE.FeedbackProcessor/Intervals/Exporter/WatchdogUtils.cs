@@ -112,7 +112,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
         public static string ToIsoDate(this DateTime date)
         {
-            return date.ToString("s", CultureInfo.InvariantCulture);
+            return date.ToString("s", CultureInfo.InvariantCulture) + "Z";
         }
 
         public static void WriteToFiles(this WatchdogData data, string outputFolder)

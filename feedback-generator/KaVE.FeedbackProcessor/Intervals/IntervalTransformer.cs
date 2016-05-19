@@ -68,7 +68,7 @@ namespace KaVE.FeedbackProcessor.Intervals
 
         public IEnumerable<Interval> TransformFolder(string path)
         {
-            return Directory.EnumerateFiles(path).SelectMany(TransformFile);
+            return Directory.EnumerateFiles(path, "*.zip", SearchOption.AllDirectories).SelectMany(TransformFile);
         }
 
         public IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events,
