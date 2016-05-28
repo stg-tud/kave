@@ -15,13 +15,12 @@
  */
 
 using JetBrains.Application.Settings;
-using JetBrains.UsageStatistics;
 
 namespace KaVE.RS.Commons.Settings
 {
     namespace KaVE.RS.Commons.Settings
     {
-        [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
+        [SettingsKey(typeof (KaVESettings), "KaVE model store settings")]
         public class ModelStoreSettings
         {
             [SettingsEntry(@"c:\kave-models\", "Path to KaVE models")]

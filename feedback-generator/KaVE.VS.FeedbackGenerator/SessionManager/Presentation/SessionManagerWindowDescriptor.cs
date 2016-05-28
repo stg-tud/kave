@@ -25,7 +25,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
         Text = "Event Manager",
         Type = ToolWindowType.SingleInstance,
         VisibilityPersistenceScope = ToolWindowVisibilityPersistenceScope.Global,
-        Icon = typeof (FeaturesFindingThemedIcons.SearchOptionsPage), // TODO Replace with own icon
+        Icon = typeof(FeaturesFindingThemedIcons.SearchOptionsPage), // TODO Replace with own icon
         InitialDocking = ToolWindowInitialDocking.Bottom, // TODO make it dock!
         InitialHeight = 400,
         InitialWidth = 1000
@@ -34,5 +34,15 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
     {
         public SessionManagerWindowDescriptor(IApplicationHost applicationHost)
             : base(applicationHost) {}
+
+        /// <summary>
+        ///     If the type FeaturesFindingThemedIcons.SearchOptionsPage is only used within attributes, it will not be loaded
+        ///     properly while installing the ReSharper plugin and cause errors. The errors don't actually cause any problems, but
+        ///     using the type within actual code will make the errors disappear.
+        /// </summary>
+        private static void __nothing__()
+        {
+            var _ = FeaturesFindingThemedIcons.SearchOptionsPage.Id;
+        }
     }
 }
