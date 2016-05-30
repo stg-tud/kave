@@ -115,6 +115,7 @@
     <Compile Include="Model\Names\CSharp\NameTest.cs" />
     <Compile Include="Model\Names\CSharp\ParameterNameTest.cs" />
     <Compile Include="Model\Names\CSharp\NameUtilsTest.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\CsNameUtilTest.cs" />
     <Compile Include="Model\Names\CSharp\Parser\MethodNameTestCase.cs" />
     <Compile Include="Model\Names\CSharp\Parser\MethodNameTestSuite.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCaseProvider.cs" />

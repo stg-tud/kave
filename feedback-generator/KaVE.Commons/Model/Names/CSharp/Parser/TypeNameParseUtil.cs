@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Antlr4.Runtime;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.Commons.Model.Names.CSharp.Parser
 {
-    class TypeNameParseUtil
+    public class TypeNameParseUtil
     {
         private class MyErrorListener : IAntlrErrorListener<int>, IAntlrErrorListener<IToken>
         {
@@ -64,9 +59,11 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
         {
             var inputStream = new AntlrInputStream(input + "\n");
             var lexer = new TypeNamingLexer(inputStream);
+            lexer.RemoveErrorListeners();
             lexer.AddErrorListener(el);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             TypeNamingParser parser = new TypeNamingParser(tokens);
+            parser.RemoveErrorListeners();
             parser.AddErrorListener(el);
             return parser;
         }
@@ -118,7 +115,7 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
 
 
-        internal static TypeNamingParser.MethodContext ValidateMethodName(string input)
+        public static TypeNamingParser.MethodContext ValidateMethodName(string input)
         {
             MyErrorListener el = new MyErrorListener();
             TypeNamingParser parser = SetupParser(input, el);

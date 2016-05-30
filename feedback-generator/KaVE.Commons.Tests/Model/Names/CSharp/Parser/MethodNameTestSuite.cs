@@ -45,5 +45,15 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         {
             Assert.Catch(delegate { new CsMethodName(invalidType); });
         }
+
+        [Test, Ignore]
+        public void testMethodName()
+        {
+            Assert.DoesNotThrow(delegate
+            {
+                new CsMethodName(
+                    "[System.Void, mscorlib, 4.0.0.0] [ACAT.Lib.Core.ActuatorManagement.ActuatorBase, Core].UpdateCalibrationStatus([System.String, mscorlib, 4.0.0.0] caption, [System.String, mscorlib, 4.0.0.0] prompt, opt [System.Int32, mscorlib, 4.0.0.0] timeout, opt [System.Boolean, mscorlib, 4.0.0.0] enableConfigure)");
+            });
+        }
     }
 }

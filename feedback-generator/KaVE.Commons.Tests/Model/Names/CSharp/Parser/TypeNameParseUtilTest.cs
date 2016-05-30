@@ -41,13 +41,5 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             Assert.DoesNotThrow(delegate { TypeNameParseUtil.ValidateTypeName(input); });
         }
 
-        [TestCase("n.T+T1,a", "n:n.T+T1,a"),
-         TestCase("n.T+T1+T2,a", "n:n:n.T+T1+T2,a"),
-         TestCase("T`1[[T1 -> i:T`1[[T -> T]], a, 4.0.0.0]], a, 4.0.0.0",
-             "T'1[[T1 -> i:T'1[[T -> T]], a, 4.0.0.0]], a, 4.0.0.0")]
-        public void HandleOldNamesSimpleNested(string input, string expected)
-        {
-            Assert.AreEqual(expected, TypeNameParseUtil.HandleOldTypeNames(input));
-        }
     }
 }

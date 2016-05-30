@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Users\Jonas\Documents\kave\feedback-generator\KaVE.Commons\Model\Names\CSharp\Parser\TypeNaming.g4 by ANTLR 4.5-SNAPSHOT
+// Generated from C:\Users\Jonas\Documents\Visual Studio 2013\Projects\Grammar\Grammar\TypeNaming.g4 by ANTLR 4.5-SNAPSHOT
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,7 +19,8 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace KaVE.Commons.Model.Names.CSharp.Parser {
+namespace KaVE.Commons.Model.Names.CSharp.Parser
+{
 
 /**
  * Copyright 2016 Sebastian Proksch
@@ -94,6 +95,17 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitTypeParameter([NotNull] TypeNamingParser.TypeParameterContext context) { return VisitChildren(context); }
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.notTypeParameter"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitNotTypeParameter([NotNull] TypeNamingParser.NotTypeParameterContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.regularType"/>.
@@ -261,17 +273,6 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	public virtual Result VisitGenericParam([NotNull] TypeNamingParser.GenericParamContext context) { return VisitChildren(context); }
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.boundTypeParameter"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitBoundTypeParameter([NotNull] TypeNamingParser.BoundTypeParameterContext context) { return VisitChildren(context); }
-
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.assembly"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -371,17 +372,6 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	public virtual Result VisitFormalParam([NotNull] TypeNamingParser.FormalParamContext context) { return VisitChildren(context); }
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.parameterModifier"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitParameterModifier([NotNull] TypeNamingParser.ParameterModifierContext context) { return VisitChildren(context); }
-
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.staticModifier"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -391,61 +381,6 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitStaticModifier([NotNull] TypeNamingParser.StaticModifierContext context) { return VisitChildren(context); }
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.paramsModifier"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitParamsModifier([NotNull] TypeNamingParser.ParamsModifierContext context) { return VisitChildren(context); }
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.optsModifier"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitOptsModifier([NotNull] TypeNamingParser.OptsModifierContext context) { return VisitChildren(context); }
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.refModifier"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitRefModifier([NotNull] TypeNamingParser.RefModifierContext context) { return VisitChildren(context); }
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.outModifier"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitOutModifier([NotNull] TypeNamingParser.OutModifierContext context) { return VisitChildren(context); }
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.extensionModifier"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitExtensionModifier([NotNull] TypeNamingParser.ExtensionModifierContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.id"/>.

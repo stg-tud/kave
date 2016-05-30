@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Users\Jonas\Documents\kave\feedback-generator\KaVE.Commons\Model\Names\CSharp\Parser\TypeNaming.g4 by ANTLR 4.5-SNAPSHOT
+// Generated from C:\Users\Jonas\Documents\Visual Studio 2013\Projects\Grammar\Grammar\TypeNaming.g4 by ANTLR 4.5-SNAPSHOT
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,7 +19,8 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace KaVE.Commons.Model.Names.CSharp.Parser {
+namespace KaVE.Commons.Model.Names.CSharp.Parser
+{
 
 /**
  * Copyright 2016 Sebastian Proksch
@@ -76,6 +77,13 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitTypeParameter([NotNull] TypeNamingParser.TypeParameterContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.notTypeParameter"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNotTypeParameter([NotNull] TypeNamingParser.NotTypeParameterContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.regularType"/>.
@@ -183,13 +191,6 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitGenericParam([NotNull] TypeNamingParser.GenericParamContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.boundTypeParameter"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitBoundTypeParameter([NotNull] TypeNamingParser.BoundTypeParameterContext context);
-
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.assembly"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -253,53 +254,11 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitFormalParam([NotNull] TypeNamingParser.FormalParamContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.parameterModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitParameterModifier([NotNull] TypeNamingParser.ParameterModifierContext context);
-
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.staticModifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitStaticModifier([NotNull] TypeNamingParser.StaticModifierContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.paramsModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitParamsModifier([NotNull] TypeNamingParser.ParamsModifierContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.optsModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitOptsModifier([NotNull] TypeNamingParser.OptsModifierContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.refModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitRefModifier([NotNull] TypeNamingParser.RefModifierContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.outModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitOutModifier([NotNull] TypeNamingParser.OutModifierContext context);
-
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.extensionModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitExtensionModifier([NotNull] TypeNamingParser.ExtensionModifierContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.id"/>.

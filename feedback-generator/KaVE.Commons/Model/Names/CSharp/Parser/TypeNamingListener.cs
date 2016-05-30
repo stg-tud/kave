@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Users\Jonas\Documents\kave\feedback-generator\KaVE.Commons\Model\Names\CSharp\Parser\TypeNaming.g4 by ANTLR 4.5-SNAPSHOT
+// Generated from C:\Users\Jonas\Documents\Visual Studio 2013\Projects\Grammar\Grammar\TypeNaming.g4 by ANTLR 4.5-SNAPSHOT
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,7 +19,8 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace KaVE.Commons.Model.Names.CSharp.Parser {
+namespace KaVE.Commons.Model.Names.CSharp.Parser
+{
 
 /**
  * Copyright 2016 Sebastian Proksch
@@ -91,6 +92,17 @@ public interface ITypeNamingListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitTypeParameter([NotNull] TypeNamingParser.TypeParameterContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.notTypeParameter"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNotTypeParameter([NotNull] TypeNamingParser.NotTypeParameterContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.notTypeParameter"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNotTypeParameter([NotNull] TypeNamingParser.NotTypeParameterContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.regularType"/>.
@@ -258,17 +270,6 @@ public interface ITypeNamingListener : IParseTreeListener {
 	void ExitGenericParam([NotNull] TypeNamingParser.GenericParamContext context);
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.boundTypeParameter"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterBoundTypeParameter([NotNull] TypeNamingParser.BoundTypeParameterContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.boundTypeParameter"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitBoundTypeParameter([NotNull] TypeNamingParser.BoundTypeParameterContext context);
-
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.assembly"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -368,17 +369,6 @@ public interface ITypeNamingListener : IParseTreeListener {
 	void ExitFormalParam([NotNull] TypeNamingParser.FormalParamContext context);
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.parameterModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterParameterModifier([NotNull] TypeNamingParser.ParameterModifierContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.parameterModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitParameterModifier([NotNull] TypeNamingParser.ParameterModifierContext context);
-
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.staticModifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -388,61 +378,6 @@ public interface ITypeNamingListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitStaticModifier([NotNull] TypeNamingParser.StaticModifierContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.paramsModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterParamsModifier([NotNull] TypeNamingParser.ParamsModifierContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.paramsModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitParamsModifier([NotNull] TypeNamingParser.ParamsModifierContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.optsModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOptsModifier([NotNull] TypeNamingParser.OptsModifierContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.optsModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOptsModifier([NotNull] TypeNamingParser.OptsModifierContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.refModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterRefModifier([NotNull] TypeNamingParser.RefModifierContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.refModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitRefModifier([NotNull] TypeNamingParser.RefModifierContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.outModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOutModifier([NotNull] TypeNamingParser.OutModifierContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.outModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOutModifier([NotNull] TypeNamingParser.OutModifierContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.extensionModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterExtensionModifier([NotNull] TypeNamingParser.ExtensionModifierContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.extensionModifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitExtensionModifier([NotNull] TypeNamingParser.ExtensionModifierContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.id"/>.

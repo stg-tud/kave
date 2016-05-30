@@ -52,7 +52,8 @@ typeEOL : type EOL;
 methodEOL: method EOL;
 
 type: UNKNOWN | typeParameter | regularType | delegateType | arrayType;
-typeParameter : id;
+typeParameter : id (WS? '->' WS? notTypeParameter)?;
+notTypeParameter: regularType | delegateType | arrayType | UNKNOWN | id;
 regularType: ( resolvedType | nestedType ) ',' WS? assembly;
 delegateType: 'd:' method;
 arrayType: 'arr(' POSNUM '):' type;
@@ -73,11 +74,9 @@ simpleTypeName: id;
 
 
 genericTypePart: '\'' POSNUM '[' genericParam (',' genericParam)* ']';
-genericParam: '[' boundTypeParameter ']';
-boundTypeParameter: typeParameter (WS? '->' WS? type)?;
+genericParam: '[' typeParameter ']';
 
-
-assembly: id (',' WS? assemblyVersion)? ;
+assembly: (id '.')* id (',' WS? assemblyVersion)? ;
 assemblyVersion: num '.' num '.' num '.' num;	
 
 method: UNKNOWN | regularMethod;
@@ -90,11 +89,11 @@ formalParam: (WS? parameterModifier)? WS? '[' type ']' WS? id;
 parameterModifier: paramsModifier | optsModifier | refModifier | outModifier | extensionModifier;
 
 staticModifier: 'static';
-paramsModifier: 'params';
-optsModifier: 'opts';
-refModifier: 'ref';
-outModifier: 'out';
-extensionModifier: 'this';
+paramsModifier: 'params ';
+optsModifier: 'opt ';
+refModifier: 'ref ';
+outModifier: 'out ';
+extensionModifier: 'this ';
 
 // basic
 UNKNOWN:'?';

@@ -15,8 +15,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace KaVE.Commons.Model.Names.CSharp.Parser
 {
@@ -96,7 +94,7 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
 
         public string Identifier
         {
-            get { throw new NotImplementedException(); }
+            get { return ctx.GetText(); }
         }
 
         public bool IsUnknown

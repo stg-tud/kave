@@ -15,9 +15,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.CSharp.Parser
 {
