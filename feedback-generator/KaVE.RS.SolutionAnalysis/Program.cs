@@ -56,7 +56,7 @@ namespace KaVE.RS.SolutionAnalysis
 
             /* data preparation */
             RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
-            //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
+            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunFailingRepoFinder();
             //RunApiStatisticsRunner();
             //RunCompletionEventStatistics();
@@ -115,7 +115,7 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 Filters =
                 {
-                    new VersionFilter(723),
+                    new VersionFilter(1000),
                     new NoSessionIdFilter(),
                     new NoTimeFilter(),
                     new InvalidCompletionEventFilter()

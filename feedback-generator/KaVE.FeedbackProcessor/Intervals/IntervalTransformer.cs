@@ -62,13 +62,15 @@ namespace KaVE.FeedbackProcessor.Intervals
 
         public IEnumerable<Interval> TransformFile(string filename)
         {
+            Console.WriteLine("Transforming {0}...", filename);
             return
                 Transform(GetAllEventsFromFile(filename)).Select(SetUserId(Path.GetFileNameWithoutExtension(filename)));
         }
 
         public IEnumerable<Interval> TransformFolder(string path)
         {
-            return Directory.EnumerateFiles(path, "*.zip", SearchOption.AllDirectories).SelectMany(TransformFile);
+            var zips = Directory.GetFiles(path, "*.zip", SearchOption.AllDirectories);
+            return zips.SelectMany(TransformFile);
         }
 
         public IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events,
