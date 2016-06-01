@@ -17,6 +17,7 @@
 using System;
 using System.ComponentModel;
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp.Parser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -46,6 +47,8 @@ namespace KaVE.Commons.Utils.Json
                 return null;
             }
             var serialization = ReadSerializationFrom(reader);
+            CsNameUtil.AddName(serialization);
+            // CsNameUtil.ParseJson(serialization);
             return _converter.ConvertFromString(serialization);
         }
 

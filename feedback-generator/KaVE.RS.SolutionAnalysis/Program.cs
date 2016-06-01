@@ -78,6 +78,8 @@ namespace KaVE.RS.SolutionAnalysis
             //RunCShaspVsFSharpStats();
             RunUserStats(); // used to export positions used in the Demographic generator on Java
 
+            RunNameGrabber();
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
@@ -91,6 +93,11 @@ namespace KaVE.RS.SolutionAnalysis
         private static void RunCShaspVsFSharpStats()
         {
             new FileSetExtractionRunner(DirEventsAll_Clean).Run();
+        }
+
+        private static void RunNameGrabber()
+        {
+            new NameGrabber(DirRoot, DirRoot, 10, 10, true).Run();
         }
 
         private static void RunQuickSanityCheck()

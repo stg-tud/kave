@@ -81,7 +81,6 @@
     <Compile Include="Model\Names\CSharp\Parser\CsMethodName.cs" />
     <Compile Include="Model\Names\CSharp\Parser\CsNameUtil.cs" />
     <Compile Include="Model\Names\CSharp\Parser\CsTypeName.cs" />
-    <Compile Include="Model\Names\CSharp\Parser\NameGrabber.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameParseUtil.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNamingBaseListener.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNamingBaseVisitor.cs" />
