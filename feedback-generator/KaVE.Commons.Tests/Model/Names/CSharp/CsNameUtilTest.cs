@@ -26,38 +26,6 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
     public class CsNameUtilTest
     {
 
-        [TestCase("n.T+T1,a", "n:n.T+T1,a"),
-         TestCase("n.T+T1+T2,a", "n:n:n.T+T1+T2,a"),
-         TestCase("T`1[[T1 -> i:T`1[[T -> T]], a, 4.0.0.0]], a, 4.0.0.0",
-             "T'1[[T1 -> i:T'1[[T -> T]], a, 4.0.0.0]], a, 4.0.0.0"),
-        TestCase("d:[e:n.T1+T2, a] [e:n.T1+T2, a].d([e:n.T, a] p)", "d:[n:n.e:T1+T2, a] [n:n.e:T1+T2, a].d([n.e:T, a] p)"),
-        TestCase("i:T`1[[T -> i:n.T, a, 0.0.0.0]]+T2, a, 0.0.0.0", "n:i:T'1[[T -> n.i:T, a, 0.0.0.0]]+T2, a, 0.0.0.0")]
-        public void HandleOldNamesSimpleNested(string input, string expected)
-        {
-            Assert.AreEqual(expected, CsNameUtil.HandleOldTypeNames(input));
-        }
-
-        [TestCase("[System.Void, mscorlib, 4.0.0.0] [?]..ctor([?] a)", "[?] [?]..ctor([?] a)"),
-        TestCase("[?] [?].m(out [?] t)", "[?] [?].m(out [?] t)")]
-        public void HandleOldMethodNames(string input, string expected)
-        {
-            Assert.AreEqual(expected, CsNameUtil.HandleOldMethodNames(input));
-        }
-
-        [TestCase("e:n.T, a, 0.0.0.0", "n.e:T, a, 0.0.0.0"),
-        TestCase("e:n.T+T2, a, 0.0.0.0", "n.e:T+T2, a, 0.0.0.0")]
-        public void HandleTypeIdentifier(string input, string expected)
-        {
-            Assert.AreEqual(expected, CsNameUtil.HandleTypeIdentifier(input));
-        }
-
-        [TestCase("e:n.T+T2, a, 0.0.0.0", "n:n.e:T+T2, a, 0.0.0.0"),
-        TestCase("e:n.T+T2+T3, a, 0.0.0.0", "n:n:n.e:T+T2+T3, a, 0.0.0.0")]
-        public void HandleNestedTypeIdentifier(string input, string expected)
-        {
-            Assert.AreEqual(expected, CsNameUtil.HandleNestedTypeNames(CsNameUtil.HandleTypeIdentifier(input)));
-        }
-
         [TestCase("CSharp.AliasName:???", typeof(AliasName)),
         TestCase("CSharp.AssemblyName:???", typeof(AssemblyName)),
         TestCase("CSharp.EventName:???", typeof(EventName)),
