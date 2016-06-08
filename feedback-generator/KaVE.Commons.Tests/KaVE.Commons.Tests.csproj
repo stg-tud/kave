@@ -126,6 +126,7 @@
     <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCase.cs" />
     <Compile Include="Model\Names\CSharp\SimpleType.cs" />
     <Compile Include="Model\Names\CSharp\TypeNameTest.cs" />
+    <Compile Include="Model\Names\CSharp\CsNameFixerTest.cs" />
     <Compile Include="Model\Names\VisualStudio\DocumentNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\ProjectItemNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\ProjectNameTest.cs" />

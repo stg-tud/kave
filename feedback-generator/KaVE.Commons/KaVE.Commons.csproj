@@ -81,6 +81,7 @@
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\CSharp\CsMethodName.cs" />
+    <Compile Include="Model\Names\CsNameFixer.cs" />
     <Compile Include="Model\Names\CsNameUtil.cs" />
     <Compile Include="Model\Names\CSharp\CsTypeName.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameParseUtil.cs" />
