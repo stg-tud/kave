@@ -16,7 +16,10 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
@@ -33,25 +36,40 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         }
 
         [Test, TestCaseSource("TestCases")]
-        public void ValidTypeName(MethodNameTestCase testCase)
+        public void ValidMethodName(MethodNameTestCase testCase)
         {
-            Assert.DoesNotThrow(delegate { new CsMethodName(testCase.Identifier); });
-            var type = new CsMethodName(testCase.Identifier);
+            Assert.DoesNotThrow(delegate { CsNameUtil.ParseMethodName(testCase.Identifier); });
+            var type = CsNameUtil.ParseMethodName(testCase.Identifier);
             Assert.AreEqual(testCase.DeclaringType, type.DeclaringType.Identifier);
+            Assert.AreEqual(testCase.ReturnType, type.ReturnType.Identifier);
+            AssertStrings(testCase.Parameters, type.Parameters);
+            AssertStrings(testCase.TypeParameters, type.TypeParameters);
+            Assert.AreEqual(testCase.IsStatic, type.IsStatic);
+            Assert.AreEqual(testCase.IsGeneric, type.IsGenericEntity);
+            Assert.AreEqual(testCase.SimpleName, type.Name);
+        }
+
+        private void AssertStrings<T>(IKaVEList<string> parameters, IList<T> parameterNames) where T : IName
+        {
+            Assert.AreEqual(parameters.Count, parameterNames.Count);
+            for(var i = 0; i < parameters.Count; i++)
+            {
+                Assert.AreEqual(parameters[i], parameterNames[i].Identifier);
+            }
         }
 
         [Test, TestCaseSource("InvalidTestCases")]
-        public void InvalidTypeName(string invalidType)
+        public void InvalidMethodName(string invalidType)
         {
-            Assert.Catch(delegate { new CsMethodName(invalidType); });
+            Assert.Catch(delegate { TypeNameParseUtil.ValidateMethodName(invalidType); });
         }
 
         [Test, Ignore]
-        public void testMethodName()
+        public void MethodName()
         {
             Assert.DoesNotThrow(delegate
             {
-                new CsMethodName(
+                CsNameUtil.ParseMethodName(
                     "[System.Void, mscorlib, 4.0.0.0] [ACAT.Lib.Core.ActuatorManagement.ActuatorBase, Core].UpdateCalibrationStatus([System.String, mscorlib, 4.0.0.0] caption, [System.String, mscorlib, 4.0.0.0] prompt, opt [System.Int32, mscorlib, 4.0.0.0] timeout, opt [System.Boolean, mscorlib, 4.0.0.0] enableConfigure)");
             });
         }

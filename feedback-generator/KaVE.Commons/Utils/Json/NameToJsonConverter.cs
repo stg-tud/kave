@@ -34,7 +34,8 @@ namespace KaVE.Commons.Utils.Json
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(_converter.ConvertToString(value));
+            //writer.WriteValue(_converter.ConvertToString(value));
+            writer.WriteValue(CsNameUtil.ToJson((IName)value));
         }
 
         public override object ReadJson(JsonReader reader,
@@ -48,8 +49,8 @@ namespace KaVE.Commons.Utils.Json
             }
             var serialization = ReadSerializationFrom(reader);
             CsNameUtil.AddName(serialization);
-            // CsNameUtil.ParseJson(serialization);
-            return _converter.ConvertFromString(serialization);
+            return CsNameUtil.ParseJson(serialization);
+            //return _converter.ConvertFromString(serialization);
         }
 
         private static string ReadSerializationFrom(JsonReader reader)

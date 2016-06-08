@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         private const string ValidTypeFile = "\\valid-typenames.tsv";
         private const string InvalidTypeFile = "\\invalid-typenames.tsv";
         private const string ValidMethodFile = "\\valid-methodnames.tsv";
-        private const string InvalidMethodFile = "\\invalid-typenames.tsv";
+        private const string InvalidMethodFile = "\\invalid-methodnames.tsv";
 
         public static string[] LoadTestFile(string file)
         {
@@ -46,7 +46,13 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
                 {
                     Identifier = fields[0],
                     Namespace = fields[1],
-                    Assembly = fields[2]
+                    Assembly = fields[2],
+                    DeclaringType = fields[3],
+                    FullName = fields[4],
+                    Name = fields[5],
+                    //ArrayBaseType = fields[6],
+                    //TypeParameterType = fields[7],
+                    //TypeParameterShortName = fields[8]
                 };
                 testcases.Add(t);
             }
@@ -64,6 +70,12 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
                 {
                     Identifier = fields[0],
                     DeclaringType = fields[1],
+                    ReturnType = fields[2],
+                    SimpleName = fields[3],
+                    Parameters = GetList(fields[4]),
+                    TypeParameters = GetList(fields[5]),
+                    IsStatic = GetBoolean(fields[6]),
+                    IsGeneric = GetBoolean(fields[7])
                 };
                 testcases.Add(t);
             }

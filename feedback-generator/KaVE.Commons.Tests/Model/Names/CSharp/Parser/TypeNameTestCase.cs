@@ -25,5 +25,11 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         public string Identifier { get; set; }
         public string Assembly { get; set; }
         public string Namespace { get; set; }
+        public string DeclaringType { get; set; }
+        public string FullName { get; set; }
+        public string Name { get; set; }
+        public string ArrayBaseType { get; set; }
+        public string TypeParameterType { get; set; }
+        public string TypeParameterShortName { get; set; }
     }
 }

@@ -76,11 +76,13 @@
     <Compile Include="Model\Events\UserProfiles\YesNoUnknown.cs" />
     <Compile Include="Model\Events\SystemEvent.cs" />
     <Compile Include="Model\Events\TestRunEvents\TestRunEvent.cs" />
+    <Compile Include="Model\Names\CSharp\CsAssemblyName.cs" />
+    <Compile Include="Model\Names\CSharp\CsNamespaceName.cs" />
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
-    <Compile Include="Model\Names\CSharp\Parser\CsMethodName.cs" />
-    <Compile Include="Model\Names\CSharp\Parser\CsNameUtil.cs" />
-    <Compile Include="Model\Names\CSharp\Parser\CsTypeName.cs" />
+    <Compile Include="Model\Names\CSharp\CsMethodName.cs" />
+    <Compile Include="Model\Names\CsNameUtil.cs" />
+    <Compile Include="Model\Names\CSharp\CsTypeName.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameParseUtil.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNamingBaseListener.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNamingBaseVisitor.cs" />

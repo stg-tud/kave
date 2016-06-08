@@ -16,9 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.CSharp.Parser;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Commons.Model.Names.CSharp.Parser
+namespace KaVE.Commons.Model.Names
 {
     public static class CsNameUtil
     {
@@ -41,33 +43,47 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
         private static Dictionary<string, Types> IdToType = new Dictionary<string, Types>()
         {
             {"CSharp.AliasName", Types.AliasName},
+            {"1a", Types.AliasName},
             {"CSharp.AssemblyName", Types.AssemblyName},
+            {"1b", Types.AssemblyName},
             {"CSharp.EventName", Types.EventName},
+             {"1c", Types.EventName},
             {"CSharp.FieldName", Types.FieldName},
+            {"1d", Types.FieldName},
             {"CSharp.LambdaName", Types.LambdaName},
+            {"1e", Types.LambdaName},
             {"CSharp.LocalVariableName", Types.LocalVariableName},
+            {"1f", Types.LocalVariableName},
             {"CSharp.MethodName", Types.MethodName},
+            {"1g", Types.MethodName},
             {"CSharp.Name", Types.Name},
+            {"1h", Types.Name},
             {"CSharp.NamespaceName", Types.NamespaceName},
+            {"1i", Types.NamespaceName},
             {"CSharp.ParameterName", Types.ParameterName},
+            {"1j", Types.ParameterName},
             {"CSharp.PropertyName", Types.PropertyName},
-            {"CSharp.TypeName", Types.TypeName}
+            {"1k", Types.PropertyName},
+            {"CSharp.TypeName", Types.TypeName},
+            {"1l", Types.TypeName}
         };
 
         private static Dictionary<Type, string> TypeToJson = new Dictionary<Type, string>()
         {
-            {typeof(AliasName), ""},
-            {typeof(AssemblyName), ""},
-            {typeof(EventName), ""},
-            {typeof(FieldName), ""},
-            {typeof(LambdaName), ""},
-            {typeof(LocalVariableName), ""},
-            {typeof(MethodName), ""},
-            {typeof(Name), ""},
-            {typeof(NamespaceName), ""},
-            {typeof(ParameterName), ""},
-            {typeof(PropertyName), ""},
-            {typeof(TypeName), ""}
+            {typeof(AliasName), "1a"},
+            {typeof(AssemblyName), "1b"},
+            {typeof(EventName), "1c"},
+            {typeof(FieldName), "1d"},
+            {typeof(LambdaName), "1e"},
+            {typeof(LocalVariableName), "1f"},
+            {typeof(MethodName), "1g"},
+            {typeof(CsMethodName), "1g"},
+            {typeof(Name), "1h"},
+            {typeof(NamespaceName), "1i"},
+            {typeof(ParameterName), "1j"},
+            {typeof(PropertyName), "1k"},
+            {typeof(TypeName), "1l"},
+            {typeof(CsTypeName), "1l"}
         };
 
         public static KaVEList<string> Names = new KaVEList<string>();
@@ -117,10 +133,10 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             return null;
         }
 
-        public static string toJson(IName type)
+        public static string ToJson(IName type)
         {
 
-            return TypeToJson[type.GetType()] + type.Identifier;
+            return TypeToJson[type.GetType()] + ":" + type.Identifier;
         }
 
         public static ITypeName ParseTypeName(string input)
@@ -265,6 +281,30 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
         private static string GetTypeNameIdentifier(ITypeName typeName)
         {
             return typeName.IsInterfaceType ? "i:" : typeName.IsStructType ? "s:" : typeName.IsEnumType ? "e:" : "";
+        }
+
+        public static string GetTextFromId(TypeNamingParser.IdContext[] id)
+        {
+            string s = "";
+            foreach (var i in id)
+            {
+                if (s.Equals(""))
+                {
+                    s += i.GetText();
+                }
+                else
+                {
+                    s += "." + i.GetText();
+                }
+
+            }
+            return s;
+        }
+
+        public static IAssemblyName ParseAssemblyName(string input)
+        {
+            var ctx = TypeNameParseUtil.ValidateAssemblyContext(input);
+            return new CsAssemblyName(ctx);
         }
     }
 }

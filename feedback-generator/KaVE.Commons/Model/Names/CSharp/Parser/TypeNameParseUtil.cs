@@ -55,66 +55,6 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             return typeEOL.type();
         }
 
-        private static TypeNamingParser SetupParser(string input, MyErrorListener el)
-        {
-            var inputStream = new AntlrInputStream(input + "\n");
-            var lexer = new TypeNamingLexer(inputStream);
-            lexer.RemoveErrorListeners();
-            lexer.AddErrorListener(el);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            TypeNamingParser parser = new TypeNamingParser(tokens);
-            parser.RemoveErrorListeners();
-            parser.AddErrorListener(el);
-            return parser;
-        }
-
-        public ITypeName ParseTypeName(string input)
-        {
-            try
-            {
-                var ctx = TypeNameParseUtil.ValidateTypeName(input);
-                return new CsTypeName(ctx);
-            }
-            catch (AssertException e)
-            {
-                try
-                {
-                    var ctx = TypeNameParseUtil.ValidateTypeName(HandleOldTypeNames(input));
-                    return new CsTypeName(ctx);
-                }
-                catch (AssertException e2)
-                {
-                    return new CsTypeName("?");
-                }
-            }
-        }
-
-        public static string HandleOldTypeNames(string input)
-        {
-            ITypeName typeName = TypeName.Get(input);
-            string result = "";
-            if (typeName.IsNestedType)
-            {
-                int nestedCount = input.Split('+').Length - 1;
-                for (int i = 0; i < nestedCount; i++)
-                {
-                    result += "n:";
-                }
-                result += input;
-            }
-            else if (typeName.IsGenericEntity)
-            {
-                if (result.Equals(""))
-                {
-                    result = input;
-                }
-                result = result.Replace("`", "'");
-            }
-            return result;
-        }
-
-
-
         public static TypeNamingParser.MethodContext ValidateMethodName(string input)
         {
             MyErrorListener el = new MyErrorListener();
@@ -122,6 +62,28 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             var methodEol= parser.methodEOL();
             Asserts.Not(el.HasError, "Syntax Error: " + input);
             return methodEol.method();
+        }
+
+        public static TypeNamingParser.AssemblyContext ValidateAssemblyContext(string input)
+        {
+            MyErrorListener el = new MyErrorListener();
+            TypeNamingParser parser = SetupParser(input, el);
+            var assemblyContext = parser.assembly();
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
+            return assemblyContext;
+        }
+
+        private static TypeNamingParser SetupParser(string input, MyErrorListener el)
+        {
+            var inputStream = new AntlrInputStream(input + "\n");
+            var lexer = new TypeNamingLexer(inputStream);
+            //lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(el);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            TypeNamingParser parser = new TypeNamingParser(tokens);
+            //parser.RemoveErrorListeners();
+            parser.AddErrorListener(el);
+            return parser;
         }
     }
 }

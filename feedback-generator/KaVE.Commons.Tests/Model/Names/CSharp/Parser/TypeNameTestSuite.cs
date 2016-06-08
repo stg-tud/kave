@@ -18,6 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.CSharp.Parser;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -39,12 +41,13 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         [Test, TestCaseSource("TestCases")]
         public void ValidTypeName(TypeNameTestCase testCase)
         {
-            Assert.DoesNotThrow(delegate { new CsTypeName(testCase.Identifier); });
+            Assert.DoesNotThrow(delegate { CsNameUtil.ParseTypeName(testCase.Identifier); });
             var type = new CsTypeName(testCase.Identifier);
+            Console.WriteLine(testCase.Identifier);
             Assert.AreEqual(testCase.Identifier, type.Identifier);
             Assert.AreEqual(testCase.Assembly, type.Assembly.Identifier);
-            Console.WriteLine(testCase.Identifier);
             Assert.AreEqual(testCase.Namespace, type.Namespace.Identifier);
+            Assert.AreEqual(testCase.DeclaringType, type.DeclaringType.Identifier);
         }
 
         [Test, TestCaseSource("InvalidTestCases")]
@@ -53,7 +56,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             Assert.Catch(delegate { new CsTypeName(invalidType); });
         }
 
-        [Test]
+        [Test, Ignore]
         public void testName()
         {
             Assert.DoesNotThrow(
