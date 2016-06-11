@@ -17,6 +17,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using JetBrains.DataFlow;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils;
@@ -61,6 +63,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             Registry.Clear();
         }
 
+        protected static IThreading TestThreading
+        {
+            get { return new Invocator(Lifetimes.Define("testlifetime").Lifetime); }
+        }
+
         private void ProcessEvent(IDEEvent ideEvent)
         {
             lock (_publishedEvents)
@@ -92,7 +99,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         protected TEvent GetLastPublished<TEvent>() where TEvent : IDEEvent
         {
             var @event = _publishedEvents.Last();
-            Assert.IsInstanceOf(typeof (TEvent), @event);
+            Assert.IsInstanceOf(typeof(TEvent), @event);
             return (TEvent) @event;
         }
 

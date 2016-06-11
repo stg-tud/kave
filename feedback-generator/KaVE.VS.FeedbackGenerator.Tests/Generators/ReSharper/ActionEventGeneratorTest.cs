@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
-using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
@@ -29,8 +27,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
         [SetUp]
         public void Setup()
         {
-            var threading = Mock.Of<IThreading>();
-            _uut = new ActionEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, threading);
+            _uut = new ActionEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, TestThreading);
         }
 
         [Test]
