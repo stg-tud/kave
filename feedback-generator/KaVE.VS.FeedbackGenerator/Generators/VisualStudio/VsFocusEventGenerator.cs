@@ -19,28 +19,35 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Timers;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    // TODO RS9: disabled for now
-    //[ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     internal class VsFocusEventGenerator : EventGeneratorBase
     {
         private readonly IFocusHelper _focusHelper;
+        private readonly IThreading _threading;
 
         [UsedImplicitly]
         private Timer _timer;
 
         private bool _wasActive;
 
-        public VsFocusEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils, IFocusHelper focusHelper)
+        public VsFocusEventGenerator(IRSEnv env,
+            IMessageBus messageBus,
+            IDateUtils dateUtils,
+            IFocusHelper focusHelper,
+            [NotNull] IThreading threading)
             : base(env, messageBus, dateUtils)
         {
             _focusHelper = focusHelper;
+            _threading = threading;
             _timer = new Timer();
             _timer.Elapsed += OnTimerElapsed;
             _timer.Interval = 1000;
@@ -53,10 +60,17 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             var isActive = _focusHelper.IsCurrentApplicationActive();
             if (isActive != _wasActive)
             {
-                var windowEvent = Create<WindowEvent>();
-                windowEvent.Action = isActive ? WindowEvent.WindowAction.Activate : WindowEvent.WindowAction.Deactivate;
-                // TODO unecessary?: windowEvent.Window = DTE.MainWindow.GetName();
-                FireNow(windowEvent);
+                var windowAction = isActive ? WindowEvent.WindowAction.Activate : WindowEvent.WindowAction.Deactivate;
+
+                _threading.ExecuteOrQueue(
+                    "VsFocusEventGenerator.OnTimerElapsed",
+                    () =>
+                    {
+                        var windowEvent = Create<WindowEvent>();
+                        windowEvent.Action = windowAction;
+                        windowEvent.Window = DTE.MainWindow.GetName();
+                        FireNow(windowEvent);
+                    });
             }
             _wasActive = isActive;
             _timer.Enabled = true;
