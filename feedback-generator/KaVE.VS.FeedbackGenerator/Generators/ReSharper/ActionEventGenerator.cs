@@ -16,6 +16,7 @@
 
 using JetBrains.Application;
 using JetBrains.Application.ActivityTrackingNew;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -42,9 +43,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         protected void FireActionEvent(string actionId)
         {
-            var actionEvent = Create<CommandEvent>();
-            actionEvent.CommandId = actionId;
-            Fire(actionEvent);
+            ReentrancyGuard.Current.ExecuteOrQueue(
+                "ActionEventGenerator.FireActionEvent",
+                () =>
+                {
+                    var actionEvent = Create<CommandEvent>();
+                    actionEvent.CommandId = actionId;
+                    Fire(actionEvent);
+                });
         }
     }
 }
