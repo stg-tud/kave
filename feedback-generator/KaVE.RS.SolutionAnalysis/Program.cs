@@ -22,6 +22,7 @@ using KaVE.RS.SolutionAnalysis.CleanUp;
 using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
+using KaVE.RS.SolutionAnalysis.CSharpVsFSharp;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using KaVE.RS.SolutionAnalysis.UserProfileExports;
@@ -55,8 +56,8 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine(@"{0} start", DateTime.Now);
 
             /* data preparation */
-            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
-            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
+            //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
+            //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunFailingRepoFinder();
             //RunApiStatisticsRunner();
             //RunCompletionEventStatistics();
@@ -73,13 +74,17 @@ namespace KaVE.RS.SolutionAnalysis
             //new EditLocationRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
             //RunUserProfileExport();
             //RunStatisticsForPaperCreation();
-
+            RunCShaspVsFSharpStats();
 
             //new UserStatsRunner(new UserStatsIo(DirEventsAll_Clean, "")).Run();
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
-            Console.ReadKey();
+        }
+
+        private static void RunCShaspVsFSharpStats()
+        {
+            new FileSetExtractionRunner(DirEventsAll_Clean).Run();
         }
 
         private static void RunQuickSanityCheck()

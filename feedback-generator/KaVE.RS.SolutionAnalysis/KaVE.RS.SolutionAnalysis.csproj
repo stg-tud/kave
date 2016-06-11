@@ -188,6 +188,7 @@
     <Compile Include="CompletionEventToMicroCommits\CompletionEventToMicroCommitRunner.cs" />
     <Compile Include="CompletionEventToMicroCommits\IoHelper.cs" />
     <Compile Include="CompletionEventToMicroCommits\MicroCommitGenerator.cs" />
+    <Compile Include="CSharpVsFSharp\FileSetExtractionRunner.cs" />
     <Compile Include="EditLocationRunner.cs" />
     <Compile Include="Episodes\Event.cs" />
     <Compile Include="Episodes\EventStreamGenerator.cs" />
