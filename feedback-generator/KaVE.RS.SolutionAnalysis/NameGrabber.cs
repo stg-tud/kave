@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using JetBrains.ReSharper.Features.Inspections.Resources;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp.Parser;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;

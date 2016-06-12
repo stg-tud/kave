@@ -56,14 +56,5 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             Assert.Catch(delegate { new CsTypeName(invalidType); });
         }
 
-        [Test, Ignore]
-        public void testName()
-        {
-            Assert.DoesNotThrow(
-                delegate
-                {
-                    TypeNameParseUtil.ValidateTypeName(CsNameUtil.HandleOldTypeNames("System.Collections.Generic.List`1[[T -> d:[System.Void, mscorlib, 4.0.0.0] [System.Windows.Automation.AutomationPropertyChangedEventHandler, UIAutomationTypes, 4.0.0.0].m([System.Object, mscorlib, 4.0.0.0] sender, [System.Windows.Automation.AutomationPropertyChangedEventArgs, UIAutomationTypes, 4.0.0.0] e)]], mscorlib, 4.0.0.0"));
-                });
-        }
     }
 }
