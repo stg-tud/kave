@@ -17,9 +17,11 @@
 using System;
 using System.Diagnostics;
 using EnvDTE;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -33,14 +35,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         private readonly IRSEnv _env;
         private readonly IMessageBus _messageBus;
         private readonly IDateUtils _dateUtils;
+        private readonly IThreading _threading;
 
         protected EventGeneratorBase([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
-            [NotNull] IDateUtils dateUtils)
+            [NotNull] IDateUtils dateUtils,
+            // TODO refactor all generators and get rid of default value
+            IThreading threading = null)
         {
             _env = env;
             _messageBus = messageBus;
             _dateUtils = dateUtils;
+            _threading = threading;
         }
 
         [NotNull]
@@ -121,11 +127,23 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         /// </summary>
         protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
-            // TODO @Sven: why is it set here and not with the other information "on create"?
-            // TODO @Seb: good question... if we always use Create it shouldn't make a difference...
+            // TODO move to 'Create<TEvent>' method
             @event.IDESessionUUID = _env.IDESession.UUID;
             _messageBus.Publish<IDEEvent>(@event);
             WriteToDebugConsole(@event);
+        }
+
+        protected void FireAsync<TEvent>([NotNull] Action<TEvent> fun) where TEvent : IDEEvent, new()
+        {
+            Asserts.NotNull(_threading, "threading object is not provided");
+            _threading.ExecuteOrQueue(
+                "EventGeneratorBase.FireAsync",
+                () =>
+                {
+                    var e = Create<TEvent>();
+                    fun(e);
+                    Fire(e);
+                });
         }
 
         [Conditional("DEBUG")]
