@@ -23,8 +23,8 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
-    [TestFixture]
-    internal class EventGeneratorBaseTest : EventGeneratorTestBase
+    // do not extend! this class is only used to test basic functionality of the base test
+    internal sealed class EventGeneratorBaseTest : EventGeneratorTestBase
     {
         private TestEventGenerator _uut;
 
@@ -46,7 +46,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         }
 
         [SetUp]
-        public void SetUp()
+        public void BaseTestSetUp()
         {
             _uut = new TestEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
         }

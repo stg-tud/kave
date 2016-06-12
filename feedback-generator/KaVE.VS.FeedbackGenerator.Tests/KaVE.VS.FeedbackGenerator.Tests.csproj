@@ -193,6 +193,7 @@
     <Compile Include="Generators\Activity\MouseActivityEventGeneratorTest.cs" />
     <Compile Include="Generators\ReSharper\ActionEventGeneratorTest.cs" />
     <Compile Include="Generators\ReSharper\TestRunEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\VsFocusEventGeneratorTest.cs" />
     <Compile Include="Menu\UploadWizardActionTest.cs" />
     <Compile Include="PropertiesTests\EnumLocalizationTest.cs" />
     <Compile Include="SessionManager\Anonymize\TestRunEventAnonymizerTest.cs" />

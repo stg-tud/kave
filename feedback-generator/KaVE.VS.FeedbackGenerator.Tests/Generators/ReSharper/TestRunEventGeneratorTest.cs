@@ -19,7 +19,7 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 {
-    internal class TestRunEventGeneratorTest : EventGeneratorBaseTest
+    internal class TestRunEventGeneratorTest : EventGeneratorTestBase
     {
         [TestCase("NoParameters", ""),
          TestCase("SomeParameters(\"a string\", 1, 2)", "\"a string\", 1, 2"),

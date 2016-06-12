@@ -21,16 +21,19 @@ using System.Timers;
 using JetBrains.Application;
 using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent]
     internal class VsFocusEventGenerator : EventGeneratorBase
     {
+        public const int TimerIntervalSize = 1000;
+        public const string MainWindowName = "main Microsoft Visual Studio";
+
         private readonly IFocusHelper _focusHelper;
         private readonly IThreading _threading;
 
@@ -43,18 +46,19 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             IMessageBus messageBus,
             IDateUtils dateUtils,
             IFocusHelper focusHelper,
-            [NotNull] IThreading threading)
+            IThreading threading)
             : base(env, messageBus, dateUtils)
         {
             _focusHelper = focusHelper;
             _threading = threading;
+
             _timer = new Timer();
             _timer.Elapsed += OnTimerElapsed;
-            _timer.Interval = 1000;
+            _timer.Interval = TimerIntervalSize;
             _timer.Enabled = true;
         }
 
-        private void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        public void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             _timer.Enabled = false;
             var isActive = _focusHelper.IsCurrentApplicationActive();
@@ -68,7 +72,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
                     {
                         var windowEvent = Create<WindowEvent>();
                         windowEvent.Action = windowAction;
-                        windowEvent.Window = DTE.MainWindow.GetName();
+                        windowEvent.Window = WindowName.Get(MainWindowName);
                         FireNow(windowEvent);
                     });
             }

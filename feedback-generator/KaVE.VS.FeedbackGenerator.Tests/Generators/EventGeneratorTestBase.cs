@@ -41,7 +41,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         protected Mock<ILogger> MockLogger { get; private set; }
 
         [SetUp]
-        public void SetUpEventReception()
+        public void TestBaseSetUp()
         {
             TestIDESession = new TestIDESession();
             TestRSEnv = new TestRSEnv(TestIDESession);
@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         }
 
         [TearDown]
-        public void TearDown()
+        public void TestBaseTearDown()
         {
             Registry.Clear();
         }
@@ -89,6 +89,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             CollectionAssert.IsEmpty(_publishedEvents);
         }
 
+        protected void AssertNumEvent(int expectedNum)
+        {
+            Assert.AreEqual(expectedNum, _publishedEvents.Count);
+        }
+
         [NotNull]
         protected IEnumerable<IDEEvent> GetPublishedEvents()
         {
@@ -106,7 +111,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         [NotNull]
         protected TEvent GetSinglePublished<TEvent>() where TEvent : IDEEvent
         {
-            Assert.AreEqual(1, _publishedEvents.Count, "expected single published event, found multiple");
+            Assert.AreEqual(1, _publishedEvents.Count, "expected single published event");
             return GetLastPublished<TEvent>();
         }
 
