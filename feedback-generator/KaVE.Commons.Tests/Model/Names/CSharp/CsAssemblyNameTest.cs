@@ -22,7 +22,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
     public class CsAssemblyNameTest
     {
         [TestCase("T, a, 0.0.0.0", "0.0.0.0"),
-        TestCase("T, a", "???")]
+        TestCase("T, a", "?")]
         public void AssemblyVersion(string input, string expected)
         {
             var name = CsNameUtil.ParseTypeName(input);

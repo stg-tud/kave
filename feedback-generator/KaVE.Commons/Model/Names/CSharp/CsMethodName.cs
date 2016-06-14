@@ -44,9 +44,9 @@ namespace KaVE.Commons.Model.Names.CSharp
                         ? ".ctor" + ctx.regularMethod().methodParameters().GetText()
                         : ".cctor" + ctx.regularMethod().methodParameters().GetText();
                 }
-                if(ctx.regularMethod() != null)
+                if (ctx.regularMethod() != null)
                 {
-                    return ctx.regularMethod().customMethod().id().GetText() +
+                    return ctx.regularMethod().customMethod().id().GetText() + (ctx.regularMethod().customMethod().genericTypePart() != null ? ctx.regularMethod().customMethod().genericTypePart().GetText() : "") +
                            ctx.regularMethod().methodParameters().GetText();
                 }
                 return ctx.UNKNOWN().GetText();
@@ -85,18 +85,20 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public ITypeName ReturnType
         {
-            get {
-                    if (ctx.regularMethod() != null && ctx.regularMethod().customMethod() != null)
-                    {
-                        return new CsTypeName(ctx.regularMethod().customMethod().type()[0]);
-                    }
-                    return new CsTypeName("?");
+            get
+            {
+                if (ctx.regularMethod() != null && ctx.regularMethod().customMethod() != null)
+                {
+                    return new CsTypeName(ctx.regularMethod().customMethod().type()[0]);
                 }
+                return new CsTypeName("?");
+            }
         }
 
         public bool IsExtensionMethod
         {
-            get {
+            get
+            {
                 if (HasParameters)
                 {
                     foreach (var p in Parameters)

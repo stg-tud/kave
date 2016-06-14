@@ -76,13 +76,5 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         {
             Assert.AreEqual(CsNameUtil.ToJson(CsNameUtil.ParseJson(input)), expected);
         }
-
-        [TestCase("T, a", "a"),
-        TestCase("T, a.a.a", "a.a.a")]
-        public void GetNameFromId(string input, string expected)
-        {
-            var name = CsNameUtil.ParseTypeName(input);
-            Assert.AreEqual(name.Assembly.Name, expected);
-        }
     }
 }

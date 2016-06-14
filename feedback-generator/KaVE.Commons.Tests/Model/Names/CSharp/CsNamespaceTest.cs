@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Model.Names;
+using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Names.CSharp
 {
-    public class MethodNameTestCase : ITestCase
+    [TestFixture]
+    public class CsNamespaceTest
     {
-        public string Identifier { get; set; }
-        public string DeclaringType { get; set; }
-        public string ReturnType { get; set; }
-        public string SimpleName { get; set; }
-        public bool IsStatic { get; set; }
-        public bool IsGeneric { get; set; }
-        public IKaVEList<string> Parameters { get; set; }
-        public IKaVEList<string> TypeParameters { get; set; }
+        [TestCase("a.b.c.", "a.b."),
+        TestCase("a.b.", "a.")]
+        public void ParentNamespace(string input, string expected)
+        {
+            Assert.AreEqual(CsNameUtil.ParseNamespaceName(input).ParentNamespace.Identifier, expected);
+        }
+
+        [TestCase("a.b.", "b"),
+        TestCase("a.b.c.", "c")]
+        public void Name(string input, string expected)
+        {
+            Assert.AreEqual(CsNameUtil.ParseNamespaceName(input).Name, expected);
+        }
     }
 }

@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils.Collections;
+using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser.Data
 {
-    public class MethodNameTestCase : ITestCase
+    public class TestCaseBaseTestSuite
     {
-        public string Identifier { get; set; }
-        public string DeclaringType { get; set; }
-        public string ReturnType { get; set; }
-        public string SimpleName { get; set; }
-        public bool IsStatic { get; set; }
-        public bool IsGeneric { get; set; }
-        public IKaVEList<string> Parameters { get; set; }
-        public IKaVEList<string> TypeParameters { get; set; }
+        protected void AssertStrings<T>(IKaVEList<string> parameters, IList<T> parameterNames) where T : IName
+        {
+            Assert.AreEqual(parameters.Count, parameterNames.Count);
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                Assert.AreEqual(parameters[i], parameterNames[i].Identifier);
+            }
+        }
     }
 }

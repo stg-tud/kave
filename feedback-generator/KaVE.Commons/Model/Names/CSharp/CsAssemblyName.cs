@@ -29,22 +29,25 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public IAssemblyVersion AssemblyVersion
         {
-            get { return ctx.assemblyVersion() != null ? CSharp.AssemblyVersion.Get(ctx.assemblyVersion().GetText()) : CSharp.AssemblyVersion.UnknownName; }
+            get
+            {
+                return new CsAssemblyVersion(ctx.regularAssembly().assemblyVersion());
+            }
         }
 
         public string Name
         {
-            get { return CsNameUtil.GetTextFromId(ctx.id()); }
+            get { return IsUnknown ? Identifier : ctx.regularAssembly().id(0).GetText(); }
         }
 
         public string Identifier
         {
-            get { return ctx.GetText(); }
+            get { return ctx == null ? "?" : ctx.GetText(); }
         }
 
         public bool IsUnknown
         {
-            get { return false; }
+            get { return ctx == null || ctx.UNKNOWN() != null; }
         }
 
         public bool IsHashed

@@ -35,10 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr4.Runtime, Version=4.5.0.0, Culture=neutral, PublicKeyToken=e9931a4108ef2354, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr4.Runtime.4.5.3-rc1\lib\net40-client\Antlr4.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
@@ -100,6 +96,7 @@
     <Compile Include="Model\Names\CSharp\CsAssemblyNameTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameFromInfoFactoryTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameUtilsTest.cs" />
+    <Compile Include="Model\Names\CSharp\CsNamespaceTest.cs" />
     <Compile Include="Model\Names\CSharp\DelegateTypeNameTest.cs" />
     <Compile Include="Model\Names\CSharp\GenericType.cs" />
     <Compile Include="Model\Names\CSharp\GlobalNamespaceTest.cs" />
@@ -117,13 +114,19 @@
     <Compile Include="Model\Names\CSharp\ParameterNameTest.cs" />
     <Compile Include="Model\Names\CSharp\NameUtilsTest.cs" />
     <Compile Include="Model\Names\CSharp\CsNameUtilTest.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\ArrayTypeNameTestCase.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\ArrayTypeNameTestSuite.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TestCaseBaseTestSuite.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\DelegateTypeNameTestCase.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\DelegateTypeNameTestSuite.cs" />
     <Compile Include="Model\Names\CSharp\Parser\MethodNameTestCase.cs" />
     <Compile Include="Model\Names\CSharp\Parser\MethodNameTestSuite.cs" />
-    <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCaseProvider.cs" />
-    <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCaseProviderTest.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TestCaseProvider.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TestCaseProviderTest.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameTestSuite.cs" />
-    <Compile Include="Model\Names\CSharp\Parser\TypeNameParseUtilTest.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNameTestCase.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeParameterNameTestCase.cs" />
+    <Compile Include="Model\Names\CSharp\Parser\TypeParameterNameTestSuite.cs" />
     <Compile Include="Model\Names\CSharp\SimpleType.cs" />
     <Compile Include="Model\Names\CSharp\TypeNameTest.cs" />
     <Compile Include="Model\Names\CSharp\CsNameFixerTest.cs" />
@@ -305,6 +308,13 @@
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
+    <None Include="Model\Names\CSharp\Parser\Data\invalid-arraytypes.tsv" />
+    <None Include="Model\Names\CSharp\Parser\Data\invalid-delegates.tsv" />
+    <None Include="Model\Names\CSharp\Parser\Data\invalid-typeparameternames.tsv" />
+    <None Include="Model\Names\CSharp\Parser\Data\valid-arraytypes.tsv" />
+    <None Include="Model\Names\CSharp\Parser\Data\valid-delegates.tsv" />
+    <None Include="Model\Names\CSharp\Parser\Data\valid-typenames.tsv" />
+    <None Include="Model\Names\CSharp\Parser\Data\valid-typeparameternames.tsv" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -323,9 +333,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Model\Names\CSharp\Parser\Data\valid-typenames.tsv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Model\Names\CSharp\Parser\Data\invalid-typenames.tsv" />

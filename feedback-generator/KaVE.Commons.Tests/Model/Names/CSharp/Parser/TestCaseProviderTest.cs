@@ -19,7 +19,7 @@ using NUnit.Framework;
 namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
 {
     [TestFixture]
-    public class TypeNameTestCaseProviderTest
+    public class TestCaseProviderTest
     {
         private string file;
         private string[] _fileContent;
@@ -30,7 +30,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             file = Path.Combine(Path.GetTempPath(), "tmp.tsv");
             _fileContent = new[]
             {
-                "identifier\tassembly\tnamespace",
+                "Identifier\tassembly\tnamespace",
                 "",
                 "#test",
                 "n.T,a\ta\tn.",
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         [Test]
         public void LoadTestFile()
         {
-            var lines = TypeNameTestCaseProvider.LoadTestFile(file);
+            var lines = TestCaseProvider.LoadTestFile(file);
             Assert.AreNotEqual(_fileContent, lines);
             Assert.AreEqual(1, lines.Length);
             Assert.AreEqual("n.T,a\ta\tn.", lines[0]);

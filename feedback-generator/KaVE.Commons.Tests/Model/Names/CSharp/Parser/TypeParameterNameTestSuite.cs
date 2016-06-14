@@ -16,46 +16,35 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.Names.CSharp.Parser;
 using KaVE.Commons.Tests.Model.Names.CSharp.Parser.Data;
-using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
 {
     [TestFixture]
-    class TypeNameTestSuite : TestCaseBaseTestSuite
+    public class TypeParameterNameTestSuite : TestCaseBaseTestSuite
     {
-        private static IEnumerable<TypeNameTestCase> TestCases
+        private static IEnumerable<TypeParameterNameTestCase> TestCases
         {
-            get { return TestCaseProvider.ValidTypeNames(); }
+            get { return TestCaseProvider.ValidTypeParameterNames(); }
         }
         private static IEnumerable<string> InvalidTestCases
         {
-            get { return TestCaseProvider.InvalidTypeNames(); }
+            get { return TestCaseProvider.InvalidTypeParameterNames(); }
         }
 
         [Test, TestCaseSource("TestCases")]
-        public void ValidTypeName(TypeNameTestCase testCase)
+        public void ValidTypeName(TypeParameterNameTestCase testCase)
         {
             var type = CsNameUtil.ParseTypeName(testCase.Identifier);
+            Assert.NotNull(type);
             Console.WriteLine(testCase.Identifier);
             Assert.AreEqual(testCase.Identifier, type.Identifier);
             Assert.AreEqual(testCase.Assembly, type.Assembly.Identifier);
             Assert.AreEqual(testCase.Namespace, type.Namespace.Identifier);
             Assert.AreEqual(testCase.FullName, type.FullName);
             Assert.AreEqual(testCase.Name, type.Name);
-            AssertStrings(testCase.TypeParameters, type.TypeParameters);
-            Assert.AreEqual(testCase.IsInterfaceType, type.IsInterfaceType);
-            Assert.AreEqual(testCase.IsEnumType, type.IsEnumType);
-            Assert.AreEqual(testCase.IsStructType, type.IsStructType);
-            Assert.AreEqual(testCase.IsNestedType, type.IsNestedType);
-            //Assert.AreEqual(testCase.IsReferenceType, type.IsReferenceType);
-            //Assert.AreEqual(testCase.IsClassType, type.IsClassType);
         }
 
         [Test, TestCaseSource("InvalidTestCases")]
@@ -63,6 +52,5 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         {
             Assert.AreEqual(CsNameUtil.ParseTypeName(invalidType).Identifier, "?");
         }
-
     }
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -24,7 +25,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void HappyPath()
         {
-            var n = AssemblyName.Get("A, 1.2.3.4");
+            var n = CsNameUtil.ParseAssemblyName("A, 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -32,15 +33,15 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void NoVersion()
         {
-            var n = AssemblyName.Get("A");
+            var n = CsNameUtil.ParseAssemblyName("A");
             AssertName(n, "A");
-            AssertVersion(n, AssemblyVersion.UnknownName.Identifier);
+            AssertVersion(n, "?");
         }
 
         [Test]
         public void KommasInName()
         {
-            var n = AssemblyName.Get("A (B, C)");
+            var n = CsNameUtil.ParseAssemblyName("A (B, C)");
             AssertName(n, "A (B, C)");
             AssertVersion(n, AssemblyVersion.UnknownName.Identifier);
         }
@@ -48,7 +49,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void KommasInNameAndVersion()
         {
-            var n = AssemblyName.Get("A (B, C), 1.2.3.4");
+            var n = CsNameUtil.ParseAssemblyName("A (B, C), 1.2.3.4");
             AssertName(n, "A (B, C)");
             AssertVersion(n, "1.2.3.4");
         }
@@ -56,7 +57,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void LotOfWhitespace()
         {
-            var n = AssemblyName.Get(" A , 1.2.3.4");
+            var n = CsNameUtil.ParseAssemblyName(" A , 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -64,7 +65,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void NoWhitespace()
         {
-            var n = AssemblyName.Get("A,1.2.3.4");
+            var n = CsNameUtil.ParseAssemblyName("A,1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -72,17 +73,16 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         // Clustering (K-Means, MeanShift)
 
 
-        private static void AssertName(AssemblyName assemblyName, string expected)
+        private static void AssertName(IAssemblyName assemblyName, string expected)
         {
             var actual = assemblyName.Name;
             Assert.AreEqual(expected, actual);
         }
 
-        private static void AssertVersion(AssemblyName assemblyName, string version)
+        private static void AssertVersion(IAssemblyName assemblyName, string version)
         {
             var actual = assemblyName.AssemblyVersion;
-            var expected = AssemblyVersion.Get(version);
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(version, actual.Identifier);
         }
     }
 }

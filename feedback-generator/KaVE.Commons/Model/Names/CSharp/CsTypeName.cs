@@ -20,9 +20,8 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
-    class CsTypeName : ITypeName, IDelegateTypeName
+    public class CsTypeName : IName, ITypeName, IDelegateTypeName
     {
-        private static string UNKNOWN_IDENTIFIER = "???";
         protected TypeNamingParser.TypeContext ctx;
 
         public CsTypeName(String type)
@@ -52,7 +51,26 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     return new CsMethodName(ctx.delegateType().method()).DeclaringType.Assembly;
                 }
-                return AssemblyName.UnknownName;
+                else if (ctx.typeParameter() != null)
+                {
+                    if (ctx.typeParameter().notTypeParameter() != null)
+                    {
+                        var typeCtx = ctx.typeParameter().notTypeParameter();
+                        if (typeCtx.regularType() != null)
+                        {
+                            return new CsAssemblyName(typeCtx.regularType().assembly());
+                        }
+                        else if (typeCtx.arrayType() != null)
+                        {
+                            return new CsTypeName(typeCtx.arrayType().type()).Assembly;
+                        }
+                        else if (typeCtx.delegateType() != null)
+                        {
+                            return new CsMethodName(typeCtx.delegateType().method()).DeclaringType.Assembly;
+                        }
+                    }
+                }
+                return new CsAssemblyName(null);
             }
         }
 
@@ -60,49 +78,73 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                var identifier = "???";
                 if (ctx.regularType() != null && ctx.regularType().resolvedType() != null &&
                     ctx.regularType().resolvedType().@namespace() != null)
                 {
-                    identifier = ctx.regularType().resolvedType().@namespace().GetText();
+                    return new CsNamespaceName(ctx.regularType().resolvedType().@namespace());
                 }
                 else if (ctx.regularType() != null && ctx.regularType().nestedType() != null)
                 {
-                    identifier = RecursiveNested(ctx.regularType().nestedType().nestedTypeName());
+                    return new CsNamespaceName(RecursiveNested(ctx.regularType().nestedType().nestedTypeName()).@namespace());
                 }
                 else if (ctx.delegateType() != null)
                 {
                     return new CsMethodName(ctx.delegateType().method()).DeclaringType.Namespace;
                 }
-                return NamespaceName.Get(identifier);
+                else if (ctx.arrayType() != null)
+                {
+                    return new CsTypeName(ctx.arrayType().type()).Namespace;
+                }
+                else if (ctx.typeParameter() != null)
+                {
+                    if (ctx.typeParameter().notTypeParameter() != null)
+                    {
+                        var typeCtx = ctx.typeParameter().notTypeParameter();
+                        if (typeCtx.regularType() != null && typeCtx.regularType().resolvedType() != null && typeCtx.regularType().resolvedType().@namespace() != null)
+                        {
+                            return new CsNamespaceName(typeCtx.regularType().resolvedType().@namespace());
+                        }
+                        else if (typeCtx.arrayType() != null)
+                        {
+                            return new CsTypeName(typeCtx.arrayType().type()).Namespace;
+                        }
+                        else if (typeCtx.delegateType() != null)
+                        {
+                            return new CsMethodName(typeCtx.delegateType().method()).DeclaringType.Namespace;
+                        }
+                    }
+                }
+                return new CsNamespaceName(null);
             }
         }
 
-        private string RecursiveNested(TypeNamingParser.NestedTypeNameContext nestedTypeNameContext)
+        private TypeNamingParser.ResolvedTypeContext RecursiveNested(
+            TypeNamingParser.NestedTypeNameContext nestedTypeNameContext)
         {
             while (nestedTypeNameContext.resolvedType() == null)
             {
                 nestedTypeNameContext = nestedTypeNameContext.nestedType().nestedTypeName();
             }
-            return nestedTypeNameContext.resolvedType().@namespace() != null ? nestedTypeNameContext.resolvedType().@namespace().GetText() : UNKNOWN_IDENTIFIER;
+            return nestedTypeNameContext.resolvedType();
         }
 
         public ITypeName DeclaringType
         {
             get
             {
-                if (ctx.regularType() != null && ((ITypeName) this).IsNestedType)
+                if (ctx.regularType() != null && IsNestedType)
                 {
-                    String identifier = GetWithoutLastTypeName(ctx.regularType().resolvedType()) + ","
-                            + (ctx.regularType().WS() != null ? ctx.regularType().WS().GetText() : "")
-                            + ctx.regularType().assembly().GetText();
-                    return CsNameUtil.ParseTypeName(identifier);
+                    return CsNameUtil.ParseTypeName(ctx.regularType().nestedType().nestedTypeName().GetText() + "," + ctx.regularType().assembly().GetText());
                 }
                 else if (ctx.delegateType() != null)
                 {
                     return new CsMethodName(ctx.delegateType().method()).DeclaringType;
                 }
-                return CsNameUtil.ParseTypeName("?");
+                else if (ctx.arrayType() != null)
+                {
+                    return new CsTypeName(ctx.arrayType().type()).DeclaringType;
+                }
+                return CsNameUtil.ParseTypeName(UNKNOWN_IDENTIFIER);
             }
         }
 
@@ -123,31 +165,202 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                throw new NotImplementedException();
+                if (ctx.regularType() != null)
+                {
+                    if (!IsNestedType)
+                    {
+                        return ctx.regularType().resolvedType().GetText();
+                    }
+                    return ctx.regularType().nestedType().GetText();
+                }
+                else if (ctx.delegateType() != null)
+                {
+                    return DeclaringType.FullName;
+                }
+                else if (ctx.arrayType() != null)
+                {
+                    return new CsTypeName(ctx.arrayType().type()).FullName;
+                }
+                else if (ctx.typeParameter() != null)
+                {
+                    if (ctx.typeParameter().notTypeParameter() != null)
+                    {
+                        var c = ctx.typeParameter().notTypeParameter();
+                        if (c.regularType() != null)
+                        {
+                            return c.regularType().resolvedType() != null
+                                ? c.regularType().resolvedType().GetText()
+                                : c.regularType().nestedType().GetText();
+                        }
+                        else if (c.delegateType() != null)
+                        {
+                            return new CsMethodName(c.delegateType().method()).DeclaringType.FullName;
+                        }
+                        else if (c.arrayType() != null)
+                        {
+                            return new CsTypeName(c.arrayType().type()).FullName;
+                        }
+                        else if (c.UNKNOWN() != null)
+                        {
+                            return c.UNKNOWN().GetText();
+                        }else if (c.id() != null)
+                        {
+                            return c.id().GetText();
+                        }
+                        return UNKNOWN_IDENTIFIER;
+                    }
+                }
+                else if (ctx.UNKNOWN() != null)
+                {
+                    return ctx.UNKNOWN().GetText();
+                }
+                return UNKNOWN_IDENTIFIER;
             }
         }
 
         public string Name
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                if (ctx.regularType() != null)
+                {
+                    if (!IsNestedType)
+                    {
+                        return ExtractNameFromRegularType();
+                    }
+                    // TODO: What is the exact name of a nested type? With or without identifiers?
+                    return UNKNOWN_IDENTIFIER;
+                }
+                else if (ctx.delegateType() != null)
+                {
+                    return DeclaringType.Name;
+                }
+                else if (ctx.arrayType() != null)
+                {
+                    return new CsTypeName(ctx.arrayType().type()).Name;
+                }
+                else if (ctx.typeParameter() != null)
+                {
+                    if (ctx.typeParameter().notTypeParameter() != null)
+                    {
+                        return ExtractNameFromTypeParameter();
+                    }
+                    return UNKNOWN_IDENTIFIER;
+                }
+                return ctx.UNKNOWN().GetText();
+            }
         }
 
-        bool ITypeName.IsUnknownType
+        private string ExtractNameFromRegularType()
+        {
+            if (IsEnumType)
+            {
+                return ctx.regularType().resolvedType().typeName().enumTypeName().simpleTypeName().GetText();
+            }
+            else
+            {
+                if (IsInterfaceType)
+                {
+                    return
+                        ctx.regularType()
+                           .resolvedType()
+                           .typeName()
+                           .possiblyGenericTypeName()
+                           .interfaceTypeName()
+                           .simpleTypeName()
+                           .GetText();
+                }
+                else if (IsStructType)
+                {
+                    return
+                        ctx.regularType()
+                           .resolvedType()
+                           .typeName()
+                           .possiblyGenericTypeName()
+                           .structTypeName()
+                           .simpleTypeName()
+                           .GetText();
+                }
+                else
+                {
+                    return
+                        ctx.regularType()
+                           .resolvedType()
+                           .typeName()
+                           .possiblyGenericTypeName()
+                           .simpleTypeName().GetText();
+                }
+            }
+        }
+
+        private string ExtractNameFromTypeParameter()
+        {
+            if (ctx.typeParameter().notTypeParameter().regularType() != null)
+            {
+                if (ctx.typeParameter().notTypeParameter().regularType().resolvedType() != null)
+                {
+                    return GetNameFromTypeName();
+                }
+                return ctx.typeParameter().notTypeParameter().regularType().nestedType().typeName().GetText();
+            }
+            else if (ctx.typeParameter().notTypeParameter().delegateType() != null)
+            {
+                return new CsMethodName(ctx.typeParameter().notTypeParameter().delegateType().method()).DeclaringType.Name;
+            }
+            else if (ctx.typeParameter().notTypeParameter().arrayType() != null)
+            {
+                return new CsTypeName(ctx.typeParameter().notTypeParameter().arrayType().type()).Name;
+            }
+            else if (ctx.typeParameter().notTypeParameter().id() != null)
+            {
+                return ctx.typeParameter().notTypeParameter().id().GetText();
+            }
+            else if (ctx.typeParameter().notTypeParameter().UNKNOWN() != null)
+            {
+                return ctx.typeParameter().notTypeParameter().UNKNOWN().GetText();
+            }
+            return UNKNOWN_IDENTIFIER;
+        }
+
+        private string GetNameFromTypeName()
+        {
+            var c = ctx.typeParameter().notTypeParameter().regularType().resolvedType().typeName();
+            if (c.enumTypeName() != null)
+            {
+                return c.enumTypeName().GetText();
+            }
+            var cp = c.possiblyGenericTypeName();
+            if (cp.simpleTypeName() != null)
+            {
+                return cp.simpleTypeName().GetText();
+            }
+            else if (cp.interfaceTypeName() != null)
+            {
+                return cp.interfaceTypeName().GetText();
+            }
+            else if (cp.structTypeName() != null)
+            {
+                return cp.structTypeName().GetText();
+            }
+            return UNKNOWN_IDENTIFIER;
+        }
+
+        public bool IsUnknownType
         {
             get { return ctx.UNKNOWN() != null || ctx.typeParameter() != null; }
         }
 
-        bool ITypeName.IsVoidType
+        public bool IsVoidType
         {
-            get { return ctx.regularType() != null && ctx.regularType().resolvedType().GetText().StartsWith("System.Void"); }
+            get { return ctx.regularType() != null && ctx.regularType().resolvedType() != null && ctx.regularType().resolvedType().GetText().StartsWith("System.Void"); }
         }
 
-        bool ITypeName.IsValueType
+        public bool IsValueType
         {
-            get { return ((ITypeName)this).IsStructType || ((ITypeName)this).IsEnumType || ((ITypeName)this).IsVoidType; }
+            get { return IsStructType || IsEnumType || IsVoidType; }
         }
 
-        bool ITypeName.IsSimpleType
+        public bool IsSimpleType
         {
             get
             {
@@ -186,6 +399,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         private static String[] FloatingPointTypeNames = { "System.Single,", "System.Double," };
+        private static readonly string UNKNOWN_IDENTIFIER = "?";
 
         private static bool IsFloatingPointTypeName(String identifier)
         {
@@ -199,55 +413,77 @@ namespace KaVE.Commons.Model.Names.CSharp
             return false;
         }
 
-        bool ITypeName.IsEnumType
+        public bool IsEnumType
         {
-            get { return ctx.regularType() != null && ctx.regularType().resolvedType().typeName().enumTypeName() != null; }
+            get { return ctx.regularType() != null && ((ctx.regularType().resolvedType() != null && ctx.regularType().resolvedType().typeName().enumTypeName() != null) || (ctx.regularType().nestedType() != null && ctx.regularType().nestedType().typeName().enumTypeName() != null)); }
         }
 
-        bool ITypeName.IsStructType
+        public bool IsStructType
         {
             get
             {
-                return ((ITypeName)this).IsSimpleType || ((ITypeName)this).IsVoidType || ((ITypeName)this).IsNullableType
-                || (ctx.regularType() != null &&
+                return IsSimpleType || IsVoidType || IsNullableType
+                || (IsNotNestedRegular() && ctx.regularType().resolvedType() != null &&
                        ctx.regularType().resolvedType().typeName().possiblyGenericTypeName() != null &&
-                       ctx.regularType().resolvedType().typeName().possiblyGenericTypeName().interfaceTypeName() != null);
+                       ctx.regularType().resolvedType().typeName().possiblyGenericTypeName().structTypeName() != null) || (ctx.regularType() != null && ctx.regularType().nestedType() != null && ctx.regularType().nestedType().typeName().possiblyGenericTypeName() != null && ctx.regularType().nestedType().typeName().possiblyGenericTypeName().structTypeName() != null);
             }
         }
 
-        bool ITypeName.IsNullableType
+        public bool IsNullableType
         {
             get
             {
-                return ctx.regularType() != null
+                return IsNotNestedRegular()
                   && ctx.regularType().resolvedType().GetText().StartsWith("System.Nullable'1[[");
             }
         }
 
-        bool ITypeName.IsReferenceType
+        public bool IsReferenceType
         {
-            get { throw new NotImplementedException(); }
+            get { return IsClassType || IsInterfaceType || IsArrayType || IsDelegateType; }
         }
 
-        bool ITypeName.IsClassType
+        public bool IsClassType
         {
             get
             {
-                throw new NotImplementedException();
+                return !IsValueType && !IsInterfaceType && !IsArrayType && !IsDelegateType && !IsUnknownType;
             }
         }
 
-        bool ITypeName.IsInterfaceType
+        public bool IsInterfaceType
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return ctx.regularType() != null && (IsRegularInterface() || IsNestedInterface());
+            }
         }
 
-        bool ITypeName.IsDelegateType
+        private bool IsNestedInterface()
+        {
+            return ctx.regularType().nestedType() != null &&
+                   ctx.regularType().nestedType().typeName().possiblyGenericTypeName() != null &&
+                   ctx.regularType().nestedType().typeName().possiblyGenericTypeName().interfaceTypeName() != null;
+        }
+
+        private bool IsRegularInterface()
+        {
+            return (IsNotNestedRegular() &&
+                    ctx.regularType().resolvedType().typeName().possiblyGenericTypeName() != null &&
+                    ctx.regularType().resolvedType().typeName().possiblyGenericTypeName().interfaceTypeName() != null);
+        }
+
+        private bool IsNotNestedRegular()
+        {
+            return ctx.regularType() != null && ctx.regularType().resolvedType() != null;
+        }
+
+        public bool IsDelegateType
         {
             get { return ctx.delegateType() != null; }
         }
 
-        bool ITypeName.IsNestedType
+        public bool IsNestedType
         {
             get
             {
@@ -259,17 +495,17 @@ namespace KaVE.Commons.Model.Names.CSharp
             }
         }
 
-        bool ITypeName.IsArrayType
+        public bool IsArrayType
         {
             get { return ctx.arrayType() != null; }
         }
 
         public ITypeName ArrayBaseType
         {
-            get { throw new NotImplementedException(); }
+            get { return IsArrayType ? new CsTypeName(ctx.arrayType().type()) : null; }
         }
 
-        bool ITypeName.IsTypeParameter
+        public bool IsTypeParameter
         {
             get { return ctx.typeParameter() != null; }
         }
@@ -284,19 +520,100 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { throw new NotImplementedException(); }
         }
 
-        bool IGenericName.IsGenericEntity
+        public bool IsGenericEntity
         {
-            get { throw new NotImplementedException(); }
+            get { return RegularHasTypeParameters() || DelegateHasTypeParameters() || ArrayTypeNameHasTypeParameters(); }
         }
 
-        bool IGenericName.HasTypeParameters
+        public bool HasTypeParameters
         {
-            get { throw new NotImplementedException(); }
+            get { return RegularHasTypeParameters() || DelegateHasTypeParameters() || ArrayTypeNameHasTypeParameters(); }
+        }
+
+        private bool ArrayTypeNameHasTypeParameters()
+        {
+            return (ctx.arrayType() != null && ((
+                IGenericName)new CsTypeName(ctx.arrayType().type())).HasTypeParameters);
+        }
+
+        private bool DelegateHasTypeParameters()
+        {
+            return (ctx.delegateType() != null && new CsMethodName(ctx.delegateType().method()).IsGenericEntity);
+        }
+
+        private bool RegularHasTypeParameters()
+        {
+            return (ctx.regularType() != null && (IsResolvedGeneric() || IsNestedGeneric()));
+        }
+
+        private bool IsResolvedGeneric()
+        {
+            return ctx.regularType().resolvedType() != null && (ctx.regularType().resolvedType().typeName().possiblyGenericTypeName() != null && ctx.regularType().resolvedType().typeName().possiblyGenericTypeName().genericTypePart() != null);
+        }
+
+        private bool IsNestedGeneric()
+        {
+            if (ctx.regularType() != null && ctx.regularType().nestedType() != null)
+            {
+                var c = RecursiveNested(ctx.regularType().nestedType().nestedTypeName());
+                return c.typeName().possiblyGenericTypeName() != null && c.typeName().possiblyGenericTypeName().genericTypePart() != null || ctx.regularType().nestedType().typeName().possiblyGenericTypeName().genericTypePart() != null;
+            }
+            return false;
         }
 
         public IList<ITypeName> TypeParameters
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                List<ITypeName> typePara = new KaVEList<ITypeName>();
+                if (HasTypeParameters)
+                {
+                    if (RegularHasTypeParameters())
+                    {
+                        var genericParams = GetGenericParams();
+                        foreach (var p in genericParams)
+                        {
+                            typePara.Add(new TypeParameterName(p.GetText()));
+                        }
+                    }
+                    else if (ArrayTypeNameHasTypeParameters())
+                    {
+                        return new CsTypeName(ctx.arrayType().type()).TypeParameters;
+                    }
+                    else if (DelegateHasTypeParameters())
+                    {
+                        return new CsMethodName(ctx.delegateType().method()).TypeParameters;
+                    }
+                }
+                return typePara;
+            }
+        }
+
+        private TypeNamingParser.GenericParamContext[] GetGenericParams()
+        {
+            if (IsNestedGeneric())
+            {
+                KaVEList<TypeNamingParser.GenericParamContext> param = new KaVEList<TypeNamingParser.GenericParamContext>();
+                var genericTypePartContext = RecursiveNested(ctx.regularType().nestedType().nestedTypeName())
+                    .typeName()
+                    .possiblyGenericTypeName()
+                    .genericTypePart();
+                if (genericTypePartContext != null)
+                {
+                    param.AddAll(genericTypePartContext.genericParam());
+                }
+                if (ctx.regularType().nestedType().typeName().possiblyGenericTypeName().genericTypePart() != null)
+                {
+                    param.AddAll(ctx.regularType().nestedType().typeName().possiblyGenericTypeName().genericTypePart().genericParam());
+                }
+                return param.ToArray();
+            }
+            return ctx.regularType()
+                      .resolvedType()
+                      .typeName()
+                      .possiblyGenericTypeName()
+                      .genericTypePart()
+                      .genericParam();
         }
 
         public string Identifier
@@ -318,7 +635,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return ((ITypeName)this).IsDelegateType ? new CsMethodName(ctx.delegateType().method()).DeclaringType : null;
+                return IsDelegateType ? new CsMethodName(ctx.delegateType().method()).DeclaringType : null;
             }
         }
 
@@ -326,7 +643,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return ((ITypeName)this).IsDelegateType ? new CsMethodName(ctx.delegateType().method()).Signature : "";
+                return IsDelegateType ? new CsMethodName(ctx.delegateType().method()).Signature : "";
             }
         }
 
@@ -334,7 +651,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return ((ITypeName)this).IsDelegateType ? new CsMethodName(ctx.delegateType().method()).Parameters : Lists.NewList<IParameterName>();
+                return IsDelegateType ? new CsMethodName(ctx.delegateType().method()).Parameters : Lists.NewList<IParameterName>();
             }
         }
 
@@ -342,13 +659,23 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return ((ITypeName)this).IsDelegateType && new CsMethodName(ctx.delegateType().method()).HasParameters;
+                return IsDelegateType && new CsMethodName(ctx.delegateType().method()).HasParameters;
             }
         }
 
         public ITypeName ReturnType
         {
-            get { return ((ITypeName) this).IsDelegateType ? new CsMethodName(ctx.delegateType().method()).ReturnType : null; }
+            get { return IsDelegateType ? new CsMethodName(ctx.delegateType().method()).ReturnType : null; }
         }
+
+        public IDelegateTypeName ToDelegateType()
+        {
+            if (IsDelegateType)
+            {
+                return ((IDelegateTypeName)this);
+            }
+            return null;
+        }
+
     }
 }

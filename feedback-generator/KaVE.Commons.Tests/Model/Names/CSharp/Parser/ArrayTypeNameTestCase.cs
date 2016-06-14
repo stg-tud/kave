@@ -14,32 +14,18 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KaVE.Commons.Model.Names.CSharp.Parser;
-using Antlr4.Runtime;
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Utils.Assertion;
-using NUnit.Framework;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
 {
-    [TestFixture]
-    class TypeNameParseUtilTest
+    public class ArrayTypeNameTestCase : ITestCase
     {
-        [TestCase("?.?")]
-        public void ValidateWrongTypeName(string input)
-        {
-            Assert.Catch(delegate { TypeNameParseUtil.ValidateTypeName(input); });
-        }
-
-        [TestCase("n.T,a")]
-        public void ValidateTypeName(string input)
-        {
-            Assert.DoesNotThrow(delegate { TypeNameParseUtil.ValidateTypeName(input); });
-        }
-
+        public string Identifier { get; set; }
+        public string Assembly { get; set; }
+        public string Namespace { get; set; }
+        public string FullName { get; set; }
+        public string Name { get; set; }
+        public string ArrayBaseType { get; set; }
+        public IKaVEList<string> TypeParameters { get; set; }
     }
 }

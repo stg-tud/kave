@@ -18,42 +18,46 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.Names.CSharp.Parser;
 using KaVE.Commons.Tests.Model.Names.CSharp.Parser.Data;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
 {
-    public class MethodNameTestSuite : TestCaseBaseTestSuite
+    [TestFixture]
+    public class DelegateTypeNameTestSuite : TestCaseBaseTestSuite
     {
-        private static IEnumerable<MethodNameTestCase> TestCases
+        private static IEnumerable<DelegateTypeNameTestCase> TestCases
         {
-            get { return TestCaseProvider.ValidMethodNames(); }
+            get { return TestCaseProvider.ValidDelegates(); }
         }
         private static IEnumerable<string> InvalidTestCases
         {
-            get { return TestCaseProvider.InvalidMethodNames(); }
+            get { return TestCaseProvider.InvalidDelegates(); }
         }
 
         [Test, TestCaseSource("TestCases")]
-        public void ValidMethodName(MethodNameTestCase testCase)
+        public void ValidTypeName(DelegateTypeNameTestCase testCase)
         {
-            var type = CsNameUtil.ParseMethodName(testCase.Identifier);
+            var type = CsNameUtil.ParseTypeName(testCase.Identifier).ToDelegateType();
             Console.WriteLine(testCase.Identifier);
+            Assert.AreEqual(testCase.Identifier, type.Identifier);
+            Assert.AreEqual(testCase.Assembly, type.Assembly.Identifier);
+            Assert.AreEqual(testCase.Namespace, type.Namespace.Identifier);
+            Assert.AreEqual(testCase.FullName, type.FullName);
+            Assert.AreEqual(testCase.Name, type.Name);
             Assert.AreEqual(testCase.DeclaringType, type.DeclaringType.Identifier);
+            Assert.AreEqual(testCase.DeclaringType, type.DelegateType.Identifier);
             Assert.AreEqual(testCase.ReturnType, type.ReturnType.Identifier);
-            AssertStrings(testCase.Parameters, type.Parameters);
+            Assert.AreEqual(testCase.Signature, type.Signature);
             AssertStrings(testCase.TypeParameters, type.TypeParameters);
-            Assert.AreEqual(testCase.IsStatic, type.IsStatic);
-            Assert.AreEqual(testCase.IsGeneric, type.IsGenericEntity);
-            Assert.AreEqual(testCase.SimpleName, type.Name);
+            AssertStrings(testCase.Parameters, type.Parameters);
         }
 
         [Test, TestCaseSource("InvalidTestCases")]
-        public void InvalidMethodName(string invalidType)
+        public void InvalidTypeName(string invalidType)
         {
-            Assert.AreEqual("?", CsNameUtil.ParseMethodName(invalidType).Identifier);
+            Assert.AreEqual(CsNameUtil.ParseTypeName(invalidType).Identifier, "?");
         }
     }
 }

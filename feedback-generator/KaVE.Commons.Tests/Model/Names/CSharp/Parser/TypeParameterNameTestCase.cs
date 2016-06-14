@@ -13,15 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KaVE.Commons.Utils.Collections;
-
 namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
 {
-    public class TypeNameTestCase : ITestCase
+    public class TypeParameterNameTestCase : ITestCase
     {
         public string Identifier { get; set; }
         public string Assembly { get; set; }
@@ -29,15 +23,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         public string DeclaringType { get; set; }
         public string FullName { get; set; }
         public string Name { get; set; }
-        public string ArrayBaseType { get; set; }
         public string TypeParameterType { get; set; }
         public string TypeParameterShortName { get; set; }
-        public IKaVEList<string> TypeParameters { get; set; }
-        public bool IsReferenceType { get; set; }
-        public bool IsClassType { get; set; }
-        public bool IsInterfaceType { get; set; }
-        public bool IsEnumType { get; set; }
-        public bool IsStructType { get; set; }
-        public bool IsNestedType { get; set; }
     }
 }

@@ -1,0 +1,21 @@
+﻿arr(1):A B			
+arr(1):T[,A			
+arr(1):T],A			
+arr(1):T(,A			
+arr(1):T),A			
+arr(1):T{,A			
+arr(1):T},A			
+arr(1):T,U,A,1.0.0.0			
+arr(1):T,A,0.0.0.01			
+arr(1):T'1,P			
+arr(1):T[[T1]]			
+arr(1):T'-1[[T]]			
+arr(1):T'1[[]]			
+arr(1):T'1[[T ->]]			
+arr(1):T'1[[T -> T]]			
+arr(1):T'0[[T]]			
+arr(1):T'1[]			
+arr(1):T->P			
+arr(1):T -> P			
+arr(1):d:[] [?].M()			
+arr(1):d:[?] [?].()			

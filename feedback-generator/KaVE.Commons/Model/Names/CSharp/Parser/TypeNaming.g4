@@ -50,6 +50,9 @@ options {
 
 typeEOL : type EOL;
 methodEOL: method EOL;
+namespaceEOL: namespace EOL;
+assemblyEOL: assembly EOL;
+parameterNameEOL: formalParam EOL;
 
 type: UNKNOWN | typeParameter | regularType | delegateType | arrayType;
 typeParameter : id (WS? '->' WS? notTypeParameter)?;
@@ -76,7 +79,8 @@ simpleTypeName: id;
 genericTypePart: '\'' POSNUM '[' genericParam (',' genericParam)* ']';
 genericParam: '[' typeParameter ']';
 
-assembly: (id '.')* id (',' WS? assemblyVersion)? ;
+assembly: regularAssembly | UNKNOWN;
+regularAssembly: (id '.')* id (',' WS? assemblyVersion)?;
 assemblyVersion: num '.' num '.' num '.' num;	
 
 method: UNKNOWN | regularMethod;

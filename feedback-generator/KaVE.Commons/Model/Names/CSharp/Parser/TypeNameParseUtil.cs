@@ -64,15 +64,6 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             return methodEol.method();
         }
 
-        public static TypeNamingParser.AssemblyContext ValidateAssemblyContext(string input)
-        {
-            MyErrorListener el = new MyErrorListener();
-            TypeNamingParser parser = SetupParser(input, el);
-            var assemblyContext = parser.assembly();
-            Asserts.Not(el.HasError, "Syntax Error: " + input);
-            return assemblyContext;
-        }
-
         private static TypeNamingParser SetupParser(string input, MyErrorListener el)
         {
             var inputStream = new AntlrInputStream(input + "\n");
@@ -84,6 +75,33 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             //parser.RemoveErrorListeners();
             parser.AddErrorListener(el);
             return parser;
+        }
+
+        public static TypeNamingParser.NamespaceContext ValidateNamespaceName(string input)
+        {
+            MyErrorListener el = new MyErrorListener();
+            TypeNamingParser parser = SetupParser(input, el);
+            var namespaceEol = parser.namespaceEOL();
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
+            return namespaceEol.@namespace();
+        }
+
+        public static TypeNamingParser.AssemblyContext ValidateAssemblyName(string input)
+        {
+            MyErrorListener el = new MyErrorListener();
+            TypeNamingParser parser = SetupParser(input, el);
+            var namespaceEol = parser.assemblyEOL();
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
+            return namespaceEol.assembly();
+        }
+
+        public static TypeNamingParser.FormalParamContext ValideParameterName(string input)
+        {
+            MyErrorListener el = new MyErrorListener();
+            TypeNamingParser parser = SetupParser(input, el);
+            var parameterEol = parser.parameterNameEOL();
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
+            return parameterEol.formalParam();
         }
     }
 }

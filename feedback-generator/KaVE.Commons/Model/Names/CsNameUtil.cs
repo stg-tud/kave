@@ -16,8 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names
@@ -139,7 +142,7 @@ namespace KaVE.Commons.Model.Names
             return TypeToJson[type.GetType()] + ":" + type.Identifier;
         }
 
-        public static ITypeName ParseTypeName(string input)
+        public static CsTypeName ParseTypeName(string input)
         {
             try
             {
@@ -181,22 +184,43 @@ namespace KaVE.Commons.Model.Names
             }
         }
 
-        public static string GetTextFromId(TypeNamingParser.IdContext[] id)
+        public static INamespaceName ParseNamespaceName(string input)
         {
-            string s = "";
-            foreach (var i in id)
+            try
             {
-                if (s.Equals(""))
-                {
-                    s += i.GetText();
-                }
-                else
-                {
-                    s += "." + i.GetText();
-                }
-
+                var ctx = TypeNameParseUtil.ValidateNamespaceName(input);
+                return new CsNamespaceName(ctx);
             }
-            return s;
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static IAssemblyName ParseAssemblyName(string input)
+        {
+            try
+            {
+                var ctx = TypeNameParseUtil.ValidateAssemblyName(input);
+                return new CsAssemblyName(ctx);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static IParameterName ParseParameterName(string input)
+        {
+            try
+            {
+                var ctx = TypeNameParseUtil.ValideParameterName(input);
+                return new CsParameterName(ctx);
+            }
+            catch (AssertException e)
+            {
+                return null;
+            }
         }
     }
 }
