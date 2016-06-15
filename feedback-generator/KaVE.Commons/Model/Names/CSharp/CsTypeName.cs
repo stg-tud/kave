@@ -412,7 +412,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public bool IsDelegateType
         {
-            get { return ctx.delegateType() != null; }
+            get { return ctx.delegateType() != null || (ctx.arrayType() != null && ArrayBaseType.IsDelegateType); }
         }
 
         public bool IsNestedType
@@ -422,6 +422,10 @@ namespace KaVE.Commons.Model.Names.CSharp
                 if (ctx.regularType() != null)
                 {
                     return ctx.regularType().nestedType() != null;
+                }
+                else if (ctx.arrayType() != null)
+                {
+                    return ArrayBaseType.IsNestedType;
                 }
                 return false;
             }

@@ -27,5 +27,11 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         public string Name { get; set; }
         public string ArrayBaseType { get; set; }
         public IKaVEList<string> TypeParameters { get; set; }
+        public bool IsInterfaceType { get; set; }
+        public bool IsEnumType { get; set; }
+        public bool IsStructType { get; set; }
+        public bool IsNestedType { get; set; }
+        public bool IsDelgateType { get; set; }
+        public bool IsGenericEntity { get; set; }
     }
 }

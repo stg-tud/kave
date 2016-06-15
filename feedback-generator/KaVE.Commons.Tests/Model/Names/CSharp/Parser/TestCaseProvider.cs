@@ -114,7 +114,13 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
                     FullName = fields[3],
                     Name = fields[4],
                     ArrayBaseType = fields[5],
-                    TypeParameters = GetList(fields[6])
+                    TypeParameters = GetList(fields[6]),
+                    IsInterfaceType = GetBoolean(fields[7]),
+                    IsEnumType = GetBoolean(fields[8]),
+                    IsStructType = GetBoolean(fields[9]),
+                    IsNestedType = GetBoolean(fields[10]),
+                    IsDelgateType = GetBoolean(fields[11]),
+                    IsGenericEntity = GetBoolean(fields[12])
                 };
             }
             else if (type == typeof(TypeParameterNameTestCase))

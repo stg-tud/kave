@@ -48,6 +48,12 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             Assert.AreEqual(testCase.Name, type.Name);
             Assert.AreEqual(testCase.ArrayBaseType, type.ArrayBaseType.Identifier);
             AssertStrings(testCase.TypeParameters, type.TypeParameters);
+            Assert.AreEqual(testCase.IsInterfaceType, type.IsInterfaceType);
+            Assert.AreEqual(testCase.IsEnumType, type.IsEnumType);
+            Assert.AreEqual(testCase.IsStructType, type.IsStructType);
+            Assert.AreEqual(testCase.IsNestedType, type.IsNestedType);
+            Assert.AreEqual(testCase.IsDelgateType, type.IsDelegateType);
+            Assert.AreEqual(testCase.IsGenericEntity, type.IsGenericEntity);
         }
 
         [Test, TestCaseSource("InvalidTestCases")]
