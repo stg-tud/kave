@@ -91,7 +91,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     return new CsTypeName(ctx.regularMethod().customMethod().type()[0]);
                 }
-                return new CsTypeName("?");
+                return CsNameUtil.ParseTypeName("?");
             }
         }
 
@@ -119,7 +119,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (IsUnknown)
                 {
-                    return new CsTypeName(ctx.UNKNOWN().GetText());
+                    return CsNameUtil.ParseTypeName(ctx.UNKNOWN().GetText());
                 }
                 else if (IsConstructor)
                 {
