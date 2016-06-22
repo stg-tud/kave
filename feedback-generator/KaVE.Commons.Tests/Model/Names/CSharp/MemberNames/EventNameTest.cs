@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -30,7 +31,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         [Test]
         public void ShouldBeSimpleEvent()
         {
-            var eventName = EventName.Get("[ChangedEventHandler, IO, 1.2.3.4] [TextBox, GUI, 0.8.7.6].Changed");
+            var eventName = CsNameUtil.GetEventName(
+                "[ChangedEventHandler, IO, 1.2.3.4] [TextBox, GUI, 0.8.7.6].Changed");
 
             Assert.AreEqual("ChangedEventHandler", eventName.HandlerType.FullName);
             Assert.AreEqual("TextBox", eventName.DeclaringType.FullName);

@@ -16,12 +16,14 @@
 
 using System.Linq;
 using System.Text;
+using Antlr4.Runtime.Misc;
 using KaVE.Commons.Model.Names.CSharp.Parser;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
     public class CsNamespaceName : IName, INamespaceName
     {
+        [NotNull]
         private TypeNamingParser.NamespaceContext ctx;
 
         public CsNamespaceName(TypeNamingParser.NamespaceContext ctx)
@@ -30,12 +32,12 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
         public string Identifier
         {
-            get { return ctx != null ? ctx.GetText() : "?"; }
+            get { return ctx.GetText(); }
         }
 
         public bool IsUnknown
         {
-            get { return ctx == null; }
+            get { return false; }
         }
 
         public bool IsHashed
@@ -50,12 +52,8 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                if (!IsUnknown)
-                {
-                    var s = GetTextFromIdWithoutLast(ctx.id());
-                    return CsNameUtil.ParseNamespaceName(s);
-                }
-                return null;
+                var s = GetTextFromIdWithoutLast(ctx.id());
+                return CsNameUtil.GetNamespaceName(s);
             }
         }
 
@@ -76,10 +74,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public string Name
         {
-            get
-            {
-                return ctx != null ? ctx.id(ctx.id().Length-1).GetText() : "?";
-            }
+            get { return ctx.id(ctx.id().Length - 1).GetText(); }
         }
 
         public bool IsGlobalNamespace

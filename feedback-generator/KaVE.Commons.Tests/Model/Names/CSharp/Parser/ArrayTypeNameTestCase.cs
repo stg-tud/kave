@@ -33,5 +33,6 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         public bool IsNestedType { get; set; }
         public bool IsDelgateType { get; set; }
         public bool IsGenericEntity { get; set; }
+        public int Rank { get; set; }
     }
 }

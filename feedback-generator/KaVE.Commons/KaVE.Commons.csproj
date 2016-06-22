@@ -78,11 +78,13 @@
     <Compile Include="Model\Events\TestRunEvents\TestRunEvent.cs" />
     <Compile Include="Model\Names\CSharp\CsAssemblyName.cs" />
     <Compile Include="Model\Names\CSharp\CsAssemblyVersion.cs" />
+    <Compile Include="Model\Names\CSharp\CsMemberName.cs" />
     <Compile Include="Model\Names\CSharp\CsNamespaceName.cs" />
     <Compile Include="Model\Names\CSharp\CsParameterName.cs" />
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\CSharp\CsMethodName.cs" />
+    <Compile Include="Model\Names\CSharp\UnknownName.cs" />
     <Compile Include="Model\Names\CsNameFixer.cs" />
     <Compile Include="Model\Names\CsNameUtil.cs" />
     <Compile Include="Model\Names\CSharp\CsTypeName.cs" />
@@ -93,8 +95,10 @@
     <Compile Include="Model\Names\CSharp\Parser\TypeNamingListener.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNamingParser.cs" />
     <Compile Include="Model\Names\CSharp\Parser\TypeNamingVisitor.cs" />
+    <Compile Include="Model\Names\IArrayTypeName.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />
     <Compile Include="Model\Names\ILambdaName.cs" />
+    <Compile Include="Model\Names\ITypeParameterName.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IBinaryExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\ICastExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IIndexAccessExpression.cs" />

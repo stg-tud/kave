@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         TestCase("T, a", "?")]
         public void AssemblyVersion(string input, string expected)
         {
-            var name = CsNameUtil.ParseTypeName(input);
+            var name = CsNameUtil.GetTypeName(input);
             Assert.AreEqual(name.Assembly.AssemblyVersion.Identifier,expected);
         }
 
@@ -33,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         TestCase("T, a", "a")]
         public void AssemblyName(string input, string expected)
         {
-            var name = CsNameUtil.ParseTypeName(input);
+            var name = CsNameUtil.GetTypeName(input);
             Assert.AreEqual(name.Assembly.Name, expected);
         }
 
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T, a", "a")]
         public void Identifier(string input, string expected)
         {
-            var name = CsNameUtil.ParseTypeName(input);
+            var name = CsNameUtil.GetTypeName(input);
             Assert.AreEqual(name.Assembly.Identifier, expected);
         }
     }

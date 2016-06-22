@@ -391,6 +391,9 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return false; }
         }
 
+        public IDelegateTypeName ToDelegateTypeName { get; private set; }
+        public IArrayTypeName ToArrayTypeName { get; private set; }
+
         public string TypeParameterShortName
         {
             get { return null; }

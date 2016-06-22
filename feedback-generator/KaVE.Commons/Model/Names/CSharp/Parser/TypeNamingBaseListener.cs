@@ -118,6 +118,19 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	public virtual void ExitParameterNameEOL([NotNull] TypeNamingParser.ParameterNameEOLContext context) { }
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.memberNameEOL"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMemberNameEOL([NotNull] TypeNamingParser.MemberNameEOLContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.memberNameEOL"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMemberNameEOL([NotNull] TypeNamingParser.MemberNameEOLContext context) { }
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.type"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -391,6 +404,58 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	public virtual void ExitAssemblyVersion([NotNull] TypeNamingParser.AssemblyVersionContext context) { }
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.memberName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMemberName([NotNull] TypeNamingParser.MemberNameContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.memberName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMemberName([NotNull] TypeNamingParser.MemberNameContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.simpleMemberName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSimpleMemberName([NotNull] TypeNamingParser.SimpleMemberNameContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.simpleMemberName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSimpleMemberName([NotNull] TypeNamingParser.SimpleMemberNameContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.propertyName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPropertyName([NotNull] TypeNamingParser.PropertyNameContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.propertyName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPropertyName([NotNull] TypeNamingParser.PropertyNameContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.propertyModifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.propertyModifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context) { }
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.method"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -467,6 +532,19 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitCustomMethod([NotNull] TypeNamingParser.CustomMethodContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSignature([NotNull] TypeNamingParser.SignatureContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSignature([NotNull] TypeNamingParser.SignatureContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.formalParam"/>.

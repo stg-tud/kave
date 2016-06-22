@@ -1,6 +1,6 @@
-Identifier	Namespace	Assembly	FullName	Name
-T -> n.T,P	n.	P	n.T	T
-T -> T1	?	?	?	?
-T -> n.T,P,0.0.0.0	n.	P,0.0.0.0	n.T	T
-T	?	?	?	?
-T -> T'1[[T]], A	?	A	T'1[[T]]	T
+Identifier	Namespace	Assembly	FullName	Name	TypeParameterShortName	TypeParameterType
+T -> n.T,P	n.	P	n.T	T	T	n.T,P
+T -> T1	?	?	?	?	T	T1
+T -> n.T,P,0.0.0.0	n.	P,0.0.0.0	n.T	T	T	n.T,P,0.0.0.0
+T	?	?	?	?	T	?
+T -> T'1[[T]], A	?	A	T'1[[T]]	T	T	T'1[[T]], A

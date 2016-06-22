@@ -48,13 +48,13 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             foreach (var line in lines)
             {
                 var fields = line.Split('\t');
-                var t = (T)CreateTestCase<T>(fields, typeof(T));
+                var t = (T)CreateTestCase(fields, typeof(T));
                 testcases.Add(t);
             }
             return testcases;
         }
 
-        private static ITestCase CreateTestCase<T>(string[] fields, Type type)
+        private static ITestCase CreateTestCase(string[] fields, Type type)
         {
             if (type == typeof(MethodNameTestCase))
             {
@@ -120,7 +120,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
                     IsStructType = GetBoolean(fields[9]),
                     IsNestedType = GetBoolean(fields[10]),
                     IsDelgateType = GetBoolean(fields[11]),
-                    IsGenericEntity = GetBoolean(fields[12])
+                    IsGenericEntity = GetBoolean(fields[12]),
+                    Rank = GetInt(fields[13])
                 };
             }
             else if (type == typeof(TypeParameterNameTestCase))
@@ -132,9 +133,16 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
                     Assembly = fields[2],
                     FullName = fields[3],
                     Name = fields[4],
+                    TypeParameterShortName = fields[5],
+                    TypeParameterType = fields[6]
                 };
             }
             return null;
+        }
+
+        private static int GetInt(string s)
+        {
+            return Int32.Parse(s);
         }
 
         private static Boolean GetBoolean(string s)

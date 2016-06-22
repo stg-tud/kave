@@ -13,27 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using KaVE.Commons.Model.Names;
-using NUnit.Framework;
-
-namespace KaVE.Commons.Tests.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names
 {
-    [TestFixture]
-    public class CsNamespaceTest
+    public interface ITypeParameterName : ITypeName
     {
-        [TestCase("a.b.c.", "a.b."),
-        TestCase("a.b.", "a.")]
-        public void ParentNamespace(string input, string expected)
-        {
-            Assert.AreEqual(CsNameUtil.GetNamespaceName(input).ParentNamespace.Identifier, expected);
-        }
-
-        [TestCase("a.b.", "b"),
-        TestCase("a.b.c.", "c")]
-        public void Name(string input, string expected)
-        {
-            Assert.AreEqual(CsNameUtil.GetNamespaceName(input).Name, expected);
-        }
+        
     }
 }

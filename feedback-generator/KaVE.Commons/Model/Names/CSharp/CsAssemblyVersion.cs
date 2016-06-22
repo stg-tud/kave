@@ -30,12 +30,12 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public string Identifier
         {
-            get { return ctx != null ? ctx.GetText() : "?"; }
+            get { return ctx.GetText(); }
         }
 
         public bool IsUnknown
         {
-            get { return ctx == null; }
+            get { return false; }
         }
 
         public bool IsHashed
@@ -70,12 +70,12 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public int Major
         {
-            get { return IsUnknown ? -1 : Int32.Parse(ctx.num(0).GetText()); }
+            get { return Int32.Parse(ctx.num(0).GetText()); }
         }
 
-        public int Minor { get { return IsUnknown ? -1 : Int32.Parse(ctx.num(1).GetText()); } }
-        public int Build { get { return IsUnknown ? -1 : Int32.Parse(ctx.num(2).GetText()); } }
-        public int Revision { get { return IsUnknown ? -1 : Int32.Parse(ctx.num(3).GetText()); } }
+        public int Minor { get { return Int32.Parse(ctx.num(1).GetText()); } }
+        public int Build { get { return Int32.Parse(ctx.num(2).GetText()); } }
+        public int Revision { get { return Int32.Parse(ctx.num(3).GetText()); } }
 
         public override bool Equals(object other)
         {

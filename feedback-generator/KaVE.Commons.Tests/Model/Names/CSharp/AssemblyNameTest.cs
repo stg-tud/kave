@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void HappyPath()
         {
-            var n = CsNameUtil.ParseAssemblyName("A, 1.2.3.4");
+            var n = CsNameUtil.GetAssemblyName("A, 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -33,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void NoVersion()
         {
-            var n = CsNameUtil.ParseAssemblyName("A");
+            var n = CsNameUtil.GetAssemblyName("A");
             AssertName(n, "A");
             AssertVersion(n, "?");
         }
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void KommasInName()
         {
-            var n = CsNameUtil.ParseAssemblyName("A (B, C)");
+            var n = CsNameUtil.GetAssemblyName("A (B, C)");
             AssertName(n, "A (B, C)");
             AssertVersion(n, AssemblyVersion.UnknownName.Identifier);
         }
@@ -49,7 +49,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void KommasInNameAndVersion()
         {
-            var n = CsNameUtil.ParseAssemblyName("A (B, C), 1.2.3.4");
+            var n = CsNameUtil.GetAssemblyName("A (B, C), 1.2.3.4");
             AssertName(n, "A (B, C)");
             AssertVersion(n, "1.2.3.4");
         }
@@ -57,7 +57,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void LotOfWhitespace()
         {
-            var n = CsNameUtil.ParseAssemblyName(" A , 1.2.3.4");
+            var n = CsNameUtil.GetAssemblyName(" A , 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -65,7 +65,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void NoWhitespace()
         {
-            var n = CsNameUtil.ParseAssemblyName("A,1.2.3.4");
+            var n = CsNameUtil.GetAssemblyName("A,1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }

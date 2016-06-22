@@ -39,7 +39,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         [Test, TestCaseSource("TestCases")]
         public void ValidMethodName(MethodNameTestCase testCase)
         {
-            var type = CsNameUtil.ParseMethodName(testCase.Identifier);
+            var type = CsNameUtil.GetMethodName(testCase.Identifier);
             Console.WriteLine(testCase.Identifier);
             Assert.AreEqual(testCase.DeclaringType, type.DeclaringType.Identifier);
             Assert.AreEqual(testCase.ReturnType, type.ReturnType.Identifier);
@@ -53,7 +53,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         [Test, TestCaseSource("InvalidTestCases")]
         public void InvalidMethodName(string invalidType)
         {
-            Assert.AreEqual("?", CsNameUtil.ParseMethodName(invalidType).Identifier);
+            Assert.AreEqual("?", CsNameUtil.GetMethodName(invalidType).Identifier);
         }
     }
 }

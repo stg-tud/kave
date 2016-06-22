@@ -85,6 +85,13 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitParameterNameEOL([NotNull] TypeNamingParser.ParameterNameEOLContext context);
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.memberNameEOL"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMemberNameEOL([NotNull] TypeNamingParser.MemberNameEOLContext context);
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -232,6 +239,34 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitAssemblyVersion([NotNull] TypeNamingParser.AssemblyVersionContext context);
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.memberName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMemberName([NotNull] TypeNamingParser.MemberNameContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.simpleMemberName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSimpleMemberName([NotNull] TypeNamingParser.SimpleMemberNameContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.propertyName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPropertyName([NotNull] TypeNamingParser.PropertyNameContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.propertyModifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context);
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.method"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -272,6 +307,13 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitCustomMethod([NotNull] TypeNamingParser.CustomMethodContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSignature([NotNull] TypeNamingParser.SignatureContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.formalParam"/>.

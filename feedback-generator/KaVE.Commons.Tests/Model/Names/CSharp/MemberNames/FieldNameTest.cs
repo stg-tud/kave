@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -32,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         [Test]
         public void ShouldBeInstanceFieldName()
         {
-            var fieldName = FieldName.Get(Identifier);
+            var fieldName = CsNameUtil.GetFieldName(Identifier);
 
             Assert.AreEqual(Identifier, fieldName.Identifier);
             Assert.AreEqual("fieldName", fieldName.Name);
@@ -44,7 +45,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         [Test]
         public void ShouldBeStaticFieldName()
         {
-            var fieldName = FieldName.Get("static " + Identifier);
+            var fieldName = CsNameUtil.GetFieldName("static " + Identifier);
 
             Assert.IsTrue(fieldName.IsStatic);
         }
@@ -52,10 +53,10 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         [Test]
         public void ShouldBeFieldWithTypeParameters()
         {
-            const string valueTypeIdentifier = "T`1[[A, B, 1.0.0.0]], A, 9.1.8.2";
-            const string declaringTypeIdentifier = "U`2[[B, C, 6.7.5.8],[C, D, 8.3.7.4]], Z, 0.0.0.0";
-            var fieldName = FieldName.Get("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].bar");
-
+            const string valueTypeIdentifier = "T'1[[T -> A, B, 1.0.0.0]], A, 9.1.8.2";
+            const string declaringTypeIdentifier = "U'2[[T -> B, C, 6.7.5.8],[T2 -> C, D, 8.3.7.4]], Z, 0.0.0.0";
+            var fieldName =
+                CsNameUtil.GetFieldName("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].bar");
             Assert.AreEqual("bar", fieldName.Name);
             Assert.AreEqual(valueTypeIdentifier, fieldName.ValueType.Identifier);
             Assert.IsTrue(fieldName.ValueType.HasTypeParameters);
@@ -74,10 +75,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         [Test]
         public void HandlesDelegateValueType()
         {
-            var fieldName = FieldName.Get("[d:[V,A] [D,A].()] [D,A].fieldName");
-
+            var fieldName = CsNameUtil.GetFieldName("[d:[V,A] [D,A].m()] [D,A].fieldName");
             Assert.AreEqual("fieldName", fieldName.Name);
-            Assert.AreEqual("d:[V,A] [D,A].()", fieldName.ValueType.Identifier);
+            Assert.AreEqual("d:[V,A] [D,A].m()", fieldName.ValueType.Identifier);
         }
 
         [Test]

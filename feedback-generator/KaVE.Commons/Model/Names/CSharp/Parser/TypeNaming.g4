@@ -53,6 +53,7 @@ methodEOL: method EOL;
 namespaceEOL: namespace EOL;
 assemblyEOL: assembly EOL;
 parameterNameEOL: formalParam EOL;
+memberNameEOL: memberName EOL;
 
 type: UNKNOWN | typeParameter | regularType | delegateType | arrayType;
 typeParameter : id (WS? '->' WS? notTypeParameter)?;
@@ -83,12 +84,18 @@ assembly: regularAssembly | UNKNOWN;
 regularAssembly: (id '.')* id (',' WS? assemblyVersion)?;
 assemblyVersion: num '.' num '.' num '.' num;	
 
+memberName: UNKNOWN | simpleMemberName | propertyName;
+simpleMemberName: staticModifier? WS? signature;
+propertyName: (staticModifier | propertyModifier)? WS? signature methodParameters?;
+propertyModifier: 'get' | 'set';
+
 method: UNKNOWN | regularMethod;
 regularMethod: (nonStaticCtor | staticCctor | customMethod) methodParameters;
 methodParameters: '(' WS? ( formalParam ( WS? ',' WS? formalParam)*)? WS? ')';
 nonStaticCtor: WS? '[' UNKNOWN ']' WS? '[' type ']..ctor';
 staticCctor: staticModifier WS? '[' UNKNOWN ']' WS? '[' type ']..cctor';
-customMethod: staticModifier? WS? '[' type ']'  WS? '[' type '].' id genericTypePart?;
+customMethod: staticModifier? WS? signature genericTypePart?;
+signature: '[' type ']'  WS? '[' type '].' id;
 formalParam: (WS? parameterModifier)? WS? '[' type ']' WS? id;
 parameterModifier: paramsModifier | optsModifier | refModifier | outModifier | extensionModifier;
 

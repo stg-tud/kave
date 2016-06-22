@@ -119,7 +119,7 @@ namespace KaVE.Commons.Model.Names
                 case Types.LocalVariableName:
                     return LocalVariableName.Get(identifier);
                 case Types.MethodName:
-                    return ParseMethodName(identifier);
+                    return GetMethodName(identifier);
                 case Types.Name:
                     return Name.Get(identifier);
                 case Types.NamespaceName:
@@ -127,9 +127,9 @@ namespace KaVE.Commons.Model.Names
                 case Types.ParameterName:
                     return ParameterName.Get(identifier);
                 case Types.PropertyName:
-                    return PropertyName.Get(identifier);
+                    return GetPropertyName(identifier);
                 case Types.TypeName:
-                    return ParseTypeName(identifier);
+                    return GetTypeName(identifier);
                 default:
                     break;
             };
@@ -142,7 +142,7 @@ namespace KaVE.Commons.Model.Names
             return TypeToJson[type.GetType()] + ":" + type.Identifier;
         }
 
-        public static CsTypeName ParseTypeName(string input)
+        public static ITypeName GetTypeName(string input)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace KaVE.Commons.Model.Names
             }
         }
 
-        public static IMethodName ParseMethodName(string input)
+        public static IMethodName GetMethodName(string input)
         {
             try
             {
@@ -184,7 +184,7 @@ namespace KaVE.Commons.Model.Names
             }
         }
 
-        public static INamespaceName ParseNamespaceName(string input)
+        public static INamespaceName GetNamespaceName(string input)
         {
             try
             {
@@ -193,11 +193,11 @@ namespace KaVE.Commons.Model.Names
             }
             catch (Exception e)
             {
-                return null;
+                return new UnknownName();
             }
         }
 
-        public static IAssemblyName ParseAssemblyName(string input)
+        public static IAssemblyName GetAssemblyName(string input)
         {
             try
             {
@@ -206,21 +206,64 @@ namespace KaVE.Commons.Model.Names
             }
             catch (Exception e)
             {
-                return null;
+                return new UnknownName();
             }
         }
 
-        public static IParameterName ParseParameterName(string input)
+        public static IParameterName GetParameterName(string input)
         {
             try
             {
-                var ctx = TypeNameParseUtil.ValideParameterName(input);
+                var ctx = TypeNameParseUtil.ValidateParameterName(input);
                 return new CsParameterName(ctx);
+            }
+            catch (AssertException e)
+            {
+                return new UnknownName();
+            }
+        }
+
+        private static CsMemberName GetMemberName(string input)
+        {
+            try
+            {
+                var ctx = TypeNameParseUtil.ValidateMemberName(input);
+                return new CsMemberName(ctx);
             }
             catch (AssertException e)
             {
                 return null;
             }
+        }
+
+        public static IFieldName GetFieldName(string input)
+        {
+            var name = GetMemberName(input);
+            if (name != null)
+            {
+                return name;
+            }
+            return new UnknownName();
+        }
+
+        public static IEventName GetEventName(string input)
+        {
+            var name = GetMemberName(input);
+            if (name != null)
+            {
+                return name;
+            }
+            return new UnknownName();
+        }
+
+        public static IPropertyName GetPropertyName(string input)
+        {
+            var name = GetMemberName(input);
+            if (name != null)
+            {
+                return name;
+            }
+            return new UnknownName();
         }
     }
 }

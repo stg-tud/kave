@@ -36,7 +36,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return ctx.type().UNKNOWN() == null;
+                return false;
             }
         }
 
@@ -57,7 +57,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public bool IsPassedByReference
         {
-            get { return ctx.parameterModifier() != null && ctx.parameterModifier().refModifier() != null; }
+            get { return (ctx.parameterModifier() != null && ctx.parameterModifier().refModifier() != null) || ValueType.IsReferenceType; }
         }
 
         public bool IsOutput

@@ -46,7 +46,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                 }
                 if (ctx.regularMethod() != null)
                 {
-                    return ctx.regularMethod().customMethod().id().GetText() + (ctx.regularMethod().customMethod().genericTypePart() != null ? ctx.regularMethod().customMethod().genericTypePart().GetText() : "") +
+                    return ctx.regularMethod().customMethod().signature().id().GetText() + (ctx.regularMethod().customMethod().genericTypePart() != null ? ctx.regularMethod().customMethod().genericTypePart().GetText() : "") +
                            ctx.regularMethod().methodParameters().GetText();
                 }
                 return ctx.UNKNOWN().GetText();
@@ -89,9 +89,9 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (ctx.regularMethod() != null && ctx.regularMethod().customMethod() != null)
                 {
-                    return new CsTypeName(ctx.regularMethod().customMethod().type()[0]);
+                    return new CsTypeName(ctx.regularMethod().customMethod().signature().type()[0]);
                 }
-                return CsNameUtil.ParseTypeName("?");
+                return CsNameUtil.GetTypeName("?");
             }
         }
 
@@ -119,13 +119,13 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (IsUnknown)
                 {
-                    return CsNameUtil.ParseTypeName(ctx.UNKNOWN().GetText());
+                    return CsNameUtil.GetTypeName(ctx.UNKNOWN().GetText());
                 }
                 else if (IsConstructor)
                 {
                     return new CsTypeName(ctx.regularMethod().staticCctor() != null ? ctx.regularMethod().staticCctor().type() : ctx.regularMethod().nonStaticCtor().type());
                 }
-                return new CsTypeName(ctx.regularMethod().customMethod().type(1));
+                return new CsTypeName(ctx.regularMethod().customMethod().signature().type(1));
             }
         }
 
@@ -153,7 +153,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     return ctx.UNKNOWN().GetText();
                 }
-                return ctx.regularMethod().customMethod().id().GetText();
+                return ctx.regularMethod().customMethod().signature().id().GetText();
             }
         }
 

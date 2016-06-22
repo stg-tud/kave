@@ -68,11 +68,11 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
         {
             var inputStream = new AntlrInputStream(input + "\n");
             var lexer = new TypeNamingLexer(inputStream);
-            //lexer.RemoveErrorListeners();
+            lexer.RemoveErrorListeners();
             lexer.AddErrorListener(el);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             TypeNamingParser parser = new TypeNamingParser(tokens);
-            //parser.RemoveErrorListeners();
+            parser.RemoveErrorListeners();
             parser.AddErrorListener(el);
             return parser;
         }
@@ -95,13 +95,22 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             return namespaceEol.assembly();
         }
 
-        public static TypeNamingParser.FormalParamContext ValideParameterName(string input)
+        public static TypeNamingParser.FormalParamContext ValidateParameterName(string input)
         {
             MyErrorListener el = new MyErrorListener();
             TypeNamingParser parser = SetupParser(input, el);
             var parameterEol = parser.parameterNameEOL();
             Asserts.Not(el.HasError, "Syntax Error: " + input);
             return parameterEol.formalParam();
+        }
+
+        public static TypeNamingParser.MemberNameContext ValidateMemberName(string input)
+        {
+            MyErrorListener el = new MyErrorListener();
+            TypeNamingParser parser = SetupParser(input, el);
+            var memberNameEol = parser.memberNameEOL();
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
+            return memberNameEol.memberName();
         }
     }
 }

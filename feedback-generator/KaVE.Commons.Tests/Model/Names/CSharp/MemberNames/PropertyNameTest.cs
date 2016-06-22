@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -33,7 +34,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
             const string valueTypeIdentifier = "A, B, 1.0.0.0";
             const string declaringTypeIdentifier = "C, D, 0.9.8.7";
             var propertyName =
-                PropertyName.Get("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
+                CsNameUtil.GetPropertyName("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
 
             Assert.AreEqual("Property", propertyName.Name);
             Assert.AreEqual(valueTypeIdentifier, propertyName.ValueType.Identifier);
@@ -44,39 +45,40 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         [Test]
         public void ShoudBePropertyWithGetter()
         {
-            var propertyName = PropertyName.Get("get [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
-
+            var propertyName =
+               CsNameUtil.GetPropertyName("get [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
             Assert.IsTrue(propertyName.HasGetter);
         }
 
         [Test]
         public void ShoudBePropertyWithSetter()
         {
-            var propertyName = PropertyName.Get("set [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
-
+            var propertyName =
+               CsNameUtil.GetPropertyName("set [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
             Assert.IsTrue(propertyName.HasSetter);
         }
 
         [Test]
         public void ShouldBeStaticProperty()
         {
-            var propertyName = PropertyName.Get("static [A, B, 1.2.3.4] [C, D, 5.6.7.8].E");
-
+            var propertyName =
+               CsNameUtil.GetPropertyName("static [A, B, 1.2.3.4] [C, D, 5.6.7.8].E");
             Assert.IsTrue(propertyName.IsStatic);
         }
 
         [Test]
         public void HandlesDelegateValueType()
         {
-            var propertyName = PropertyName.Get("[d:[R,A] [D,A].()] [D,B].P");
-
+            var propertyName =
+               CsNameUtil.GetPropertyName("[d:[R,A] [D,A].m()] [D,B].P");
             Assert.AreEqual("P", propertyName.Name);
         }
 
         [Test]
         public void PropertyNameIsSimpleName()
         {
-            var propertyName = PropertyName.Get("[TR,P] [TD,P].P()");
+            var propertyName =
+              CsNameUtil.GetPropertyName("[TR,P] [TD,P].P()");
             Assert.AreEqual("P", propertyName.Name);
         }
 

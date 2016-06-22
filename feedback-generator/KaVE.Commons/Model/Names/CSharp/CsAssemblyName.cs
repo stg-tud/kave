@@ -31,23 +31,27 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return new CsAssemblyVersion(ctx.regularAssembly().assemblyVersion());
+                if (ctx.regularAssembly().assemblyVersion() != null)
+                {
+                    return new CsAssemblyVersion(ctx.regularAssembly().assemblyVersion());
+                }
+                return new UnknownName();
             }
         }
 
         public string Name
         {
-            get { return IsUnknown ? Identifier : ctx.regularAssembly().id(0).GetText(); }
+            get { return ctx.regularAssembly().id(0).GetText(); }
         }
 
         public string Identifier
         {
-            get { return ctx == null ? "?" : ctx.GetText(); }
+            get { return ctx.GetText(); }
         }
 
         public bool IsUnknown
         {
-            get { return ctx == null || ctx.UNKNOWN() != null; }
+            get { return ctx.UNKNOWN() != null; }
         }
 
         public bool IsHashed

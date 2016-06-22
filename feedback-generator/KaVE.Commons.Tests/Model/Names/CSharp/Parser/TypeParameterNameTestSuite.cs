@@ -37,7 +37,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         [Test, TestCaseSource("TestCases")]
         public void ValidTypeName(TypeParameterNameTestCase testCase)
         {
-            var type = CsNameUtil.ParseTypeName(testCase.Identifier);
+            var type = CsNameUtil.GetTypeName(testCase.Identifier);
             Assert.NotNull(type);
             Console.WriteLine(testCase.Identifier);
             Assert.AreEqual(testCase.Identifier, type.Identifier);
@@ -45,12 +45,14 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             Assert.AreEqual(testCase.Namespace, type.Namespace.Identifier);
             Assert.AreEqual(testCase.FullName, type.FullName);
             Assert.AreEqual(testCase.Name, type.Name);
+            Assert.AreEqual(testCase.TypeParameterShortName, type.TypeParameterShortName);
+            Assert.AreEqual(testCase.TypeParameterType, type.TypeParameterType.Identifier);
         }
 
         [Test, TestCaseSource("InvalidTestCases")]
         public void InvalidTypeName(string invalidType)
         {
-            Assert.AreEqual(CsNameUtil.ParseTypeName(invalidType).Identifier, "?");
+            Assert.AreEqual(CsNameUtil.GetTypeName(invalidType).Identifier, "?");
         }
     }
 }
