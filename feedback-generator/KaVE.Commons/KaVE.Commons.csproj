@@ -78,6 +78,7 @@
     <Compile Include="Model\Events\TestRunEvents\TestRunEvent.cs" />
     <Compile Include="Model\Names\CSharp\CsAssemblyName.cs" />
     <Compile Include="Model\Names\CSharp\CsAssemblyVersion.cs" />
+    <Compile Include="Model\Names\CSharp\CsLambdaName.cs" />
     <Compile Include="Model\Names\CSharp\CsMemberName.cs" />
     <Compile Include="Model\Names\CSharp\CsNamespaceName.cs" />
     <Compile Include="Model\Names\CSharp\CsParameterName.cs" />

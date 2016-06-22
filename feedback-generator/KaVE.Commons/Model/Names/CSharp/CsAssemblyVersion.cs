@@ -80,7 +80,12 @@ namespace KaVE.Commons.Model.Names.CSharp
         public override bool Equals(object other)
         {
             var otherName = other as IName;
-            return otherName != null && string.Equals(Identifier, otherName.Identifier);
+            return otherName != null && Equals(otherName);
+        }
+
+        private bool Equals(IName other)
+        {
+            return string.Equals(Identifier, other.Identifier);
         }
 
         public override int GetHashCode()

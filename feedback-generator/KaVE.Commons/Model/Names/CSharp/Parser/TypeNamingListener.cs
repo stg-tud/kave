@@ -115,6 +115,17 @@ public interface ITypeNamingListener : IParseTreeListener {
 	void ExitMemberNameEOL([NotNull] TypeNamingParser.MemberNameEOLContext context);
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.lambdaNameEOL"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLambdaNameEOL([NotNull] TypeNamingParser.LambdaNameEOLContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.lambdaNameEOL"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLambdaNameEOL([NotNull] TypeNamingParser.LambdaNameEOLContext context);
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -388,6 +399,28 @@ public interface ITypeNamingListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLambdaName([NotNull] TypeNamingParser.LambdaNameContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLambdaName([NotNull] TypeNamingParser.LambdaNameContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.realLambdaName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterRealLambdaName([NotNull] TypeNamingParser.RealLambdaNameContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.realLambdaName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitRealLambdaName([NotNull] TypeNamingParser.RealLambdaNameContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.method"/>.

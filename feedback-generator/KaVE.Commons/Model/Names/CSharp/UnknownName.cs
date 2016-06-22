@@ -19,11 +19,11 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
-    public class UnknownName : IArrayTypeName, IAssemblyName, IAssemblyVersion, IMethodName, IDelegateTypeName, ITypeParameterName, IParameterName, INamespaceName, IFieldName, IPropertyName, IEventName
+    public class UnknownName : IArrayTypeName, IAssemblyName, IAssemblyVersion, IMethodName, IDelegateTypeName, ITypeParameterName, IParameterName, INamespaceName, IFieldName, IPropertyName, IEventName, ILambdaName
     {
         public UnknownName()
         {
-            
+
         }
 
         public string Identifier { get { return "?"; } }
@@ -123,6 +123,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return Identifier; }
         }
 
+        public IList<IParameterName> Parameters { get { return Lists.NewList<IParameterName>(); } }
+        public bool HasParameters { get { return false; } }
+        public ITypeName ReturnType { get { return new UnknownName(); } }
+
+        public string Signature { get { return Identifier; } }
+
         IList<IParameterName> IDelegateTypeName.Parameters
         {
             get { return Lists.NewList<IParameterName>(); }
@@ -161,6 +167,6 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         public bool IsExtensionMethod { get { return false; } }
-        public ITypeName HandlerType { get; private set; }
+        public ITypeName HandlerType { get { return new UnknownName(); } }
     }
 }

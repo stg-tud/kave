@@ -92,6 +92,13 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitMemberNameEOL([NotNull] TypeNamingParser.MemberNameEOLContext context);
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.lambdaNameEOL"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLambdaNameEOL([NotNull] TypeNamingParser.LambdaNameEOLContext context);
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -265,6 +272,20 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLambdaName([NotNull] TypeNamingParser.LambdaNameContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.realLambdaName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRealLambdaName([NotNull] TypeNamingParser.RealLambdaNameContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.method"/>.

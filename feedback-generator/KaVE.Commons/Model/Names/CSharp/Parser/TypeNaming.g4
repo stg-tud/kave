@@ -54,6 +54,7 @@ namespaceEOL: namespace EOL;
 assemblyEOL: assembly EOL;
 parameterNameEOL: formalParam EOL;
 memberNameEOL: memberName EOL;
+lambdaNameEOL: lambdaName EOL;
 
 type: UNKNOWN | typeParameter | regularType | delegateType | arrayType;
 typeParameter : id (WS? '->' WS? notTypeParameter)?;
@@ -88,6 +89,9 @@ memberName: UNKNOWN | simpleMemberName | propertyName;
 simpleMemberName: staticModifier? WS? signature;
 propertyName: (staticModifier | propertyModifier)? WS? signature methodParameters?;
 propertyModifier: 'get' | 'set';
+
+lambdaName: UNKNOWN | realLambdaName;
+realLambdaName: '[' type ']' WS? methodParameters;
 
 method: UNKNOWN | regularMethod;
 regularMethod: (nonStaticCtor | staticCctor | customMethod) methodParameters;

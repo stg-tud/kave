@@ -101,7 +101,7 @@ namespace KaVE.Commons.Model.Names
                 result = n + GetTypeNameIdentifier(typeName) + typeName.Name + "'" + paras.Count + "[";
                 for (var i = 0; i < paras.Count; i++)
                 {
-                    result += "[" + ((ITypeParameterName)paras[i]).TypeParameterShortName + " -> " + HandleOldTypeNames(((ITypeParameterName)paras[i]).TypeParameterType.Identifier) + "]" + (i < paras.Count - 1 ? "," : "")
+                    result += "[" + (paras[i]).TypeParameterShortName + " -> " + HandleOldTypeNames((paras[i]).TypeParameterType.Identifier) + "]" + (i < paras.Count - 1 ? "," : "")
                     ;
                 }
                 result += "]" + a;

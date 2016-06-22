@@ -68,5 +68,21 @@ namespace KaVE.Commons.Model.Names.CSharp
         public bool IsParameterArray { get { return ctx.parameterModifier() != null && ctx.parameterModifier().paramsModifier() != null; } }
         public bool IsOptional { get { return ctx.parameterModifier() != null && ctx.parameterModifier().optsModifier() != null; } }
         public bool IsExtensionMethodParameter { get { return ctx.parameterModifier() != null && ctx.parameterModifier().extensionModifier() != null; } }
+
+        public override bool Equals(object other)
+        {
+            var otherName = other as IName;
+            return otherName != null && Equals(otherName);
+        }
+
+        private bool Equals(IName other)
+        {
+            return string.Equals(Identifier, other.Identifier);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Identifier != null ? Identifier.GetHashCode() : 0);
+        }
     }
 }

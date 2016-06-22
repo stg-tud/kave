@@ -658,5 +658,21 @@ namespace KaVE.Commons.Model.Names.CSharp
                 return null;
             }
         }
+
+        public override bool Equals(object other)
+        {
+            var otherName = other as IName;
+            return otherName != null && Equals(otherName);
+        }
+
+        private bool Equals(IName other)
+        {
+            return string.Equals(Identifier, other.Identifier);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Identifier != null ? Identifier.GetHashCode() : 0);
+        }
     }
 }

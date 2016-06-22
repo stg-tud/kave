@@ -109,13 +109,13 @@ namespace KaVE.Commons.Model.Names
                 case Types.AliasName:
                     return AliasName.Get(identifier);
                 case Types.AssemblyName:
-                    return AssemblyName.Get(identifier);
+                    return GetAssemblyName(identifier);
                 case Types.EventName:
-                    return EventName.Get(identifier);
+                    return GetEventName(identifier);
                 case Types.FieldName:
-                    return FieldName.Get(identifier);
+                    return GetFieldName(identifier);
                 case Types.LambdaName:
-                    return LambdaName.Get(identifier);
+                    return GetLambdaName(identifier);
                 case Types.LocalVariableName:
                     return LocalVariableName.Get(identifier);
                 case Types.MethodName:
@@ -123,9 +123,9 @@ namespace KaVE.Commons.Model.Names
                 case Types.Name:
                     return Name.Get(identifier);
                 case Types.NamespaceName:
-                    return NamespaceName.Get(identifier);
+                    return GetNamespaceName(identifier);
                 case Types.ParameterName:
-                    return ParameterName.Get(identifier);
+                    return GetParameterName(identifier);
                 case Types.PropertyName:
                     return GetPropertyName(identifier);
                 case Types.TypeName:
@@ -264,6 +264,19 @@ namespace KaVE.Commons.Model.Names
                 return name;
             }
             return new UnknownName();
+        }
+
+        public static ILambdaName GetLambdaName(string input)
+        {
+            try
+            {
+                var ctx = TypeNameParseUtil.ValidateLambdaName(input);
+                return new CsLambdaName(ctx);
+            }
+            catch (AssertException e)
+            {
+                return null;
+            }
         }
     }
 }

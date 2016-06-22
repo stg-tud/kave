@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -25,15 +26,15 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ReturnType()
         {
-            var name = LambdaName.Get("[System.String, mscorlib, 4.0.0.0] ()");
+            var name = CsNameUtil.GetLambdaName("[System.String, mscorlib, 4.0.0.0] ()");
 
-            Assert.AreEqual(TypeName.Get("System.String, mscorlib, 4.0.0.0"), name.ReturnType);
+            Assert.AreEqual("System.String, mscorlib, 4.0.0.0", name.ReturnType.Identifier);
         }
 
         [Test]
         public void WithoutParameters()
         {
-            var name = LambdaName.Get("[System.String, mscorlib, 4.0.0.0] ()");
+            var name = CsNameUtil.GetLambdaName("[System.String, mscorlib, 4.0.0.0] ()");
 
             Assert.False(name.HasParameters);
             CollectionAssert.IsEmpty(name.Parameters);
@@ -43,10 +44,10 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void WithParameters()
         {
-            var name = LambdaName.Get("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)");
+            var name = CsNameUtil.GetLambdaName("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)");
 
             Assert.True(name.HasParameters);
-            CollectionAssert.AreEqual(new[] { ParameterName.Get("[C, A] p1"), ParameterName.Get("[C, B] p2") }, name.Parameters);
+            CollectionAssert.AreEqual(new[] { CsNameUtil.GetParameterName("[C, A] p1"), CsNameUtil.GetParameterName("[C, B] p2") }, name.Parameters);
             Assert.AreEqual("([C, A] p1, [C, B] p2)", name.Signature);
         }
 

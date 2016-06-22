@@ -131,6 +131,19 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	public virtual void ExitMemberNameEOL([NotNull] TypeNamingParser.MemberNameEOLContext context) { }
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.lambdaNameEOL"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLambdaNameEOL([NotNull] TypeNamingParser.LambdaNameEOLContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.lambdaNameEOL"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLambdaNameEOL([NotNull] TypeNamingParser.LambdaNameEOLContext context) { }
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.type"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -454,6 +467,32 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLambdaName([NotNull] TypeNamingParser.LambdaNameContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLambdaName([NotNull] TypeNamingParser.LambdaNameContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.realLambdaName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterRealLambdaName([NotNull] TypeNamingParser.RealLambdaNameContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.realLambdaName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitRealLambdaName([NotNull] TypeNamingParser.RealLambdaNameContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.method"/>.

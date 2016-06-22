@@ -112,5 +112,14 @@ namespace KaVE.Commons.Model.Names.CSharp.Parser
             Asserts.Not(el.HasError, "Syntax Error: " + input);
             return memberNameEol.memberName();
         }
+
+        public static TypeNamingParser.LambdaNameContext ValidateLambdaName(string input)
+        {
+            MyErrorListener el = new MyErrorListener();
+            TypeNamingParser parser = SetupParser(input, el);
+            var lambdaNameEol = parser.lambdaNameEOL();
+            Asserts.Not(el.HasError, "Syntax Error: " + input);
+            return lambdaNameEol.lambdaName();
+        }
     }
 }
