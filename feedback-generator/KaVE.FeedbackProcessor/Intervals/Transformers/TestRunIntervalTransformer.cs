@@ -54,10 +54,13 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
                             var testMethodResult = new TestRunInterval.TestMethodResult
                             {
                                 TestMethodName = testMethod.TestMethod.Name + testMethod.Parameters,
+                                Duration = testMethod.Duration,
                                 Result = testMethod.Result
                             };
 
                             testClassResult.TestMethods.Add(testMethodResult);
+
+                            testClassResult.Duration += testMethod.Duration;
 
                             testClassResult.Result = UpdateCumulativeTestResult(
                                 testClassResult.Result,
@@ -69,6 +72,8 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
                         }
 
                         interval.TestClasses.Add(testClassResult);
+
+                        interval.Duration += testClassResult.Duration;
                     }
 
                     _currentIntervals.Add(interval);

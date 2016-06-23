@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Linq;
 using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.Commons.Model.Names;
@@ -74,14 +75,14 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
         }
 
         [Test]
-        public void ResultsAreSetAndPropagatedCorrectly()
+        public void ResultsAndDurationsAreSetAndPropagatedCorrectly()
         {
             var testEvent = new TestRunEvent
             {
                 Tests =
                 {
-                    new TestCaseResult {TestMethod = TestMethod1, Result = TestResult.Success},
-                    new TestCaseResult {TestMethod = TestMethod2, Result = TestResult.Failed}
+                    new TestCaseResult {TestMethod = TestMethod1, Result = TestResult.Success, Duration = TimeSpan.FromSeconds(0.1)},
+                    new TestCaseResult {TestMethod = TestMethod2, Result = TestResult.Failed, Duration = TimeSpan.FromSeconds(0.2)}
                 }
             };
 
@@ -89,10 +90,14 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(testEvent);
 
             var actual = sut.SignalEndOfEventStream().First();
+            
             Assert.AreEqual("TestProj1", actual.ProjectName);
             Assert.AreEqual(1, actual.TestClasses.Count);
+            Assert.AreEqual(TimeSpan.FromSeconds(0.3), actual.Duration);
             Assert.AreEqual(TestResult.Failed, actual.Result);
+
             Assert.AreEqual("Test.TestClass", actual.TestClasses[0].TestClassName);
+            Assert.AreEqual(TimeSpan.FromSeconds(0.3), actual.TestClasses[0].Duration);
             Assert.AreEqual(2, actual.TestClasses[0].TestMethods.Count);
             Assert.AreEqual(TestResult.Failed, actual.TestClasses[0].Result);
 
@@ -101,10 +106,12 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
                 if (method.TestMethodName == "Test")
                 {
                     Assert.AreEqual(TestResult.Success, method.Result);
+                    Assert.AreEqual(TimeSpan.FromSeconds(0.1), method.Duration);
                 }
                 else if (method.TestMethodName == "Test2")
                 {
                     Assert.AreEqual(TestResult.Failed, method.Result);
+                    Assert.AreEqual(TimeSpan.FromSeconds(0.2), method.Duration);
                 }
                 else
                 {

@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using KaVE.JetBrains.Annotations;
@@ -63,6 +64,16 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         public override string ToString()
         {
             return Value.ToString();
+        }
+    }
+
+    public class WatchdogDoubleValue : WatchdogValue
+    {
+        public double Value { get; set; }
+
+        public override string ToString()
+        {
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
     }
 

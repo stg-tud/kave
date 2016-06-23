@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.Commons.Utils.Collections;
 
@@ -24,6 +25,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         public class TestClassResult
         {
             public string TestClassName { get; set; }
+            public TimeSpan Duration { get; set; }
             public TestResult Result { get; set; }
             public IKaVEList<TestMethodResult> TestMethods { get; set; }
 
@@ -70,6 +72,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         public class TestMethodResult
         {
             public string TestMethodName { get; set; }
+            public TimeSpan Duration { get; set; }
             public TestResult Result { get; set; }
 
             protected bool Equals(TestMethodResult other)
@@ -104,6 +107,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         }
 
         public string ProjectName { get; set; }
+        public TimeSpan Duration { get; set; }
         public TestResult Result { get; set; }
         public IKaVEList<TestClassResult> TestClasses { get; set; }
 

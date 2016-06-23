@@ -112,6 +112,11 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             return new WatchdogIntValue {Value = value};
         }
 
+        private static WatchdogDoubleValue Double(double value)
+        {
+            return new WatchdogDoubleValue {Value = value};
+        }
+
         private static WatchdogUnquotedLiteral Literal(string value)
         {
             return new WatchdogUnquotedLiteral {Value = value};
@@ -189,32 +194,33 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             var projectObject = new WatchdogObject();
             obj.Properties.Add("testExecution", projectObject);
 
-            projectObject.Properties.Add("projectHash", String(WatchdogUtils.Sha1Hash(testRunInterval.ProjectName)));
-            projectObject.Properties.Add("result", String(testRunInterval.Result.ToSerializedName()));
+            projectObject.Properties.Add("p", String(WatchdogUtils.Sha1Hash(testRunInterval.ProjectName)));
+            projectObject.Properties.Add("d", Double(testRunInterval.Duration.TotalSeconds));
+            projectObject.Properties.Add("r", String(testRunInterval.Result.ToSerializedName()));
 
             var testClassArray = new WatchdogArray();
-            projectObject.Properties.Add("childrenExecutions", testClassArray);
+            projectObject.Properties.Add("c", testClassArray);
 
             foreach (var testClass in testRunInterval.TestClasses)
             {
                 var testClassObject = new WatchdogObject();
                 testClassArray.Elements.Add(testClassObject);
 
-                testClassObject.Properties.Add("testClassHash", String(WatchdogUtils.Sha1Hash(testClass.TestClassName)));
-                testClassObject.Properties.Add("result", String(testClass.Result.ToSerializedName()));
+                testClassObject.Properties.Add("t", String(WatchdogUtils.Sha1Hash(testClass.TestClassName)));
+                testClassObject.Properties.Add("d", Double(testClass.Duration.TotalSeconds));
+                testClassObject.Properties.Add("r", String(testClass.Result.ToSerializedName()));
 
                 var testMethodArray = new WatchdogArray();
-                testClassObject.Properties.Add("childrenExecutions", testMethodArray);
+                testClassObject.Properties.Add("c", testMethodArray);
 
                 foreach (var testMethod in testClass.TestMethods)
                 {
                     var testMethodObject = new WatchdogObject();
                     testMethodArray.Elements.Add(testMethodObject);
 
-                    testMethodObject.Properties.Add(
-                        "testMethodHash",
-                        String(WatchdogUtils.Sha1Hash(testMethod.TestMethodName)));
-                    testMethodObject.Properties.Add("result", String(testMethod.Result.ToSerializedName()));
+                    testMethodObject.Properties.Add("m", String(WatchdogUtils.Sha1Hash(testMethod.TestMethodName)));
+                    testMethodObject.Properties.Add("d", Double(testMethod.Duration.TotalSeconds));
+                    testMethodObject.Properties.Add("r", String(testMethod.Result.ToSerializedName()));
                 }
             }
 

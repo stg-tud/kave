@@ -30,6 +30,14 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Exporter
         }
 
         [Test]
+        public void WatchdogDoubleValueFormatCorrectly()
+        {
+            var dbl = new WatchdogDoubleValue {Value = 0.12345};
+
+            Assert.AreEqual("0.12345", dbl.ToString());
+        }
+
+        [Test]
         public void WatchdogWrappedValueFormatsCorrectly()
         {
             var wrap = new WatchdogWrappedValue {Wrapper = "ObjectId", Value = "abc"};
