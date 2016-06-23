@@ -32,9 +32,9 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Exporter
         [Test]
         public void WatchdogDoubleValueFormatCorrectly()
         {
-            var dbl = new WatchdogDoubleValue {Value = 0.12345};
+            var dbl = new WatchdogDoubleValue {Value = 0.000001};
 
-            Assert.AreEqual("0.12345", dbl.ToString());
+            Assert.AreEqual("0.000001", dbl.ToString());
         }
 
         [Test]

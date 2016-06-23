@@ -192,7 +192,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             var obj = ConvertBasicInterval(testRunInterval);
 
             var projectObject = new WatchdogObject();
-            obj.Properties.Add("testExecution", projectObject);
+            obj.Properties.Add("je", projectObject);
 
             projectObject.Properties.Add("p", String(WatchdogUtils.Sha1Hash(testRunInterval.ProjectName)));
             projectObject.Properties.Add("d", Double(testRunInterval.Duration.TotalSeconds));

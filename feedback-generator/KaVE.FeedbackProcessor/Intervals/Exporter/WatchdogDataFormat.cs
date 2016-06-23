@@ -73,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
         public override string ToString()
         {
-            return Value.ToString(CultureInfo.InvariantCulture);
+            return Value.ToString("F99", CultureInfo.InvariantCulture).TrimEnd("0".ToCharArray());
         }
     }
 
