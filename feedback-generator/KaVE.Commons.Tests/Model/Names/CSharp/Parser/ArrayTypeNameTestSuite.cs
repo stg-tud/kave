@@ -38,7 +38,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         [Test, TestCaseSource("TestCases")]
         public void ValidTypeName(ArrayTypeNameTestCase testCase)
         {
-            var type = CsNameUtil.GetTypeName(testCase.Identifier).ToArrayTypeName;
+            var type = CsNameUtil.GetTypeName(testCase.Identifier).AsArrayTypeName;
             Console.WriteLine(testCase.Identifier);
             Assert.NotNull(type);
             Assert.AreEqual(testCase.Identifier, type.Identifier);

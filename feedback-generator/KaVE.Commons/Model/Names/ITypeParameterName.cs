@@ -17,6 +17,7 @@ namespace KaVE.Commons.Model.Names
 {
     public interface ITypeParameterName : ITypeName
     {
-        
+        string TypeParameterShortName { get; }
+        ITypeName TypeParameterType { get; }
     }
 }

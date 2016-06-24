@@ -635,7 +635,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             }
         }
 
-        public IDelegateTypeName ToDelegateTypeName
+        public IDelegateTypeName AsDelegateTypeName
         {
             get
             {
@@ -647,13 +647,25 @@ namespace KaVE.Commons.Model.Names.CSharp
             }
         }
 
-        public IArrayTypeName ToArrayTypeName
+        public IArrayTypeName AsArrayTypeName
         {
             get
             {
                 if (IsArrayType)
                 {
                     return ((IArrayTypeName)this);
+                }
+                return null;
+            }
+        }
+
+        public ITypeParameterName AsTypeParameterName
+        {
+            get
+            {
+                if (IsTypeParameter)
+                {
+                    return ((ITypeParameterName) this);
                 }
                 return null;
             }

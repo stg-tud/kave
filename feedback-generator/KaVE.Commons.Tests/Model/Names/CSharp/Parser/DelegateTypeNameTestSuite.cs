@@ -39,7 +39,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
         [Test, TestCaseSource("TestCases")]
         public void ValidTypeName(DelegateTypeNameTestCase testCase)
         {
-            var type = CsNameUtil.GetTypeName(testCase.Identifier).ToDelegateTypeName;
+            var type = CsNameUtil.GetTypeName(testCase.Identifier).AsDelegateTypeName;
             Console.WriteLine(testCase.Identifier);
             Assert.AreEqual(testCase.Identifier, type.Identifier);
             Assert.AreEqual(testCase.Assembly, type.Assembly.Identifier);

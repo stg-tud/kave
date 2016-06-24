@@ -104,8 +104,8 @@ namespace KaVE.Commons.Model.Names.CSharp
         public bool IsTypeParameter { get { return false; } }
         public string TypeParameterShortName { get { return "?"; } }
         public ITypeName TypeParameterType { get { return new UnknownName(); } }
-        public IDelegateTypeName ToDelegateTypeName { get { return new UnknownName(); } }
-        public IArrayTypeName ToArrayTypeName { get { return new UnknownName(); } }
+        public IDelegateTypeName AsDelegateTypeName { get { return new UnknownName(); } }
+        public IArrayTypeName AsArrayTypeName { get { return new UnknownName(); } }
         public int Rank { get { return -1; } }
         public int CompareTo(IAssemblyVersion other)
         {

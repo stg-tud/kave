@@ -90,10 +90,9 @@ namespace KaVE.Commons.Model.Names
         ITypeName ArrayBaseType { get; }
 
         bool IsTypeParameter { get; }
-        string TypeParameterShortName { get; }
-        ITypeName TypeParameterType { get; }
 
-        IDelegateTypeName ToDelegateTypeName { get; }
-        IArrayTypeName ToArrayTypeName { get; }
+        IDelegateTypeName AsDelegateTypeName { get; }
+        IArrayTypeName AsArrayTypeName { get; }
+        ITypeParameterName AsTypeParameterName { get; }
     }
 }
