@@ -45,8 +45,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.Parser
             Assert.AreEqual(testCase.Namespace, type.Namespace.Identifier);
             Assert.AreEqual(testCase.FullName, type.FullName);
             Assert.AreEqual(testCase.Name, type.Name);
-            Assert.AreEqual(testCase.TypeParameterShortName, type.TypeParameterShortName);
-            Assert.AreEqual(testCase.TypeParameterType, type.TypeParameterType.Identifier);
+            Assert.AreEqual(testCase.TypeParameterShortName, ((ITypeParameterName)type).TypeParameterShortName);
+            Assert.AreEqual(testCase.TypeParameterType, ((ITypeParameterName)type).TypeParameterType.Identifier);
         }
 
         [Test, TestCaseSource("InvalidTestCases")]

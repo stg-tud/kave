@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
@@ -24,6 +25,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public CsAssemblyName(TypeNamingParser.AssemblyContext ctx) 
         {
+            Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
             this.ctx = ctx;
         }
 
@@ -35,13 +37,13 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     return new CsAssemblyVersion(ctx.regularAssembly().assemblyVersion());
                 }
-                return new UnknownName();
+                return UnknownName.Get(typeof(IAssemblyVersion));
             }
         }
 
         public string Name
         {
-            get { return ctx.regularAssembly().id(0).GetText(); }
+            get { return ctx.regularAssembly().assemblyName().GetText(); }
         }
 
         public string Identifier
@@ -51,7 +53,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public bool IsUnknown
         {
-            get { return ctx.UNKNOWN() != null; }
+            get { return false; }
         }
 
         public bool IsHashed

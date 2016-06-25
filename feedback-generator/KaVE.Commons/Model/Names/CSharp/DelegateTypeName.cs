@@ -102,6 +102,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public IDelegateTypeName AsDelegateTypeName { get; private set; }
         public IArrayTypeName AsArrayTypeName { get; private set; }
+        public ITypeParameterName AsTypeParameterName { get; private set; }
 
         public string TypeParameterShortName
         {

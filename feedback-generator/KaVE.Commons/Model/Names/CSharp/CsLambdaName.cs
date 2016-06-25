@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.CSharp
@@ -26,6 +27,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public CsLambdaName(TypeNamingParser.LambdaNameContext ctx)
         {
+            Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
             _ctx = ctx;
         }
 
@@ -36,7 +38,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public bool IsUnknown
         {
-            get { return _ctx.UNKNOWN() != null; }
+            get { return false; }
         }
 
         public bool IsHashed
@@ -48,9 +50,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                if (!IsUnknown)
-                    return _ctx.realLambdaName().methodParameters().GetText();
-                return _ctx.UNKNOWN().GetText();
+                return _ctx.realLambdaName().methodSignature().GetText();
             }
         }
 
@@ -59,9 +59,9 @@ namespace KaVE.Commons.Model.Names.CSharp
             get
             {
                 var parameters = Lists.NewList<IParameterName>();
-                if (!IsUnknown && _ctx.realLambdaName().methodParameters() != null)
+                if (_ctx.realLambdaName().methodSignature() != null)
                 {
-                    foreach (var p in _ctx.realLambdaName().methodParameters().formalParam())
+                    foreach (var p in _ctx.realLambdaName().methodSignature().formalParam())
                     {
                         parameters.Add(ParameterName.Get(p.GetText()));
                     }
@@ -74,8 +74,8 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                return _ctx.realLambdaName() != null && _ctx.realLambdaName().methodParameters() != null &&
-                       _ctx.realLambdaName().methodParameters().formalParam().Length != 0;
+                return _ctx.realLambdaName() != null && _ctx.realLambdaName().methodSignature() != null &&
+                       _ctx.realLambdaName().methodSignature().formalParam().Length != 0;
             }
         }
 
@@ -83,11 +83,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                if (!IsUnknown)
-                {
-                    return new CsTypeName(_ctx.realLambdaName().type());    
-                }  
-                return new UnknownName();
+                return new CsTypeName(_ctx.realLambdaName().type());    
             }
         }
 

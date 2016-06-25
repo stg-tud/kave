@@ -73,7 +73,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         TestCase("1l:?", "1l:?")]
         public void NameToJson(string input, string expected)
         {
-            Assert.AreEqual(expected, CsNameUtil.ToJson(CsNameUtil.ParseJson(input)));
+            var name = CsNameUtil.ParseJson(input);
+            Console.WriteLine(name);
+            Assert.AreEqual(expected, CsNameUtil.ToJson(name));
         }
     }
 }

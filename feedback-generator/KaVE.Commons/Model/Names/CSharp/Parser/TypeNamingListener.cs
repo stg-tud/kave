@@ -357,6 +357,17 @@ public interface ITypeNamingListener : IParseTreeListener {
 	void ExitAssemblyVersion([NotNull] TypeNamingParser.AssemblyVersionContext context);
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.assemblyName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAssemblyName([NotNull] TypeNamingParser.AssemblyNameContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.assemblyName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAssemblyName([NotNull] TypeNamingParser.AssemblyNameContext context);
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.memberName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -399,6 +410,17 @@ public interface ITypeNamingListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.bothPropertyModifiers"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterBothPropertyModifiers([NotNull] TypeNamingParser.BothPropertyModifiersContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.bothPropertyModifiers"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitBothPropertyModifiers([NotNull] TypeNamingParser.BothPropertyModifiersContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
@@ -445,15 +467,15 @@ public interface ITypeNamingListener : IParseTreeListener {
 	void ExitRegularMethod([NotNull] TypeNamingParser.RegularMethodContext context);
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.methodParameters"/>.
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.methodSignature"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterMethodParameters([NotNull] TypeNamingParser.MethodParametersContext context);
+	void EnterMethodSignature([NotNull] TypeNamingParser.MethodSignatureContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.methodParameters"/>.
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.methodSignature"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitMethodParameters([NotNull] TypeNamingParser.MethodParametersContext context);
+	void ExitMethodSignature([NotNull] TypeNamingParser.MethodSignatureContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.nonStaticCtor"/>.
@@ -489,15 +511,15 @@ public interface ITypeNamingListener : IParseTreeListener {
 	void ExitCustomMethod([NotNull] TypeNamingParser.CustomMethodContext context);
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.methodDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterSignature([NotNull] TypeNamingParser.SignatureContext context);
+	void EnterMethodDefinition([NotNull] TypeNamingParser.MethodDefinitionContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.methodDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitSignature([NotNull] TypeNamingParser.SignatureContext context);
+	void ExitMethodDefinition([NotNull] TypeNamingParser.MethodDefinitionContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.formalParam"/>.

@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using Antlr4.Runtime.Misc;
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {

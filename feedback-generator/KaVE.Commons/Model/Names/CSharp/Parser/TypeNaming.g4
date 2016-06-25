@@ -82,24 +82,26 @@ genericTypePart: '\'' POSNUM '[' genericParam (',' genericParam)* ']';
 genericParam: '[' typeParameter ']';
 
 assembly: regularAssembly | UNKNOWN;
-regularAssembly: (id '.')* id (',' WS? assemblyVersion)?;
-assemblyVersion: num '.' num '.' num '.' num;	
+regularAssembly:  assemblyName WS? (',' WS? assemblyVersion)?;
+assemblyVersion: num '.' num '.' num '.' num;
+assemblyName: (id '.')* id;	
 
 memberName: UNKNOWN | simpleMemberName | propertyName;
-simpleMemberName: staticModifier? WS? signature;
-propertyName: (staticModifier | propertyModifier)? WS? signature methodParameters?;
-propertyModifier: 'get' | 'set';
+simpleMemberName: staticModifier? WS? methodDefinition;
+propertyName: (staticModifier | propertyModifier)? WS? methodDefinition methodSignature?;
+propertyModifier: 'get' | 'set' | bothPropertyModifiers;
+bothPropertyModifiers: ('get' WS? 'set') | ('set' WS? 'get');
 
 lambdaName: UNKNOWN | realLambdaName;
-realLambdaName: '[' type ']' WS? methodParameters;
+realLambdaName: '[' type ']' WS? methodSignature;
 
 method: UNKNOWN | regularMethod;
-regularMethod: (nonStaticCtor | staticCctor | customMethod) methodParameters;
-methodParameters: '(' WS? ( formalParam ( WS? ',' WS? formalParam)*)? WS? ')';
+regularMethod: (nonStaticCtor | staticCctor | customMethod) methodSignature;
+methodSignature: '(' WS? ( formalParam ( WS? ',' WS? formalParam)*)? WS? ')';
 nonStaticCtor: WS? '[' UNKNOWN ']' WS? '[' type ']..ctor';
 staticCctor: staticModifier WS? '[' UNKNOWN ']' WS? '[' type ']..cctor';
-customMethod: staticModifier? WS? signature genericTypePart?;
-signature: '[' type ']'  WS? '[' type '].' id;
+customMethod: staticModifier? WS? methodDefinition genericTypePart?;
+methodDefinition: '[' type ']'  WS? '[' type '].' id;
 formalParam: (WS? parameterModifier)? WS? '[' type ']' WS? id;
 parameterModifier: paramsModifier | optsModifier | refModifier | outModifier | extensionModifier;
 

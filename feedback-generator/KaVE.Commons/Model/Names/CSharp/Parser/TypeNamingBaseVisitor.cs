@@ -360,6 +360,17 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	public virtual Result VisitAssemblyVersion([NotNull] TypeNamingParser.AssemblyVersionContext context) { return VisitChildren(context); }
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.assemblyName"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitAssemblyName([NotNull] TypeNamingParser.AssemblyNameContext context) { return VisitChildren(context); }
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.memberName"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -402,6 +413,17 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context) { return VisitChildren(context); }
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.bothPropertyModifiers"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitBothPropertyModifiers([NotNull] TypeNamingParser.BothPropertyModifiersContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
@@ -448,7 +470,7 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	public virtual Result VisitRegularMethod([NotNull] TypeNamingParser.RegularMethodContext context) { return VisitChildren(context); }
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.methodParameters"/>.
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.methodSignature"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -456,7 +478,7 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMethodParameters([NotNull] TypeNamingParser.MethodParametersContext context) { return VisitChildren(context); }
+	public virtual Result VisitMethodSignature([NotNull] TypeNamingParser.MethodSignatureContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.nonStaticCtor"/>.
@@ -492,7 +514,7 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	public virtual Result VisitCustomMethod([NotNull] TypeNamingParser.CustomMethodContext context) { return VisitChildren(context); }
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.methodDefinition"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -500,7 +522,7 @@ public partial class TypeNamingBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSignature([NotNull] TypeNamingParser.SignatureContext context) { return VisitChildren(context); }
+	public virtual Result VisitMethodDefinition([NotNull] TypeNamingParser.MethodDefinitionContext context) { return VisitChildren(context); }
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.formalParam"/>.

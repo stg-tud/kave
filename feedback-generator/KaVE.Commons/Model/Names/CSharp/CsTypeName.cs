@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.CSharp
@@ -23,10 +24,10 @@ namespace KaVE.Commons.Model.Names.CSharp
     public class CsTypeName : IName, ITypeName, IDelegateTypeName, IArrayTypeName, ITypeParameterName
     {
         protected TypeNamingParser.TypeContext ctx;
-        private static readonly UnknownName UnknownName = new UnknownName();
 
         public CsTypeName(TypeNamingParser.TypeContext ctx)
         {
+            Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
             this.ctx = ctx;
         }
 
@@ -53,7 +54,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                         return CsNameUtil.GetTypeName(ctx.typeParameter().notTypeParameter().GetText()).Assembly;
                     }
                 }
-                return new UnknownName();
+                return UnknownName.Get(typeof(IAssemblyName));
             }
         }
 
@@ -86,7 +87,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     return CsNameUtil.GetTypeName(ctx.typeParameter().notTypeParameter().GetText()).Namespace;
                 }
-                return new UnknownName();
+                return UnknownName.Get(typeof(INamespaceName));
             }
         }
 
@@ -116,7 +117,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     return new CsTypeName(ctx.arrayType().type()).DeclaringType;
                 }
-                return UnknownName;
+                return UnknownName.Get(typeof(ITypeName));
             }
         }
 
@@ -164,7 +165,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     return ctx.UNKNOWN().GetText();
                 }
-                return UnknownName.FullName;
+                return UnknownName.Get(typeof(ITypeName)).Identifier;
             }
         }
 
@@ -180,23 +181,23 @@ namespace KaVE.Commons.Model.Names.CSharp
                     }
                     return ExtractNameFromTypeName(ctx.regularType().nestedType().typeName());
                 }
-                else if (ctx.delegateType() != null)
+                if (ctx.delegateType() != null)
                 {
                     return DeclaringType.Name;
                 }
-                else if (ctx.arrayType() != null)
+                if (ctx.arrayType() != null)
                 {
                     return "arr(" + ctx.arrayType().POSNUM().GetText() + "):" + new CsTypeName(ctx.arrayType().type()).Name;
                 }
-                else if (ctx.typeParameter() != null)
+                if (ctx.typeParameter() != null)
                 {
                     if (ctx.typeParameter().notTypeParameter() != null)
                     {
                         return CsNameUtil.GetTypeName(ctx.typeParameter().notTypeParameter().GetText()).Name;
                     }
-                    return UnknownName.Identifier;
+                    return UnknownName.Get(typeof(ITypeName)).FullName;
                 }
-                return ctx.UNKNOWN().GetText();
+                return UnknownName.Get(typeof(ITypeName)).FullName;
             }
         }
 
@@ -230,7 +231,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public bool IsUnknownType
         {
-            get { return ctx.UNKNOWN() != null || ctx.typeParameter() != null; }
+            get { return false; }
         }
 
         public bool IsVoidType
@@ -469,7 +470,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                     {
                         return CsNameUtil.GetTypeName(ctx.typeParameter().notTypeParameter().GetText());
                     }
-                    return UnknownName;
+                    return UnknownName.Get(typeof(ITypeParameterName));
                 }
                 return null;
             }
@@ -578,7 +579,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         bool IName.IsUnknown
         {
-            get { return ctx.UNKNOWN() != null; }
+            get { return false; }
         }
 
         public bool IsHashed

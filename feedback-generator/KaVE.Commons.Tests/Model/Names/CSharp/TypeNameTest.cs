@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -32,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldGetNamespaceFromTypeInGlobalNamespace()
         {
-            var uut = TypeName.Get("MyType, Assembly, 1.2.3.4");
+            var uut = CsNameUtil.GetTypeName("MyType, Assembly, 1.2.3.4");
 
             Assert.AreEqual(NamespaceName.GlobalNamespace, uut.Namespace);
         }
@@ -40,7 +41,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldBeVoidType()
         {
-            var uut = TypeName.Get("System.Void, mscorlib, 4.0.0.0");
+            var uut = CsNameUtil.GetTypeName("System.Void, mscorlib, 4.0.0.0");
 
             Assert.IsTrue(uut.IsVoidType);
         }
@@ -49,7 +50,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> System.Int32, mscorlib, 4.0.0.0")]
         public void ShouldNotBeVoidType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(uut.IsVoidType);
         }
@@ -70,7 +71,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> System.Int32, mscorlib, 4.0.0.0")]
         public void ShouldBeSimpleType(string identifer)
         {
-            var uut = TypeName.Get(identifer);
+            var uut = CsNameUtil.GetTypeName(identifer);
 
             Assert.IsTrue(uut.IsSimpleType);
         }
@@ -80,7 +81,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("?")]
         public void ShouldNotBeSimpleType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(uut.IsSimpleType);
         }
@@ -89,7 +90,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> System.Nullable`1[[T -> System.UInt64, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0")]
         public void ShouldBeNullableType(string identifier)
         {
-            var nullableTypeName = TypeName.Get(identifier);
+            var nullableTypeName = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(nullableTypeName.IsNullableType);
         }
@@ -99,7 +100,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("?")]
         public void ShouldNotBeNullableType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(uut.IsNullableType);
         }
@@ -111,7 +112,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("s:My.Struct, A, 1.0.0.0")]
         public void ShouldBeStructType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(uut.IsStructType);
         }
@@ -120,7 +121,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("?")]
         public void ShouldNotBeStructType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(uut.IsStructType);
         }
@@ -128,7 +129,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldBeEnumType()
         {
-            var uut = TypeName.Get("e:My.EnumType, E, 3.9.5.6");
+            var uut = CsNameUtil.GetTypeName("e:My.EnumType, E, 3.9.5.6");
 
             Assert.IsTrue(uut.IsEnumType);
         }
@@ -136,7 +137,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldNotBeEnumType()
         {
-            var uut = TypeName.Get("Non.Enum.Type, E, 7.9.3.5");
+            var uut = CsNameUtil.GetTypeName("Non.Enum.Type, E, 7.9.3.5");
 
             Assert.IsFalse(uut.IsEnumType);
         }
@@ -148,7 +149,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> System.Boolean, mscorlib, 4.0.0.0")]
         public void ShouldBeValueType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(uut.IsValueType);
         }
@@ -157,7 +158,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("?")]
         public void ShouldNotBeValueType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(uut.IsValueType);
         }
@@ -166,7 +167,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("TI -> i:MyInterface, Is, 3.8.67.0")]
         public void ShouldBeInterfaceType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(uut.IsInterfaceType);
         }
@@ -174,7 +175,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldNotBeInterfaceType()
         {
-            var uut = TypeName.Get("Some.Class, C, 3.2.1.0");
+            var uut = CsNameUtil.GetTypeName("Some.Class, C, 3.2.1.0");
 
             Assert.IsFalse(uut.IsInterfaceType);
         }
@@ -185,7 +186,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("TP")]
         public void ShouldBeUnknownType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(uut.IsUnknownType);
         }
@@ -193,7 +194,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldNotBeUnknownType()
         {
-            var uut = TypeName.Get("Some.Known.Type, A, 1.2.3.4");
+            var uut = CsNameUtil.GetTypeName("Some.Known.Type, A, 1.2.3.4");
 
             Assert.IsFalse(uut.IsUnknownType);
         }
@@ -203,7 +204,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> Another.Class, F, 4.7.55.6")]
         public void ShouldBeClassType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(uut.IsClassType);
         }
@@ -214,7 +215,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("?")]
         public void ShouldNotBeClassType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(uut.IsClassType);
         }
@@ -224,7 +225,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("Vt[], A, 5.2.7.8")]
         public void ShouldBeReferenceType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(uut.IsReferenceType);
         }
@@ -233,7 +234,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("?")]
         public void ShouldNotBeReferenceType(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(uut.IsReferenceType);
         }
@@ -252,7 +253,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
              "Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]]")]
         public void ShouldDetermineFullName(string identifier, string expectedFullName)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.AreEqual(expectedFullName, uut.FullName);
         }
@@ -269,7 +270,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Task")]
         public void ShouldDetermineName(string identifier, string expectedName)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.AreEqual(expectedName, uut.Name);
         }
@@ -282,7 +283,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("GlobalType, A, 5.6.7.4", NamespaceName.GlobalNamespaceIdentifier)]
         public void ShouldDetermineNamespace(string identifier, string expectedNamespace)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.AreEqual(expectedNamespace, uut.Namespace.Identifier);
         }
@@ -290,9 +291,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void UnknownTypeShouldNotHaveNamespace()
         {
-            var uut = TypeName.Get("?");
+            var uut = CsNameUtil.GetTypeName("?");
 
-            Assert.AreSame(NamespaceName.UnknownName, uut.Namespace);
+            Assert.AreSame(UnknownName.Get(typeof(INamespaceName)), uut.Namespace);
         }
 
         [TestCase("System.Object, mscorlib, 4.0.0.0", "mscorlib, 4.0.0.0"),
@@ -300,7 +301,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> Type.Parameter, A, 1.2.3.4", "A, 1.2.3.4")]
         public void ShouldDetermineAssembly(string identifier, string expectedAssemblyIdentifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.AreEqual(expectedAssemblyIdentifier, uut.Assembly.Identifier);
         }
@@ -308,9 +309,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void UnknownTypeShouldHaveUnknownAssembly()
         {
-            var uut = TypeName.Get("?");
+            var uut = CsNameUtil.GetTypeName("?");
 
-            Assert.AreSame(AssemblyName.UnknownName, uut.Assembly);
+            Assert.AreSame(UnknownName.Get(typeof(IAssemblyName)), uut.Assembly);
         }
 
         [Test]
@@ -320,7 +321,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             const string intIdentifier = "I -> System.Int32, mscore, 4.0.0.0";
 
             var parameterizedTypeName =
-                TypeName.Get(
+                CsNameUtil.GetTypeName(
                     "pack.age.MyType`2[[" + stringIdentifier + "],[" + intIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.AreEqual(TestAssemblyIdentifier, parameterizedTypeName.Assembly.Identifier);
@@ -336,7 +337,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldHaveUninstantiatedTypeParameters()
         {
-            var typeName = TypeName.Get("OuterType`1+InnerType, Assembly, 1.2.3.4");
+            var typeName = CsNameUtil.GetTypeName("OuterType`1+InnerType, Assembly, 1.2.3.4");
 
             Assert.IsTrue(typeName.IsGenericEntity);
             Assert.IsFalse(typeName.HasTypeParameters);
@@ -347,7 +348,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [Test]
         public void ShouldBeTopLevelType()
         {
-            var typeName = TypeName.Get("this.is.a.top.level.ValueType, " + TestAssemblyIdentifier);
+            var typeName = CsNameUtil.GetTypeName("this.is.a.top.level.ValueType, " + TestAssemblyIdentifier);
 
             Assert.IsFalse(typeName.IsNestedType);
             Assert.IsNull(typeName.DeclaringType);
@@ -362,9 +363,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         {
             var expected = expectedDeclaringTypeFullName.Equals("?")
                 ? TypeName.UnknownName
-                : TypeName.Get(expectedDeclaringTypeFullName + ", " + TestAssemblyIdentifier);
+                : CsNameUtil.GetTypeName(expectedDeclaringTypeFullName + ", " + TestAssemblyIdentifier);
 
-            var nestedTypeName = TypeName.Get(nestedTypeFullName + ", " + TestAssemblyIdentifier);
+            var nestedTypeName = CsNameUtil.GetTypeName(nestedTypeFullName + ", " + TestAssemblyIdentifier);
             var actual = nestedTypeName.DeclaringType;
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
@@ -376,7 +377,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         {
             const string paramIdentifier = "T -> p.OP, A, 1.0.0.0";
 
-            var nestedTypeName = TypeName.Get("p.O`1+I[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
+            var nestedTypeName = CsNameUtil.GetTypeName("p.O`1+I[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
             Assert.IsTrue(nestedTypeName.HasTypeParameters);
@@ -398,7 +399,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             const string p3Identifier = "C -> IP2, B, 5.1.0.9";
 
             var nestedTypeName =
-                TypeName.Get(
+                CsNameUtil.GetTypeName(
                     "p.O`1+I`2[[" + p1Identifier + "],[" + p2Identifier + "],[" + p3Identifier + "]], " +
                     TestAssemblyIdentifier);
 
@@ -421,7 +422,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             const string paramParamIdentifier = "T -> yan.PTPT, Z, 1.0.0.0";
             const string paramIdentifier = "on.PT`1[[" + paramParamIdentifier + "]], Y, 1.0.0.0";
 
-            var typeName = TypeName.Get("n.OT`1[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
+            var typeName = CsNameUtil.GetTypeName("n.OT`1[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.IsTrue(typeName.HasTypeParameters);
             Assert.AreEqual(1, typeName.TypeParameters.Count);
@@ -437,7 +438,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         public void ShouldBeDeeplyNestedTypeWithLotsOfTypeParameters()
         {
             var typeName =
-                TypeName.Get(
+                CsNameUtil.GetTypeName(
                     "p.O`1+M`1+I`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0],[V -> p.P3, A, 1.0.0.0]], " +
                     TestAssemblyIdentifier);
 
@@ -451,7 +452,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("TParam")]
         public void ShouldBeTypeParameter(string identifier)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsTrue(uut.IsTypeParameter);
         }
@@ -461,62 +462,50 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("TParam", "TParam")]
         public void ShouldExtractTypeParameterShortName(string identifier, string expectedShortName)
         {
-            var uut = TypeName.Get(identifier);
+            var uut = CsNameUtil.GetTypeName(identifier);
 
-            Assert.AreEqual(expectedShortName, uut.TypeParameterShortName);
+            Assert.AreEqual(expectedShortName, ((ITypeParameterName)uut).TypeParameterShortName);
         }
 
         [Test]
         public void TypeParameterTypeShouldBeConcreteType()
         {
-            var uut = TypeName.Get("T -> System.String, mscorlib, 4.0.0.0");
+            var uut = CsNameUtil.GetTypeName("T -> System.String, mscorlib, 4.0.0.0");
 
-            Assert.AreEqual(false, uut.TypeParameterType.IsTypeParameter);
+            Assert.AreEqual(false, ((ITypeParameterName)uut).TypeParameterType.IsTypeParameter);
         }
 
         [Test]
         public void TypeParameterTypeShouldBeShortName()
         {
-            var uut = TypeName.Get("T -> T");
+            var uut = CsNameUtil.GetTypeName("T -> T");
 
-            Assert.AreEqual(true, uut.TypeParameterType.IsTypeParameter);
+            Assert.AreEqual(true, ((ITypeParameterName)uut).TypeParameterType.IsTypeParameter);
         }
 
         [Test]
         public void ShouldNotHaveTypeParameterShortName()
         {
-            var uut = TypeName.Get("Non.Parameter.Type, As, 1.2.3.4");
+            var uut = CsNameUtil.GetTypeName("Non.Parameter.Type, As, 1.2.3.4");
 
-            Assert.IsNull(uut.TypeParameterShortName);
+            Assert.AreEqual("",((ITypeParameterName)uut).TypeParameterShortName);
         }
 
         [Test]
         public void ShouldNotHaveTypeParameterType()
         {
-            var uut = TypeName.Get("Non.Parameter.Type, As, 1.2.3.4");
+            var uut = CsNameUtil.GetTypeName("Non.Parameter.Type, As, 1.2.3.4");
 
-            Assert.IsNull(uut.TypeParameterType);
+            Assert.IsNull(((ITypeParameterName)uut).TypeParameterType);
         }
 
         [TestCase("SomeType`1[[T -> Foo, Bar, 1.2.3.4]], A, 1.2.3.4"),
          TestCase("System.Object, mscorlib, 4.0.0.0")]
         public void ShouldBeNotTypeParameter(string identifier)
         {
-            var genericType = TypeName.Get(identifier);
+            var genericType = CsNameUtil.GetTypeName(identifier);
 
             Assert.IsFalse(genericType.IsTypeParameter);
-        }
-
-        [Test]
-        public void StringHelperWorks()
-        {
-            const string id = "{0},P";
-            const string t1 = "T1";
-            var a = TypeName.Get(string.Format(id, t1));
-            var b = TypeName.Get(id, t1);
-
-            Assert.AreEqual(a, b);
-            Assert.AreSame(a, b);
         }
     }
 }

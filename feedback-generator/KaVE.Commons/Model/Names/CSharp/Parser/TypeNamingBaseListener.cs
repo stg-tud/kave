@@ -417,6 +417,19 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	public virtual void ExitAssemblyVersion([NotNull] TypeNamingParser.AssemblyVersionContext context) { }
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.assemblyName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssemblyName([NotNull] TypeNamingParser.AssemblyNameContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.assemblyName"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssemblyName([NotNull] TypeNamingParser.AssemblyNameContext context) { }
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.memberName"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -467,6 +480,19 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.bothPropertyModifiers"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBothPropertyModifiers([NotNull] TypeNamingParser.BothPropertyModifiersContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.bothPropertyModifiers"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBothPropertyModifiers([NotNull] TypeNamingParser.BothPropertyModifiersContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
@@ -521,17 +547,17 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	public virtual void ExitRegularMethod([NotNull] TypeNamingParser.RegularMethodContext context) { }
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.methodParameters"/>.
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.methodSignature"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterMethodParameters([NotNull] TypeNamingParser.MethodParametersContext context) { }
+	public virtual void EnterMethodSignature([NotNull] TypeNamingParser.MethodSignatureContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.methodParameters"/>.
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.methodSignature"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitMethodParameters([NotNull] TypeNamingParser.MethodParametersContext context) { }
+	public virtual void ExitMethodSignature([NotNull] TypeNamingParser.MethodSignatureContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.nonStaticCtor"/>.
@@ -573,17 +599,17 @@ public partial class TypeNamingBaseListener : ITypeNamingListener {
 	public virtual void ExitCustomMethod([NotNull] TypeNamingParser.CustomMethodContext context) { }
 
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// Enter a parse tree produced by <see cref="TypeNamingParser.methodDefinition"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSignature([NotNull] TypeNamingParser.SignatureContext context) { }
+	public virtual void EnterMethodDefinition([NotNull] TypeNamingParser.MethodDefinitionContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// Exit a parse tree produced by <see cref="TypeNamingParser.methodDefinition"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSignature([NotNull] TypeNamingParser.SignatureContext context) { }
+	public virtual void ExitMethodDefinition([NotNull] TypeNamingParser.MethodDefinitionContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="TypeNamingParser.formalParam"/>.

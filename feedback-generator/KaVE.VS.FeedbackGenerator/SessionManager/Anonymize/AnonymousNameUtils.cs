@@ -139,7 +139,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.Append('[');
             if (type.IsTypeParameter && parameterNameWasAnonymized)
             {
-                identifier.Append(type.TypeParameterShortName.ToHash());
+                identifier.Append(((ITypeParameterName)type).TypeParameterShortName.ToHash());
             }
             else
             {
@@ -317,14 +317,14 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             return typeParameter =>
             {
                 var rightmostSideIsAShortName = typeParameter.TypeParameterType.IsTypeParameter &&
-                                                (typeParameter.TypeParameterType.TypeParameterType == null ||
-                                                 typeParameter.TypeParameterType.TypeParameterType.IsUnknownType);
+                                                (((ITypeParameterName) typeParameter.TypeParameterType).TypeParameterType == null ||
+                                                 ((ITypeParameterName)typeParameter.TypeParameterType).TypeParameterType.IsUnknownType);
                 return (TypeParameterName) TypeParameterName.Get(
                     anonymizeShortNames
                         ? typeParameter.TypeParameterShortName.ToHash()
                         : typeParameter.TypeParameterShortName,
                     rightmostSideIsAShortName
-                        ? typeParameter.TypeParameterType.TypeParameterShortName.ToHash()
+                        ? ((ITypeParameterName)typeParameter.TypeParameterType).TypeParameterShortName.ToHash()
                         : typeParameter.TypeParameterType.ToAnonymousName().Identifier);
             };
         }

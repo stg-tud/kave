@@ -246,6 +246,13 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitAssemblyVersion([NotNull] TypeNamingParser.AssemblyVersionContext context);
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.assemblyName"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAssemblyName([NotNull] TypeNamingParser.AssemblyNameContext context);
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.memberName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -272,6 +279,13 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitPropertyModifier([NotNull] TypeNamingParser.PropertyModifierContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.bothPropertyModifiers"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBothPropertyModifiers([NotNull] TypeNamingParser.BothPropertyModifiersContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.lambdaName"/>.
@@ -302,11 +316,11 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitRegularMethod([NotNull] TypeNamingParser.RegularMethodContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.methodParameters"/>.
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.methodSignature"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMethodParameters([NotNull] TypeNamingParser.MethodParametersContext context);
+	Result VisitMethodSignature([NotNull] TypeNamingParser.MethodSignatureContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.nonStaticCtor"/>.
@@ -330,11 +344,11 @@ public interface ITypeNamingVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitCustomMethod([NotNull] TypeNamingParser.CustomMethodContext context);
 
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="TypeNamingParser.signature"/>.
+	/// Visit a parse tree produced by <see cref="TypeNamingParser.methodDefinition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSignature([NotNull] TypeNamingParser.SignatureContext context);
+	Result VisitMethodDefinition([NotNull] TypeNamingParser.MethodDefinitionContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="TypeNamingParser.formalParam"/>.

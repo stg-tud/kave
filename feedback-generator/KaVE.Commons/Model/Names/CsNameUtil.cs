@@ -74,19 +74,20 @@ namespace KaVE.Commons.Model.Names
         private static Dictionary<Type, string> TypeToJson = new Dictionary<Type, string>()
         {
             {typeof(AliasName), "1a"},
-            {typeof(AssemblyName), "1b"},
-            {typeof(EventName), "1c"},
-            {typeof(FieldName), "1d"},
-            {typeof(LambdaName), "1e"},
+            {typeof(IAssemblyName), "1b"},
+            {typeof(IEventName), "1c"},
+            {typeof(IFieldName), "1d"},
+            {typeof(ILambdaName), "1e"},
             {typeof(LocalVariableName), "1f"},
-            {typeof(MethodName), "1g"},
+            {typeof(IMethodName), "1g"},
             {typeof(CsMethodName), "1g"},
             {typeof(Name), "1h"},
-            {typeof(NamespaceName), "1i"},
-            {typeof(ParameterName), "1j"},
-            {typeof(PropertyName), "1k"},
+            {typeof(INamespaceName), "1i"},
+            {typeof(IParameterName), "1j"},
+            {typeof(IPropertyName), "1k"},
             {typeof(TypeName), "1l"},
-            {typeof(CsTypeName), "1l"}
+            {typeof(CsTypeName), "1l"},
+            {typeof(CsAssemblyName), "1b"}
         };
 
         public static KaVEList<string> Names = new KaVEList<string>();
@@ -138,8 +139,19 @@ namespace KaVE.Commons.Model.Names
 
         public static string ToJson(IName type)
         {
-
-            return TypeToJson[type.GetType()] + ":" + type.Identifier;
+            var s = new StringBuilder();
+            var name = type as UnknownName;
+            if (name != null)
+            {
+                s.Append(TypeToJson[name.GetUnknownType()]);
+            }
+            else
+            {
+                s.Append(TypeToJson[type.GetType()]);
+            }
+            s.Append(":");
+            s.Append(type.Identifier);
+            return s.ToString();
         }
 
         public static ITypeName GetTypeName(string input)
@@ -147,6 +159,10 @@ namespace KaVE.Commons.Model.Names
             try
             {
                 var ctx = TypeNameParseUtil.ValidateTypeName(input);
+                if (ctx.UNKNOWN() != null)
+                {
+                    return UnknownName.Get(typeof(ITypeName));
+                }
                 return new CsTypeName(ctx);
             }
             catch (Exception e)
@@ -154,11 +170,15 @@ namespace KaVE.Commons.Model.Names
                 try
                 {
                     var ctx = TypeNameParseUtil.ValidateTypeName(CsNameFixer.HandleOldTypeNames(input));
+                    if (ctx.UNKNOWN() != null)
+                    {
+                        return UnknownName.Get(typeof(ITypeName));
+                    }
                     return new CsTypeName(ctx);
                 }
                 catch (Exception e2)
                 {
-                    return new CsTypeName(TypeNameParseUtil.ValidateTypeName("?"));
+                    return UnknownName.Get(typeof(ITypeName));
                 }
             }
         }
@@ -168,6 +188,10 @@ namespace KaVE.Commons.Model.Names
             try
             {
                 var ctx = TypeNameParseUtil.ValidateMethodName(input);
+                if (ctx.UNKNOWN() != null)
+                {
+                    return UnknownName.Get(typeof(IMethodName));
+                }
                 return new CsMethodName(ctx);
             }
             catch (Exception e)
@@ -175,11 +199,15 @@ namespace KaVE.Commons.Model.Names
                 try
                 {
                     var ctx = TypeNameParseUtil.ValidateMethodName(CsNameFixer.HandleOldMethodNames(input));
+                    if (ctx.UNKNOWN() != null)
+                    {
+                        return UnknownName.Get(typeof(IMethodName));
+                    }
                     return new CsMethodName(ctx);
                 }
                 catch (Exception e2)
                 {
-                    return new CsMethodName(TypeNameParseUtil.ValidateMethodName("?"));
+                    return UnknownName.Get(typeof(IMethodName));
                 }
             }
         }
@@ -193,7 +221,7 @@ namespace KaVE.Commons.Model.Names
             }
             catch (Exception e)
             {
-                return new UnknownName();
+                return UnknownName.Get(typeof(INamespaceName));
             }
         }
 
@@ -206,7 +234,7 @@ namespace KaVE.Commons.Model.Names
             }
             catch (Exception e)
             {
-                return new UnknownName();
+                return UnknownName.Get(typeof(IAssemblyName));
             }
         }
 
@@ -219,7 +247,7 @@ namespace KaVE.Commons.Model.Names
             }
             catch (AssertException e)
             {
-                return new UnknownName();
+                return UnknownName.Get(typeof(IParameterName));
             }
         }
 
@@ -228,7 +256,11 @@ namespace KaVE.Commons.Model.Names
             try
             {
                 var ctx = TypeNameParseUtil.ValidateMemberName(input);
-                return new CsMemberName(ctx);
+                if (ctx.UNKNOWN() == null)
+                {
+                    return new CsMemberName(ctx);
+                }
+                return null;
             }
             catch (AssertException e)
             {
@@ -243,7 +275,7 @@ namespace KaVE.Commons.Model.Names
             {
                 return name;
             }
-            return new UnknownName();
+            return UnknownName.Get(typeof(IFieldName));
         }
 
         public static IEventName GetEventName(string input)
@@ -253,7 +285,7 @@ namespace KaVE.Commons.Model.Names
             {
                 return name;
             }
-            return new UnknownName();
+            return UnknownName.Get(typeof(IEventName));
         }
 
         public static IPropertyName GetPropertyName(string input)
@@ -263,7 +295,7 @@ namespace KaVE.Commons.Model.Names
             {
                 return name;
             }
-            return new UnknownName();
+            return UnknownName.Get(typeof(IPropertyName));
         }
 
         public static ILambdaName GetLambdaName(string input)
@@ -271,11 +303,15 @@ namespace KaVE.Commons.Model.Names
             try
             {
                 var ctx = TypeNameParseUtil.ValidateLambdaName(input);
+                if (ctx.UNKNOWN() != null)
+                {
+                    return UnknownName.Get(typeof(ILambdaName));
+                }
                 return new CsLambdaName(ctx);
             }
             catch (AssertException e)
             {
-                return null;
+                return UnknownName.Get(typeof(ILambdaName));
             }
         }
     }

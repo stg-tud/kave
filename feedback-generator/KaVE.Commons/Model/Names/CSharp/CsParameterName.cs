@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {

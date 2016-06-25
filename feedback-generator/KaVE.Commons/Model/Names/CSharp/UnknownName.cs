@@ -14,16 +14,39 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
+using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
     public class UnknownName : IArrayTypeName, IAssemblyName, IAssemblyVersion, IMethodName, IDelegateTypeName, ITypeParameterName, IParameterName, INamespaceName, IFieldName, IPropertyName, IEventName, ILambdaName
     {
-        public UnknownName()
-        {
 
+        private static readonly Dictionary<Type, UnknownName> NameCache = new Dictionary<Type, UnknownName>();
+
+        public static UnknownName Get(Type t)
+        {
+            if (NameCache.ContainsKey(t))
+            {
+                return NameCache[t];
+            }
+            UnknownName name = new UnknownName(t);
+            NameCache.Add(t, name);
+            return name;
+        }
+
+        private readonly Type _t;
+
+        private UnknownName(Type t)
+        {
+            _t = t;
+        }
+
+        public Type GetUnknownType()
+        {
+            return _t;
         }
 
         public string Identifier { get { return "?"; } }
@@ -32,19 +55,19 @@ namespace KaVE.Commons.Model.Names.CSharp
         public bool IsGenericEntity { get { return false; } }
         public bool HasTypeParameters { get { return false; } }
         public IList<ITypeName> TypeParameters { get { return Lists.NewList<ITypeName>(); } }
-        public IAssemblyName Assembly { get { return new UnknownName(); } }
-        public INamespaceName Namespace { get { return new UnknownName(); } }
+        public IAssemblyName Assembly { get { return UnknownName.Get(typeof(IAssemblyName)); } }
+        public INamespaceName Namespace { get { return UnknownName.Get(typeof(INamespaceName)); } }
 
         ITypeName ITypeName.DeclaringType
         {
-            get { return new UnknownName(); }
+            get { return UnknownName.Get(typeof(ITypeName)); }
         }
 
         public bool IsStatic { get { return false; } }
         public bool HasSetter { get { return false; } }
         public bool HasGetter { get { return false; } }
-        public ITypeName ValueType { get { return new UnknownName(); } }
-        public INamespaceName ParentNamespace { get { return new UnknownName(); } }
+        public ITypeName ValueType { get { return UnknownName.Get(typeof(ITypeName)); } }
+        public INamespaceName ParentNamespace { get { return UnknownName.Get(typeof(INamespaceName)); } }
 
         string INamespaceName.Name
         {
@@ -70,11 +93,11 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         public string FullName { get { return Identifier; } }
-        public IAssemblyVersion AssemblyVersion { get { return new UnknownName(); } }
+        public IAssemblyVersion AssemblyVersion { get { return UnknownName.Get(typeof(IAssemblyVersion)); } }
 
         ITypeName IMemberName.DeclaringType
         {
-            get { return new UnknownName(); }
+            get { return UnknownName.Get(typeof(ITypeName)); }
         }
 
         string IAssemblyName.Name
@@ -100,12 +123,13 @@ namespace KaVE.Commons.Model.Names.CSharp
         public bool IsDelegateType { get { return false; } }
         public bool IsNestedType { get { return false; } }
         public bool IsArrayType { get { return false; } }
-        public ITypeName ArrayBaseType { get { return new UnknownName(); } }
+        public ITypeName ArrayBaseType { get { return UnknownName.Get(typeof(ITypeName)); } }
         public bool IsTypeParameter { get { return false; } }
         public string TypeParameterShortName { get { return "?"; } }
-        public ITypeName TypeParameterType { get { return new UnknownName(); } }
-        public IDelegateTypeName AsDelegateTypeName { get { return new UnknownName(); } }
-        public IArrayTypeName AsArrayTypeName { get { return new UnknownName(); } }
+        public ITypeName TypeParameterType { get { return UnknownName.Get(typeof(ITypeName)); } }
+        public IDelegateTypeName AsDelegateTypeName { get { return UnknownName.Get(typeof(IDelegateTypeName)); } }
+        public IArrayTypeName AsArrayTypeName { get { return UnknownName.Get(typeof(IArrayTypeName)); } }
+        public ITypeParameterName AsTypeParameterName { get { return UnknownName.Get(typeof(ITypeParameterName)); } }
         public int Rank { get { return -1; } }
         public int CompareTo(IAssemblyVersion other)
         {
@@ -116,7 +140,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         public int Minor { get { return -1; } }
         public int Build { get { return -1; } }
         public int Revision { get { return -1; } }
-        public ITypeName DelegateType { get { return new UnknownName(); } }
+        public ITypeName DelegateType { get { return UnknownName.Get(typeof(ITypeName)); } }
 
         string IDelegateTypeName.Signature
         {
@@ -125,7 +149,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public IList<IParameterName> Parameters { get { return Lists.NewList<IParameterName>(); } }
         public bool HasParameters { get { return false; } }
-        public ITypeName ReturnType { get { return new UnknownName(); } }
+        public ITypeName ReturnType { get { return UnknownName.Get(typeof(ITypeName)); } }
 
         public string Signature { get { return Identifier; } }
 
@@ -141,7 +165,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         ITypeName IDelegateTypeName.ReturnType
         {
-            get { return new UnknownName(); }
+            get { return UnknownName.Get(typeof(ITypeName)); }
         }
 
         string IMethodName.Signature
@@ -163,10 +187,10 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         ITypeName IMethodName.ReturnType
         {
-            get { return new UnknownName(); }
+            get { return UnknownName.Get(typeof(ITypeName)); }
         }
 
         public bool IsExtensionMethod { get { return false; } }
-        public ITypeName HandlerType { get { return new UnknownName(); } }
+        public ITypeName HandlerType { get { return UnknownName.Get(typeof(ITypeName)); } }
     }
 }

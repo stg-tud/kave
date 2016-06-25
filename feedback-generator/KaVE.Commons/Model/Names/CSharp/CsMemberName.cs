@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
+using NUnit.Framework;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
@@ -25,6 +28,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public CsMemberName(TypeNamingParser.MemberNameContext ctx)
         {
+            Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
             this._ctx = ctx;
         }
 
@@ -46,17 +50,17 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (_ctx.simpleMemberName() != null)
                 {
-                    return GetDeclaringType(_ctx.simpleMemberName().signature());
+                    return GetDeclaringType(_ctx.simpleMemberName().methodDefinition());
                 }
                 else if (_ctx.propertyName() != null)
                 {
-                    return GetDeclaringType(_ctx.propertyName().signature());
+                    return GetDeclaringType(_ctx.propertyName().methodDefinition());
                 }
-                return new UnknownName();
+                return UnknownName.Get(typeof(ITypeName));
             }
         }
 
-        private ITypeName GetDeclaringType(TypeNamingParser.SignatureContext signature)
+        private ITypeName GetDeclaringType(TypeNamingParser.MethodDefinitionContext signature)
         {
             return new CsTypeName(signature.type(1));
         }
@@ -83,17 +87,17 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (_ctx.simpleMemberName() != null)
                 {
-                    return GetName(_ctx.simpleMemberName().signature());
+                    return GetName(_ctx.simpleMemberName().methodDefinition());
                 }
                 else if (_ctx.propertyName() != null)
                 {
-                    return GetName(_ctx.propertyName().signature());
+                    return GetName(_ctx.propertyName().methodDefinition());
                 }
-                return new UnknownName().Identifier;
+                return UnknownName.Get(typeof(IMemberName)).FullName;
             }
         }
 
-        private string GetName(TypeNamingParser.SignatureContext signature)
+        private string GetName(TypeNamingParser.MethodDefinitionContext signature)
         {
             return signature.id().GetText();
         }
@@ -104,7 +108,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (_ctx.propertyName() != null)
                 {
-                    return _ctx.propertyName().propertyModifier().GetText() == "set";
+                    return _ctx.propertyName().propertyModifier().GetText().Contains("set");
                 }
                 return false;
             }
@@ -116,7 +120,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (_ctx.propertyName() != null)
                 {
-                    return _ctx.propertyName().propertyModifier().GetText() == "get";
+                    return _ctx.propertyName().propertyModifier().GetText().Contains("get");
                 }
                 return false;
             }
@@ -128,17 +132,17 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (_ctx.simpleMemberName() != null)
                 {
-                    return GetValueType(_ctx.simpleMemberName().signature());
+                    return GetValueType(_ctx.simpleMemberName().methodDefinition());
                 }
                 else if (_ctx.propertyName() != null)
                 {
-                    return GetValueType(_ctx.propertyName().signature());
+                    return GetValueType(_ctx.propertyName().methodDefinition());
                 }
-                return new UnknownName();
+                return UnknownName.Get(typeof(ITypeName));
             }
         }
 
-        private ITypeName GetValueType(TypeNamingParser.SignatureContext signature)
+        private ITypeName GetValueType(TypeNamingParser.MethodDefinitionContext signature)
         {
             return new CsTypeName(signature.type(0));
         }
