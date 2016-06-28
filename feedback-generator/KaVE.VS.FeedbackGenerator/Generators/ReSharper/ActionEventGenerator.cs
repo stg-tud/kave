@@ -27,11 +27,16 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     [ShellComponent]
     internal class ActionEventGenerator : EventGeneratorBase, IActivityTracking
     {
+        private readonly IThreading _threading;
+
         public ActionEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
             [NotNull] IThreading threading)
-            : base(env, messageBus, dateUtils, threading) {}
+            : base(env, messageBus, dateUtils)
+        {
+            _threading = threading;
+        }
 
         public void TrackAction(string actionId)
         {
@@ -40,13 +45,19 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void TrackActivity(string activityGroup, string activityId, int count = 1)
         {
-            var actionId = string.Format("{0}:{1}:{2}", activityGroup, count, activityId);
-            FireActionEvent(actionId);
+            FireActionEvent(string.Format("{0}:{1}:{2}", activityGroup, count, activityId));
         }
 
         protected void FireActionEvent(string actionId)
         {
-            FireAsync<CommandEvent>(e => { e.CommandId = actionId; });
+            _threading.ExecuteOrQueue(
+                "ActionEventGenerator.FireActionEvent",
+                () =>
+                {
+                    var actionEvent = Create<CommandEvent>();
+                    actionEvent.CommandId = actionId;
+                    Fire(actionEvent);
+                });
         }
     }
 }
