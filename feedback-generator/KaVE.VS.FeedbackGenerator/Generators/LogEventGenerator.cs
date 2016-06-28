@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
@@ -29,8 +30,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators
     {
         private readonly IDateUtils _dateUtils;
 
-        public LogEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+        public LogEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils, IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _dateUtils = dateUtils;
         }

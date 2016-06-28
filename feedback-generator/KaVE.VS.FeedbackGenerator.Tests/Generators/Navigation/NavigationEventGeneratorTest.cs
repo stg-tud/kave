@@ -85,7 +85,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
                 TestDateUtils,
                 textControlManager,
                 _navigationUtils,
-                TestLifetime);
+                TestLifetime, 
+                TestThreading);
         }
 
         [Test]

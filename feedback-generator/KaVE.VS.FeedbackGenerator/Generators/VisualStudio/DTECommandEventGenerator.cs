@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
@@ -65,8 +66,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         private readonly Dictionary<string, CommandEvent> _eventQueue;
 
-        public DTECommandEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+        public DTECommandEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils, IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _eventQueue = new Dictionary<string, CommandEvent>();
             _commandEvents = DTE.Events.CommandEvents;

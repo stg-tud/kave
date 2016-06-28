@@ -44,7 +44,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
                 TestMessageBus,
                 TestDateUtils,
                 _mouseEventsMock.Object,
-                focusHelper);
+                focusHelper,
+                TestThreading);
         }
 
         [Test]

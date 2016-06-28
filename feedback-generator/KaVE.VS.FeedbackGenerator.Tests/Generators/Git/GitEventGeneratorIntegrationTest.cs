@@ -110,7 +110,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             _solutionMock = new Mock<ISolution>();
             _solutionMock.Setup(solution => solution.SolutionFilePath).Returns(FileSystemPath.Parse(FileSolution));
             _solutionMock.Setup(solution => solution.Name).Returns("SomeSolution");
-            _uut = new GitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
+            _uut = new GitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, TestThreading);
 
             _watcher = new GitLogFileChangedRegistration(_solutionMock.Object, _uut);
         }

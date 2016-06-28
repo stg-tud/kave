@@ -15,6 +15,7 @@
  */
 
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -28,7 +29,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
     {
         public SystemEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
-            [NotNull] IDateUtils dateUtils) : base(env, messageBus, dateUtils)
+            [NotNull] IDateUtils dateUtils,
+            [NotNull] IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;

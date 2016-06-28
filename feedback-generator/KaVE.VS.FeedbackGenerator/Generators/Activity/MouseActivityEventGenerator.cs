@@ -17,6 +17,7 @@
 using System;
 using System.Windows.Forms;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -41,7 +42,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
             [NotNull] IKaVEMouseEvents mouseEvents,
-            IFocusHelper focusHelper) : base(env, messageBus, dateUtils)
+            IFocusHelper focusHelper,
+            IThreading threading) : base(env, messageBus, dateUtils, threading)
         {
             _dateUtils = dateUtils;
             _focusHelper = focusHelper;

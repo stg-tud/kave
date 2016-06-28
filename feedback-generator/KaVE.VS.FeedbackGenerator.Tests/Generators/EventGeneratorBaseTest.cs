@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using JetBrains.Threading;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -32,7 +33,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         {
             public TestEventGenerator([NotNull] IRSEnv env,
                 [NotNull] IMessageBus messageBus,
-                [NotNull] IDateUtils dateUtils) : base(env, messageBus, dateUtils) {}
+                [NotNull] IDateUtils dateUtils,
+                [NotNull] IThreading threading) : base(env, messageBus, dateUtils, threading) {}
 
             public void FireTestIDEEvent()
             {
@@ -48,7 +50,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         [SetUp]
         public void BaseTestSetUp()
         {
-            _uut = new TestEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
+            _uut = new TestEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, TestThreading);
         }
 
         [Test]

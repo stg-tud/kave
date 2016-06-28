@@ -30,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         [SetUp]
         protected void SetUp()
         {
-            _uut = new LogEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
+            _uut = new LogEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, TestThreading);
         }
 
         [Test]

@@ -16,6 +16,7 @@
 
 using EnvDTE;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -31,8 +32,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         public DocumentEventGenerator(IRSEnv env,
             IMessageBus messageBus,
-            IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+            IDateUtils dateUtils,
+            IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _documentEvents = DTE.Events.DocumentEvents;
             _documentEvents.DocumentOpened += HandleDocumentOpened;

@@ -17,6 +17,7 @@
 using System;
 using System.Diagnostics;
 using EnvDTE;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
@@ -33,14 +34,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         private readonly IRSEnv _env;
         private readonly IMessageBus _messageBus;
         private readonly IDateUtils _dateUtils;
+        private readonly IThreading _threading;
 
-        protected EventGeneratorBase([NotNull] IRSEnv env,
-            [NotNull] IMessageBus messageBus,
-            [NotNull] IDateUtils dateUtils)
+        protected EventGeneratorBase([NotNull] IRSEnv env, [NotNull] IMessageBus messageBus, [NotNull] IDateUtils dateUtils, IThreading threading)
         {
             _env = env;
             _messageBus = messageBus;
             _dateUtils = dateUtils;
+            _threading = threading;
         }
 
         [NotNull]
@@ -51,15 +52,23 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 
         protected TIDEEvent Create<TIDEEvent>() where TIDEEvent : IDEEvent, new()
         {
-            return new TIDEEvent
+            var ideEvent = new TIDEEvent
             {
                 KaVEVersion = _env.KaVEVersion,
                 IDESessionUUID = _env.IDESession.UUID,
-                ActiveWindow = DTEActiveWindowName,
-                ActiveDocument = DTEActiveDocumentName,
                 TriggeredBy = CurrentTrigger,
                 TriggeredAt = _dateUtils.Now
             };
+
+            _threading.ExecuteOrQueue(
+                "EventGeneratorBase.Create",
+                () =>
+                {
+                    ideEvent.ActiveWindow = DTEActiveWindowName;
+                    ideEvent.ActiveDocument = DTEActiveDocumentName;
+                });
+
+            return ideEvent;
         }
 
         private static IDEEvent.Trigger CurrentTrigger
@@ -123,9 +132,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         {
             // TODO @Sven: why is it set here and not with the other information "on create"?
             // TODO @Seb: good question... if we always use Create it shouldn't make a difference...
-            @event.IDESessionUUID = _env.IDESession.UUID;
-            _messageBus.Publish<IDEEvent>(@event);
-            WriteToDebugConsole(@event);
+            _threading.ExecuteOrQueue(
+                "EventGeneratorBase.Fire",
+                () =>
+                {
+                    @event.IDESessionUUID = _env.IDESession.UUID;
+                    _messageBus.Publish<IDEEvent>(@event);
+                    WriteToDebugConsole(@event);
+                });
         }
 
         [Conditional("DEBUG")]

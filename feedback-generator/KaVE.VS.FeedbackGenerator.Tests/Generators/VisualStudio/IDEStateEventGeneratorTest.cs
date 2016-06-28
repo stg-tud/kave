@@ -77,7 +77,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var visibleWindowName = mockVisibleWindow.Object.GetName();
 
             // ReSharper disable once ObjectCreationAsStatement
-            new IDEStateEventGenerator(TestRSEnv, TestMessageBus, EternalLifetime.Instance, TestDateUtils, null);
+            new IDEStateEventGenerator(TestRSEnv, TestMessageBus, EternalLifetime.Instance, TestDateUtils, null, TestThreading);
 
             var actuals = GetSinglePublished<IDEStateEvent>().OpenWindows;
             var expecteds = new[] {visibleWindowName};
@@ -94,7 +94,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 
             Lifetimes.Using(
                 lt =>
-                    new IDEStateEventGenerator(TestRSEnv, TestMessageBus, lt, TestDateUtils, mockLogger.Object));
+                    new IDEStateEventGenerator(TestRSEnv, TestMessageBus, lt, TestDateUtils, mockLogger.Object, TestThreading));
 
             Assert.AreEqual(TestIDESession.UUID, shutdownEvent.IDESessionUUID);
             Assert.AreEqual(IDEStateEvent.LifecyclePhase.Shutdown, shutdownEvent.IDELifecyclePhase);

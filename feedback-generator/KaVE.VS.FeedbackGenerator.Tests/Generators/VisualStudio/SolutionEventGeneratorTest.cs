@@ -44,7 +44,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
         public void SetUp()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new SolutionEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
+            new SolutionEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, TestThreading);
         }
 
         [TestCase("{test}", "NuGet.Config"),

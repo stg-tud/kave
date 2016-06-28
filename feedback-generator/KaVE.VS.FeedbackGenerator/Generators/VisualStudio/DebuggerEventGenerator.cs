@@ -16,6 +16,7 @@
 
 using EnvDTE;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -28,8 +29,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DebuggerEvents _debuggerEvents;
 
-        public DebuggerEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+        public DebuggerEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils, IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _debuggerEvents = DTE.Events.DebuggerEvents;
             _debuggerEvents.OnEnterBreakMode += _debuggerEvents_OnEnterBreakMode;

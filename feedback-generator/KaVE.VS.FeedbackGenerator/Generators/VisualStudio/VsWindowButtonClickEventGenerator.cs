@@ -21,6 +21,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using JetBrains.Threading;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
@@ -44,8 +45,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             [NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
-            [NotNull] ILogger logger)
-            : base(env, messageBus, dateUtils)
+            [NotNull] ILogger logger,
+            [NotNull] IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _frame = GetFrame(window);
             _logger = logger;

@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
@@ -35,6 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         private readonly IMessageBus _messageBus;
         private readonly IDateUtils _dateUtils;
         private readonly ILogger _logger;
+        private readonly IThreading _threading;
 
         [UsedImplicitly]
         private WindowEvents _windowEvents;
@@ -42,12 +44,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         public VsWindowButtonInstrumentationComponent([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger,
+            [NotNull] IThreading threading)
         {
             _env = env;
             _messageBus = messageBus;
             _dateUtils = dateUtils;
             _logger = logger;
+            _threading = threading;
             Initialize(env);
         }
 
@@ -74,7 +78,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
                         _env,
                         _messageBus,
                         _dateUtils,
-                        _logger);
+                        _logger,
+                        _threading);
                     WindowRegistry[focusedWindow] = listener;
                 }
                 listener.WindowChanged();

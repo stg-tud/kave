@@ -47,7 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             IRSEnv env,
             IMessageBus messageBus,
             IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+            : base(env, messageBus, dateUtils, threading)
         {
             _resultManager = resultManager;
             _threading = threading;

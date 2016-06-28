@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.IDEComponents;
@@ -87,7 +88,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         [SetUp]
         public void Setup()
         {
-            _uut = new TestGitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
+            _uut = new TestGitEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, TestThreading);
 
             foreach (var line in InitialContent)
             {
@@ -200,8 +201,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
 
             public TestGitEventGenerator([NotNull] IRSEnv env,
                 [NotNull] IMessageBus messageBus,
-                [NotNull] IDateUtils dateUtils)
-                : base(env, messageBus, dateUtils)
+                [NotNull] IDateUtils dateUtils,
+                [NotNull] IThreading threading)
+                : base(env, messageBus, dateUtils, threading)
             {
                 Content = Lists.NewList<string>();
             }

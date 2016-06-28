@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using JetBrains.ProjectModel;
+using JetBrains.Threading;
 using JetBrains.Util.Extension;
 using KaVE.Commons.Model.Events.VersionControlEvents;
 using KaVE.Commons.Model.Naming.IDEComponents;
@@ -40,8 +41,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
     {
         private readonly IKaVEList<VersionControlAction> _oldActions;
 
-        public GitEventGenerator([NotNull] IRSEnv env, [NotNull] IMessageBus messageBus, [NotNull] IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+        public GitEventGenerator([NotNull] IRSEnv env, [NotNull] IMessageBus messageBus, [NotNull] IDateUtils dateUtils, [NotNull] IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _oldActions = Lists.NewList<VersionControlAction>();
         }

@@ -20,6 +20,7 @@ using JetBrains.DataFlow;
 using JetBrains.Interop.WinApi;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils;
@@ -42,7 +43,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             [NotNull] IDateUtils dateUtils,
             [NotNull] ITextControlManager textControlManager,
             [NotNull] INavigationUtils navigationUtils,
-            [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils, textControlManager, lifetime)
+            [NotNull] Lifetime lifetime,
+            [NotNull] IThreading threading) : base(env, messageBus, dateUtils, textControlManager, lifetime, threading)
         {
             _navigationUtils = navigationUtils;
         }
@@ -113,7 +115,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
             [NotNull] ITextControlManager textControlManager,
-            [NotNull] Lifetime lifetime) : base(env, messageBus, dateUtils)
+            [NotNull] Lifetime lifetime,
+            [NotNull] IThreading threading) : base(env, messageBus, dateUtils, threading)
         {
             _myLifetime = lifetime;
             _textControlManager = textControlManager;

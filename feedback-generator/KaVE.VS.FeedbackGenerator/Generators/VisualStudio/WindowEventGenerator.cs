@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -53,8 +54,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         public WindowEventGenerator(IRSEnv env,
             IMessageBus messageBus,
             ICallbackManager callbackManager,
-            IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+            IDateUtils dateUtils,
+            IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _callbackManager = callbackManager;
             _knownWindows = new Dictionary<Window, WindowDescriptor>();

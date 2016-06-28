@@ -19,6 +19,7 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.DataFlow;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -36,8 +37,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             IMessageBus messageBus,
             Lifetime lifetime,
             IDateUtils dateUtils,
-            IEventLogger logger)
-            : base(env, messageBus, dateUtils)
+            IEventLogger logger,
+            IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _env = env;
             _logger = logger;

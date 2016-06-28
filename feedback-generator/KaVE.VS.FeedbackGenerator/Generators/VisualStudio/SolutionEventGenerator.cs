@@ -17,6 +17,7 @@
 using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
@@ -45,8 +46,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         private readonly SelectionEvents _selectionEvents;
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
-        public SolutionEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+        public SolutionEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils, IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _solutionEvents = DTE.Events.SolutionEvents;
             _solutionEvents.Opened += _solutionEvents_Opened;

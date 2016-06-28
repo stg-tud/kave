@@ -35,7 +35,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         public const string MainWindowName = "main Microsoft Visual Studio";
 
         private readonly IFocusHelper _focusHelper;
-        private readonly IThreading _threading;
 
         [UsedImplicitly]
         private Timer _timer;
@@ -47,10 +46,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             IDateUtils dateUtils,
             IFocusHelper focusHelper,
             IThreading threading)
-            : base(env, messageBus, dateUtils)
+            : base(env, messageBus, dateUtils, threading)
         {
             _focusHelper = focusHelper;
-            _threading = threading;
 
             _timer = new Timer();
             _timer.Elapsed += OnTimerElapsed;
@@ -66,15 +64,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             {
                 var windowAction = isActive ? WindowEvent.WindowAction.Activate : WindowEvent.WindowAction.Deactivate;
 
-                _threading.ExecuteOrQueue(
-                    "VsFocusEventGenerator.OnTimerElapsed",
-                    () =>
-                    {
-                        var windowEvent = Create<WindowEvent>();
-                        windowEvent.Action = windowAction;
+                var windowEvent = Create<WindowEvent>();
+                windowEvent.Action = windowAction;
                         windowEvent.Window = Names.Window(MainWindowName);
-                        FireNow(windowEvent);
-                    });
+                FireNow(windowEvent);
             }
             _wasActive = isActive;
             _timer.Enabled = true;

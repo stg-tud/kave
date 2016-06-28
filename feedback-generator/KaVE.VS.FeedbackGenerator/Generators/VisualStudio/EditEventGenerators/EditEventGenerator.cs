@@ -18,6 +18,7 @@ using System;
 using System.Timers;
 using EnvDTE;
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.EventContext;
@@ -41,8 +42,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
         public EditEventGenerator(IRSEnv env,
             IMessageBus messageBus,
             IDateUtils dateUtils,
-            IContextProvider contextProvider)
-            : base(env, messageBus, dateUtils)
+            IContextProvider contextProvider,
+            IThreading threading)
+            : base(env, messageBus, dateUtils, threading)
         {
             _dateUtils = dateUtils;
             _contextProvider = contextProvider;

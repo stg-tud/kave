@@ -15,6 +15,7 @@
  */
 
 using JetBrains.Application;
+using JetBrains.Threading;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -37,7 +38,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         public UserProfileEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils,
-            [NotNull] ISettingsStore settingsStore) : base(env, messageBus, dateUtils)
+            [NotNull] ISettingsStore settingsStore,
+            [NotNull] IThreading threading) : base(env, messageBus, dateUtils, threading)
         {
             _settingsStore = settingsStore;
         }

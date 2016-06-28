@@ -57,7 +57,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             _settingsStore = Mock.Of<ISettingsStore>();
             Mock.Get(_settingsStore).Setup(s => s.GetSettings<UserProfileSettings>()).Returns(_userSettings);
 
-            _sut = new UserProfileEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _settingsStore);
+            _sut = new UserProfileEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _settingsStore, TestThreading);
         }
 
         private void AssertEvent(UserProfileEvent expected)
