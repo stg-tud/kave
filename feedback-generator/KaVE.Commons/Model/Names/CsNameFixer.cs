@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Linq;
+using System.Runtime.Serialization.Configuration;
 using KaVE.Commons.Model.Names.CSharp;
 
 namespace KaVE.Commons.Model.Names
@@ -23,6 +25,7 @@ namespace KaVE.Commons.Model.Names
         public static string HandleOldMethodNames(string input)
         {
             IMethodName m = MethodName.Get(input);
+            var name = m.Name;
             var sig = m.Signature;
             var decl = m.DeclaringType.Identifier;
             var ret = m.ReturnType.Identifier;
@@ -34,11 +37,20 @@ namespace KaVE.Commons.Model.Names
             {
                 ret = HandleOldTypeNames(ret);
             }
-            decl = HandleOldTypeNames(decl);
+            if (name == "")
+            {
+                name = m.DeclaringType.Name;
+                decl = HandleOldTypeNames(m.DeclaringType.IsNestedType ? m.DeclaringType.DeclaringType.Identifier : "?, " + m.DeclaringType.Assembly);
+                sig = name + "()";
+            }
+            else
+            {
+                decl = HandleOldTypeNames(decl);
+            }
             if (m.HasParameters)
             {
                 var parameters = m.Parameters;
-                sig = m.Name + "(";
+                sig = name + "(";
                 for (var i = 0; i < parameters.Count; i++)
                 {
                     var keyword = GetKeyWord(parameters[i]);
@@ -85,6 +97,11 @@ namespace KaVE.Commons.Model.Names
             {
                 return "d:" + HandleOldMethodNames(input.Substring(2, input.Length - 2));
             }
+            else if (typeName.IsArrayType)
+            {
+                ArrayTypeName name = (ArrayTypeName) typeName;
+                return "arr(" + name.Rank + "):" + HandleOldTypeNames(name.ArrayBaseType.Identifier);
+            }
             else if (typeName.IsGenericEntity)
             {
                 var paras = typeName.TypeParameters;
@@ -101,7 +118,7 @@ namespace KaVE.Commons.Model.Names
                 result = n + GetTypeNameIdentifier(typeName) + typeName.Name + "'" + paras.Count + "[";
                 for (var i = 0; i < paras.Count; i++)
                 {
-                    result += "[" + ((ITypeParameterName)paras[i]).TypeParameterShortName + " -> " + HandleOldTypeNames(((ITypeParameterName)paras[i]).TypeParameterType.Identifier) + "]" + (i < paras.Count - 1 ? "," : "")
+                    result += "[" + ((TypeParameterName)paras[i]).TypeParameterShortName + " -> " + HandleOldTypeNames(((TypeParameterName)paras[i]).TypeParameterType.Identifier) + "]" + (i < paras.Count - 1 ? "," : "")
                     ;
                 }
                 result += "]" + a;

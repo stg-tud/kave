@@ -90,13 +90,6 @@ namespace KaVE.Commons.Model.Names
             {typeof(CsAssemblyName), "1b"}
         };
 
-        public static KaVEList<string> Names = new KaVEList<string>();
-
-        public static void AddName(string json)
-        {
-            Names.Add(json);
-        }
-
         public static IName ParseJson(string input)
         {
             var splitPos = input.IndexOf(":", StringComparison.Ordinal);

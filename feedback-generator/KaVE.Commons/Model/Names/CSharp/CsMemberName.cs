@@ -18,7 +18,6 @@ using System;
 using KaVE.Commons.Model.Names.CSharp.Parser;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
-using NUnit.Framework;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {

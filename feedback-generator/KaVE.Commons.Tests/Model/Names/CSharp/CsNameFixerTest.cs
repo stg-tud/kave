@@ -53,5 +53,21 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         {
             Assert.AreEqual(expected, CsNameFixer.HandleNestedTypeNames(CsNameFixer.HandleTypeIdentifier(input)));
         }
+
+        [TestCase("Test[,], A, 0.0.0.0", "arr(2):Test, A, 0.0.0.0"),
+        TestCase("Test[], A, 0.0.0.0", "arr(1):Test, A, 0.0.0.0")]
+        public void HandleArrayTypeIdentifier(string input, string expected)
+        {
+            Assert.AreEqual(expected, CsNameFixer.HandleOldTypeNames(input));
+        }
+
+        [TestCase("d:[?] [Kave.Commons.D, A, 0.0.0.0].()", "d:[?] [?, A, 0.0.0.0].D()"),
+        TestCase("d:[?] [Kave.Commons.D+D1, A, 0.0.0.0].()", "d:[?] [Kave.Commons.D, A, 0.0.0.0].D1()"),
+        TestCase("d:[?] [Kave.Commons.D, A, 0.0.0.0].([?] a)", "d:[?] [?, A, 0.0.0.0].D([?] a)"),
+        TestCase("d:[?] [Kave.Commons.D+D1, A, 0.0.0.0].([?] a)", "d:[?] [Kave.Commons.D, A, 0.0.0.0].D1([?] a)")]
+        public void HandleNotNamedDelegates(string input, string expected)
+        {
+            Assert.AreEqual(expected, CsNameFixer.HandleOldTypeNames(input));
+        }
     }
 }

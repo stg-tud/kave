@@ -67,16 +67,11 @@ namespace KaVE.RS.SolutionAnalysis
                 {
                     var context = ra.GetNext<Context>();
                     var list = new KaVEList<string>();
-                    foreach (var n in CsNameUtil.Names)
-                    {
-                        list.Add(n);
-                    }
-                    ssts.Add(new Tuple<string, List<string>>(context.SST.EnclosingType.Identifier, list));
-                    CsNameUtil.Names.Clear();
+                    // TODO: grab names in a NameToJsonConverter
                     numCtxs++;
                 }
                 Log("found {0} contexts\n\n", numCtxs);
-                if (currentZip == numMaxZips + 1)
+                if (numMaxZips != -1 && currentZip == numMaxZips + 1)
                 {
                     break;
                 }
@@ -86,13 +81,12 @@ namespace KaVE.RS.SolutionAnalysis
             var methodNameNullCount = 0;
             var methodNameCount = 0;
             List<Tuple<string, string>> wrongSyntaxTypeName = new KaVEList<Tuple<string, string>>();
-            List<Tuple<string, string>> wrongSyntaxMethodName = new KaVEList<Tuple<string, string>>();
             foreach (var t in ssts)
             {
                 foreach (var s in t.Item2)
                 {
                     var type = s.Split(':');
-                    if (type[0].Equals("CSharp.TypeName"))
+                    if (type[0].Equals("CSharp.PropertyName"))
                     {
                         typeNameCount++;
                         var name = CsNameUtil.ParseJson(s);
@@ -102,16 +96,6 @@ namespace KaVE.RS.SolutionAnalysis
                             typeNameNullCount++;
                         }
                     }
-                    else if (type[0].Equals("CSharp.MethodName"))
-                    {
-                        methodNameCount++;
-                        var name = CsNameUtil.ParseJson(s);
-                        if (name.Identifier == "?")
-                        {
-                            wrongSyntaxMethodName.Add(new Tuple<string, string>(s, t.Item1));
-                            methodNameNullCount++;
-                        }
-                    }
                 }
             }
             Log("{0} of {1} names are null", typeNameNullCount, typeNameCount);
@@ -119,7 +103,7 @@ namespace KaVE.RS.SolutionAnalysis
             double percentageTypeNames = (double) ((double) typeNameNullCount/(double) typeNameCount);
             double percentageMethodNames = (double) ((double) methodNameNullCount/(double) methodNameCount);
             Log("TypeNames not parseable: {0}%\n", percentageTypeNames);
-            Log("MethodNames not parseable: {0}%\n\n", percentageMethodNames);
+            Log("PropertyName not parseable: {0}%\n\n", percentageMethodNames);
 
             //showInvalidNames(wrongSyntaxTypeName);
 
@@ -130,7 +114,6 @@ namespace KaVE.RS.SolutionAnalysis
             if (writeToFile_)
             {
                 Log("File with invalid names written to {0}", _dirOut);
-                writeToFile(wrongSyntaxMethodName, _dirOut + "/methodname.txt");   
                 writeToFile(wrongSyntaxTypeName, _dirOut + "/typename.txt");
 
             }
@@ -142,7 +125,7 @@ namespace KaVE.RS.SolutionAnalysis
         {
             for (var i = 0; i < list.Count; i++)
             {
-                if (i == numMaxInvalidNames)
+                if (numMaxInvalidNames != -1 && i == numMaxInvalidNames)
                 {
                     break;
                 }

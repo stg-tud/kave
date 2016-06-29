@@ -48,7 +48,6 @@ namespace KaVE.Commons.Utils.Json
                 return null;
             }
             var serialization = ReadSerializationFrom(reader);
-            CsNameUtil.AddName(serialization);
             return CsNameUtil.ParseJson(serialization);
             //return _converter.ConvertFromString(serialization);
         }

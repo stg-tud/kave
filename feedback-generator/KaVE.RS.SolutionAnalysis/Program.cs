@@ -34,7 +34,7 @@ namespace KaVE.RS.SolutionAnalysis
 {
     internal class Program
     {
-        private const string DirRoot = @"E:\";
+        private const string DirRoot = @"C:\Users\Jonas\Desktop\SST-2016-02-19\Github";
         private const string DirEventsAll = DirRoot + @"Events\All\";
 
         private const string DirEventsAll_SortedByUser = DirRoot + @"Events\All-SortedByUser\";
@@ -97,7 +97,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void RunNameGrabber()
         {
-            new NameGrabber(DirRoot, DirRoot, 10, 10, true).Run();
+            new NameGrabber(DirRoot, DirRoot, -1, -1, true).Run();
         }
 
         private static void RunQuickSanityCheck()
