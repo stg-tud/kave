@@ -404,18 +404,6 @@
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
-    <Antlr4 Include="Model\Names\CSharp\Parser\TypeNaming.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>KaVE.Commons.Model.Names.CSharp.Parser</CustomToolNamespace>
-    </Antlr4>
-    <AntlrTokens Include="Model\Names\CSharp\Parser\TypeNaming.tokens">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>KaVE.Commons.Model.Names.CSharp.Parser</CustomToolNamespace>
-    </AntlrTokens>
-    <AntlrTokens Include="Model\Names\CSharp\Parser\TypeNamingLexer.tokens">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>KaVE.Commons.Model.Names.CSharp.Parser</CustomToolNamespace>
-    </AntlrTokens>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
