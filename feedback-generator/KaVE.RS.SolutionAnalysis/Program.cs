@@ -26,6 +26,7 @@ using KaVE.RS.SolutionAnalysis.CSharpVsFSharp;
 using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using KaVE.RS.SolutionAnalysis.UserProfileExports;
+using KaVE.RS.SolutionAnalysis.UserStatistics;
 
 // ReSharper disable InconsistentNaming
 
@@ -56,14 +57,14 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine(@"{0} start", DateTime.Now);
 
             /* data preparation */
-            //RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
-            //RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
+            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
+            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunFailingRepoFinder();
             //RunApiStatisticsRunner();
             //RunCompletionEventStatistics();
             //RunUsageExport(DirContexts, DirUsages);
             //RunUsageExport(DirContexts_Inlined, DirUsages_Inlined);
-            //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
+            RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Keep);
             //RunCompletionEventFilter(CompletionEventFilter.NoTriggerPointOption.Remove);
             //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTrigger, DirMicroCommits);
             //RunCompletionEventToMicroCommit(DirEventsCompletion_KeepNoTriggerInlined, DirMicroCommits_Inlined);
@@ -74,12 +75,17 @@ namespace KaVE.RS.SolutionAnalysis
             //new EditLocationRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
             //RunUserProfileExport();
             //RunStatisticsForPaperCreation();
-            RunCShaspVsFSharpStats();
+            //RunCShaspVsFSharpStats();
+            RunUserStats(); // used to export positions used in the Demographic generator on Java
 
-            //new UserStatsRunner(new UserStatsIo(DirEventsAll_Clean, "")).Run();
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine(@"{0} finish", DateTime.Now);
+        }
+
+        private static void RunUserStats()
+        {
+            new UserStatsRunner(new UserStatsIo(DirEventsAll_Clean, "")).Run();
         }
 
         private static void RunCShaspVsFSharpStats()

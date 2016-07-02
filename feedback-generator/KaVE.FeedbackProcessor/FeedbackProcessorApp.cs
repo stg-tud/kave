@@ -49,11 +49,12 @@ namespace KaVE.FeedbackProcessor
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
             //var file = "C:/Users/Andreas/Desktop/testrunevents.zip";
+            CleanDirs(outFolder);
+            
+            Logger.Info(@"Creating intervals now ...");
             var intervals = new IntervalTransformer(Logger).TransformFolder(inFolder).ToList();
 
-            Logger.Info(@"Got {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
-
-            CleanDirs(outFolder);
+            Logger.Info(@"Found {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
             WatchdogExporter.Convert(intervals).WriteToFiles(outFolder);
 
             Logger.Info("Done!");
