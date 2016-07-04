@@ -195,7 +195,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                 {
                     foreach (var p in ctx.regularMethod().customMethod().genericTypePart().genericParam())
                     {
-                        typePara.Add(new TypeParameterName(p.GetText()));
+                        typePara.Add(CsNameUtil.GetTypeName(p.typeParameter().GetText()));
                     }
                 }
                 return typePara;

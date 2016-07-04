@@ -87,6 +87,7 @@ namespace KaVE.Commons.Model.Names
             {typeof(IPropertyName), "1k"},
             {typeof(TypeName), "1l"},
             {typeof(CsTypeName), "1l"},
+            {typeof(ITypeName), "1l"},
             {typeof(CsAssemblyName), "1b"}
         };
 

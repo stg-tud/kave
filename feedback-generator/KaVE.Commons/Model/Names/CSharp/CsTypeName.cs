@@ -529,7 +529,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                         var genericParams = GetGenericParams();
                         foreach (var p in genericParams)
                         {
-                            typePara.Add(new TypeParameterName(p.GetText()));
+                            typePara.Add(CsNameUtil.GetTypeName(p.typeParameter().GetText()));
                         }
                     }
                     else if (ArrayTypeNameHasTypeParameters())
