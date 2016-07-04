@@ -24,6 +24,7 @@ namespace KaVE.Commons.Model.Names.CSharp
     /// </summary>
     public class AliasName : Name
     {
+        // TODO remove this name!
         private static readonly WeakNameCache<AliasName> Registry = WeakNameCache<AliasName>.Get(
             id => new AliasName(id));
 

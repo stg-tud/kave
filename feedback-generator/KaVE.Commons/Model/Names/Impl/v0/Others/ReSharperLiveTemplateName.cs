@@ -19,20 +19,20 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Names.ReSharper
 {
-    public class LiveTemplateName : Name
+    public class ReSharperLiveTemplateName : Name
     {
-        private static readonly WeakNameCache<LiveTemplateName> Registry =
-            WeakNameCache<LiveTemplateName>.Get(id => new LiveTemplateName(id));
+        private static readonly WeakNameCache<ReSharperLiveTemplateName> Registry =
+            WeakNameCache<ReSharperLiveTemplateName>.Get(id => new ReSharperLiveTemplateName(id));
 
         /// <summary>
         ///     Template names follow the scheme "&lt;template name&gt;:&lt;template description&gt;".
         /// </summary>
-        public new static LiveTemplateName Get(string identifier)
+        public new static ReSharperLiveTemplateName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }
 
-        private LiveTemplateName(string identifier) : base(identifier) {}
+        private ReSharperLiveTemplateName(string identifier) : base(identifier) {}
 
         public string Name
         {

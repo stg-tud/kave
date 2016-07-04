@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-using System.ComponentModel;
-
 namespace KaVE.Commons.Model.Names
 {
     /// <summary>
     ///     Represents full-qualified names.
     /// </summary>
-    [TypeConverter(typeof (NameToStringConverter))]
     public interface IName
     {
         /// <summary>
