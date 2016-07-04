@@ -140,6 +140,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             WriteLine(TestCommitString);
 
             Thread.Sleep(500);
+            TestThreading.ReentrancyGuard.PumpQueue(0);
 
             var actualEvent = GetLastPublished<VersionControlEvent>();
             Assert.AreEqual(Names.Solution("SomeSolution"), actualEvent.Solution);

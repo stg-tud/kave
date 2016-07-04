@@ -63,9 +63,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             Registry.Clear();
         }
 
-        protected static IThreading TestThreading
+        private readonly IThreading _testThreading = new Invocator(Lifetimes.Define("testlifetime").Lifetime);
+
+        protected IThreading TestThreading
         {
-            get { return new Invocator(Lifetimes.Define("testlifetime").Lifetime); }
+            get { return _testThreading; }
         }
 
         private void ProcessEvent(IDEEvent ideEvent)
