@@ -86,9 +86,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 if (ctx.regularMethod() != null && ctx.regularMethod().customMethod() != null)
                 {
-                    return new CsTypeName(ctx.regularMethod().customMethod().methodDefinition().type()[0]);
+                    if (ctx.regularMethod().customMethod().methodDefinition().type()[0].UNKNOWN() == null)
+                    {
+                        return new CsTypeName(ctx.regularMethod().customMethod().methodDefinition().type()[0]);
+                    }
                 }
-                return CsNameUtil.GetTypeName("?");
+                return UnknownName.Get(typeof(ITypeName));
             }
         }
 
@@ -114,11 +117,15 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                if (IsConstructor)
+                if (IsConstructor && ((ctx.regularMethod().staticCctor() != null && ctx.regularMethod().staticCctor().type().UNKNOWN() == null) || (ctx.regularMethod().nonStaticCtor() != null && ctx.regularMethod().nonStaticCtor().type().UNKNOWN() == null)))
                 {
                     return new CsTypeName(ctx.regularMethod().staticCctor() != null ? ctx.regularMethod().staticCctor().type() : ctx.regularMethod().nonStaticCtor().type());
                 }
-                return new CsTypeName(ctx.regularMethod().customMethod().methodDefinition().type(1));
+                else if (ctx.regularMethod().customMethod().methodDefinition().type(1).UNKNOWN() == null)
+                {
+                    return new CsTypeName(ctx.regularMethod().customMethod().methodDefinition().type(1));
+                }
+                return UnknownName.Get(typeof(ITypeName));
             }
         }
 
