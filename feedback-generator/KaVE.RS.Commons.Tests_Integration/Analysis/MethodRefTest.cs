@@ -16,7 +16,7 @@
 
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.RS.Commons.Analysis;
 using Moq;
 using NUnit.Framework;

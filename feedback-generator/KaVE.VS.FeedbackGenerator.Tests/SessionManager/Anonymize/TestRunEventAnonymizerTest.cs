@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Utils.Collections;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;

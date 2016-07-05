@@ -18,7 +18,9 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.FeedbackGenerator.SessionManager;
@@ -26,7 +28,6 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 {
-    [TestFixture]
     internal class EventViewTest
     {
         [Test]
@@ -61,7 +62,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         {
             var editEvent = new EditEvent
             {
-                Context2 = new Context { SST = new SST { EnclosingType = TypeName.Get("TestClass,TestProject") } }
+                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}}
             };
 
             var view = new EventViewModel(editEvent);
@@ -248,14 +249,20 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                 {
                     new ProposalSelection
                     {
-                        Proposal = new Proposal {Name = Name.Get("System.Threading.ThreadLocal`1[[T -> T]], mscorlib, 4.0.0.0")},
+                        Proposal =
+                            new Proposal
+                            {
+                                Name = Name.Get("System.Threading.ThreadLocal`1[[T -> T]], mscorlib, 4.0.0.0")
+                            },
                         SelectedAfter = TimeSpan.FromSeconds(1)
                     }
                 }
             };
 
             var view = new EventViewModel(completionEvent);
-            Assert.AreEqual("• <Bold>00:00:01 at index -1</Bold> System.Threading.ThreadLocal`1[[T -&gt; T]], mscorlib, 4.0.0.0\r\n", view.XamlSelectionsRepresentation);
+            Assert.AreEqual(
+                "• <Bold>00:00:01 at index -1</Bold> System.Threading.ThreadLocal`1[[T -&gt; T]], mscorlib, 4.0.0.0\r\n",
+                view.XamlSelectionsRepresentation);
         }
     }
 }

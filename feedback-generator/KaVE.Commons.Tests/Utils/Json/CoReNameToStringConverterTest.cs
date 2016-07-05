@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
@@ -173,7 +173,7 @@ namespace KaVE.Commons.Tests.Utils.Json
             {
                 kind = DefinitionSiteKind.THIS,
                 field = null,
-                method = null,
+                method = null
             };
 
             var json = "{" + Environment.NewLine +
@@ -193,7 +193,7 @@ namespace KaVE.Commons.Tests.Utils.Json
             {
                 kind = DefinitionSiteKind.THIS,
                 field = FieldName.Get("[F,P] [T,P].f").ToCoReName(),
-                method = MethodName.Get("[R,P] [T,P].M()").ToCoReName(),
+                method = MethodName.Get("[R,P] [T,P].M()").ToCoReName()
             };
 
             var json = "{" + Environment.NewLine +

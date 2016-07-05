@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {

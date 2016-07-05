@@ -15,7 +15,7 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VisualStudio

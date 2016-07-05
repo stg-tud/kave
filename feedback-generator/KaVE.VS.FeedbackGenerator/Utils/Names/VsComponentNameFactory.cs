@@ -20,7 +20,7 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Annotations;
 using JetBrains.Util;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Utils.Assertion;
 using Microsoft.VisualStudio.CommandBars;
 

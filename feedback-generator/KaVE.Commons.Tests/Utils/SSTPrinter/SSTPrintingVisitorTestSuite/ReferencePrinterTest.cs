@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -49,7 +49,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new EventReference
             {
-                EventName = EventName.Get("static [EventType,P] [DeclaringType,P].E"),
+                EventName = EventName.Get("static [EventType,P] [DeclaringType,P].E")
             };
 
             AssertPrint(sst, "DeclaringType.E");
@@ -72,7 +72,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new FieldReference
             {
-                FieldName = FieldName.Get("static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Empty"),
+                FieldName =
+                    FieldName.Get("static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Empty")
             };
 
             AssertPrint(sst, "string.Empty");
@@ -95,7 +96,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodReference
             {
-                MethodName = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                MethodName = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
             };
 
             AssertPrint(sst, "DeclaringType.M");
@@ -118,7 +119,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyReference
             {
-                PropertyName = PropertyName.Get("static get set [PropertyType,P] [DeclaringType,P].P"),
+                PropertyName = PropertyName.Get("static get set [PropertyType,P] [DeclaringType,P].P")
             };
 
             AssertPrint(sst, "DeclaringType.P");

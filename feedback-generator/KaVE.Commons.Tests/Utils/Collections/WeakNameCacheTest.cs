@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 

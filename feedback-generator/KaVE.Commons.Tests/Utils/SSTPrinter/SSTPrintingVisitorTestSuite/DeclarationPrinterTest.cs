@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -41,7 +42,11 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_PartialClass()
         {
-            var sst = new SST { EnclosingType = TypeName.Get("TestClass,TestProject"), PartialClassIdentifier = "TestClass_1.cs" };
+            var sst = new SST
+            {
+                EnclosingType = TypeName.Get("TestClass,TestProject"),
+                PartialClassIdentifier = "TestClass_1.cs"
+            };
 
             AssertPrint(
                 sst,
@@ -95,7 +100,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                     Element = thisType,
                     Implements =
                     {
-                        new TypeHierarchy {Element = interface1},
+                        new TypeHierarchy {Element = interface1}
                     }
                 }
             };
@@ -329,7 +334,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
+                Name = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P")
             };
 
             AssertPrint(sst, "PropertyType P { get; set; }");
@@ -349,7 +354,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 Set =
                 {
                     new BreakStatement(),
-                    new ContinueStatement(),
+                    new ContinueStatement()
                 }
             };
 

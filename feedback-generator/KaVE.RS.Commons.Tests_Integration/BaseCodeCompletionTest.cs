@@ -25,7 +25,7 @@ using JetBrains.ReSharper.FeaturesTestFramework.Completion;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.RS.Commons.Utils;
+using KaVE.RS.Commons.Utils.LookupItems;
 
 namespace KaVE.RS.Commons.Tests_Integration
 {

@@ -21,14 +21,15 @@ using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Transformer;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Naming;
 
 namespace KaVE.RS.Commons.Analysis
 {
@@ -161,7 +162,7 @@ namespace KaVE.RS.Commons.Analysis
                 }
                 else
                 {
-                    sst.EnclosingType = TypeName.UnknownName;
+                    sst.EnclosingType = Names.UnknownType();
                 }
             }
 

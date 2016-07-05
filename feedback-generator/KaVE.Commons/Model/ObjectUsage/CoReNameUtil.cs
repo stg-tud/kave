@@ -17,8 +17,10 @@
 using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 

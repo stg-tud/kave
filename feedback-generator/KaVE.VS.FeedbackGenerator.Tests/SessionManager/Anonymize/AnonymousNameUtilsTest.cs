@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
@@ -637,7 +639,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeGenericTypeParameter_UnboundGenericAssignedToPlaceholder()
         {
             var original = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> G2]], A, 0.0.0.0].M([G1] p)");
-            var expected = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> HAqGEOJc_-qPti2JYHwR3Q==]], A, 0.0.0.0].M([G1] p)");
+            var expected =
+                MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> HAqGEOJc_-qPti2JYHwR3Q==]], A, 0.0.0.0].M([G1] p)");
 
             AssertAnonymizedEquals(original, expected);
         }

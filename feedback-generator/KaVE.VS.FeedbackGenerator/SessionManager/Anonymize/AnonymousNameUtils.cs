@@ -19,9 +19,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
@@ -139,7 +143,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.Append('[');
             if (type.IsTypeParameter && parameterNameWasAnonymized)
             {
-                identifier.Append(((ITypeParameterName)type).TypeParameterShortName.ToHash());
+                identifier.Append(((ITypeParameterName) type).TypeParameterShortName.ToHash());
             }
             else
             {
@@ -317,14 +321,16 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             return typeParameter =>
             {
                 var rightmostSideIsAShortName = typeParameter.TypeParameterType.IsTypeParameter &&
-                                                (((ITypeParameterName) typeParameter.TypeParameterType).TypeParameterType == null ||
-                                                 ((ITypeParameterName)typeParameter.TypeParameterType).TypeParameterType.IsUnknownType);
+                                                (((ITypeParameterName) typeParameter.TypeParameterType)
+                                                    .TypeParameterType == null ||
+                                                 ((ITypeParameterName) typeParameter.TypeParameterType)
+                                                     .TypeParameterType.IsUnknownType);
                 return (TypeParameterName) TypeParameterName.Get(
                     anonymizeShortNames
                         ? typeParameter.TypeParameterShortName.ToHash()
                         : typeParameter.TypeParameterShortName,
                     rightmostSideIsAShortName
-                        ? ((ITypeParameterName)typeParameter.TypeParameterType).TypeParameterShortName.ToHash()
+                        ? ((ITypeParameterName) typeParameter.TypeParameterType).TypeParameterShortName.ToHash()
                         : typeParameter.TypeParameterType.ToAnonymousName().Identifier);
             };
         }
@@ -346,7 +352,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 
         private static bool IsEnclosingProject(this IAssemblyName assembly)
         {
-            return assembly.AssemblyVersion == AssemblyVersion.UnknownName;
+            return assembly.Version == AssemblyVersion.UnknownName;
         }
 
         private static AliasName ToAnonymousName(AliasName alias)

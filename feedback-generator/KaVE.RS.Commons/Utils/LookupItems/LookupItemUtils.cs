@@ -25,12 +25,12 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectL
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.AspectLookupItems;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.RS.Commons.Utils.LookupItems;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.RS.Commons.Utils.Naming;
 
-namespace KaVE.RS.Commons.Utils
+namespace KaVE.RS.Commons.Utils.LookupItems
 {
     public static class LookupItemUtils
     {

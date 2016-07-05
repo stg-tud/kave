@@ -29,14 +29,14 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Analysis;
-using KaVE.RS.Commons.Utils;
+using KaVE.RS.Commons.Utils.LookupItems;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    [SolutionComponent, Language(typeof (CSharpLanguage))]
+    [SolutionComponent, Language(typeof(CSharpLanguage))]
     internal class CodeCompletionEventGeneratorRegistration
     {
         public CodeCompletionEventGeneratorRegistration(CodeCompletionLifecycleManager manager,
@@ -52,7 +52,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         }
     }
 
-    [Language(typeof (CSharpLanguage))]
+    [Language(typeof(CSharpLanguage))]
     public class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
         private readonly CodeCompletionEventHandler _handler;

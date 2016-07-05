@@ -20,8 +20,10 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -37,7 +39,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Naming;
 using IBreakStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IBreakStatement;
 using IContinueStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IContinueStatement;
 using IExpressionStatement = JetBrains.ReSharper.Psi.CSharp.Tree.IExpressionStatement;
@@ -106,7 +108,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             catch (AssertException)
             {
                 // TODO this is an intermediate "fix"... the analysis sometimes fails here ("cannot create name for anonymous type")
-                type = TypeName.UnknownName;
+                type = Names.UnknownType();
             }
             body.Add(SSTUtil.Declare(id, type));
 
@@ -165,7 +167,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             catch (AssertException)
             {
                 // TODO this is an intermediate "fix"... the analysis sometimes fails here ("cannot create name for anonymous type")
-                type = TypeName.UnknownName;
+                type = Names.UnknownType();
             }
             body.Add(SSTUtil.Declare(id, type));
 
@@ -466,7 +468,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 body.Add(
                     new VariableDeclaration
                     {
-                        Type = TypeName.Get("System.Exception, mscorlib, 4.0.0.0"),
+                        Type = Names.Type("System.Exception, mscorlib, 4.0.0.0"),
                         Reference = varRef
                     });
                 body.Add(new Assignment {Reference = varRef, Expression = new CompletionExpression()});
@@ -645,7 +647,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             if (stmt.IteratorDeclaration != null && stmt.IteratorDeclaration.DeclaredElement != null)
             {
-                var localVar = stmt.IteratorDeclaration.DeclaredElement.GetName<LocalVariableName>();
+                var localVar = stmt.IteratorDeclaration.DeclaredElement.GetName<ILocalVariableName>();
                 loop.Declaration = new VariableDeclaration
                 {
                     Reference = new VariableReference {Identifier = localVar.Name},

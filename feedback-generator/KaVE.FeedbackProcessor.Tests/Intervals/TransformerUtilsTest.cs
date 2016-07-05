@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;

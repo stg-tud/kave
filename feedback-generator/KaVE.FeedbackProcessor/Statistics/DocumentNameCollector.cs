@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Statistics

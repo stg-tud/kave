@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
@@ -133,7 +133,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[N.H, TestProject] h"));
+            var mA = NewMethodDeclaration(Fix.Void, "A", "[N.H, TestProject] h");
 
             mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.Declare("$0", Fix.Int));
@@ -170,8 +170,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(
                 Fix.Void,
                 "A",
-                string.Format("[N.H, TestProject] h1"),
-                string.Format("[N.H, TestProject] h2"));
+                "[N.H, TestProject] h1",
+                "[N.H, TestProject] h2");
 
             mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.Declare("$0", Fix.Int));
@@ -215,8 +215,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(
                 Fix.Void,
                 "A",
-                string.Format("[N.U, TestProject] u1"),
-                string.Format("[N.U, TestProject] u2"));
+                "[N.U, TestProject] u1",
+                "[N.U, TestProject] u2");
 
             mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.Declare("$0", Fix.Int));

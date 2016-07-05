@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VS.FeedbackGenerator.Settings;

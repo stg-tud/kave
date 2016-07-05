@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 
 namespace KaVE.RS.SolutionAnalysis.CompletionEventStatistics
 {

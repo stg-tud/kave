@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.ObjectUsage

@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.RS.SolutionAnalysis.SortByUser;

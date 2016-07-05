@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming;
 
 namespace KaVE.Commons.Utils.Collections
 {

@@ -15,7 +15,7 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.CompletionEvents

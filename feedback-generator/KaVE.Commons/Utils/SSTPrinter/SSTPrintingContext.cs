@@ -17,8 +17,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Model.TypeShapes;
@@ -220,7 +222,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 }
                 else
                 {
-                    Type(((ITypeParameterName)p).TypeParameterType);
+                    Type(((ITypeParameterName) p).TypeParameterType);
                 }
 
                 if (!ReferenceEquals(p, typeParameters.Last()))

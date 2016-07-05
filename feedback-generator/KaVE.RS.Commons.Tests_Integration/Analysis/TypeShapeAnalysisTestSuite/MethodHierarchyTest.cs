@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using JetBrains.Util;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
@@ -477,7 +477,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
-        
+
         [Test]
         public void MoreComplexHierarchy_UnboundGenerics()
         {
@@ -505,8 +505,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                CompleteDecl("[System.Void, mscorlib, 4.0.0.0] [N.C`1[[T]], TestProject].M([T] p)", 
-                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[U]], TestProject].M([U] p)", 
+                CompleteDecl(
+                    "[System.Void, mscorlib, 4.0.0.0] [N.C`1[[T]], TestProject].M([T] p)",
+                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[U]], TestProject].M([U] p)",
                     "[System.Void, mscorlib, 4.0.0.0] [i:N.I`1[[V]], TestProject].M([V] p)")
             };
 
@@ -540,8 +541,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                CompleteDecl("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M([System.String, mscorlib, 4.0.0.0] p)", 
-                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject].M([T] p)", 
+                CompleteDecl(
+                    "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M([System.String, mscorlib, 4.0.0.0] p)",
+                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject].M([T] p)",
                     "[System.Void, mscorlib, 4.0.0.0] [i:N.I`1[[U -> System.String, mscorlib, 4.0.0.0]], TestProject].M([U] p)")
             };
 
@@ -575,8 +577,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                CompleteDecl("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M([System.String, mscorlib, 4.0.0.0] p)", 
-                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject].M([T] p)", 
+                CompleteDecl(
+                    "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M([System.String, mscorlib, 4.0.0.0] p)",
+                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject].M([T] p)",
                     "[System.Void, mscorlib, 4.0.0.0] [N.F`1[[U -> System.String, mscorlib, 4.0.0.0]], TestProject].M([U] p)")
             };
 

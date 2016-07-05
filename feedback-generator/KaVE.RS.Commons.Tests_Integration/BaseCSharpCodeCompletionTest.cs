@@ -22,7 +22,7 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.FeaturesTestFramework.Completion;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Tests_Integration.Analysis;

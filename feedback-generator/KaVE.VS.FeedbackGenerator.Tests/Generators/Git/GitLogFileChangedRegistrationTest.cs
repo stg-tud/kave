@@ -19,7 +19,7 @@ using System.IO;
 using System.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
 using Moq;
 using NUnit.Framework;

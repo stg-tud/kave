@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.SSTs.References

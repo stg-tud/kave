@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.Types;
 
 namespace KaVE.Commons.Utils.SSTPrinter
 {

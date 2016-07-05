@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.ObjectUsage
 {
-    [TestFixture]
     internal class CallSitesTest
     {
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void NullStringReceiverCallSite()
         {
             CallSites.CreateReceiverCallSite((string) null);
@@ -34,10 +33,10 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         [Test, ExpectedException(typeof(AssertException))]
         public void NullValueReceiverCallSite()
         {
-            CallSites.CreateReceiverCallSite((IMethodName)null);
+            CallSites.CreateReceiverCallSite((IMethodName) null);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void NullValueParameterCallSite()
         {
             CallSites.CreateParameterCallSite(null, 0);
@@ -59,11 +58,15 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         [Test]
         public void ReceiverCallSiteForMethodNameIsCorrectInitialized()
         {
-            var actual = CallSites.CreateReceiverCallSite(MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)"));
+            var actual =
+                CallSites.CreateReceiverCallSite(
+                    MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)"));
             var expected = new CallSite
             {
                 kind = CallSiteKind.RECEIVER,
-                method = MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)").ToCoReName()
+                method =
+                    MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)")
+                              .ToCoReName()
             };
 
             Assert.AreEqual(expected, actual);

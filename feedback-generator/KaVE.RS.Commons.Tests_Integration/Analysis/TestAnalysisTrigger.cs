@@ -23,7 +23,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis;

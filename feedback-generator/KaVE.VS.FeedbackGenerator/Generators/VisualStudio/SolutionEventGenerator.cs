@@ -18,7 +18,7 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Utils.Names;

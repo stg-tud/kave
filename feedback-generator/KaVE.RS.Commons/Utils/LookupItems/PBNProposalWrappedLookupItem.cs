@@ -21,7 +21,7 @@ using JetBrains.UI.Icons;
 using JetBrains.UI.Icons.ColorIcons;
 using JetBrains.UI.Icons.ComposedIcons;
 using JetBrains.UI.RichText;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming;
 
 namespace KaVE.RS.Commons.Utils.LookupItems
 {

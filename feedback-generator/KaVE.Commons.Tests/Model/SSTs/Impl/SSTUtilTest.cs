@@ -15,8 +15,9 @@
  */
 
 using System.Linq;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -161,13 +162,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             Assert.AreEqual(expected, actual);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void CustomConstructor_NonStaticAssert()
         {
             SSTUtil.InvocationExpression("a1", GetStaticMethod("B1"), Refs("c1"));
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void CustomConstructor_StaticAssert()
         {
             SSTUtil.InvocationExpression(GetMethod("B2"), Refs("c2"));

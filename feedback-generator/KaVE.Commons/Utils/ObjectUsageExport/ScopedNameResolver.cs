@@ -15,7 +15,6 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;

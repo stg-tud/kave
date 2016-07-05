@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
-    [TestFixture, Ignore]
+    [Ignore]
     internal class ContextAnalysisCompletionTargetTest : BaseCSharpCodeCompletionTest
     {
         [Test]

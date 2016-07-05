@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -62,13 +62,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hcTypeRef = TypeReference != null ? TypeReference.GetHashCode() : 0;
-                var hcObjRef = VariableReference != null ? VariableReference.GetHashCode() : 0;
-                var hcToken = Token.GetHashCode();
-                return unchecked (3 + hcToken*397 + hcTypeRef*23846 + hcObjRef);
-            }
+            var hcTypeRef = TypeReference != null ? TypeReference.GetHashCode() : 0;
+            var hcObjRef = VariableReference != null ? VariableReference.GetHashCode() : 0;
+            var hcToken = Token.GetHashCode();
+            return unchecked (3 + hcToken*397 + hcTypeRef*23846 + hcObjRef);
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

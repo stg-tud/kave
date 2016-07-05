@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Utils.Collections;
@@ -49,7 +49,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             AssertBody(
                 VarDecl("i", Fix.Int),
-                Assign("i", Const("1")), 
+                Assign("i", Const("1")),
                 VarDecl("j", Fix.Int),
                 Assign("j", Const("2")),
                 ExprStmt(new CompletionExpression()));
@@ -82,7 +82,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                     },
                     new FieldDeclaration
                     {
-                        Name = FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].OtherConstant")
+                        Name =
+                            FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].OtherConstant")
                     });
             Assert.AreEqual(expected, ResultSST.Fields);
         }

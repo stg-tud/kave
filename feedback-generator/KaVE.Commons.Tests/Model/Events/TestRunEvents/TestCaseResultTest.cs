@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 

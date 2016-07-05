@@ -15,9 +15,7 @@
  */
 
 using System;
-using System.ComponentModel;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Model.Naming;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -33,7 +31,7 @@ namespace KaVE.Commons.Utils.Json
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             //writer.WriteValue(_converter.ConvertToString(value));
-            writer.WriteValue(CsNameUtil.ToJson((IName)value));
+            writer.WriteValue(Names.ToJson((IName) value));
         }
 
         public override object ReadJson(JsonReader reader,
@@ -46,7 +44,7 @@ namespace KaVE.Commons.Utils.Json
                 return null;
             }
             var serialization = ReadSerializationFrom(reader);
-            return CsNameUtil.ParseJson(serialization);
+            return Names.ParseJson(serialization);
             //return _converter.ConvertFromString(serialization);
         }
 
@@ -80,7 +78,7 @@ namespace KaVE.Commons.Utils.Json
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof (IName).IsAssignableFrom(objectType);
+            return typeof(IName).IsAssignableFrom(objectType);
         }
     }
 }

@@ -16,15 +16,15 @@
 
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
     // TODO split this into enclosingMethod and methodHierarchy tests
-    [TestFixture, Ignore]
+    [Ignore]
     internal class ContextAnalysisEnclosingMethodTest : BaseCSharpCodeCompletionTest
     {
         private static IMethodHierarchy FindEnclosingMethodHierarchy(Context context)

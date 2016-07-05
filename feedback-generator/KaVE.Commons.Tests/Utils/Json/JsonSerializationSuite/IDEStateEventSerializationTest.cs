@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite

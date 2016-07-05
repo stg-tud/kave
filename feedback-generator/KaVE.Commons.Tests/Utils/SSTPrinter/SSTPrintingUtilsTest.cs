@@ -15,8 +15,8 @@
  */
 
 using System;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.SSTPrinter;
 using NUnit.Framework;

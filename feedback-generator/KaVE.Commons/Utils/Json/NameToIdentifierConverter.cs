@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming;
 using Newtonsoft.Json;
 
 namespace KaVE.Commons.Utils.Json

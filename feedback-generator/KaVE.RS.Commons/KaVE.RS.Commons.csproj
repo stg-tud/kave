@@ -210,9 +210,9 @@
     <Compile Include="Utils\LookupItems\AbstractWrappedLookupItem.cs" />
     <Compile Include="Utils\LookupItems\LookupItemUtils.cs" />
     <Compile Include="Utils\LookupItems\PBNProposalWrappedLookupItem.cs" />
-    <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
-    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
-    <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
+    <Compile Include="Utils\Naming\ReSharperDeclarationNameFactory.cs" />
+    <Compile Include="Utils\Naming\ReSharperDeclaredElementNameFactory.cs" />
+    <Compile Include="Utils\Naming\ReSharperTypeNameFactory.cs" />
     <Compile Include="Utils\ProposalProbabilityUtils.cs" />
     <Compile Include="Utils\PublisherUtils.cs" />
     <Compile Include="Utils\Registry.cs" />

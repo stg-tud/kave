@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;

@@ -15,7 +15,7 @@
  */
 
 using System.Linq;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
@@ -367,7 +367,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             {
                 var idx = epName.IndexOf('.');
                 var className = epName.Substring(0, idx);
-                var methodName = epName.Substring(idx+1);
+                var methodName = epName.Substring(idx + 1);
                 var ep = "[System.Void, mscorlib, 4.0.0.0] [" + className + ", TestProject]." + methodName + "()";
                 AssertEntryPoint(ep);
             }

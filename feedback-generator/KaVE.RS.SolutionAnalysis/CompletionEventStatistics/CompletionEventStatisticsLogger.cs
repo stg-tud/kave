@@ -18,7 +18,8 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 
 // ReSharper disable LocalizableElement
 

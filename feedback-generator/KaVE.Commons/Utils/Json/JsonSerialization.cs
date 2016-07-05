@@ -20,7 +20,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming;
 using KaVE.JetBrains.Annotations;
 using Newtonsoft.Json;
 

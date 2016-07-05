@@ -19,7 +19,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
@@ -119,7 +120,7 @@ namespace KaVE.RS.SolutionAnalysis
                 Console.WriteLine(
                     "\"{0}\"\t{1}\t{2}\t{3}\t{4}",
                     api.Name,
-                    api.AssemblyVersion,
+                    api.Version,
                     repoCounts[api],
                     slnCounts[api],
                     sstCounts[api]);
@@ -240,7 +241,7 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 return;
             }
-            if (t.Assembly.AssemblyVersion.IsUnknown)
+            if (t.Assembly.Version.IsUnknown)
             {
                 return;
             }

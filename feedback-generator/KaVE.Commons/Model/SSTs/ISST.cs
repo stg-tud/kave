@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils.Collections;

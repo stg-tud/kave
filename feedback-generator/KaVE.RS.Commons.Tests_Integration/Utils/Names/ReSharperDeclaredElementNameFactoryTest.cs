@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Naming;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 

@@ -26,14 +26,13 @@ using JetBrains.ReSharper.UnitTestExplorer.Session.ViewModels;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.Threading;
 using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Utils;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Naming;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    // TODO RS10: Some class/event names will change. 
     // See https://github.com/citizenmatt/resharper-clippy/commit/56bb5fdba58b932ea462c5a3329f7a81c767e836#diff-25
     [SolutionComponent]
     public class TestRunEventGenerator : EventGeneratorBase

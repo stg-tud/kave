@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;

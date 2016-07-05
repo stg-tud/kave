@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 

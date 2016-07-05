@@ -18,8 +18,9 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
@@ -110,8 +111,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                 Environment.NewLine,
                 "    \"NumberOfChanges\": 2",
                 "    \"SizeOfChanges\": 20");
-                var actual = editEvent.GetDetailsAsJson();
-                Assert.AreEqual(expected, actual);
+            var actual = editEvent.GetDetailsAsJson();
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]

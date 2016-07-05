@@ -16,8 +16,8 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;

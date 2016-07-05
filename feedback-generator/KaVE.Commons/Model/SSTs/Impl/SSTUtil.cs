@@ -16,7 +16,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -34,6 +35,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.SSTs.Impl
 {
+    // TODO: get rid of this obsolete class
     public class SSTUtil
     {
         public static IVariableDeclaration Declare(string identifier, ITypeName type)

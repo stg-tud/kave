@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Names;

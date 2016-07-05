@@ -20,8 +20,9 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Util;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -38,7 +39,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Naming;
 using ICastExpression = JetBrains.ReSharper.Psi.CSharp.Tree.ICastExpression;
 using IInvocationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IInvocationExpression;
 using ILambdaExpression = JetBrains.ReSharper.Psi.CSharp.Tree.ILambdaExpression;
@@ -49,7 +50,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public partial class ExpressionVisitor : TreeNodeVisitor<IList<IStatement>, IAssignableExpression>
     {
-        public readonly ITypeName Bool = TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
+        public readonly ITypeName Bool = Names.Type("System.Boolean, mscorlib, 4.0.0.0");
 
         private readonly UniqueVariableNameGenerator _nameGen;
         private readonly CompletionTargetMarker _marker;
@@ -120,7 +121,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var newRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
             var exprIType = csExpr.GetExpressionType().ToIType();
             // TODO write test for this null check
-            var exprType = exprIType == null ? TypeName.UnknownName : exprIType.GetName();
+            var exprType = exprIType == null ? Names.UnknownType() : exprIType.GetName();
             body.Add(
                 new VariableDeclaration
                 {
@@ -233,7 +234,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         private static ITypeName GetTypeName([NotNull] ICSharpExpression csExpr)
         {
             var type = csExpr.GetExpressionType().ToIType();
-            return type != null ? type.GetName() : TypeName.UnknownName;
+            return type != null ? type.GetName() : Names.UnknownType();
         }
 
         private static IVariableReference VarRef(string id)
@@ -261,7 +262,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 var resolvedMethod = inv.Reference.ResolveMethod();
                 var methodName = resolvedMethod != null
                     ? resolvedMethod.GetName<IMethodName>()
-                    : MethodName.UnknownName;
+                    : Names.UnknownMethod();
 
                 var qExpr = invokedExpression.QualifierExpression;
 
@@ -676,7 +677,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     if (cInit != null)
                     {
                         var m = r.DeclaredElement as IConstructor;
-                        var addName = FindAdd(m, r.Result.Substitution) ?? MethodName.UnknownName;
+                        var addName = FindAdd(m, r.Result.Substitution) ?? Names.UnknownMethod();
 
                         foreach (var eInit in cInit.ElementInitializersEnumerable)
                         {
@@ -705,7 +706,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
             return new InvocationExpression
             {
-                MethodName = MethodName.UnknownName
+                MethodName = Names.UnknownMethod()
             };
         }
 
@@ -765,7 +766,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
             }
 
-            return MethodName.UnknownName;
+            return Names.UnknownMethod();
         }
 
         private static IMethodName FindAdd(IConstructor c, [NotNull] ISubstitution substitution)
@@ -785,7 +786,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
             }
 
-            return MethodName.UnknownName;
+            return Names.UnknownMethod();
         }
 
         public IKaVEList<ISimpleExpression> GetArgumentList(IArgumentList argumentListParam, IList<IStatement> body)
@@ -874,7 +875,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     return elem.GetName<ITypeName>(elem.GetIdSubstitutionSafe());
                 }
             }
-            return TypeName.UnknownName;
+            return Names.UnknownType();
         }
 
         private static bool IsStatic(IReferenceExpression expr)
@@ -1045,9 +1046,5 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 ElseExpression = ToSimpleExpression(expr.RightOperand, context)
             };
         }
-
-        #region ComposedExpressionCreator entry points
-
-        #endregion
     }
 }

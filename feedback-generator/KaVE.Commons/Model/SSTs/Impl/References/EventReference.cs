@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
         public EventReference()
         {
             Reference = new VariableReference();
-            EventName = Names.CSharp.EventName.UnknownName;
+            EventName = Naming.Impl.v0.CodeElements.EventName.UnknownName;
         }
 
         private bool Equals(EventReference other)

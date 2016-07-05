@@ -18,9 +18,9 @@ using System;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
-using KaVE.RS.Commons.Utils;
+using KaVE.RS.Commons.Utils.LookupItems;
 using KaVE.VS.FeedbackGenerator.Generators.Merging;
 using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
 using NUnit.Framework;
@@ -143,7 +143,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
 
             var mergedEvent = _strategy.Merge(_event, _subsequentEvent);
 
-            Assert.IsInstanceOf(typeof (CompletionEvent), mergedEvent);
+            Assert.IsInstanceOf(typeof(CompletionEvent), mergedEvent);
             var mergedCompletionEvent = (CompletionEvent) mergedEvent;
             // could be taken from either event, as both are equal
             Assert.AreEqual(_event.IDESessionUUID, mergedCompletionEvent.IDESessionUUID);

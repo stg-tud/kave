@@ -26,7 +26,7 @@ using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.Impl.v0;
 using Moq;
 
 namespace KaVE.RS.Commons.Tests_Unit.TestFactories

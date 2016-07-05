@@ -17,8 +17,8 @@
 using System;
 using System.Linq;
 using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
 using NUnit.Framework;
@@ -81,8 +81,18 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             {
                 Tests =
                 {
-                    new TestCaseResult {TestMethod = TestMethod1, Result = TestResult.Success, Duration = TimeSpan.FromSeconds(0.1)},
-                    new TestCaseResult {TestMethod = TestMethod2, Result = TestResult.Failed, Duration = TimeSpan.FromSeconds(0.2)}
+                    new TestCaseResult
+                    {
+                        TestMethod = TestMethod1,
+                        Result = TestResult.Success,
+                        Duration = TimeSpan.FromSeconds(0.1)
+                    },
+                    new TestCaseResult
+                    {
+                        TestMethod = TestMethod2,
+                        Result = TestResult.Failed,
+                        Duration = TimeSpan.FromSeconds(0.2)
+                    }
                 }
             };
 
@@ -90,7 +100,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(testEvent);
 
             var actual = sut.SignalEndOfEventStream().First();
-            
+
             Assert.AreEqual("TestProj1", actual.ProjectName);
             Assert.AreEqual(1, actual.TestClasses.Count);
             Assert.AreEqual(TimeSpan.FromSeconds(0.3), actual.Duration);

@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Names

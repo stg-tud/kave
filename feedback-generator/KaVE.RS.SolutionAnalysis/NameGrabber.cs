@@ -18,10 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.ReSharper.Features.Inspections.Resources;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp.Parser;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 
@@ -31,18 +29,19 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private readonly string _dirIn;
         private readonly string _dirOut;
-        private readonly int numMaxZips;
-        private readonly int numMaxInvalidNames;
-        private bool writeToFile_;
+        private readonly int _numMaxZips;
+        private readonly int _numMaxInvalidNames;
+        private readonly bool _writeToFile;
 
-        public NameGrabber(string dirIn, string dirOut, int numMaxZips, int numMaxInvalidNames,bool writeToFile_)
+        public NameGrabber(string dirIn, string dirOut, int numMaxZips, int numMaxInvalidNames, bool writeToFile)
         {
             _dirIn = dirIn;
             _dirOut = dirOut;
-            this.numMaxZips = numMaxZips;
-            this.numMaxInvalidNames = numMaxInvalidNames;
-            this.writeToFile_ = writeToFile_;
+            _numMaxZips = numMaxZips;
+            _numMaxInvalidNames = numMaxInvalidNames;
+            _writeToFile = writeToFile;
         }
+
         public void Run()
         {
             Console.WriteLine("Grab Names from Contexts");
@@ -71,7 +70,7 @@ namespace KaVE.RS.SolutionAnalysis
                     numCtxs++;
                 }
                 Log("found {0} contexts\n\n", numCtxs);
-                if (numMaxZips != -1 && currentZip == numMaxZips + 1)
+                if (_numMaxZips != -1 && currentZip == _numMaxZips + 1)
                 {
                     break;
                 }
@@ -89,7 +88,7 @@ namespace KaVE.RS.SolutionAnalysis
                     if (type[0].Equals("CSharp.PropertyName"))
                     {
                         typeNameCount++;
-                        var name = CsNameUtil.ParseJson(s);
+                        var name = Names.ParseJson(s);
                         if (name.Identifier == "?")
                         {
                             wrongSyntaxTypeName.Add(new Tuple<string, string>(s, t.Item1));
@@ -100,8 +99,8 @@ namespace KaVE.RS.SolutionAnalysis
             }
             Log("{0} of {1} names are null", typeNameNullCount, typeNameCount);
             Log("{0} of {1} names are null", methodNameNullCount, methodNameCount);
-            double percentageTypeNames = (double) ((double) typeNameNullCount/(double) typeNameCount);
-            double percentageMethodNames = (double) ((double) methodNameNullCount/(double) methodNameCount);
+            double percentageTypeNames = typeNameNullCount/(double) typeNameCount;
+            double percentageMethodNames = methodNameNullCount/(double) methodNameCount;
             Log("TypeNames not parseable: {0}%\n", percentageTypeNames);
             Log("PropertyName not parseable: {0}%\n\n", percentageMethodNames);
 
@@ -111,11 +110,10 @@ namespace KaVE.RS.SolutionAnalysis
 
             //showInvalidNames(wrongSyntaxMethodName);
 
-            if (writeToFile_)
+            if (_writeToFile)
             {
                 Log("File with invalid names written to {0}", _dirOut);
                 writeToFile(wrongSyntaxTypeName, _dirOut + "/typename.txt");
-
             }
             //Log(wrongSyntax[0].Item1 + "\n\n");
             //Log(wrongSyntax[0].Item2 + "\n\n");
@@ -125,7 +123,7 @@ namespace KaVE.RS.SolutionAnalysis
         {
             for (var i = 0; i < list.Count; i++)
             {
-                if (numMaxInvalidNames != -1 && i == numMaxInvalidNames)
+                if (_numMaxInvalidNames != -1 && i == _numMaxInvalidNames)
                 {
                     break;
                 }
@@ -139,7 +137,7 @@ namespace KaVE.RS.SolutionAnalysis
             List<string> s = new KaVEList<string>();
             for (var i = 0; i < list.Count; i++)
             {
-                if (i == numMaxInvalidNames)
+                if (i == _numMaxInvalidNames)
                 {
                     break;
                 }

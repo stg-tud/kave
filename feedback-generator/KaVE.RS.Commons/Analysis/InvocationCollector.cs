@@ -19,8 +19,8 @@ using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using KaVE.Commons.Model.Names;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.RS.Commons.Utils.Naming;
 
 namespace KaVE.RS.Commons.Analysis
 {

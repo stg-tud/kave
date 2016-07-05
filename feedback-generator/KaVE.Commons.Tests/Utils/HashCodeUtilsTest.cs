@@ -15,14 +15,13 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils
 {
-    [TestFixture]
     internal class HashCodeUtilsTest
     {
         private const int Seed = 123;

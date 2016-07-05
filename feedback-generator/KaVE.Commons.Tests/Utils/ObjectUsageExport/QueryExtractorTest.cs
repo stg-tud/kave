@@ -15,8 +15,10 @@
  */
 
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -124,17 +126,17 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             _sut.Extract(context);
 
             context = NewContextWithDefaults(
-                 new TypeHierarchy
-                 {
-                     Element = DefaultClassContext
-                 },
-                 new MethodHierarchy
-                 {
-                     Element = DefaultMethodContext
-                 },
-                 VarDecl("A", "a"),
-                 InvokeStmt("a", Method("R", "A", "M"))
-                 );
+                new TypeHierarchy
+                {
+                    Element = DefaultClassContext
+                },
+                new MethodHierarchy
+                {
+                    Element = DefaultMethodContext
+                },
+                VarDecl("A", "a"),
+                InvokeStmt("a", Method("R", "A", "M"))
+                );
 
             var actual = _sut.Extract(context);
 

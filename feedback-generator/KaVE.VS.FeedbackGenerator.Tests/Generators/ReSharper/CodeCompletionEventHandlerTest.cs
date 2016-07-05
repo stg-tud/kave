@@ -19,7 +19,7 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupI
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.RS.Commons.Utils;
+using KaVE.RS.Commons.Utils.LookupItems;
 using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
 using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
 using NUnit.Framework;
@@ -169,7 +169,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             Assert.AreEqual(expected, ce.ProposalCollection);
         }
 
-        [TestCase(13, TestName = "Less proposals than transformation limit"), TestCase(1000, TestName = "More proposals than transformation limit")]
+        [TestCase(13, TestName = "Less proposals than transformation limit"),
+         TestCase(1000, TestName = "More proposals than transformation limit")]
         public void ShouldSetProposalCount(int testProposalCount)
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(testProposalCount);

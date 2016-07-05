@@ -21,8 +21,9 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -33,7 +34,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Util;
-using KaVE.RS.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Naming;
 using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using IKaVEStatement = KaVE.Commons.Model.SSTs.IStatement;
 
@@ -122,7 +123,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     return;
                 }
 
-                context.Fields.Add(new FieldDeclaration { Name = name });
+                context.Fields.Add(new FieldDeclaration {Name = name});
             }
         }
 

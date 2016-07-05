@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
@@ -60,7 +60,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
                 {
                     new TestCaseResult
                     {
-                        TestMethod = MethodName.Get("[T,P] [T,P].M()"),
+                        TestMethod = Names.Method("[T,P] [T,P].M()"),
                         Parameters = "asd",
                         Duration = TimeSpan.FromSeconds(3),
                         Result = TestResult.Ignored

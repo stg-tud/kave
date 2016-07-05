@@ -16,8 +16,9 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using Moq;
