@@ -162,7 +162,7 @@ namespace KaVE.RS.Commons.Analysis
                 }
                 else
                 {
-                    sst.EnclosingType = Names.UnknownType();
+                    sst.EnclosingType = Names.UnknownType;
                 }
             }
 

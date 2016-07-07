@@ -121,7 +121,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var newRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
             var exprIType = csExpr.GetExpressionType().ToIType();
             // TODO write test for this null check
-            var exprType = exprIType == null ? Names.UnknownType() : exprIType.GetName();
+            var exprType = exprIType == null ? Names.UnknownType : exprIType.GetName();
             body.Add(
                 new VariableDeclaration
                 {
@@ -234,7 +234,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         private static ITypeName GetTypeName([NotNull] ICSharpExpression csExpr)
         {
             var type = csExpr.GetExpressionType().ToIType();
-            return type != null ? type.GetName() : Names.UnknownType();
+            return type != null ? type.GetName() : Names.UnknownType;
         }
 
         private static IVariableReference VarRef(string id)
@@ -262,7 +262,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 var resolvedMethod = inv.Reference.ResolveMethod();
                 var methodName = resolvedMethod != null
                     ? resolvedMethod.GetName<IMethodName>()
-                    : Names.UnknownMethod();
+                    : Names.UnknownMethod;
 
                 var qExpr = invokedExpression.QualifierExpression;
 
@@ -677,7 +677,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     if (cInit != null)
                     {
                         var m = r.DeclaredElement as IConstructor;
-                        var addName = FindAdd(m, r.Result.Substitution) ?? Names.UnknownMethod();
+                        var addName = FindAdd(m, r.Result.Substitution) ?? Names.UnknownMethod;
 
                         foreach (var eInit in cInit.ElementInitializersEnumerable)
                         {
@@ -706,7 +706,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             }
             return new InvocationExpression
             {
-                MethodName = Names.UnknownMethod()
+                MethodName = Names.UnknownMethod
             };
         }
 
@@ -766,7 +766,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
             }
 
-            return Names.UnknownMethod();
+            return Names.UnknownMethod;
         }
 
         private static IMethodName FindAdd(IConstructor c, [NotNull] ISubstitution substitution)
@@ -786,7 +786,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 }
             }
 
-            return Names.UnknownMethod();
+            return Names.UnknownMethod;
         }
 
         public IKaVEList<ISimpleExpression> GetArgumentList(IArgumentList argumentListParam, IList<IStatement> body)
@@ -875,7 +875,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     return elem.GetName<ITypeName>(elem.GetIdSubstitutionSafe());
                 }
             }
-            return Names.UnknownType();
+            return Names.UnknownType;
         }
 
         private static bool IsStatic(IReferenceExpression expr)

@@ -29,7 +29,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new TypeCheckExpression();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(Names.UnknownType(), sut.Type);
+            Assert.AreEqual(Names.UnknownType, sut.Type);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

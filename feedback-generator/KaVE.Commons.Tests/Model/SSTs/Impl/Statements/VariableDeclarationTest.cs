@@ -30,7 +30,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         {
             var sut = new VariableDeclaration();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(Names.UnknownType(), sut.Type);
+            Assert.AreEqual(Names.UnknownType, sut.Type);
             Assert.True(sut.IsMissing);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());

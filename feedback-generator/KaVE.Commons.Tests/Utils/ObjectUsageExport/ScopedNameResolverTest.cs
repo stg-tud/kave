@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
     {
         private CoReTypeName TypeUnknown
         {
-            get { return Names.UnknownType().ToCoReName(); }
+            get { return Names.UnknownType.ToCoReName(); }
         }
 
         [Test]

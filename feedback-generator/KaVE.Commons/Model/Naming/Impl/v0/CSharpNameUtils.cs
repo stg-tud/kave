@@ -37,7 +37,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             {"decimal", "System.Decimal"},
             {"void", "System.Void"},
             {"object", "System.Object"},
-            {"string","System.String"}
+            {"string", "System.String"}
         };
 
         private static readonly IDictionary<string, string> FullNameToSimpleTypeMap = new Dictionary<string, string>();
@@ -81,7 +81,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         }
 
         /// <summary>
-        /// Translates fully qualified type names of simple types (e.g. "System.Int32") back to their alias.
+        ///     Translates fully qualified type names of simple types (e.g. "System.Int32") back to their alias.
         /// </summary>
         /// <param name="typeName">Fully qualified type name.</param>
         /// <returns>The alias, if it exists.</returns>

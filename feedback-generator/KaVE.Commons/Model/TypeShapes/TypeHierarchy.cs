@@ -51,7 +51,7 @@ namespace KaVE.Commons.Model.TypeShapes
 
         public TypeHierarchy()
         {
-            Element = Names.UnknownType();
+            Element = Names.UnknownType;
             Implements = Sets.NewHashSet<ITypeHierarchy>();
         }
 

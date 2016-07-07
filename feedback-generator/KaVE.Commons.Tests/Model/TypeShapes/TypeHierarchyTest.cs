@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         public void DefaultValues()
         {
             var sut = new TypeHierarchy();
-            Assert.AreEqual(Names.UnknownType(), sut.Element);
+            Assert.AreEqual(Names.UnknownType, sut.Element);
             Assert.Null(sut.Extends);
             Assert.AreEqual(Sets.NewHashSet<ITypeHierarchy>(), sut.Implements);
             Assert.False(sut.HasSuperclass);

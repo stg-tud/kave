@@ -40,11 +40,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             var sut = new CompletionExpression
             {
                 VariableReference = SomeVarRef("i"),
-                TypeReference = Names.UnknownType(),
+                TypeReference = Names.UnknownType,
                 Token = "t"
             };
             Assert.AreEqual(SomeVarRef("i"), sut.VariableReference);
-            Assert.AreEqual(Names.UnknownType(), sut.TypeReference);
+            Assert.AreEqual(Names.UnknownType, sut.TypeReference);
             Assert.AreEqual("t", sut.Token);
         }
 
@@ -64,13 +64,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             {
                 VariableReference = SomeVarRef("i"),
                 Token = "t",
-                TypeReference = Names.UnknownType()
+                TypeReference = Names.UnknownType
             };
             var b = new CompletionExpression
             {
                 VariableReference = SomeVarRef("i"),
                 Token = "t",
-                TypeReference = Names.UnknownType()
+                TypeReference = Names.UnknownType
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -98,7 +98,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentTypeReference()
         {
-            var a = new CompletionExpression {TypeReference = Names.UnknownType()};
+            var a = new CompletionExpression {TypeReference = Names.UnknownType};
             var b = new CompletionExpression {TypeReference = Names.Type("System.Int32, mscore, 4.0.0.0")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

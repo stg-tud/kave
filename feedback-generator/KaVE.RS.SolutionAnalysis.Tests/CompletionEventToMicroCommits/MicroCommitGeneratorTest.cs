@@ -157,10 +157,10 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             var ctxStart = CreateContext("T1");
             var ctxEnd = CreateContext("T2");
 
-            var u1 = Usage(Names.UnknownType(), DefinitionSites.CreateUnknownDefinitionSite(), "a1");
+            var u1 = Usage(Names.UnknownType, DefinitionSites.CreateUnknownDefinitionSite(), "a1");
             SetupUsageExport(ctxStart, u1);
 
-            var u2 = Usage(Names.UnknownType(), DefinitionSites.CreateUnknownDefinitionSite(), "a1", "a2");
+            var u2 = Usage(Names.UnknownType, DefinitionSites.CreateUnknownDefinitionSite(), "a1", "a2");
             SetupUsageExport(ctxEnd, u2);
 
             var actuals = _sut.GenerateTuples(ctxStart, ctxEnd);

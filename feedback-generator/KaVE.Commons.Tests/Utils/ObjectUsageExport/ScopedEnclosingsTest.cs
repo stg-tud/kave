@@ -29,8 +29,8 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         {
             var sut = new ScopedEnclosings();
             Assert.Null(sut.Parent);
-            Assert.AreEqual(Names.UnknownType(), sut.Type);
-            Assert.AreEqual(Names.UnknownMethod(), sut.Method);
+            Assert.AreEqual(Names.UnknownType, sut.Type);
+            Assert.AreEqual(Names.UnknownMethod, sut.Method);
         }
 
         [Test]

@@ -21,9 +21,6 @@ using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.VS.FeedbackGenerator.Generators.Navigation;
 using Moq;
 using NUnit.Framework;
@@ -41,8 +38,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
 
         private IName _testTarget;
 
-        private readonly IMethodName _method1 = MethodName.Get("[TR,P] [TD,P].M()");
-        private readonly IMethodName _method2 = MethodName.Get("[TR,P] [TD,P].M2()");
+        private readonly IMethodName _method1 = Names.Method("[TR,P] [TD,P].M()");
+        private readonly IMethodName _method2 = Names.Method("[TR,P] [TD,P].M2()");
 
         private static Lifetime TestLifetime
         {
@@ -57,7 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             _mouseSignal = Mock.Of<ISignal<TextControlMouseEventArgs>>();
 
             // ctrl click
-            _testTarget = TypeName.Get("System.Int32, mscore, 4.0.0.0");
+            _testTarget = Names.Type("System.Int32, mscore, 4.0.0.0");
 
             // window
             var window = Mock.Of<ITextControlWindow>();
@@ -109,7 +106,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             PressKey();
 
             var actual = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(Name.UnknownName, actual.Target);
+            Assert.AreEqual(Names.UnknownGeneral, actual.Target);
             Assert.AreEqual(_method1, actual.Location);
             Assert.AreEqual(IDEEvent.Trigger.Typing, actual.TriggeredBy);
             Assert.AreEqual(NavigationType.Keyboard, actual.TypeOfNavigation);
@@ -121,7 +118,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             Click();
 
             var actual = GetSinglePublished<NavigationEvent>();
-            Assert.AreEqual(Name.UnknownName, actual.Target);
+            Assert.AreEqual(Names.UnknownGeneral, actual.Target);
             Assert.AreEqual(_method1, actual.Location);
             Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
             Assert.AreEqual(NavigationType.Click, actual.TypeOfNavigation);

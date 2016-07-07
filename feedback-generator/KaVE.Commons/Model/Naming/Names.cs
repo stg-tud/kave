@@ -340,14 +340,19 @@ namespace KaVE.Commons.Model.Naming
 
         #region unknowns
 
-        public static ITypeName UnknownType()
+        public static ITypeName UnknownType
         {
-            return UnknownName.Type();
+            get { return UnknownName.Type(); }
         }
 
-        public static IMethodName UnknownMethod()
+        public static IMethodName UnknownMethod
         {
-            return UnknownName.Method();
+            get { return UnknownName.Method(); }
+        }
+
+        public static IName UnknownGeneral
+        {
+            get { return Name.UnknownName; }
         }
 
         #endregion

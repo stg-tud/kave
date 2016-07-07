@@ -49,8 +49,8 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         public void DefaultValues()
         {
             var sut = new UsageContext();
-            Assert.AreEqual(Names.UnknownType(), sut.Enclosings.Type);
-            Assert.AreEqual(Names.UnknownMethod(), sut.Enclosings.Method);
+            Assert.AreEqual(Names.UnknownType, sut.Enclosings.Type);
+            Assert.AreEqual(Names.UnknownMethod, sut.Enclosings.Method);
             Assert.AreEqual(Lists.NewList<Query>(), sut.AllQueries);
             Assert.AreEqual(new ScopedNameResolver(), sut.NameResolver);
         }

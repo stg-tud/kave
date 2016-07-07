@@ -108,7 +108,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             catch (AssertException)
             {
                 // TODO this is an intermediate "fix"... the analysis sometimes fails here ("cannot create name for anonymous type")
-                type = Names.UnknownType();
+                type = Names.UnknownType;
             }
             body.Add(SSTUtil.Declare(id, type));
 
@@ -167,7 +167,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             catch (AssertException)
             {
                 // TODO this is an intermediate "fix"... the analysis sometimes fails here ("cannot create name for anonymous type")
-                type = Names.UnknownType();
+                type = Names.UnknownType;
             }
             body.Add(SSTUtil.Declare(id, type));
 

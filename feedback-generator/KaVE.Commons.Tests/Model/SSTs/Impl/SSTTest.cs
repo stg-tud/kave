@@ -31,7 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         {
             var sut = new SST();
 
-            Assert.AreEqual(Names.UnknownType(), sut.EnclosingType);
+            Assert.AreEqual(Names.UnknownType, sut.EnclosingType);
             Assert.AreEqual("", sut.PartialClassIdentifier);
             Assert.False(sut.IsPartialClass);
             Assert.AreEqual(Lists.NewList<IDelegateDeclaration>(), sut.Delegates);

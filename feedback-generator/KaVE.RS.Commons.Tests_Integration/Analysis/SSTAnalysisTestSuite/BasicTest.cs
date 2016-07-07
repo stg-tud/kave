@@ -15,7 +15,7 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
@@ -293,7 +293,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            Assert.AreEqual(TypeName.Get("N.C, TestProject"), ResultSST.EnclosingType);
+            Assert.AreEqual(Names.Type("N.C, TestProject"), ResultSST.EnclosingType);
             Assert.AreEqual("", ResultSST.PartialClassIdentifier);
         }
 
@@ -310,7 +310,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            Assert.AreEqual(TypeName.Get("N.C, TestProject"), ResultSST.EnclosingType);
+            Assert.AreEqual(Names.Type("N.C, TestProject"), ResultSST.EnclosingType);
             Assert.That(ResultSST.PartialClassIdentifier.StartsWith("<TestProject>"));
             // name of test file is randomized and is unknown before
             Assert.That(ResultSST.PartialClassIdentifier.EndsWith(".cs"));

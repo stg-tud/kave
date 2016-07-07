@@ -30,7 +30,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CastExpression();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(Names.UnknownType(), sut.TargetType);
+            Assert.AreEqual(Names.UnknownType, sut.TargetType);
             Assert.AreEqual(CastOperator.Unknown, sut.Operator);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());

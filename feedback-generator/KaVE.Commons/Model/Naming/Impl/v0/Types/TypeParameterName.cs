@@ -218,7 +218,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparater.Length;
                 return startOfTypeName >= Identifier.Length
-                    ? Names.UnknownType()
+                    ? Names.UnknownType
                     : Names.Type(Identifier.Substring(startOfTypeName));
             }
         }
