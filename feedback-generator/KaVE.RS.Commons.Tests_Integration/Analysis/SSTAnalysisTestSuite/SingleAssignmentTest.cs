@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
@@ -142,7 +142,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                     "$0",
                     SSTUtil.InvocationExpression(
                         "h",
-                        MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+                        Names.Method("[{0}] [N.H, TestProject].Get()", Fix.Int))));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("$0")));
 
             AssertAllMethods(mA);
@@ -180,14 +180,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                     "$0",
                     SSTUtil.InvocationExpression(
                         "h1",
-                        MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+                        Names.Method(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
             mA.Body.Add(SSTUtil.Declare("$1", Fix.Int));
             mA.Body.Add(
                 SSTUtil.AssignmentToLocal(
                     "$1",
                     SSTUtil.InvocationExpression(
                         "h2",
-                        MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+                        Names.Method(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("$0", "$1")));
 
             AssertAllMethods(mA);
@@ -227,14 +227,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                     "$1",
                     SSTUtil.InvocationExpression(
                         "u2",
-                        MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
+                        Names.Method(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
                         RefExprs("$0"))));
             mA.Body.Add(
                 SSTUtil.AssignmentToLocal(
                     "i",
                     SSTUtil.InvocationExpression(
                         "u1",
-                        MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
+                        Names.Method(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
                         RefExprs("$1"))));
 
             AssertAllMethods(mA);

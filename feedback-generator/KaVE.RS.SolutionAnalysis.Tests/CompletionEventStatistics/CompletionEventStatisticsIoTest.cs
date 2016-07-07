@@ -19,9 +19,6 @@ using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
@@ -64,7 +61,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
             return new CompletionEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = DocumentName.Get(Guid.NewGuid().ToString()),
+                ActiveDocument = Names.Document(Guid.NewGuid().ToString()),
                 TerminatedState = ts,
                 Selections =
                 {
@@ -84,7 +81,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
             return new ActivityEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = DocumentName.Get(Guid.NewGuid().ToString())
+                ActiveDocument = Names.Document(Guid.NewGuid().ToString())
             };
         }
 
@@ -128,8 +125,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
             const TerminationState applied = TerminationState.Applied;
             const TerminationState cancelled = TerminationState.Cancelled;
 
-            var x = Name.Get("x");
-            var m = MethodName.Get("[T,P] [T,P].M()");
+            var x = Names.General("x");
+            var m = Names.Method("[T,P] [T,P].M()");
 
             var appliedAndMethod = CompletionEvent(applied, m);
 

@@ -17,8 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -54,9 +53,9 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         public Query(IEnumerable<CallSite> callSites)
         {
-            type = TypeName.UnknownName.ToCoReName();
-            methodCtx = MethodName.UnknownName.ToCoReName();
-            classCtx = TypeName.UnknownName.ToCoReName();
+            type = Names.UnknownType.ToCoReName();
+            methodCtx = Names.UnknownMethod.ToCoReName();
+            classCtx = Names.UnknownType.ToCoReName();
             definition = DefinitionSites.CreateUnknownDefinitionSite();
             sites = Lists.NewList(callSites.ToArray());
         }

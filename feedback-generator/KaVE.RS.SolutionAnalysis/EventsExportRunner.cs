@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
@@ -48,7 +48,7 @@ namespace KaVE.RS.SolutionAnalysis
                 new Event
                 {
                     Kind = EventKind.MethodDeclaration,
-                    Method = MethodName.Get("[You, Can] [Safely, Ignore].ThisDummyValue()")
+                    Method = Names.Method("[You, Can] [Safely, Ignore].ThisDummyValue()")
                 });
 
             ExtractEvents(events);

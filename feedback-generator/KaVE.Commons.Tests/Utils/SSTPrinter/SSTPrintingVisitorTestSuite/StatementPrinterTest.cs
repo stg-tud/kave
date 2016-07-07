@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -117,7 +117,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var invocation = new InvocationExpression
             {
                 Reference = SSTUtil.VariableReference("this"),
-                MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                MethodName = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
                 Parameters = {new ConstantValueExpression {Value = "1"}}
             };
 
@@ -140,14 +140,14 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             {
                 Reference = new EventReference
                 {
-                    EventName = EventName.Get("[EventType,P] [DeclaringType,P].SomeEvent"),
+                    EventName = Names.Event("[EventType,P] [DeclaringType,P].SomeEvent"),
                     Reference = SSTUtil.VariableReference("o")
                 },
                 Expression = new ReferenceExpression
                 {
                     Reference = new MethodReference
                     {
-                        MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].Handler()"),
+                        MethodName = Names.Method("[ReturnType,P] [DeclaringType,P].Handler()"),
                         Reference = SSTUtil.VariableReference("this")
                     }
                 },
@@ -164,14 +164,14 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             {
                 Reference = new EventReference
                 {
-                    EventName = EventName.Get("[EventType,P] [DeclaringType,P].SomeEvent"),
+                    EventName = Names.Event("[EventType,P] [DeclaringType,P].SomeEvent"),
                     Reference = SSTUtil.VariableReference("o")
                 },
                 Expression = new ReferenceExpression
                 {
                     Reference = new MethodReference
                     {
-                        MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].Handler()"),
+                        MethodName = Names.Method("[ReturnType,P] [DeclaringType,P].Handler()"),
                         Reference = SSTUtil.VariableReference("this")
                     }
                 },

@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
@@ -84,7 +84,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             @event.TriggeredAt = new DateTime(2015, 04, 24, 15, 28, 30);
             @event.TriggeredBy = IDEEvent.Trigger.Unknown;
             @event.Duration = TimeSpan.FromMilliseconds(10);
-            @event.ActiveWindow = WindowName.Get("vsWindowTypeToolWindow Startseite");
+            @event.ActiveWindow = Names.Window("vsWindowTypeToolWindow Startseite");
         }
     }
 }

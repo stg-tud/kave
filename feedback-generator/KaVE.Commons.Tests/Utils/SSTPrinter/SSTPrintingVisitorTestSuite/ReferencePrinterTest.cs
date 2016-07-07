@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -37,7 +37,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new EventReference
             {
-                EventName = EventName.Get("[EventType,P] [DeclaringType,P].E"),
+                EventName = Names.Event("[EventType,P] [DeclaringType,P].E"),
                 Reference = SSTUtil.VariableReference("o")
             };
 
@@ -49,7 +49,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new EventReference
             {
-                EventName = EventName.Get("static [EventType,P] [DeclaringType,P].E")
+                EventName = Names.Event("static [EventType,P] [DeclaringType,P].E")
             };
 
             AssertPrint(sst, "DeclaringType.E");
@@ -60,7 +60,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new FieldReference
             {
-                FieldName = FieldName.Get("[FieldType,P] [DeclaringType,P].F"),
+                FieldName = Names.Field("[FieldType,P] [DeclaringType,P].F"),
                 Reference = SSTUtil.VariableReference("o")
             };
 
@@ -73,7 +73,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new FieldReference
             {
                 FieldName =
-                    FieldName.Get("static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Empty")
+                    Names.Field("static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Empty")
             };
 
             AssertPrint(sst, "string.Empty");
@@ -84,7 +84,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodReference
             {
-                MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                MethodName = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
                 Reference = SSTUtil.VariableReference("o")
             };
 
@@ -96,7 +96,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodReference
             {
-                MethodName = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                MethodName = Names.Method("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
             };
 
             AssertPrint(sst, "DeclaringType.M");
@@ -107,7 +107,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyReference
             {
-                PropertyName = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
+                PropertyName = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
                 Reference = SSTUtil.VariableReference("o")
             };
 
@@ -119,7 +119,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyReference
             {
-                PropertyName = PropertyName.Get("static get set [PropertyType,P] [DeclaringType,P].P")
+                PropertyName = Names.Property("static get set [PropertyType,P] [DeclaringType,P].P")
             };
 
             AssertPrint(sst, "DeclaringType.P");

@@ -16,7 +16,7 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Tests.Model;
@@ -25,7 +25,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
-    [TestFixture]
     internal class AddFileProcessorTest
     {
         private AddFileProcessor _uut;
@@ -70,7 +69,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var addNewItemCommandEvent = new CommandEvent {CommandId = commandId};
             var documentEvent = new DocumentEvent
             {
-                Document = DocumentName.Get(documentIdentifier)
+                Document = Names.Document(documentIdentifier)
             };
 
             _uut.Map(addNewItemCommandEvent);
@@ -87,8 +86,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ResetsForNewDeveloper()
         {
-            var addNewItemCommandEvent = new CommandEvent { CommandId = "AddNewItem" };
-            var documentEvent = new DocumentEvent { Document = DocumentName.Get("CSharp Test.cs") };
+            var addNewItemCommandEvent = new CommandEvent {CommandId = "AddNewItem"};
+            var documentEvent = new DocumentEvent {Document = Names.Document("CSharp Test.cs")};
 
             _uut.Map(addNewItemCommandEvent);
             _uut.OnStreamEnds();

@@ -16,8 +16,8 @@
 
 using System;
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 
@@ -39,7 +39,7 @@ namespace KaVE.Commons.Model.Events.TestRunEvents
 
         public TestCaseResult()
         {
-            TestMethod = MethodName.UnknownName;
+            TestMethod = Names.UnknownMethod;
             Parameters = "";
         }
 

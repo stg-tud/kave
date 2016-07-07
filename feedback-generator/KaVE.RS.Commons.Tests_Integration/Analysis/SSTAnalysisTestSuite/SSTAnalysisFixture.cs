@@ -16,9 +16,8 @@
 
 using System.Linq;
 using JetBrains;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
@@ -35,136 +34,136 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     internal class SSTAnalysisFixture
     {
-        internal static readonly ITypeName TestClass = TypeName.Get("N.C, TestProject");
+        internal static readonly ITypeName TestClass = Names.Type("N.C, TestProject");
 
         internal static readonly ITypeName Int =
-            TypeName.Get("System.Int32, mscorlib, 4.0.0.0");
+            Names.Type("System.Int32, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Byte =
-            TypeName.Get("System.Byte, mscorlib, 4.0.0.0");
+            Names.Type("System.Byte, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Float =
-            TypeName.Get("System.Single, mscorlib, 4.0.0.0");
+            Names.Type("System.Single, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Double =
-            TypeName.Get("System.Double, mscorlib, 4.0.0.0");
+            Names.Type("System.Double, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName IntArray =
-            TypeName.Get("System.Int32[], mscorlib, 4.0.0.0");
+            Names.Type("System.Int32[], mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Void =
-            TypeName.Get("System.Void, mscorlib, 4.0.0.0");
+            Names.Type("System.Void, mscorlib, 4.0.0.0");
 
-        internal static readonly ITypeName Unknown = UnknownTypeName.Instance;
+        internal static readonly ITypeName Unknown = Names.UnknownType;
 
         internal static readonly ITypeName String =
-            TypeName.Get("System.String, mscorlib, 4.0.0.0");
+            Names.Type("System.String, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Bool =
-            TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
+            Names.Type("System.Boolean, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Object =
-            TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+            Names.Type("System.Object, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Exception =
-            TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
+            Names.Type("System.Exception, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName IOException =
-            TypeName.Get("System.IO.IOException, mscorlib, 4.0.0.0");
+            Names.Type("System.IO.IOException, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Type =
-            TypeName.Get("System.Type, mscorlib, 4.0.0.0");
+            Names.Type("System.Type, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName ListOfInt =
-            TypeName.Get(
+            Names.Type(
                 "System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName ListOfObject =
-            TypeName.Get(
+            Names.Type(
                 "System.Collections.Generic.List`1[[T -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName Action =
-            TypeName.Get(
+            Names.Type(
                 "d:[System.Void, mscorlib, 4.0.0.0] [System.Action, mscorlib, 4.0.0.0].()");
 
         internal static readonly ITypeName ActionOfInt =
-            TypeName.Get(
+            Names.Type(
                 "d:[System.Void, mscorlib, 4.0.0.0] [System.Action`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] obj)");
 
         internal static readonly ITypeName FuncOfIntAndInt =
-            TypeName.Get(
+            Names.Type(
                 "d:[TResult] [System.Func`2[[T -> System.Int32, mscorlib, 4.0.0.0],[TResult -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] arg)");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetHashCode =
-            MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+            Names.Method("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Int_GetHashCode =
-            MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Int32, mscorlib, 4.0.0.0].GetHashCode()");
+            Names.Method("[System.Int32, mscorlib, 4.0.0.0] [System.Int32, mscorlib, 4.0.0.0].GetHashCode()");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_Init =
-            MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0]..ctor()");
+            Names.Method("[System.Void, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0]..ctor()");
 
         // ReSharper disable once InconsistentNaming
         internal static IMethodName ListOfInt_Init =
-            MethodName.Get(
+            Names.Method(
                 "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]..ctor()");
 
         // ReSharper disable once InconsistentNaming
         internal static IMethodName ListOfInt_Add =
-            MethodName.Get(
+            Names.Method(
                 "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Add([T] item)");
 
         // ReSharper disable once InconsistentNaming
         internal static IMethodName ListOfObject_Add =
-            MethodName.Get(
+            Names.Method(
                 "[{0}] [System.Collections.Generic.List`1[[T -> {1}]], mscorlib, 4.0.0.0].Add([T] item)",
                 Void,
                 Object);
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName String_Format =
-            MethodName.Get(
+            Names.Method(
                 "static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Format([System.String, mscorlib, 4.0.0.0] format)");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_static_Equals =
-            MethodName.Get(string.Format("static [{0}] [{1}].Equals([{1}] objA, [{1}] objB)", Bool, Object));
+            Names.Method(string.Format("static [{0}] [{1}].Equals([{1}] objA, [{1}] objB)", Bool, Object));
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_Equals =
-            MethodName.Get(string.Format("[{0}] [{1}].Equals([{1}] obj)", Bool, Object));
+            Names.Method(string.Format("[{0}] [{1}].Equals([{1}] obj)", Bool, Object));
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetType =
-            MethodName.Get(string.Format("[{0}] [{1}].GetType()", Type, Object));
+            Names.Method(string.Format("[{0}] [{1}].GetType()", Type, Object));
 
         // ReSharper disable once InconsistentNaming
         public static readonly IMethodName Object_ctor =
-            MethodName.Get(string.Format("[{0}] [{1}]..ctor()", Void, Object));
+            Names.Method(string.Format("[{0}] [{1}]..ctor()", Void, Object));
 
         // ReSharper disable once InconsistentNaming
         public static readonly IMethodName Exception_ctor =
-            MethodName.Get(string.Format("[{0}] [{1}]..ctor([{2}] message)", Void, Exception, String));
+            Names.Method(string.Format("[{0}] [{1}]..ctor([{2}] message)", Void, Exception, String));
 
         public static readonly ITypeName EventHandler =
-            TypeName.Get("System.EventHandler, mscorlib, 4.0.0.0");
+            Names.Type("System.EventHandler, mscorlib, 4.0.0.0");
 
         public static readonly ITypeName EventArgs =
-            TypeName.Get("System.EventArgs, mscorlib, 4.0.0.0");
+            Names.Type("System.EventArgs, mscorlib, 4.0.0.0");
 
         // ReSharper disable once InconsistentNaming
         public static readonly IMethodName TestClass_Init =
-            MethodName.Get(string.Format("[{0}] [{1}]..ctor()", Void, TestClass));
+            Names.Method(string.Format("[{0}] [{1}]..ctor()", Void, TestClass));
 
         public static readonly IReturnStatement Return =
             new ReturnStatement {IsVoid = true};
 
         // ReSharper disable once InconsistentNaming
         public static readonly IMethodName Action_Invoke =
-            MethodName.Get(
+            Names.Method(
                 string.Format(
                     "[{0}] [d:[{0}] [System.Action`1[[T -> {1}]], mscorlib, 4.0.0.0].([T] obj)].Invoke([T] obj)",
                     Void,
@@ -172,49 +171,49 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {
-            return MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Int, declaringType));
+            return Names.Method(string.Format("[{0}] [{1}].GetHashCode()", Int, declaringType));
         }
 
         internal static IMethodName ToString(ITypeName declaringType)
         {
-            return MethodName.Get(string.Format("[{0}] [{1}].ToString()", String, declaringType));
+            return Names.Method(string.Format("[{0}] [{1}].ToString()", String, declaringType));
         }
 
         internal static IMethodName Equals(ITypeName declaringType, ITypeName argType, string argName)
         {
-            return MethodName.Get(string.Format("[{0}] [{1}].Equals([{2}] {3})", Bool, declaringType, argType, argName));
+            return Names.Method(string.Format("[{0}] [{1}].Equals([{2}] {3})", Bool, declaringType, argType, argName));
         }
 
         internal static IMethodName ConsoleWrite(ITypeName arg)
         {
             return
-                MethodName.Get(
+                Names.Method(
                     string.Format("static [{0}] [System.Console, mscorlib, 4.0.0.0].Write([{1}] value)", Void, arg));
         }
 
         public static IMethodName GetMethodName(string cGet)
         {
-            return MethodName.Get(cGet);
+            return Names.Method(cGet);
         }
 
         public static ITypeName TypeInCoreLib(string simpleName)
         {
-            return TypeName.Get(simpleName + ", mscorlib, 4.0.0.0");
+            return Names.Type(simpleName + ", mscorlib, 4.0.0.0");
         }
 
         public static ITypeName TypeInProject(string simpleName)
         {
-            return TypeName.Get(simpleName + ", TestProject");
+            return Names.Type(simpleName + ", TestProject");
         }
 
         public static IParameterName Parameter(ITypeName parameterType, string name)
         {
-            return ParameterName.Get("[{0}] {1}".FormatEx(parameterType, name));
+            return Names.Parameter("[{0}] {1}", parameterType, name);
         }
 
         public static IMethodName Method(ITypeName returnType, ITypeName declType, string name)
         {
-            return MethodName.Get("[{0}] [{1}].{2}()".FormatEx(returnType, declType, name));
+            return Names.Method("[{0}] [{1}].{2}()".FormatEx(returnType, declType, name));
         }
 
         public static IMethodName Method(ITypeName returnType,
@@ -223,7 +222,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             params IParameterName[] parameters)
         {
             return
-                MethodName.Get(
+                Names.Method(
                     "[{0}] [{1}].{2}({3})".FormatEx(
                         returnType,
                         declType,
@@ -233,13 +232,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         public static IFieldName Field(ITypeName valueType, ITypeName declType, string name)
         {
-            return FieldName.Get("[{0}] [{1}].{2}".FormatEx(valueType, declType, name));
+            return Names.Field("[{0}] [{1}].{2}".FormatEx(valueType, declType, name));
         }
 
         public static IEventName Event(ITypeName declType, string name)
         {
             return
-                EventName.Get(
+                Names.Event(
                     "[d:[{0}] [{1}].([{2}] sender, [{3}] e)] [{4}].{5}".FormatEx(
                         Void,
                         EventHandler,
@@ -256,13 +255,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             bool hasSetter = true)
         {
             return
-                PropertyName.Get(
-                    "{3}{4}[{0}] [{1}].{2}".FormatEx(
-                        valueType,
-                        declType,
-                        name,
-                        hasGetter ? "get " : "",
-                        hasSetter ? "set " : ""));
+                Names.Property(
+                    "{3}{4}[{0}] [{1}].{2}",
+                    valueType,
+                    declType,
+                    name,
+                    hasGetter ? "get " : "",
+                    hasSetter ? "set " : "");
         }
 
         public static ICompletionExpression CompletionOnVar(IVariableReference varRef, string token)
@@ -306,7 +305,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         public static IMethodName Ctor(ITypeName type, params IParameterName[] parameterNames)
         {
             var parameters = string.Join<IParameterName>(",", parameterNames);
-            return MethodName.Get(string.Format("[{0}] [{1}]..ctor({2})", Void, type, parameters));
+            return Names.Method(string.Format("[{0}] [{1}]..ctor({2})", Void, type, parameters));
         }
 
         public static IReturnStatement ReturnVar(string varName)

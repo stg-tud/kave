@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using JetBrains;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -236,7 +235,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void TryBlock()
         {
-            var someParameter = ParameterName.Get("[{0}] p".FormatEx(Type("a")));
+            var someParameter = Names.Parameter("[{0}] p", Type("a"));
             AssertAnonymization(
                 new TryBlock
                 {

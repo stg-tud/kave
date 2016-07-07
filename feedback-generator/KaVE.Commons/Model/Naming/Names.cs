@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl;
 using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
@@ -111,7 +112,7 @@ namespace KaVE.Commons.Model.Naming
                 case Types.AliasName:
                     return AliasName.Get(identifier);
                 case Types.AssemblyName:
-                    return GetAssemblyName(identifier);
+                    return Assembly(identifier);
                 case Types.EventName:
                     return Event(identifier);
                 case Types.FieldName:
@@ -224,7 +225,7 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
-        public static IAssemblyName GetAssemblyName(string input)
+        public static IAssemblyName Assembly(string input)
         {
             try
             {
@@ -324,16 +325,36 @@ namespace KaVE.Commons.Model.Naming
             return LambdaName.Get(n);
         }
 
+        public static ILocalVariableName LocalVariable(string n)
+        {
+            return LocalVariableName.Get(n);
+        }
+
+        public static ITypeName ArrayType(int rank, ITypeName baseType)
+        {
+            return Type("arr({0}):{1}", rank, baseType);
+        }
+
+        public static IAliasName Alias(string n)
+        {
+            return AliasName.Get(n);
+        }
+
         #region ide components
 
-        public static WindowName Window(string n)
+        public static IWindowName Window(string n)
         {
             return WindowName.Get(n);
         }
 
-        public static DocumentName Document(string n)
+        public static IDocumentName Document(string n)
         {
             return DocumentName.Get(n);
+        }
+
+        public static ISolutionName Solution(string somesolution)
+        {
+            return SolutionName.Get(somesolution);
         }
 
         #endregion
@@ -353,6 +374,41 @@ namespace KaVE.Commons.Model.Naming
         public static IName UnknownGeneral
         {
             get { return Name.UnknownName; }
+        }
+
+        public static IEventName UnknownEvent
+        {
+            get { return EventName.UnknownName; }
+        }
+
+        public static IFieldName UnknownField
+        {
+            get { return FieldName.UnknownName; }
+        }
+
+        public static IPropertyName UnknownProperty
+        {
+            get { return PropertyName.UnknownName; }
+        }
+
+        public static INamespaceName UnknownNamespace
+        {
+            get { return NamespaceName.UnknownName; }
+        }
+
+        public static IParameterName UnknownParameter
+        {
+            get { return ParameterName.UnknownName; }
+        }
+
+        public static ILocalVariableName UnknownLocalVariable
+        {
+            get { return LocalVariableName.UnknownName; }
+        }
+
+        public static IAliasName UnknownAlias
+        {
+            get { return AliasName.UnknownName; }
         }
 
         #endregion
@@ -395,5 +451,10 @@ namespace KaVE.Commons.Model.Naming
         }
 
         #endregion
+
+        public static IEventName Event(string input, params object[] args)
+        {
+            return Event(string.Format(input, args));
+        }
     }
 }

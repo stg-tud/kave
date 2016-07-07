@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
@@ -81,7 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
             AnyLambdaExpr = new LambdaExpression
             {
-                Name = LambdaName.Get("[V,P] ([T,P] a)"),
+                Name = Names.Lambda("[V,P] ([T,P] a)"),
                 Body = {AnyStatement}
             };
             AnyLambdaExprAnonymized = new LambdaExpression
@@ -99,7 +98,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         protected static ITypeName Type(string type)
         {
-            return TypeName.Get(type + ", MyProject");
+            return Names.Type(type + ", MyProject");
         }
 
         protected static ITypeName TypeAnonymized(string type)
@@ -109,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         protected IEventName Event(string name)
         {
-            return EventName.Get(string.Format("[T1] [T2].{0}", name));
+            return Names.Event(string.Format("[T1] [T2].{0}", name));
         }
 
         protected IEventName EventAnonymized(string name)
@@ -119,7 +118,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         protected IFieldName Field(string name)
         {
-            return FieldName.Get(string.Format("[T1] [T2].{0}", name));
+            return Names.Field("[T1] [T2].{0}", name);
         }
 
         protected IFieldName FieldAnonymized(string name)
@@ -129,7 +128,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         protected IMethodName Method(string m)
         {
-            return MethodName.Get(string.Format("[T1,P1] [T2,P2].{0}()", m));
+            return Names.Method(string.Format("[T1,P1] [T2,P2].{0}()", m));
         }
 
         protected IMethodName MethodAnonymized(string m)
@@ -139,7 +138,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         protected IPropertyName Property(string name)
         {
-            return PropertyName.Get(string.Format("[T1] [T2].{0}", name));
+            return Names.Property("[T1] [T2].{0}", name);
         }
 
         protected IPropertyName PropertyAnonymized(string name)

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.JetBrains.Annotations;
 
@@ -36,7 +35,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 {
                     return _type;
                 }
-                return Parent != null ? Parent.Type : TypeName.UnknownName;
+                return Parent != null ? Parent.Type : Names.UnknownType;
             }
             set { _type = value; }
         }
@@ -50,7 +49,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 {
                     return _method;
                 }
-                return Parent != null ? Parent.Method : MethodName.UnknownName;
+                return Parent != null ? Parent.Method : Names.UnknownMethod;
             }
             set { _method = value; }
         }

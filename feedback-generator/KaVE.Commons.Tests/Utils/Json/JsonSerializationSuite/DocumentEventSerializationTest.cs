@@ -15,12 +15,11 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    [TestFixture]
     internal class DocumentEventSerializationTest
     {
         [Test]
@@ -29,7 +28,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             var documentEvent = new DocumentEvent
             {
                 Action = DocumentEvent.DocumentAction.Saved,
-                Document = DocumentName.Get("SomeProcessedDocument")
+                Document = Names.Document("SomeProcessedDocument")
             };
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.DocumentEvent, KaVE.Commons\",\"Document\":\"VisualStudio.DocumentName:SomeProcessedDocument\",\"Action\":1,\"TriggeredBy\":0}";

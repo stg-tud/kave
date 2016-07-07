@@ -20,7 +20,7 @@ using KaVE.RS.Commons.Tests_Unit.TestFactories;
 using KaVE.RS.Commons.Utils.Naming;
 using NUnit.Framework;
 
-namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
+namespace KaVE.RS.Commons.Tests_Unit.Utils.Naming
 {
     public class ReSharperTypeNameFactoryTest
     {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
@@ -29,7 +29,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
             var sut = new CallSite();
             Assert.AreEqual(CallSiteKind.RECEIVER, sut.kind);
             Assert.AreEqual(0, sut.argIndex);
-            Assert.AreEqual(MethodName.UnknownName.ToCoReName(), sut.method);
+            Assert.AreEqual(Names.UnknownMethod.ToCoReName(), sut.method);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -41,11 +41,11 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
             {
                 kind = CallSiteKind.PARAMETER,
                 argIndex = 3,
-                method = MethodName.Get("[T1,P] [T2,P].M()").ToCoReName()
+                method = Names.Method("[T1,P] [T2,P].M()").ToCoReName()
             };
             Assert.AreEqual(CallSiteKind.PARAMETER, sut.kind);
             Assert.AreEqual(3, sut.argIndex);
-            Assert.AreEqual(MethodName.Get("[T1,P] [T2,P].M()").ToCoReName(), sut.method);
+            Assert.AreEqual(Names.Method("[T1,P] [T2,P].M()").ToCoReName(), sut.method);
         }
 
         [Test]

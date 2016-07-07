@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
@@ -49,7 +49,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
         public VariableDeclaration()
         {
             Reference = new VariableReference();
-            Type = TypeName.UnknownName;
+            Type = Names.UnknownType;
         }
 
         public override bool Equals(object obj)

@@ -16,7 +16,6 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
@@ -63,7 +62,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 {
                     foreach (var p in _ctx.realLambdaName().methodSignature().formalParam())
                     {
-                        parameters.Add(ParameterName.Get(p.GetText()));
+                        parameters.Add(Names.Parameter(p.GetText()));
                     }
                 }
                 return parameters;

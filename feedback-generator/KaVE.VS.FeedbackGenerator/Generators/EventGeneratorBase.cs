@@ -25,7 +25,7 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using KaVE.VS.FeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Utils.Naming;
 using KaVE.VS.FeedbackGenerator.VsIntegration;
 
 namespace KaVE.VS.FeedbackGenerator.Generators

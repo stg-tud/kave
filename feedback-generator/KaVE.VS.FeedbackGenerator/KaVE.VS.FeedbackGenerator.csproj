@@ -445,7 +445,7 @@
     <Compile Include="Utils\Logging\ILogManager.cs" />
     <Compile Include="Utils\Logging\LogFile.cs" />
     <Compile Include="Utils\Logging\LogFileManager.cs" />
-    <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
+    <Compile Include="Utils\Naming\VsComponentNameFactory.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />

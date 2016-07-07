@@ -17,7 +17,8 @@
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Statistics;
 using KaVE.FeedbackProcessor.Tests.Model;
@@ -25,7 +26,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
 {
-    [TestFixture]
     class WindowNameCollectorTest
     {
         private WindowNameCollector _uut;
@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CollectsNameFromWindowEvent()
         {
-            var windowEvent = new WindowEvent{Window = WindowName.Get("window event")};
+            var windowEvent = new WindowEvent {Window = Names.Window("window event")};
 
             Process(windowEvent);
 
@@ -49,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CollectsActiveWindow()
         {
-            var ideEvent = new TestIDEEvent { ActiveWindow = WindowName.Get("active window name") };
+            var ideEvent = new TestIDEEvent {ActiveWindow = Names.Window("active window name")};
 
             Process(ideEvent);
 
@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CollectsOpenWindowsFromIDEStateEvent()
         {
-            var ideEvent = new IDEStateEvent { OpenWindows = { WindowName.Get("window 1"), WindowName.Get("window 2") } };
+            var ideEvent = new IDEStateEvent {OpenWindows = {Names.Window("window 1"), Names.Window("window 2")}};
 
             Process(ideEvent);
 
@@ -73,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.OnStreamEnds();
         }
 
-        private void AssertNameCollected(params WindowName[] expected)
+        private void AssertNameCollected(params IWindowName[] expected)
         {
             var actuals = _uut.AllWindowNames;
             CollectionAssert.IsSubsetOf(expected.Select(wn => wn.Identifier), actuals);

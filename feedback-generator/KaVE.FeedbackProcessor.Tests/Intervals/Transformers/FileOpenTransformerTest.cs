@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
 using NUnit.Framework;
@@ -35,12 +35,15 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
                 TriggeredAt = TestTime(startOffset),
                 TerminatedAt = TestTime(endOffset),
                 Action = isFileOpen ? DocumentEvent.DocumentAction.Opened : DocumentEvent.DocumentAction.Closing,
-                Document = DocumentName.Get("CSharp " + filename),
+                Document = Names.Document("CSharp " + filename),
                 IDESessionUUID = sessionId
             };
         }
 
-        private FileOpenInterval ExpectedInterval(int startOffset, int endOffset, string filename, string sessionId = null)
+        private FileOpenInterval ExpectedInterval(int startOffset,
+            int endOffset,
+            string filename,
+            string sessionId = null)
         {
             var interval = base.ExpectedInterval(startOffset, endOffset, sessionId);
             interval.FileName = filename;

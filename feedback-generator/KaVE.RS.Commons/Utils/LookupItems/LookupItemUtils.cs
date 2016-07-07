@@ -26,8 +26,6 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupI
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.AspectLookupItems;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.RS.Commons.Utils.Naming;
 
 namespace KaVE.RS.Commons.Utils.LookupItems
@@ -44,7 +42,7 @@ namespace KaVE.RS.Commons.Utils.LookupItems
         public static Proposal ToProposal([CanBeNull] this ILookupItem lookupItem)
         {
             //return new Proposal {Name = Name.Get("deactivated")};
-            var name = lookupItem == null ? Name.UnknownName : lookupItem.GetName();
+            var name = lookupItem == null ? Names.UnknownGeneral : lookupItem.GetName();
             return new Proposal {Name = name};
         }
 
@@ -78,7 +76,7 @@ namespace KaVE.RS.Commons.Utils.LookupItems
         {
             var pbnItem = lookupItem as PBNProposalWrappedLookupItem;
             return pbnItem != null
-                ? Name.Get(pbnItem.ToString())
+                ? Names.General(pbnItem.ToString())
                 : null;
         }
 
@@ -111,7 +109,7 @@ namespace KaVE.RS.Commons.Utils.LookupItems
             // the method, we introduce an artificial constructor name to at least capture the
             // information that a constructor was selected
             var typeName = de.GetName();
-            return MethodName.Get(string.Format("[{0}] [{0}]..ctor()", typeName));
+            return Names.Method(string.Format("[{0}] [{0}]..ctor()", typeName));
         }
 
         private static IName TryGetNameFromCombinedLookupItem(ILookupItem lookupItem)
@@ -121,12 +119,12 @@ namespace KaVE.RS.Commons.Utils.LookupItems
             {
                 return null;
             }
-            return Name.Get(String.Format("CombinedLookupItem:{0}", cli.DisplayName.Text));
+            return Names.General(string.Format("CombinedLookupItem:{0}", cli.DisplayName.Text));
         }
 
         private static IName GetNameFromLookupItemIdentity(ILookupItem item)
         {
-            return Name.Get(GetPossiblyGenericTypeName(item) + ":" + item.Identity);
+            return Names.General(GetPossiblyGenericTypeName(item) + ":" + item.Identity);
         }
 
         private static string GetPossiblyGenericTypeName(ILookupItem item)

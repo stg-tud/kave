@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Utils.Collections;
@@ -37,8 +36,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
                 new DelegateDeclaration
                 {
                     Name =
-                        DelegateTypeName.Get(
+                        Names.Type(
                             "d:[System.Void, mscorlib, 4.0.0.0] [N.C+D, TestProject].([System.Object, mscorlib, 4.0.0.0] o)")
+                             .AsDelegateTypeName
                 });
             Assert.AreEqual(expected, ResultSST.Delegates);
         }
@@ -54,7 +54,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
             var expected = Sets.NewHashSet(
                 new EventDeclaration
                 {
-                    Name = EventName.Get("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].E")
+                    Name = Names.Event("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].E")
                 });
             Assert.AreEqual(expected, ResultSST.Events);
         }
@@ -71,7 +71,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
                 Sets.NewHashSet(
                     new FieldDeclaration
                     {
-                        Name = FieldName.Get("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject]._f")
+                        Name = Names.Field("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject]._f")
                     });
             Assert.AreEqual(expected, ResultSST.Fields);
         }
@@ -87,12 +87,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
 
             var m = new MethodDeclaration
             {
-                Name = MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M()"),
+                Name = Names.Method("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M()"),
                 IsEntryPoint = true
             };
             var n = new MethodDeclaration
             {
-                Name = MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].N()"),
+                Name = Names.Method("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].N()"),
                 IsEntryPoint = false
             };
             var expected = Sets.NewHashSet(m, n);
@@ -111,7 +111,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
                 Sets.NewHashSet(
                     new PropertyDeclaration
                     {
-                        Name = PropertyName.Get("set get [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].P()")
+                        Name = Names.Property("set get [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].P()")
                     });
             Assert.AreEqual(expected, ResultSST.Properties);
         }

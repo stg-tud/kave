@@ -16,5 +16,9 @@
 
 namespace KaVE.Commons.Model.Naming.IDEComponents
 {
-    public interface IWindowName : IIDEComponentName {}
+    public interface IWindowName : IIDEComponentName
+    {
+        string Type { get; }
+        string Caption { get; }
+    }
 }

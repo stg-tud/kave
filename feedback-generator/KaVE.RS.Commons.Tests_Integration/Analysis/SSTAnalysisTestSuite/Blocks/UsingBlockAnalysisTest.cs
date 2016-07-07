@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -29,10 +28,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 {
     internal class UsingBlockAnalysisTest : BaseSSTAnalysisTest
     {
-        private readonly ITypeName _streamWriter = TypeName.Get("System.IO.StreamWriter, mscorlib, 4.0.0.0");
+        private readonly ITypeName _streamWriter = Names.Type("System.IO.StreamWriter, mscorlib, 4.0.0.0");
 
         private readonly IMethodName _streamWriterCtor =
-            MethodName.Get(
+            Names.Method(
                 "[System.Void, mscorlib, 4.0.0.0] [System.IO.StreamWriter, mscorlib, 4.0.0.0]..ctor([System.String, mscorlib, 4.0.0.0] path)");
 
         [Test]

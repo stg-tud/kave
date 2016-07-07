@@ -22,7 +22,7 @@ using JetBrains.DataFlow;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using KaVE.VS.FeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Utils.Naming;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {

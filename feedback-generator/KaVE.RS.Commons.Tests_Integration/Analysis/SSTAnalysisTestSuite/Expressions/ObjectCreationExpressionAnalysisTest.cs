@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -37,7 +36,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("t", TypeName.UnknownName),
+                VarDecl("t", Names.UnknownType),
                 Assign("t", new InvocationExpression()),
                 Fix.EmptyCompletion);
         }
@@ -52,7 +51,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("t", Fix.Object),
-                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                Assign("t", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 Fix.EmptyCompletion);
         }
 
@@ -65,8 +64,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
                 Fix.EmptyCompletion);
         }
@@ -85,8 +84,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("t", Fix.Object),
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("$0", Const("1")),
                 Assign("t", RefExpr("$0")),
                 Fix.EmptyCompletion);
@@ -105,8 +104,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("t", TypeName.Get("N.T, TestProject")),
-                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("t", Names.Type("N.T, TestProject")),
+                Assign("t", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("t", Const("1")),
                 Fix.EmptyCompletion);
         }
@@ -124,8 +123,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("t", Fix.Object),
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("$0", Const("1")),
                 Assign("t", RefExpr("$0")),
                 Fix.EmptyCompletion);
@@ -143,8 +142,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("t", TypeName.Get("N.T, TestProject")),
-                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("t", Names.Type("N.T, TestProject")),
+                Assign("t", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("t", Const("1")),
                 Fix.EmptyCompletion);
         }
@@ -161,8 +160,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("t", TypeName.Get("N.T, TestProject")),
-                Assign("t", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("t", Names.Type("N.T, TestProject")),
+                Assign("t", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("t", Const("1")),
                 Fix.EmptyCompletion);
         }
@@ -178,8 +177,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 $
             ");
             AssertBody(
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("$0", Const("1")),
                 ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
                 Fix.EmptyCompletion);
@@ -234,10 +233,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("t", Fix.Object),
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                VarDecl("$1", TypeName.Get("N.T, TestProject")),
-                Assign("$1", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$1", Names.Type("N.T, TestProject")),
+                Assign("$1", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("$1", Const("1")),
                 AssignP("$0", RefExpr("$1")),
                 Assign("t", RefExpr("$0")),
@@ -259,10 +258,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                VarDecl("$1", TypeName.Get("N.T, TestProject")),
-                Assign("$1", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$1", Names.Type("N.T, TestProject")),
+                Assign("$1", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("$1", Const("1")),
                 AssignP("$0", RefExpr("$1")),
                 ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
@@ -282,8 +281,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("t", Fix.Object),
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 VarDecl("$1", Fix.ListOfObject),
                 Assign(
                     "$1",
@@ -291,7 +290,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         new PropertyReference
                         {
                             Reference = VarRef("$0"),
-                            PropertyName = PropertyName.Get("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
+                            PropertyName = Names.Property("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
                         })),
                 InvokeStmt("$1", Fix.ListOfObject_Add, Const("1")),
                 Assign("t", RefExpr("$0")),
@@ -310,8 +309,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 VarDecl("$1", Fix.ListOfObject),
                 Assign(
                     "$1",
@@ -319,7 +318,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         new PropertyReference
                         {
                             Reference = VarRef("$0"),
-                            PropertyName = PropertyName.Get("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
+                            PropertyName = Names.Property("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
                         })),
                 InvokeStmt("$1", Fix.ListOfObject_Add, Const("1")),
                 ExprStmt(Invoke("this", Fix.Object_Equals, RefExpr("$0"))),
@@ -342,10 +341,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             AssertBody(
                 VarDecl("t", Fix.Object),
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                VarDecl("$1", TypeName.Get("N.T, TestProject")),
-                Assign("$1", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$1", Names.Type("N.T, TestProject")),
+                Assign("$1", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("$1", Const("0")),
                 AssignP("$0", RefExpr("$1")),
                 VarDecl("$2", Fix.ListOfObject),
@@ -356,7 +355,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Reference = new PropertyReference
                         {
                             Reference = VarRef("$0"),
-                            PropertyName = PropertyName.Get("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
+                            PropertyName = Names.Property("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
                         }
                     }),
                 InvokeStmt("$2", Fix.ListOfObject_Add, Const("1")),
@@ -379,10 +378,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("$0", TypeName.Get("N.T, TestProject")),
-                Assign("$0", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
-                VarDecl("$1", TypeName.Get("N.T, TestProject")),
-                Assign("$1", InvokeCtor(MethodName.Get("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$0", Names.Type("N.T, TestProject")),
+                Assign("$0", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
+                VarDecl("$1", Names.Type("N.T, TestProject")),
+                Assign("$1", InvokeCtor(Names.Method("[{0}] [N.T, TestProject]..ctor()", Fix.Void))),
                 AssignP("$1", Const("0")),
                 AssignP("$0", RefExpr("$1")),
                 VarDecl("$2", Fix.ListOfObject),
@@ -393,7 +392,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Reference = new PropertyReference
                         {
                             Reference = VarRef("$0"),
-                            PropertyName = PropertyName.Get("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
+                            PropertyName = Names.Property("set get [{0}] [N.T, TestProject].CP()", Fix.ListOfObject)
                         }
                     }),
                 InvokeStmt("$2", Fix.ListOfObject_Add, Const("1")),
@@ -408,7 +407,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 Reference = new PropertyReference
                 {
                     Reference = VarRef(varId),
-                    PropertyName = PropertyName.Get("set get [{0}] [N.T, TestProject].P()", Fix.Object)
+                    PropertyName = Names.Property("set get [{0}] [N.T, TestProject].P()", Fix.Object)
                 },
                 Expression = expr
             };

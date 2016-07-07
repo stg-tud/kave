@@ -15,8 +15,7 @@
  */
 
 using System.Linq;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -55,28 +54,28 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 
         public IDelegateDeclaration Anonymize(IDelegateDeclaration d)
         {
-            var defaultName = DelegateTypeName.UnknownName;
+            var defaultName = Names.UnknownType.AsDelegateTypeName;
             var isDefaultName = defaultName.Equals(d.Name);
             return new DelegateDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }
 
         public IEventDeclaration Anonymize(IEventDeclaration d)
         {
-            var defaultName = EventName.UnknownName;
+            var defaultName = Names.UnknownEvent;
             var isDefaultName = defaultName.Equals(d.Name);
             return new EventDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }
 
         public IFieldDeclaration Anonymize(IFieldDeclaration d)
         {
-            var defaultName = FieldName.UnknownName;
+            var defaultName = Names.UnknownField;
             var isDefaultName = defaultName.Equals(d.Name);
             return new FieldDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }
 
         public IMethodDeclaration Anonymize(IMethodDeclaration d)
         {
-            var defaultName = MethodName.UnknownName;
+            var defaultName = Names.UnknownMethod;
             var isDefaultName = defaultName.Equals(d.Name);
             return new MethodDeclaration
             {
@@ -88,7 +87,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 
         public IPropertyDeclaration Anonymize(IPropertyDeclaration d)
         {
-            var defaultName = PropertyName.UnknownName;
+            var defaultName = Names.UnknownProperty;
             var isDefaultName = defaultName.Equals(d.Name);
             return new PropertyDeclaration
             {

@@ -15,8 +15,8 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 
@@ -135,7 +135,7 @@ namespace KaVE.Commons.Tests.Utils
         public static IMethodName M(string methodName)
         {
             return
-                MethodName.Get(
+                Names.Method(
                     "[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0]." + methodName +
                     "(opt [System.Int32, mscore, 4.0.0.0] length)");
         }

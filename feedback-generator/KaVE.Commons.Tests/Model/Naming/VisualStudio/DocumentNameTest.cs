@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.VisualStudio
 {
-    [TestFixture]
-    class DocumentNameTest
+    internal class DocumentNameTest
     {
         [TestCase("CSharp C:\\File.cs", "CSharp", "C:\\File.cs"),
-        TestCase(" \\File.ext", "", "\\File.ext"),
-        TestCase("Basic Code.vb", "Basic", "Code.vb"),
-        TestCase("C/C++ Code.c", "C/C++", "Code.c"),
-        TestCase("Plain Text Readme.txt", "Plain Text", "Readme.txt")]
+         TestCase(" \\File.ext", "", "\\File.ext"),
+         TestCase("Basic Code.vb", "Basic", "Code.vb"),
+         TestCase("C/C++ Code.c", "C/C++", "Code.c"),
+         TestCase("Plain Text Readme.txt", "Plain Text", "Readme.txt")]
         public void ParsesName(string identifier, string language, string fileName)
         {
-            var uut = DocumentName.Get(identifier);
+            var uut = Names.Document(identifier);
 
             Assert.AreEqual(language, uut.Language);
             Assert.AreEqual(fileName, uut.FileName);

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -60,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
                                 Expression = new InvocationExpression
                                 {
                                     MethodName =
-                                        MethodName.Get(
+                                        Names.Method(
                                             testMethod)
                                 }
                             }
@@ -73,7 +72,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test, TestCase(NUnitTestMethod), TestCase(NUnitTestMethod2)]
         public void GuessDocumentType_Test(string methodName)
         {
-            var docName = DocumentName.Get("CSharp /TestProject/Test.cs");
+            var docName = Names.Document("CSharp /TestProject/Test.cs");
             var sst = PrepareSST(methodName);
 
             var actual = TransformerUtils.GuessDocumentType(docName, sst);
@@ -83,7 +82,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test, TestCase(NotNUnit), TestCase(NotNUnit2)]
         public void GuessDocumentType_NotTest(string methodName)
         {
-            var docName = DocumentName.Get("CSharp /TestProject/Test.cs");
+            var docName = Names.Document("CSharp /TestProject/Test.cs");
             var sst = PrepareSST(methodName);
 
             var actual = TransformerUtils.GuessDocumentType(docName, sst);
@@ -93,7 +92,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test, TestCase(MoqMethod)]
         public void GuessDocumentType_TestFramework(string methodName)
         {
-            var docName = DocumentName.Get("CSharp /TestProject/MockHelpers.cs");
+            var docName = Names.Document("CSharp /TestProject/MockHelpers.cs");
             var sst = PrepareSST(methodName);
 
             var actual = TransformerUtils.GuessDocumentType(docName, sst);
@@ -103,7 +102,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test]
         public void GuessDocumentType_FilenameTest()
         {
-            var docName = DocumentName.Get("CSharp /TestProject/Test.cs");
+            var docName = Names.Document("CSharp /TestProject/Test.cs");
             var actual = TransformerUtils.GuessDocumentType(docName, new SST());
             Assert.AreEqual(DocumentType.FilenameTest, actual);
         }
@@ -111,7 +110,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test]
         public void GuessDocumentType_PathnameTest()
         {
-            var docName = DocumentName.Get("CSharp /TestProject/SomeFile.cs");
+            var docName = Names.Document("CSharp /TestProject/SomeFile.cs");
             var actual = TransformerUtils.GuessDocumentType(docName, new SST());
             Assert.AreEqual(DocumentType.PathnameTest, actual);
         }
@@ -119,7 +118,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test]
         public void GuessDocumentType_Production()
         {
-            var docName = DocumentName.Get("CSharp /Project/SomeFile.cs");
+            var docName = Names.Document("CSharp /Project/SomeFile.cs");
             var actual = TransformerUtils.GuessDocumentType(docName, new SST());
             Assert.AreEqual(DocumentType.Production, actual);
         }
@@ -127,7 +126,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals
         [Test]
         public void GuessDocumentType_Undefined()
         {
-            var docName = DocumentName.Get("NotCSharp /Project/SomeFile.abc");
+            var docName = Names.Document("NotCSharp /Project/SomeFile.abc");
             var actual = TransformerUtils.GuessDocumentType(docName, new SST());
             Assert.AreEqual(DocumentType.Undefined, actual);
         }

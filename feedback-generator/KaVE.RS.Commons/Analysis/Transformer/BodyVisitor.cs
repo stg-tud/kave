@@ -22,7 +22,6 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
@@ -708,7 +707,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
                     var typeName = specificClause.ExceptionType.GetName();
                     var varName = isUnnamed ? "?" : varDecl.DeclaredName;
-                    catchBlock.Parameter = ParameterName.Get(string.Format("[{0}] {1}", typeName, varName));
+                    catchBlock.Parameter = Names.Parameter("[{0}] {1}", typeName, varName);
                     catchBlock.Kind = isUnnamed ? CatchBlockKind.Unnamed : CatchBlockKind.Default;
                 }
             }

@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
@@ -68,7 +68,7 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits
 
             var keys = GetLocationIndices(usagesFirst, usagesLast);
 
-            var unknownType = TypeName.UnknownName.ToCoReName();
+            var unknownType = Names.UnknownType.ToCoReName();
 
             foreach (var key in keys)
             {

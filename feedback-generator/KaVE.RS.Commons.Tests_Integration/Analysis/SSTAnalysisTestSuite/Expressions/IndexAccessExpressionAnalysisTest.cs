@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
@@ -73,7 +73,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 $");
 
             AssertBody(
-                VarDecl("arr", TypeName.Get("System.Int32[,], mscorlib, 4.0.0.0")),
+                VarDecl("arr", Names.Type("System.Int32[,], mscorlib, 4.0.0.0")),
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.IntArray),
                 Assign(
@@ -219,7 +219,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 $");
 
             AssertBody(
-                VarDecl("arr", TypeName.Get("System.Int32[,], mscorlib, 4.0.0.0")),
+                VarDecl("arr", Names.Type("System.Int32[,], mscorlib, 4.0.0.0")),
                 VarDecl("$0", Fix.IntArray),
                 Assign(
                     "$0",

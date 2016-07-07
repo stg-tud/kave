@@ -22,7 +22,7 @@ using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.FeedbackProcessor.Names
+namespace KaVE.FeedbackProcessor.Naming
 {
     internal class NameScrapingVisitor : AbstractNodeVisitor<IKaVESet<IName>>
     {

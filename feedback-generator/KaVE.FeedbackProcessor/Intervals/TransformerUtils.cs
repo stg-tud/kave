@@ -21,7 +21,7 @@ using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -53,10 +53,10 @@ namespace KaVE.FeedbackProcessor.Intervals
             "moq",
             "Rhino.Mocks",
             "NSubstitute",
-            "Simple.Mocking",
+            "Simple.Mocking"
         };
 
-        public static DocumentType GuessDocumentType(DocumentName docName, ISST context)
+        public static DocumentType GuessDocumentType(IDocumentName docName, ISST context)
         {
             if (docName.Language != "CSharp")
             {

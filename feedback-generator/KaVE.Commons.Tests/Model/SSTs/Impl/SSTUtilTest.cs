@@ -15,9 +15,8 @@
  */
 
 using System.Linq;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -37,11 +36,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         [Test]
         public void Declare()
         {
-            var actual = SSTUtil.Declare("a", TypeName.UnknownName);
+            var actual = SSTUtil.Declare("a", Names.UnknownType);
             var expected = new VariableDeclaration
             {
                 Reference = Ref("a"),
-                Type = TypeName.UnknownName
+                Type = Names.UnknownType
             };
             Assert.AreEqual(expected, actual);
         }
@@ -179,7 +178,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             var methodName = string.Format(
                 "[System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0].{0}()",
                 simpleName);
-            return MethodName.Get(methodName);
+            return Names.Method(methodName);
         }
 
         private static IMethodName GetStaticMethod(string simpleName)
@@ -187,7 +186,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             var methodName = string.Format(
                 "static [System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0].{0}()",
                 simpleName);
-            return MethodName.Get(methodName);
+            return Names.Method(methodName);
         }
 
         private static ISimpleExpression VarRefExpr(string id)

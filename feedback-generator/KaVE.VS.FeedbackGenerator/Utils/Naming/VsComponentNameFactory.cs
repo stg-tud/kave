@@ -20,51 +20,53 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Annotations;
 using JetBrains.Util;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Utils.Assertion;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace KaVE.VS.FeedbackGenerator.Utils.Names
+namespace KaVE.VS.FeedbackGenerator.Utils.Naming
 {
     public static class VsComponentNameFactory
     {
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static WindowName GetName([CanBeNull] this Window window)
+        public static IWindowName GetName([CanBeNull] this Window window)
         {
             return window == null ? null : GetWindowName(window.Type.ToString(), window.Caption);
         }
 
         [NotNull]
-        public static WindowName GetWindowName([NotNull] string vsWindowType, [NotNull] string caption)
+        public static IWindowName GetWindowName([NotNull] string vsWindowType, [NotNull] string caption)
         {
-            return WindowName.Get(vsWindowType + " " + caption);
+            return Names.Window(vsWindowType + " " + caption);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static SolutionName GetName([CanBeNull] this Solution solution)
+        public static ISolutionName GetName([CanBeNull] this Solution solution)
         {
             return solution == null ? null : GetSolutionName(solution.FullName);
         }
 
-        public static SolutionName GetSolutionName(string fullName)
+        public static ISolutionName GetSolutionName(string fullName)
         {
             return SolutionName.Get(fullName);
         }
 
         [NotNull]
-        public static IList<WindowName> GetNames([NotNull] this Windows windows)
+        public static IList<IWindowName> GetNames([NotNull] this Windows windows)
         {
             return GetNames(windows.Cast<Window>().ToList());
         }
 
         [NotNull]
-        public static IList<WindowName> GetNames([NotNull] this IEnumerable<Window> windows)
+        public static IList<IWindowName> GetNames([NotNull] this IEnumerable<Window> windows)
         {
             return (from Window window in windows select window.GetName()).ToList();
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static DocumentName GetName([CanBeNull] this Document document)
+        public static IDocumentName GetName([CanBeNull] this Document document)
         {
             if (document == null)
             {
@@ -76,9 +78,9 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Names
         }
 
         [NotNull]
-        public static DocumentName GetDocumentName([NotNull] string language, [NotNull] string fileName)
+        public static IDocumentName GetDocumentName([NotNull] string language, [NotNull] string fileName)
         {
-            return DocumentName.Get(language + " " + fileName);
+            return Names.Document(language + " " + fileName);
         }
 
         private static string GetSolutionRelativeName(this Document document)
@@ -98,9 +100,8 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Names
             return Path.GetFileName(fullDocumentName);
         }
 
-
         [NotNull]
-        public static IList<DocumentName> GetNames([NotNull] this Documents documents)
+        public static IList<IDocumentName> GetNames([NotNull] this Documents documents)
         {
             Asserts.NotNull(documents, "documents");
             return (from Document document in documents select document.GetName()).ToList();

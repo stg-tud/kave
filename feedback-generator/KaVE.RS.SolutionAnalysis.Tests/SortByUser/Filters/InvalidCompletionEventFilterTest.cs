@@ -17,8 +17,6 @@
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
 using NUnit.Framework;
@@ -39,7 +37,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser.Filters
         {
             return new CompletionEvent
             {
-                ActiveDocument = DocumentName.Get(@"CSharp \path\to\abc.cs"),
+                ActiveDocument = Names.Document(@"CSharp \path\to\abc.cs"),
                 Context2 = new Context
                 {
                     SST = new SST
@@ -53,7 +51,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser.Filters
         [Test]
         public void HasName()
         {
-            Assert.AreEqual(typeof (InvalidCompletionEventFilter).Name, _sut.Name);
+            Assert.AreEqual(typeof(InvalidCompletionEventFilter).Name, _sut.Name);
         }
 
         [Test]
@@ -74,7 +72,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser.Filters
         public void RemovesEventsWithWrongFileExtension()
         {
             var e = CreateValidCompletionEvent();
-            e.ActiveDocument = DocumentName.Get(@"CSharp \path\to\abc.txt");
+            e.ActiveDocument = Names.Document(@"CSharp \path\to\abc.txt");
             Assert.False(_sut.Func(e));
         }
 

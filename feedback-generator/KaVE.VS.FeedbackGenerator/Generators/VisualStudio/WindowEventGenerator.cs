@@ -23,7 +23,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using KaVE.VS.FeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Utils.Naming;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {

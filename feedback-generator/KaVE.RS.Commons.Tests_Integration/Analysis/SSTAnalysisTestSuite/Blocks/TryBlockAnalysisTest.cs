@@ -15,7 +15,7 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -85,7 +85,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     {
                         new CatchBlock
                         {
-                            Parameter = ParameterName.Get(string.Format("[{0}] e", Fix.Exception)),
+                            Parameter = Names.Parameter("[{0}] e", Fix.Exception),
                             Body =
                             {
                                 InvokeStmt("this", Fix.Object_Equals, RefExpr("e"))
@@ -115,7 +115,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     {
                         new CatchBlock
                         {
-                            Parameter = ParameterName.Get(string.Format("[{0}] e", Fix.Exception))
+                            Parameter = Names.Parameter("[{0}] e", Fix.Exception)
                         }
                     }
                 },
@@ -138,7 +138,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                         new CatchBlock
                         {
                             Kind = CatchBlockKind.Unnamed,
-                            Parameter = ParameterName.Get(string.Format("[{0}] ?", Fix.Exception))
+                            Parameter = Names.Parameter("[{0}] ?", Fix.Exception)
                         }
                     }
                 },
@@ -161,7 +161,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                         new CatchBlock
                         {
                             Kind = CatchBlockKind.General,
-                            Parameter = ParameterName.UnknownName
+                            Parameter = Names.UnknownParameter
                         }
                     }
                 },

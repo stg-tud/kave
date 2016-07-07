@@ -17,9 +17,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -218,7 +218,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             {
                 if (p.IsUnknownType || ((ITypeParameterName) p).TypeParameterType.IsUnknownType)
                 {
-                    TypeParameterShortName(TypeName.UnknownName.Identifier);
+                    TypeParameterShortName(Names.UnknownType.Identifier);
                 }
                 else
                 {

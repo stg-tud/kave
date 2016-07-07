@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
@@ -22,13 +23,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
     ///     Aliases are defined by using statements, like "using alias = Some.Reference;". A special case is the alias
     ///     "global" that represents the global namespace by convention.
     /// </summary>
-    public class AliasName : Name
+    public class AliasName : Name, IAliasName
     {
         // TODO remove this name!
-        private static readonly WeakNameCache<AliasName> Registry = WeakNameCache<AliasName>.Get(
+        private static readonly WeakNameCache<IAliasName> Registry = WeakNameCache<IAliasName>.Get(
             id => new AliasName(id));
 
-        public new static AliasName UnknownName
+        public new static IAliasName UnknownName
         {
             get { return Get(UnknownNameIdentifier); }
         }
@@ -36,7 +37,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         /// <summary>
         ///     Alias names are valid C# identifiers that are not keywords, plus the special alias 'global'.
         /// </summary>
-        public new static AliasName Get(string identifier)
+        public new static IAliasName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
@@ -103,7 +102,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         private static ITypeName T(string typeName)
         {
-            return TypeName.Get(typeName + ", P");
+            return Names.Type(typeName + ", P");
         }
 
         private static ITypeHierarchy H(string name)
@@ -146,7 +145,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         private static IMethodName M(string name)
         {
-            return MethodName.Get(string.Format("[T1,P1] [T2,P2].{0}()", name));
+            return Names.Method(string.Format("[T1,P1] [T2,P2].{0}()", name));
         }
     }
 }

@@ -16,5 +16,9 @@
 
 namespace KaVE.Commons.Model.Naming.IDEComponents
 {
-    public interface IDocumentName : IIDEComponentName {}
+    public interface IDocumentName : IIDEComponentName
+    {
+        string Language { get; }
+        string FileName { get; }
+    }
 }

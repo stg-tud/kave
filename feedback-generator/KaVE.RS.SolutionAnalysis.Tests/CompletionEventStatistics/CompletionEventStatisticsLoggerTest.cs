@@ -16,7 +16,7 @@
 
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using NUnit.Framework;
@@ -43,9 +43,9 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
             {
                 _sut.StartingZip(zip);
                 _sut.FoundAppliedCompletionEvents(Lists.NewList<ICompletionEvent>());
-                _sut.Store(MethodName.Get("[T,P] [T1,P].M1()"));
-                _sut.Store(MethodName.Get("[T,P] [T1,P].M2()"));
-                _sut.Store(MethodName.Get("[T,P] [T2,P].M3()"));
+                _sut.Store(Names.Method("[T,P] [T1,P].M1()"));
+                _sut.Store(Names.Method("[T,P] [T1,P].M2()"));
+                _sut.Store(Names.Method("[T,P] [T2,P].M3()"));
                 _sut.FoundOtherProposal();
 
                 _sut.DoneWithZip();

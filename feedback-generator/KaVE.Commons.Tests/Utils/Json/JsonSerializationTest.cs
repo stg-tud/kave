@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using System;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -165,17 +164,17 @@ namespace KaVE.Commons.Tests.Utils.Json
             };
 
             const string expected = "{\r\n" +
-                        "    \"Id\": \"Foo\"\r\n" +
-                        "}";
+                                    "    \"Id\": \"Foo\"\r\n" +
+                                    "}";
 
-            var actual = target.ToPrettyPrintJson(new String[] { "Name" });
+            var actual = target.ToPrettyPrintJson(new[] {"Name"});
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public void ShouldPrettyPrintName()
         {
-            var target = TypeName.Get("Raba, Rababa, 9.5.7.4");
+            var target = Names.Type("Raba, Rababa, 9.5.7.4");
             const string expected = "\"Raba, Rababa, 9.5.7.4\"";
             var actual = target.ToPrettyPrintJson();
             Assert.AreEqual(expected, actual);

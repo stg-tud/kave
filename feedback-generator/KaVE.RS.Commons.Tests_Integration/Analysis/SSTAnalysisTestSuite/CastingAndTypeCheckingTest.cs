@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
@@ -35,7 +35,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(SSTUtil.Declare("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
+            mA.Body.Add(SSTUtil.Declare("t", Names.Type("System.Type, mscorlib, 4.0.0.0")));
             mA.Body.Add(SSTUtil.AssignmentToLocal("t", new ConstantValueExpression()));
 
             AssertAllMethods(mA);

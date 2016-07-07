@@ -15,12 +15,11 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
-    [TestFixture]
     internal class IDEStateEventAnonymizerTest : IDEEventAnonymizerTestBase<IDEStateEvent>
     {
         protected override IDEStateEvent CreateEventWithAllAnonymizablePropertiesSet()
@@ -31,15 +30,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
                 OpenDocuments =
                     new[]
                     {
-                        DocumentName.Get("CSharp C:\\File.cs"),
-                        DocumentName.Get("CSharp C:\\AnotherFile.cs")
+                        Names.Document("CSharp C:\\File.cs"),
+                        Names.Document("CSharp C:\\AnotherFile.cs")
                     },
                 OpenWindows =
                     new[]
                     {
-                        WindowName.Get("vsWinType Solution Explorer"),
-                        WindowName.Get("vsToolWindow Unit Test Sessions"),
-                        WindowName.Get("vsEditor File.cs")
+                        Names.Window("vsWinType Solution Explorer"),
+                        Names.Window("vsToolWindow Unit Test Sessions"),
+                        Names.Window("vsEditor File.cs")
                     }
             };
         }

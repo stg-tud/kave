@@ -21,7 +21,7 @@ using System.Timers;
 using JetBrains.Application;
 using JetBrains.Threading;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -72,7 +72,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
                     {
                         var windowEvent = Create<WindowEvent>();
                         windowEvent.Action = windowAction;
-                        windowEvent.Window = WindowName.Get(MainWindowName);
+                        windowEvent.Window = Names.Window(MainWindowName);
                         FireNow(windowEvent);
                     });
             }

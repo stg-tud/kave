@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
@@ -47,8 +47,8 @@ namespace KaVE.Commons.Tests.Model.Events
             var sut = new TestIDEEvent
             {
                 Id = "1",
-                ActiveDocument = DocumentName.Get("d"),
-                ActiveWindow = WindowName.Get("w"),
+                ActiveDocument = Names.Document("d"),
+                ActiveWindow = Names.Window("w"),
                 // Duration is automatically set
                 IDESessionUUID = "2",
                 KaVEVersion = "3",
@@ -57,8 +57,8 @@ namespace KaVE.Commons.Tests.Model.Events
                 TriggeredBy = IDEEvent.Trigger.Click
             };
             Assert.AreEqual("1", sut.Id);
-            Assert.AreEqual(DocumentName.Get("d"), sut.ActiveDocument);
-            Assert.AreEqual(WindowName.Get("w"), sut.ActiveWindow);
+            Assert.AreEqual(Names.Document("d"), sut.ActiveDocument);
+            Assert.AreEqual(Names.Window("w"), sut.ActiveWindow);
             Assert.AreEqual(TimeSpan.FromDays(1), sut.Duration);
             Assert.AreEqual("2", sut.IDESessionUUID);
             Assert.AreEqual("3", sut.KaVEVersion);
@@ -82,8 +82,8 @@ namespace KaVE.Commons.Tests.Model.Events
             var a = new TestIDEEvent
             {
                 Id = "1",
-                ActiveDocument = DocumentName.Get("d"),
-                ActiveWindow = WindowName.Get("w"),
+                ActiveDocument = Names.Document("d"),
+                ActiveWindow = Names.Window("w"),
                 // Duration is automatically set
                 IDESessionUUID = "2",
                 KaVEVersion = "3",
@@ -94,8 +94,8 @@ namespace KaVE.Commons.Tests.Model.Events
             var b = new TestIDEEvent
             {
                 Id = "1",
-                ActiveDocument = DocumentName.Get("d"),
-                ActiveWindow = WindowName.Get("w"),
+                ActiveDocument = Names.Document("d"),
+                ActiveWindow = Names.Window("w"),
                 // Duration is automatically set
                 IDESessionUUID = "2",
                 KaVEVersion = "3",

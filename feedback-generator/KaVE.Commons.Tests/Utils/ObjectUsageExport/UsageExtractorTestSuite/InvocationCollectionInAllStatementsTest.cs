@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -123,7 +123,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                     "a",
                     new LambdaExpression
                     {
-                        Name = LambdaName.Get(string.Format("[{0}] ()", Fix.Void)),
+                        Name = Names.Lambda("[{0}] ()", Fix.Void),
                         Body =
                         {
                             VarDecl("v", Type("V")),
@@ -139,13 +139,12 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                     }));
 
 
-            var lambdaMethod = string.Format("[{0}] [{1}].M$Lambda()", Type("A"), DefaultClassContext);
             AssertQueriesWithoutSettingContexts(
                 new Query
                 {
                     type = Type("V").ToCoReName(),
                     classCtx = Type("TDecl$Lambda").ToCoReName(),
-                    methodCtx = MethodName.Get(lambdaMethod).ToCoReName(),
+                    methodCtx = Names.Method("[{0}] [{1}].M$Lambda()", Type("A"), DefaultClassContext).ToCoReName(),
                     sites =
                     {
                         CallSites.CreateReceiverCallSite(Method(Type("R"), Type("V"), "methodV"))

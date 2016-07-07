@@ -31,9 +31,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
@@ -42,6 +40,9 @@ namespace KaVE.RS.Commons.Utils.Naming
 {
     public static class ReSharperDeclaredElementNameFactory
     {
+        // TODO find better solution for this and all "modifier" references in this file
+        private const string TypeParameterArrow = " -> ";
+
         [NotNull]
         public static TName GetName<TName>([NotNull] this DeclaredElementInstance instance) where TName : class, IName
         {
@@ -85,17 +86,17 @@ namespace KaVE.RS.Commons.Utils.Naming
             IDictionary<DeclaredElementInstance, IName> seen)
         {
             return
-                IfElementIs<INamespaceName, INamespace>(elem, GetName, substitution, NamespaceName.UnknownName, seen) ??
-                IfElementIs<ITypeName, ITypeParameter>(elem, GetName, substitution, TypeName.UnknownName, seen) ??
-                IfElementIs<ITypeName, ITypeElement>(elem, GetName, substitution, TypeName.UnknownName, seen) ??
-                IfElementIs<IMethodName, IFunction>(elem, GetName, substitution, MethodName.UnknownName, seen) ??
-                IfElementIs<IParameterName, IParameter>(elem, GetName, substitution, ParameterName.UnknownName, seen) ??
-                IfElementIs<IFieldName, IField>(elem, GetName, substitution, FieldName.UnknownName, seen) ??
-                IfElementIs<IPropertyName, IProperty>(elem, GetName, substitution, PropertyName.UnknownName, seen) ??
-                IfElementIs<IEventName, IEvent>(elem, GetName, substitution, EventName.UnknownName, seen) ??
-                IfElementIs<IName, ITypeOwner>(elem, GetName, substitution, LocalVariableName.UnknownName, seen) ??
-                IfElementIs<IName, IAlias>(elem, GetName, substitution, AliasName.UnknownName, seen) ??
-                IfElementIs<IName, IDeclaredElement>(elem, (e, s, a) => null, substitution, Name.UnknownName, seen) ??
+                IfElementIs<INamespaceName, INamespace>(elem, GetName, substitution, Names.UnknownNamespace, seen) ??
+                IfElementIs<ITypeName, ITypeParameter>(elem, GetName, substitution, Names.UnknownType, seen) ??
+                IfElementIs<ITypeName, ITypeElement>(elem, GetName, substitution, Names.UnknownType, seen) ??
+                IfElementIs<IMethodName, IFunction>(elem, GetName, substitution, Names.UnknownMethod, seen) ??
+                IfElementIs<IParameterName, IParameter>(elem, GetName, substitution, Names.UnknownParameter, seen) ??
+                IfElementIs<IFieldName, IField>(elem, GetName, substitution, Names.UnknownField, seen) ??
+                IfElementIs<IPropertyName, IProperty>(elem, GetName, substitution, Names.UnknownProperty, seen) ??
+                IfElementIs<IEventName, IEvent>(elem, GetName, substitution, Names.UnknownEvent, seen) ??
+                IfElementIs<IName, ITypeOwner>(elem, GetName, substitution, Names.UnknownLocalVariable, seen) ??
+                IfElementIs<IName, IAlias>(elem, GetName, substitution, Names.UnknownAlias, seen) ??
+                IfElementIs<IName, IDeclaredElement>(elem, (e, s, a) => null, substitution, Names.UnknownGeneral, seen) ??
                 FallbackHandler(elem, substitution);
         }
 
@@ -104,7 +105,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             var typeName = element.GetType().FullName;
             var elementName = element.ShortName;
             var id = string.Format("UnknownDeclaredElement: {0}, '{1}', {2}", typeName, elementName, substitution);
-            return Name.Get(id);
+            return Names.General(id);
         }
 
         private static bool IsMissingDeclaration(IDeclaredElement element)
@@ -153,10 +154,10 @@ namespace KaVE.RS.Commons.Utils.Naming
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             return
-                IfElementIs<IDelegate>(typeElement, GetName, substitution, seenElements, DelegateTypeName.UnknownName) ??
-                IfElementIs<IEnum>(typeElement, GetName, substitution, seenElements, TypeName.UnknownName) ??
-                IfElementIs<IInterface>(typeElement, GetName, substitution, seenElements, TypeName.UnknownName) ??
-                IfElementIs<IStruct>(typeElement, GetName, substitution, seenElements, TypeName.UnknownName) ??
+                IfElementIs<IDelegate>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
+                IfElementIs<IEnum>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
+                IfElementIs<IInterface>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
+                IfElementIs<IStruct>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
                 Names.Type(typeElement.GetAssemblyQualifiedName(substitution, seenElements));
         }
 
@@ -225,8 +226,8 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return TypeParameterName.Get(
-                typeParameter.ShortName,
+            return Names.Type(
+                typeParameter.ShortName + TypeParameterArrow +
                 typeParameter.GetAssemblyQualifiedNameFromActualType(substitution, seenElements));
         }
 
@@ -242,7 +243,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                     return type.GetName(seenElements).Identifier;
                 }
             }
-            return UnknownTypeName.Identifier;
+            return Names.UnknownType.Identifier;
         }
 
         [NotNull]
@@ -250,7 +251,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return NamespaceName.Get(ns.QualifiedName);
+            return Names.Namespace(ns.QualifiedName);
         }
 
         [NotNull]
@@ -265,7 +266,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier + " ");
             identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier + " ");
             identifier.AppendType(parameter.Type, seenElements).Append(" ").Append(parameter.ShortName);
-            return ParameterName.Get(identifier.ToString());
+            return Names.Parameter(identifier.ToString());
         }
 
         [NotNull]
@@ -282,7 +283,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                 identifier.Append(typeParametersOwner.GetTypeParametersList(substitution, seenElements));
             }
             identifier.AppendParameters(function, substitution, seenElements);
-            return MethodName.Get(identifier.ToString());
+            return Names.Method(identifier.ToString());
         }
 
         [NotNull]
@@ -290,7 +291,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return FieldName.Get(field.GetMemberIdentifier(substitution, field.Type, seenElements));
+            return Names.Field(field.GetMemberIdentifier(substitution, field.Type, seenElements));
         }
 
         [NotNull]
@@ -298,7 +299,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return EventName.Get(evt.GetMemberIdentifier(substitution, evt.Type, seenElements));
+            return Names.Event(evt.GetMemberIdentifier(substitution, evt.Type, seenElements));
         }
 
         [NotNull]
@@ -311,7 +312,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             identifier.AppendIf(property.IsReadable, PropertyName.GetterModifier + " ");
             identifier.Append(property.GetMemberIdentifier(substitution, property.ReturnType, seenElements));
             identifier.AppendParameters(property, substitution, seenElements);
-            return PropertyName.Get(identifier.ToString());
+            return Names.Property(identifier.ToString());
         }
 
         private static string GetMemberIdentifier(this ITypeMember member,
@@ -326,13 +327,13 @@ namespace KaVE.RS.Commons.Utils.Naming
         }
 
         [NotNull]
-        private static LocalVariableName GetName(this ITypeOwner variable,
+        private static ILocalVariableName GetName(this ITypeOwner variable,
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             var identifier = new StringBuilder();
             identifier.AppendType(variable.Type, seenElements).Append(' ').Append(variable.ShortName);
-            return LocalVariableName.Get(identifier.ToString());
+            return Names.LocalVariable(identifier.ToString());
         }
 
         [NotNull]
@@ -340,7 +341,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return AliasName.Get(alias.ShortName);
+            return Names.Alias(alias.ShortName);
         }
 
         [NotNull]
@@ -352,7 +353,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             identifier.AppendType(lambdaExpression.ReturnType, seen);
             identifier.Append(' ');
             identifier.AppendParameters(lambdaExpression.DeclaredParametersOwner, EmptySubstitution.INSTANCE, seen);
-            return LambdaName.Get(identifier.ToString());
+            return Names.Lambda(identifier.ToString());
         }
 
         [NotNull]
@@ -364,7 +365,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             identifier.AppendType(anonymousMethodDecl.ReturnType, seen);
             identifier.Append(' ');
             identifier.AppendParameters(anonymousMethodDecl.DeclaredParametersOwner, EmptySubstitution.INSTANCE, seen);
-            return LambdaName.Get(identifier.ToString());
+            return Names.Lambda(identifier.ToString());
         }
 
         private static void AppendMemberBase(this StringBuilder identifier,
@@ -397,13 +398,13 @@ namespace KaVE.RS.Commons.Utils.Naming
         }
 
         [NotNull]
-        private static String GetAssemblyQualifiedName(this ITypeElement type,
+        private static string GetAssemblyQualifiedName(this ITypeElement type,
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             if (type == null)
             {
-                return UnknownTypeName.Identifier;
+                return Names.UnknownType.Identifier;
             }
 
             var clrTypeName = type.GetClrName();

@@ -22,22 +22,19 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Resolve;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.RS.Commons.Tests_Unit.TestFactories;
 using KaVE.RS.Commons.Utils.Naming;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
+namespace KaVE.RS.Commons.Tests_Unit.Utils.Naming
 {
     public class ReSharperDeclaredElementNameFactoryTest
     {
         [Test]
         public void ShouldReturnUnknownElementNameForUnknownElement()
         {
-            AssertUnknownName<IDeclaredElement>(Name.UnknownName);
+            AssertUnknownName<IDeclaredElement>(Names.UnknownGeneral);
         }
 
         [Test]
@@ -46,13 +43,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
             var nsMock = new Mock<INamespace>();
             nsMock.Setup(ns => ns.QualifiedName).Returns("My.Test.Namespace");
 
-            AssertName(nsMock.Object, NamespaceName.Get("My.Test.Namespace"));
+            AssertName(nsMock.Object, Names.Namespace("My.Test.Namespace"));
         }
 
         [Test]
         public void ShouldGetUnknownNamespaceName()
         {
-            AssertUnknownName<INamespace>(NamespaceName.UnknownName);
+            AssertUnknownName<INamespace>(Names.UnknownNamespace);
         }
 
         [Test]
@@ -62,7 +59,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
                 "Full.Qualified.TypeName",
                 TypeMockUtils.MockAssembly("AssemblyName", "0.9.8.7"));
 
-            AssertName(typeElement, TypeName.Get("Full.Qualified.TypeName, AssemblyName, 0.9.8.7"));
+            AssertName(typeElement, Names.Type("Full.Qualified.TypeName, AssemblyName, 0.9.8.7"));
         }
 
         [Test]
@@ -70,13 +67,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
         {
             var typeElement = TypeMockUtils.MockTypeElement("TypeName", TypeMockUtils.MockProject("Project"));
 
-            AssertName(typeElement, TypeName.Get("TypeName, Project"));
+            AssertName(typeElement, Names.Type("TypeName, Project"));
         }
 
         [Test]
         public void ShouldGetUnknownTypeName()
         {
-            AssertUnknownName<ITypeElement>(TypeName.UnknownName);
+            AssertUnknownName<ITypeElement>(Names.UnknownType);
         }
 
         [TestCase("param0", "ParameterType", "AnAssembly", "1.2.3.4", ParameterKind.VALUE, false, false,
@@ -107,13 +104,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
             paramMock.Setup(p => p.IsOptional).Returns(isOptional);
             paramMock.Setup(p => p.IsParameterArray).Returns(isParameterArray);
 
-            AssertName(paramMock.Object, ParameterName.Get(identifier));
+            AssertName(paramMock.Object, Names.Parameter(identifier));
         }
 
         [Test]
         public void ShouldGetUnknownParameterName()
         {
-            AssertUnknownName<IParameter>(ParameterName.UnknownName);
+            AssertUnknownName<IParameter>(Names.UnknownParameter);
         }
 
         [Test]
@@ -127,7 +124,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 
             AssertName(
                 fieldMock.Object,
-                FieldName.Get("[ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName"));
+                Names.Field("[ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName"));
         }
 
         [Test]
@@ -142,13 +139,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 
             AssertName(
                 fieldMock.Object,
-                FieldName.Get("static [ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName"));
+                Names.Field("static [ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName"));
         }
 
         [Test]
         public void ShouldGetUnknownFieldName()
         {
-            AssertUnknownName<IField>(FieldName.UnknownName);
+            AssertUnknownName<IField>(Names.UnknownField);
         }
 
         [Test]
@@ -165,13 +162,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 
             AssertName(
                 propertyMock.Object,
-                PropertyName.Get("set get [ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].PropertyName()"));
+                Names.Property("set get [ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].PropertyName()"));
         }
 
         [Test]
         public void ShouldGetUnknownPropertyName()
         {
-            AssertUnknownName<IProperty>(PropertyName.UnknownName);
+            AssertUnknownName<IProperty>(Names.UnknownProperty);
         }
 
         [Test]
@@ -186,7 +183,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 
             AssertName(
                 functionMock.Object,
-                MethodName.Get("[ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName()"));
+                Names.Method("[ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName()"));
         }
 
         // TODO @Sven: Write tests for function with parameters
@@ -205,7 +202,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 
             AssertName(
                 method.Object,
-                MethodName.Get("[ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName`2[[T],[U]]()"));
+                Names.Method("[ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName`2[[T],[U]]()"));
         }
 
         // TODO @Sven: Write tests for type parameters
@@ -223,13 +220,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 
             AssertName(
                 functionMock.Object,
-                MethodName.Get("static [ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName()"));
+                Names.Method("static [ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName()"));
         }
 
         [Test]
         public void ShouldGetUnknownMethodName()
         {
-            AssertUnknownName<IMethod>(MethodName.UnknownName);
+            AssertUnknownName<IMethod>(Names.UnknownMethod);
         }
 
         [Test]
@@ -239,13 +236,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
             mockVariable.Setup(v => v.ShortName).Returns("variable");
             mockVariable.Setup(v => v.Type).Returns(TypeMockUtils.MockIType("Type", "Assembly", "1.2.3.4"));
 
-            AssertName(mockVariable.Object, LocalVariableName.Get("[Type, Assembly, 1.2.3.4] variable"));
+            AssertName(mockVariable.Object, Names.LocalVariable("[Type, Assembly, 1.2.3.4] variable"));
         }
 
         [Test]
         public void ShouldGetUnknownLocalVariableName()
         {
-            AssertUnknownName<ITypeOwner>(LocalVariableName.UnknownName);
+            AssertUnknownName<ITypeOwner>(Names.UnknownLocalVariable);
         }
 
         [Test]
@@ -259,13 +256,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 
             AssertName(
                 mockEvent.Object,
-                EventName.Get("[HandlerType, HTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].EventName"));
+                Names.Event("[HandlerType, HTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].EventName"));
         }
 
         [Test]
         public void ShouldGetUnknownEventName()
         {
-            AssertUnknownName<IEvent>(EventName.UnknownName);
+            AssertUnknownName<IEvent>(Names.UnknownEvent);
         }
 
         [Test]
@@ -274,13 +271,13 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
             var aliasMock = new Mock<IAlias>();
             aliasMock.Setup(a => a.ShortName).Returns("global");
 
-            AssertName(aliasMock.Object, AliasName.Get("global"));
+            AssertName(aliasMock.Object, Names.Alias("global"));
         }
 
         [Test]
         public void ShouldGetUnknownAliasName()
         {
-            AssertUnknownName<IAlias>(AliasName.UnknownName);
+            AssertUnknownName<IAlias>(Names.UnknownAlias);
         }
 
         private static void AssertUnknownName<TDeclaredElement>(IName unknownName)

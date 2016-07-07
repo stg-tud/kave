@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.RS.SolutionAnalysis.SortByUser;
@@ -92,7 +92,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             return new UserProfileEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = DocumentName.Get(Guid.NewGuid().ToString()),
+                ActiveDocument = Names.Document(Guid.NewGuid().ToString()),
                 ProfileId = string.Format("{0}", pid)
             };
         }
@@ -102,7 +102,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             return new ActivityEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = DocumentName.Get(Guid.NewGuid().ToString()),
+                ActiveDocument = Names.Document(Guid.NewGuid().ToString()),
                 IDESessionUUID = string.Format("{0}", sid)
             };
         }
@@ -112,7 +112,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             return new ActivityEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = DocumentName.Get(Guid.NewGuid().ToString())
+                ActiveDocument = Names.Document(Guid.NewGuid().ToString())
             };
         }
 

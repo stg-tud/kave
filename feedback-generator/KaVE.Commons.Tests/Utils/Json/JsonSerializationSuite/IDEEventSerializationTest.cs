@@ -16,14 +16,13 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    [TestFixture]
     class IDEEventSerializationTest
     {
         [Test]
@@ -33,8 +32,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             {
                 IDESessionUUID = "0xDEADBEEF",
                 KaVEVersion = "1.2.3.4",
-                ActiveDocument = DocumentName.Get("Random"),
-                ActiveWindow = WindowName.Get("Random"),
+                ActiveDocument = Names.Document("Random"),
+                ActiveWindow = Names.Window("Random"),
                 TriggeredBy = IDEEvent.Trigger.Click,
                 TriggeredAt = System.DateTime.Now,
                 Duration = TimeSpan.FromSeconds(5)
@@ -48,8 +47,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         {
             var ideEvent = new TestIDEEvent
             {
-                ActiveDocument = DocumentName.Get("SomeDocument"),
-                ActiveWindow = WindowName.Get("SomeWindow"),
+                ActiveDocument = Names.Document("SomeDocument"),
+                ActiveWindow = Names.Window("SomeWindow"),
                 Duration = new TimeSpan(0, 0, 1),
                 IDESessionUUID = "0xDEADBEEF",
                 KaVEVersion = "1.2.3.4",
@@ -69,7 +68,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             var triggeredAt = new System.DateTime(2014, 5, 5, 12, 0, 2, 69, DateTimeKind.Local);
             var terminatedAt = new System.DateTime(2014, 5, 5, 12, 0, 7, 69, DateTimeKind.Local);
             var duration = TimeSpan.FromSeconds(5);
-            var eventJson = string.Format("{{\"TriggeredAt\":\"2014-05-05T12:00:02.069000+02:00\",\"Duration\":\"00:00:05\"}}");
+            var eventJson = "{\"TriggeredAt\":\"2014-05-05T12:00:02.069000+02:00\",\"Duration\":\"00:00:05\"}";
 
             var actual = eventJson.ParseJsonTo<TestIDEEvent>();
 

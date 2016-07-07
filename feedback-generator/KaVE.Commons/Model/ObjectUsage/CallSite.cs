@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 
@@ -35,7 +35,7 @@ namespace KaVE.Commons.Model.ObjectUsage
         {
             kind = CallSiteKind.RECEIVER;
             argIndex = 0;
-            method = MethodName.UnknownName.ToCoReName();
+            method = Names.UnknownMethod.ToCoReName();
         }
 
         /// <summary>

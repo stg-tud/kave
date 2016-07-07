@@ -18,7 +18,7 @@ using System;
 using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
@@ -84,12 +84,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             var e1 = new CommandEvent
             {
                 TriggeredAt = DateTime.Now,
-                ActiveDocument = DocumentName.Get("... somefile.cs")
+                ActiveDocument = Names.Document("... somefile.cs")
             };
             var e2 = new CompletionEvent
             {
                 TriggeredAt = DateTime.Now,
-                ActiveDocument = DocumentName.Get("... otherfile.cs")
+                ActiveDocument = Names.Document("... otherfile.cs")
             };
             Write(e1, e2);
             AssertEvents(e1, e2);
@@ -101,12 +101,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             var e1 = new CommandEvent
             {
                 TriggeredAt = DateTime.Now,
-                ActiveDocument = DocumentName.Get("... somefile.cs")
+                ActiveDocument = Names.Document("... somefile.cs")
             };
             var e2 = new CompletionEvent
             {
                 TriggeredAt = DateTime.Now,
-                ActiveDocument = DocumentName.Get("... otherfile.cs")
+                ActiveDocument = Names.Document("... otherfile.cs")
             };
             Write(e1, e2);
             AssertCompletionEvents(e2);
@@ -118,7 +118,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             var e1 = new CompletionEvent
             {
                 TriggeredAt = DateTime.Now,
-                ActiveDocument = DocumentName.Get("... somefile.cs")
+                ActiveDocument = Names.Document("... somefile.cs")
             };
             Write(e1, null);
             AssertCompletionEvents(e1);
@@ -129,7 +129,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
         {
             var e1 = new CompletionEvent
             {
-                ActiveDocument = DocumentName.Get("... somefile.cs")
+                ActiveDocument = Names.Document("... somefile.cs")
             };
             Write(e1);
             AssertCompletionEvents();
@@ -141,7 +141,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             var e1 = new CompletionEvent
             {
                 TriggeredAt = DateTime.Now,
-                ActiveDocument = DocumentName.Get("... somefile.xml")
+                ActiveDocument = Names.Document("... somefile.xml")
             };
             Write(e1);
             AssertCompletionEvents();

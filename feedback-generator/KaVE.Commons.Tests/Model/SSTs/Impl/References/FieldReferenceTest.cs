@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.TestUtils;
@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
 
         private static IFieldName SomeField
         {
-            get { return FieldName.Get("[T1,P1] [T2,P2].E"); }
+            get { return Names.Field("[T1,P1] [T2,P2].E"); }
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
         {
             var sut = new FieldReference();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(FieldName.UnknownName, sut.FieldName);
+            Assert.AreEqual(Names.UnknownField, sut.FieldName);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

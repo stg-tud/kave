@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
 using NUnit.Framework;
@@ -30,7 +30,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             {
                 TriggeredAt = TestTime(startOffset),
                 TerminatedAt = TestTime(endOffset),
-                ActiveDocument = DocumentName.Get("CSharp " + filename)
+                ActiveDocument = Names.Document("CSharp " + filename)
             };
         }
 
@@ -40,17 +40,20 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             {
                 TriggeredAt = TestTime(startOffset),
                 TerminatedAt = TestTime(endOffset),
-                ActiveDocument = DocumentName.Get("CSharp " + filename)
+                ActiveDocument = Names.Document("CSharp " + filename)
             };
         }
 
-        private DebuggerEvent TestDebuggerEvent(int startOffsetInMinutes, int endOffsetInMinutes, string filename, bool isStartOfSession)
+        private DebuggerEvent TestDebuggerEvent(int startOffsetInMinutes,
+            int endOffsetInMinutes,
+            string filename,
+            bool isStartOfSession)
         {
             return new DebuggerEvent
             {
                 TriggeredAt = TestTime(startOffsetInMinutes),
                 TerminatedAt = TestTime(endOffsetInMinutes),
-                ActiveDocument = DocumentName.Get("CSharp " + filename),
+                ActiveDocument = Names.Document("CSharp " + filename),
                 Mode = isStartOfSession ? DebuggerEvent.DebuggerMode.Run : DebuggerEvent.DebuggerMode.Design
             };
         }
@@ -85,7 +88,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(TestReadingEvent(0, 1, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 2, "File1.cs"));
 
-            var expected = new[] { ExpectedInterval(0, 1, "File1.cs", false), ExpectedInterval(1, 2, "File1.cs", true) };
+            var expected = new[] {ExpectedInterval(0, 1, "File1.cs", false), ExpectedInterval(1, 2, "File1.cs", true)};
 
             var actual = sut.SignalEndOfEventStream();
             Assert.AreEqual(expected, actual);
@@ -99,7 +102,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(TestReadingEvent(0, 1, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 2, "File2.cs"));
 
-            var expected = new[] { ExpectedInterval(0, 1, "File1.cs", false), ExpectedInterval(1, 2, "File2.cs", true) };
+            var expected = new[] {ExpectedInterval(0, 1, "File1.cs", false), ExpectedInterval(1, 2, "File2.cs", true)};
 
             var actual = sut.SignalEndOfEventStream();
             Assert.AreEqual(expected, actual);
@@ -113,7 +116,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(TestReadingEvent(0, 2, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 3, "File1.cs"));
 
-            var expected = new[] { ExpectedInterval(0, 2, "File1.cs", false), ExpectedInterval(2, 3, "File1.cs", true) };
+            var expected = new[] {ExpectedInterval(0, 2, "File1.cs", false), ExpectedInterval(2, 3, "File1.cs", true)};
 
             Assert.AreEqual(expected, sut.SignalEndOfEventStream());
         }
@@ -126,7 +129,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(TestReadingEvent(0, 2, "File1.cs"));
             sut.ProcessEvent(TestTypingEvent(1, 3, "File2.cs"));
 
-            var expected = new[] { ExpectedInterval(0, 2, "File1.cs", false), ExpectedInterval(2, 3, "File2.cs", true) };
+            var expected = new[] {ExpectedInterval(0, 2, "File1.cs", false), ExpectedInterval(2, 3, "File2.cs", true)};
 
             Assert.AreEqual(expected, sut.SignalEndOfEventStream());
         }
@@ -141,7 +144,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             sut.ProcessEvent(TestDebuggerEvent(2, 3, "File1.cs", false));
             sut.ProcessEvent(TestTypingEvent(3, 4, "File1.cs"));
 
-            var expected = new[] { ExpectedInterval(0, 3, "File1.cs", false), ExpectedInterval(3, 4, "File1.cs", true) };
+            var expected = new[] {ExpectedInterval(0, 3, "File1.cs", false), ExpectedInterval(3, 4, "File1.cs", true)};
 
             Assert.AreEqual(expected, sut.SignalEndOfEventStream());
         }

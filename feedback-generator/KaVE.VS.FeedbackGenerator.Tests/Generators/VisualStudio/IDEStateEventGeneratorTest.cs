@@ -21,7 +21,7 @@ using JetBrains.DataFlow;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
-using KaVE.VS.FeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Utils.Naming;
 using Moq;
 using NUnit.Framework;
 

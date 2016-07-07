@@ -21,7 +21,7 @@ using System.Security.Cryptography;
 using System.Text;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
@@ -29,7 +29,7 @@ using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
-using KaVE.VS.FeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Utils.Naming;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {
@@ -54,15 +54,15 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             {
                 return name;
             }
-            return ToAnonymousName<DocumentName, TName>(name, ToAnonymousName) ??
-                   ToAnonymousName<WindowName, TName>(name, ToAnonymousName) ??
-                   ToAnonymousName<SolutionName, TName>(name, ToAnonymousName) ??
+            return ToAnonymousName<IDocumentName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IWindowName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<ISolutionName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<ProjectName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<ProjectItemName, TName>(name, ToAnonymousName) ??
-                   ToAnonymousName<AliasName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IAliasName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IAssemblyName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<ITypeName, TName>(name, ToAnonymousName) ??
-                   ToAnonymousName<LocalVariableName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<ILocalVariableName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IFieldName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IPropertyName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IEventName, TName>(name, ToAnonymousName) ??
@@ -102,7 +102,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             var inLocalProject = method.DeclaringType.IsDeclaredInEnclosingProjectOrUnknown();
             identifier.AppendTypeParameters(method, inLocalProject);
             identifier.AppendParameters(method.Parameters, inLocalProject);
-            return MethodName.Get(identifier.ToString());
+            return Names.Method(identifier.ToString());
         }
 
         private static void AppendParameters(this StringBuilder identifier,
@@ -157,7 +157,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
         {
             var identifier = new StringBuilder();
             identifier.AppendAnonymousMemberName(@event, @event.HandlerType);
-            return EventName.Get(identifier.ToString());
+            return Names.Event(identifier.ToString());
         }
 
         private static IPropertyName ToAnonymousName(IPropertyName property)
@@ -173,7 +173,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
         {
             var identifier = new StringBuilder();
             identifier.AppendAnonymousMemberName(field, field.ValueType);
-            return FieldName.Get(identifier.ToString());
+            return Names.Field(identifier.ToString());
         }
 
         private static void AppendAnonymousMemberName(this StringBuilder identifier,
@@ -190,17 +190,17 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.Append(nameShouldNotBeHashed ? member.Name : member.Name.ToHash());
         }
 
-        private static LocalVariableName ToAnonymousName(LocalVariableName variable)
+        private static ILocalVariableName ToAnonymousName(LocalVariableName variable)
         {
             var identifier = new StringBuilder();
             identifier.AppendAnonymousTypeName(variable.ValueType).Append(' ');
             identifier.Append(variable.Name.ToHash());
-            return LocalVariableName.Get(identifier.ToString());
+            return Names.LocalVariable(identifier.ToString());
         }
 
         private static IName ToAnonymousName(IName name)
         {
-            return Name.Get(name.Identifier.ToHash());
+            return Names.General(name.Identifier.ToHash());
         }
 
         private static ITypeName ToAnonymousName(ITypeName type)
@@ -236,7 +236,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.Append("].");
             identifier.AppendParameters(type.Parameters, true);
 
-            return (DelegateTypeName) TypeName.Get(identifier.ToString());
+            return (DelegateTypeName) Names.Type(identifier.ToString());
         }
 
         private static TypeName ToAnonymousName(TypeName type)
@@ -247,7 +247,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.Append(inEnclosingProject ? type.AnonymizedRawFullName() : type.RawFullName);
             identifier.AppendTypeParameters(type, inEnclosingProject).Append(", ");
             identifier.Append(type.Assembly.ToAnonymousName());
-            return (TypeName) TypeName.Get(identifier.ToString());
+            return (TypeName) Names.Type(identifier.ToString());
         }
 
         private static void AppendTypeKindPrefix(this StringBuilder identifier, ITypeName type)
@@ -355,13 +355,13 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             return assembly.Version == AssemblyVersion.UnknownName;
         }
 
-        private static AliasName ToAnonymousName(AliasName alias)
+        private static IAliasName ToAnonymousName(AliasName alias)
         {
-            return AliasName.Get(alias.Identifier.ToHash());
+            return Names.Alias(alias.Identifier.ToHash());
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static DocumentName ToAnonymousName([CanBeNull] this DocumentName document)
+        public static IDocumentName ToAnonymousName([CanBeNull] this DocumentName document)
         {
             return document == null
                 ? null
@@ -385,7 +385,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static SolutionName ToAnonymousName([CanBeNull] this SolutionName solution)
+        public static ISolutionName ToAnonymousName([CanBeNull] this SolutionName solution)
         {
             return solution == null
                 ? null
@@ -393,7 +393,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static WindowName ToAnonymousName([CanBeNull] this WindowName window)
+        public static IWindowName ToAnonymousName([CanBeNull] this WindowName window)
         {
             return window == null
                 ? null

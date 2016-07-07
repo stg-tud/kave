@@ -20,13 +20,13 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class DocumentName : Name, IIDEComponentName
+    public class DocumentName : Name, IDocumentName
     {
         private static readonly WeakNameCache<DocumentName> Registry =
             WeakNameCache<DocumentName>.Get(id => new DocumentName(id));
 
         [NotNull]
-        public new static DocumentName Get(string identifier)
+        public new static IDocumentName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }

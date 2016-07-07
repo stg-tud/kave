@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
 
@@ -61,7 +60,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             // parameter type in the incomplete method declaration
             // > public void M(int i, )
             return typeElement == null
-                ? UnknownTypeName.Instance
+                ? Names.UnknownType
                 : (ITypeName) typeElement.GetName(type.GetSubstitution(), seenElements);
         }
 
@@ -69,20 +68,21 @@ namespace KaVE.RS.Commons.Utils.Naming
         private static ITypeName GetName(this IArrayType arrayType,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return ArrayTypeName.From(arrayType.ElementType.GetName(seenElements), arrayType.Rank);
+            var baseType = arrayType.ElementType.GetName(seenElements);
+            return Names.ArrayType(arrayType.Rank, baseType);
         }
 
         [NotNull]
         private static ITypeName GetName(this IAnonymousType type,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return TypeName.UnknownName;
+            return Names.UnknownType;
         }
 
         [NotNull]
         private static ITypeName GetName(this IMultitype type, IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return TypeName.UnknownName;
+            return Names.UnknownType;
         }
 
         [NotNull]

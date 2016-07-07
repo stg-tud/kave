@@ -17,25 +17,24 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    [TestFixture]
     internal class SolutionEventSerializationTest
     {
         [Test]
-        public void ShoudlSerializeToString()
+        public void ShouldSerializeToString()
         {
             var solutionEvent = new SolutionEvent
             {
-                ActiveDocument = DocumentName.Get("SomeDocument"),
-                ActiveWindow = WindowName.Get("SomeWindow"),
+                ActiveDocument = Names.Document("SomeDocument"),
+                ActiveWindow = Names.Window("SomeWindow"),
                 Action = SolutionEvent.SolutionAction.RenameSolution,
                 Duration = new TimeSpan(0, 0, 1),
                 IDESessionUUID = "0xDEADBEEF",
-                Target = SolutionName.Get("SomeSolution"),
+                Target = Names.Solution("SomeSolution"),
                 TriggeredAt = new System.DateTime(2010, 01, 01, 12, 30, 44),
                 TriggeredBy = IDEEvent.Trigger.Click
             };

@@ -18,9 +18,7 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
@@ -34,10 +32,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         {
             var actionEvent = new WindowEvent
             {
-                Window = WindowName.Get("MyWindow"),
+                Window = Names.Window("MyWindow"),
                 Action = WindowEvent.WindowAction.Create
             };
-            string expected = String.Join(
+            string expected = string.Join(
                 Environment.NewLine,
                 "    \"Window\": \"MyWindow\"",
                 "    \"Action\": \"Create\"");
@@ -50,18 +48,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         {
             var completionEvent = new CompletionEvent
             {
-                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}},
+                Context2 = new Context {SST = new SST {EnclosingType = Names.Type("TestClass,TestProject")}},
                 ProposalCollection =
                 {
-                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
-                    new Proposal {Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
-                    new Proposal {Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
+                    new Proposal {Name = Names.Field("[FieldType,P] [TestClass,P].SomeField")},
+                    new Proposal {Name = Names.Event("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
+                    new Proposal {Name = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
                 },
                 Selections =
                 {
                     new ProposalSelection
                     {
-                        Proposal = new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
+                        Proposal = new Proposal {Name = Names.Field("[FieldType,P] [TestClass,P].SomeField")},
                         SelectedAfter = TimeSpan.FromSeconds(1)
                     },
                     new ProposalSelection
@@ -69,7 +67,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                         Proposal =
                             new Proposal
                             {
-                                Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
+                                Name = Names.Event("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
                             },
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     },
@@ -78,7 +76,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                         Proposal =
                             new Proposal
                             {
-                                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
                             },
                         SelectedAfter = TimeSpan.FromSeconds(3)
                     }
@@ -88,7 +86,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                 ProposalCount = 1
             };
 
-            var expected = String.Join(
+            var expected = string.Join(
                 Environment.NewLine,
                 "    \"TerminatedBy\": \"Typing\"",
                 "    \"TerminatedState\": \"Cancelled\"",
@@ -102,7 +100,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         {
             var editEvent = new EditEvent
             {
-                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}},
+                Context2 = new Context {SST = new SST {EnclosingType = Names.Type("TestClass,TestProject")}},
                 NumberOfChanges = 2,
                 SizeOfChanges = 20
             };
@@ -120,8 +118,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         {
             var actionEvent = new CommandEvent
             {
-                ActiveDocument = DocumentName.Get("Doc"),
-                ActiveWindow = WindowName.Get("Window"),
+                ActiveDocument = Names.Document("Doc"),
+                ActiveWindow = Names.Window("Window"),
                 IDESessionUUID = "UUID",
                 TerminatedAt = DateTime.Now,
                 TriggeredAt = DateTime.Now,

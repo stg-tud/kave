@@ -21,8 +21,8 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -157,7 +157,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
                 if (decl.Initializer != null)
                 {
-                    var name = MethodName.UnknownName;
+                    var name = Names.UnknownMethod;
 
                     var substitution = decl.DeclaredElement.IdSubstitution;
                     var resolvedRef = decl.Initializer.Reference.Resolve();

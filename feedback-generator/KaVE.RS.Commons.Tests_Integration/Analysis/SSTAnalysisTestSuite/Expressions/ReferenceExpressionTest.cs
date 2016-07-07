@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -185,14 +184,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
             SetupReferenceExample("c.c.f$");
 
             AssertReferenceExampleBody(
-                VarDecl("$0", TypeName.Get("N.C, TestProject")),
+                VarDecl("$0", Names.Type("N.C, TestProject")),
                 Assign(
                     "$0",
                     RefExpr(
                         new FieldReference
                         {
                             Reference = VarRef("c"),
-                            FieldName = FieldName.Get(string.Format("[{0}] [{0}].c", "N.C, TestProject"))
+                            FieldName = Names.Field(string.Format("[{0}] [{0}].c", "N.C, TestProject"))
                         })),
                 ExprStmt(
                     new CompletionExpression

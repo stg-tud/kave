@@ -20,13 +20,13 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class WindowName : Name, IIDEComponentName
+    public class WindowName : Name, IWindowName
     {
-        private static readonly WeakNameCache<WindowName> Registry =
-            WeakNameCache<WindowName>.Get(id => new WindowName(id));
+        private static readonly WeakNameCache<IWindowName> Registry =
+            WeakNameCache<IWindowName>.Get(id => new WindowName(id));
 
         [NotNull]
-        public new static WindowName Get(string identifier)
+        public new static IWindowName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }

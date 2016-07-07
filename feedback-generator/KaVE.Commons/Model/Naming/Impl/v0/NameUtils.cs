@@ -26,7 +26,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
     {
         public static IMethodName RemoveGenerics(this IMethodName name)
         {
-            return MethodName.Get(RemoveGenerics(name.Identifier));
+            return Names.Method(RemoveGenerics(name.Identifier));
         }
 
         private static string RemoveGenerics(string id)

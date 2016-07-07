@@ -16,8 +16,8 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -38,7 +38,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 
         public FieldDeclaration()
         {
-            Name = FieldName.UnknownName;
+            Name = Names.UnknownField;
         }
 
         private bool Equals(FieldDeclaration other)

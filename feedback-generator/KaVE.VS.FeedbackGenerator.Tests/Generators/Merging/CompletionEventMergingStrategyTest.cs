@@ -18,7 +18,7 @@ using System;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
 using KaVE.RS.Commons.Utils.LookupItems;
 using KaVE.VS.FeedbackGenerator.Generators.Merging;
@@ -43,8 +43,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
         {
             _proposalCollection = LookupItemsMockUtils.MockLookupItemList(5).ToProposalCollection();
             var now = DateTime.Now;
-            var activeWindow = WindowName.Get("testWindow");
-            var activeDocument = DocumentName.Get("testDocument");
+            var activeWindow = Names.Window("testWindow");
+            var activeDocument = Names.Document("testDocument");
 
             _event = new CompletionEvent
             {

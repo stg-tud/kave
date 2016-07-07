@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -29,7 +28,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
     {
         private static readonly ILambdaExpression EmptyDefaultDelegate = new LambdaExpression
         {
-            Name = LambdaName.Get(string.Format("[{0}] ()", Fix.Void))
+            Name = Names.Lambda("[{0}] ()", Fix.Void)
         };
 
         [Test]
@@ -46,7 +45,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             ");
 
             var listenerName =
-                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
+                Names.Method(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
 
             AssertBody(
                 "M",
@@ -73,7 +72,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             ");
 
             var listenerName =
-                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
+                Names.Method(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
 
             AssertBody(
                 "M",
@@ -104,7 +103,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
                     Reference = EventRef("E", Fix.ActionOfInt),
                     Expression = new LambdaExpression
                     {
-                        Name = LambdaName.Get(string.Format("[{0}] ([{1}] i)", Fix.Void, Fix.Int))
+                        Name = Names.Lambda("[{0}] ([{1}] i)", Fix.Void, Fix.Int)
                     }
                 },
                 ExprStmt(new CompletionExpression()));
@@ -145,7 +144,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             ");
 
             var listenerName =
-                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
+                Names.Method(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
 
             AssertBody(
                 "M",
@@ -174,12 +173,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
             ");
 
             var delegateType =
-                TypeName.Get(string.Format("d:[{0}] [N.C+Handler, TestProject].([{1}] i)", Fix.Void, Fix.Int));
-            var parameter = ParameterName.Get(string.Format("[{0}] target", delegateType));
+                Names.Type(string.Format("d:[{0}] [N.C+Handler, TestProject].([{1}] i)", Fix.Void, Fix.Int));
+            var parameter = Names.Parameter("[{0}] target", delegateType);
             var ctor = Fix.Ctor(delegateType, parameter);
 
             var listenerName =
-                MethodName.Get(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
+                Names.Method(string.Format("[{0}] [{1}].Listener([{2}] i)", Fix.Void, Fix.TestClass, Fix.Int));
 
             AssertBody(
                 "M",

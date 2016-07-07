@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
@@ -107,7 +107,7 @@ namespace KaVE.Commons.Tests.Utils.Json
             {
                 argIndex = 3,
                 kind = CallSiteKind.RECEIVER,
-                method = MethodName.Get("[R,P] [T,P].M()").ToCoReName()
+                method = Names.Method("[R,P] [T,P].M()").ToCoReName()
             };
 
             var json = "{" + Environment.NewLine +
@@ -128,7 +128,7 @@ namespace KaVE.Commons.Tests.Utils.Json
             var obj = new CallSite
             {
                 kind = CallSiteKind.RECEIVER,
-                method = MethodName.Get("[R,P] [T,P].M()").ToCoReName()
+                method = Names.Method("[R,P] [T,P].M()").ToCoReName()
             };
 
             var json = "{" + Environment.NewLine +
@@ -148,8 +148,8 @@ namespace KaVE.Commons.Tests.Utils.Json
             var obj = new DefinitionSite
             {
                 kind = DefinitionSiteKind.THIS,
-                field = FieldName.Get("[F,P] [T,P].f").ToCoReName(),
-                method = MethodName.Get("[R,P] [T,P].M()").ToCoReName(),
+                field = Names.Field("[F,P] [T,P].f").ToCoReName(),
+                method = Names.Method("[R,P] [T,P].M()").ToCoReName(),
                 argIndex = 4
             };
 
@@ -192,8 +192,8 @@ namespace KaVE.Commons.Tests.Utils.Json
             var obj = new DefinitionSite
             {
                 kind = DefinitionSiteKind.THIS,
-                field = FieldName.Get("[F,P] [T,P].f").ToCoReName(),
-                method = MethodName.Get("[R,P] [T,P].M()").ToCoReName()
+                field = Names.Field("[F,P] [T,P].f").ToCoReName(),
+                method = Names.Method("[R,P] [T,P].M()").ToCoReName()
             };
 
             var json = "{" + Environment.NewLine +

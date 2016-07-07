@@ -16,7 +16,7 @@
 
 using System;
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events
@@ -112,14 +112,14 @@ namespace KaVE.Commons.Model.Events
         ///     <code>null</code>.
         /// </summary>
         [DataMember]
-        public WindowName ActiveWindow { get; set; }
+        public IWindowName ActiveWindow { get; set; }
 
         /// <summary>
         ///     The document with the focus, i.e., the document inside the active window, at the moment the event is fired. If the
         ///     focus was not in a document, this property is <code>null</code>.
         /// </summary>
         [DataMember]
-        public DocumentName ActiveDocument { get; set; }
+        public IDocumentName ActiveDocument { get; set; }
 
         private bool Equals(IDEEvent other)
         {

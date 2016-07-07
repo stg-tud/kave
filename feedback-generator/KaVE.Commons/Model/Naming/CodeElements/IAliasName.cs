@@ -14,22 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
-
-namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
+namespace KaVE.Commons.Model.Naming.CodeElements
 {
-    public class SolutionName : Name, ISolutionName
-    {
-        private static readonly WeakNameCache<ISolutionName> Registry =
-            WeakNameCache<ISolutionName>.Get(id => new SolutionName(id));
-
-        public new static ISolutionName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private SolutionName(string identifier)
-            : base(identifier) {}
-    }
+    public interface IAliasName : IName {}
 }

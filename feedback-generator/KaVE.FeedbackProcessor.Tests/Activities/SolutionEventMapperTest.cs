@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.FeedbackProcessor.Activities;
 using NUnit.Framework;
 
@@ -33,7 +33,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new SolutionEvent
             {
-                Target = DocumentName.Get(""),
+                Target = Names.Document(""),
                 Action = SolutionEvent.SolutionAction.AddProject
             };
             // TODO I'm not sure about the correct category...

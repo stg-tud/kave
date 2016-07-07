@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -41,7 +42,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
         public MethodReference()
         {
             Reference = new VariableReference();
-            MethodName = Naming.Impl.v0.CodeElements.MethodName.UnknownName;
+            MethodName = Names.UnknownMethod;
         }
 
         private bool Equals(MethodReference other)

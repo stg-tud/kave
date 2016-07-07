@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -33,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new InvocationExpression();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(MethodName.UnknownName, sut.MethodName);
+            Assert.AreEqual(Names.UnknownMethod, sut.MethodName);
             Assert.AreEqual(Lists.NewList<ISimpleExpression>(), sut.Parameters);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());

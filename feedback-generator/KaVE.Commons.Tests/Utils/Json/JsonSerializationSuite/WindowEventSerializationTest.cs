@@ -15,12 +15,11 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    [TestFixture]
     internal class WindowEventSerializationTest
     {
         [Test]
@@ -29,7 +28,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             var windowEvent = new WindowEvent
             {
                 Action = WindowEvent.WindowAction.Activate,
-                Window = WindowName.Get("SomeProcessedWindow")
+                Window = Names.Window("SomeProcessedWindow")
             };
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.WindowEvent, KaVE.Commons\",\"Window\":\"VisualStudio.WindowName:SomeProcessedWindow\",\"Action\":1,\"TriggeredBy\":0}";

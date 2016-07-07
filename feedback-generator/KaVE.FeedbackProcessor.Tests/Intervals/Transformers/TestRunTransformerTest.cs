@@ -17,8 +17,8 @@
 using System;
 using System.Linq;
 using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using KaVE.FeedbackProcessor.Intervals.Transformers;
 using NUnit.Framework;
@@ -28,13 +28,13 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
     internal class TestRunTransformerTest : TransformerTestBase<TestRunInterval>
     {
         private static readonly IMethodName TestMethod1 =
-            MethodName.Get("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj1, 1.0.0.0].Test()");
+            Names.Method("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj1, 1.0.0.0].Test()");
 
         private static readonly IMethodName TestMethod2 =
-            MethodName.Get("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj1, 1.0.0.0].Test2()");
+            Names.Method("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj1, 1.0.0.0].Test2()");
 
         private static readonly IMethodName TestMethodInOtherProject =
-            MethodName.Get("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj2, 1.0.0.0].Test()");
+            Names.Method("[System.Void, mscore, 4.0.0.0] [Test.TestClass, TestProj2, 1.0.0.0].Test()");
 
         [Test]
         public void TransformsTestResultCorrectly()

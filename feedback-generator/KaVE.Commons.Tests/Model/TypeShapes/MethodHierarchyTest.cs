@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Naming;
@@ -29,7 +29,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         public void DefaultValues()
         {
             var sut = new MethodHierarchy();
-            Assert.AreEqual(MethodName.UnknownName, sut.Element);
+            Assert.AreEqual(Names.UnknownMethod, sut.Element);
             Assert.Null(sut.Super);
             Assert.Null(sut.First);
             Assert.IsFalse(sut.IsDeclaredInParentHierarchy);
@@ -132,7 +132,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
 
         private static IMethodName M(string s)
         {
-            return MethodName.Get(string.Format("[T1,P1] [T2,P2].{0}()", s));
+            return Names.Method(string.Format("[T1,P1] [T2,P2].{0}()", s));
         }
     }
 }

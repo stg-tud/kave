@@ -17,8 +17,6 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using Moq;
@@ -43,18 +41,18 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
         [Test]
         public void Run()
         {
-            var m1 = MethodName.Get("[T,P] [T2,P].M()");
-            var m2 = MethodName.Get("[T,P] [T2,P].M2()");
-            var m3 = MethodName.Get("[T,P] [T3,P].M3()");
+            var m1 = Names.Method("[T,P] [T2,P].M()");
+            var m2 = Names.Method("[T,P] [T2,P].M2()");
+            var m3 = Names.Method("[T,P] [T3,P].M3()");
 
             Mock.Get(_io).Setup(io => io.FindZips()).Returns(Lists.NewList("a", "b"));
 
             Mock.Get(_io)
                 .Setup(io => io.FindAppliedCompletionEvents("a"))
-                .Returns(Lists.NewList(Ce(Name.Get("x")), Ce(m1)));
+                .Returns(Lists.NewList(Ce(Names.General("x")), Ce(m1)));
             Mock.Get(_io)
                 .Setup(io => io.FindAppliedCompletionEvents("b"))
-                .Returns(Lists.NewList(Ce(m2), Ce(Name.Get("y")), Ce(m3)));
+                .Returns(Lists.NewList(Ce(m2), Ce(Names.General("y")), Ce(m3)));
 
             _sut.Run();
 

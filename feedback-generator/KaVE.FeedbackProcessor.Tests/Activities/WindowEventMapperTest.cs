@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.TestUtils.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("Type Caption"),
+                Window = Names.Window("Type Caption"),
                 Action = WindowEvent.WindowAction.Create
             };
             AssertMapsToActivity(@event, Activity.LocalConfiguration);
@@ -48,7 +48,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("Type Caption"),
+                Window = Names.Window("Type Caption"),
                 Action = WindowEvent.WindowAction.Move
             };
             AssertMapsToActivity(@event, Activity.LocalConfiguration);
@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("Type Caption"),
+                Window = Names.Window("Type Caption"),
                 Action = WindowEvent.WindowAction.Close
             };
             AssertMapsToActivity(@event, Activity.LocalConfiguration);
@@ -70,7 +70,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeDocumentOutline Document Outline"),
+                Window = Names.Window("vsWindowTypeDocumentOutline Document Outline"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivities(@event, Activity.Navigation);
@@ -81,7 +81,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeBrowser Object Browser"),
+                Window = Names.Window("vsWindowTypeBrowser Object Browser"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.Navigation);
@@ -92,7 +92,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeDocument MyClass.cs"),
+                Window = Names.Window("vsWindowTypeDocument MyClass.cs"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.Navigation);
@@ -116,7 +116,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get(string.Format("vsWindowTypeDocument {0} 90210", workItemType)),
+                Window = Names.Window(string.Format("vsWindowTypeDocument {0} 90210", workItemType)),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.ProjectManagement);
@@ -127,7 +127,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get(string.Format("vsWindowTypeDocument New {0} An Item", workItemType)),
+                Window = Names.Window(string.Format("vsWindowTypeDocument New {0} An Item", workItemType)),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.ProjectManagement);
@@ -139,7 +139,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get(string.Format("vsWindowTypeDocument blabla [{0}]", marker)),
+                Window = Names.Window(string.Format("vsWindowTypeDocument blabla [{0}]", marker)),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.ProjectManagement);
@@ -150,7 +150,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeDocument something.wiq"),
+                Window = Names.Window("vsWindowTypeDocument something.wiq"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.ProjectManagement);
@@ -164,7 +164,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
 
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeDocument bla"),
+                Window = Names.Window("vsWindowTypeDocument bla"),
                 Action = WindowEvent.WindowAction.Activate
             };
             Sut.Map(@event);
@@ -177,7 +177,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeProperties Properties"),
+                Window = Names.Window("vsWindowTypeProperties Properties"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.Development);
@@ -188,7 +188,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeOutput Output"),
+                Window = Names.Window("vsWindowTypeOutput Output"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivities(@event, Activity.Development);
@@ -199,7 +199,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeSolutionExplorer Solution Explorer"),
+                Window = Names.Window("vsWindowTypeSolutionExplorer Solution Explorer"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.Navigation);
@@ -210,7 +210,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeTaskList Task List"),
+                Window = Names.Window("vsWindowTypeTaskList Task List"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivities(@event, Activity.ProjectManagement);
@@ -221,7 +221,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeToolbox Toolbox"),
+                Window = Names.Window("vsWindowTypeToolbox Toolbox"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.Development);
@@ -232,7 +232,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeToolWindow Unit Test Explorer"),
+                Window = Names.Window("vsWindowTypeToolWindow Unit Test Explorer"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.Development);
@@ -243,7 +243,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeToolWindow Analyze <Some Target>"),
+                Window = Names.Window("vsWindowTypeToolWindow Analyze <Some Target>"),
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivity(@event, Activity.Development);
@@ -257,7 +257,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
 
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeToolWindow Unknown Window"),
+                Window = Names.Window("vsWindowTypeToolWindow Unknown Window"),
                 Action = WindowEvent.WindowAction.Activate
             };
             Sut.Map(@event);
@@ -270,7 +270,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeMainWindow Startseite - Microsoft Visual Studio"),
+                Window = Names.Window("vsWindowTypeMainWindow Startseite - Microsoft Visual Studio"),
                 Action = WindowEvent.WindowAction.Activate
             };
 
@@ -282,7 +282,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeMainWindow Aktueller Fenstertitel"),
+                Window = Names.Window("vsWindowTypeMainWindow Aktueller Fenstertitel"),
                 Action = WindowEvent.WindowAction.Deactivate
             };
 
@@ -294,7 +294,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("unknownWindowType Foo"),
+                Window = Names.Window("unknownWindowType Foo"),
                 Action = WindowEvent.WindowAction.Activate
             };
             Sut.Map(@event);

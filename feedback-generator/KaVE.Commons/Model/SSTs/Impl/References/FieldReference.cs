@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
@@ -41,7 +42,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
         public FieldReference()
         {
             Reference = new VariableReference();
-            FieldName = Naming.Impl.v0.CodeElements.FieldName.UnknownName;
+            FieldName = Names.UnknownField;
         }
 
         private bool Equals(FieldReference other)

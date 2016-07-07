@@ -20,8 +20,7 @@ using System.Linq;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.TestUtils.Utils.Exceptions;
 using KaVE.RS.Commons.Utils;
@@ -142,7 +141,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             var analyzedTypes = results.AnalyzedContexts.Select(context => context.TypeShape.TypeHierarchy.Element);
-            CollectionAssert.Contains(analyzedTypes, TypeName.Get("Project1.ClassInNamespace, Project1"));
+            CollectionAssert.Contains(analyzedTypes, Names.Type("Project1.ClassInNamespace, Project1"));
         }
 
         [Test]
@@ -153,7 +152,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             var context = GetContextForType(results, "ClassWithCoreLibDependency");
             var expectedDeclaration = new FieldDeclaration
             {
-                Name = FieldName.Get(
+                Name = Names.Field(
                     "[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [Project1.ClassWithCoreLibDependency, Project1].MyList")
             };
             CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
@@ -167,7 +166,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             var context = GetContextForType(results, "ClassWithNuGetDependency");
             var expectedDeclaration = new FieldDeclaration
             {
-                Name = FieldName.Get(
+                Name = Names.Field(
                     "[Newtonsoft.Json.JsonConverter, Newtonsoft.Json, 6.0.0.0] [Project1.ClassWithNuGetDependency, Project1].MyConverter")
             };
             CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);

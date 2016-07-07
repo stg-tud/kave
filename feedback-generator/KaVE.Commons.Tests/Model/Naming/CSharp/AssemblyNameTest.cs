@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void HappyPath()
         {
-            var n = Commons.Model.Naming.Names.GetAssemblyName("A, 1.2.3.4");
+            var n = Commons.Model.Naming.Names.Assembly("A, 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -33,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void NoVersion()
         {
-            var n = Commons.Model.Naming.Names.GetAssemblyName("A");
+            var n = Commons.Model.Naming.Names.Assembly("A");
             AssertName(n, "A");
             AssertVersion(n, "?");
         }
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void KommasInName()
         {
-            var n = Commons.Model.Naming.Names.GetAssemblyName("A (B, C)");
+            var n = Commons.Model.Naming.Names.Assembly("A (B, C)");
             AssertName(n, "A (B, C)");
             AssertVersion(n, AssemblyVersion.UnknownName.Identifier);
         }
@@ -49,7 +49,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void KommasInNameAndVersion()
         {
-            var n = Commons.Model.Naming.Names.GetAssemblyName("A (B, C), 1.2.3.4");
+            var n = Commons.Model.Naming.Names.Assembly("A (B, C), 1.2.3.4");
             AssertName(n, "A (B, C)");
             AssertVersion(n, "1.2.3.4");
         }
@@ -57,7 +57,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void LotOfWhitespace()
         {
-            var n = Commons.Model.Naming.Names.GetAssemblyName(" A , 1.2.3.4");
+            var n = Commons.Model.Naming.Names.Assembly(" A , 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -65,7 +65,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void NoWhitespace()
         {
-            var n = Commons.Model.Naming.Names.GetAssemblyName("A,1.2.3.4");
+            var n = Commons.Model.Naming.Names.Assembly("A,1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }

@@ -15,10 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
@@ -49,24 +46,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldNotAnonymizeUnknownNames()
         {
-            var actual = Name.UnknownName.ToAnonymousName();
-            var expected = Name.UnknownName;
+            var actual = Names.UnknownGeneral.ToAnonymousName();
+            var expected = Names.UnknownGeneral;
             Assert.AreEqual(expected, actual);
             // equivalent...
-            var actual2 = TypeName.UnknownName.ToAnonymousName();
-            var expected2 = TypeName.UnknownName;
+            var actual2 = Names.UnknownType.ToAnonymousName();
+            var expected2 = Names.UnknownType;
             Assert.AreEqual(expected2, actual2);
             // equivalent...
-            var actual3 = MethodName.UnknownName.ToAnonymousName();
-            var expected3 = MethodName.UnknownName;
+            var actual3 = Names.UnknownMethod.ToAnonymousName();
+            var expected3 = Names.UnknownMethod;
             Assert.AreEqual(expected3, actual3);
         }
 
         [Test]
         public void ShouldAnonymizeFileNameFromDocumentName()
         {
-            var original = DocumentName.Get("CSharp C:\\File.cs");
-            var expected = DocumentName.Get("CSharp ixlmuLAuUg0yq59EtLWB7w==");
+            var original = Names.Document("CSharp C:\\File.cs");
+            var expected = Names.Document("CSharp ixlmuLAuUg0yq59EtLWB7w==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -74,8 +71,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeWindowCaptionIfItContainsAFileName()
         {
-            var original = WindowName.Get("vsSomeWindowType C:\\Contains\\File.Name");
-            var expected = WindowName.Get("vsSomeWindowType aVxPI-qHR-QO3bMv-Ker6w==");
+            var original = Names.Window("vsSomeWindowType C:\\Contains\\File.Name");
+            var expected = Names.Window("vsSomeWindowType aVxPI-qHR-QO3bMv-Ker6w==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -83,7 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepWindowCaptionIfItDoesNotContainAFileName()
         {
-            var original = WindowName.Get("vsToolWindow Unit Test Sessions");
+            var original = Names.Window("vsToolWindow Unit Test Sessions");
 
             AssertAnonymizedEquals(original, original);
         }
@@ -91,8 +88,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeSolutionPath()
         {
-            var original = SolutionName.Get("C:\\Solution.sln");
-            var expected = SolutionName.Get("H_MB2iBprhCn9SyXdxnVNQ==");
+            var original = Names.Solution("C:\\Solution.sln");
+            var expected = Names.Solution("H_MB2iBprhCn9SyXdxnVNQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -118,8 +115,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeAlias()
         {
-            var original = AliasName.Get("global");
-            var expected = AliasName.Get("rW1oPYChRX9JiYuIQBWjBQ==");
+            var original = Names.Alias("global");
+            var expected = Names.Alias("rW1oPYChRX9JiYuIQBWjBQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -127,8 +124,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeGenericName()
         {
-            var original = Name.Get("some name that might or might not contain private information");
-            var expected = Name.Get("C5my9gXfmcktCtPzYR9MEQ==");
+            var original = Names.General("some name that might or might not contain private information");
+            var expected = Names.General("C5my9gXfmcktCtPzYR9MEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -136,8 +133,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeAssemblyIfEnclosingProject()
         {
-            var original = AssemblyName.Get("MyProject");
-            var expected = AssemblyName.Get("zRLpydQJBMrk8DCiP3BwEQ==");
+            var original = Names.Assembly("MyProject");
+            var expected = Names.Assembly("zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -145,7 +142,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepAssemblyIfFullQualified()
         {
-            var original = AssemblyName.Get("SomeAssembly, 1.5.6.3");
+            var original = Names.Assembly("SomeAssembly, 1.5.6.3");
 
             AssertAnonymizedEquals(original, original);
         }
@@ -153,7 +150,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepTypeFromOtherAssembly()
         {
-            var original = TypeName.Get("SomeType, MyProject, 1.2.3.4");
+            var original = Names.Type("SomeType, MyProject, 1.2.3.4");
 
             AssertAnonymizedEquals(original, original);
         }
@@ -161,7 +158,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepUnknownTypeName()
         {
-            var original = UnknownTypeName.Instance;
+            var original = Names.UnknownType;
 
             AssertAnonymizedEquals(original, original);
         }
@@ -169,8 +166,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeFieldNameIfDeclaringTypeIsUnknown()
         {
-            var original = FieldName.Get("[?] [?].field");
-            var expected = FieldName.Get("[?] [?].uH-HUtyKzOVVTdxGpUvTRg==");
+            var original = Names.Field("[?] [?].field");
+            var expected = Names.Field("[?] [?].uH-HUtyKzOVVTdxGpUvTRg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -178,8 +175,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeMethodMembersIfDeclaringTypeIsUnknown()
         {
-            var original = MethodName.Get("[?] [?].method([?] arg)");
-            var expected = MethodName.Get("[?] [?].S2MqM0cJGKIdPyRb46oevg==([?] cjjZM6DVkmp283JnWfyH_A==)");
+            var original = Names.Method("[?] [?].method([?] arg)");
+            var expected = Names.Method("[?] [?].S2MqM0cJGKIdPyRb46oevg==([?] cjjZM6DVkmp283JnWfyH_A==)");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -187,8 +184,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeTypeNameIfFromEnclosingProject()
         {
-            var original = TypeName.Get("SomeType, MyProject");
-            var expected = TypeName.Get("5TEfRdZBhGQY3JybERVp-w==, zRLpydQJBMrk8DCiP3BwEQ==");
+            var original = Names.Type("SomeType, MyProject");
+            var expected = Names.Type("5TEfRdZBhGQY3JybERVp-w==, zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -196,9 +193,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepNestedTypeMarkersWhenAnonymizingTypeName()
         {
-            var original = TypeName.Get("Outer+Intermediate+Inner, MyProject");
+            var original = Names.Type("Outer+Intermediate+Inner, MyProject");
             var expected =
-                TypeName.Get(
+                Names.Type(
                     "vWJW7HmayjJvbX16XC9VnQ==+471REvNW-WCCyW7mDRT4EA==+YDcvejSpfAK3U9T4L-U5Ng==, zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
@@ -207,8 +204,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepNamespaceToTypeSeparatorWhenAnonymizingTypeName()
         {
-            var original = TypeName.Get("My.Namespace.MyType, MyProject");
-            var expected = TypeName.Get("L5-7Qmufwl5lDD-ks5-QzQ==.T3GwyBT-NeFSuHH-NHnMzQ==, zRLpydQJBMrk8DCiP3BwEQ==");
+            var original = Names.Type("My.Namespace.MyType, MyProject");
+            var expected = Names.Type("L5-7Qmufwl5lDD-ks5-QzQ==.T3GwyBT-NeFSuHH-NHnMzQ==, zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -216,8 +213,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepTypeParameterShortName()
         {
-            var original = TypeName.Get("TT -> AType, MyProject");
-            var expected = TypeName.Get("TT -> S8jqvjvDTBSSXY7BIBFNOQ==, zRLpydQJBMrk8DCiP3BwEQ==");
+            var original = Names.Type("TT -> AType, MyProject");
+            var expected = Names.Type("TT -> S8jqvjvDTBSSXY7BIBFNOQ==, zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -225,8 +222,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepNestedTypeParameterShortNames()
         {
-            var original = TypeName.Get("TT -> TU -> TV -> AType, MyProject");
-            var expected = TypeName.Get("TT -> TU -> TV -> S8jqvjvDTBSSXY7BIBFNOQ==, zRLpydQJBMrk8DCiP3BwEQ==");
+            var original = Names.Type("TT -> TU -> TV -> AType, MyProject");
+            var expected = Names.Type("TT -> TU -> TV -> S8jqvjvDTBSSXY7BIBFNOQ==, zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -234,9 +231,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeTypeParametersIfDefinedInEnclosingProject()
         {
-            var original = TypeName.Get("Some.Type`1[[T -> OtherType, A]], B, 1.2.3.4");
+            var original = Names.Type("Some.Type`1[[T -> OtherType, A]], B, 1.2.3.4");
             var expected =
-                TypeName.Get("Some.Type`1[[T -> xJGI74kh-RBFid7-a1wFlg==, ghTRAD9op9mwNWwMvX7uGg==]], B, 1.2.3.4");
+                Names.Type("Some.Type`1[[T -> xJGI74kh-RBFid7-a1wFlg==, ghTRAD9op9mwNWwMvX7uGg==]], B, 1.2.3.4");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -245,10 +242,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldKeepTypeParametersFromOtherAssembly()
         {
             var original =
-                TypeName.Get(
+                Names.Type(
                     "Some.Type`3[[T -> MyType, A],[U -> System.Double, mscorlib, 4.0.0.0],[V -> MyOtherType, A]], B, 1.2.3.4");
             var expected =
-                TypeName.Get(
+                Names.Type(
                     "Some.Type`3[[T -> Q-vTVCo_g8yayGGoDdH7BA==, ghTRAD9op9mwNWwMvX7uGg==],[U -> System.Double, mscorlib, 4.0.0.0],[V -> w20iwoM8jFvdUxBRQsKvhg==, ghTRAD9op9mwNWwMvX7uGg==]], B, 1.2.3.4");
 
             AssertAnonymizedEquals(original, expected);
@@ -258,9 +255,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeParameterizedTypeIfDefinedInEnclosingProject()
         {
             var original =
-                TypeName.Get("MyTypeFromEnclosingProject`1[[T -> System.Int32, mscorlib, 4.0.0.0]], EnclosingProject");
+                Names.Type("MyTypeFromEnclosingProject`1[[T -> System.Int32, mscorlib, 4.0.0.0]], EnclosingProject");
             var expected =
-                TypeName.Get(
+                Names.Type(
                     "yqUUbRFTqfCBIMxMRH-qDA==`1[[TM6pgLI0nE5n0EEgAKIIFw== -> System.Int32, mscorlib, 4.0.0.0]], qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
@@ -269,8 +266,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeInterfaceTypeNameFromEnclosingProject()
         {
-            var original = TypeName.Get("i:My.Interface, EnclosingProject");
-            var expected = TypeName.Get("i:S7JFQ1Qpzr6dQZksNAcR7A==.6e_eXMoTYXtpcGd2wrWE-A==, qfFVtSOtve-XEFJXWTbfXw==");
+            var original = Names.Type("i:My.Interface, EnclosingProject");
+            var expected = Names.Type("i:S7JFQ1Qpzr6dQZksNAcR7A==.6e_eXMoTYXtpcGd2wrWE-A==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -278,8 +275,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeEnumTypeNameFromEnclosingProject()
         {
-            var original = TypeName.Get("e:My.Enum, EnclosingProject");
-            var expected = TypeName.Get("e:S7JFQ1Qpzr6dQZksNAcR7A==.klRY89gvVPCkpyaQ3MurVQ==, qfFVtSOtve-XEFJXWTbfXw==");
+            var original = Names.Type("e:My.Enum, EnclosingProject");
+            var expected = Names.Type("e:S7JFQ1Qpzr6dQZksNAcR7A==.klRY89gvVPCkpyaQ3MurVQ==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -287,9 +284,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeDelegateTypeNameFromEnclosingProject()
         {
-            var original = TypeName.Get("d:[Void, CL, 4.0.0.0] [My.Delegate, EnclosingProject].()");
+            var original = Names.Type("d:[Void, CL, 4.0.0.0] [My.Delegate, EnclosingProject].()");
             var expected =
-                TypeName.Get(
+                Names.Type(
                     "d:[Void, CL, 4.0.0.0] [S7JFQ1Qpzr6dQZksNAcR7A==.ssIB3MfpFeOROPNn2-P9xg==, qfFVtSOtve-XEFJXWTbfXw==].()");
 
             AssertAnonymizedEquals(original, expected);
@@ -298,9 +295,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeDelegateParameterNameFromEnclosingProject()
         {
-            var original = TypeName.Get("d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([P, A] p)");
+            var original = Names.Type("d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([P, A] p)");
             var expected =
-                TypeName.Get(
+                Names.Type(
                     "d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([aUaDMpYpDqsiSh5nQjiWFw==, ghTRAD9op9mwNWwMvX7uGg==] xBzbwjgZ_3fD0cNcmbedKA==)");
 
             AssertAnonymizedEquals(original, expected);
@@ -309,8 +306,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeDelegateReturnTypeFromEnclosingProject()
         {
-            var original = TypeName.Get("d:[T, EP] [D, E, 1.2.3.4].()");
-            var expected = TypeName.Get("d:[TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] [D, E, 1.2.3.4].()");
+            var original = Names.Type("d:[T, EP] [D, E, 1.2.3.4].()");
+            var expected = Names.Type("d:[TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] [D, E, 1.2.3.4].()");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -318,8 +315,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeCustomStructTypeNameFromEnclosingProject()
         {
-            var original = TypeName.Get("s:My.Struct, EnclosingProject");
-            var expected = TypeName.Get("s:S7JFQ1Qpzr6dQZksNAcR7A==.Csl4y2WI7aP5CjXqBQ8QRQ==, qfFVtSOtve-XEFJXWTbfXw==");
+            var original = Names.Type("s:My.Struct, EnclosingProject");
+            var expected = Names.Type("s:S7JFQ1Qpzr6dQZksNAcR7A==.Csl4y2WI7aP5CjXqBQ8QRQ==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -327,8 +324,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeValueTypeOfArrayTypeIfDeclaredInEnclosingProject()
         {
-            var original = TypeName.Get("SomeType[], EnclosingProject");
-            var expected = TypeName.Get("5TEfRdZBhGQY3JybERVp-w==[], qfFVtSOtve-XEFJXWTbfXw==");
+            var original = Names.Type("SomeType[], EnclosingProject");
+            var expected = Names.Type("5TEfRdZBhGQY3JybERVp-w==[], qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -336,10 +333,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeValueTypeOfDelegateArrayTypeIfDeckaredInEnclosingProject()
         {
-            var original = TypeName.Get(
+            var original = Names.Type(
                 "d:[VT, A] [ConsoleApplication1.Program+TestDelegate, A].()[]");
             var expected =
-                TypeName.Get(
+                Names.Type(
                     "d:[3sO2hZAKj3g4-Zk_E0A-_w==, ghTRAD9op9mwNWwMvX7uGg==] [IJXZZxKP9BYUXNF-zFV4Mg==.o4DFluOfxaQkPRb-pAXvpg==+qXAvOqA3UCqSEhbDeHkp3A==, ghTRAD9op9mwNWwMvX7uGg==].()[]");
 
             AssertAnonymizedEquals(original, expected);
@@ -348,8 +345,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeLocalVariableName()
         {
-            var original = LocalVariableName.Get("[System.Int32, mscorlib, 4.0.0.0] variable");
-            var expected = LocalVariableName.Get("[System.Int32, mscorlib, 4.0.0.0] ex1ycJF4ixZdevwEdEfKcQ==");
+            var original = Names.LocalVariable("[System.Int32, mscorlib, 4.0.0.0] variable");
+            var expected = Names.LocalVariable("[System.Int32, mscorlib, 4.0.0.0] ex1ycJF4ixZdevwEdEfKcQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -357,9 +354,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeLocalVariableValueTypeIfDeclaredInEnclosingProject()
         {
-            var original = LocalVariableName.Get("[ValueType, EnclosingProject] variable");
+            var original = Names.LocalVariable("[ValueType, EnclosingProject] variable");
             var expected =
-                LocalVariableName.Get("[K6-3xDZUlJ-Wew_p0xcfQg==, qfFVtSOtve-XEFJXWTbfXw==] ex1ycJF4ixZdevwEdEfKcQ==");
+                Names.LocalVariable("[K6-3xDZUlJ-Wew_p0xcfQg==, qfFVtSOtve-XEFJXWTbfXw==] ex1ycJF4ixZdevwEdEfKcQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -367,9 +364,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepFieldNameIfDeclaredInOtherAssembly()
         {
-            var original = FieldName.Get(
+            var original = Names.Field(
                 "static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4]._field");
-            var expected = FieldName.Get(
+            var expected = Names.Field(
                 "static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4]._field");
 
             AssertAnonymizedEquals(original, expected);
@@ -378,9 +375,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeFieldNameIfDeclaredInEnclosingProject()
         {
-            var original = FieldName.Get("[System.Int32, mscorlib, 4.0.0.0] [Class, Project]._field");
+            var original = Names.Field("[System.Int32, mscorlib, 4.0.0.0] [Class, Project]._field");
             var expected =
-                FieldName.Get(
+                Names.Field(
                     "[System.Int32, mscorlib, 4.0.0.0] [C30g7wWDiaLWDoT99aNK_Q==, Mxp53D4r1Kx8kPEM01ySAA==].gcnTNGyqNJv6QToYz_Vmbg==");
 
             AssertAnonymizedEquals(original, expected);
@@ -389,9 +386,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeFieldValueTypeIfDeclaredInEnclosingProject()
         {
-            var original = FieldName.Get("[ValueType, EnclosingProject] [SomeType, SomeAssembly, 1.2.3.4]._field");
+            var original = Names.Field("[ValueType, EnclosingProject] [SomeType, SomeAssembly, 1.2.3.4]._field");
             var expected =
-                FieldName.Get(
+                Names.Field(
                     "[K6-3xDZUlJ-Wew_p0xcfQg==, qfFVtSOtve-XEFJXWTbfXw==] [SomeType, SomeAssembly, 1.2.3.4]._field");
 
             AssertAnonymizedEquals(original, expected);
@@ -400,11 +397,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepPropertyNameIfDeclaredInOtherAssembly()
         {
-            var original =
-                PropertyName.Get(
-                    "set get static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
+            var original = Names.Property(
+                "set get static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
             var expected =
-                PropertyName.Get(
+                Names.Property(
                     "set get static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
 
             AssertAnonymizedEquals(original, expected);
@@ -413,9 +409,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizePropertyNameIfDeclaredInEnclosingProject()
         {
-            var original = PropertyName.Get("get [System.Int32, mscorlib, 4.0.0.0] [Declarator, MyProject].Property");
+            var original = Names.Property("get [System.Int32, mscorlib, 4.0.0.0] [Declarator, MyProject].Property");
             var expected =
-                PropertyName.Get(
+                Names.Property(
                     "get [System.Int32, mscorlib, 4.0.0.0] [UFthX8igK4OWY-bjuPcWaA==, zRLpydQJBMrk8DCiP3BwEQ==].3_9-BEZu3bkEMnTfk5eHKw==");
 
             AssertAnonymizedEquals(original, expected);
@@ -424,9 +420,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizePropertyValueTypeIfDeclaredInEnclosingProject()
         {
-            var original = PropertyName.Get("set [PropType, AProject] [AType, AnAssembly, 6.5.4.3].Property");
+            var original = Names.Property("set [PropType, AProject] [AType, AnAssembly, 6.5.4.3].Property");
             var expected =
-                PropertyName.Get(
+                Names.Property(
                     "set [Mh2DRn_FRby9df2VWWFg4Q==, CD0OwIZmS7FL5zL5GiXZbg==] [AType, AnAssembly, 6.5.4.3].Property");
 
             AssertAnonymizedEquals(original, expected);
@@ -435,8 +431,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepEventNameIfDeclaredInOtherAssembly()
         {
-            var original = EventName.Get("static [ChangeEventHandler, Assembly, 6.3.5.2] [C, Foo, 9.1.2.3].Event");
-            var expected = EventName.Get("static [ChangeEventHandler, Assembly, 6.3.5.2] [C, Foo, 9.1.2.3].Event");
+            var original = Names.Event("static [ChangeEventHandler, Assembly, 6.3.5.2] [C, Foo, 9.1.2.3].Event");
+            var expected = Names.Event("static [ChangeEventHandler, Assembly, 6.3.5.2] [C, Foo, 9.1.2.3].Event");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -444,9 +440,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeEventNameIfDeclaredInEnclosingProject()
         {
-            var original = EventName.Get("[ChangeEventHandler, Assembly, 6.3.5.2] [A, Foo].Event");
+            var original = Names.Event("[ChangeEventHandler, Assembly, 6.3.5.2] [A, Foo].Event");
             var expected =
-                EventName.Get(
+                Names.Event(
                     "[ChangeEventHandler, Assembly, 6.3.5.2] [ghTRAD9op9mwNWwMvX7uGg==, sl_wrZDQnTlQkOiin_TGPA==].Ryz5fpCQs0Nwm_x0Vy4cQg==");
 
             AssertAnonymizedEquals(original, expected);
@@ -455,9 +451,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeEventHandlerTypeIfDeclaredInEnclosingProject()
         {
-            var original = EventName.Get("[Handler, Project] [AType, AnAssembly, 6.5.4.3].Event");
+            var original = Names.Event("[Handler, Project] [AType, AnAssembly, 6.5.4.3].Event");
             var expected =
-                EventName.Get("[ooP_qY1chg4oTJoBIeq1_A==, Mxp53D4r1Kx8kPEM01ySAA==] [AType, AnAssembly, 6.5.4.3].Event");
+                Names.Event("[ooP_qY1chg4oTJoBIeq1_A==, Mxp53D4r1Kx8kPEM01ySAA==] [AType, AnAssembly, 6.5.4.3].Event");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -465,8 +461,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeNamespace()
         {
-            var original = NamespaceName.Get("Some.Arbitrary.Namespace");
-            var expected = NamespaceName.Get("PU4V3sU7dhVQzcD16BGtuw==");
+            var original = Names.Namespace("Some.Arbitrary.Namespace");
+            var expected = Names.Namespace("PU4V3sU7dhVQzcD16BGtuw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -474,8 +470,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeOutParameterName()
         {
-            var original = ParameterName.Get("out [ParamType, A, 1.2.3.4] parameter");
-            var expected = ParameterName.Get("out [ParamType, A, 1.2.3.4] jaWpYMumKzk5dZafVWTD1A==");
+            var original = Names.Parameter("out [ParamType, A, 1.2.3.4] parameter");
+            var expected = Names.Parameter("out [ParamType, A, 1.2.3.4] jaWpYMumKzk5dZafVWTD1A==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -483,8 +479,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeRefParameterName()
         {
-            var original = ParameterName.Get("ref [System.Int32, mscorlib, 4.0.0.0] name");
-            var expected = ParameterName.Get("ref [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
+            var original = Names.Parameter("ref [System.Int32, mscorlib, 4.0.0.0] name");
+            var expected = Names.Parameter("ref [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -492,8 +488,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeParamsParameterName()
         {
-            var original = ParameterName.Get("params [System.Int32, mscorlib, 4.0.0.0] name");
-            var expected = ParameterName.Get("params [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
+            var original = Names.Parameter("params [System.Int32, mscorlib, 4.0.0.0] name");
+            var expected = Names.Parameter("params [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -501,8 +497,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeOptParameterName()
         {
-            var original = ParameterName.Get("opt [System.Int32, mscorlib, 4.0.0.0] name");
-            var expected = ParameterName.Get("opt [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
+            var original = Names.Parameter("opt [System.Int32, mscorlib, 4.0.0.0] name");
+            var expected = Names.Parameter("opt [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -510,9 +506,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeParameterValueTypeIfDeclaredInEnclosingProject()
         {
-            var original = ParameterName.Get("[Type, Project] name");
+            var original = Names.Parameter("[Type, Project] name");
             var expected =
-                ParameterName.Get("[aSO4V69Y4hQtcEQCnqsGww==, Mxp53D4r1Kx8kPEM01ySAA==] mT62IUL9_OAA7vtSkeTMzg==");
+                Names.Parameter("[aSO4V69Y4hQtcEQCnqsGww==, Mxp53D4r1Kx8kPEM01ySAA==] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -520,9 +516,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeMethodNameIfDeclaringTypeIsFromEnclosingProject()
         {
-            var original = MethodName.Get("[ReturnType, A, 1.2.3.4] [DeclaringType, EnclosingProject].M()");
+            var original = Names.Method("[ReturnType, A, 1.2.3.4] [DeclaringType, EnclosingProject].M()");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[ReturnType, A, 1.2.3.4] [HTr1vZnVhe-8SY78vI2ffQ==, qfFVtSOtve-XEFJXWTbfXw==].lNSAgClcjc9lDeUkXybdNQ==()");
 
             AssertAnonymizedEquals(original, expected);
@@ -531,8 +527,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeMethodReturnTypeIfDeclaringTypeIsFromEnclosingProject()
         {
-            var original = MethodName.Get("[ReturnType, EP] [DT, A, 1.2.3.4].M()");
-            var expected = MethodName.Get("[a6Ix9ar6tahkEo1TOfBLwg==, vW8RYxLbF7t21szDOJMe_w==] [DT, A, 1.2.3.4].M()");
+            var original = Names.Method("[ReturnType, EP] [DT, A, 1.2.3.4].M()");
+            var expected = Names.Method("[a6Ix9ar6tahkEo1TOfBLwg==, vW8RYxLbF7t21szDOJMe_w==] [DT, A, 1.2.3.4].M()");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -540,10 +536,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeMethodTypeParametersIfDeclaredInEnclosingProject()
         {
-            var original = MethodName.Get(
+            var original = Names.Method(
                 "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M`2[[T -> Foo, EP],[E -> Bar, A, 1.2.3.4]]()");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M`2[[T -> sl_wrZDQnTlQkOiin_TGPA==, vW8RYxLbF7t21szDOJMe_w==],[E -> Bar, A, 1.2.3.4]]()");
 
             AssertAnonymizedEquals(original, expected);
@@ -552,9 +548,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeLambdaParametersIfDeclaredInEclosingProject()
         {
-            var original = LambdaName.Get("[A, B, 1.2.3.4] ([T, EP] p)");
+            var original = Names.Lambda("[A, B, 1.2.3.4] ([T, EP] p)");
             var expected =
-                LambdaName.Get(
+                Names.Lambda(
                     "[A, B, 1.2.3.4] ([TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] xBzbwjgZ_3fD0cNcmbedKA==)");
 
             AssertAnonymizedEquals(original, expected);
@@ -563,8 +559,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeLambdaReturnTypeIfDeclaredInEclosingProject()
         {
-            var original = LambdaName.Get("[T, EP] ()");
-            var expected = LambdaName.Get("[TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] ()");
+            var original = Names.Lambda("[T, EP] ()");
+            var expected = Names.Lambda("[TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] ()");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -573,7 +569,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldNotAnonymizeMethodsOrTheirParametersFromOtherAssemblies()
         {
             var original =
-                MethodName.Get("[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M([System.String, mscorlib, 4.0.0.0] p)");
+                Names.Method("[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M([System.String, mscorlib, 4.0.0.0] p)");
 
             AssertAnonymizedEquals(original, original);
         }
@@ -581,9 +577,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void AnonymizedMethodsHaveParametersWithHashedNamesButUnhashedTypes()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [T,P].M([T, A, 1.2.3.4] p)");
+            var original = Names.Method("[T, A, 1.2.3.4] [T,P].M([T, A, 1.2.3.4] p)");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[T, A, 1.2.3.4] [TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==([T, A, 1.2.3.4] xBzbwjgZ_3fD0cNcmbedKA==)");
 
             AssertAnonymizedEquals(original, expected);
@@ -592,9 +588,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldOnlyAnonymizeParameterTypeInMethodFromOtherAssembly()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [T, A, 1.2.3.4].M([T,P] p)");
+            var original = Names.Method("[T, A, 1.2.3.4] [T, A, 1.2.3.4].M([T,P] p)");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[T, A, 1.2.3.4] [T, A, 1.2.3.4].M([TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==] p)");
 
             AssertAnonymizedEquals(original, expected);
@@ -603,9 +599,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldNotAnonymizeConstructorName()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [DT, P]..ctor([T,P] p, [T,A,4.0.0.0] p2)");
+            var original = Names.Method("[T, A, 1.2.3.4] [DT, P]..ctor([T,P] p, [T,A,4.0.0.0] p2)");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[T, A, 1.2.3.4] [UP5Ipka5g2hTcMU6LNvz2A==, aUaDMpYpDqsiSh5nQjiWFw==]..ctor([TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==] xBzbwjgZ_3fD0cNcmbedKA==, [T, A,4.0.0.0] UIuXc44R1FaeNKJ8ldQB7A==)");
 
             AssertAnonymizedEquals(original, expected);
@@ -614,9 +610,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldNotAnonymizeStaticConstructorName()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [DT, P]..cctor([T,P] p, [T,A,4.0.0.0] p2)");
+            var original = Names.Method("[T, A, 1.2.3.4] [DT, P]..cctor([T,P] p, [T,A,4.0.0.0] p2)");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[T, A, 1.2.3.4] [UP5Ipka5g2hTcMU6LNvz2A==, aUaDMpYpDqsiSh5nQjiWFw==]..cctor([TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==] xBzbwjgZ_3fD0cNcmbedKA==, [T, A,4.0.0.0] UIuXc44R1FaeNKJ8ldQB7A==)");
 
             AssertAnonymizedEquals(original, expected);
@@ -627,9 +623,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeGenericTypeParameter_UnboundGenericInEnclosingProject()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [C`1[[G2]], P].M([G2] p)");
+            var original = Names.Method("[T, A, 1.2.3.4] [C`1[[G2]], P].M([G2] p)");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[T, A, 1.2.3.4] [3Rx860ySZTppa3kHpN1N8Q==`1[[HAqGEOJc_-qPti2JYHwR3Q==]], aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==([HAqGEOJc_-qPti2JYHwR3Q==] xBzbwjgZ_3fD0cNcmbedKA==)");
 
             AssertAnonymizedEquals(original, expected);
@@ -638,9 +634,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeGenericTypeParameter_UnboundGenericAssignedToPlaceholder()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> G2]], A, 0.0.0.0].M([G1] p)");
+            var original = Names.Method("[T, A, 1.2.3.4] [A`1[[G1 -> G2]], A, 0.0.0.0].M([G1] p)");
             var expected =
-                MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> HAqGEOJc_-qPti2JYHwR3Q==]], A, 0.0.0.0].M([G1] p)");
+                Names.Method("[T, A, 1.2.3.4] [A`1[[G1 -> HAqGEOJc_-qPti2JYHwR3Q==]], A, 0.0.0.0].M([G1] p)");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -648,9 +644,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeGenericTypeParameter_BoundGenericInEnclosingProject()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [C`1[[G2 -> T, A, 0.0.0.0]], P].M([G2] p)");
+            var original = Names.Method("[T, A, 1.2.3.4] [C`1[[G2 -> T, A, 0.0.0.0]], P].M([G2] p)");
             var expected =
-                MethodName.Get(
+                Names.Method(
                     "[T, A, 1.2.3.4] [3Rx860ySZTppa3kHpN1N8Q==`1[[HAqGEOJc_-qPti2JYHwR3Q== -> T, A, 0.0.0.0]], aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==([HAqGEOJc_-qPti2JYHwR3Q==] xBzbwjgZ_3fD0cNcmbedKA==)");
 
             AssertAnonymizedEquals(original, expected);
@@ -659,8 +655,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeGenericTypeParameter_BoundGenericInAssembly()
         {
-            var original = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> T, A, 0.0.0.0]], A, 0.0.0.0].M([G1] p)");
-            var expected = MethodName.Get("[T, A, 1.2.3.4] [A`1[[G1 -> T, A, 0.0.0.0]], A, 0.0.0.0].M([G1] p)");
+            var original = Names.Method("[T, A, 1.2.3.4] [A`1[[G1 -> T, A, 0.0.0.0]], A, 0.0.0.0].M([G1] p)");
+            var expected = Names.Method("[T, A, 1.2.3.4] [A`1[[G1 -> T, A, 0.0.0.0]], A, 0.0.0.0].M([G1] p)");
 
             AssertAnonymizedEquals(original, expected);
         }

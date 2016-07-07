@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.VisualStudio
 {
-    [TestFixture]
-    class WindowNameTest
+    internal class WindowNameTest
     {
-        private WindowName _uut;
+        private IWindowName _uut;
 
         [SetUp]
         public void SetUp()

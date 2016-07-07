@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.TestUtils;
@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         public void DefaultValues()
         {
             var sut = new DelegateDeclaration();
-            Assert.AreEqual(DelegateTypeName.UnknownName, sut.Name);
+            Assert.AreEqual(Names.UnknownType, sut.Name);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -90,7 +90,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
 
         private static IDelegateTypeName SomeDelegateType()
         {
-            return DelegateTypeName.Get("d:[R,P] [SomeDelegateType,P].()");
+            return Names.Type("d:[R,P] [SomeDelegateType,P].()").AsDelegateTypeName;
         }
     }
 }

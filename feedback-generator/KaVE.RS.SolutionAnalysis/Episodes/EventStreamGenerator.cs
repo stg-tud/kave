@@ -15,10 +15,9 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -55,12 +54,12 @@ namespace KaVE.RS.SolutionAnalysis.Episodes
 
         private static bool ShouldInclude(IMethodName name)
         {
-            if (MethodName.UnknownName.Equals(name))
+            if (Names.UnknownMethod.Equals(name))
             {
                 return false;
             }
 
-            var mscorlib = AssemblyName.Get("mscorlib, 4.0.0.0");
+            var mscorlib = Names.Assembly("mscorlib, 4.0.0.0");
             var actualLib = name.DeclaringType.Assembly;
             if (!mscorlib.Equals(actualLib))
             {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using NUnit.Framework;
@@ -52,7 +52,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
             mA.Body.Add(
                 SSTUtil.InvocationStatement(
                     "this",
-                    MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].B()"),
+                    Names.Method("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].B()"),
                     new ISimpleExpression[] {}));
             var mB = NewMethodDeclaration(Fix.Void, "B"); // ...
             mB.IsEntryPoint = false;

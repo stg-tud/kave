@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 
 namespace KaVE.Commons.TestUtils.Model.Naming
 {
@@ -22,16 +23,16 @@ namespace KaVE.Commons.TestUtils.Model.Naming
     {
         private static int _index;
 
-        public static WindowName CreateAnonymousWindowName()
+        public static IWindowName CreateAnonymousWindowName()
         {
             _index++;
-            return WindowName.Get("TestWindowName" + _index);
+            return Names.Window("TestWindowName" + _index);
         }
 
-        public static DocumentName CreateAnonymousDocumentName()
+        public static IDocumentName CreateAnonymousDocumentName()
         {
             _index++;
-            return DocumentName.Get("TestDocumentName" + _index);
+            return Names.Document("TestDocumentName" + _index);
         }
     }
 }

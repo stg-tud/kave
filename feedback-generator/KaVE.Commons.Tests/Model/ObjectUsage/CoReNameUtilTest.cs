@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using NUnit.Framework;
 
@@ -33,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         public void ShouldConvertTypeNames(string iName, string coReName)
         {
             var expected = new CoReTypeName(coReName);
-            var original = TypeName.Get(iName);
+            var original = Names.Type(iName);
 
             var actual = original.ToCoReName();
 
@@ -47,7 +46,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         public void ShouldConvertMethodNames(string iName, string coReName)
         {
             var expected = new CoReMethodName(coReName);
-            var original = MethodName.Get(iName);
+            var original = Names.Method(iName);
 
             var actual = original.ToCoReName();
 
@@ -59,7 +58,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         public void ShouldConvertFieldNames(string iName, string coReName)
         {
             var expected = new CoReFieldName(coReName);
-            var original = FieldName.Get(iName);
+            var original = Names.Field(iName);
 
             var actual = original.ToCoReName();
 

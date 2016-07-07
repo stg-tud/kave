@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
@@ -27,26 +26,26 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeNullNames()
         {
-            JsonAssert.SerializesTo((Name) null, "null");
+            JsonAssert.SerializesTo((IName) null, "null");
         }
 
         [Test]
         public void ShouldDeserializeNullNames()
         {
-            JsonAssert.DeserializesTo("null", (Name) null);
+            JsonAssert.DeserializesTo("null", (IName) null);
         }
 
         [Test]
         public void ShouldSerializeName()
         {
-            var name = Name.Get("Foobar! That's my Name.");
+            var name = Names.General("Foobar! That's my Name.");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeAssemblyName()
         {
-            var name = AssemblyName.Get("AssemblyName, 0.8.15.0");
+            var name = Names.Assembly("AssemblyName, 0.8.15.0");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
@@ -60,7 +59,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeFieldName()
         {
-            var name = FieldName.Get("static [Declarator, B, 9.2.3.8] [Val, G, 5.4.6.3].Field");
+            var name = Names.Field("static [Declarator, B, 9.2.3.8] [Val, G, 5.4.6.3].Field");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
@@ -68,7 +67,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         public void ShouldSerializeMethodName()
         {
             var name =
-                MethodName.Get(
+                Names.Method(
                     "[Declarator, B, 9.2.3.8] [Val, G, 5.4.6.3].Method(out [Param, P, 8.1.7.2])");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
@@ -83,71 +82,71 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeTypeName()
         {
-            var name = TypeName.Get("Foo.Bar, foo, 1.0.0.0");
+            var name = Names.Type("Foo.Bar, foo, 1.0.0.0");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeTypeParameterName()
         {
-            var name = TypeName.Get("T -> Foo.Bar, foo, 1.0.0.0");
+            var name = Names.Type("T -> Foo.Bar, foo, 1.0.0.0");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeInterfaceTypeName()
         {
-            var name = TypeName.Get("i:IMyInterface, Assembly, 1.2.3.4");
+            var name = Names.Type("i:IMyInterface, Assembly, 1.2.3.4");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeEnumTypeName()
         {
-            var name = TypeName.Get("e:MyEnum, Assembly, 1.2.3.4");
+            var name = Names.Type("e:MyEnum, Assembly, 1.2.3.4");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeStructTypeName()
         {
-            var name = TypeName.Get("s:MyStruct, Assembly, 1.2.3.4");
+            var name = Names.Type("s:MyStruct, Assembly, 1.2.3.4");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeDelegateTypeName()
         {
-            var name = TypeName.Get("d:MyDelegate, Assembly, 1.2.3.4");
+            var name = Names.Type("d:MyDelegate, Assembly, 1.2.3.4");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeUnknownTypeName()
         {
-            var name = UnknownTypeName.Instance;
+            var name = Names.UnknownType;
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldSerializeArrayTypeName()
         {
-            var name = TypeName.Get("ValueType[], Assembly, 1.2.3.4");
+            var name = Names.Type("ValueType[], Assembly, 1.2.3.4");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
         [Test]
         public void ShouldDeserializeJaggedArrayToMultidimensional()
         {
-            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[], B\"", TypeName.Get("A[], B"));
-            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][], B\"", TypeName.Get("A[,], B"));
-            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][][][], B\"", TypeName.Get("A[,,,], B"));
+            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[], B\"", Names.Type("A[], B"));
+            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][], B\"", Names.Type("A[,], B"));
+            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][][][], B\"", Names.Type("A[,,,], B"));
         }
 
         [Test]
         public void ShouldSerializeNameToStringContainingTypeAndIdentifier()
         {
-            var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");
+            var name = Names.Type("My.Custom.Type, AnAssembly, 1.5.2.4");
             const string expected = "\"CSharp.TypeName:My.Custom.Type, AnAssembly, 1.5.2.4\"";
             JsonAssert.SerializesTo(name, expected);
         }
@@ -156,7 +155,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         public void ShouldDeserializeNameFromFormat1()
         {
             const string json = "{\"type\":\"CSharp.AssemblyName\",\"identifier\":\"MyAssembly, 1.2.3.4\"}";
-            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
+            var expected = Names.Assembly("MyAssembly, 1.2.3.4");
             JsonAssert.DeserializesTo(json, expected);
         }
 
@@ -164,7 +163,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         public void ShouldDeserializeNameFromFormat2()
         {
             const string json = "{\"type\":\"CSharp.AssemblyName\",\"id\":\"MyAssembly, 1.2.3.4\"}";
-            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
+            var expected = Names.Assembly("MyAssembly, 1.2.3.4");
             JsonAssert.DeserializesTo(json, expected);
         }
 
@@ -172,14 +171,14 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         public void ShouldDeserializeNameFromFormat3()
         {
             const string json = "\"CSharp.AssemblyName:MyAssembly, 1.2.3.4\"";
-            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
+            var expected = Names.Assembly("MyAssembly, 1.2.3.4");
             JsonAssert.DeserializesTo(json, expected);
         }
 
         [Test]
         public void ShouldSerializeNameToStringContainingTypeAndIdentifierWhenFormatting()
         {
-            var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");
+            var name = Names.Type("My.Custom.Type, AnAssembly, 1.5.2.4");
             const string expected = "\"CSharp.TypeName:My.Custom.Type, AnAssembly, 1.5.2.4\"";
             var actual = name.ToFormattedJson();
             Assert.AreEqual(expected, actual);

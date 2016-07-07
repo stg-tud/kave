@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -27,14 +27,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
 {
     internal class MethodDeclarationTest
     {
-        private readonly IMethodName _mA = MethodName.Get("[T1,P1] [T2,P2].A()");
-        private readonly IMethodName _mB = MethodName.Get("[T1,P1] [T2,P2].B()");
+        private readonly IMethodName _mA = Names.Method("[T1,P1] [T2,P2].A()");
+        private readonly IMethodName _mB = Names.Method("[T1,P1] [T2,P2].B()");
 
         [Test]
         public void DefaultValues()
         {
             var sut = new MethodDeclaration();
-            Assert.AreEqual(MethodName.UnknownName, sut.Name);
+            Assert.AreEqual(Names.UnknownMethod, sut.Name);
             Assert.False(sut.IsEntryPoint);
             Assert.AreEqual(Lists.NewList<IMethodDeclaration>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());

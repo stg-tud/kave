@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
@@ -26,14 +26,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
     {
         private static IEventName SomeEvent
         {
-            get { return EventName.Get("[T1,P1] [T2,P2].Event"); }
+            get { return Names.Event("[T1,P1] [T2,P2].Event"); }
         }
 
         [Test]
         public void DefaultValues()
         {
             var sut = new EventDeclaration();
-            Assert.AreEqual(EventName.UnknownName, sut.Name);
+            Assert.AreEqual(Names.UnknownEvent, sut.Name);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

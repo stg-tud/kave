@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite;
 using KaVE.RS.Commons.Utils.Naming;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.RS.Commons.Tests_Integration.Utils.Names
+namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming
 {
     internal class ReSharperDeclaredElementNameFactoryTest : BaseSSTAnalysisTest
     {
@@ -47,7 +46,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Names
 
             AssertBody(
                 InvokeStaticStmt(
-                    MethodName.Get("static [{0}] [N.H, TestProject].EM(this [N.C, TestProject] c)", Fix.Void),
+                    Names.Method("static [{0}] [N.H, TestProject].EM(this [N.C, TestProject] c)", Fix.Void),
                     RefExpr("this")),
                 ExprStmt(new CompletionExpression()));
         }
@@ -73,8 +72,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Names
             var ctor = string.Format("[{0}] [{1}]..ctor()", Fix.Void, type);
 
             AssertBody(
-                VarDecl("g", TypeName.Get(type)),
-                Assign("g", InvokeCtor(MethodName.Get(ctor))),
+                VarDecl("g", Names.Type(type)),
+                Assign("g", InvokeCtor(Names.Method(ctor))),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -99,8 +98,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Names
             var ctor = string.Format("[{0}] [{1}]..ctor()", Fix.Void, type);
 
             AssertBody(
-                VarDecl("n", TypeName.Get(type)),
-                Assign("n", InvokeCtor(MethodName.Get(ctor))),
+                VarDecl("n", Names.Type(type)),
+                Assign("n", InvokeCtor(Names.Method(ctor))),
                 ExprStmt(new CompletionExpression()));
         }
 

@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -39,7 +39,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public TypeCheckExpression()
         {
             Reference = new VariableReference();
-            Type = TypeName.UnknownName;
+            Type = Names.UnknownType;
         }
 
         public IEnumerable<ISSTNode> Children

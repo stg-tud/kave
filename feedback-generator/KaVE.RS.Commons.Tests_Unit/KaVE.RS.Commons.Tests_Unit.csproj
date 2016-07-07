@@ -180,8 +180,8 @@
     <Compile Include="Utils\HierarchyTest.cs" />
     <Compile Include="Utils\HttpPublisherTest.cs" />
     <Compile Include="Utils\InjectableIoUtilsTest.cs" />
-    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
-    <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
+    <Compile Include="Utils\Naming\ReSharperDeclaredElementNameFactoryTest.cs" />
+    <Compile Include="Utils\Naming\ReSharperTypeNameFactoryTest.cs" />
     <Compile Include="Utils\ProposalProbabilityUtilsTest.cs" />
     <Compile Include="Utils\PublisherUtilsTestSuite\WriteEventsToZipStreamTest.cs" />
     <Compile Include="Utils\XamlFormattingUtilTest.cs" />

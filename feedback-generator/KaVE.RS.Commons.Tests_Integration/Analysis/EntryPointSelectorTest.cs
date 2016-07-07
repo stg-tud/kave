@@ -15,7 +15,7 @@
  */
 
 using System.Linq;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
@@ -380,7 +380,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
 
         private void AssertEntryPoint(string ep)
         {
-            CollectionAssert.Contains(AnalyzedEntryPoints, MethodName.Get(ep));
+            CollectionAssert.Contains(AnalyzedEntryPoints, Names.Method(ep));
         }
     }
 }

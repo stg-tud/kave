@@ -15,7 +15,7 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VisualStudio
@@ -31,7 +31,7 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         }
 
         [DataMember]
-        public DocumentName Document { get; set; }
+        public IDocumentName Document { get; set; }
 
         [DataMember]
         public DocumentAction Action { get; set; }

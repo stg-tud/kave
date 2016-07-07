@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
         public void DefaultValues()
         {
             var sut = new TestCaseResult();
-            Assert.AreEqual(MethodName.UnknownName, sut.TestMethod);
+            Assert.AreEqual(Names.UnknownMethod, sut.TestMethod);
             Assert.AreEqual("", sut.Parameters);
             Assert.AreEqual(TimeSpan.Zero, sut.Duration);
             Assert.AreEqual(TestResult.Unknown, sut.Result);
@@ -42,12 +42,12 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
         {
             var sut = new TestCaseResult
             {
-                TestMethod = MethodName.Get("[T,P] [T,P].M()"),
+                TestMethod = Names.Method("[T,P] [T,P].M()"),
                 Parameters = "p",
                 Duration = TimeSpan.FromSeconds(3),
                 Result = TestResult.Success
             };
-            Assert.AreEqual(MethodName.Get("[T,P] [T,P].M()"), sut.TestMethod);
+            Assert.AreEqual(Names.Method("[T,P] [T,P].M()"), sut.TestMethod);
             Assert.AreEqual("p", sut.Parameters);
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.Duration);
             Assert.AreEqual(TestResult.Success, sut.Result);
@@ -68,14 +68,14 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
         {
             var a = new TestCaseResult
             {
-                TestMethod = MethodName.Get("[T,P] [T,P].M()"),
+                TestMethod = Names.Method("[T,P] [T,P].M()"),
                 Parameters = "p",
                 Duration = TimeSpan.FromSeconds(3),
                 Result = TestResult.Success
             };
             var b = new TestCaseResult
             {
-                TestMethod = MethodName.Get("[T,P] [T,P].M()"),
+                TestMethod = Names.Method("[T,P] [T,P].M()"),
                 Parameters = "p",
                 Duration = TimeSpan.FromSeconds(3),
                 Result = TestResult.Success
@@ -90,7 +90,7 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
         {
             var a = new TestCaseResult
             {
-                TestMethod = MethodName.Get("[T,P] [T,P].M()")
+                TestMethod = Names.Method("[T,P] [T,P].M()")
             };
             var b = new TestCaseResult();
 

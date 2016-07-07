@@ -15,12 +15,11 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    [TestFixture]
     internal class IDEStateEventSerializationTest
     {
         [Test]
@@ -29,8 +28,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             var ideStateEvent = new IDEStateEvent
             {
                 IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Runtime,
-                OpenDocuments = new[] {DocumentName.Get("SomeOpenDocument")},
-                OpenWindows = new[] {WindowName.Get("SomeOpenWindow")}
+                OpenDocuments = new[] {Names.Document("SomeOpenDocument")},
+                OpenWindows = new[] {Names.Window("SomeOpenWindow")}
             };
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.IDEStateEvent, KaVE.Commons\",\"IDELifecyclePhase\":2,\"OpenWindows\":[\"VisualStudio.WindowName:SomeOpenWindow\"],\"OpenDocuments\":[\"VisualStudio.DocumentName:SomeOpenDocument\"],\"TriggeredBy\":0}";

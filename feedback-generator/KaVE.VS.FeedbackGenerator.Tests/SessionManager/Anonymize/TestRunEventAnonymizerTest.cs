@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
@@ -32,7 +32,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
                 {
                     new TestCaseResult
                     {
-                        TestMethod = MethodName.Get("[T,P] [T,P].M()"),
+                        TestMethod = Names.Method("[T,P] [T,P].M()"),
                         Parameters = "abc"
                     }
                 }
@@ -45,7 +45,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             var expecteds = Sets.NewHashSet(
                 new TestCaseResult
                 {
-                    TestMethod = MethodName.Get("[T,P] [T,P].M()").ToAnonymousName(),
+                    TestMethod = Names.Method("[T,P] [T,P].M()").ToAnonymousName(),
                     Parameters = "abc".ToHash()
                 });
             Assert.AreEqual(expecteds, anonymized.Tests);

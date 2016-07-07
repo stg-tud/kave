@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
     internal static class TestFixtures
     {
-        public static readonly DocumentName SomeProductionDocumentName = DocumentName.Get("some document");
-        public static readonly DocumentName SomeTestDocumentName = DocumentName.Get("some test document");
+        public static readonly IDocumentName SomeProductionDocumentName = Names.Document("some document");
+        public static readonly IDocumentName SomeTestDocumentName = Names.Document("some test document");
     }
 }

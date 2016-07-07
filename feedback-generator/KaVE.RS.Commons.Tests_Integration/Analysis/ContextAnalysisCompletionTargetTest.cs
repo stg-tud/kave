@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
+    // TODO dead code?
     [Ignore]
     internal class ContextAnalysisCompletionTargetTest : BaseCSharpCodeCompletionTest
     {
@@ -31,7 +31,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 list.$
             ");
 
-            var expected = LocalVariableName.Get("[i:System.Collections.IList, mscorlib, 4.0.0.0] list");
+            var expected = Names.LocalVariable("[i:System.Collections.IList, mscorlib, 4.0.0.0] list");
             //var actual = ResultContext.TriggerTarget;
             //Assert.AreEqual(expected, actual);
         }
@@ -44,7 +44,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 list.Add$
             ");
 
-            var expected = LocalVariableName.Get("[i:System.Collections.IList, mscorlib, 4.0.0.0] list");
+            var expected = Names.LocalVariable("[i:System.Collections.IList, mscorlib, 4.0.0.0] list");
             //var actual = ResultContext.TriggerTarget;
             //Assert.AreEqual(expected, actual);
         }
@@ -88,7 +88,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("N.C, TestProject");
+            var expected = Names.Type("N.C, TestProject");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -111,7 +111,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("N.S, TestProject");
+            var expected = Names.Type("N.S, TestProject");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -124,7 +124,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = Names.Type("i:System.Collections.IList, mscorlib, 4.0.0.0");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -137,7 +137,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = Names.Type("i:System.Collections.IList, mscorlib, 4.0.0.0");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -153,7 +153,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 }");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = Names.Type("i:System.Collections.IList, mscorlib, 4.0.0.0");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -165,7 +165,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+            var expected = Names.Type("System.Object, mscorlib, 4.0.0.0");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -184,7 +184,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 }");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = FieldName.Get("[System.String, mscorlib, 4.0.0.0] [C, TestProject].Field");
+            var expected = Names.Field("[System.String, mscorlib, 4.0.0.0] [C, TestProject].Field");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -197,7 +197,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = LocalVariableName.Get("[System.String, mscorlib, 4.0.0.0] Const");
+            var expected = Names.LocalVariable("[System.String, mscorlib, 4.0.0.0] Const");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -209,7 +209,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = NamespaceName.Get("System");
+            var expected = Names.Namespace("System");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -223,7 +223,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = LocalVariableName.Get("[System.Object, mscorlib, 4.0.0.0] o");
+            var expected = Names.LocalVariable("[System.Object, mscorlib, 4.0.0.0] o");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -237,7 +237,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = LocalVariableName.Get("[System.Object, mscorlib, 4.0.0.0] o");
+            var expected = Names.LocalVariable("[System.Object, mscorlib, 4.0.0.0] o");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -262,7 +262,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
 
             //var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+            var expected = Names.Type("System.Object, mscorlib, 4.0.0.0");
             //Assert.AreEqual(expected, actual);
         }
 
@@ -275,7 +275,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                     param.$
                 }");
 
-            var expected = ParameterName.Get("[System.Object, mscorlib, 4.0.0.0] param");
+            var expected = Names.Parameter("[System.Object, mscorlib, 4.0.0.0] param");
             //var actual = ResultContext.TriggerTarget;
             //Assert.AreEqual(expected, actual);
         }

@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -89,7 +89,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             {
                 var id = property.Name.Name;
                 var type = property.Name.ValueType;
-                var definition = DefinitionSites.CreateDefinitionByField(FieldName.UnknownName);
+                var definition = DefinitionSites.CreateDefinitionByField(Names.UnknownField);
                 context.DefineVariable(id, type, definition);
             }
         }

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -375,7 +374,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                             new VariableDeclaration
                             {
                                 Reference = new VariableReference {Identifier = "coreName"},
-                                Type = TypeName.Get("KaVE.Commons.Model.ObjectUsage.CoReName, KaVE.Commons, 1.0.0.0")
+                                Type = Names.Type("KaVE.Commons.Model.ObjectUsage.CoReName, KaVE.Commons, 1.0.0.0")
                             },
                             new Assignment
                             {
@@ -393,7 +392,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                                         {
                                             Reference = new VariableReference {Identifier = "writer"},
                                             MethodName =
-                                                MethodName.Get(
+                                                Names.Method(
                                                     "[System.Void, mscorlib, 4.0.0.0] [Newtonsoft.Json.JsonWriter, Newtonsoft.Json, 6.0.0.0].WriteValue([System.String, mscorlib, 4.0.0.0] value)"),
                                             Parameters =
                                             {
@@ -409,7 +408,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                             new VariableDeclaration
                             {
                                 Reference = new VariableReference {Identifier = "callSite"},
-                                Type = TypeName.Get("KaVE.Commons.Model.ObjectUsage.CallSite, KaVE.Commons, 1.0.0.0")
+                                Type = Names.Type("KaVE.Commons.Model.ObjectUsage.CallSite, KaVE.Commons, 1.0.0.0")
                             },
                             new Assignment
                             {

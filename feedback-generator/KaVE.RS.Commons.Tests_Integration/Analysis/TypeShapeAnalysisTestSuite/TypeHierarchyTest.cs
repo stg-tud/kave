@@ -15,8 +15,7 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
@@ -65,7 +64,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                 }");
             var actual = ResultContext.TypeShape.TypeHierarchy.Element;
 
-            var expected = TypeName.Get("TestNamespace.TestClass, TestProject");
+            var expected = Names.Type("TestNamespace.TestClass, TestProject");
 
             Assert.AreEqual(expected, actual);
         }
@@ -92,7 +91,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             // ReSharper disable once PossibleNullReferenceException
             var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
 
-            var expected = TypeName.Get("TestNamespace.SuperClass, TestProject");
+            var expected = Names.Type("TestNamespace.SuperClass, TestProject");
 
             Assert.AreEqual(expected, actual);
         }
@@ -148,7 +147,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 
             // ReSharper disable once PossibleNullReferenceException
             var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
-            var expected = TypeName.Get("N.IC`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject");
+            var expected = Names.Type("N.IC`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject");
             Assert.AreEqual(expected, actual);
         }
 
@@ -173,7 +172,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                 }");
 
             var actual = ResultContext.TypeShape.TypeHierarchy.Element;
-            var expected = TypeName.Get("N.C`1[[T]], TestProject");
+            var expected = Names.Type("N.C`1[[T]], TestProject");
             Assert.AreEqual(expected, actual);
         }
 
@@ -307,7 +306,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                 },
                 MethodHierarchies =
                 {
-                    new MethodHierarchy(MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].M()"))
+                    new MethodHierarchy(Names.Method("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].M()"))
                 }
             };
 
@@ -316,7 +315,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 
         private static ITypeName Type(string typeName)
         {
-            return TypeName.Get("N." + typeName + ", TestProject");
+            return Names.Type("N." + typeName + ", TestProject");
         }
     }
 }

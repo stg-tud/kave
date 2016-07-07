@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -57,7 +56,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         {
             var query = new Query();
             Assert.NotNull(query.type);
-            Assert.AreEqual(TypeName.UnknownName.ToCoReName(), query.type);
+            Assert.AreEqual(Names.UnknownType.ToCoReName(), query.type);
         }
 
         [Test]
@@ -65,7 +64,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         {
             var query = new Query();
             Assert.NotNull(query.classCtx);
-            Assert.AreEqual(TypeName.UnknownName.ToCoReName(), query.classCtx);
+            Assert.AreEqual(Names.UnknownType.ToCoReName(), query.classCtx);
         }
 
         [Test]
@@ -73,7 +72,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         {
             var query = new Query();
             Assert.NotNull(query.methodCtx);
-            Assert.AreEqual(MethodName.UnknownName.ToCoReName(), query.methodCtx);
+            Assert.AreEqual(Names.UnknownMethod.ToCoReName(), query.methodCtx);
         }
 
         [Test]

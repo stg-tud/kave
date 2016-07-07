@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Utils.Collections;
@@ -64,7 +64,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 Sets.NewHashSet(
                     new FieldDeclaration
                     {
-                        Name = FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
+                        Name = Names.Field("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
                     });
             Assert.AreEqual(expected, ResultSST.Fields);
         }
@@ -78,12 +78,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 Sets.NewHashSet(
                     new FieldDeclaration
                     {
-                        Name = FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
+                        Name = Names.Field("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
                     },
                     new FieldDeclaration
                     {
                         Name =
-                            FieldName.Get("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].OtherConstant")
+                            Names.Field("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].OtherConstant")
                     });
             Assert.AreEqual(expected, ResultSST.Fields);
         }

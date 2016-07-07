@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
 {
-    [TestFixture]
     internal class TestVsProductionDocumentHeuristicTest
     {
         [TestCase("CSharp Foo.cs"),
          TestCase("Plain Text Class.txt")]
         public void IdentifiesProductionDocument(string identifier)
         {
-            var document = DocumentName.Get(identifier);
+            var document = Names.Document(identifier);
             Assert.IsTrue(document.IsProductionDocument());
         }
 
@@ -40,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
          TestCase("Plain Text sometestdocument.txt")]
         public void IdentifiesTestDocument(string identifier)
         {
-            var document = DocumentName.Get(identifier);
+            var document = Names.Document(identifier);
             Assert.IsTrue(document.IsTestDocument());
         }
     }

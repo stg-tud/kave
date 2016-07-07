@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -47,7 +48,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public InvocationExpression()
         {
             Reference = new VariableReference();
-            MethodName = Naming.Impl.v0.CodeElements.MethodName.UnknownName;
+            MethodName = Names.UnknownMethod;
             Parameters = Lists.NewList<ISimpleExpression>();
         }
 

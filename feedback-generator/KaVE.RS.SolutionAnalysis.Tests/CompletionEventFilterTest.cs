@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -189,7 +189,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private static IDEEvent CreateCompletionEvent_NoCSharpFile()
         {
             var e = CreateCompletionEvent();
-            e.ActiveDocument = DocumentName.Get("... blabla.xml");
+            e.ActiveDocument = Names.Document("... blabla.xml");
             return e;
         }
 
@@ -197,7 +197,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         {
             e.IDESessionUUID = "SomeUID";
             e.TriggeredAt = DateTime.Now;
-            e.ActiveDocument = DocumentName.Get("... blabla.cs");
+            e.ActiveDocument = Names.Document("... blabla.cs");
         }
 
         private static Context CreateContext(params IStatement[] stmts)

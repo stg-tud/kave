@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
@@ -60,13 +60,13 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         {
             var actual =
                 CallSites.CreateReceiverCallSite(
-                    MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)"));
+                    Names.Method("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)"));
             var expected = new CallSite
             {
                 kind = CallSiteKind.RECEIVER,
                 method =
-                    MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)")
-                              .ToCoReName()
+                    Names.Method("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)")
+                         .ToCoReName()
             };
 
             Assert.AreEqual(expected, actual);

@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -45,8 +45,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             OriginalEvent.IDESessionUUID = "0xDEADBEEF";
             OriginalEvent.TriggeredAt = DateTime.Now;
             OriginalEvent.Duration = TimeSpan.FromSeconds(23);
-            OriginalEvent.ActiveDocument = DocumentName.Get("CSharp \\P1\\Class1.cs");
-            OriginalEvent.ActiveWindow = WindowName.Get("vsWindowTypeDocument Class1.cs");
+            OriginalEvent.ActiveDocument = Names.Document("CSharp \\P1\\Class1.cs");
+            OriginalEvent.ActiveWindow = Names.Window("vsWindowTypeDocument Class1.cs");
             OriginalEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
@@ -139,7 +139,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldNotChangeActiveWindowNameWhenRemoveNamesIsSetButWindowNameContainsNoPath()
         {
-            OriginalEvent.ActiveWindow = WindowName.Get("vsWindowTypeToolWindow Start Page");
+            OriginalEvent.ActiveWindow = Names.Window("vsWindowTypeToolWindow Start Page");
             AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();

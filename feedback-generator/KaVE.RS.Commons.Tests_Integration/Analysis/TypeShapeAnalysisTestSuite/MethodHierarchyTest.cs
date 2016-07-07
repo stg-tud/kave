@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 using JetBrains.Util;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
@@ -622,14 +622,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 
         private static MethodHierarchy CompleteDecl(string encType, string superType, string firstType)
         {
-            var decl = new MethodHierarchy(MethodName.Get(encType));
+            var decl = new MethodHierarchy(Names.Method(encType));
             if (!superType.IsEmpty())
             {
-                decl.Super = MethodName.Get(superType);
+                decl.Super = Names.Method(superType);
             }
             if (!firstType.IsEmpty())
             {
-                decl.First = MethodName.Get(firstType);
+                decl.First = Names.Method(firstType);
             }
 
             return decl;

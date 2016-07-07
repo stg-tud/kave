@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 
 namespace KaVE.Commons.Model.Naming
@@ -64,7 +63,7 @@ namespace KaVE.Commons.Model.Naming
 
         public static IMethodName RemoveGenerics(this IMethodName name)
         {
-            return MethodName.Get(RemoveGenerics(name.Identifier));
+            return Names.Method(RemoveGenerics(name.Identifier));
         }
 
         private static string RemoveGenerics(string id)
@@ -170,7 +169,7 @@ namespace KaVE.Commons.Model.Naming
 
                 var lengthOfSubstring = endOfParam - startOfParam;
                 var paramSubstring = identifierWithParameters.Substring(startOfParam, lengthOfSubstring);
-                parameters.Add(ParameterName.Get(paramSubstring.Trim()));
+                parameters.Add(Names.Parameter(paramSubstring.Trim()));
             }
 
             return parameters;

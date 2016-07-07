@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using NUnit.Framework;
 
@@ -38,7 +38,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         [Test]
         public void MethodReturnByMethodNameDefinitionIsCorrectInitialized()
         {
-            var methodName = MethodName.Get("[RType,P1] [Decl,P1].MethodName()");
+            var methodName = Names.Method("[RType,P1] [Decl,P1].MethodName()");
             var actual = DefinitionSites.CreateDefinitionByReturn(methodName);
             var expected = new DefinitionSite
             {
@@ -65,7 +65,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         [Test]
         public void FieldDefinitionByFieldNameIsCorrectInitialized()
         {
-            var fieldName = FieldName.Get("[VType,P1] [Decl,P1]._fieldName");
+            var fieldName = Names.Field("[VType,P1] [Decl,P1]._fieldName");
             var actual = DefinitionSites.CreateDefinitionByField(fieldName);
             var expected = new DefinitionSite
             {
@@ -93,7 +93,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         [Test]
         public void InitDefinitionByMethodNameIsCorrectInitialized()
         {
-            var methodName = MethodName.Get("[RType,P1] [Decl,P1]..ctor()");
+            var methodName = Names.Method("[RType,P1] [Decl,P1]..ctor()");
             var actual = DefinitionSites.CreateDefinitionByConstructor(methodName);
             var expected = new DefinitionSite
             {
@@ -121,7 +121,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         [Test]
         public void ParameterDefinitionByMethodNameIsCorrectInitialized()
         {
-            var methodName = MethodName.Get("[RType,P1] [Decl,P1].method([PType, Pq1] length)");
+            var methodName = Names.Method("[RType,P1] [Decl,P1].method([PType, Pq1] length)");
             var actual = DefinitionSites.CreateDefinitionByParam(methodName, 0);
             var expected = new DefinitionSite
             {

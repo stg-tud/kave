@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
@@ -27,12 +26,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 {
     class CsMethodName : IMethodName
     {
-        protected TypeNamingParser.MethodContext ctx;
+        protected TypeNamingParser.MethodContext Ctx;
 
         public CsMethodName(TypeNamingParser.MethodContext ctx)
         {
             Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
-            this.ctx = ctx;
+            this.Ctx = ctx;
         }
 
         public string Signature
@@ -41,19 +40,19 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             {
                 if (IsConstructor)
                 {
-                    return ctx.regularMethod().nonStaticCtor() != null
-                        ? ".ctor" + ctx.regularMethod().methodSignature().GetText()
-                        : ".cctor" + ctx.regularMethod().methodSignature().GetText();
+                    return Ctx.regularMethod().nonStaticCtor() != null
+                        ? ".ctor" + Ctx.regularMethod().methodSignature().GetText()
+                        : ".cctor" + Ctx.regularMethod().methodSignature().GetText();
                 }
-                if (ctx.regularMethod() != null)
+                if (Ctx.regularMethod() != null)
                 {
-                    return ctx.regularMethod().customMethod().methodDefinition().id().GetText() +
-                           (ctx.regularMethod().customMethod().genericTypePart() != null
-                               ? ctx.regularMethod().customMethod().genericTypePart().GetText()
+                    return Ctx.regularMethod().customMethod().methodDefinition().id().GetText() +
+                           (Ctx.regularMethod().customMethod().genericTypePart() != null
+                               ? Ctx.regularMethod().customMethod().genericTypePart().GetText()
                                : "") +
-                           ctx.regularMethod().methodSignature().GetText();
+                           Ctx.regularMethod().methodSignature().GetText();
                 }
-                return ctx.UNKNOWN().GetText();
+                return Ctx.UNKNOWN().GetText();
             }
         }
 
@@ -64,9 +63,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 IList<IParameterName> paras = new KaVEList<IParameterName>();
                 if (HasParameters)
                 {
-                    foreach (var p in ctx.regularMethod().methodSignature().formalParam())
+                    foreach (var p in Ctx.regularMethod().methodSignature().formalParam())
                     {
-                        paras.Add(ParameterName.Get(p.GetText()));
+                        // TODO the getText call seems to break the context concept here
+                        paras.Add(Names.Parameter(p.GetText()));
                     }
                 }
                 return paras;
@@ -75,7 +75,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 
         public bool HasParameters
         {
-            get { return ctx.regularMethod() != null && ctx.regularMethod().methodSignature() != null; }
+            get { return Ctx.regularMethod() != null && Ctx.regularMethod().methodSignature() != null; }
         }
 
         public bool IsConstructor
@@ -83,7 +83,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get
             {
                 return IsUnknown &&
-                       (ctx.regularMethod().staticCctor() != null || ctx.regularMethod().nonStaticCtor() != null);
+                       (Ctx.regularMethod().staticCctor() != null || Ctx.regularMethod().nonStaticCtor() != null);
             }
         }
 
@@ -91,11 +91,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         {
             get
             {
-                if (ctx.regularMethod() != null && ctx.regularMethod().customMethod() != null)
+                if (Ctx.regularMethod() != null && Ctx.regularMethod().customMethod() != null)
                 {
-                    if (ctx.regularMethod().customMethod().methodDefinition().type()[0].UNKNOWN() == null)
+                    if (Ctx.regularMethod().customMethod().methodDefinition().type()[0].UNKNOWN() == null)
                     {
-                        return new CsTypeName(ctx.regularMethod().customMethod().methodDefinition().type()[0]);
+                        return new CsTypeName(Ctx.regularMethod().customMethod().methodDefinition().type()[0]);
                     }
                 }
                 return UnknownName.Get(typeof(ITypeName));
@@ -125,20 +125,20 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get
             {
                 if (IsConstructor &&
-                    ((ctx.regularMethod().staticCctor() != null &&
-                      ctx.regularMethod().staticCctor().type().UNKNOWN() == null) ||
-                     (ctx.regularMethod().nonStaticCtor() != null &&
-                      ctx.regularMethod().nonStaticCtor().type().UNKNOWN() == null)))
+                    ((Ctx.regularMethod().staticCctor() != null &&
+                      Ctx.regularMethod().staticCctor().type().UNKNOWN() == null) ||
+                     (Ctx.regularMethod().nonStaticCtor() != null &&
+                      Ctx.regularMethod().nonStaticCtor().type().UNKNOWN() == null)))
                 {
                     return
                         new CsTypeName(
-                            ctx.regularMethod().staticCctor() != null
-                                ? ctx.regularMethod().staticCctor().type()
-                                : ctx.regularMethod().nonStaticCtor().type());
+                            Ctx.regularMethod().staticCctor() != null
+                                ? Ctx.regularMethod().staticCctor().type()
+                                : Ctx.regularMethod().nonStaticCtor().type());
                 }
-                if (ctx.regularMethod().customMethod().methodDefinition().type(1).UNKNOWN() == null)
+                if (Ctx.regularMethod().customMethod().methodDefinition().type(1).UNKNOWN() == null)
                 {
-                    return new CsTypeName(ctx.regularMethod().customMethod().methodDefinition().type(1));
+                    return new CsTypeName(Ctx.regularMethod().customMethod().methodDefinition().type(1));
                 }
                 return UnknownName.Get(typeof(ITypeName));
             }
@@ -150,11 +150,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             {
                 if (IsConstructor)
                 {
-                    return ctx.regularMethod().staticCctor() != null &&
-                           ctx.regularMethod().staticCctor().staticModifier() != null;
+                    return Ctx.regularMethod().staticCctor() != null &&
+                           Ctx.regularMethod().staticCctor().staticModifier() != null;
                 }
                 return !IsUnknown &&
-                       (ctx.regularMethod() != null && ctx.regularMethod().customMethod().staticModifier() != null);
+                       (Ctx.regularMethod() != null && Ctx.regularMethod().customMethod().staticModifier() != null);
             }
         }
 
@@ -164,15 +164,15 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             {
                 if (IsConstructor)
                 {
-                    return ctx.regularMethod().staticCctor() != null ? ".cctor" : ".ctor";
+                    return Ctx.regularMethod().staticCctor() != null ? ".cctor" : ".ctor";
                 }
-                return ctx.regularMethod().customMethod().methodDefinition().id().GetText();
+                return Ctx.regularMethod().customMethod().methodDefinition().id().GetText();
             }
         }
 
         public string Identifier
         {
-            get { return ctx.GetText(); }
+            get { return Ctx.GetText(); }
         }
 
         public bool IsUnknown
@@ -190,8 +190,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get
             {
                 return !IsConstructor && !IsUnknown &&
-                       ctx.regularMethod() != null && ctx.regularMethod().customMethod() != null &&
-                       ctx.regularMethod().customMethod().genericTypePart() != null;
+                       Ctx.regularMethod() != null && Ctx.regularMethod().customMethod() != null &&
+                       Ctx.regularMethod().customMethod().genericTypePart() != null;
             }
         }
 
@@ -199,7 +199,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         {
             get
             {
-                return IsGenericEntity && ctx.regularMethod().customMethod().genericTypePart().genericParam() != null;
+                return IsGenericEntity && Ctx.regularMethod().customMethod().genericTypePart().genericParam() != null;
             }
         }
 
@@ -210,7 +210,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 List<ITypeName> typePara = new KaVEList<ITypeName>();
                 if (HasTypeParameters)
                 {
-                    foreach (var p in ctx.regularMethod().customMethod().genericTypePart().genericParam())
+                    foreach (var p in Ctx.regularMethod().customMethod().genericTypePart().genericParam())
                     {
                         typePara.Add(Names.Type(p.typeParameter().GetText()));
                     }

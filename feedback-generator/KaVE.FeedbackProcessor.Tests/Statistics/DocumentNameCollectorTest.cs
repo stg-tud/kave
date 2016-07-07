@@ -17,6 +17,7 @@
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Statistics;
@@ -25,7 +26,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
 {
-    [TestFixture]
     internal class DocumentNameCollectorTest
     {
         private DocumentNameCollector _uut;
@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CollectsNameFromDocumentEvent()
         {
-            var windowEvent = new DocumentEvent {Document = DocumentName.Get("document event")};
+            var windowEvent = new DocumentEvent {Document = Names.Document("document event")};
 
             Process(windowEvent);
 
@@ -49,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CollectsActiveDocument()
         {
-            var ideEvent = new TestIDEEvent {ActiveDocument = DocumentName.Get("active document name")};
+            var ideEvent = new TestIDEEvent {ActiveDocument = Names.Document("active document name")};
 
             Process(ideEvent);
 
@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CollectsOpenDocumentsFromIDEStateEvent()
         {
-            var ideEvent = new IDEStateEvent {OpenDocuments = {DocumentName.Get("doc 1"), DocumentName.Get("doc 2")}};
+            var ideEvent = new IDEStateEvent {OpenDocuments = {Names.Document("doc 1"), Names.Document("doc 2")}};
 
             Process(ideEvent);
 
