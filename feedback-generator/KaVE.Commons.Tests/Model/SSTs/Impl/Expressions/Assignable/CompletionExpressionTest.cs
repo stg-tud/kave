@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
@@ -40,11 +40,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             var sut = new CompletionExpression
             {
                 VariableReference = SomeVarRef("i"),
-                TypeReference = TypeName.UnknownName,
+                TypeReference = Names.UnknownType(),
                 Token = "t"
             };
             Assert.AreEqual(SomeVarRef("i"), sut.VariableReference);
-            Assert.AreEqual(TypeName.UnknownName, sut.TypeReference);
+            Assert.AreEqual(Names.UnknownType(), sut.TypeReference);
             Assert.AreEqual("t", sut.Token);
         }
 
@@ -64,13 +64,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
             {
                 VariableReference = SomeVarRef("i"),
                 Token = "t",
-                TypeReference = TypeName.UnknownName
+                TypeReference = Names.UnknownType()
             };
             var b = new CompletionExpression
             {
                 VariableReference = SomeVarRef("i"),
                 Token = "t",
-                TypeReference = TypeName.UnknownName
+                TypeReference = Names.UnknownType()
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -98,8 +98,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentTypeReference()
         {
-            var a = new CompletionExpression {TypeReference = TypeName.UnknownName};
-            var b = new CompletionExpression {TypeReference = TypeName.Get("System.Int32, mscore, 4.0.0.0")};
+            var a = new CompletionExpression {TypeReference = Names.UnknownType()};
+            var b = new CompletionExpression {TypeReference = Names.Type("System.Int32, mscore, 4.0.0.0")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

@@ -25,14 +25,14 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
          TestCase("a.b.", "a.")]
         public void ParentNamespace(string input, string expected)
         {
-            Assert.AreEqual(Names.GetNamespaceName(input).ParentNamespace.Identifier, expected);
+            Assert.AreEqual(Names.Namespace(input).ParentNamespace.Identifier, expected);
         }
 
         [TestCase("a.b.", "b"),
          TestCase("a.b.c.", "c")]
         public void Name(string input, string expected)
         {
-            Assert.AreEqual(Names.GetNamespaceName(input).Name, expected);
+            Assert.AreEqual(Names.Namespace(input).Name, expected);
         }
     }
 }

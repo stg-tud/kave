@@ -16,7 +16,7 @@
 
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 
-namespace KaVE.Commons.TestUtils.Model.Names
+namespace KaVE.Commons.TestUtils.Model.Naming
 {
     public class VsComponentNameTestFactory
     {

@@ -25,7 +25,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public static ITypeName Instance
         {
-            get { return TypeName.Get(Identifier); }
+            get { return Names.Type(Identifier); }
         }
 
         internal static bool IsUnknownTypeIdentifier(string identifier)
@@ -36,7 +36,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         [UsedImplicitly]
         internal new static ITypeName Get(string identifier)
         {
-            return TypeName.Get(identifier);
+            return Names.Type(identifier);
         }
 
         internal UnknownTypeName(string identifier) : base(identifier) {}

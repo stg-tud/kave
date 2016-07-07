@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
@@ -95,39 +94,39 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         {
             return new SST
             {
-                EnclosingType = TypeName.Get("T,P"),
+                EnclosingType = Names.Type("T,P"),
                 Delegates =
                 {
                     new DelegateDeclaration
                     {
-                        Name = DelegateTypeName.Get("d:[R,P] [T2,P].()")
+                        Name = Names.Type("d:[R,P] [T2,P].()").AsDelegateTypeName
                     }
                 },
                 Events =
                 {
                     new EventDeclaration
                     {
-                        Name = EventName.Get("[T2,P] [T3,P].E")
+                        Name = Names.Event("[T2,P] [T3,P].E")
                     }
                 },
                 Fields =
                 {
                     new FieldDeclaration
                     {
-                        Name = FieldName.Get("[T4,P] [T5,P].F")
+                        Name = Names.Field("[T4,P] [T5,P].F")
                     }
                 },
                 Methods =
                 {
                     new MethodDeclaration
                     {
-                        Name = MethodName.Get("[T6,P] [T7,P].M1()"),
+                        Name = Names.Method("[T6,P] [T7,P].M1()"),
                         IsEntryPoint = false,
                         Body = CreateCurrentBody()
                     },
                     new MethodDeclaration
                     {
-                        Name = MethodName.Get("[T8,P] [T9,P].M2()"),
+                        Name = Names.Method("[T8,P] [T9,P].M2()"),
                         IsEntryPoint = true
                     }
                 },
@@ -135,7 +134,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 {
                     new PropertyDeclaration
                     {
-                        Name = PropertyName.Get("[T10,P] [T11,P].P"),
+                        Name = Names.Property("[T10,P] [T11,P].P"),
                         Get =
                         {
                             new ReturnStatement()
@@ -153,39 +152,39 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         {
             return new SST
             {
-                EnclosingType = TypeName.Get("T,P"),
+                EnclosingType = Names.Type("T,P"),
                 Delegates =
                 {
                     new DelegateDeclaration
                     {
-                        Name = DelegateTypeName.Get("d:T2,P")
+                        Name = Names.Type("d:T2,P").AsDelegateTypeName
                     }
                 },
                 Events =
                 {
                     new EventDeclaration
                     {
-                        Name = EventName.Get("[T2,P] [T3,P].E")
+                        Name = Names.Event("[T2,P] [T3,P].E")
                     }
                 },
                 Fields =
                 {
                     new FieldDeclaration
                     {
-                        Name = FieldName.Get("[T4,P] [T5,P].F")
+                        Name = Names.Field("[T4,P] [T5,P].F")
                     }
                 },
                 Methods =
                 {
                     new MethodDeclaration
                     {
-                        Name = MethodName.Get("[T6,P] [T7,P].M1()"),
+                        Name = Names.Method("[T6,P] [T7,P].M1()"),
                         IsEntryPoint = false,
                         Body = CreateLegacyBody(false)
                     },
                     new MethodDeclaration
                     {
-                        Name = MethodName.Get("[T8,P] [T9,P].M2()"),
+                        Name = Names.Method("[T8,P] [T9,P].M2()"),
                         IsEntryPoint = true
                     }
                 },
@@ -193,7 +192,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 {
                     new PropertyDeclaration
                     {
-                        Name = PropertyName.Get("[T10,P] [T11,P].P"),
+                        Name = Names.Property("[T10,P] [T11,P].P"),
                         Get =
                         {
                             new ReturnStatement()
@@ -327,7 +326,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                     new CatchBlock
                     {
                         Kind = CatchBlockKind.Unnamed,
-                        Parameter = ParameterName.Get("[T,P] p"),
+                        Parameter = Names.Parameter("[T,P] p"),
                         Body =
                         {
                             new ContinueStatement()

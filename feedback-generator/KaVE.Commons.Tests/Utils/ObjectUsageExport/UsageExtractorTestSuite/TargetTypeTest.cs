@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -89,7 +89,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                 }
             };
             var context = new UsageContext();
-            context.DefineVariable("a", TypeName.Get("T,P"), DefinitionSites.CreateUnknownDefinitionSite());
+            context.DefineVariable("a", Names.Type("T,P"), DefinitionSites.CreateUnknownDefinitionSite());
             _sut.Visit(expr, context);
 
             Assert.AreEqual(new CoReTypeName("LT"), context.TargetType);

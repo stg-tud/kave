@@ -16,9 +16,8 @@
 
 using System;
 using System.Linq;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -53,7 +52,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
 
         protected IVariableDeclaration SomeDeclaration(string type = "T1")
         {
-            return new VariableDeclaration {Type = TypeName.Get(type + ",P1")};
+            return new VariableDeclaration {Type = Names.Type(type + ",P1")};
         }
 
         protected IVariableReference SomeVarRef(string id = "v")
@@ -70,7 +69,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         protected IMethodName GetMethod(string simpleName)
         {
             var methodName = String.Format("[T1, P1] [T2, P2].{0}()", simpleName);
-            return MethodName.Get(methodName);
+            return Names.Method(methodName);
         }
 
         protected IKaVEList<ISimpleExpression> RefExprs(params string[] ids)
@@ -82,12 +81,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
 
         protected IParameterName SomeParameter()
         {
-            return ParameterName.Get("[T,P] n");
+            return Names.Parameter("[T,P] n");
         }
 
         protected ILambdaName SomeLambdaName()
         {
-            return LambdaName.Get("[T,P] ([T2,P2] p)");
+            return Names.Lambda("[T,P] ([T2,P2] p)");
         }
     }
 }

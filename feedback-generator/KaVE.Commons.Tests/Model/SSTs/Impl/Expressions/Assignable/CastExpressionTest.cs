@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -30,7 +30,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CastExpression();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(TypeName.UnknownName, sut.TargetType);
+            Assert.AreEqual(Names.UnknownType(), sut.TargetType);
             Assert.AreEqual(CastOperator.Unknown, sut.Operator);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -41,12 +41,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CastExpression
             {
-                TargetType = TypeName.Get("T,P"),
+                TargetType = Names.Type("T,P"),
                 Reference = SomeVarRef(),
                 Operator = CastOperator.SafeCast
             };
 
-            Assert.AreEqual(TypeName.Get("T,P"), sut.TargetType);
+            Assert.AreEqual(Names.Type("T,P"), sut.TargetType);
             Assert.AreEqual(SomeVarRef(), sut.Reference);
             Assert.AreEqual(CastOperator.SafeCast, sut.Operator);
         }
@@ -65,14 +65,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new CastExpression
             {
-                TargetType = TypeName.Get("T,P"),
+                TargetType = Names.Type("T,P"),
                 Reference = SomeVarRef(),
                 Operator = CastOperator.SafeCast
             };
 
             var b = new CastExpression
             {
-                TargetType = TypeName.Get("T,P"),
+                TargetType = Names.Type("T,P"),
                 Reference = SomeVarRef(),
                 Operator = CastOperator.SafeCast
             };
@@ -86,7 +86,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new CastExpression
             {
-                TargetType = TypeName.Get("T,P")
+                TargetType = Names.Type("T,P")
             };
 
             var b = new CastExpression();

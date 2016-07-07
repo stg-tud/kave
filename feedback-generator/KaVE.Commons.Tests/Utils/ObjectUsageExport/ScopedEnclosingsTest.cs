@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using NUnit.Framework;
@@ -30,8 +29,8 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         {
             var sut = new ScopedEnclosings();
             Assert.Null(sut.Parent);
-            Assert.AreEqual(TypeName.UnknownName, sut.Type);
-            Assert.AreEqual(MethodName.UnknownName, sut.Method);
+            Assert.AreEqual(Names.UnknownType(), sut.Type);
+            Assert.AreEqual(Names.UnknownMethod(), sut.Method);
         }
 
         [Test]
@@ -92,12 +91,12 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         private static IMethodName Method(string m)
         {
             var methodName = string.Format("[{0}] [{1}].{2}()", Type("R"), Type("D"), m);
-            return MethodName.Get(methodName);
+            return Names.Method(methodName);
         }
 
         private static ITypeName Type(string typeName)
         {
-            return TypeName.Get(typeName + ",P");
+            return Names.Type(typeName + ",P");
         }
     }
 }

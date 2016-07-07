@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -31,7 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         {
             var sut = new SST();
 
-            Assert.AreEqual(TypeName.UnknownName, sut.EnclosingType);
+            Assert.AreEqual(Names.UnknownType(), sut.EnclosingType);
             Assert.AreEqual("", sut.PartialClassIdentifier);
             Assert.False(sut.IsPartialClass);
             Assert.AreEqual(Lists.NewList<IDelegateDeclaration>(), sut.Delegates);
@@ -51,7 +51,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         {
             var sut = new SST
             {
-                EnclosingType = TypeName.Get("T1, P1"),
+                EnclosingType = Names.Type("T1, P1"),
                 PartialClassIdentifier = "abc",
                 Delegates = {new DelegateDeclaration()},
                 Events = {new EventDeclaration()},
@@ -60,7 +60,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
                 Properties = {new PropertyDeclaration()}
             };
 
-            Assert.AreEqual(TypeName.Get("T1, P1"), sut.EnclosingType);
+            Assert.AreEqual(Names.Type("T1, P1"), sut.EnclosingType);
             Assert.AreEqual("abc", sut.PartialClassIdentifier);
             Assert.True(sut.IsPartialClass);
             Assert.AreEqual(Lists.NewList(new DelegateDeclaration()), sut.Delegates);
@@ -84,7 +84,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         {
             var a = new SST
             {
-                EnclosingType = TypeName.Get("T1, P1"),
+                EnclosingType = Names.Type("T1, P1"),
                 PartialClassIdentifier = "abc",
                 Delegates = {new DelegateDeclaration()},
                 Events = {new EventDeclaration()},
@@ -94,7 +94,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             };
             var b = new SST
             {
-                EnclosingType = TypeName.Get("T1, P1"),
+                EnclosingType = Names.Type("T1, P1"),
                 PartialClassIdentifier = "abc",
                 Delegates = {new DelegateDeclaration()},
                 Events = {new EventDeclaration()},
@@ -110,7 +110,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new SST {EnclosingType = TypeName.Get("T1, P1")};
+            var a = new SST {EnclosingType = Names.Type("T1, P1")};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

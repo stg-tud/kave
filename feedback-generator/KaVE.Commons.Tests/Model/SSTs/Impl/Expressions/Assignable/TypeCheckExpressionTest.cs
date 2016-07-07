@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.TestUtils;
@@ -29,7 +29,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new TypeCheckExpression();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(TypeName.UnknownName, sut.Type);
+            Assert.AreEqual(Names.UnknownType(), sut.Type);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -39,11 +39,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef()
             };
 
-            Assert.AreEqual(TypeName.Get("System.Int32, mscorlib, 4.0.0.0"), sut.Type);
+            Assert.AreEqual(Names.Type("System.Int32, mscorlib, 4.0.0.0"), sut.Type);
             Assert.AreEqual(SomeVarRef(), sut.Reference);
         }
 
@@ -61,13 +61,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef()
             };
 
             var b = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef()
             };
 
@@ -80,13 +80,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef()
             };
 
             var b = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.String, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.String, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef()
             };
 
@@ -99,13 +99,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef("i")
             };
 
             var b = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = SomeVarRef("j")
             };
 

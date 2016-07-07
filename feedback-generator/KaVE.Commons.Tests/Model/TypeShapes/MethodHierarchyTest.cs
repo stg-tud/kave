@@ -18,7 +18,7 @@ using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils;
-using KaVE.Commons.TestUtils.Model.Names;
+using KaVE.Commons.TestUtils.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.TypeShapes

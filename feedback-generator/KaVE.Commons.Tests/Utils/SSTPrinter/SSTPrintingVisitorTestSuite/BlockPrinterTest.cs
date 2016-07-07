@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -34,7 +33,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new ForEachLoop
             {
-                Declaration = SSTUtil.Declare("e", TypeName.Get("T,P")),
+                Declaration = SSTUtil.Declare("e", Names.Type("T,P")),
                 LoopedReference = SSTUtil.VariableReference("elements"),
                 Body =
                 {
@@ -121,7 +120,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new CatchBlock
                     {
-                        Parameter = ParameterName.Get("[ExceptionType,P] e"),
+                        Parameter = Names.Parameter("[ExceptionType,P] e"),
                         Body = {new BreakStatement()}
                     }
                 },
@@ -154,7 +153,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new CatchBlock
                     {
-                        Parameter = ParameterName.Get("[ExceptionType,P] e"),
+                        Parameter = Names.Parameter("[ExceptionType,P] e"),
                         Body = {new BreakStatement()}
                     }
                 }
@@ -211,7 +210,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                     new CatchBlock
                     {
                         Kind = CatchBlockKind.Unnamed,
-                        Parameter = ParameterName.Get("[ExceptionType,P] e"),
+                        Parameter = Names.Parameter("[ExceptionType,P] e"),
                         Body = {new BreakStatement()}
                     }
                 }
@@ -398,7 +397,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             {
                 Init =
                 {
-                    SSTUtil.Declare("i", TypeName.Get("T,P")),
+                    SSTUtil.Declare("i", Names.Type("T,P")),
                     SSTUtil.AssignmentToLocal("i", new ConstantValueExpression {Value = "0"})
                 },
                 Body = {new ContinueStatement(), new BreakStatement()},

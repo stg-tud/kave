@@ -39,7 +39,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var startOfDecarlingType = Identifier.StartOfNextTypeIdentifier(endOfValueType) + 1;
                 var endOfDeclaringType = Identifier.EndOfNextTypeIdentifier(endOfValueType) - 1;
                 var lengthOfDeclaringType = endOfDeclaringType - startOfDecarlingType;
-                return TypeName.Get(Identifier.Substring(startOfDecarlingType, lengthOfDeclaringType));
+                return Names.Type(Identifier.Substring(startOfDecarlingType, lengthOfDeclaringType));
             }
         }
 
@@ -67,7 +67,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var startOfValueType = Identifier.StartOfNextTypeIdentifier(0) + 1;
                 var endOfValueType = Identifier.EndOfNextTypeIdentifier(0) - 1;
                 var lengthOfValueTypeIdentifier = endOfValueType - startOfValueType;
-                return TypeName.Get(Identifier.Substring(startOfValueType, lengthOfValueTypeIdentifier));
+                return Names.Type(Identifier.Substring(startOfValueType, lengthOfValueTypeIdentifier));
             }
         }
     }

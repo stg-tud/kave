@@ -17,8 +17,7 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -30,7 +29,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
     {
         private static Context SomeContext
         {
-            get { return new Context {SST = new SST {EnclosingType = TypeName.Get("T,P")}}; }
+            get { return new Context {SST = new SST {EnclosingType = Names.Type("T,P")}}; }
         }
 
         private static IProposal SomeProposal
@@ -163,11 +162,11 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         [Test]
         public void GetLastSelectedProposal()
         {
-            var pX = new Proposal {Name = Name.Get("3")};
-            var pY = new Proposal {Name = Name.Get("4")};
+            var pX = new Proposal {Name = Names.General("3")};
+            var pY = new Proposal {Name = Names.General("4")};
 
-            var p1 = new Proposal {Name = Name.Get("1")};
-            var p2 = new Proposal {Name = Name.Get("2")};
+            var p1 = new Proposal {Name = Names.General("1")};
+            var p2 = new Proposal {Name = Names.General("2")};
             var s1 = new ProposalSelection {Proposal = p1};
             var s2 = new ProposalSelection {Proposal = p2};
 

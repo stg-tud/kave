@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 
-namespace KaVE.Commons.TestUtils.Model.Names
+namespace KaVE.Commons.TestUtils.Model.Naming
 {
     public static class TestNameFactory
     {
@@ -38,24 +37,21 @@ namespace KaVE.Commons.TestUtils.Model.Names
         public static IMethodName GetAnonymousMethodName()
         {
             return
-                MethodName.Get(
-                    string.Format(
-                        "[{0}] [{1}].Method{2}()",
-                        GetAnonymousTypeName(),
-                        GetAnonymousTypeName(),
-                        NextCounter()));
+                Names.Method(
+                    "[{0}] [{1}].Method{2}()",
+                    GetAnonymousTypeName(),
+                    GetAnonymousTypeName(),
+                    NextCounter());
         }
 
         public static ITypeName GetAnonymousTypeName()
         {
-            return
-                TypeName.Get(
-                    string.Format("SomeType{0}, SomeAssembly{1}, 9.8.7.6", NextCounter(), NextCounter()));
+            return Names.Type("SomeType{0}, SomeAssembly{1}, 9.8.7.6", NextCounter(), NextCounter());
         }
 
         public static INamespaceName GetAnonymousNamespace()
         {
-            return NamespaceName.Get(string.Format("A.N{0}", NextCounter()));
+            return Names.Namespace("A.N{0}", NextCounter());
         }
     }
 }

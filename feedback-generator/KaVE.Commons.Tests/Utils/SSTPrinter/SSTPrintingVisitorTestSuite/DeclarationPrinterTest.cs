@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -30,7 +29,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_EmptyClass()
         {
-            var sst = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")};
+            var sst = new SST {EnclosingType = Names.Type("TestClass,TestProject")};
 
             AssertPrint(
                 sst,
@@ -44,7 +43,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new SST
             {
-                EnclosingType = TypeName.Get("TestClass,TestProject"),
+                EnclosingType = Names.Type("TestClass,TestProject"),
                 PartialClassIdentifier = "TestClass_1.cs"
             };
 
@@ -58,10 +57,10 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_WithSupertypes()
         {
-            var thisType = TypeName.Get("TestClass,P");
-            var superType = TypeName.Get("SuperClass,P");
-            var interface1 = TypeName.Get("i:IDoesSomething,P");
-            var interface2 = TypeName.Get("i:IDoesSomethingElse,P");
+            var thisType = Names.Type("TestClass,P");
+            var superType = Names.Type("SuperClass,P");
+            var interface1 = Names.Type("i:IDoesSomething,P");
+            var interface2 = Names.Type("i:IDoesSomethingElse,P");
 
             var sst = new SST {EnclosingType = thisType};
             var typeShape = new TypeShape
@@ -89,8 +88,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_WithSupertypes_OnlyInterface()
         {
-            var thisType = TypeName.Get("TestClass,P");
-            var interface1 = TypeName.Get("i:IDoesSomething,P");
+            var thisType = Names.Type("TestClass,P");
+            var interface1 = Names.Type("i:IDoesSomething,P");
 
             var sst = new SST {EnclosingType = thisType};
             var typeShape = new TypeShape
@@ -116,8 +115,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_WithSupertypes_OnlySuperclass()
         {
-            var thisType = TypeName.Get("TestClass,P");
-            var superType = TypeName.Get("SuperClass,P");
+            var thisType = Names.Type("TestClass,P");
+            var superType = Names.Type("SuperClass,P");
 
             var sst = new SST {EnclosingType = thisType};
             var typeShape = new TypeShape
@@ -142,27 +141,36 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new SST
             {
-                EnclosingType = TypeName.Get("TestClass,P"),
-                Delegates = {new DelegateDeclaration {Name = DelegateTypeName.Get("d:[T,P][TestDelegate,P].()")}},
-                Events = {new EventDeclaration {Name = EventName.Get("[EventType,P] [TestClass,P].SomethingHappened")}},
+                EnclosingType = Names.Type("TestClass,P"),
+                Delegates =
+                {
+                    new DelegateDeclaration {Name = Names.Type("d:[T,P][TestDelegate,P].()").AsDelegateTypeName}
+                },
+                Events =
+                {
+                    new EventDeclaration
+                    {
+                        Name = Names.Event("[EventType,P] [TestClass,P].SomethingHappened")
+                    }
+                },
                 Fields =
                 {
-                    new FieldDeclaration {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
-                    new FieldDeclaration {Name = FieldName.Get("[FieldType,P] [TestClass,P].AnotherField")}
+                    new FieldDeclaration {Name = Names.Field("[FieldType,P] [TestClass,P].SomeField")},
+                    new FieldDeclaration {Name = Names.Field("[FieldType,P] [TestClass,P].AnotherField")}
                 },
                 Properties =
                 {
                     new PropertyDeclaration
                     {
-                        Name = PropertyName.Get("get set [PropertyType,P] [TestClass,P].SomeProperty")
+                        Name = Names.Property("get set [PropertyType,P] [TestClass,P].SomeProperty")
                     }
                 },
                 Methods =
                 {
-                    new MethodDeclaration {Name = MethodName.Get("[ReturnType,P] [TestClass,P].M([ParameterType,P] p)")},
+                    new MethodDeclaration {Name = Names.Method("[ReturnType,P] [TestClass,P].M([ParameterType,P] p)")},
                     new MethodDeclaration
                     {
-                        Name = MethodName.Get("[ReturnType,P] [TestClass,P].M2()"),
+                        Name = Names.Method("[ReturnType,P] [TestClass,P].M2()"),
                         Body = {new BreakStatement()}
                     }
                 }
@@ -193,7 +201,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_Interface()
         {
-            var sst = new SST {EnclosingType = TypeName.Get("i:SomeInterface,P")};
+            var sst = new SST {EnclosingType = Names.Type("i:SomeInterface,P")};
 
             AssertPrint(
                 sst,
@@ -205,7 +213,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_Struct()
         {
-            var sst = new SST {EnclosingType = TypeName.Get("s:SomeStruct,P")};
+            var sst = new SST {EnclosingType = Names.Type("s:SomeStruct,P")};
 
             AssertPrint(
                 sst,
@@ -217,7 +225,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void SSTDeclaration_Enum()
         {
-            var sst = new SST {EnclosingType = TypeName.Get("e:SomeEnum,P")};
+            var sst = new SST {EnclosingType = Names.Type("e:SomeEnum,P")};
 
             AssertPrint(
                 sst,
@@ -229,7 +237,10 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void DelegateDeclaration_Parameterless()
         {
-            var sst = new DelegateDeclaration {Name = DelegateTypeName.Get("d:[R, P] [Some.DelegateType, P].()")};
+            var sst = new DelegateDeclaration
+            {
+                Name = Names.Type("d:[R, P] [Some.DelegateType, P].()").AsDelegateTypeName
+            };
             AssertPrint(sst, "delegate DelegateType();");
         }
 
@@ -238,7 +249,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new DelegateDeclaration
             {
-                Name = DelegateTypeName.Get("d:[R, P] [Some.DelegateType, P].([C, P] p1, [D, P] p2)")
+                Name = Names.Type("d:[R, P] [Some.DelegateType, P].([C, P] p1, [D, P] p2)").AsDelegateTypeName
             };
 
             AssertPrint(sst, "delegate DelegateType(C p1, D p2);");
@@ -249,7 +260,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new DelegateDeclaration
             {
-                Name = DelegateTypeName.Get("d:[R, P] [Some.DelegateType`1[[T -> T]], P].([T] p1)")
+                Name = Names.Type("d:[R, P] [Some.DelegateType`1[[T -> T]], P].([T] p1)").AsDelegateTypeName
             };
 
             AssertPrint(sst, "delegate DelegateType<?>(? p1);");
@@ -260,7 +271,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new EventDeclaration
             {
-                Name = EventName.Get("[EventType,P] [DeclaringType,P].E")
+                Name = Names.Event("[EventType,P] [DeclaringType,P].E")
             };
 
             AssertPrint(sst, "event EventType E;");
@@ -271,7 +282,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new EventDeclaration
             {
-                Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
+                Name = Names.Event("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
             };
 
             AssertPrint(sst, "event EventType<EventArgsType> E;");
@@ -282,7 +293,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new FieldDeclaration
             {
-                Name = FieldName.Get("[FieldType,P] [DeclaringType,P].F")
+                Name = Names.Field("[FieldType,P] [DeclaringType,P].F")
             };
 
             AssertPrint(sst, "FieldType F;");
@@ -293,7 +304,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new FieldDeclaration
             {
-                Name = FieldName.Get("static [FieldType,P] [DeclaringType,P].F")
+                Name = Names.Field("static [FieldType,P] [DeclaringType,P].F")
             };
 
             AssertPrint(sst, "static FieldType F;");
@@ -302,7 +313,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void FieldDeclaration_Array()
         {
-            var sst = new FieldDeclaration {Name = FieldName.Get("[d:[V, A] [N.TD, A].()[]] [DT, A]._delegatesField")};
+            var sst = new FieldDeclaration {Name = Names.Field("[d:[V, A] [N.TD, A].()[]] [DT, A]._delegatesField")};
 
             AssertPrint(sst, "TD[] _delegatesField;");
         }
@@ -312,7 +323,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = PropertyName.Get("get [PropertyType,P] [DeclaringType,P].P")
+                Name = Names.Property("get [PropertyType,P] [DeclaringType,P].P")
             };
 
             AssertPrint(sst, "PropertyType P { get; }");
@@ -323,7 +334,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = PropertyName.Get("set [PropertyType,P] [DeclaringType,P].P")
+                Name = Names.Property("set [PropertyType,P] [DeclaringType,P].P")
             };
 
             AssertPrint(sst, "PropertyType P { set; }");
@@ -334,7 +345,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P")
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P")
             };
 
             AssertPrint(sst, "PropertyType P { get; set; }");
@@ -345,7 +356,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
                 Get =
                 {
                     new ContinueStatement(),
@@ -380,7 +391,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
                 Get =
                 {
                     new BreakStatement()
@@ -404,7 +415,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
                 Set =
                 {
                     new BreakStatement()
@@ -428,7 +439,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
             };
 
             AssertPrint(
@@ -441,7 +452,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                Name = Names.Method("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
             };
 
             AssertPrint(
@@ -454,7 +465,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M(this [ParameterType,P] p)")
+                Name = Names.Method("static [ReturnType,P] [DeclaringType,P].M(this [ParameterType,P] p)")
             };
 
             AssertPrint(
@@ -467,7 +478,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(ref [System.Int32, mscore, 4.0.0.0] p)")
+                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M(ref [System.Int32, mscore, 4.0.0.0] p)")
             };
 
             AssertPrint(
@@ -480,7 +491,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(out [ParameterType,P] p)")
+                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M(out [ParameterType,P] p)")
             };
 
             AssertPrint(
@@ -493,7 +504,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(params [ParameterType[],P] p)")
+                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M(params [ParameterType[],P] p)")
             };
 
             AssertPrint(
@@ -506,7 +517,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(opt [ParameterType,P] p)")
+                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M(opt [ParameterType,P] p)")
             };
 
             AssertPrint(
@@ -519,7 +530,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
                 Body =
                 {
                     new ContinueStatement(),
@@ -541,7 +552,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new MethodDeclaration
             {
-                Name = MethodName.Get("[ReturnType, P] [DeclaringType, P].M`1[[T -> T]]([T] p)")
+                Name = Names.Method("[ReturnType, P] [DeclaringType, P].M`1[[T -> T]]([T] p)")
             };
 
             AssertPrint(
@@ -552,7 +563,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void VariableDeclaration()
         {
-            var sst = SSTUtil.Declare("var", TypeName.Get("T,P"));
+            var sst = SSTUtil.Declare("var", Names.Type("T,P"));
 
             AssertPrint(sst, "T var;");
         }
@@ -560,7 +571,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void VariableDeclaration_TranslatesSimpleTypeBackToAlias()
         {
-            var sst = SSTUtil.Declare("var", TypeName.Get("System.Int32, mscore, 4.0.0.0"));
+            var sst = SSTUtil.Declare("var", Names.Type("System.Int32, mscore, 4.0.0.0"));
 
             AssertPrint(sst, "int var;");
         }

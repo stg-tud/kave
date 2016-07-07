@@ -15,8 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -60,16 +59,16 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
             AssertLinesInMethodBody(sst, "o.f<Bold>$</Bold>;");
         }
 
-        private ISST SetupSST(params IStatement[] stmts)
+        private static ISST SetupSST(params IStatement[] stmts)
         {
             return new SST
             {
-                EnclosingType = TypeName.Get("T,P"),
+                EnclosingType = Names.Type("T,P"),
                 Methods =
                 {
                     new MethodDeclaration
                     {
-                        Name = MethodName.Get("[R,P] [T,P].M()"),
+                        Name = Names.Method("[R,P] [T,P].M()"),
                         Body = Lists.NewList(stmts)
                     }
                 }

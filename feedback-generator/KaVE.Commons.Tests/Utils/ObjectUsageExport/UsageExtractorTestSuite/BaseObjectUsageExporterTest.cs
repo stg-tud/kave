@@ -16,9 +16,8 @@
 
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs;
@@ -179,35 +178,31 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
             params IParameterName[] parameters)
         {
             var parameterStr = string.Join(", ", parameters.Select(p => p.Identifier));
-            var methodStart = string.Format("[{0}] [{1}].{2}({3})", retType, declType, simpleName, parameterStr);
-            return MethodName.Get(methodStart);
+            return Names.Method("[{0}] [{1}].{2}({3})", retType, declType, simpleName, parameterStr);
         }
 
         protected static IFieldName Field(ITypeName valType,
             ITypeName declType,
             string fieldName)
         {
-            var field = string.Format("[{0}] [{1}].{2}", valType, declType, fieldName);
-            return FieldName.Get(field);
+            return Names.Field("[{0}] [{1}].{2}", valType, declType, fieldName);
         }
 
         protected static IParameterName Parameter(ITypeName valType, string paramName)
         {
-            var param = string.Format("[{0}] {1}", valType, paramName);
-            return ParameterName.Get(param);
+            return Names.Parameter("[{0}] {1}", valType, paramName);
         }
 
         protected static ITypeName Type(string simpleName)
         {
-            return TypeName.Get(simpleName + ",P1");
+            return Names.Type(simpleName + ",P1");
         }
 
         protected static IPropertyName Property(ITypeName valType,
             ITypeName declType,
             string propertyName)
         {
-            var property = string.Format("[{0}] [{1}].{2}", valType, declType, propertyName);
-            return PropertyName.Get(property);
+            return Names.Property("[{0}] [{1}].{2}", valType, declType, propertyName);
         }
 
         protected static IVariableReference VarRef(string id)
@@ -220,7 +215,6 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
 
         protected static IInvocationExpression Constructor(ITypeName type)
         {
-            // TODO @seb: is Void return correct for constructor calls?
             return InvokeStatic(Method(Fix.Void, type, ".ctor"));
         }
 

@@ -19,5 +19,6 @@ namespace KaVE.Commons.Model.Naming.Types
     public interface IArrayTypeName : ITypeName
     {
         int Rank { get; }
+        ITypeName ArrayBaseType { get; }
     }
 }

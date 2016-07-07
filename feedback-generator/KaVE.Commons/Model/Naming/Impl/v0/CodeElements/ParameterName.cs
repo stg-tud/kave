@@ -89,7 +89,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var startOfValueTypeIdentifier = Identifier.IndexOf('[') + 1;
                 var endOfValueTypeIdentifier = Identifier.LastIndexOf(']');
                 var lengthOfValueTypeIdentifier = endOfValueTypeIdentifier - startOfValueTypeIdentifier;
-                return TypeName.Get(Identifier.Substring(startOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
+                return Names.Type(Identifier.Substring(startOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
             }
         }
 

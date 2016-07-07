@@ -34,7 +34,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
             const string valueTypeIdentifier = "A, B, 1.0.0.0";
             const string declaringTypeIdentifier = "C, D, 0.9.8.7";
             var propertyName =
-                Names.GetPropertyName("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
+                Names.Property("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
 
             Assert.AreEqual("Property", propertyName.Name);
             Assert.AreEqual(valueTypeIdentifier, propertyName.ValueType.Identifier);
@@ -46,7 +46,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         public void ShoudBePropertyWithGetter()
         {
             var propertyName =
-                Names.GetPropertyName("get [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
+                Names.Property("get [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
             Assert.IsTrue(propertyName.HasGetter);
         }
 
@@ -54,7 +54,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         public void ShoudBePropertyWithSetter()
         {
             var propertyName =
-                Names.GetPropertyName("set [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
+                Names.Property("set [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
             Assert.IsTrue(propertyName.HasSetter);
         }
 
@@ -62,7 +62,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         public void ShouldBeStaticProperty()
         {
             var propertyName =
-                Names.GetPropertyName("static [A, B, 1.2.3.4] [C, D, 5.6.7.8].E");
+                Names.Property("static [A, B, 1.2.3.4] [C, D, 5.6.7.8].E");
             Assert.IsTrue(propertyName.IsStatic);
         }
 
@@ -70,7 +70,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         public void HandlesDelegateValueType()
         {
             var propertyName =
-                Names.GetPropertyName("[d:[R,A] [D,A].m()] [D,B].P");
+                Names.Property("[d:[R,A] [D,A].m()] [D,B].P");
             Assert.AreEqual("P", propertyName.Name);
         }
 
@@ -78,7 +78,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         public void PropertyNameIsSimpleName()
         {
             var propertyName =
-                Names.GetPropertyName("[TR,P] [TD,P].P()");
+                Names.Property("[TR,P] [TD,P].P()");
             Assert.AreEqual("P", propertyName.Name);
         }
 

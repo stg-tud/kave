@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         public void DefaultValues()
         {
             var sut = new TypeHierarchy();
-            Assert.AreEqual(TypeName.UnknownName, sut.Element);
+            Assert.AreEqual(Names.UnknownType(), sut.Element);
             Assert.Null(sut.Extends);
             Assert.AreEqual(Sets.NewHashSet<ITypeHierarchy>(), sut.Implements);
             Assert.False(sut.HasSuperclass);
@@ -42,7 +42,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         public void DefaultValues_CustomConstructor()
         {
             var sut = new TypeHierarchy("T,P");
-            Assert.AreEqual(TypeName.Get("T,P"), sut.Element);
+            Assert.AreEqual(Names.Type("T,P"), sut.Element);
         }
 
         [Test]
@@ -50,11 +50,11 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         {
             var sut = new TypeHierarchy
             {
-                Element = TypeName.Get("T1,P1"),
+                Element = Names.Type("T1,P1"),
                 Extends = SomeHierarchy("x"),
                 Implements = {SomeHierarchy("y")}
             };
-            Assert.AreEqual(TypeName.Get("T1,P1"), sut.Element);
+            Assert.AreEqual(Names.Type("T1,P1"), sut.Element);
             Assert.AreEqual(SomeHierarchy("x"), sut.Extends);
             Assert.AreEqual(Sets.NewHashSet<ITypeHierarchy>(SomeHierarchy("y")), sut.Implements);
             Assert.True(sut.HasSuperclass);
@@ -76,13 +76,13 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         {
             var a = new TypeHierarchy
             {
-                Element = TypeName.Get("T1,P1"),
+                Element = Names.Type("T1,P1"),
                 Extends = SomeHierarchy("x"),
                 Implements = {SomeHierarchy("y")}
             };
             var b = new TypeHierarchy
             {
-                Element = TypeName.Get("T1,P1"),
+                Element = Names.Type("T1,P1"),
                 Extends = SomeHierarchy("x"),
                 Implements = {SomeHierarchy("y")}
             };
@@ -93,7 +93,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         [Test]
         public void Equality_DifferentElement()
         {
-            var a = new TypeHierarchy {Element = TypeName.Get("T1,P1")};
+            var a = new TypeHierarchy {Element = Names.Type("T1,P1")};
             var b = new TypeHierarchy();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -125,7 +125,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
 
         private static TypeHierarchy SomeHierarchy(string simpleType)
         {
-            return new TypeHierarchy {Element = TypeName.Get(simpleType + ",P")};
+            return new TypeHierarchy {Element = Names.Type(simpleType + ",P")};
         }
     }
 }

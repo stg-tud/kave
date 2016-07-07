@@ -213,7 +213,7 @@
     <Compile Include="Model\Naming\Impl\v0\Types\EnumTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\EventName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\FieldName.cs" />
-    <Compile Include="Model\Naming\Impl\v0\GenericNameUtils.cs" />
+    <Compile Include="Model\Naming\NameUtils.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\InterfaceTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\LocalVariableName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MemberName.cs" />

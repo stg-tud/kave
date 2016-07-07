@@ -17,7 +17,7 @@
 using System;
 using System.Globalization;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.ObjectUsage;
@@ -157,10 +157,10 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             var ctxStart = CreateContext("T1");
             var ctxEnd = CreateContext("T2");
 
-            var u1 = Usage(TypeName.UnknownName, DefinitionSites.CreateUnknownDefinitionSite(), "a1");
+            var u1 = Usage(Names.UnknownType(), DefinitionSites.CreateUnknownDefinitionSite(), "a1");
             SetupUsageExport(ctxStart, u1);
 
-            var u2 = Usage(TypeName.UnknownName, DefinitionSites.CreateUnknownDefinitionSite(), "a1", "a2");
+            var u2 = Usage(Names.UnknownType(), DefinitionSites.CreateUnknownDefinitionSite(), "a1", "a2");
             SetupUsageExport(ctxEnd, u2);
 
             var actuals = _sut.GenerateTuples(ctxStart, ctxEnd);
@@ -179,7 +179,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             {
                 SST = new SST
                 {
-                    EnclosingType = TypeName.Get(type + ",P")
+                    EnclosingType = Names.Type(type + ",P")
                 }
             };
         }
@@ -192,17 +192,17 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
 
         private Query UsageA1(params string[] calls)
         {
-            return Usage(TypeName.Get("A,P"), DefinitionSites.CreateDefinitionByConstant(), calls);
+            return Usage(Names.Type("A,P"), DefinitionSites.CreateDefinitionByConstant(), calls);
         }
 
         private Query UsageA2(params string[] calls)
         {
-            return Usage(TypeName.Get("A,P"), DefinitionSites.CreateDefinitionByThis(), calls);
+            return Usage(Names.Type("A,P"), DefinitionSites.CreateDefinitionByThis(), calls);
         }
 
         private Query UsageB(params string[] calls)
         {
-            return Usage(TypeName.Get("B,P"), DefinitionSites.CreateUnknownDefinitionSite(), calls);
+            return Usage(Names.Type("B,P"), DefinitionSites.CreateUnknownDefinitionSite(), calls);
         }
 
         private Query Usage(ITypeName type, DefinitionSite defSite, params string[] calls)
@@ -215,7 +215,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             foreach (var shortCall in calls)
             {
                 var mStr = string.Format("[{0}] [{1}].{2}()", "System.Void", "A,P", shortCall);
-                var m = MethodName.Get(mStr);
+                var m = Names.Method(mStr);
                 var call = CallSites.CreateReceiverCallSite(m);
                 q.sites.Add(call);
             }
@@ -241,7 +241,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             return DateTime.ParseExact(dateStr, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         }
 
-        private ITypeName Type(int hashcode)
+        private static ITypeName Type(int hashcode)
         {
             return new TestTypeName(hashcode);
         }

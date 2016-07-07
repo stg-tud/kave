@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
@@ -26,7 +26,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
     {
         private static TypeHierarchy SomeTypeHierarchy
         {
-            get { return new TypeHierarchy {Element = TypeName.Get("T,P")}; }
+            get { return new TypeHierarchy {Element = Names.Type("T,P")}; }
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         {
             var a = new TypeShape
             {
-                MethodHierarchies = { new MethodHierarchy() }
+                MethodHierarchies = {new MethodHierarchy()}
             };
             var b = new TypeShape();
             Assert.AreNotEqual(a, b);
@@ -102,7 +102,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         [Test]
         public void ToStringReflection()
         {
-           ToStringAssert.Reflection(new TypeShape());
+            ToStringAssert.Reflection(new TypeShape());
         }
     }
 }

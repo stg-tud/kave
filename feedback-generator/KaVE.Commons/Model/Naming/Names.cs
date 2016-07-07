@@ -21,6 +21,7 @@ using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl;
 using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Impl.v1;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
@@ -112,9 +113,9 @@ namespace KaVE.Commons.Model.Naming
                 case Types.AssemblyName:
                     return GetAssemblyName(identifier);
                 case Types.EventName:
-                    return GetEventName(identifier);
+                    return Event(identifier);
                 case Types.FieldName:
-                    return GetFieldName(identifier);
+                    return Field(identifier);
                 case Types.LambdaName:
                     return GetLambdaName(identifier);
                 case Types.LocalVariableName:
@@ -124,11 +125,11 @@ namespace KaVE.Commons.Model.Naming
                 case Types.Name:
                     return Name.Get(identifier);
                 case Types.NamespaceName:
-                    return GetNamespaceName(identifier);
+                    return Namespace(identifier);
                 case Types.ParameterName:
-                    return GetParameterName(identifier);
+                    return Parameter(identifier);
                 case Types.PropertyName:
-                    return GetPropertyName(identifier);
+                    return Property(identifier);
                 case Types.TypeName:
                     return Type(identifier);
             }
@@ -210,7 +211,7 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
-        public static INamespaceName GetNamespaceName(string input)
+        public static INamespaceName Namespace(string input)
         {
             try
             {
@@ -236,7 +237,7 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
-        public static IParameterName GetParameterName(string input)
+        public static IParameterName Parameter(string input)
         {
             try
             {
@@ -266,7 +267,7 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
-        public static IFieldName GetFieldName(string input)
+        public static IFieldName Field(string input)
         {
             var name = GetMemberName(input);
             if (name != null)
@@ -276,7 +277,7 @@ namespace KaVE.Commons.Model.Naming
             return UnknownName.Get(typeof(IFieldName));
         }
 
-        public static IEventName GetEventName(string input)
+        public static IEventName Event(string input)
         {
             var name = GetMemberName(input);
             if (name != null)
@@ -286,7 +287,7 @@ namespace KaVE.Commons.Model.Naming
             return UnknownName.Get(typeof(IEventName));
         }
 
-        public static IPropertyName GetPropertyName(string input)
+        public static IPropertyName Property(string input)
         {
             var name = GetMemberName(input);
             if (name != null)
@@ -313,6 +314,32 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
+        public static IName General(string s)
+        {
+            return Name.Get(s);
+        }
+
+        public static ILambdaName Lambda(string n)
+        {
+            return LambdaName.Get(n);
+        }
+
+        #region ide components
+
+        public static WindowName Window(string n)
+        {
+            return WindowName.Get(n);
+        }
+
+        public static DocumentName Document(string n)
+        {
+            return DocumentName.Get(n);
+        }
+
+        #endregion
+
+        #region unknowns
+
         public static ITypeName UnknownType()
         {
             return UnknownName.Type();
@@ -322,5 +349,46 @@ namespace KaVE.Commons.Model.Naming
         {
             return UnknownName.Method();
         }
+
+        #endregion
+
+        #region string.Format helpers
+
+        public static ITypeName Type(string typeStr, params object[] args)
+        {
+            return Type(string.Format(typeStr, args));
+        }
+
+        public static INamespaceName Namespace(string name, params object[] args)
+        {
+            return Namespace(string.Format(name, args));
+        }
+
+        public static IMethodName Method(string input, params object[] args)
+        {
+            return Method(string.Format(input, args));
+        }
+
+        public static IParameterName Parameter(string input, params object[] args)
+        {
+            return Parameter(string.Format(input, args));
+        }
+
+        public static IFieldName Field(string input, params object[] args)
+        {
+            return Field(string.Format(input, args));
+        }
+
+        public static IPropertyName Property(string input, params object[] args)
+        {
+            return Property(string.Format(input, args));
+        }
+
+        public static ILambdaName Lambda(string input, params object[] args)
+        {
+            return Lambda(string.Format(input, args));
+        }
+
+        #endregion
     }
 }

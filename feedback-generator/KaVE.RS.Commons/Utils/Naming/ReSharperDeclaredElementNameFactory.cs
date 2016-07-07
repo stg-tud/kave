@@ -157,7 +157,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                 IfElementIs<IEnum>(typeElement, GetName, substitution, seenElements, TypeName.UnknownName) ??
                 IfElementIs<IInterface>(typeElement, GetName, substitution, seenElements, TypeName.UnknownName) ??
                 IfElementIs<IStruct>(typeElement, GetName, substitution, seenElements, TypeName.UnknownName) ??
-                TypeName.Get(typeElement.GetAssemblyQualifiedName(substitution, seenElements));
+                Names.Type(typeElement.GetAssemblyQualifiedName(substitution, seenElements));
         }
 
         private static ITypeName IfElementIs<TE>(ITypeElement typeElement,
@@ -189,7 +189,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                       .Append(delegateElement.GetAssemblyQualifiedName(substitution, seenElements))
                       .Append("].")
                       .AppendParameters(invokeMethod, substitution, seenElements);
-            return TypeName.Get(identifier.ToString());
+            return Names.Type(identifier.ToString());
         }
 
         [NotNull]
@@ -197,7 +197,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return TypeName.Get("e:" + enumElement.GetAssemblyQualifiedName(substitution, seenElements));
+            return Names.Type("e:" + enumElement.GetAssemblyQualifiedName(substitution, seenElements));
         }
 
         [NotNull]
@@ -205,7 +205,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return TypeName.Get("i:" + interfaceElement.GetAssemblyQualifiedName(substitution, seenElements));
+            return Names.Type("i:" + interfaceElement.GetAssemblyQualifiedName(substitution, seenElements));
         }
 
         [NotNull]
@@ -214,10 +214,10 @@ namespace KaVE.RS.Commons.Utils.Naming
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             var structName = structElement.GetAssemblyQualifiedName(substitution, seenElements);
-            var typeNameCandidate = TypeName.Get(structName);
+            var typeNameCandidate = Names.Type(structName);
             // predefined structs are recognized as such without flagging them
             var isPredefinedStruct = typeNameCandidate.IsStructType;
-            return isPredefinedStruct ? typeNameCandidate : TypeName.Get("s:" + structName);
+            return isPredefinedStruct ? typeNameCandidate : Names.Type("s:" + structName);
         }
 
         [NotNull]

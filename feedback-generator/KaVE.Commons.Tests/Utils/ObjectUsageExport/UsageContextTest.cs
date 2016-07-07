@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
@@ -28,8 +27,8 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
 {
     internal class UsageContextTest
     {
-        private static readonly ITypeName SomeType = TypeName.Get("T,P");
-        private static readonly MethodName SomeMethodName = MethodName.Get("[A,P] [B,P].M()");
+        private static readonly ITypeName SomeType = Names.Type("T,P");
+        private static readonly IMethodName SomeMethodName = Names.Method("[A,P] [B,P].M()");
 
         private UsageContext _sut;
 
@@ -50,8 +49,8 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         public void DefaultValues()
         {
             var sut = new UsageContext();
-            Assert.AreEqual(TypeName.UnknownName, sut.Enclosings.Type);
-            Assert.AreEqual(MethodName.UnknownName, sut.Enclosings.Method);
+            Assert.AreEqual(Names.UnknownType(), sut.Enclosings.Type);
+            Assert.AreEqual(Names.UnknownMethod(), sut.Enclosings.Method);
             Assert.AreEqual(Lists.NewList<Query>(), sut.AllQueries);
             Assert.AreEqual(new ScopedNameResolver(), sut.NameResolver);
         }
@@ -279,12 +278,12 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
 
         private static ITypeName Type(string name)
         {
-            return TypeName.Get(name + ", P");
+            return Names.Type(name + ", P");
         }
 
         private static IMethodName Method(ITypeName type, string methodName)
         {
-            return MethodName.Get(string.Format("[T,P] [{0},P].{1}()", type, methodName));
+            return Names.Method(string.Format("[T,P] [{0},P].{1}()", type, methodName));
         }
 
         private static DefinitionSite DefinitionByReturn(string methodName, ITypeName returnType)

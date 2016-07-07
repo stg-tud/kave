@@ -37,12 +37,6 @@ namespace KaVE.Commons.Model.Naming.Types
         [NotNull]
         INamespaceName Namespace { get; }
 
-        /// <summary>
-        ///     The name of the type declaring this type or
-        ///     <code>null</code> if this type is not nested.
-        /// </summary>
-        ITypeName DeclaringType { get; }
-
         [NotNull]
         string FullName { get; }
 
@@ -84,17 +78,24 @@ namespace KaVE.Commons.Model.Naming.Types
         bool IsReferenceType { get; }
 
         bool IsClassType { get; }
+
         bool IsInterfaceType { get; }
-        bool IsDelegateType { get; }
+
         bool IsNestedType { get; }
 
+        /// <summary>
+        ///     The name of the type declaring this type or
+        ///     <code>null</code> if this type is not nested.
+        /// </summary>
+        ITypeName DeclaringType { get; }
+
+        bool IsDelegateType { get; }
+        IDelegateTypeName AsDelegateTypeName { get; }
+
         bool IsArrayType { get; }
-        ITypeName ArrayBaseType { get; }
+        IArrayTypeName AsArrayTypeName { get; }
 
         bool IsTypeParameter { get; }
-
-        IDelegateTypeName AsDelegateTypeName { get; }
-        IArrayTypeName AsArrayTypeName { get; }
         ITypeParameterName AsTypeParameterName { get; }
     }
 }

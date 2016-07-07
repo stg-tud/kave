@@ -34,7 +34,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         [Test]
         public void ShouldBeInstanceFieldName()
         {
-            var fieldName = Names.GetFieldName(Identifier);
+            var fieldName = Names.Field(Identifier);
 
             Assert.AreEqual(Identifier, fieldName.Identifier);
             Assert.AreEqual("fieldName", fieldName.Name);
@@ -46,7 +46,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         [Test]
         public void ShouldBeStaticFieldName()
         {
-            var fieldName = Names.GetFieldName("static " + Identifier);
+            var fieldName = Names.Field("static " + Identifier);
 
             Assert.IsTrue(fieldName.IsStatic);
         }
@@ -57,7 +57,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
             const string valueTypeIdentifier = "T'1[[T -> A, B, 1.0.0.0]], A, 9.1.8.2";
             const string declaringTypeIdentifier = "U'2[[T -> B, C, 6.7.5.8],[T2 -> C, D, 8.3.7.4]], Z, 0.0.0.0";
             var fieldName =
-                Names.GetFieldName("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].bar");
+                Names.Field("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].bar");
             Assert.AreEqual("bar", fieldName.Name);
             Assert.AreEqual(valueTypeIdentifier, fieldName.ValueType.Identifier);
             Assert.IsTrue(fieldName.ValueType.HasTypeParameters);
@@ -76,7 +76,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         [Test]
         public void HandlesDelegateValueType()
         {
-            var fieldName = Names.GetFieldName("[d:[V,A] [D,A].m()] [D,A].fieldName");
+            var fieldName = Names.Field("[d:[V,A] [D,A].m()] [D,A].fieldName");
             Assert.AreEqual("fieldName", fieldName.Name);
             Assert.AreEqual("d:[V,A] [D,A].m()", fieldName.ValueType.Identifier);
         }

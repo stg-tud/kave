@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
@@ -62,16 +61,16 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
             {
                 TypeHierarchy = new TypeHierarchy
                 {
-                    Element = TypeName.Get("T,P"),
+                    Element = Names.Type("T,P"),
                     Extends = new TypeHierarchy
                     {
-                        Element = TypeName.Get("S,P")
+                        Element = Names.Type("S,P")
                     },
                     Implements =
                     {
                         new TypeHierarchy
                         {
-                            Element = TypeName.Get("I,P")
+                            Element = Names.Type("I,P")
                         }
                     }
                 },
@@ -79,9 +78,9 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 {
                     new MethodHierarchy
                     {
-                        Element = MethodName.Get("[T,P] [T,P].M1()"),
-                        Super = MethodName.Get("[T,P] [T,P].M2()"),
-                        First = MethodName.Get("[T,P] [T,P].M3()")
+                        Element = Names.Method("[T,P] [T,P].M1()"),
+                        Super = Names.Method("[T,P] [T,P].M2()"),
+                        First = Names.Method("[T,P] [T,P].M3()")
                     }
                 }
             };

@@ -16,6 +16,7 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -43,7 +44,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser.Filters
                 {
                     SST = new SST
                     {
-                        EnclosingType = TypeName.Get("T,P")
+                        EnclosingType = Names.Type("T,P")
                     }
                 }
             };

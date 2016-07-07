@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -30,7 +30,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         {
             var sut = new VariableDeclaration();
             Assert.AreEqual(new VariableReference(), sut.Reference);
-            Assert.AreEqual(TypeName.UnknownName, sut.Type);
+            Assert.AreEqual(Names.UnknownType(), sut.Type);
             Assert.True(sut.IsMissing);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -42,12 +42,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
             var sut = new VariableDeclaration
             {
                 Reference = SSTUtil.VariableReference("a"),
-                Type = TypeName.Get("T,P")
+                Type = Names.Type("T,P")
             };
 
             Assert.False(sut.IsMissing);
             Assert.AreEqual(SSTUtil.VariableReference("a"), sut.Reference);
-            Assert.AreEqual(TypeName.Get("T,P"), sut.Type);
+            Assert.AreEqual(Names.Type("T,P"), sut.Type);
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = TypeName.Get("T1,P1")};
-            var b = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = TypeName.Get("T1,P1")};
+            var a = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = Names.Type("T1,P1")};
+            var b = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = Names.Type("T1,P1")};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -81,7 +81,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new VariableDeclaration {Type = TypeName.Get("T1,P1")};
+            var a = new VariableDeclaration {Type = Names.Type("T1,P1")};
             var b = new VariableDeclaration();
 
             Assert.AreNotEqual(a, b);

@@ -47,7 +47,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
 
             Assert.True(name.HasParameters);
             CollectionAssert.AreEqual(
-                new[] {Names.GetParameterName("[C, A] p1"), Names.GetParameterName("[C, B] p2")},
+                new[] {Names.Parameter("[C, A] p1"), Names.Parameter("[C, B] p2")},
                 name.Parameters);
             Assert.AreEqual("([C, A] p1, [C, B] p2)", name.Signature);
         }

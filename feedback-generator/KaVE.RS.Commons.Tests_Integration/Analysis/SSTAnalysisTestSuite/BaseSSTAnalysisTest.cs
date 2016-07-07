@@ -17,9 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -70,7 +69,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         {
             return new SST
             {
-                EnclosingType = TypeName.Get("N.C, TestProject")
+                EnclosingType = Names.Type("N.C, TestProject")
             };
         }
 
@@ -82,15 +81,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         protected MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName, params string[] args)
         {
             const string package = "N.C, TestProject";
-            var identifier = string.Format(
-                "[{0}] [{1}].{2}({3})",
-                returnType,
-                package,
-                simpleName,
-                string.Join(", ", args));
             return new MethodDeclaration
             {
-                Name = MethodName.Get(identifier),
+                Name = Names.Method(
+                    "[{0}] [{1}].{2}({3})",
+                    returnType,
+                    package,
+                    simpleName,
+                    string.Join(", ", args)),
                 IsEntryPoint = true
             };
         }
@@ -257,19 +255,19 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         protected static PropertyReference PropRef(string name, ITypeName type, string target = "this")
         {
-            var propertyName = PropertyName.Get("set get " + MemberName(name, type) + "()");
+            var propertyName = Names.Property("set get " + MemberName(name, type) + "()");
             return new PropertyReference {Reference = VarRef(target), PropertyName = propertyName};
         }
 
         protected static FieldReference FieldRef(string name, ITypeName type, string target = "this")
         {
-            var fieldName = FieldName.Get(MemberName(name, type));
+            var fieldName = Names.Field(MemberName(name, type));
             return new FieldReference {Reference = VarRef(target), FieldName = fieldName};
         }
 
         protected static EventReference EventRef(string name, ITypeName type, string target = "this")
         {
-            var eventName = EventName.Get(MemberName(name, type));
+            var eventName = Names.Event(MemberName(name, type));
             return new EventReference {Reference = VarRef(target), EventName = eventName};
         }
 
@@ -400,7 +398,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         protected static IMethodName Method(string methodDef, params object[] args)
         {
-            return MethodName.Get(string.Format(methodDef, args));
+            return Names.Method(methodDef, args);
         }
 
         protected static MethodDeclaration ConstructorDecl(string type, params IParameterName[] parameters)
@@ -420,12 +418,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
         protected static IParameterName Param(ITypeName type, string name)
         {
-            return ParameterName.Get(string.Format("[{0}] {1}", type, name));
+            return Names.Parameter("[{0}] {1}", type, name);
         }
 
         protected static ITypeName Type(string shortName)
         {
-            return TypeName.Get("N." + shortName + ", TestProject");
+            return Names.Type("N.{0}, TestProject", shortName);
         }
 
         protected static IAssignableExpression ComposedExpr(params string[] ids)

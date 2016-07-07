@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
@@ -51,7 +50,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void EnclosingTypeIsAnonymized()
         {
-            var typeName = TypeName.Get("My.Type, MyProject");
+            var typeName = Names.Type("My.Type, MyProject");
 
             var actual = _sut.Anonymize(new SST {EnclosingType = typeName});
             var expected = new SST {EnclosingType = typeName.ToAnonymousName()};
@@ -69,7 +68,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void DelegateDeclarationsAreAnonymized()
         {
-            var typeName = DelegateTypeName.Get("d:[R,P] [My.Type, MyProject].()");
+            var typeName = Names.Type("d:[R,P] [My.Type, MyProject].()").AsDelegateTypeName;
 
             var actual = _sut.Anonymize(
                 new SST
@@ -89,7 +88,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void EventDeclarationsAreAnonymized()
         {
-            var eventName = EventName.Get("[ChangeEventHandler, IO, 1.2.3.4] [TextBox, GUI, 5.6.7.8].Changed");
+            var eventName = Names.Event("[ChangeEventHandler, IO, 1.2.3.4] [TextBox, GUI, 5.6.7.8].Changed");
 
             var actual = _sut.Anonymize(
                 new SST
@@ -109,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void FieldDeclarationsAreAnonymized()
         {
-            var fieldName = FieldName.Get("static [T1,P1] [T2,P2].F");
+            var fieldName = Names.Field("static [T1,P1] [T2,P2].F");
 
             var actual = _sut.Anonymize(
                 new SST
@@ -130,7 +129,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void PropertyDeclarationsAreAnonymized_Name()
         {
-            var propertyName = PropertyName.Get("set [T1,P1] [T2,P2].P");
+            var propertyName = Names.Property("set [T1,P1] [T2,P2].P");
 
             var actual = _sut.Anonymize(
                 new SST
@@ -187,7 +186,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void MethodDeclarationsAreAnonymized_Name()
         {
-            var methodName = MethodName.Get("[T1, P1] [T2, P2].M()");
+            var methodName = Names.Method("[T1, P1] [T2, P2].M()");
 
             var actual = _sut.Anonymize(
                 new SST

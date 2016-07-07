@@ -22,7 +22,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class ArrayTypeName : TypeName
+    public class ArrayTypeName : TypeName, IArrayTypeName
     {
         private static readonly Regex ArrayTypeNameSuffix = new Regex("(\\[[,]*\\])([^()]*)$");
 
@@ -70,7 +70,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             if (baseType.IsArrayType)
             {
                 rank += GetArrayRank(baseType);
-                baseType = baseType.ArrayBaseType;
+                baseType = baseType.AsArrayTypeName.ArrayBaseType;
             }
 
             var identifier = baseType.Identifier;
@@ -115,7 +115,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         [UsedImplicitly]
         internal new static ITypeName Get(string identifier)
         {
-            return TypeName.Get(identifier);
+            return Names.Type(identifier);
         }
 
         internal ArrayTypeName(string identifier) : base(identifier) {}
@@ -142,7 +142,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 endIdx = idx;
 
                 var newId = id.Substring(0, startIdx) + id.Substring(endIdx + 1);
-                return TypeName.Get(newId);
+                return Names.Type(newId);
             }
         }
 

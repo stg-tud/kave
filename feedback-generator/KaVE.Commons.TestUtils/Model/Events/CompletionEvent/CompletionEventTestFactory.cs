@@ -26,7 +26,7 @@ using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.Commons.TestUtils.Model.Names;
+using KaVE.Commons.TestUtils.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent

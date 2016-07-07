@@ -15,7 +15,7 @@
  */
 
 using EnvDTE;
-using KaVE.Commons.TestUtils.Model.Names;
+using KaVE.Commons.TestUtils.Model.Naming;
 using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
 using KaVE.VS.FeedbackGenerator.Utils.Names;
 using Moq;

@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
@@ -302,7 +303,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
         }
 
-        private string TakeUntilChar(string fullName, char[] stopChars)
+        private static string TakeUntilChar(string fullName, char[] stopChars)
         {
             var i = 0;
             foreach (var c in fullName)
@@ -392,9 +393,25 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return false; }
         }
 
-        public IDelegateTypeName AsDelegateTypeName { get; private set; }
-        public IArrayTypeName AsArrayTypeName { get; private set; }
-        public ITypeParameterName AsTypeParameterName { get; private set; }
+        public IDelegateTypeName AsDelegateTypeName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IArrayTypeName AsArrayTypeName
+        {
+            get
+            {
+                var atn = this as IArrayTypeName;
+                Asserts.NotNull(atn);
+                return atn;
+            }
+        }
+
+        public ITypeParameterName AsTypeParameterName
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         public string TypeParameterShortName
         {

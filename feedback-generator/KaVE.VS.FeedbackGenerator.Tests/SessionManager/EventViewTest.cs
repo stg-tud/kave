@@ -18,9 +18,7 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.FeedbackGenerator.SessionManager;
@@ -48,7 +46,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         {
             var completionEvent = new CompletionEvent
             {
-                Context2 = {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}}
+                Context2 = {SST = new SST {EnclosingType = Names.Type("TestClass,TestProject")}}
             };
 
             var view = new EventViewModel(completionEvent);
@@ -62,7 +60,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         {
             var editEvent = new EditEvent
             {
-                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}}
+                Context2 = new Context {SST = new SST {EnclosingType = Names.Type("TestClass,TestProject")}}
             };
 
             var view = new EventViewModel(editEvent);
@@ -87,9 +85,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
-                    new Proposal {Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
-                    new Proposal {Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
+                    new Proposal {Name = Names.Field("[FieldType,P] [TestClass,P].SomeField")},
+                    new Proposal {Name = Names.Event("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
+                    new Proposal {Name = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
                 }
             };
 
@@ -113,15 +111,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
-                    new Proposal {Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
-                    new Proposal {Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
+                    new Proposal {Name = Names.Field("[FieldType,P] [TestClass,P].SomeField")},
+                    new Proposal {Name = Names.Event("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
+                    new Proposal {Name = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
                 },
                 Selections =
                 {
                     new ProposalSelection
                     {
-                        Proposal = new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
+                        Proposal = new Proposal {Name = Names.Field("[FieldType,P] [TestClass,P].SomeField")},
                         SelectedAfter = TimeSpan.FromSeconds(1)
                     },
                     new ProposalSelection
@@ -129,7 +127,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                         Proposal =
                             new Proposal
                             {
-                                Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
+                                Name = Names.Event("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
                             },
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     },
@@ -138,7 +136,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                         Proposal =
                             new Proposal
                             {
-                                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                                Name = Names.Method("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
                             },
                         SelectedAfter = TimeSpan.FromSeconds(3)
                     }
@@ -167,7 +165,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                 {
                     new ProposalSelection
                     {
-                        Proposal = new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")},
+                        Proposal = new Proposal {Name = Names.General("TypeLookupItem:TestDelegate<string>[]")},
                         SelectedAfter = TimeSpan.FromSeconds(1)
                     }
                 }
@@ -186,7 +184,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")}
+                    new Proposal {Name = Names.General("TypeLookupItem:TestDelegate<string>[]")}
                 }
             };
 
@@ -201,7 +199,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")}
+                    new Proposal {Name = Names.General("TypeLookupItem:TestDelegate<string>[]")}
                 }
             };
 
@@ -216,9 +214,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")},
+                    new Proposal {Name = Names.General("TypeLookupItem:TestDelegate<string>[]")},
                     // filler to make the overall serialization longer than 50000 characters
-                    new Proposal {Name = Name.Get(new string('a', 50000))}
+                    new Proposal {Name = Names.General(new string('a', 50000))}
                 }
             };
 
@@ -231,7 +229,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         {
             var completionEvent = new CompletionEvent
             {
-                Context2 = {SST = new SST {EnclosingType = TypeName.Get("C`1[[T]],TestProject")}}
+                Context2 = {SST = new SST {EnclosingType = Names.Type("C`1[[T]],TestProject")}}
             };
 
             var view = new EventViewModel(completionEvent);
@@ -252,7 +250,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
                         Proposal =
                             new Proposal
                             {
-                                Name = Name.Get("System.Threading.ThreadLocal`1[[T -> T]], mscorlib, 4.0.0.0")
+                                Name = Names.Type("System.Threading.ThreadLocal`1[[T -> T]], mscorlib, 4.0.0.0")
                             },
                         SelectedAfter = TimeSpan.FromSeconds(1)
                     }

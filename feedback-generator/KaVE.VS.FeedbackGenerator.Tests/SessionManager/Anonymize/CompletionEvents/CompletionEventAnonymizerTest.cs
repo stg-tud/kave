@@ -17,7 +17,7 @@
 using System;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
@@ -34,17 +34,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
                 ProposalCollection = new ProposalCollection(
                     new[]
                     {
-                        new Proposal {Name = TypeName.Get("MyType, EnclosingProject")},
-                        new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
-                        new Proposal {Name = NamespaceName.Get("Some.Namepsace")}
+                        new Proposal {Name = Names.Type("MyType, EnclosingProject")},
+                        new Proposal {Name = Names.Type("OtherType, Assembly, 1.2.3.4")},
+                        new Proposal {Name = Names.Namespace("Some.Namepsace")}
                     }),
                 Selections =
                 {
-                    new ProposalSelection(new Proposal {Name = TypeName.Get("MyType, EnclosingProject")})
+                    new ProposalSelection(new Proposal {Name = Names.Type("MyType, EnclosingProject")})
                     {
                         SelectedAfter = TimeSpan.FromSeconds(0)
                     },
-                    new ProposalSelection(new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")})
+                    new ProposalSelection(new Proposal {Name = Names.Type("OtherType, Assembly, 1.2.3.4")})
                     {
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     }
@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             return new Context
             {
                 TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy("C, P")},
-                SST = new SST {EnclosingType = TypeName.Get("T,P")}
+                SST = new SST {EnclosingType = Names.Type("T,P")}
             };
         }
 
@@ -78,9 +78,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             AnonymizationSettings.RemoveCodeNames = true;
             var expected = new[]
             {
-                new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")},
-                new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
-                new Proposal {Name = NamespaceName.Get("A_SHMh611J-1vRjtIJDirA==")}
+                new Proposal {Name = Names.Type("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")},
+                new Proposal {Name = Names.Type("OtherType, Assembly, 1.2.3.4")},
+                new Proposal {Name = Names.Namespace("A_SHMh611J-1vRjtIJDirA==")}
             };
 
             var actual = WhenEventIsAnonymized();
@@ -95,11 +95,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             var expected = new[]
             {
                 new ProposalSelection(
-                    new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")})
+                    new Proposal {Name = Names.Type("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")})
                 {
                     SelectedAfter = TimeSpan.FromSeconds(0)
                 },
-                new ProposalSelection(new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")})
+                new ProposalSelection(new Proposal {Name = Names.Type("OtherType, Assembly, 1.2.3.4")})
                 {
                     SelectedAfter = TimeSpan.FromSeconds(2)
                 }
@@ -122,7 +122,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
                 },
                 SST = new SST
                 {
-                    EnclosingType = TypeName.Get("T,P").ToAnonymousName()
+                    EnclosingType = Names.Type("T,P").ToAnonymousName()
                 }
             };
 

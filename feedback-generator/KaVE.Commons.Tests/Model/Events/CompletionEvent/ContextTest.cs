@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.TypeShapes;
@@ -27,12 +27,12 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
     {
         private static ISST SomeSST
         {
-            get { return new SST {EnclosingType = TypeName.Get("T, P")}; }
+            get { return new SST {EnclosingType = Names.Type("T, P")}; }
         }
 
         private static ITypeShape SomeTypeShape
         {
-            get { return new TypeShape {TypeHierarchy = new TypeHierarchy {Element = TypeName.Get("T2, P2")}}; }
+            get { return new TypeShape {TypeHierarchy = new TypeHierarchy {Element = Names.Type("T2, P2")}}; }
         }
 
         [Test]

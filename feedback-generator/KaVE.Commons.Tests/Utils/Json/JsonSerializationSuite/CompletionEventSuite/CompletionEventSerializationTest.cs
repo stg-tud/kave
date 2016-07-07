@@ -17,9 +17,7 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
@@ -104,22 +102,22 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 TriggeredAt = now,
                 TriggeredBy = IDEEvent.Trigger.Unknown,
                 Duration = TimeSpan.FromSeconds(2),
-                ActiveWindow = WindowName.Get("vsWindowTypeDocument File.cs"),
-                ActiveDocument = DocumentName.Get("\\Path\\To\\File.cs"),
+                ActiveWindow = Names.Window("vsWindowTypeDocument File.cs"),
+                ActiveDocument = Names.Document("\\Path\\To\\File.cs"),
                 /* CompletionEvent */
-                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("T,P")}},
+                Context2 = new Context {SST = new SST {EnclosingType = Names.Type("T,P")}},
                 ProposalCollection =
                 {
                     Proposals =
                     {
                         new Proposal
                         {
-                            Name = MethodName.Get("[T1,P1] [T1,P2].M1()"),
+                            Name = Names.Method("[T1,P1] [T1,P2].M1()"),
                             Relevance = 42
                         },
                         new Proposal
                         {
-                            Name = MethodName.Get("[T1,P1] [T1,P2].M2()"),
+                            Name = Names.Method("[T1,P1] [T1,P2].M2()"),
                             Relevance = 42
                         }
                     }
@@ -130,7 +128,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                     {
                         Proposal = new Proposal
                         {
-                            Name = MethodName.Get("[T1,P1] [T1,P2].M1()"),
+                            Name = Names.Method("[T1,P1] [T1,P2].M1()"),
                             Relevance = 42
                         },
                         SelectedAfter = now.AddMilliseconds(123).TimeOfDay
@@ -139,7 +137,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                     {
                         Proposal = new Proposal
                         {
-                            Name = MethodName.Get("[T1,P1] [T1,P2].M2()"),
+                            Name = Names.Method("[T1,P1] [T1,P2].M2()"),
                             Relevance = 42
                         },
                         SelectedAfter = now.AddMilliseconds(234).TimeOfDay
@@ -148,7 +146,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                     {
                         Proposal = new Proposal
                         {
-                            Name = MethodName.Get("[T1,P1] [T1,P2].M1()"),
+                            Name = Names.Method("[T1,P1] [T1,P2].M1()"),
                             Relevance = 42
                         },
                         SelectedAfter = now.AddMilliseconds(345).TimeOfDay

@@ -36,7 +36,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         [UsedImplicitly]
         public new static ITypeName Get(string identifier)
         {
-            return TypeName.Get(identifier);
+            return Names.Type(identifier);
         }
 
         /// <summary>
@@ -183,18 +183,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return TypeParameterType.IsArrayType; }
         }
 
-        public ITypeName ArrayBaseType
-        {
-            get { return TypeParameterType.ArrayBaseType; }
-        }
-
         // TODO test this method
         public ITypeName DeriveArrayTypeName(int rank)
         {
             Asserts.That(rank > 0, "rank smaller than 1");
             var typeParameterShortName = TypeParameterShortName;
             var suffix = Identifier.Substring(typeParameterShortName.Length);
-            return TypeName.Get(string.Format("{0}[{1}]{2}", typeParameterShortName, new string(',', rank - 1), suffix));
+            return Names.Type(string.Format("{0}[{1}]{2}", typeParameterShortName, new string(',', rank - 1), suffix));
         }
 
         public bool IsTypeParameter
@@ -223,8 +218,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparater.Length;
                 return startOfTypeName >= Identifier.Length
-                    ? UnknownTypeName.Instance
-                    : TypeName.Get(Identifier.Substring(startOfTypeName));
+                    ? Names.UnknownType()
+                    : Names.Type(Identifier.Substring(startOfTypeName));
             }
         }
     }

@@ -17,7 +17,7 @@
 using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
-namespace KaVE.Commons.TestUtils.Model.Names
+namespace KaVE.Commons.TestUtils.Model.Naming
 {
     public static class NameAssert
     {

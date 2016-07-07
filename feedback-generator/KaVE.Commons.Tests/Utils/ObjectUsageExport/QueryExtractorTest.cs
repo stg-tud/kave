@@ -15,9 +15,8 @@
  */
 
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs;
@@ -38,12 +37,12 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
     {
         private static ITypeName DefaultClassContext
         {
-            get { return TypeName.Get("T,P"); }
+            get { return Names.Type("T,P"); }
         }
 
         private static IMethodName DefaultMethodContext
         {
-            get { return MethodName.Get("[R,P] [T,P].M()"); }
+            get { return Names.Method("[R,P] [T,P].M()"); }
         }
 
         private QueryExtractor _sut;
@@ -249,17 +248,17 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
 
         #region helper
 
-        private ITypeName Type(string typeName)
+        private static ITypeName Type(string typeName)
         {
-            return TypeName.Get(typeName + ", P");
+            return Names.Type(typeName + ", P");
         }
 
-        private IMethodName Method(string returnTypeName, string declTypeName, string methodName)
+        private static IMethodName Method(string returnTypeName, string declTypeName, string methodName)
         {
-            return MethodName.Get(string.Format("[{0}, P] [{1}, P].{2}()", returnTypeName, declTypeName, methodName));
+            return Names.Method(string.Format("[{0}, P] [{1}, P].{2}()", returnTypeName, declTypeName, methodName));
         }
 
-        private IVariableDeclaration VarDecl(string type, string id)
+        private static IVariableDeclaration VarDecl(string type, string id)
         {
             return new VariableDeclaration
             {
@@ -271,7 +270,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             };
         }
 
-        private IStatement InvokeStmt(string id, IMethodName method)
+        private static IStatement InvokeStmt(string id, IMethodName method)
         {
             return new ExpressionStatement
             {

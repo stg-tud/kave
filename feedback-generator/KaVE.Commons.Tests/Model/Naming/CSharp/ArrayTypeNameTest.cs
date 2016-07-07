@@ -19,7 +19,6 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.CSharp
 {
-    [TestFixture]
     internal class ArrayTypeNameTest
     {
         [TestCase("T, P", "T[], P"),
@@ -76,7 +75,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         {
             var arrayTypeName = TypeName.Get(identifier);
 
-            Assert.AreEqual(expected, arrayTypeName.ArrayBaseType.Identifier);
+            Assert.AreEqual(expected, arrayTypeName.AsArrayTypeName.ArrayBaseType.Identifier);
         }
 
         [TestCase("ValueType[,,], As, 9.8.7.6", 3),

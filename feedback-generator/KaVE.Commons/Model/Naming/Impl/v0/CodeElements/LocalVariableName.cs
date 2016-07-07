@@ -60,7 +60,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get
             {
                 var lengthOfTypeIdentifier = Identifier.LastIndexOf(']') - 1;
-                return TypeName.Get(Identifier.Substring(1, lengthOfTypeIdentifier));
+                return Names.Type(Identifier.Substring(1, lengthOfTypeIdentifier));
             }
         }
     }

@@ -31,7 +31,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         [UsedImplicitly]
         internal new static ITypeName Get(string identifier)
         {
-            return TypeName.Get(identifier);
+            return Names.Type(identifier);
         }
 
         internal InterfaceTypeName(string identifier) : base(identifier) {}

@@ -15,9 +15,8 @@
  */
 
 using System;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Collections;
@@ -31,7 +30,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         private static void AssertTypeFormat(string expected, string typeIdentifier)
         {
             var sut = new SSTPrintingContext();
-            Assert.AreEqual(expected, sut.Type(TypeName.Get(typeIdentifier)).ToString());
+            Assert.AreEqual(expected, sut.Type(Names.Type(typeIdentifier)).ToString());
         }
 
         [Test]
@@ -143,7 +142,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         [Test]
         public void ParameterList_OneParameter()
         {
-            var parameters = new KaVEList<IParameterName> {ParameterName.Get("[A,P] p1")};
+            var parameters = new KaVEList<IParameterName> {Names.Parameter("[A,P] p1")};
             var sut = new SSTPrintingContext();
             sut.ParameterList(parameters);
             Assert.AreEqual("(A p1)", sut.ToString());
@@ -152,7 +151,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         [Test]
         public void ParameterList_MultipleParameters()
         {
-            var parameters = new KaVEList<IParameterName> {ParameterName.Get("[A,P] p1"), ParameterName.Get("[B,P] p2")};
+            var parameters = new KaVEList<IParameterName> {Names.Parameter("[A,P] p1"), Names.Parameter("[B,P] p2")};
             var sut = new SSTPrintingContext();
             sut.ParameterList(parameters);
             Assert.AreEqual("(A p1, B p2)", sut.ToString());

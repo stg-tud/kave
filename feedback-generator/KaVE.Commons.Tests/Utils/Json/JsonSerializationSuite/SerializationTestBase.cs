@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
-using KaVE.Commons.TestUtils.Model.Names;
+using KaVE.Commons.TestUtils.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite

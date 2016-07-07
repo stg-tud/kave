@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
         [Test]
         public void ShouldBeSimpleEvent()
         {
-            var eventName = Names.GetEventName("[ChangedEventHandler, IO, 1.2.3.4] [TextBox, GUI, 0.8.7.6].Changed");
+            var eventName = Names.Event("[ChangedEventHandler, IO, 1.2.3.4] [TextBox, GUI, 0.8.7.6].Changed");
 
             Assert.AreEqual("ChangedEventHandler", eventName.HandlerType.FullName);
             Assert.AreEqual("TextBox", eventName.DeclaringType.FullName);

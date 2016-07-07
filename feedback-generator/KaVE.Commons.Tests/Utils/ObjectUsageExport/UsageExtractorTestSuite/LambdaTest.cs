@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -41,7 +40,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                     "a",
                     new LambdaExpression
                     {
-                        Name = LambdaName.Get(string.Format("[{0}] ()", Fix.Void)),
+                        Name = Names.Lambda("[{0}] ()", Fix.Void),
                         Body =
                         {
                             InvokeStmt("i", Fix.Int_GetHashCode)
@@ -84,7 +83,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
                 Element = DefaultClassContext,
                 Extends = new TypeHierarchy
                 {
-                    Element = TypeName.Get("Super, P")
+                    Element = Names.Type("Super, P")
                 }
             };
 

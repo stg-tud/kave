@@ -24,13 +24,13 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(Names.GetParameterName("?").IsUnknown);
+            Assert.That(Names.Parameter("?").IsUnknown);
         }
 
         [Test]
         public void ShouldBeSimpleParameter()
         {
-            var parameterName = Names.GetParameterName("[ValueType, Assembly, 1.2.3.4] ParameterName");
+            var parameterName = Names.Parameter("[ValueType, Assembly, 1.2.3.4] ParameterName");
 
             Assert.AreEqual("ValueType, Assembly, 1.2.3.4", parameterName.ValueType.Identifier);
             Assert.AreEqual("ParameterName", parameterName.Name);
@@ -44,7 +44,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeOutputParameter()
         {
-            var parameterName = Names.GetParameterName("out [VT, A, 1.0.0.0] PName");
+            var parameterName = Names.Parameter("out [VT, A, 1.0.0.0] PName");
 
             Assert.AreEqual("VT, A, 1.0.0.0", parameterName.ValueType.Identifier);
             Assert.AreEqual("PName", parameterName.Name);
@@ -54,7 +54,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeValueParameter()
         {
-            var parameterName = Names.GetParameterName("[System.Single, mscore, 4.0.0.0] i");
+            var parameterName = Names.Parameter("[System.Single, mscore, 4.0.0.0] i");
 
             Assert.IsFalse(parameterName.IsPassedByReference);
         }
@@ -62,7 +62,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeReferenceParameter()
         {
-            var parameterName = Names.GetParameterName("ref [System.Single, mscore, 4.0.0.0] i");
+            var parameterName = Names.Parameter("ref [System.Single, mscore, 4.0.0.0] i");
 
             Assert.IsTrue(parameterName.IsPassedByReference);
         }
@@ -70,7 +70,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeParameterArray()
         {
-            var parameterName = Names.GetParameterName("params [T, P, 1.3.2.4] name");
+            var parameterName = Names.Parameter("params [T, P, 1.3.2.4] name");
 
             Assert.IsTrue(parameterName.IsParameterArray);
         }
@@ -78,7 +78,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldNoBeParameterArray()
         {
-            var parameterName = Names.GetParameterName("[arr(1):T, P, 1.3.2.4] name");
+            var parameterName = Names.Parameter("[arr(1):T, P, 1.3.2.4] name");
 
             Assert.IsTrue(parameterName.ValueType.IsArrayType);
             Assert.IsFalse(parameterName.IsParameterArray);
@@ -87,7 +87,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldHaveDefaultValue()
         {
-            var parameterName = Names.GetParameterName("opt [T, A, 4.3.2.1] p");
+            var parameterName = Names.Parameter("opt [T, A, 4.3.2.1] p");
 
             Assert.IsTrue(parameterName.IsOptional);
         }
@@ -95,7 +95,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeExtensionMethodParameter()
         {
-            var parameterName = Names.GetParameterName("this [T, A, 4.3.2.1] p");
+            var parameterName = Names.Parameter("this [T, A, 4.3.2.1] p");
 
             Assert.IsTrue(parameterName.IsExtensionMethodParameter);
         }
@@ -103,7 +103,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test, Ignore]
         public void ShouldBeOptionalReferenceParameter()
         {
-            var parameterName = Names.GetParameterName("opt ref [System.Double, mscore, 4.0.0.0] param");
+            var parameterName = Names.Parameter("opt ref [System.Double, mscore, 4.0.0.0] param");
 
             Assert.IsTrue(parameterName.IsOptional);
             Assert.IsTrue(parameterName.IsPassedByReference);

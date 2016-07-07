@@ -16,9 +16,8 @@
 
 using System;
 using System.Linq;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
@@ -67,7 +66,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             var oldName = type.Name + ",";
             var newName = type.Name + "$Lambda,";
             var newId = type.Identifier.Replace(oldName, newName);
-            return TypeName.Get(newId);
+            return Names.Type(newId);
         }
 
         internal static IMethodName AddLambda(IMethodName method)
@@ -75,7 +74,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             var oldName = "." + method.Name + "(";
             var newName = "." + method.Name + "$Lambda(";
             var newId = method.Identifier.Replace(oldName, newName);
-            return MethodName.Get(newId);
+            return Names.Method(newId);
         }
 
         public void LeaveCurrentScope()
@@ -163,7 +162,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 q.methodCtx = Enclosings.Method.ToCoReName();
                 return q;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("failed to create new Query, falling back to Unknown");
                 return q;

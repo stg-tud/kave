@@ -21,7 +21,6 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.CSharp
 {
-    [TestFixture]
     internal class NameUtilsTest
     {
         [Test]

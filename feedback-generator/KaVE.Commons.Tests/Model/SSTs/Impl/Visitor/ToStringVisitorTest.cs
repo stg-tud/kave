@@ -15,8 +15,7 @@
  */
 
 using System.Text;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
@@ -31,14 +30,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor
         {
             var eventDeclaration = new EventDeclaration
             {
-                Name = EventName.Get("[MyEvent, IO, 1.2.3.4] [DeclaringType, GUI, 5.6.7.8].E")
+                Name = Names.Event("[MyEvent, IO, 1.2.3.4] [DeclaringType, GUI, 5.6.7.8].E")
             };
             var fieldDeclaration = new FieldDeclaration
             {
-                Name = FieldName.Get("[MyField, mscore, 4.0.0.0] [DeclaringType, mscore, 4.0.0.0]._f")
+                Name = Names.Field("[MyField, mscore, 4.0.0.0] [DeclaringType, mscore, 4.0.0.0]._f")
             };
 
-            var sst = new SST {EnclosingType = TypeName.Get("MyType, mscore, 4.0.0.0")};
+            var sst = new SST {EnclosingType = Names.Type("MyType, mscore, 4.0.0.0")};
             sst.Events.Add(eventDeclaration);
             sst.Fields.Add(fieldDeclaration);
 

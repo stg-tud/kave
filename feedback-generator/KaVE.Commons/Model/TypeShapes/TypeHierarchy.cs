@@ -15,7 +15,7 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -51,14 +51,14 @@ namespace KaVE.Commons.Model.TypeShapes
 
         public TypeHierarchy()
         {
-            Element = TypeName.UnknownName;
+            Element = Names.UnknownType();
             Implements = Sets.NewHashSet<ITypeHierarchy>();
         }
 
         public TypeHierarchy(string elementQualifiedName)
             : this()
         {
-            Element = TypeName.Get(elementQualifiedName);
+            Element = Names.Type(elementQualifiedName);
         }
 
         public override bool Equals(object obj)

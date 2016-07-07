@@ -123,7 +123,7 @@ namespace KaVE.Commons.Model.ObjectUsage
             }
             if (name.IsArrayType)
             {
-                return "[" + name.ArrayBaseType.ToName();
+                return "[" + name.AsArrayTypeName.ArrayBaseType.ToName();
             }
             if (name.IsNestedType)
             {

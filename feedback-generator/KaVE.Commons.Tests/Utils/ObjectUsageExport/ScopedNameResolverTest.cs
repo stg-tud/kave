@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
     {
         private CoReTypeName TypeUnknown
         {
-            get { return TypeName.UnknownName.ToCoReName(); }
+            get { return Names.UnknownType().ToCoReName(); }
         }
 
         [Test]
@@ -96,10 +96,10 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
                 "a",
                 new Query
                 {
-                    type = TypeName.Get("T,P").ToCoReName()
+                    type = Type("T,P")
                 });
             var actual = sut.GetStaticType("a");
-            var expected = TypeName.Get("T,P").ToCoReName();
+            var expected = Type("T,P");
             Assert.AreEqual(expected, actual);
         }
 
@@ -111,16 +111,16 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
                 "a",
                 new Query
                 {
-                    type = TypeName.Get("T,P").ToCoReName()
+                    type = Type("T,P")
                 });
             var sut = new ScopedNameResolver(parent);
 
             var actual = sut.GetStaticType("a");
-            var expected = TypeName.Get("T,P").ToCoReName();
+            var expected = Type("T,P");
             Assert.AreEqual(expected, actual);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void GetStaticType_Undefined()
         {
             var sut = new ScopedNameResolver();
@@ -267,7 +267,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         }
 
         [Test,
-         ExpectedException(typeof (AssertException),
+         ExpectedException(typeof(AssertException),
              ExpectedMessage = "type 'LX' is already bound in current scope")]
         public void CannotReregisterInTheSameScope_Type()
         {
@@ -277,7 +277,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         }
 
         [Test,
-         ExpectedException(typeof (AssertException), ExpectedMessage = "id 'x' is already bound in current scope")]
+         ExpectedException(typeof(AssertException), ExpectedMessage = "id 'x' is already bound in current scope")]
         public void CannotReregisterInTheSameScope_Id()
         {
             var sut = new ScopedNameResolver();
@@ -331,7 +331,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
 
         private static CoReTypeName Type(string name)
         {
-            return TypeName.Get(name + ", P").ToCoReName();
+            return Names.Type(name + ", P").ToCoReName();
         }
     }
 }

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -85,7 +84,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new InvocationExpression
             {
                 Reference = VarRef("this"),
-                MethodName = MethodName.Get("[R,P] [D,P].M([T,P] p)"),
+                MethodName = Names.Method("[R,P] [D,P].M([T,P] p)"),
                 Parameters = {Constant("1")}
             };
 
@@ -98,7 +97,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new InvocationExpression
             {
                 Reference = SSTUtil.VariableReference("this"),
-                MethodName = MethodName.Get("[R,P] [D,P].M([T,P] p)"),
+                MethodName = Names.Method("[R,P] [D,P].M([T,P] p)"),
                 Parameters = {Null()}
             };
 
@@ -111,7 +110,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new InvocationExpression
             {
                 Reference = VarRef("should be ignored anyways"),
-                MethodName = MethodName.Get("static [R,P] [D,P].M([T,P] p)"),
+                MethodName = Names.Method("static [R,P] [D,P].M([T,P] p)"),
                 Parameters = {Null()}
             };
 
@@ -124,7 +123,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new InvocationExpression
             {
                 Reference = VarRef("should be ignored anyways"),
-                MethodName = MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [C,P]..ctor()"),
+                MethodName = Names.Method("[System.Void, mscorlib, 4.0.0.0] [C,P]..ctor()"),
                 Parameters = {Constant("1")}
             };
 
@@ -235,7 +234,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new CompletionExpression
             {
-                TypeReference = TypeName.Get("T,P")
+                TypeReference = Names.Type("T,P")
             };
             AssertPrint(sst, "T.$");
         }
@@ -245,7 +244,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new CompletionExpression
             {
-                TypeReference = TypeName.Get("T,P"),
+                TypeReference = Names.Type("T,P"),
                 Token = "t"
             };
             AssertPrint(sst, "T.t$");
@@ -256,7 +255,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new CompletionExpression
             {
-                TypeReference = TypeName.Get("T`1[[G -> A,P]],P")
+                TypeReference = Names.Type("T`1[[G -> A,P]],P")
             };
             AssertPrint(sst, "T<A>.$");
         }
@@ -266,7 +265,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new CompletionExpression
             {
-                TypeReference = TypeName.Get("T`1[[G]],P")
+                TypeReference = Names.Type("T`1[[G]],P")
             };
             AssertPrint(sst, "T<?>.$");
         }
@@ -276,7 +275,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new LambdaExpression
             {
-                Name = LambdaName.Get("[T,P]([C, A] p1, [C, B] p2)"),
+                Name = Names.Lambda("[T,P]([C, A] p1, [C, B] p2)"),
                 Body =
                 {
                     new ContinueStatement(),
@@ -309,7 +308,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new CastExpression
             {
-                TargetType = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                TargetType = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = VarRef("i")
             };
 
@@ -347,7 +346,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new TypeCheckExpression
             {
-                Type = TypeName.Get("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
                 Reference = VarRef("i")
             };
 

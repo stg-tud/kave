@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
@@ -35,8 +35,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(SSTUtil.Declare("arr", SSTAnalysisFixture.IntArray));
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(SSTUtil.Declare("arr", Fix.IntArray));
             mA.Body.Add(SSTUtil.AssignmentToLocal("arr", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -75,7 +75,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(SSTUtil.Declare("arr", TypeName.Get("System.Int32[][], mscorlib, 4.0.0.0")));
+            mA.Body.Add(SSTUtil.Declare("arr", Names.Type("System.Int32[][], mscorlib, 4.0.0.0")));
             mA.Body.Add(SSTUtil.Declare("$0", SSTAnalysisFixture.IntArray));
             mA.Body.Add(SSTUtil.AssignmentToLocal("$0", new ConstantValueExpression()));
             mA.Body.Add(SSTUtil.Declare("$1", SSTAnalysisFixture.IntArray));
