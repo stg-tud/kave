@@ -94,7 +94,6 @@
     <Compile Include="Model\Naming\CSharp\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Naming\CSharp\AssemblyNameTest.cs" />
     <Compile Include="Model\Naming\CSharp\CsAssemblyNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\CSharpNameFromInfoFactoryTest.cs" />
     <Compile Include="Model\Naming\CSharp\CSharpNameUtilsTest.cs" />
     <Compile Include="Model\Naming\CSharp\CsNamespaceTest.cs" />
     <Compile Include="Model\Naming\CSharp\DelegateTypeNameTest.cs" />
