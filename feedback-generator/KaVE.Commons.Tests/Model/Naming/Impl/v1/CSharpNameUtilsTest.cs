@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Impl.v0;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeVoidType()
         {
-            var voidTypeName = CSharpNameUtils.GetFullTypeNameFromTypeAlias("void");
+            var voidTypeName = BuiltInTypeAliases.GetFullTypeNameFromTypeAlias("void");
 
             Assert.AreEqual("System.Void", voidTypeName);
         }
@@ -33,7 +34,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeValueTypeInt()
         {
-            var intTypeName = CSharpNameUtils.GetFullTypeNameFromTypeAlias("int");
+            var intTypeName = BuiltInTypeAliases.GetFullTypeNameFromTypeAlias("int");
 
             Assert.AreEqual("System.Int32", intTypeName);
         }
@@ -41,7 +42,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldBeNullableType()
         {
-            var nullableTypeName = CSharpNameUtils.GetFullTypeNameFromTypeAlias("int?");
+            var nullableTypeName = BuiltInTypeAliases.GetFullTypeNameFromTypeAlias("int?");
 
             Assert.AreEqual("System.Nullable`1[[System.Int32]]", nullableTypeName);
         }
@@ -49,7 +50,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ObjectShouldBeClassType()
         {
-            var objectTypeName = CSharpNameUtils.GetFullTypeNameFromTypeAlias("object");
+            var objectTypeName = BuiltInTypeAliases.GetFullTypeNameFromTypeAlias("object");
 
             Assert.AreEqual("System.Object", objectTypeName);
         }
@@ -57,7 +58,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldReplaceAliasesInArrayTypes()
         {
-            var arrayTypeName = CSharpNameUtils.GetFullTypeNameFromTypeAlias("long[]");
+            var arrayTypeName = BuiltInTypeAliases.GetFullTypeNameFromTypeAlias("long[]");
 
             Assert.AreEqual("System.Int64[]", arrayTypeName);
         }
@@ -65,7 +66,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void TranslatesTypeBackToAlias()
         {
-            var alias = CSharpNameUtils.GetTypeAliasFromFullTypeName("System.Int32");
+            var alias = BuiltInTypeAliases.GetTypeAliasFromFullTypeName("System.Int32");
 
             Assert.AreEqual("int", alias);
         }
@@ -73,7 +74,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void DoesNotTranslateTypesWithoutAlias()
         {
-            var notAnAlias = CSharpNameUtils.GetTypeAliasFromFullTypeName("System.NotAnInt");
+            var notAnAlias = BuiltInTypeAliases.GetTypeAliasFromFullTypeName("System.NotAnInt");
 
             Assert.AreEqual("System.NotAnInt", notAnAlias);
         }

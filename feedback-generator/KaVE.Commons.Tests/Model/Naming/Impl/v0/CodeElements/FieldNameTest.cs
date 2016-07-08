@@ -19,8 +19,9 @@ using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
 {
+    // TODO NameUpdate: Use BaseTest for Members
     internal class FieldNameTest
     {
         private const string Identifier = "[b.ValueType, B, 1.3.3.7] [a.ValueType, A, 4.2.2.3].fieldName";

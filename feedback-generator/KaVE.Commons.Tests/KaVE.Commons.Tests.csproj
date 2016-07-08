@@ -91,48 +91,52 @@
     <Compile Include="Model\Events\IDEEventTest.cs" />
     <Compile Include="Model\Events\InfoEventTest.cs" />
     <Compile Include="Model\Events\UserProfiles\UserProfileEventTest.cs" />
-    <Compile Include="Model\Naming\CSharp\ArrayTypeNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\AssemblyNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\CsAssemblyNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\CSharpNameUtilsTest.cs" />
-    <Compile Include="Model\Naming\CSharp\CsNamespaceTest.cs" />
-    <Compile Include="Model\Naming\CSharp\DelegateTypeNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\GenericType.cs" />
-    <Compile Include="Model\Naming\CSharp\GlobalNamespaceTest.cs" />
-    <Compile Include="Model\Naming\CSharp\LambdaNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\LocalVariableNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\MemberNames\EventNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\MemberNames\FieldNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\MemberNames\MethodNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\MemberNames\PropertyNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\Modularization\AliasNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\Modularization\AssemblyNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\Modularization\AssemblyVersionTest.cs" />
-    <Compile Include="Model\Naming\CSharp\Modularization\NamespaceNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\NameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\ParameterNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\NameUtilsTest.cs" />
-    <Compile Include="Model\Naming\CSharp\CsNameUtilTest.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\ArrayTypeNameTestCase.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\ArrayTypeNameTestSuite.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\TestCaseBaseTestSuite.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\DelegateTypeNameTestCase.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\DelegateTypeNameTestSuite.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\MethodNameTestCase.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\MethodNameTestSuite.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\TestCaseProvider.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\TestCaseProviderTest.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\TypeNameTestSuite.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\TypeNameTestCase.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\TypeParameterNameTestCase.cs" />
-    <Compile Include="Model\Naming\CSharp\Parser\TypeParameterNameTestSuite.cs" />
-    <Compile Include="Model\Naming\CSharp\SimpleType.cs" />
-    <Compile Include="Model\Naming\CSharp\TypeNameTest.cs" />
-    <Compile Include="Model\Naming\CSharp\CsNameFixerTest.cs" />
-    <Compile Include="Model\Naming\VisualStudio\DocumentNameTest.cs" />
-    <Compile Include="Model\Naming\VisualStudio\ProjectItemNameTest.cs" />
-    <Compile Include="Model\Naming\VisualStudio\ProjectNameTest.cs" />
-    <Compile Include="Model\Naming\VisualStudio\WindowNameTest.cs" />
+    <Compile Include="Model\Naming\BuiltInTypeAliasesTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\IDEComponents\CommandBarControlNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\IDEComponents\CommandNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\IDEComponents\SolutionNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Others\ReSharperLiveTemplateNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\ArrayTypeNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\AssemblyNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v1\CsAssemblyNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v1\CSharpNameUtilsTest.cs" />
+    <Compile Include="Model\Naming\Impl\v1\CsNamespaceTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\DelegateTypeNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\GlobalNamespaceTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\LambdaNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\LocalVariableNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\EventNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\FieldNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\MethodNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\PropertyNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\AliasNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\AssemblyNameTest2.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\AssemblyVersionTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\NamespaceNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\NameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\ParameterNameTest.cs" />
+    <Compile Include="Model\Naming\NamesTest.cs" />
+    <Compile Include="Model\Naming\NameUtilsTest.cs" />
+    <Compile Include="Model\Naming\Impl\v1\CsNameUtilTest.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\ArrayTypeNameTestCase.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\ArrayTypeNameTestSuite.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\TestCaseBaseTestSuite.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\DelegateTypeNameTestCase.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\DelegateTypeNameTestSuite.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\MethodNameTestCase.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\MethodNameTestSuite.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\TestCaseProvider.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\TestCaseProviderTest.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\TypeNameTestSuite.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\TypeNameTestCase.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\TypeParameterNameTestCase.cs" />
+    <Compile Include="Model\Naming\Impl\v1\Parser\TypeParameterNameTestSuite.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\TypeNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v1\CsNameFixerTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\IDEComponents\DocumentNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\IDEComponents\ProjectItemNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\IDEComponents\ProjectNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\IDEComponents\WindowNameTest.cs" />
     <Compile Include="Model\ObjectUsage\CallSitesTest.cs" />
     <Compile Include="Model\ObjectUsage\CallSiteTest.cs" />
     <Compile Include="Model\ObjectUsage\CoReFieldNameTest.cs" />
@@ -307,13 +311,13 @@
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
-    <None Include="Model\Naming\CSharp\Parser\Data\invalid-arraytypes.tsv" />
-    <None Include="Model\Naming\CSharp\Parser\Data\invalid-delegates.tsv" />
-    <None Include="Model\Naming\CSharp\Parser\Data\invalid-typeparameternames.tsv" />
-    <None Include="Model\Naming\CSharp\Parser\Data\valid-arraytypes.tsv" />
-    <None Include="Model\Naming\CSharp\Parser\Data\valid-delegates.tsv" />
-    <None Include="Model\Naming\CSharp\Parser\Data\valid-typenames.tsv" />
-    <None Include="Model\Naming\CSharp\Parser\Data\valid-typeparameternames.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\invalid-arraytypes.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\invalid-delegates.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\invalid-typeparameternames.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\valid-arraytypes.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\valid-delegates.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\valid-typenames.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\valid-typeparameternames.tsv" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -334,13 +338,13 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Model\Naming\CSharp\Parser\Data\invalid-typenames.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\invalid-typenames.tsv" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Model\Naming\CSharp\Parser\Data\invalid-methodnames.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\invalid-methodnames.tsv" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Model\Naming\CSharp\Parser\Data\valid-methodnames.tsv" />
+    <None Include="Model\Naming\Impl\v1\Parser\Data\valid-methodnames.tsv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

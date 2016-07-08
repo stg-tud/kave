@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements

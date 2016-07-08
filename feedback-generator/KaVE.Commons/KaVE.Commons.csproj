@@ -90,7 +90,6 @@
     <Compile Include="Model\Naming\Impl\v1\CsNamespaceName.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsParameterName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\LambdaName.cs" />
-    <Compile Include="Model\Naming\Impl\v0\NameUtils.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsMethodName.cs" />
     <Compile Include="Model\Naming\Impl\v1\UnknownName.cs" />
     <Compile Include="Model\Naming\Impl\NameUpdater_v0v1.cs" />
@@ -209,7 +208,7 @@
     <Compile Include="Model\Naming\Impl\v0\Types\ArrayTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\AssemblyName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\AssemblyVersion.cs" />
-    <Compile Include="Model\Naming\Impl\v0\CSharpNameUtils.cs" />
+    <Compile Include="Model\Naming\BuiltInTypeAliases.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\DelegateTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\EnumTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\EventName.cs" />

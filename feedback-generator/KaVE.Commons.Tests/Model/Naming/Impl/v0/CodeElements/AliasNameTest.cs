@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// ReSharper disable once CheckNamespace
-namespace Test.Targets
-{
-    internal class GenericType<TA>
-    {
-        public TA _genericTypedField;
 
-        public interface IInnerType {}
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using NUnit.Framework;
+
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
+{
+    internal class AliasNameTest
+    {
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(AliasName.UnknownName.IsUnknown);
+        }
     }
 }

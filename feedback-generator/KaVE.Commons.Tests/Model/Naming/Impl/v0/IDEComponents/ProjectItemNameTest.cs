@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,27 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Modularization
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 {
-    internal class AliasNameTest
+    internal class ProjectItemNameTest
     {
         [Test]
-        public void ShouldImplementIsUnknown()
+        public void ShouldParseType()
         {
-            Assert.That(AliasName.UnknownName.IsUnknown);
+            var uut = ProjectItemName.Get("File C:\\Project\\File.txt");
+
+            Assert.AreEqual("File", uut.Type);
+        }
+
+        [Test]
+        public void ShouldParseName()
+        {
+            var uut = ProjectItemName.Get("File C:\\Project\\File.txt");
+
+            Assert.AreEqual("C:\\Project\\File.txt", uut.Name);
         }
     }
 }

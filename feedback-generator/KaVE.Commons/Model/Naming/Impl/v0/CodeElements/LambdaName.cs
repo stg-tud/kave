@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;

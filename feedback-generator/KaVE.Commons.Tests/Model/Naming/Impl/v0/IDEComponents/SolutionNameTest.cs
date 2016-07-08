@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 {
-    internal class LocalVariableNameTest
+    internal class SolutionNameTest
     {
         [Test]
-        public void ShouldImplementIsUnknown()
+        public void ImplementMe()
         {
-            Assert.That(LocalVariableName.UnknownName.IsUnknown);
+            Assert.Fail();
         }
     }
 }

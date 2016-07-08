@@ -17,9 +17,9 @@
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Modularization
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
-    internal class AssemblyNameTest
+    internal class AssemblyNameTest2
     {
         [Test]
         public void ShouldImplementIsUnknown()

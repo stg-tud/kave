@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 
-namespace KaVE.Commons.Model.Naming.Impl.v0
+namespace KaVE.Commons.Model.Naming
 {
-    public static class CSharpNameUtils
+    public static class BuiltInTypeAliases
     {
         private static readonly IDictionary<string, string> SimpleTypeToFullNameMap = new Dictionary<string, string>
         {
@@ -42,7 +42,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         private static readonly IDictionary<string, string> FullNameToSimpleTypeMap = new Dictionary<string, string>();
 
-        static CSharpNameUtils()
+        static BuiltInTypeAliases()
         {
             foreach (var entry in SimpleTypeToFullNameMap)
             {

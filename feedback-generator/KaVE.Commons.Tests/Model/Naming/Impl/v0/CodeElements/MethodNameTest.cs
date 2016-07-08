@@ -20,7 +20,7 @@ using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.MemberNames
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
 {
     internal class MethodNameTest
     {

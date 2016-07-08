@@ -26,7 +26,7 @@ using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
-using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming;
 using Moq;
 
 namespace KaVE.RS.Commons.Tests_Unit.TestFactories
@@ -66,7 +66,7 @@ namespace KaVE.RS.Commons.Tests_Unit.TestFactories
         {
             var typeMock = new Mock<IDeclaredType>();
             typeMock.Setup(t => t.Classify).Returns(TypeClassification.REFERENCE_TYPE);
-            var fqn = CSharpNameUtils.GetFullTypeNameFromTypeAlias(fqnOrAlias);
+            var fqn = BuiltInTypeAliases.GetFullTypeNameFromTypeAlias(fqnOrAlias);
             var mockTypeElement = MockTypeElement(fqn, assemblyName, assemblyVersion);
             mockTypeElement.TypeParameters.AddRange(substitution.Domain);
             typeMock.Setup(t => t.GetTypeElement()).Returns(mockTypeElement);

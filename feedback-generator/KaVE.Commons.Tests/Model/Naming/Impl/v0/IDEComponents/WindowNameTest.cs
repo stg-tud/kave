@@ -18,7 +18,7 @@ using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.VisualStudio
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 {
     internal class WindowNameTest
     {

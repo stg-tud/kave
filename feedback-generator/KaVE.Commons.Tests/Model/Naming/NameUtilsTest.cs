@@ -17,43 +17,42 @@
 using System;
 using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
-using NameUtils = KaVE.Commons.Model.Naming.Impl.v0.NameUtils;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp
+namespace KaVE.Commons.Tests.Model.Naming
 {
     internal class NameUtilsTest
     {
         [Test]
         public void HasParameters()
         {
-            Assert.IsTrue(NameUtils.HasParameters("M([C,P] p)"));
-            Assert.IsTrue(NameUtils.HasParameters("M([[DR, P] [D, P].()] p)"));
+            Assert.IsTrue("M([C,P] p)".HasParameters());
+            Assert.IsTrue("M([[DR, P] [D, P].()] p)".HasParameters());
         }
 
         [Test]
         public void HasNoParameters()
         {
-            Assert.IsFalse(NameUtils.HasParameters("M()"));
+            Assert.IsFalse("M()".HasParameters());
         }
 
         [Test]
         public void ParsesParametersWithParameterizedType()
         {
-            var parameterNames = NameUtils.GetParameterNames("M([A`1[[B, P]], P] p)");
+            var parameterNames = "M([A`1[[B, P]], P] p)".GetParameterNames();
             Assert.AreEqual(Names.Parameter("[A`1[[B, P]], P] p"), parameterNames[0]);
         }
 
         [Test]
         public void ParsesParametersWithDelegateType()
         {
-            var parameterNames = NameUtils.GetParameterNames("M([[DR, P] [D, P].()] p)");
+            var parameterNames = "M([[DR, P] [D, P].()] p)".GetParameterNames();
             Assert.AreEqual(Names.Parameter("[[DR, P] [D, P].()] p"), parameterNames[0]);
         }
 
         [Test]
         public void ParsesMultipleParameters()
         {
-            var parameterNames = NameUtils.GetParameterNames("M([T1,P] a, [T2,P] b)");
+            var parameterNames = "M([T1,P] a, [T2,P] b)".GetParameterNames();
             Assert.AreEqual(2, parameterNames.Count);
             Assert.AreEqual(Names.Parameter("[T1,P] a"), parameterNames[0]);
             Assert.AreEqual(Names.Parameter("[T2,P] b"), parameterNames[1]);
@@ -62,21 +61,21 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ParsesUnknownNames()
         {
-            var parameterNames = NameUtils.GetParameterNames("???");
+            var parameterNames = "???".GetParameterNames();
             Assert.AreEqual(0, parameterNames.Count);
         }
 
         [Test]
         public void ParsesEmptyParameters()
         {
-            var parameterNames = NameUtils.GetParameterNames("M()");
+            var parameterNames = "M()".GetParameterNames();
             Assert.AreEqual(0, parameterNames.Count);
         }
 
         [Test]
         public void ParsesParametersWithModifiers()
         {
-            var parameterNames = NameUtils.GetParameterNames("M(out [T,P] p, out [T,P] q)");
+            var parameterNames = "M(out [T,P] p, out [T,P] q)".GetParameterNames();
             Assert.AreEqual(2, parameterNames.Count);
             Assert.AreEqual(Names.Parameter("out [T,P] p"), parameterNames[0]);
             Assert.AreEqual(Names.Parameter("out [T,P] q"), parameterNames[1]);
@@ -85,7 +84,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ParsesParametersWithAdditionalWhitespace()
         {
-            var parameterNames = NameUtils.GetParameterNames("M(  out [T,P] p   )");
+            var parameterNames = "M(  out [T,P] p   )".GetParameterNames();
             Assert.AreEqual(1, parameterNames.Count);
             Assert.AreEqual(Names.Parameter("out [T,P] p"), parameterNames[0]);
         }
@@ -153,160 +152,160 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void FindNext()
         {
-            var actual = NameUtils.FindNext("abcabcabc", 1, 'a');
+            var actual = "abcabcabc".FindNext(1, 'a');
             Assert.AreEqual(3, actual);
         }
 
         [Test]
         public void FindNext_array()
         {
-            var actual = NameUtils.FindNext("ccccab", 1, 'a', 'b');
+            var actual = "ccccab".FindNext(1, 'a', 'b');
             Assert.AreEqual(4, actual);
         }
 
         [Test]
         public void FindNext_array2()
         {
-            var actual = NameUtils.FindNext("ccccba", 1, 'a', 'b');
+            var actual = "ccccba".FindNext(1, 'a', 'b');
             Assert.AreEqual(4, actual);
         }
 
         [Test]
         public void FindNext_NotFound()
         {
-            var actual = NameUtils.FindNext("abbb", 1, 'a');
+            var actual = "abbb".FindNext(1, 'a');
             Assert.AreEqual(-1, actual);
         }
 
         [Test]
         public void FindPrevious()
         {
-            var actual = NameUtils.FindPrevious("abcabcabc", 5, 'a');
+            var actual = "abcabcabc".FindPrevious(5, 'a');
             Assert.AreEqual(3, actual);
         }
 
         [Test]
         public void GetCorresponding_Round_Open()
         {
-            var actual = NameUtils.GetCorresponding('(');
+            var actual = '('.GetCorresponding();
             Assert.AreEqual(')', actual);
         }
 
         [Test]
         public void GetCorresponding_Round_Close()
         {
-            var actual = NameUtils.GetCorresponding(')');
+            var actual = ')'.GetCorresponding();
             Assert.AreEqual('(', actual);
         }
 
         [Test]
         public void GetCorresponding_Curly_Open()
         {
-            var actual = NameUtils.GetCorresponding('{');
+            var actual = '{'.GetCorresponding();
             Assert.AreEqual('}', actual);
         }
 
         [Test]
         public void GetCorresponding_Curly_Close()
         {
-            var actual = NameUtils.GetCorresponding('}');
+            var actual = '}'.GetCorresponding();
             Assert.AreEqual('{', actual);
         }
 
         [Test]
         public void GetCorresponding_Array_Open()
         {
-            var actual = NameUtils.GetCorresponding('[');
+            var actual = '['.GetCorresponding();
             Assert.AreEqual(']', actual);
         }
 
         [Test]
         public void GetCorresponding_Array_Close()
         {
-            var actual = NameUtils.GetCorresponding(']');
+            var actual = ']'.GetCorresponding();
             Assert.AreEqual('[', actual);
         }
 
         [Test]
         public void GetCorresponding_Pointy_Open()
         {
-            var actual = NameUtils.GetCorresponding('<');
+            var actual = '<'.GetCorresponding();
             Assert.AreEqual('>', actual);
         }
 
         [Test]
         public void GetCorresponding_Pointy_Close()
         {
-            var actual = NameUtils.GetCorresponding('>');
+            var actual = '>'.GetCorresponding();
             Assert.AreEqual('<', actual);
         }
 
         [Test, ExpectedException(typeof(ArgumentException))]
         public void GetCorresponding_EverythingElse()
         {
-            NameUtils.GetCorresponding('x');
+            'x'.GetCorresponding();
         }
 
         [Test]
         public void FindPrevious_NotFound()
         {
-            var actual = NameUtils.FindPrevious("bbb", 1, 'a');
+            var actual = "bbb".FindPrevious(1, 'a');
             Assert.AreEqual(-1, actual);
         }
 
         [Test]
         public void FindCorrespondingCloseBracket_Round()
         {
-            var actual = NameUtils.FindCorrespondingCloseBracket("((()))", 1);
+            var actual = "((()))".FindCorrespondingCloseBracket(1);
             Assert.AreEqual(4, actual);
         }
 
         [Test]
         public void FindCorrespondingCloseBracket_Courly()
         {
-            var actual = NameUtils.FindCorrespondingCloseBracket("{{{}}}", 1);
+            var actual = "{{{}}}".FindCorrespondingCloseBracket(1);
             Assert.AreEqual(4, actual);
         }
 
         [Test]
         public void FindCorrespondingCloseBracket_Array()
         {
-            var actual = NameUtils.FindCorrespondingCloseBracket("[[[]]]", 1);
+            var actual = "[[[]]]".FindCorrespondingCloseBracket(1);
             Assert.AreEqual(4, actual);
         }
 
         [Test]
         public void FindCorrespondingCloseBracket_Pointy()
         {
-            var actual = NameUtils.FindCorrespondingCloseBracket("<<<>>>", 1);
+            var actual = "<<<>>>".FindCorrespondingCloseBracket(1);
             Assert.AreEqual(4, actual);
         }
 
         [Test]
         public void FindCorrespondingOpenBracket_Round()
         {
-            var actual = NameUtils.FindCorrespondingOpenBracket("((()))", 4);
+            var actual = "((()))".FindCorrespondingOpenBracket(4);
             Assert.AreEqual(1, actual);
         }
 
         [Test]
         public void FindCorrespondingOpenBracket_Courly()
         {
-            var actual = NameUtils.FindCorrespondingOpenBracket("{{{}}}", 4);
+            var actual = "{{{}}}".FindCorrespondingOpenBracket(4);
             Assert.AreEqual(1, actual);
         }
 
         [Test]
         public void FindCorrespondingOpenBracket_Array()
         {
-            var actual = NameUtils.FindCorrespondingOpenBracket("[[[]]]", 4);
+            var actual = "[[[]]]".FindCorrespondingOpenBracket(4);
             Assert.AreEqual(1, actual);
         }
 
         [Test]
         public void FindCorrespondingOpenBracket_Pointy()
         {
-            var actual = NameUtils.FindCorrespondingOpenBracket("<<<>>>", 4);
+            var actual = "<<<>>>".FindCorrespondingOpenBracket(4);
             Assert.AreEqual(1, actual);
         }
 
