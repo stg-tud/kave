@@ -24,6 +24,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
         private static readonly WeakNameCache<ISolutionName> Registry =
             WeakNameCache<ISolutionName>.Get(id => new SolutionName(id));
 
+        public new static ISolutionName UnknownName
+        {
+            get { return Get("?"); }
+        }
+
         public new static ISolutionName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);

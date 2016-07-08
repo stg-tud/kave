@@ -15,7 +15,8 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 
@@ -28,12 +29,12 @@ namespace KaVE.Commons.Model.Events.VersionControlEvents
         public IKaVEList<IVersionControlAction> Actions { get; set; }
 
         [DataMember]
-        public SolutionName Solution { get; set; }
+        public ISolutionName Solution { get; set; }
 
         public VersionControlEvent()
         {
             Actions = Lists.NewList<IVersionControlAction>();
-            Solution = SolutionName.Get("");
+            Solution = Names.UnknownSolution;
         }
 
         private bool Equals(VersionControlEvent other)

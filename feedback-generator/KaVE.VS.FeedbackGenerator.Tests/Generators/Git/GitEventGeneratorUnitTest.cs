@@ -17,7 +17,8 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.VersionControlEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -79,7 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             }
         }
 
-        private static readonly SolutionName SomeSolution = SolutionName.Get("SomeSolution");
+        private static readonly ISolutionName SomeSolution = Names.Solution("SomeSolution");
 
         private TestGitEventGenerator _uut;
 

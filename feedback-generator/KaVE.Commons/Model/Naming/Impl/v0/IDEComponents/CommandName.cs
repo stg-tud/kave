@@ -19,17 +19,17 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class CommandName : Name, IIDEComponentName
+    public class CommandName : Name, ICommandName
     {
-        private static readonly WeakNameCache<CommandName> Registry =
-            WeakNameCache<CommandName>.Get(id => new CommandName(id));
+        private static readonly WeakNameCache<ICommandName> Registry =
+            WeakNameCache<ICommandName>.Get(id => new CommandName(id));
 
         /// <summary>
         ///     <code>{guid}:id:name</code>
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
-        public new static CommandName Get(string identifier)
+        public new static ICommandName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }

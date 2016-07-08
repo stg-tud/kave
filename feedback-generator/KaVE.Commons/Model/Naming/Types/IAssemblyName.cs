@@ -25,5 +25,7 @@ namespace KaVE.Commons.Model.Naming.Types
 
         [NotNull]
         string Name { get; }
+
+        bool IsLocalProject { get; }
     }
 }

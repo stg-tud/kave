@@ -21,7 +21,7 @@ using System.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.VersionControlEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
@@ -130,7 +130,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         public void ShouldFireEventWithCompleteContentAtInitialization()
         {
             var initialEvent = GetSinglePublished<VersionControlEvent>();
-            Assert.AreEqual(SolutionName.Get("SomeSolution"), initialEvent.Solution);
+            Assert.AreEqual(Names.Solution("SomeSolution"), initialEvent.Solution);
             CollectionAssert.AreEqual(InitialContentActions, initialEvent.Actions);
         }
 
@@ -142,7 +142,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             Thread.Sleep(500);
 
             var actualEvent = GetLastPublished<VersionControlEvent>();
-            Assert.AreEqual(SolutionName.Get("SomeSolution"), actualEvent.Solution);
+            Assert.AreEqual(Names.Solution("SomeSolution"), actualEvent.Solution);
             CollectionAssert.AreEqual(Lists.NewList(TestCommitGitAction), actualEvent.Actions);
         }
 

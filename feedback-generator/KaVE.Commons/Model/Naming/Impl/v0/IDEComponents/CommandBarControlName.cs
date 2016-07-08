@@ -19,14 +19,14 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class CommandBarControlName : Name, IIDEComponentName
+    public class CommandBarControlName : Name, ICommandBarControlName
     {
         public const char HierarchySeperator = '|';
 
-        private static readonly WeakNameCache<CommandBarControlName> Registry =
-            WeakNameCache<CommandBarControlName>.Get(id => new CommandBarControlName(id));
+        private static readonly WeakNameCache<ICommandBarControlName> Registry =
+            WeakNameCache<ICommandBarControlName>.Get(id => new CommandBarControlName(id));
 
-        public new static CommandBarControlName Get(string identifier)
+        public new static ICommandBarControlName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }
@@ -34,7 +34,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
         private CommandBarControlName(string identifier)
             : base(identifier) {}
 
-        public CommandBarControlName Parent
+        public ICommandBarControlName Parent
         {
             get
             {

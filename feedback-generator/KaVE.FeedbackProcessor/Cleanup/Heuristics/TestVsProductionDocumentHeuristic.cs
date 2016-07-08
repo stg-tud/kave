@@ -15,19 +15,19 @@
  */
 
 using System.Globalization;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
     internal static class TestVsProductionDocumentHeuristic
     {
-        public static bool IsTestDocument(this DocumentName document)
+        public static bool IsTestDocument(this IDocumentName document)
         {
             return NameEndsWithTest(document);
         }
 
-        private static bool NameEndsWithTest(this DocumentName document)
+        private static bool NameEndsWithTest(this IDocumentName document)
         {
             var filename = document.FileName;
             if (filename != null)
@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
             return false;
         }
 
-        public static bool IsProductionDocument(this DocumentName document)
+        public static bool IsProductionDocument(this IDocumentName document)
         {
             return !IsTestDocument(document);
         }

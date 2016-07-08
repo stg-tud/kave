@@ -19,12 +19,18 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class ProjectItemName : Name, IIDEComponentName
+    public class ProjectItemName : Name, IProjectItemName
     {
-        private static readonly WeakNameCache<ProjectItemName> Registry =
-            WeakNameCache<ProjectItemName>.Get(id => new ProjectItemName(id));
+        private static readonly WeakNameCache<IProjectItemName> Registry =
+            WeakNameCache<IProjectItemName>.Get(id => new ProjectItemName(id));
 
-        public new static ProjectItemName Get(string identifier)
+        public new static IProjectItemName UnknownName
+        {
+            get { return Get("?"); }
+        }
+
+
+        public new static IProjectItemName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }

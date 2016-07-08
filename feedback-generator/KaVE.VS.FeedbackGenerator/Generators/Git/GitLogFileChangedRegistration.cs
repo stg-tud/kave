@@ -19,7 +19,8 @@ using System.IO;
 using System.Security;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.Git
@@ -66,7 +67,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
         {
             _eventGenerator.OnGitHistoryFileChanged(
                 this,
-                new GitLogFileChangedEventArgs(directory, SolutionName.Get(_solution.Name)));
+                new GitLogFileChangedEventArgs(directory, Names.Solution(_solution.Name)));
         }
 
         private void OnGitHistoryFileChanged(object sender, FileSystemEventArgs args)
@@ -79,7 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
             _eventGenerator.OnGitHistoryFileChanged(
                 this,
-                new GitLogFileChangedEventArgs(directoryName, SolutionName.Get(_solution.Name)));
+                new GitLogFileChangedEventArgs(directoryName, Names.Solution(_solution.Name)));
         }
 
         private static string GetGitLogPath(ISolution solution)
@@ -139,9 +140,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Git
 
     public class GitLogFileChangedEventArgs : FileSystemEventArgs
     {
-        public SolutionName Solution { get; private set; }
+        public ISolutionName Solution { get; private set; }
 
-        public GitLogFileChangedEventArgs([NotNull] string directory, [NotNull] SolutionName solution)
+        public GitLogFileChangedEventArgs([NotNull] string directory, [NotNull] ISolutionName solution)
             : base(WatcherChangeTypes.Changed, directory, "HEAD")
         {
             Solution = solution;

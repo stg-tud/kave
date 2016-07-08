@@ -15,7 +15,8 @@
  */
 
 using System;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -126,9 +127,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
             }
         }
 
-        private PropertyName P(string name, params object[] args)
+        private static IPropertyName P(string name, params object[] args)
         {
-            return PropertyName.Get(name, args);
+            return Names.Property(name, args);
         }
     }
 }

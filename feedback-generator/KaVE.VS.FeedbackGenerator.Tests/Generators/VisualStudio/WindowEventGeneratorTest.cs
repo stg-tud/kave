@@ -17,7 +17,7 @@
 using System;
 using EnvDTE;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
@@ -31,7 +31,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
     {
         private Mock<WindowEvents> _mockWindowEvents;
         private Window _testWindow;
-        private WindowName _testWindowName;
+        private IWindowName _testWindowName;
         private WindowEvent _expected;
         private Action _lastScheduledMoveEvent;
 
@@ -71,7 +71,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             _expected = new WindowEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
+                KaVEVersion = TestRSEnv.DefaultVersion,
                 Window = _testWindowName,
                 TriggeredAt = TestDateUtils.Now,
                 TerminatedAt = TestDateUtils.Now

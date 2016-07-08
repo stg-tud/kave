@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Statistics
@@ -35,7 +35,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             RegisterFor<IDEStateEvent>(idese => AddNames(idese.OpenDocuments));
         }
 
-        private void AddNames(IEnumerable<DocumentName> documents)
+        private void AddNames(IEnumerable<IDocumentName> documents)
         {
             foreach (var name in documents)
             {
@@ -43,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
         }
 
-        private void AddName(DocumentName windowName)
+        private void AddName(IDocumentName windowName)
         {
             if (windowName != null)
             {

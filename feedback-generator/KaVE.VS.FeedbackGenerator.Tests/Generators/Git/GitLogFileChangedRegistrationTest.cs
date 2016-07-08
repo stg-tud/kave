@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using KaVE.VS.FeedbackGenerator.Generators.Git;
 using Moq;
 using NUnit.Framework;
@@ -94,7 +93,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             var actualArgs = _eventGeneratorDummy.OnGitHistoryFileChangedArgs;
             Assert.NotNull(actualArgs);
             Assert.AreEqual(FileGitLog, actualArgs.FullPath);
-            Assert.AreEqual(SolutionName.Get(SomeSolution), actualArgs.Solution);
+            Assert.AreEqual(Names.Solution(SomeSolution), actualArgs.Solution);
         }
 
         [Test]
@@ -107,7 +106,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
         public void ShouldTriggerEventOnFileChanged()
         {
             _eventGeneratorDummy.EventFired = false;
-            
+
             WriteLine("Some line");
             Thread.Sleep(500);
 
@@ -124,7 +123,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Git
             var actualArgs = _eventGeneratorDummy.OnGitHistoryFileChangedArgs;
             Assert.NotNull(actualArgs);
             Assert.AreEqual(FileGitLog, actualArgs.FullPath);
-            Assert.AreEqual(SolutionName.Get(SomeSolution), actualArgs.Solution);
+            Assert.AreEqual(Names.Solution(SomeSolution), actualArgs.Solution);
         }
 
         [Test]

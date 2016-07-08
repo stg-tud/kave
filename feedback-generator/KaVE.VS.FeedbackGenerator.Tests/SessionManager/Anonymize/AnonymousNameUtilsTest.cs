@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
@@ -33,7 +32,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeNull()
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
             Assert.Null(((string) null).ToHash());
         }
 
@@ -97,8 +95,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeProjectPath()
         {
-            var original = ProjectName.Get("Folder C:\\A\\B\\C");
-            var expected = ProjectName.Get("Folder IklTG_YtPBAhWOIrB65I1Q==");
+            var original = Names.Project("Folder C:\\A\\B\\C");
+            var expected = Names.Project("Folder IklTG_YtPBAhWOIrB65I1Q==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -106,8 +104,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeProjectItemPath()
         {
-            var original = ProjectItemName.Get("CSharp C:\\A\\B\\Class.cs");
-            var expected = ProjectItemName.Get("CSharp nmTd_-pgymTyNZrw5bGrpg==");
+            var original = Names.ProjectItem("CSharp C:\\A\\B\\Class.cs");
+            var expected = Names.ProjectItem("CSharp nmTd_-pgymTyNZrw5bGrpg==");
 
             AssertAnonymizedEquals(original, expected);
         }

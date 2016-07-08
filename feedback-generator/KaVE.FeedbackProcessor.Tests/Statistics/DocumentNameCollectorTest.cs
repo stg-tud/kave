@@ -18,7 +18,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Statistics;
 using KaVE.FeedbackProcessor.Tests.Model;
@@ -73,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.OnStreamEnds();
         }
 
-        private void AssertNameCollected(params DocumentName[] expected)
+        private void AssertNameCollected(params IDocumentName[] expected)
         {
             var actuals = _uut.AllDocumentNames;
             CollectionAssert.IsSubsetOf(expected.Select(dn => dn.Identifier), actuals);

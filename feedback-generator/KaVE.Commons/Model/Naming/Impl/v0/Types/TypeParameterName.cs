@@ -34,16 +34,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         ///     instantiate type-parameter names.
         /// </summary>
         [UsedImplicitly]
-        public new static ITypeName Get(string identifier)
+        public new static ITypeParameterName Get(string identifier)
         {
-            return Names.Type(identifier);
+            return Names.TypeParameter(identifier);
         }
 
         /// <summary>
         ///     Gets the <see cref="ITypeName" /> for the identifer
         ///     <code>'short name' -&gt; 'actual-type identifier'</code>.
         /// </summary>
-        public static ITypeName Get(string typeParameterShortName, string actualTypeIdentifier)
+        public static ITypeParameterName Get(string typeParameterShortName, string actualTypeIdentifier)
         {
             if (UnknownTypeName.IsUnknownTypeIdentifier(actualTypeIdentifier))
             {

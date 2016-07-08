@@ -28,6 +28,7 @@ using KaVE.Commons.Model.Naming.Impl.v1;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
+using AssemblyVersionName = KaVE.Commons.Model.Naming.Impl.v0.Types.AssemblyVersion;
 
 namespace KaVE.Commons.Model.Naming
 {
@@ -330,9 +331,9 @@ namespace KaVE.Commons.Model.Naming
             return LocalVariableName.Get(n);
         }
 
-        public static ITypeName ArrayType(int rank, ITypeName baseType)
+        public static IArrayTypeName ArrayType(int rank, ITypeName baseType)
         {
-            return Type("arr({0}):{1}", rank, baseType);
+            return Type("arr({0}):{1}", rank, baseType).AsArrayTypeName;
         }
 
         public static IAliasName Alias(string n)
@@ -411,6 +412,21 @@ namespace KaVE.Commons.Model.Naming
             get { return AliasName.UnknownName; }
         }
 
+        public static ISolutionName UnknownSolution
+        {
+            get { return SolutionName.UnknownName; }
+        }
+
+        public static IProjectItemName UnknownProjectItem
+        {
+            get { return ProjectItemName.UnknownName; }
+        }
+
+        public static IProjectName UnknownProject
+        {
+            get { return ProjectName.UnknownName; }
+        }
+
         #endregion
 
         #region string.Format helpers
@@ -455,6 +471,56 @@ namespace KaVE.Commons.Model.Naming
         public static IEventName Event(string input, params object[] args)
         {
             return Event(string.Format(input, args));
+        }
+
+        public static IProjectItemName ProjectItem(string s)
+        {
+            return ProjectItemName.Get(s);
+        }
+
+        public static IProjectName Project(string s)
+        {
+            return ProjectName.Get(s);
+        }
+
+        public static ICommandName Command(string identifier)
+        {
+            return CommandName.Get(identifier);
+        }
+
+        public static ICommandBarControlName CommandBarControl(string s)
+        {
+            return CommandBarControlName.Get(s);
+        }
+
+        public static IAssemblyName UnknownAssembly
+        {
+            get { return AssemblyName.UnknownName; }
+        }
+
+        public static IAssemblyVersion UnknownAssemblyVersion
+        {
+            get { return AssemblyVersionName.UnknownName; }
+        }
+
+        public static ILambdaName UnknownLambda
+        {
+            get { return LambdaName.UnknownName; }
+        }
+
+        public static ITypeParameterName TypeParameter(string n)
+        {
+            return TypeParameterName.Get(n);
+        }
+
+        public static ITypeParameterName TypeParameter(string shortName, string boundType)
+        {
+            return TypeParameter(shortName + "->" + boundType);
+        }
+
+        public static IAssemblyVersion AssemblyVersion(string s)
+        {
+            return AssemblyVersionName.Get(s);
         }
     }
 }

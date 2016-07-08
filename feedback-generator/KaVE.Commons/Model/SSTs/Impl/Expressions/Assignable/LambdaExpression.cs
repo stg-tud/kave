@@ -16,8 +16,8 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 
         public LambdaExpression()
         {
-            Name = LambdaName.UnknownName;
+            Name = Names.UnknownLambda;
             Body = Lists.NewList<IStatement>();
         }
 

@@ -136,6 +136,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return Identifier; }
         }
 
+        public bool IsLocalProject
+        {
+            get { return false; }
+        }
+
         public bool IsGlobalNamespace
         {
             get { return false; }

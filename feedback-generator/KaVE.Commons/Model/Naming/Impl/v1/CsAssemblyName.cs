@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
@@ -45,6 +46,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         public string Name
         {
             get { return ctx.regularAssembly().assemblyName().GetText(); }
+        }
+
+        public bool IsLocalProject {
+            // TODO NameUpdate: Implement
+            get { throw new NotImplementedException(); }
         }
 
         public string Identifier

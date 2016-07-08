@@ -16,5 +16,10 @@
 
 namespace KaVE.Commons.Model.Naming.IDEComponents
 {
-    public interface ICommandBarControlName : IIDEComponentName {}
+    public interface ICommandBarControlName : IIDEComponentName
+    {
+        ICommandBarControlName Parent { get; }
+
+        string Name { get; }
+    }
 }

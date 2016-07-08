@@ -16,5 +16,10 @@
 
 namespace KaVE.Commons.Model.Naming.IDEComponents
 {
-    public interface IProjectItemName : IIDEComponentName {}
+    public interface IProjectItemName : IIDEComponentName
+    {
+        string Type { get; }
+
+        string Name { get; }
+    }
 }

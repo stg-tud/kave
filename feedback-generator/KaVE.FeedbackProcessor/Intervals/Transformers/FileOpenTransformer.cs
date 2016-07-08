@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.FeedbackProcessor.Intervals.Model;
 
 namespace KaVE.FeedbackProcessor.Intervals.Transformers
@@ -25,13 +25,13 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
     internal class FileOpenTransformer : IEventToIntervalTransformer<FileOpenInterval>
     {
         private readonly IList<FileOpenInterval> _intervals;
-        private readonly IDictionary<DocumentName, FileOpenInterval> _currentIntervals;
-        private TransformerContext _context;
+        private readonly IDictionary<IDocumentName, FileOpenInterval> _currentIntervals;
+        private readonly TransformerContext _context;
 
         public FileOpenTransformer(TransformerContext context)
         {
             _intervals = new List<FileOpenInterval>();
-            _currentIntervals = new Dictionary<DocumentName, FileOpenInterval>();
+            _currentIntervals = new Dictionary<IDocumentName, FileOpenInterval>();
             _context = context;
         }
 

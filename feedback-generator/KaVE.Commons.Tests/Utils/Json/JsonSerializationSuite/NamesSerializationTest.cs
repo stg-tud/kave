@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
@@ -52,7 +51,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeAssemblyVersion()
         {
-            var name = AssemblyVersion.Get("1.3.3.7");
+            var name = Names.AssemblyVersion("1.3.3.7");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
@@ -75,7 +74,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeNamespaceName()
         {
-            var name = NamespaceName.Get("This.Is.My.Namespace");
+            var name = Names.Namespace("This.Is.My.Namespace");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 

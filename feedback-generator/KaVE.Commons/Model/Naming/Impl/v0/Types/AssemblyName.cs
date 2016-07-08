@@ -79,6 +79,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return GetFragments()[0]; }
         }
 
+        public bool IsLocalProject
+        {
+            get { return Version.Equals(Names.UnknownAssembly.Version); }
+        }
+
         private string[] GetFragments()
         {
             var split = Identifier.LastIndexOf(",", StringComparison.Ordinal);

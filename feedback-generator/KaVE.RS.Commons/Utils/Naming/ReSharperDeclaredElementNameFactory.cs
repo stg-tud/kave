@@ -40,7 +40,7 @@ namespace KaVE.RS.Commons.Utils.Naming
 {
     public static class ReSharperDeclaredElementNameFactory
     {
-        // TODO find better solution for this and all "modifier" references in this file
+        // TODO NameUpdate: find better solution for this and all "modifier" references in this file
         private const string TypeParameterArrow = " -> ";
 
         [NotNull]

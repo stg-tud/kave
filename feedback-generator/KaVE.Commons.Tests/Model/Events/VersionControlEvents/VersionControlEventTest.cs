@@ -16,7 +16,8 @@
 
 using System;
 using KaVE.Commons.Model.Events.VersionControlEvents;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -25,12 +26,19 @@ namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
 {
     internal class VersionControlEventTest
     {
-        private static readonly SolutionName SomeSolution = SolutionName.Get("SomeSolution");
+        private static readonly ISolutionName SomeSolution = Names.Solution("SomeSolution");
         private static readonly IKaVEList<IVersionControlAction> SomeContent = Lists.NewList(SomeAction);
 
         private static IVersionControlAction SomeAction
         {
-            get { return new VersionControlAction {ExecutedAt = DateTime.Now, ActionType = VersionControlActionType.Checkout}; }
+            get
+            {
+                return new VersionControlAction
+                {
+                    ExecutedAt = DateTime.Now,
+                    ActionType = VersionControlActionType.Checkout
+                };
+            }
         }
 
         [Test]
@@ -38,7 +46,7 @@ namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
         {
             var actualEvent = new VersionControlEvent();
             Assert.AreEqual(Lists.NewList<VersionControlAction>(), actualEvent.Actions);
-            Assert.AreEqual(SolutionName.Get(""), actualEvent.Solution);
+            Assert.AreEqual(Names.UnknownSolution, actualEvent.Solution);
         }
 
         [Test]
@@ -65,8 +73,8 @@ namespace KaVE.Commons.Tests.Model.Events.VersionControlEvents
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new VersionControlEvent { Solution = SomeSolution, Actions = SomeContent };
-            var b = new VersionControlEvent { Solution = SomeSolution, Actions = SomeContent };
+            var a = new VersionControlEvent {Solution = SomeSolution, Actions = SomeContent};
+            var b = new VersionControlEvent {Solution = SomeSolution, Actions = SomeContent};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }

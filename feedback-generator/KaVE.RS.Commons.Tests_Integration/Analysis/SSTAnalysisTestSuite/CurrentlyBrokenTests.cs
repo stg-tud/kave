@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
@@ -112,7 +112,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             // Analysis will assign UnknownExpression. Should probably be ConstantValueExpression instead.
             AssertBody(
-                VarDecl("array", ArrayTypeName.From(Fix.Int, 1)),
+                VarDecl("array", Names.ArrayType(1, Fix.Int)),
                 Assign("array", new ConstantValueExpression()),
                 ExprStmt(Fix.CompletionOnVar(VarRef("array"), "")));
 

@@ -17,7 +17,8 @@
 using System;
 using EnvDTE;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
 using Moq;
@@ -199,7 +200,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
         }
 
         [Test,
-         ExpectedException(typeof (AssertException),
+         ExpectedException(typeof(AssertException),
              ExpectedMessage = "command finished that didn't start: {some-guid}:456:command-name")]
         public void ShouldFailIfCommandEndsWithoutHavingStarted()
         {
@@ -239,12 +240,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             return triggeredAt;
         }
 
-        private static CommandName GetCommand(string commandGuid, int commandId, string commandName)
+        private static ICommandName GetCommand(string commandGuid, int commandId, string commandName)
         {
-            return CommandName.Get(commandGuid + ":" + commandId + ":" + commandName);
+            return Names.Command(commandGuid + ":" + commandId + ":" + commandName);
         }
 
-        private void GivenCommandIsDefined(CommandName command)
+        private void GivenCommandIsDefined(ICommandName command)
         {
             var mockCommand = new Mock<Command>();
             mockCommand.Setup(cmd => cmd.Guid).Returns(command.Guid);
@@ -254,18 +255,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             _mockCommands.Setup(cmds => cmds.Item(command.Guid, command.Id)).Returns(mockCommand.Object);
         }
 
-        private void WhenCommandExecutes(CommandName command)
+        private void WhenCommandExecutes(ICommandName command)
         {
             WhenCommandStarts(command);
             WhenCommandEnds(command);
         }
 
-        private void WhenCommandStarts(CommandName command)
+        private void WhenCommandStarts(ICommandName command)
         {
             _mockCommandEvents.Raise(ce => ce.BeforeExecute += null, command.Guid, command.Id, null, null, true);
         }
 
-        private void WhenCommandEnds(CommandName command)
+        private void WhenCommandEnds(ICommandName command)
         {
             _mockCommandEvents.Raise(ce => ce.AfterExecute += null, command.Guid, command.Id, null, null);
         }

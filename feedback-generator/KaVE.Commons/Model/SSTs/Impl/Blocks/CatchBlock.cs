@@ -15,8 +15,8 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -37,7 +37,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 
         public CatchBlock()
         {
-            Parameter = ParameterName.UnknownName;
+            Parameter = Names.UnknownParameter;
             Body = Lists.NewList<IStatement>();
         }
 

@@ -15,12 +15,11 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
-    [TestFixture]
     internal class SolutionEventAnonymizerTest : IDEEventAnonymizerTestBase<SolutionEvent>
     {
         protected override SolutionEvent CreateEventWithAllAnonymizablePropertiesSet()
@@ -28,41 +27,41 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             return new SolutionEvent
             {
                 Action = SolutionEvent.SolutionAction.OpenSolution,
-                Target = SolutionName.Get("C:\\Solution.sln")
+                Target = Names.Solution("C:\\Solution.sln")
             };
         }
 
         [Test]
         public void ShouldRemovePathFromTargetSolutionIfRemoveNamesIsSet()
         {
-            OriginalEvent.Target = SolutionName.Get("\\Solution.sln");
+            OriginalEvent.Target = Names.Solution("\\Solution.sln");
             AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(SolutionName.Get("IIjG4xFiAr-N5Azsooms7Q=="), actual.Target);
+            Assert.AreEqual(Names.Solution("IIjG4xFiAr-N5Azsooms7Q=="), actual.Target);
         }
 
         [Test]
         public void ShouldRemovePathFromTargetProjectIfRemoveNamesIsSet()
         {
-            OriginalEvent.Target = ProjectName.Get("Folder \\A\\B\\C");
+            OriginalEvent.Target = Names.Project("Folder \\A\\B\\C");
             AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(ProjectName.Get("Folder PzkZVbprHnmonKxi9BX_dg=="), actual.Target);
+            Assert.AreEqual(Names.Project("Folder PzkZVbprHnmonKxi9BX_dg=="), actual.Target);
         }
 
         [Test]
         public void ShouldRemovePathFromTargetProjectItemIfRemoveNamesIsSet()
         {
-            OriginalEvent.Target = ProjectItemName.Get("CSharp \\A\\B\\Class.cs");
+            OriginalEvent.Target = Names.ProjectItem("CSharp \\A\\B\\Class.cs");
             AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(ProjectItemName.Get("CSharp YcTmIkbaoyTmRIAE4DoySg=="), actual.Target);
+            Assert.AreEqual(Names.ProjectItem("CSharp YcTmIkbaoyTmRIAE4DoySg=="), actual.Target);
         }
 
 

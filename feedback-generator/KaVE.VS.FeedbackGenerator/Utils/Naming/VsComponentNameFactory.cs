@@ -50,7 +50,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Naming
 
         public static ISolutionName GetSolutionName(string fullName)
         {
-            return SolutionName.Get(fullName);
+            return Names.Solution(fullName);
         }
 
         [NotNull]
@@ -108,34 +108,34 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Naming
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static ProjectItemName GetName([CanBeNull] this ProjectItem projectItem)
+        public static IProjectItemName GetName([CanBeNull] this ProjectItem projectItem)
         {
             return projectItem == null ? null : GetProjectItemName(projectItem.Kind, projectItem.Name);
         }
 
-        public static ProjectItemName GetProjectItemName(string kind, string name)
+        public static IProjectItemName GetProjectItemName(string kind, string name)
         {
-            return ProjectItemName.Get(kind + " " + name);
+            return Names.ProjectItem(kind + " " + name);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static ProjectName GetName([CanBeNull] this Project project)
+        public static IProjectName GetName([CanBeNull] this Project project)
         {
             return project == null ? null : GetProjectName(project.Kind, project.UniqueName);
         }
 
-        public static ProjectName GetProjectName(string kind, string uniqueName)
+        public static IProjectName GetProjectName(string kind, string uniqueName)
         {
-            return ProjectName.Get(kind + " " + uniqueName);
+            return Names.Project(kind + " " + uniqueName);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static CommandName GetName([CanBeNull] this Command command)
+        public static ICommandName GetName([CanBeNull] this Command command)
         {
             return command == null ? null : GetCommandName(command.Guid, command.ID, command.Name);
         }
 
-        private static CommandName GetCommandName(string guid, int id, string name)
+        private static ICommandName GetCommandName(string guid, int id, string name)
         {
             Asserts.NotNull(guid, "guid");
             var identifier = guid + ":" + id;
@@ -143,15 +143,16 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Naming
             {
                 identifier += ":" + name;
             }
-            return CommandName.Get(identifier);
+            return Names.Command(identifier);
         }
 
+        // TODO put seperator to seperate file... think about solution
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static CommandBarControlName GetName([CanBeNull] this CommandBarControl control)
+        public static ICommandBarControlName GetName([CanBeNull] this CommandBarControl control)
         {
             return control == null
                 ? null
-                : CommandBarControlName.Get(
+                : Names.CommandBarControl(
                     control.Parent.GetIdentifier() + CommandBarControlName.HierarchySeperator + control.Caption);
         }
 
