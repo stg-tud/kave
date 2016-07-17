@@ -17,51 +17,16 @@
 using System;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class AssemblyName : Name, IAssemblyName
+    public class AssemblyName : BaseName, IAssemblyName
     {
-        private static readonly WeakNameCache<AssemblyName> Registry =
-            WeakNameCache<AssemblyName>.Get(id => new AssemblyName(id));
-
         private readonly Regex _isValidVersionRegex = new Regex("^\\d\\.\\d\\.\\d\\.\\d$");
 
-        public new static IAssemblyName UnknownName
-        {
-            get { return Get(UnknownNameIdentifier); }
-        }
 
-        public override bool IsUnknown
-        {
-            get { return Equals(this, UnknownName); }
-        }
-
-        /// <summary>
-        ///     Assembly names follow the scheme <code>'assembly name'[, 'assembly version']</code>.
-        ///     Example assembly names are:
-        ///     <list type="bullet">
-        ///         <item>
-        ///             <description>
-        ///                 <code>CodeCompletion.Model.Names, 1.0.0.0</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>CodeCompletion.Model.Names</code>
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        ///     Only the assembly name and version information are mandatory. Note, however, that object identity is only guarateed
-        ///     for exact identifier matches.
-        /// </summary>
-        public new static AssemblyName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private AssemblyName(string identifier) : base(identifier) {}
+        public AssemblyName() : base(UnknownNameIdentifier) {}
+        public AssemblyName(string identifier) : base(identifier) {}
 
         public IAssemblyVersion Version
         {
@@ -69,8 +34,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 var fragments = GetFragments();
                 return fragments.Length <= 1
-                    ? AssemblyVersion.UnknownName
-                    : AssemblyVersion.Get(fragments[1]);
+                    ? new AssemblyVersion()
+                    : new AssemblyVersion(fragments[1]);
             }
         }
 
@@ -98,6 +63,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return _isValidVersionRegex.IsMatch(version)
                 ? new[] {name, version}
                 : new[] {Identifier};
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

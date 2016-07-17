@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using NUnit.Framework;
+using System;
 
-namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
+namespace KaVE.Commons.Model.Naming.Impl.v0
 {
-    internal class AliasNameTest
+    public class GeneralName : BaseName
     {
-        [Test]
-        public void ShouldImplementIsUnknown()
+        public GeneralName() : base(UnknownNameIdentifier) {}
+        public GeneralName(string identifier) : base(identifier) {}
+
+        public override bool IsUnknown
         {
-            Assert.That(new AliasName().IsUnknown);
+            get { throw new NotImplementedException(); }
         }
     }
 }

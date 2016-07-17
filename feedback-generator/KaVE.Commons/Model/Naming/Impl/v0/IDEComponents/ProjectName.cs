@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class ProjectName : Name, IProjectName
+    public class ProjectName : BaseName, IProjectName
     {
-        private static readonly WeakNameCache<IProjectName> Registry =
-            WeakNameCache<IProjectName>.Get(id => new ProjectName(id));
+        public ProjectName() : base("?") {}
 
-        public new static IProjectName UnknownName
+        public ProjectName(string identifier) : base(identifier) {}
+
+        public override bool IsUnknown
         {
-            get { return Get("?"); }
+            get { throw new NotImplementedException(); }
         }
-
-        public new static IProjectName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private ProjectName(string identifier) : base(identifier) {}
 
         public string Type
         {

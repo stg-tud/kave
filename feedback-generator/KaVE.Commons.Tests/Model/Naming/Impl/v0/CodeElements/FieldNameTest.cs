@@ -29,7 +29,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(FieldName.UnknownName.IsUnknown);
+            Assert.That(new FieldName().IsUnknown);
         }
 
         [Test]
@@ -69,9 +69,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldBeUnknownField()
         {
-            Assert.AreSame(TypeName.UnknownName, FieldName.UnknownName.ValueType);
-            Assert.AreSame(TypeName.UnknownName, FieldName.UnknownName.DeclaringType);
-            Assert.AreEqual("???", FieldName.UnknownName.Name);
+            Assert.AreSame(UnknownTypeName.Instance, new FieldName().ValueType);
+            Assert.AreSame(UnknownTypeName.Instance, new FieldName().DeclaringType);
+            Assert.AreEqual("???", new FieldName().Name);
         }
 
         [Test]
@@ -80,18 +80,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             var fieldName = Names.Field("[d:[V,A] [D,A].m()] [D,A].fieldName");
             Assert.AreEqual("fieldName", fieldName.Name);
             Assert.AreEqual("d:[V,A] [D,A].m()", fieldName.ValueType.Identifier);
-        }
-
-        [Test]
-        public void StringHelperWorks()
-        {
-            const string id = "[{0}] [T,P].F";
-            const string t1 = "T1,P";
-            var a = FieldName.Get(string.Format(id, t1));
-            var b = FieldName.Get(id, t1);
-
-            Assert.AreEqual(a, b);
-            Assert.AreSame(a, b);
         }
     }
 }

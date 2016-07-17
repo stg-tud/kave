@@ -15,23 +15,13 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class DocumentName : Name, IDocumentName
+    public class DocumentName : BaseName, IDocumentName
     {
-        private static readonly WeakNameCache<DocumentName> Registry =
-            WeakNameCache<DocumentName>.Get(id => new DocumentName(id));
-
-        [NotNull]
-        public new static IDocumentName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private DocumentName(string identifier) : base(identifier) {}
+        public DocumentName() : base(UnknownNameIdentifier) {}
+        public DocumentName(string identifier) : base(identifier) {}
 
         private string[] Parts()
         {
@@ -50,6 +40,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
         public string FileName
         {
             get { return Parts()[1]; }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

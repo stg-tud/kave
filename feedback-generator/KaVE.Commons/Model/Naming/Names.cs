@@ -90,7 +90,7 @@ namespace KaVE.Commons.Model.Naming
             {typeof(LocalVariableName), "1f"},
             {typeof(IMethodName), "1g"},
             {typeof(CsMethodName), "1g"},
-            {typeof(Name), "1h"},
+            {typeof(BaseName), "1h"},
             {typeof(INamespaceName), "1i"},
             {typeof(IParameterName), "1j"},
             {typeof(IPropertyName), "1k"},
@@ -111,7 +111,7 @@ namespace KaVE.Commons.Model.Naming
             switch (type)
             {
                 case Types.AliasName:
-                    return AliasName.Get(identifier);
+                    return Alias(identifier);
                 case Types.AssemblyName:
                     return Assembly(identifier);
                 case Types.EventName:
@@ -121,11 +121,11 @@ namespace KaVE.Commons.Model.Naming
                 case Types.LambdaName:
                     return GetLambdaName(identifier);
                 case Types.LocalVariableName:
-                    return LocalVariableName.Get(identifier);
+                    return LocalVariable(identifier);
                 case Types.MethodName:
                     return Method(identifier);
                 case Types.Name:
-                    return Name.Get(identifier);
+                    return General(identifier);
                 case Types.NamespaceName:
                     return Namespace(identifier);
                 case Types.ParameterName:
@@ -155,6 +155,50 @@ namespace KaVE.Commons.Model.Naming
             return s.ToString();
         }
 
+        /// <summary>
+        ///     Type names follow the scheme
+        ///     <code>'fully-qualified type name''generic type parameters', 'assembly identifier'</code>.
+        ///     Examples of type names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>System.Int32, mscore, 4.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>System.Collections.Dictionary`2[[TKey -> System.Int32, mscore, 4.0.0.0],[TValue -> System.String, mscore, 4.0.0.0]], mscore, 4.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>Namespace.OuterType+InnerType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>enum EnumType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>interface InterfaceType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>struct StructType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        ///     parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type
+        ///     identifier being either the identifier of a type name, as declared above, or another parameter-type name.
+        /// </summary>
         public static ITypeName Type(string input)
         {
             try
@@ -184,6 +228,34 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
+        /// <summary>
+        ///     Method type names follow the scheme
+        ///     <code>'modifiers' ['return type name'] ['declaring type name'].'method name'('parameter names')</code>.
+        ///     Examples of valid method names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].AMethod(opt [System.Int32, mscore, 4.0.0.0] length)</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0]..ctor()</code>
+        ///                 (Constructor)
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         public static IMethodName Method(string input)
         {
             try
@@ -213,6 +285,23 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
+        /// <summary>
+        ///     Namespace names follow the scheme <code>'parent namespace name'.'namespace name'</code>. An exception is the global
+        ///     namespace, which has the empty string as its identfier.
+        ///     Examples of namespace names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>System</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>CodeCompletion.Model.Names.CSharp</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         public static INamespaceName Namespace(string input)
         {
             try
@@ -226,6 +315,24 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
+        /// <summary>
+        ///     Assembly names follow the scheme <code>'assembly name'[, 'assembly version']</code>.
+        ///     Example assembly names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>CodeCompletion.Model.Names, 1.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>CodeCompletion.Model.Names</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        ///     Only the assembly name and version information are mandatory. Note, however, that object identity is only guarateed
+        ///     for exact identifier matches.
+        /// </summary>
         public static IAssemblyName Assembly(string input)
         {
             try
@@ -239,6 +346,59 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
+        /// <summary>
+        ///     Assembly version numbers have the format <code>'major'.'minor'.'build'.'revision'</code>.
+        ///     Examples of assembly versions are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>4.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
+        public static IAssemblyVersion AssemblyVersion(string s)
+        {
+            return new AssemblyVersionName(s);
+        }
+
+        /// <summary>
+        ///     Parameter names follow the scheme <code>'modifiers' ['parameter type name'] 'parameter name'</code>.
+        ///     Examples of parameter names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.Int32, mscore, 4.0.0.0] size</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>out [System.Int32, mscore, 4.0.0.0] outputParameter</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>params [System.Int32, mscore, 4.0.0.0] varArgsParamter</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>ref [System.Int32, mscore, 4.0.0.0] referenceParameter</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>opt [System.Int32, mscore, 4.0.0.0] optionalParameter</code> (i.e., parameter with
+        ///                 default value)
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         public static IParameterName Parameter(string input)
         {
             try
@@ -269,6 +429,22 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
+        /// <summary>
+        ///     Field names follow the scheme <code>'modifiers' ['value type name'] ['declaring type name'].'field name'</code>.
+        ///     Examples of field names are:
+        ///     <list type="buller">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.Int32, mscore, 4.0.0.0] [Collections.IList, mscore, 4.0.0.0]._count</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>static [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Constant</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         public static IFieldName Field(string input)
         {
             var name = GetMemberName(input);
@@ -279,6 +455,17 @@ namespace KaVE.Commons.Model.Naming
             return UnknownName.Get(typeof(IFieldName));
         }
 
+        /// <summary>
+        ///     Event names follow the scheme <code>'modifiers' ['event-handler-type name'] ['declaring-type name'].'name'</code>.
+        ///     Examples of type names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[ChangeEventHandler, IO, 1.2.3.4] [TextBox, GUI, 5.6.7.8].Changed</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         public static IEventName Event(string input)
         {
             var name = GetMemberName(input);
@@ -289,6 +476,83 @@ namespace KaVE.Commons.Model.Naming
             return UnknownName.Get(typeof(IEventName));
         }
 
+        public static IEventName Event(string input, params object[] args)
+        {
+            return Event(string.Format(input, args));
+        }
+
+        public static IProjectItemName ProjectItem(string s)
+        {
+            return new ProjectItemName(s);
+        }
+
+        public static IProjectName Project(string s)
+        {
+            return new ProjectName(s);
+        }
+
+        /// <summary>
+        ///     <code>{guid}:id:name</code>
+        /// </summary>
+        public static ICommandName Command(string identifier)
+        {
+            return new CommandName(identifier);
+        }
+
+        public static ICommandBarControlName CommandBarControl(string s)
+        {
+            return new CommandBarControlName(s);
+        }
+
+        public static IAssemblyName UnknownAssembly
+        {
+            get { return new AssemblyName(); }
+        }
+
+        public static IAssemblyVersion UnknownAssemblyVersion
+        {
+            get { return new AssemblyVersionName(); }
+        }
+
+        public static ILambdaName UnknownLambda
+        {
+            get { return new LambdaName(); }
+        }
+
+        public static ITypeParameterName TypeParameter(string n)
+        {
+            return TypeUtils.CreateTypeName(n).AsTypeParameterName;
+        }
+
+        public static ITypeParameterName TypeParameter(string shortName, string boundType)
+        {
+            return TypeParameter(shortName + "->" + boundType);
+        }
+
+        /// <summary>
+        ///     Property names follow the scheme
+        ///     <code>'modifiers' ['value type name'] ['declaring type name'].'property name'</code>.
+        ///     Examples of property names are:
+        ///     <list type="buller">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.Int32, mscore, 4.0.0.0] [Collections.IList, mscore, 4.0.0.0].Internal</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>get [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Count</code>
+        ///                 (property with public getter)
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>set [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Position</code>
+        ///                 (property with public setter)
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         public static IPropertyName Property(string input)
         {
             var name = GetMemberName(input);
@@ -318,17 +582,20 @@ namespace KaVE.Commons.Model.Naming
 
         public static IName General(string s)
         {
-            return Name.Get(s);
+            return new GeneralName(s);
         }
 
         public static ILambdaName Lambda(string n)
         {
-            return LambdaName.Get(n);
+            return new LambdaName(n);
         }
 
+        /// <summary>
+        ///     Local variable names have the form '[value-type-identifier] variable-name'.
+        /// </summary>
         public static ILocalVariableName LocalVariable(string n)
         {
-            return LocalVariableName.Get(n);
+            return new LocalVariableName(n);
         }
 
         public static IArrayTypeName ArrayType(int rank, ITypeName baseType)
@@ -336,26 +603,29 @@ namespace KaVE.Commons.Model.Naming
             return Type("arr({0}):{1}", rank, baseType).AsArrayTypeName;
         }
 
+        /// <summary>
+        ///     Alias names are valid C# identifiers that are not keywords, plus the special alias 'global'.
+        /// </summary>
         public static IAliasName Alias(string n)
         {
-            return AliasName.Get(n);
+            return new AliasName(n);
         }
 
         #region ide components
 
         public static IWindowName Window(string n)
         {
-            return WindowName.Get(n);
+            return new WindowName(n);
         }
 
         public static IDocumentName Document(string n)
         {
-            return DocumentName.Get(n);
+            return new DocumentName(n);
         }
 
         public static ISolutionName Solution(string somesolution)
         {
-            return SolutionName.Get(somesolution);
+            return new SolutionName(somesolution);
         }
 
         #endregion
@@ -374,57 +644,57 @@ namespace KaVE.Commons.Model.Naming
 
         public static IName UnknownGeneral
         {
-            get { return Name.UnknownName; }
+            get { return new GeneralName(); }
         }
 
         public static IEventName UnknownEvent
         {
-            get { return EventName.UnknownName; }
+            get { return new EventName(); }
         }
 
         public static IFieldName UnknownField
         {
-            get { return FieldName.UnknownName; }
+            get { return new FieldName(); }
         }
 
         public static IPropertyName UnknownProperty
         {
-            get { return PropertyName.UnknownName; }
+            get { return new PropertyName(); }
         }
 
         public static INamespaceName UnknownNamespace
         {
-            get { return NamespaceName.UnknownName; }
+            get { return new NamespaceName(); }
         }
 
         public static IParameterName UnknownParameter
         {
-            get { return ParameterName.UnknownName; }
+            get { return new ParameterName(); }
         }
 
         public static ILocalVariableName UnknownLocalVariable
         {
-            get { return LocalVariableName.UnknownName; }
+            get { return new LocalVariableName(); }
         }
 
         public static IAliasName UnknownAlias
         {
-            get { return AliasName.UnknownName; }
+            get { return new AliasName(); }
         }
 
         public static ISolutionName UnknownSolution
         {
-            get { return SolutionName.UnknownName; }
+            get { return new SolutionName(); }
         }
 
         public static IProjectItemName UnknownProjectItem
         {
-            get { return ProjectItemName.UnknownName; }
+            get { return new ProjectItemName(); }
         }
 
         public static IProjectName UnknownProject
         {
-            get { return ProjectName.UnknownName; }
+            get { return new ProjectName(); }
         }
 
         #endregion
@@ -461,66 +731,28 @@ namespace KaVE.Commons.Model.Naming
             return Property(string.Format(input, args));
         }
 
+        /// <summary>
+        ///     Lambda type names follow the scheme
+        ///     <code>['return type name'] ('parameter names')</code>.
+        ///     Examples of valid lambda names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.String, mscore, 4.0.0.0] ()</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.String, mscore, 4.0.0.0] ([System.Int32, mscore, 4.0.0.0] length)</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         public static ILambdaName Lambda(string input, params object[] args)
         {
             return Lambda(string.Format(input, args));
         }
 
         #endregion
-
-        public static IEventName Event(string input, params object[] args)
-        {
-            return Event(string.Format(input, args));
-        }
-
-        public static IProjectItemName ProjectItem(string s)
-        {
-            return ProjectItemName.Get(s);
-        }
-
-        public static IProjectName Project(string s)
-        {
-            return ProjectName.Get(s);
-        }
-
-        public static ICommandName Command(string identifier)
-        {
-            return CommandName.Get(identifier);
-        }
-
-        public static ICommandBarControlName CommandBarControl(string s)
-        {
-            return CommandBarControlName.Get(s);
-        }
-
-        public static IAssemblyName UnknownAssembly
-        {
-            get { return AssemblyName.UnknownName; }
-        }
-
-        public static IAssemblyVersion UnknownAssemblyVersion
-        {
-            get { return AssemblyVersionName.UnknownName; }
-        }
-
-        public static ILambdaName UnknownLambda
-        {
-            get { return LambdaName.UnknownName; }
-        }
-
-        public static ITypeParameterName TypeParameter(string n)
-        {
-            return TypeParameterName.Get(n);
-        }
-
-        public static ITypeParameterName TypeParameter(string shortName, string boundType)
-        {
-            return TypeParameter(shortName + "->" + boundType);
-        }
-
-        public static IAssemblyVersion AssemblyVersion(string s)
-        {
-            return AssemblyVersionName.Get(s);
-        }
     }
 }

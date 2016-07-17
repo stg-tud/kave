@@ -27,7 +27,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
         [SetUp]
         public void SetUp()
         {
-            _uut = WindowName.Get("windowType Window Caption");
+            _uut = new WindowName("windowType Window Caption");
         }
 
         [Test]

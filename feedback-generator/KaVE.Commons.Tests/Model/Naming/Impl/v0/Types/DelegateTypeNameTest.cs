@@ -19,18 +19,18 @@ using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     class DelegateTypeNameTest
     {
         private static readonly IDelegateTypeName LegacyDelegateName =
-            DelegateTypeName.Get("d:Some.DelegateType, A, 1.0.0.0");
+            new DelegateTypeName("d:Some.DelegateType, A, 1.0.0.0");
 
         private static readonly IDelegateTypeName ParameterlessDelegateName =
-            DelegateTypeName.Get("d:[R, A, 1.0.0.0] [Some.DelegateType, A, 1.0.0.0].()");
+            new DelegateTypeName("d:[R, A, 1.0.0.0] [Some.DelegateType, A, 1.0.0.0].()");
 
         private static readonly IDelegateTypeName ParameterizedDelegateName =
-            DelegateTypeName.Get(
+            new DelegateTypeName(
                 "d:[R, A, 1.0.0.0] [Some.DelegateType, A, 1.0.0.0].([C, A, 1.2.3.4] p1, [D, A, 1.2.3.4] p2)");
 
         private static readonly IDelegateTypeName[] DelegateTypeNames =
@@ -74,19 +74,19 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [TestCaseSource("DelegateTypeNames")]
         public void ParsesNamespace(IDelegateTypeName delegateType)
         {
-            Assert.AreEqual(NamespaceName.Get("Some"), delegateType.Namespace);
+            Assert.AreEqual(new NamespaceName("Some"), delegateType.Namespace);
         }
 
         [Test]
         public void IsNested()
         {
-            Assert.IsTrue(DelegateTypeName.Get("d:[R, P] [O+D, P].()").IsNestedType);
+            Assert.IsTrue(new DelegateTypeName("d:[R, P] [O+D, P].()").IsNestedType);
         }
 
         [Test]
         public void IsNotNested()
         {
-            Assert.IsFalse(DelegateTypeName.Get("d:[R, P] [D, P].()").IsNestedType);
+            Assert.IsFalse(new DelegateTypeName("d:[R, P] [D, P].()").IsNestedType);
         }
 
         [Test]
@@ -116,14 +116,14 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
             CollectionAssert.IsEmpty(LegacyDelegateName.Parameters);
             CollectionAssert.IsEmpty(ParameterlessDelegateName.Parameters);
             CollectionAssert.AreEqual(
-                new[] {ParameterName.Get("[C, A, 1.2.3.4] p1"), ParameterName.Get("[D, A, 1.2.3.4] p2")},
+                new[] {new ParameterName("[C, A, 1.2.3.4] p1"), new ParameterName("[D, A, 1.2.3.4] p2")},
                 ParameterizedDelegateName.Parameters);
         }
 
         [Test]
         public void OtherTypeNameIsNoDelegateType()
         {
-            var uut = TypeName.Get("My.NonDelegate.Type, ND, 6.6.6.6");
+            var uut = new TypeName("My.NonDelegate.Type, ND, 6.6.6.6");
 
             Assert.IsFalse(uut.IsDelegateType);
         }
@@ -131,27 +131,27 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ParsesDelegateTypeOfMethodParameter()
         {
-            var methodName = MethodName.Get("[R, A] [D, A].M([d:[DR, A] [DD, A].()] p)");
+            var methodName = new MethodName("[R, A] [D, A].M([d:[DR, A] [DD, A].()] p)");
             var delegateParameter = methodName.Parameters[0];
-            Assert.AreEqual(ParameterName.Get("[d:[DR, A] [DD, A].()] p"), delegateParameter);
+            Assert.AreEqual(new ParameterName("[d:[DR, A] [DD, A].()] p"), delegateParameter);
         }
 
         [Test]
         public void ParsesDelegateTypeOfLambdaParameter()
         {
-            var lambdaName = LambdaName.Get("[R, P] ([d:[DR, A] [DD, A].()] p)");
+            var lambdaName = new LambdaName("[R, P] ([d:[DR, A] [DD, A].()] p)");
             var delegateParameter = lambdaName.Parameters[0];
-            Assert.AreEqual(ParameterName.Get("[d:[DR, A] [DD, A].()] p"), delegateParameter);
+            Assert.AreEqual(new ParameterName("[d:[DR, A] [DD, A].()] p"), delegateParameter);
         }
 
         [Test]
         public void ParsesDelegateTypeOfMemberValueType()
         {
             var eventName =
-                EventName.Get(
+                new EventName(
                     "[d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)] [C, TestProject].Event");
             Assert.AreSame(
-                TypeName.Get(
+                new DelegateTypeName(
                     "d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)"),
                 eventName.HandlerType);
         }
@@ -159,19 +159,16 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void IsDelegateTypeName()
         {
-            var typeName =
-                TypeName.Get(
-                    "d:[System.Void, mscorlib, 4.0.0.0] [System.AppDomainInitializer, mscorlib, 4.0.0.0].([System.String[], mscorlib, 4.0.0.0] args)");
-            Assert.IsInstanceOf<DelegateTypeName>(typeName);
+            Assert.True(DelegateTypeName.IsDelegateTypeIdentifier("d:[System.Void, mscorlib, 4.0.0.0] [System.AppDomainInitializer, mscorlib, 4.0.0.0].([System.String[], mscorlib, 4.0.0.0] args)"));
         }
 
         [Test]
         public void ParsesTypeParameters()
         {
-            var typeName = TypeName.Get("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)");
+            var typeName = new DelegateTypeName("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)");
 
             Assert.IsTrue(typeName.HasTypeParameters);
-            CollectionAssert.AreEqual(new[] {TypeParameterName.Get("T -> String, mscorlib")}, typeName.TypeParameters);
+            CollectionAssert.AreEqual(new[] {new TypeParameterName("T -> String, mscorlib")}, typeName.TypeParameters);
         }
 
         [Test]

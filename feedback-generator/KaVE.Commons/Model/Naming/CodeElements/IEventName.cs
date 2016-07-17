@@ -20,6 +20,7 @@ namespace KaVE.Commons.Model.Naming.CodeElements
 {
     public interface IEventName : IMemberName
     {
+        // TODO NameUpdate: This has to be a delegate type... adapt type of property?
         ITypeName HandlerType { get; }
     }
 }

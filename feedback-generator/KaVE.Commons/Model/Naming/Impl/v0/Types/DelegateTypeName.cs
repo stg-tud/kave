@@ -22,24 +22,13 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class DelegateTypeName : Name, IDelegateTypeName
+    public class DelegateTypeName : BaseName, IDelegateTypeName
     {
-        public new static IDelegateTypeName UnknownName
-        {
-            get { return Get("d:[?] [?].()"); }
-        }
-
         private const string Prefix = "d:";
 
         internal static bool IsDelegateTypeIdentifier(string identifier)
         {
             return identifier.StartsWith(Prefix);
-        }
-
-        [UsedImplicitly, NotNull]
-        public new static IDelegateTypeName Get(string identifier)
-        {
-            return (IDelegateTypeName) TypeName.Get(identifier);
         }
 
         internal static string FixLegacyDelegateNames(string identifier)
@@ -56,11 +45,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return identifier;
         }
 
-        internal DelegateTypeName(string identifier) : base(identifier) {}
+        public DelegateTypeName() : base("d:[?] [?].()") { }
+        public DelegateTypeName(string identifier) : base(identifier) { }
 
         private IMethodName DelegateMethod
         {
-            get { return MethodName.Get(Identifier.Substring(Prefix.Length)); }
+            // TODO NameUpdate: use updater and then "Names" Factory
+            get { return new MethodName(Identifier.Substring(Prefix.Length)); }
         }
 
         public ITypeName DelegateType
@@ -225,6 +216,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public IList<ITypeName> TypeParameters
         {
             get { return DelegateType.TypeParameters; }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

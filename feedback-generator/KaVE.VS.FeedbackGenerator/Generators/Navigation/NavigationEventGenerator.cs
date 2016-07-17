@@ -22,7 +22,6 @@ using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -36,7 +35,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         private readonly INavigationUtils _navigationUtils;
 
         [NotNull]
-        private IName _currentLocation = Name.UnknownName;
+        private IName _currentLocation = Names.UnknownGeneral;
 
         public NavigationEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,

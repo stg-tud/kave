@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(PropertyName.UnknownName.IsUnknown);
+            Assert.That(new PropertyName().IsUnknown);
         }
 
         [Test]
@@ -80,18 +80,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             var propertyName =
                 Names.Property("[TR,P] [TD,P].P()");
             Assert.AreEqual("P", propertyName.Name);
-        }
-
-        [Test]
-        public void StringHelperWorks()
-        {
-            const string id = "get set [{0}] [T,P].P()";
-            const string t1 = "T1,P";
-            var a = PropertyName.Get(string.Format(id, t1));
-            var b = PropertyName.Get(id, t1);
-
-            Assert.AreEqual(a, b);
-            Assert.AreSame(a, b);
         }
     }
 }

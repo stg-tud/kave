@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;

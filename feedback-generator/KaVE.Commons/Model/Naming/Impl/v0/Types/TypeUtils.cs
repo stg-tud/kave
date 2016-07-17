@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using NUnit.Framework;
+using KaVE.Commons.Model.Naming.Types;
 
-namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
+namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    internal class AliasNameTest
+    public class TypeUtils
     {
-        [Test]
-        public void ShouldImplementIsUnknown()
+        // TODO NameUpdate: get rid of this artifcat method
+        public static ITypeName CreateTypeName(string identifier)
         {
-            Assert.That(new AliasName().IsUnknown);
+            return NamesV0.Type(identifier);
         }
     }
 }

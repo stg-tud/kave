@@ -22,7 +22,7 @@ using KaVE.Commons.Model.Naming.Types;
 
 namespace KaVE.Commons.Model.Naming
 {
-    internal static class NameUtils
+    public static class NameUtils
     {
         /// <summary>
         ///     Parses the type parameter list from a type's full name or a method's signature.

@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Model.Naming.Others;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Others
 {
-    public class ReSharperLiveTemplateName : Name
+    public class ReSharperLiveTemplateName : BaseName, IReSharperLiveTemplateName
     {
-        private static readonly WeakNameCache<ReSharperLiveTemplateName> Registry =
-            WeakNameCache<ReSharperLiveTemplateName>.Get(id => new ReSharperLiveTemplateName(id));
-
         /// <summary>
         ///     Template names follow the scheme "&lt;template name&gt;:&lt;template description&gt;".
         /// </summary>
-        public new static ReSharperLiveTemplateName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
+        public ReSharperLiveTemplateName() : base(UnknownNameIdentifier) {}
 
-        private ReSharperLiveTemplateName(string identifier) : base(identifier) {}
+        public ReSharperLiveTemplateName(string identifier) : base(identifier) {}
 
         public string Name
         {
@@ -49,6 +43,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Others
                 var startOfDescription = Identifier.IndexOf(':') + 1;
                 return Identifier.Substring(startOfDescription);
             }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

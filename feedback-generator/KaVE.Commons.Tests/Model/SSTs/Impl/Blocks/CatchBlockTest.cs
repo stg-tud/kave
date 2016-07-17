@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -31,7 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         public void DefaultValues()
         {
             var sut = new CatchBlock();
-            Assert.AreEqual(ParameterName.UnknownName, sut.Parameter);
+            Assert.AreEqual(Names.UnknownParameter, sut.Parameter);
             Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreEqual(CatchBlockKind.Default, sut.Kind);
             Assert.AreNotEqual(0, sut.GetHashCode());

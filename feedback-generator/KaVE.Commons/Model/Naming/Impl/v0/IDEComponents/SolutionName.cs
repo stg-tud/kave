@@ -15,26 +15,20 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class SolutionName : Name, ISolutionName
+    public class SolutionName : BaseName, ISolutionName
     {
-        private static readonly WeakNameCache<ISolutionName> Registry =
-            WeakNameCache<ISolutionName>.Get(id => new SolutionName(id));
+        public SolutionName()
+            : base("?") {}
 
-        public new static ISolutionName UnknownName
-        {
-            get { return Get("?"); }
-        }
-
-        public new static ISolutionName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private SolutionName(string identifier)
+        public SolutionName(string identifier)
             : base(identifier) {}
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
+        }
     }
 }

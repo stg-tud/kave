@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
@@ -50,18 +49,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
                 new[] {Names.Parameter("[C, A] p1"), Names.Parameter("[C, B] p2")},
                 name.Parameters);
             Assert.AreEqual("([C, A] p1, [C, B] p2)", name.Signature);
-        }
-
-        [Test]
-        public void StringHelperWorks()
-        {
-            const string id = "[{0}] ()";
-            const string t1 = "T1,P";
-            var a = LambdaName.Get(string.Format(id, t1));
-            var b = LambdaName.Get(id, t1);
-
-            Assert.AreEqual(a, b);
-            Assert.AreSame(a, b);
         }
     }
 }

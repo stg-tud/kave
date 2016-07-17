@@ -19,7 +19,6 @@ using System.Text;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -31,7 +30,7 @@ namespace KaVE.Commons.Model.ObjectUsage
         [CanBeNull]
         public static CoReName ToCoReName([NotNull] this Proposal proposal)
         {
-            return proposal.Name == null ? Name.UnknownName.ToCoReName() : proposal.Name.ToCoReName();
+            return proposal.Name == null ? Names.UnknownGeneral.ToCoReName() : proposal.Name.ToCoReName();
         }
 
         [CanBeNull]

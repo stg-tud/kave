@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -23,20 +22,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
     {
         public new const string Identifier = "?";
 
+        private static ITypeName _instance;
+
         public static ITypeName Instance
         {
-            get { return Names.Type(Identifier); }
+            get { return _instance ?? (_instance = new UnknownTypeName(Identifier)); }
         }
 
         internal static bool IsUnknownTypeIdentifier(string identifier)
         {
             return Identifier.Equals(identifier);
-        }
-
-        [UsedImplicitly]
-        internal new static ITypeName Get(string identifier)
-        {
-            return Names.Type(identifier);
         }
 
         internal UnknownTypeName(string identifier) : base(identifier) {}
@@ -48,12 +43,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public override IAssemblyName Assembly
         {
-            get { return AssemblyName.UnknownName; }
+            get { return Names.UnknownAssembly; }
         }
 
         public override INamespaceName Namespace
         {
-            get { return NamespaceName.UnknownName; }
+            get { return Names.UnknownNamespace; }
         }
     }
 }

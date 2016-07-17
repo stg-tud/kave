@@ -127,7 +127,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             identifier.AppendIf(parameter.HasPassByReferenceModifier(), ParameterName.PassByReferenceModifier + " ");
             identifier.AppendAnonymousTypeName(parameter.ValueType, anonymizeName).Append(' ');
             identifier.Append(anonymizeName ? parameter.Name.ToHash() : parameter.Name);
-            return ParameterName.Get(identifier.ToString());
+            return Names.Parameter(identifier.ToString());
         }
 
         private static bool HasPassByReferenceModifier(this IParameterName parameter)
@@ -230,7 +230,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
                 Asserts.Fail<ITypeName>("unknown type implementation");
             }
 
-           return ToAnonymousType_Regular(type);
+            return ToAnonymousType_Regular(type);
         }
 
         private static ITypeName ToAnonymousType_Nested(ITypeName type)
@@ -264,8 +264,8 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             var identifier = new StringBuilder();
             identifier.AppendTypeKindPrefix(type);
             var inEnclosingProject = type.IsDeclaredInEnclosingProjectOrUnknown();
-           // TODO NAmeUpdate: WTF?
-           // identifier.Append(inEnclosingProject ? type.AnonymizedRawFullName() : type.RawFullName);
+            // TODO NAmeUpdate: WTF?
+            // identifier.Append(inEnclosingProject ? type.AnonymizedRawFullName() : type.RawFullName);
             identifier.AppendTypeParameters(type, inEnclosingProject).Append(", ");
             identifier.Append(type.Assembly.ToAnonymousName());
             return Names.Type(identifier.ToString());

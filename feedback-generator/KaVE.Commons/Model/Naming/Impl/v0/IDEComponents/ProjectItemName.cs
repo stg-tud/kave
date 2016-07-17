@@ -15,27 +15,13 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class ProjectItemName : Name, IProjectItemName
+    public class ProjectItemName : BaseName, IProjectItemName
     {
-        private static readonly WeakNameCache<IProjectItemName> Registry =
-            WeakNameCache<IProjectItemName>.Get(id => new ProjectItemName(id));
-
-        public new static IProjectItemName UnknownName
-        {
-            get { return Get("?"); }
-        }
-
-
-        public new static IProjectItemName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private ProjectItemName(string identifier) : base(identifier) {}
+        public ProjectItemName() : base("?") {}
+        public ProjectItemName(string identifier) : base(identifier) {}
 
         public string Type
         {
@@ -45,6 +31,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
         public string Name
         {
             get { return Identifier.Split(new[] {' '}, 2)[1]; }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

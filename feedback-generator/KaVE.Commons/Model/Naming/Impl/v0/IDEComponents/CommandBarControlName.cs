@@ -15,31 +15,24 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class CommandBarControlName : Name, ICommandBarControlName
+    public class CommandBarControlName : BaseName, ICommandBarControlName
     {
         public const char HierarchySeperator = '|';
 
-        private static readonly WeakNameCache<ICommandBarControlName> Registry =
-            WeakNameCache<ICommandBarControlName>.Get(id => new CommandBarControlName(id));
-
-        public new static ICommandBarControlName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private CommandBarControlName(string identifier)
-            : base(identifier) {}
+        public CommandBarControlName() : base(UnknownNameIdentifier) {}
+        public CommandBarControlName(string identifier) : base(identifier) {}
 
         public ICommandBarControlName Parent
         {
             get
             {
                 var endOfParentIdentifier = Identifier.LastIndexOf(HierarchySeperator);
-                return endOfParentIdentifier < 0 ? null : Get(Identifier.Substring(0, endOfParentIdentifier));
+                return endOfParentIdentifier < 0
+                    ? null
+                    : Names.CommandBarControl(Identifier.Substring(0, endOfParentIdentifier));
             }
         }
 
@@ -50,6 +43,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
                 var startOfName = Identifier.LastIndexOf(HierarchySeperator) + 1;
                 return Identifier.Substring(startOfName);
             }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

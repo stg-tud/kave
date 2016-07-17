@@ -16,5 +16,9 @@
 
 namespace KaVE.Commons.Model.Naming.CodeElements
 {
-    public interface IAliasName : IName {}
+    /// <summary>
+    ///     Aliases are defined by using statements, like "using alias = Some.Reference;". A special case is the alias
+    ///     "global" that represents the global namespace by convention.
+    /// </summary>
+    public interface IAliasName : IName { }
 }

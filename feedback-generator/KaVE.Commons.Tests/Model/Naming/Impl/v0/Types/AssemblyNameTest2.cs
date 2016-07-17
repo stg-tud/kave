@@ -24,14 +24,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(AssemblyName.UnknownName.IsUnknown);
+            Assert.That(new AssemblyName().IsUnknown);
         }
 
         [Test]
         public void ShouldBeMSCorLibAssembly()
         {
             const string identifier = "mscorlib, 4.0.0.0";
-            var mscoreAssembly = AssemblyName.Get(identifier);
+            var mscoreAssembly = new AssemblyName(identifier);
 
             Assert.AreEqual("mscorlib", mscoreAssembly.Name);
             Assert.AreEqual("4.0.0.0", mscoreAssembly.Version.Identifier);
@@ -42,20 +42,20 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         public void ShouldBeVersionlessAssembly()
         {
             const string identifier = "assembly";
-            var assemblyName = AssemblyName.Get(identifier);
+            var assemblyName = new AssemblyName(identifier);
 
             Assert.AreEqual("assembly", assemblyName.Name);
-            Assert.AreSame(AssemblyVersion.UnknownName, assemblyName.Version);
+            Assert.AreSame(new AssemblyVersion(), assemblyName.Version);
             Assert.AreEqual(identifier, assemblyName.Identifier);
         }
 
         [Test]
         public void ShouldHaveUnknownVersionIfUnknown()
         {
-            var uut = AssemblyName.UnknownName;
+            var uut = new AssemblyName();
 
             Assert.AreEqual("???", uut.Name);
-            Assert.AreSame(AssemblyVersion.UnknownName, uut.Version);
+            Assert.AreSame(new AssemblyVersion(), uut.Version);
         }
     }
 }

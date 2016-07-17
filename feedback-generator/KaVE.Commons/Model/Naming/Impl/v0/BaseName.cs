@@ -14,27 +14,15 @@
  * limitations under the License.
  */
 
-using System.Runtime.Serialization;
-using KaVE.Commons.Utils.Collections;
-
 namespace KaVE.Commons.Model.Naming.Impl.v0
 {
-    [DataContract]
-    public class Name : IName
+    public abstract class BaseName : IName
     {
         protected const string UnknownNameIdentifier = "???";
 
-        private static readonly WeakNameCache<Name> NameRegistry = WeakNameCache<Name>.Get(id => new Name(id));
+        public string Identifier { get; private set; }
 
-        public static IName UnknownName
-        {
-            get { return Get(UnknownNameIdentifier); }
-        }
-
-        public virtual bool IsUnknown
-        {
-            get { return Equals(this, UnknownName); }
-        }
+        public abstract bool IsUnknown { get; }
 
         public virtual bool IsHashed
         {
@@ -47,15 +35,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             get { return Identifier.Contains("=="); }
         }
 
-        public static Name Get(string identifier)
-        {
-            return NameRegistry.GetOrCreate(identifier);
-        }
-
-        [DataMember(Order = 1)]
-        public string Identifier { get; private set; }
-
-        protected Name(string identifier)
+        protected BaseName(string identifier)
         {
             Identifier = identifier;
         }
@@ -76,12 +56,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return (Identifier != null ? Identifier.GetHashCode() : 0);
         }
 
-        public static bool operator ==(Name n1, IName n2)
+        public static bool operator ==(BaseName n1, IName n2)
         {
             return Equals(n1, n2);
         }
 
-        public static bool operator !=(Name n1, IName n2)
+        public static bool operator !=(BaseName n1, IName n2)
         {
             return !(n1 == n2);
         }

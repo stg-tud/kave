@@ -16,34 +16,13 @@
 
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
-    public class LocalVariableName : Name, ILocalVariableName
+    public class LocalVariableName : BaseName, ILocalVariableName
     {
-        private static readonly WeakNameCache<LocalVariableName> Registry =
-            WeakNameCache<LocalVariableName>.Get(id => new LocalVariableName(id));
-
-        public new static LocalVariableName UnknownName
-        {
-            get { return Get("[?] ???"); }
-        }
-
-        public override bool IsUnknown
-        {
-            get { return Equals(this, UnknownName); }
-        }
-
-        /// <summary>
-        ///     Local variable names have the form '[value-type-identifier] variable-name'.
-        /// </summary>
-        public new static LocalVariableName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private LocalVariableName(string identifier) : base(identifier) {}
+        public LocalVariableName() : base("[?] ???") {}
+        public LocalVariableName(string identifier) : base(identifier) {}
 
         public string Name
         {
@@ -61,6 +40,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var lengthOfTypeIdentifier = Identifier.LastIndexOf(']') - 1;
                 return Names.Type(Identifier.Substring(1, lengthOfTypeIdentifier));
             }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

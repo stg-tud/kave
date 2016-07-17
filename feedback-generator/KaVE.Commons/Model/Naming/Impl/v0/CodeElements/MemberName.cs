@@ -19,8 +19,9 @@ using KaVE.Commons.Model.Naming.Types;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
-    public abstract class MemberName : Name, IMemberName
+    public abstract class MemberName : BaseName, IMemberName
     {
+        protected const string UnknownMemberIdentifier = "[?] [?].???";
         public const string StaticModifier = "static";
 
         protected MemberName(string identifier) : base(identifier) {}

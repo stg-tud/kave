@@ -26,7 +26,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(EventName.UnknownName.IsUnknown);
+            Assert.That(new EventName().IsUnknown);
         }
 
         [Test]
@@ -42,21 +42,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldBeUnknownEvent()
         {
-            Assert.AreSame(TypeName.UnknownName, EventName.UnknownName.HandlerType);
-            Assert.AreSame(TypeName.UnknownName, EventName.UnknownName.DeclaringType);
-            Assert.AreEqual("???", EventName.UnknownName.Name);
-        }
-
-        [Test]
-        public void StringHelperWorks()
-        {
-            const string id = "[{0}] [T,P].E";
-            const string t1 = "T1,P";
-            var a = EventName.Get(string.Format(id, t1));
-            var b = EventName.Get(id, t1);
-
-            Assert.AreEqual(a, b);
-            Assert.AreSame(a, b);
+            Assert.AreSame(UnknownTypeName.Instance, new EventName().HandlerType);
+            Assert.AreSame(UnknownTypeName.Instance, new EventName().DeclaringType);
+            Assert.AreEqual("???", new EventName().Name);
         }
     }
 }

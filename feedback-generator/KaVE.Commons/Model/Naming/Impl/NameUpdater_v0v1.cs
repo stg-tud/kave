@@ -26,7 +26,7 @@ namespace KaVE.Commons.Model.Naming.Impl
     {
         public static string HandleOldMethodNames(string input)
         {
-            IMethodName m = MethodName.Get(input);
+            IMethodName m = new MethodName(input);
             var name = m.Name;
             var sig = m.Signature;
             var decl = m.DeclaringType.Identifier;
@@ -91,7 +91,7 @@ namespace KaVE.Commons.Model.Naming.Impl
 
         public static string HandleTypeIdentifier(string input)
         {
-            var type = TypeName.Get(input);
+            var type = TypeUtils.CreateTypeName(input);
             var identifier = type.IsEnumType ? "e:" : type.IsStructType ? "s:" : type.IsInterfaceType ? "i:" : "?";
             return type.Namespace + "." + identifier +
                    type.FullName.Substring(
@@ -102,7 +102,7 @@ namespace KaVE.Commons.Model.Naming.Impl
 
         public static string HandleOldTypeNames(string input)
         {
-            ITypeName typeName = TypeName.Get(input);
+            ITypeName typeName = TypeUtils.CreateTypeName(input);
             string result = input;
             if (typeName.IsDelegateType)
             {

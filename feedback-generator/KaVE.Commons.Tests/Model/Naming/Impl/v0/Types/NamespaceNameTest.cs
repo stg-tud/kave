@@ -18,7 +18,7 @@ using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Modularization
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     public class NamespaceNameTest
     {
@@ -30,14 +30,14 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.Modularization
         [SetUp]
         public void SetUpTestNamespace()
         {
-            _testNamespaceName = NamespaceName.Get(TestNamespaceIdentifier);
+            _testNamespaceName = new NamespaceName(TestNamespaceIdentifier);
             _testNamespaceParentName = _testNamespaceName.ParentNamespace;
         }
 
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(NamespaceName.UnknownName.IsUnknown);
+            Assert.That(new NamespaceName().IsUnknown);
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.Modularization
         [Test]
         public void ShouldBeUnknownNamespace()
         {
-            var uut = NamespaceName.UnknownName;
+            var uut = new NamespaceName();
 
             Assert.AreEqual("???", uut.Identifier);
             Assert.AreSame(NamespaceName.GlobalNamespace, uut.ParentNamespace);

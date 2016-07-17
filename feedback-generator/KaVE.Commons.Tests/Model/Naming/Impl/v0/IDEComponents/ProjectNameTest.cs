@@ -24,7 +24,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
         [Test]
         public void ShouldParseType()
         {
-            var uut = ProjectName.Get("ProjectType C:\\Project.csproj");
+            var uut = new ProjectName("ProjectType C:\\Project.csproj");
 
             Assert.AreEqual("ProjectType", uut.Type);
         }
@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
         [Test]
         public void ShouldParseName()
         {
-            var uut = ProjectName.Get("ProjectType C:\\Project.csproj");
+            var uut = new ProjectName("ProjectType C:\\Project.csproj");
 
             Assert.AreEqual("C:\\Project.csproj", uut.Name);
         }

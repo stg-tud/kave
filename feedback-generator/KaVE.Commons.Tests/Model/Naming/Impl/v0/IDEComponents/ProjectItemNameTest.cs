@@ -24,7 +24,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
         [Test]
         public void ShouldParseType()
         {
-            var uut = ProjectItemName.Get("File C:\\Project\\File.txt");
+            var uut = new ProjectItemName("File C:\\Project\\File.txt");
 
             Assert.AreEqual("File", uut.Type);
         }
@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
         [Test]
         public void ShouldParseName()
         {
-            var uut = ProjectItemName.Get("File C:\\Project\\File.txt");
+            var uut = new ProjectItemName("File C:\\Project\\File.txt");
 
             Assert.AreEqual("C:\\Project\\File.txt", uut.Name);
         }

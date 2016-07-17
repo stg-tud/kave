@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
@@ -38,10 +38,10 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         {
             var sut = new Proposal
             {
-                Name = Name.Get("a"),
+                Name = Names.General("a"),
                 Relevance = 3
             };
-            Assert.AreEqual(Name.Get("a"), sut.Name);
+            Assert.AreEqual(Names.General("a"), sut.Name);
             Assert.AreEqual(3, sut.Relevance);
         }
 
@@ -59,12 +59,12 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         {
             var a = new Proposal
             {
-                Name = Name.Get("a"),
+                Name = Names.General("a"),
                 Relevance = 3
             };
             var b = new Proposal
             {
-                Name = Name.Get("a"),
+                Name = Names.General("a"),
                 Relevance = 3
             };
             Assert.AreEqual(a, b);
@@ -76,7 +76,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         {
             var a = new Proposal
             {
-                Name = Name.Get("a")
+                Name = Names.General("a")
             };
             var b = new Proposal();
             Assert.AreNotEqual(a, b);

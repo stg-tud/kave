@@ -15,33 +15,17 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
-    /// <summary>
-    ///     Aliases are defined by using statements, like "using alias = Some.Reference;". A special case is the alias
-    ///     "global" that represents the global namespace by convention.
-    /// </summary>
-    public class AliasName : Name, IAliasName
+    public class AliasName : BaseName, IAliasName
     {
-        // TODO remove this name!
-        private static readonly WeakNameCache<IAliasName> Registry = WeakNameCache<IAliasName>.Get(
-            id => new AliasName(id));
+        public AliasName() : base(UnknownNameIdentifier) {}
+        public AliasName(string identifier) : base(identifier) {}
 
-        public new static IAliasName UnknownName
+        public override bool IsUnknown
         {
-            get { return Get(UnknownNameIdentifier); }
+            get { throw new System.NotImplementedException(); }
         }
-
-        /// <summary>
-        ///     Alias names are valid C# identifiers that are not keywords, plus the special alias 'global'.
-        /// </summary>
-        public new static IAliasName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private AliasName(string identifier) : base(identifier) {}
     }
 }

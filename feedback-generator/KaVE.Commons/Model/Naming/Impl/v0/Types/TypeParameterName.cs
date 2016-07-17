@@ -22,35 +22,13 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class TypeParameterName : Name, ITypeName
+    // TODO NameUpdate: strange... this type seems to create endless loops for all properties!? check changes...
+    public class TypeParameterName : BaseName, ITypeName
     {
         /// <summary>
         ///     The separator between the parameter type's short name and its type.
         /// </summary>
-        private const string ParameterNameTypeSeparater = " -> ";
-
-        /// <summary>
-        ///     Constructor for reflective recreation of names. See <see cref="Get(string,string)" /> for details on how to
-        ///     instantiate type-parameter names.
-        /// </summary>
-        [UsedImplicitly]
-        public new static ITypeParameterName Get(string identifier)
-        {
-            return Names.TypeParameter(identifier);
-        }
-
-        /// <summary>
-        ///     Gets the <see cref="ITypeName" /> for the identifer
-        ///     <code>'short name' -&gt; 'actual-type identifier'</code>.
-        /// </summary>
-        public static ITypeParameterName Get(string typeParameterShortName, string actualTypeIdentifier)
-        {
-            if (UnknownTypeName.IsUnknownTypeIdentifier(actualTypeIdentifier))
-            {
-                return Get(typeParameterShortName);
-            }
-            return Get(typeParameterShortName + ParameterNameTypeSeparater + actualTypeIdentifier);
-        }
+        public const string ParameterNameTypeSeparater = " -> ";
 
         internal static bool IsTypeParameterIdentifier(string identifier)
         {
@@ -217,10 +195,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get
             {
                 var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparater.Length;
+                // TODO NameUpdate: breaks caching
                 return startOfTypeName >= Identifier.Length
-                    ? Names.UnknownType
-                    : Names.Type(Identifier.Substring(startOfTypeName));
+                    ? UnknownTypeName.Instance
+                    : TypeUtils.CreateTypeName(Identifier.Substring(startOfTypeName));
             }
+        }
+
+        public override bool IsUnknown
+        {
+            get { return false; }
         }
     }
 }

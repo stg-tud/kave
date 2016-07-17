@@ -15,27 +15,13 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class CommandName : Name, ICommandName
+    public class CommandName : BaseName, ICommandName
     {
-        private static readonly WeakNameCache<ICommandName> Registry =
-            WeakNameCache<ICommandName>.Get(id => new CommandName(id));
-
-        /// <summary>
-        ///     <code>{guid}:id:name</code>
-        /// </summary>
-        /// <param name="identifier"></param>
-        /// <returns></returns>
-        public new static ICommandName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private CommandName(string identifier)
-            : base(identifier) {}
+        public CommandName() : base(UnknownNameIdentifier) {}
+        public CommandName(string identifier) : base(identifier) {}
 
         public string Guid
         {
@@ -58,6 +44,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
                 var parts = Identifier.Split(':');
                 return parts.Length == 3 ? parts[2] : null;
             }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

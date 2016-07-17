@@ -15,8 +15,6 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
@@ -25,57 +23,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         public const string SetterModifier = "set";
         public const string GetterModifier = "get";
 
-        private static readonly WeakNameCache<PropertyName> Registry =
-            WeakNameCache<PropertyName>.Get(id => new PropertyName(id));
+        public PropertyName() : base(UnknownMemberIdentifier) {}
 
-        public new static PropertyName UnknownName
-        {
-            get { return Get("[?] [?].???"); }
-        }
+        public PropertyName(string identifier) : base(identifier) {}
 
         public override bool IsUnknown
         {
-            get { return Equals(this, UnknownName); }
+            get { return Equals(Identifier, UnknownMemberIdentifier); }
         }
-
-        /// <summary>
-        ///     Property names follow the scheme
-        ///     <code>'modifiers' ['value type name'] ['declaring type name'].'property name'</code>.
-        ///     Examples of property names are:
-        ///     <list type="buller">
-        ///         <item>
-        ///             <description>
-        ///                 <code>[System.Int32, mscore, 4.0.0.0] [Collections.IList, mscore, 4.0.0.0].Internal</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>get [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Count</code>
-        ///                 (property with public getter)
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>set [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Position</code>
-        ///                 (property with public setter)
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        /// </summary>
-        [NotNull]
-        public new static PropertyName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        [NotNull]
-        public static PropertyName Get(string identifier, params object[] args)
-        {
-            return Get(string.Format(identifier, args));
-        }
-
-        private PropertyName(string identifier)
-            : base(identifier) {}
 
         public bool HasSetter
         {

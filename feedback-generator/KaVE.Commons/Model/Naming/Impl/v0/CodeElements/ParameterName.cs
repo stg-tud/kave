@@ -16,11 +16,10 @@
 
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
-    public class ParameterName : Name, IParameterName
+    public class ParameterName : BaseName, IParameterName
     {
         public const string PassByReferenceModifier = "ref";
         public const string OutputModifier = "out";
@@ -28,58 +27,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         public const string OptionalModifier = "opt";
         public const string ExtensionMethodModifier = "this";
 
-        private static readonly WeakNameCache<ParameterName> Registry =
-            WeakNameCache<ParameterName>.Get(id => new ParameterName(id));
-
-        public new static IParameterName UnknownName
-        {
-            get { return Get("[?] ???"); }
-        }
-
-        public override bool IsUnknown
-        {
-            get { return Equals(this, UnknownName); }
-        }
-
-        /// <summary>
-        ///     Parameter names follow the scheme <code>'modifiers' ['parameter type name'] 'parameter name'</code>.
-        ///     Examples of parameter names are:
-        ///     <list type="bullet">
-        ///         <item>
-        ///             <description>
-        ///                 <code>[System.Int32, mscore, 4.0.0.0] size</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>out [System.Int32, mscore, 4.0.0.0] outputParameter</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>params [System.Int32, mscore, 4.0.0.0] varArgsParamter</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>ref [System.Int32, mscore, 4.0.0.0] referenceParameter</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>opt [System.Int32, mscore, 4.0.0.0] optionalParameter</code> (i.e., parameter with
-        ///                 default value)
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        /// </summary>
-        public new static ParameterName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private ParameterName(string identifier)
-            : base(identifier) {}
+        public ParameterName() : base("[?] ???") {}
+        public ParameterName(string identifier) : base(identifier) {}
 
         public ITypeName ValueType
         {
@@ -125,6 +74,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         public bool IsExtensionMethodParameter
         {
             get { return Modifiers.Contains(ExtensionMethodModifier); }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

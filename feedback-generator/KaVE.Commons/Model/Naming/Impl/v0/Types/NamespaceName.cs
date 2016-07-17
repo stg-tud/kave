@@ -15,48 +15,17 @@
  */
 
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class NamespaceName : Name, INamespaceName
+    public class NamespaceName : BaseName, INamespaceName
     {
         public const string GlobalNamespaceIdentifier = "";
 
-        private static readonly WeakNameCache<NamespaceName> Registry =
-            WeakNameCache<NamespaceName>.Get(id => new NamespaceName(id));
+        public static readonly INamespaceName GlobalNamespace = new NamespaceName(GlobalNamespaceIdentifier);
 
-        public static readonly INamespaceName GlobalNamespace = Get(GlobalNamespaceIdentifier);
-
-        public new static INamespaceName UnknownName
-        {
-            get { return Get(UnknownNameIdentifier); }
-        }
-
-        /// <summary>
-        ///     Namespace names follow the scheme <code>'parent namespace name'.'namespace name'</code>. An exception is the global
-        ///     namespace, which has the empty string as its identfier.
-        ///     Examples of namespace names are:
-        ///     <list type="bullet">
-        ///         <item>
-        ///             <description>
-        ///                 <code>System</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>CodeCompletion.Model.Names.CSharp</code>
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        /// </summary>
-        public new static NamespaceName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private NamespaceName(string identifier)
-            : base(identifier) {}
+        public NamespaceName() : base(UnknownNameIdentifier) {}
+        public NamespaceName(string identifier) : base(identifier) {}
 
         public INamespaceName ParentNamespace
         {
@@ -69,7 +38,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var lastSeperatorIndex = Identifier.LastIndexOf('.');
                 return lastSeperatorIndex == -1
                     ? GlobalNamespace
-                    : Get(Identifier.Substring(0, lastSeperatorIndex));
+                    : Names.Namespace(Identifier.Substring(0, lastSeperatorIndex));
             }
         }
 
@@ -85,6 +54,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public bool IsGlobalNamespace
         {
             get { return Identifier.Equals(GlobalNamespaceIdentifier); }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

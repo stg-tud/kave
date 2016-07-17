@@ -19,7 +19,7 @@ using KaVE.Commons.Model.Naming.Impl.v1;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     internal class TypeNameTest
     {
@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(TypeName.UnknownName.IsUnknown);
+            Assert.That(UnknownTypeName.Instance.IsUnknown);
         }
 
         [Test]
@@ -363,7 +363,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         public void ShouldBeNestedType(string nestedTypeFullName, string expectedDeclaringTypeFullName)
         {
             var expected = expectedDeclaringTypeFullName.Equals("?")
-                ? TypeName.UnknownName
+                ? UnknownTypeName.Instance
                 : Commons.Model.Naming.Names.Type(expectedDeclaringTypeFullName + ", " + TestAssemblyIdentifier);
 
             var nestedTypeName = Commons.Model.Naming.Names.Type(nestedTypeFullName + ", " + TestAssemblyIdentifier);

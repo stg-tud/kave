@@ -16,49 +16,20 @@
 
 using System;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class AssemblyVersion : Name, IAssemblyVersion
+    public class AssemblyVersion : BaseName, IAssemblyVersion
     {
-        private static readonly WeakNameCache<AssemblyVersion> Registry =
-            WeakNameCache<AssemblyVersion>.Get(id => new AssemblyVersion(id));
+        public AssemblyVersion() : base(UnknownNameIdentifier) {}
 
-        public new static IAssemblyVersion UnknownName
-        {
-            get { return Get(UnknownNameIdentifier); }
-        }
-
-        /// <summary>
-        ///     Assembly version numbers have the format <code>'major'.'minor'.'build'.'revision'</code>.
-        ///     Examples of assembly versions are:
-        ///     <list type="bullet">
-        ///         <item>
-        ///             <description>
-        ///                 <code>1.2.3.4</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>4.0.0.0</code>
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        /// </summary>
-        public new static AssemblyVersion Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private AssemblyVersion(string identifier)
-            : base(identifier) {}
+        public AssemblyVersion(string identifier) : base(identifier) {}
 
         private int[] Fragments
         {
             get
             {
-                var identifier = (this == UnknownName) ? "-1.-1.-1.-1" : Identifier;
+                var identifier = IsUnknown ? "-1.-1.-1.-1" : Identifier;
                 return Array.ConvertAll(identifier.Split('.'), int.Parse);
             }
         }
@@ -83,6 +54,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return Fragments[3]; }
         }
 
+        // TODO NameUpdate: What about the custom ordering operators for AsmVersions?
         public int CompareTo(IAssemblyVersion other)
         {
             var otherVersion = other as AssemblyVersion;
@@ -126,6 +98,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public static bool operator >=(AssemblyVersion v1, AssemblyVersion v2)
         {
             return v1.CompareTo(v2) >= 0;
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

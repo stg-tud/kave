@@ -18,51 +18,13 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
-    public class LambdaName : Name, ILambdaName
+    public class LambdaName : BaseName, ILambdaName
     {
-        private static readonly WeakNameCache<LambdaName> Registry = WeakNameCache<LambdaName>.Get(
-            id => new LambdaName(id));
-
-        public new static LambdaName UnknownName
-        {
-            get { return Get(UnknownNameIdentifier); }
-        }
-
-        /// <summary>
-        ///     Lambda type names follow the scheme
-        ///     <code>['return type name'] ('parameter names')</code>.
-        ///     Examples of valid lambda names are:
-        ///     <list type="bullet">
-        ///         <item>
-        ///             <description>
-        ///                 <code>[System.String, mscore, 4.0.0.0] ()</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>[System.String, mscore, 4.0.0.0] ([System.Int32, mscore, 4.0.0.0] length)</code>
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        /// </summary>
-        [NotNull]
-        public new static LambdaName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        [NotNull]
-        public static ILambdaName Get(string identifier, params object[] args)
-        {
-            return Get(string.Format(identifier, args));
-        }
-
-        private LambdaName(string identifier) : base(identifier) {}
+        public LambdaName() : base(UnknownNameIdentifier) {}
+        public LambdaName(string identifier) : base(identifier) {}
 
         public string Signature
         {
@@ -92,6 +54,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var lengthOfValueTypeIdentifier = lastIndexOfValueTypeIdentifer - startIndexOfValueTypeIdentifier;
                 return Names.Type(Identifier.Substring(startIndexOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
             }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     internal class AssemblyNameTest
     {
         [Test]
         public void HappyPath()
         {
-            var n = Commons.Model.Naming.Names.Assembly("A, 1.2.3.4");
+            var n = Names.Assembly("A, 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -33,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void NoVersion()
         {
-            var n = Commons.Model.Naming.Names.Assembly("A");
+            var n = Names.Assembly("A");
             AssertName(n, "A");
             AssertVersion(n, "?");
         }
@@ -41,15 +41,15 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void KommasInName()
         {
-            var n = Commons.Model.Naming.Names.Assembly("A (B, C)");
+            var n = Names.Assembly("A (B, C)");
             AssertName(n, "A (B, C)");
-            AssertVersion(n, AssemblyVersion.UnknownName.Identifier);
+            AssertVersion(n, Names.UnknownAssemblyVersion);
         }
 
         [Test]
         public void KommasInNameAndVersion()
         {
-            var n = Commons.Model.Naming.Names.Assembly("A (B, C), 1.2.3.4");
+            var n = Names.Assembly("A (B, C), 1.2.3.4");
             AssertName(n, "A (B, C)");
             AssertVersion(n, "1.2.3.4");
         }
@@ -57,7 +57,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void LotOfWhitespace()
         {
-            var n = Commons.Model.Naming.Names.Assembly(" A , 1.2.3.4");
+            var n = Names.Assembly(" A , 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -65,7 +65,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void NoWhitespace()
         {
-            var n = Commons.Model.Naming.Names.Assembly("A,1.2.3.4");
+            var n = Names.Assembly("A,1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -79,10 +79,15 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
             Assert.AreEqual(expected, actual);
         }
 
-        private static void AssertVersion(IAssemblyName assemblyName, string version)
+        private static void AssertVersion(IAssemblyName actual, IAssemblyVersion expected)
+        {
+            AssertVersion(actual, expected.Identifier);
+        }
+
+        private static void AssertVersion(IAssemblyName assemblyName, string expected)
         {
             var actual = assemblyName.Version;
-            Assert.AreEqual(version, actual.Identifier);
+            Assert.AreEqual(expected, actual.Identifier);
         }
     }
 }

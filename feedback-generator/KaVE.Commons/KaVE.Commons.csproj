@@ -83,6 +83,9 @@
     <Compile Include="Model\Naming\IDEComponents\IProjectName.cs" />
     <Compile Include="Model\Naming\IDEComponents\ISolutionName.cs" />
     <Compile Include="Model\Naming\IDEComponents\IWindowName.cs" />
+    <Compile Include="Model\Naming\Impl\v0\GeneralName.cs" />
+    <Compile Include="Model\Naming\Impl\v0\NamesV0.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\TypeUtils.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyName.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyVersion.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsLambdaName.cs" />
@@ -218,7 +221,7 @@
     <Compile Include="Model\Naming\Impl\v0\CodeElements\LocalVariableName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MemberName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MethodName.cs" />
-    <Compile Include="Model\Naming\Impl\v0\Name.cs" />
+    <Compile Include="Model\Naming\Impl\v0\BaseName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\NamespaceName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\ParameterName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\PropertyName.cs" />

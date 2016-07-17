@@ -15,23 +15,13 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
-    public class WindowName : Name, IWindowName
+    public class WindowName : BaseName, IWindowName
     {
-        private static readonly WeakNameCache<IWindowName> Registry =
-            WeakNameCache<IWindowName>.Get(id => new WindowName(id));
-
-        [NotNull]
-        public new static IWindowName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        private WindowName(string identifier) : base(identifier) {}
+        public WindowName() : base(UnknownNameIdentifier) {}
+        public WindowName(string identifier) : base(identifier) {}
 
         public string Type
         {
@@ -45,6 +35,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
                 var startOfWindowCaption = Type.Length + 1;
                 return Identifier.Substring(startOfWindowCaption);
             }
+        }
+
+        public override bool IsUnknown
+        {
+            get { throw new System.NotImplementedException(); }
         }
     }
 }

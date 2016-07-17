@@ -19,71 +19,25 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class MethodName : MemberName, IMethodName
     {
-        private static readonly WeakNameCache<MethodName> Registry =
-            WeakNameCache<MethodName>.Get(id => new MethodName(id));
+        private const string UnknownMethodIdentifier = UnknownMemberIdentifier + "()";
 
-        public new static IMethodName UnknownName
-        {
-            get { return Get("[?] [?].???()"); }
-        }
+        public MethodName() : base(UnknownMethodIdentifier) {}
+
+        public MethodName(string identifier) : base(identifier) {}
 
         public override bool IsUnknown
         {
-            get { return Equals(this, UnknownName); }
+            get { return Equals(Identifier, UnknownMethodIdentifier); }
         }
 
-        /// <summary>
-        ///     Method type names follow the scheme
-        ///     <code>'modifiers' ['return type name'] ['declaring type name'].'method name'('parameter names')</code>.
-        ///     Examples of valid method names are:
-        ///     <list type="bullet">
-        ///         <item>
-        ///             <description>
-        ///                 <code>[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].AMethod(opt [System.Int32, mscore, 4.0.0.0] length)</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>[System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0]..ctor()</code>
-        ///                 (Constructor)
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        /// </summary>
-        [NotNull]
-        public new static MethodName Get(string identifier)
-        {
-            return Registry.GetOrCreate(identifier);
-        }
-
-        [NotNull]
-        public static IMethodName Get(string identifier, params object[] args)
-        {
-            return Get(string.Format(identifier, args));
-        }
 
         private static readonly Regex SignatureSyntax =
             new Regex("\\]\\.((([^([]+)(?:`[0-9]+\\[[^(]+\\]){0,1})\\(.*\\))$");
-
-        private MethodName(string identifier)
-            : base(identifier) {}
 
         public override string Name
         {

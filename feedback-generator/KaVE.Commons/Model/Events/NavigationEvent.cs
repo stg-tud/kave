@@ -16,7 +16,6 @@
 
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 
@@ -35,8 +34,8 @@ namespace KaVE.Commons.Model.Events
 
         public NavigationEvent()
         {
-            Target = Name.UnknownName;
-            Location = Name.UnknownName;
+            Target = Names.UnknownGeneral;
+            Location = Names.UnknownGeneral;
             TypeOfNavigation = NavigationType.Unknown;
         }
 

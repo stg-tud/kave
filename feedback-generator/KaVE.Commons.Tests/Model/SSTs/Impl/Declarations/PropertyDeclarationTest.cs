@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -29,14 +29,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
     {
         private static IPropertyName SomeProperty
         {
-            get { return PropertyName.Get("[T1,P1] [T2,P2].Property"); }
+            get { return Names.Property("[T1,P1] [T2,P2].Property"); }
         }
 
         [Test]
         public void DefaultValues()
         {
             var sut = new PropertyDeclaration();
-            Assert.AreEqual(PropertyName.UnknownName, sut.Name);
+            Assert.AreEqual(Names.UnknownProperty, sut.Name);
             Assert.AreEqual(Lists.NewList<IStatement>(), sut.Get);
             Assert.AreEqual(Lists.NewList<IStatement>(), sut.Set);
             Assert.AreNotEqual(0, sut.GetHashCode());

@@ -23,7 +23,6 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Threading;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Utils.Naming;
 
@@ -59,14 +58,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
         public IName GetTarget(ITextControl textControl)
         {
             var treeNode = GetTreeNode(textControl);
-            return treeNode != null ? GetTarget(treeNode) : Name.UnknownName;
+            return treeNode != null ? GetTarget(treeNode) : Names.UnknownGeneral;
         }
 
         [Pure]
         public IName GetLocation(ITextControl textControl)
         {
             var treeNode = GetTreeNode(textControl);
-            return treeNode != null ? GetLocation(treeNode) : Name.UnknownName;
+            return treeNode != null ? GetLocation(treeNode) : Names.UnknownGeneral;
         }
 
         [Pure]
@@ -91,14 +90,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             }
 
             return declaredElement == null
-                ? Name.UnknownName
+                ? Names.UnknownGeneral
                 : declaredElement.GetName(declaredElement.GetIdSubstitutionSafe());
         }
 
         [Pure]
         public IName GetLocation(ITreeNode psiNode)
         {
-            var locationName = Name.UnknownName;
+            var locationName = Names.UnknownGeneral;
 
             var surroundingMethodDeclaration = psiNode.GetContainingNode<IMethodDeclaration>();
             if (surroundingMethodDeclaration != null)
@@ -125,10 +124,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             if (ReentrancyGuard.Current.CanExecuteNow)
             {
                 ReadLockCookie.GuardedExecute(
-                    () =>
-                    {
-                        treeNode = TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
-                    });
+                    () => { treeNode = TextControlToPsi.GetElement<ITreeNode>(_solution, textControl); });
             }
 
             return treeNode;

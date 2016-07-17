@@ -24,7 +24,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(LocalVariableName.UnknownName.IsUnknown);
+            Assert.That(new LocalVariableName().IsUnknown);
         }
     }
 }

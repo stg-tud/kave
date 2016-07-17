@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     internal class ArrayTypeNameTest
     {
@@ -33,17 +34,17 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
          TestCase("T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void DerivesFrom(string baseTypeIdentifer, string expectedDerivedNameIdentifier)
         {
-            var arrayTypeName = ArrayTypeName.From(TypeName.Get(baseTypeIdentifer), 1);
+            var arrayTypeName = ArrayTypeName.From(new TypeName(baseTypeIdentifer), 1);
 
-            Assert.AreSame(TypeName.Get(expectedDerivedNameIdentifier), arrayTypeName);
+            Assert.AreSame(NamesV0.Type(expectedDerivedNameIdentifier), arrayTypeName);
         }
 
         [Test]
         public void DerivesMultiDimensionalArray()
         {
-            var arrayTypeName = ArrayTypeName.From(TypeName.Get("SomeType, Assembly, 1.2.3.4"), 2);
+            var arrayTypeName = ArrayTypeName.From(NamesV0.Type("SomeType, Assembly, 1.2.3.4"), 2);
 
-            Assert.AreSame(TypeName.Get("SomeType[,], Assembly, 1.2.3.4"), arrayTypeName);
+            Assert.AreSame(NamesV0.Type("SomeType[,], Assembly, 1.2.3.4"), arrayTypeName);
         }
 
         [TestCase("ValueType[,,], As, 9.8.7.6"),
@@ -56,7 +57,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
          TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void ShouldBeArrayType(string identifier)
         {
-            var arrayTypeName = TypeName.Get(identifier);
+            var arrayTypeName = NamesV0.Type(identifier);
 
             Assert.IsTrue(arrayTypeName.IsArrayType);
         }
@@ -73,7 +74,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
          TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void ShouldGetArrayBaseType(string identifier, string expected)
         {
-            var arrayTypeName = TypeName.Get(identifier);
+            var arrayTypeName = NamesV0.Type(identifier);
 
             Assert.AreEqual(expected, arrayTypeName.AsArrayTypeName.ArrayBaseType.Identifier);
         }
@@ -82,7 +83,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
          TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P", 1)]
         public void ShouldIdentifyRank(string id, int expectedRank)
         {
-            var arrayTypeName = TypeName.Get(id);
+            var arrayTypeName = NamesV0.Type(id);
 
             Assert.AreEqual(expectedRank, ArrayTypeName.GetArrayRank(arrayTypeName));
         }
@@ -90,7 +91,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ArrayOfNullablesShouldNotBeNullable()
         {
-            var actual = TypeName.Get("System.Nullable`1[][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4");
+            var actual = NamesV0.Type("System.Nullable`1[][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4");
 
             Assert.IsFalse(actual.IsNullableType);
         }
@@ -98,7 +99,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ArrayOfSimpleTypesShouldNotBeSimpleType()
         {
-            var actual = TypeName.Get("System.Int64[], mscorlib, 1.2.3.4");
+            var actual = NamesV0.Type("System.Int64[], mscorlib, 1.2.3.4");
 
             Assert.IsFalse(actual.IsSimpleType);
         }
@@ -106,7 +107,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ArrayOfCustomStructsShouldNotBeStruct()
         {
-            var actual = TypeName.Get("s:My.Custom.Struct[], A, 1.2.3.4");
+            var actual = NamesV0.Type("s:My.Custom.Struct[], A, 1.2.3.4");
 
             Assert.IsFalse(actual.IsStructType);
         }
@@ -114,7 +115,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldHaveArrayBracesInName()
         {
-            var uut = TypeName.Get("ValueType[,,], As, 9.8.7.6");
+            var uut = NamesV0.Type("ValueType[,,], As, 9.8.7.6");
 
             Assert.AreEqual("ValueType[,,]", uut.Name);
         }
@@ -122,7 +123,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void ShouldNotBeArrayType()
         {
-            var uut = TypeName.Get("ValueType, As, 2.5.1.6");
+            var uut = NamesV0.Type("ValueType, As, 2.5.1.6");
 
             Assert.IsFalse(uut.IsArrayType);
         }
@@ -130,7 +131,7 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void HandlesDelegateBaseType()
         {
-            var uut = TypeName.Get("d:[RT, A] [N.O+DT, AA, 1.2.3.4].()[]");
+            var uut = NamesV0.Type("d:[RT, A] [N.O+DT, AA, 1.2.3.4].()[]");
 
             Assert.AreEqual("N.O+DT[]", uut.FullName);
             Assert.AreEqual("N", uut.Namespace.Identifier);
@@ -142,10 +143,10 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp
         [Test]
         public void HandlesGenericDelegateBaseType()
         {
-            var uut = TypeName.Get("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)[]");
+            var uut = NamesV0.Type("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)[]");
 
             Assert.IsTrue(uut.HasTypeParameters);
-            CollectionAssert.AreEqual(new[] {TypeParameterName.Get("T -> String, mscorlib")}, uut.TypeParameters);
+            CollectionAssert.AreEqual(new[] {new TypeParameterName("T -> String, mscorlib")}, uut.TypeParameters);
         }
     }
 }

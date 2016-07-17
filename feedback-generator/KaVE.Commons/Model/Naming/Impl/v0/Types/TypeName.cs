@@ -19,134 +19,19 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class TypeName : Name, ITypeName
+    public class TypeName : BaseName, ITypeName
     {
-        private static readonly WeakNameCache<ITypeName> Registry = WeakNameCache<ITypeName>.Get(CreateTypeName);
-
-        public new static ITypeName UnknownName
-        {
-            get { return UnknownTypeName.Instance; }
-        }
-
         public override bool IsUnknown
         {
-            get { return Equals(this, UnknownName); }
+            get { return Equals(this, UnknownTypeName.Instance); }
         }
 
-        private static ITypeName CreateTypeName(string identifier)
-        {
-            // checked first, because it's a special case
-            if (UnknownTypeName.IsUnknownTypeIdentifier(identifier))
-            {
-                return new UnknownTypeName(identifier);
-            }
-            // checked second, since type parameters can have any kind of type
-            if (TypeParameterName.IsTypeParameterIdentifier(identifier))
-            {
-                return new TypeParameterName(identifier);
-            }
-            // checked third, since the array's value type can have any kind of type
-            if (ArrayTypeName.IsArrayTypeIdentifier(identifier))
-            {
-                return new ArrayTypeName(identifier);
-            }
-            if (InterfaceTypeName.IsInterfaceTypeIdentifier(identifier))
-            {
-                return new InterfaceTypeName(identifier);
-            }
-            if (StructTypeName.IsStructTypeIdentifier(identifier))
-            {
-                return new StructTypeName(identifier);
-            }
-            if (EnumTypeName.IsEnumTypeIdentifier(identifier))
-            {
-                return new EnumTypeName(identifier);
-            }
-            if (DelegateTypeName.IsDelegateTypeIdentifier(identifier))
-            {
-                return new DelegateTypeName(identifier);
-            }
-            return new TypeName(identifier);
-        }
+        public TypeName() : base(UnknownTypeName.Identifier) {}
 
-
-        /// <summary>
-        ///     Type names follow the scheme
-        ///     <code>'fully-qualified type name''generic type parameters', 'assembly identifier'</code>.
-        ///     Examples of type names are:
-        ///     <list type="bullet">
-        ///         <item>
-        ///             <description>
-        ///                 <code>System.Int32, mscore, 4.0.0.0</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>System.Collections.Dictionary`2[[TKey -> System.Int32, mscore, 4.0.0.0],[TValue -> System.String, mscore, 4.0.0.0]], mscore, 4.0.0.0</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>Namespace.OuterType+InnerType, Assembly, 1.2.3.4</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>enum EnumType, Assembly, 1.2.3.4</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>interface InterfaceType, Assembly, 1.2.3.4</code>
-        ///             </description>
-        ///         </item>
-        ///         <item>
-        ///             <description>
-        ///                 <code>struct StructType, Assembly, 1.2.3.4</code>
-        ///             </description>
-        ///         </item>
-        ///     </list>
-        ///     parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type
-        ///     identifier being either the identifier of a type name, as declared above, or another parameter-type name.
-        /// </summary>
-        [NotNull]
-        public new static ITypeName Get(string identifier)
-        {
-            if (identifier == String.Empty)
-            {
-                return UnknownTypeName.Instance;
-            }
-            identifier = FixLegacyNameFormat(identifier);
-
-            return Registry.GetOrCreate(identifier);
-        }
-
-        [NotNull]
-        public static ITypeName Get(string identifier, params object[] args)
-        {
-            return Get(string.Format(identifier, args));
-        }
-
-        private static string FixLegacyNameFormat(string identifier)
-        {
-            if (DelegateTypeName.IsDelegateTypeIdentifier(identifier))
-            {
-                return DelegateTypeName.FixLegacyDelegateNames(identifier);
-            }
-            return identifier;
-        }
-
-        protected TypeName(string identifier) : base(identifier) {}
+        public TypeName(string identifier) : base(identifier) {}
 
         public virtual bool IsUnknownType
         {
@@ -196,7 +81,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 var endOfTypeName = GetLengthOfTypeName(Identifier);
                 var assemblyIdentifier = Identifier.Substring(endOfTypeName).Trim(' ', ',');
-                return AssemblyName.Get(assemblyIdentifier);
+                return new AssemblyName(assemblyIdentifier);
             }
         }
 
@@ -208,7 +93,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var endIndexOfNamespaceIdentifier = id.LastIndexOf('.');
                 return endIndexOfNamespaceIdentifier < 0
                     ? NamespaceName.GlobalNamespace
-                    : NamespaceName.Get(id.Substring(0, endIndexOfNamespaceIdentifier));
+                    // TODO NAmeUpdate: use fixer/updater and then "Names" factory
+                    : new NamespaceName(id.Substring(0, endIndexOfNamespaceIdentifier));
             }
         }
 
@@ -266,7 +152,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                     var endOfDeclaringTypeName = fullName.LastIndexOf('+');
                     if (endOfDeclaringTypeName == -1)
                     {
-                        return UnknownName;
+                        return UnknownTypeName.Instance;
                     }
 
                     var declaringTypeName = fullName.Substring(0, endOfDeclaringTypeName);
@@ -291,14 +177,15 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                         declaringTypeName += "[[" + String.Join("],[", outerTypeParameters.Select(t => t.Identifier)) +
                                              "]]";
                     }
-                    return Get(declaringTypeName + ", " + Assembly);
+                    // TODO NameUpdate: breaks caching
+                    return new TypeName(declaringTypeName + ", " + Assembly);
                 }
                 catch (Exception e)
                 {
                     // TODO @seb: fix analyse and remove try/catch
                     Console.WriteLine("TypeName.DeclaringType: exception caught, falling back to unknown TypeName");
                     Console.WriteLine(e);
-                    return UnknownName;
+                    return UnknownTypeName.Instance;
                 }
             }
         }

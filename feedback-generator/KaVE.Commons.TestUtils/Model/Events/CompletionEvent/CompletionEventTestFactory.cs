@@ -20,7 +20,7 @@ using System.Globalization;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -68,7 +68,7 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
 
         public static Proposal CreateAnonymousProposal()
         {
-            return new Proposal {Name = Name.Get(Guid.NewGuid().ToString())};
+            return new Proposal {Name = Names.General(Guid.NewGuid().ToString())};
         }
 
         private static IEnumerable<Proposal> CreatePredictableProposals(uint numberOfProposals)
@@ -88,7 +88,7 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
 
         private static Proposal CreatePredictableProposal()
         {
-            return new Proposal {Name = Name.Get(NextCounter().ToString(CultureInfo.InvariantCulture))};
+            return new Proposal {Name = Names.General(NextCounter().ToString(CultureInfo.InvariantCulture))};
         }
 
         public static ITypeHierarchy GetAnonymousTypeHierarchy()
@@ -119,7 +119,7 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
                     Lists.NewList<IStatement>(
                         new ExpressionStatement
                         {
-                            Expression = new CompletionExpression { Token = newPrefix }
+                            Expression = new CompletionExpression {Token = newPrefix}
                         })
             };
 
