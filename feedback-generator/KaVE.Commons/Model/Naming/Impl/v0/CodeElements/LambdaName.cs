@@ -16,6 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -41,10 +42,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         {
             get
             {
+                if (IsUnknown)
+                {
+                    return new TypeName();
+                }
                 var startIndexOfValueTypeIdentifier = Identifier.IndexOf('[') + 1;
                 var lastIndexOfValueTypeIdentifer = Identifier.IndexOf("]", StringComparison.Ordinal);
                 var lengthOfValueTypeIdentifier = lastIndexOfValueTypeIdentifer - startIndexOfValueTypeIdentifier;
-                return Names.Type(Identifier.Substring(startIndexOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
+                return
+                    TypeUtils.CreateTypeName(
+                        Identifier.Substring(startIndexOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
             }
         }
 
