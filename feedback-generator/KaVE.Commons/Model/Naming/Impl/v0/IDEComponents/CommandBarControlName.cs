@@ -15,6 +15,8 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
@@ -23,7 +25,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
         public const char HierarchySeperator = '|';
 
         public CommandBarControlName() : base(UnknownNameIdentifier) {}
-        public CommandBarControlName(string identifier) : base(identifier) {}
+
+        public CommandBarControlName([NotNull] string identifier) : base(identifier)
+        {
+            Asserts.Not(identifier.Contains("||"));
+        }
 
         public ICommandBarControlName Parent
         {
@@ -47,7 +53,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

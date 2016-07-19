@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Commons.Model.Naming.IDEComponents
 {
     public interface ICommandBarControlName : IIDEComponentName
     {
+        [CanBeNull]
         ICommandBarControlName Parent { get; }
 
         string Name { get; }

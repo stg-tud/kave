@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
@@ -21,9 +23,51 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
     internal class CommandBarControlNameTest
     {
         [Test]
-        public void ImplementMe()
+        public void DefaultValues()
         {
-            Assert.Fail();
+            var sut = new CommandBarControlName();
+            Assert.AreEqual("???", sut.Name);
+            Assert.AreEqual(null, sut.Parent);
+            Assert.True(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new CommandBarControlName().IsUnknown);
+            Assert.True(new CommandBarControlName("???").IsUnknown);
+            Assert.False(new CommandBarControlName("...").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new CommandBarControlName(null);
+        }
+
+        [Test]
+        public void ShouldParseSimpleExample()
+        {
+            var sut = new CommandBarControlName("a");
+            Assert.AreEqual("a", sut.Name);
+            Assert.Null(sut.Parent);
+        }
+
+        [Test]
+        public void ShouldParseParent()
+        {
+            var sut = new CommandBarControlName("a|b|c");
+            Assert.AreEqual("c", sut.Name);
+            Assert.AreEqual(new CommandBarControlName("a|b"), sut.Parent);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldNotAcceptDoubleSeparator()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new CommandBarControlName("a||b");
         }
     }
 }
