@@ -15,40 +15,61 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class CommandName : BaseName, ICommandName
     {
         public CommandName() : base(UnknownNameIdentifier) {}
-        public CommandName(string identifier) : base(identifier) {}
+        public CommandName([NotNull] string identifier) : base(identifier) {}
+
+        private string[] _parts;
+
+        private string[] Parts
+        {
+            get
+            {
+                if (_parts == null)
+                {
+                    _parts = new string[3];
+
+                    var parts = Identifier.Split(':');
+                    if (parts.Length >= 3)
+                    {
+                        _parts[0] = parts[0];
+                        _parts[1] = parts[1];
+                        _parts[2] = string.Join(":", parts, 2, parts.Length - 2);
+                    }
+                    else
+                    {
+                        _parts[0] = UnknownNameIdentifier;
+                        _parts[1] = "-1";
+                        _parts[2] = Identifier;
+                    }
+                }
+                return _parts;
+            }
+        }
 
         public string Guid
         {
-            get { return Identifier.Substring(0, Identifier.IndexOf(':')); }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[0]; }
         }
 
         public int Id
         {
-            get
-            {
-                var parts = Identifier.Split(':');
-                return int.Parse(parts[1]);
-            }
+            get { return IsUnknown ? -1 : int.Parse(Parts[1]); }
         }
 
         public string Name
         {
-            get
-            {
-                var parts = Identifier.Split(':');
-                return parts.Length == 3 ? parts[2] : null;
-            }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[2]; }
         }
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

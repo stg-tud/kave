@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
@@ -21,9 +23,56 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
     internal class CommandNameTest
     {
         [Test]
-        public void ImplementMe()
+        public void DefaultValues()
         {
-            Assert.Fail();
+            var sut = new CommandName();
+            Assert.AreEqual("???", sut.Guid);
+            Assert.AreEqual(-1, sut.Id);
+            Assert.AreEqual("???", sut.Name);
+            Assert.True(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new CommandName().IsUnknown);
+            Assert.True(new CommandName("???").IsUnknown);
+            Assert.False(new CommandName("a:1:abc").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new CommandName(null);
+        }
+
+        [Test]
+        public void ShouldParseCommandsWithId()
+        {
+            var sut = new CommandName("a:1:abc");
+            Assert.AreEqual("a", sut.Guid);
+            Assert.AreEqual(1, sut.Id);
+            Assert.AreEqual("abc", sut.Name);
+        }
+
+        [Test]
+        public void ShouldIncludeAdditionalColonsInName()
+        {
+            var sut = new CommandName("a:1:funny :)");
+            Assert.AreEqual("a", sut.Guid);
+            Assert.AreEqual(1, sut.Id);
+            Assert.AreEqual("funny :)", sut.Name);
+        }
+
+        [Test]
+        public void ShouldParseSimpleButtonClicks()
+        {
+            var sut = new CommandName("funny :)");
+            Assert.AreEqual("???", sut.Guid);
+            Assert.AreEqual(-1, sut.Id);
+            Assert.AreEqual("funny :)", sut.Name);
         }
     }
 }
