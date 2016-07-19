@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
@@ -21,9 +23,26 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
     internal class SolutionNameTest
     {
         [Test]
-        public void ImplementMe()
+        public void DefaultValues()
         {
-            Assert.Fail();
+            var sut = new SolutionName();
+            Assert.IsTrue(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new SolutionName().IsUnknown);
+            Assert.True(new SolutionName("?").IsUnknown);
+            Assert.False(new SolutionName("...").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new SolutionName(null);
         }
     }
 }

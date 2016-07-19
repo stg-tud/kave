@@ -15,12 +15,38 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 {
     internal class ProjectNameTest
     {
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new ProjectName();
+            Assert.AreEqual("???", sut.Type);
+            Assert.AreEqual("???", sut.Name);
+            Assert.IsTrue(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new ProjectName().IsUnknown);
+            Assert.True(new ProjectName("?").IsUnknown);
+            Assert.False(new ProjectName("x y").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new ProjectName(null);
+        }
+
         [Test]
         public void ShouldParseType()
         {
@@ -35,6 +61,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
             var uut = new ProjectName("ProjectType C:\\Project.csproj");
 
             Assert.AreEqual("C:\\Project.csproj", uut.Name);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectNameWithoutSpaces()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new ProjectName("C:\\No\\Type\\Only\\File.cs");
         }
     }
 }

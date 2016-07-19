@@ -15,20 +15,19 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class SolutionName : BaseName, ISolutionName
     {
-        public SolutionName()
-            : base("?") {}
+        public SolutionName() : base("?") {}
 
-        public SolutionName(string identifier)
-            : base(identifier) {}
+        public SolutionName([NotNull] string identifier) : base(identifier) {}
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return "?".Equals(Identifier); }
         }
     }
 }

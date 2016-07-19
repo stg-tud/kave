@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.Impl.v0.Others;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Others
@@ -21,9 +23,47 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Others
     internal class ReSharperLiveTemplateNameTest
     {
         [Test]
-        public void ImplementMe()
+        public void DefaultValues()
         {
-            Assert.Fail();
+            var sut = new ReSharperLiveTemplateName();
+            Assert.AreEqual("???", sut.Name);
+            Assert.AreEqual("???", sut.Description);
+            Assert.IsTrue(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new ReSharperLiveTemplateName().IsUnknown);
+            Assert.True(new ReSharperLiveTemplateName("???").IsUnknown);
+            Assert.False(new ReSharperLiveTemplateName("someType:someCaption").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new ReSharperLiveTemplateName(null);
+        }
+
+        [Test]
+        public void ShouldParseName()
+        {
+            Assert.AreEqual("someName", new ReSharperLiveTemplateName("someName:someDesc").Name);
+        }
+
+        [Test]
+        public void ShouldParseDescription()
+        {
+            Assert.AreEqual("someDesc", new ReSharperLiveTemplateName("someName:someDesc").Description);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectNameWithoutSpaces()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new ReSharperLiveTemplateName("OnlyNameOrDesc");
         }
     }
 }

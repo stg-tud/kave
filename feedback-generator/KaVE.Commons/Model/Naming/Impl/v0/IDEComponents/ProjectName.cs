@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
@@ -23,21 +24,34 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
     {
         public ProjectName() : base("?") {}
 
-        public ProjectName(string identifier) : base(identifier) {}
-
-        public override bool IsUnknown
+        public ProjectName([NotNull] string identifier) : base(identifier)
         {
-            get { throw new NotImplementedException(); }
+            if (!"?".Equals(identifier))
+            {
+                Asserts.That(identifier.Contains(" "));
+            }
+        }
+
+        private string[] _parts;
+
+        private string[] Parts
+        {
+            get { return _parts ?? (_parts = Identifier.Split(new[] {' '}, 2)); }
         }
 
         public string Type
         {
-            get { return Identifier.Split(new[] {' '}, 2)[0]; }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[0]; }
         }
 
         public string Name
         {
-            get { return Identifier.Split(new[] {' '}, 2)[1]; }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[1]; }
+        }
+
+        public override bool IsUnknown
+        {
+            get { return "?".Equals(Identifier); }
         }
     }
 }

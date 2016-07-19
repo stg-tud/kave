@@ -14,25 +14,33 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Naming.Others;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Others
 {
     public class ReSharperLiveTemplateName : BaseName, IReSharperLiveTemplateName
     {
-        /// <summary>
-        ///     Template names follow the scheme "&lt;template name&gt;:&lt;template description&gt;".
-        /// </summary>
+        private const string Separator = ":";
+
         public ReSharperLiveTemplateName() : base(UnknownNameIdentifier) {}
 
-        public ReSharperLiveTemplateName(string identifier) : base(identifier) {}
+        public ReSharperLiveTemplateName([NotNull] string identifier) : base(identifier)
+        {
+            if (!UnknownNameIdentifier.Equals(identifier))
+            {
+                Asserts.That(identifier.Contains(Separator));
+            }
+        }
 
         public string Name
         {
             get
             {
-                var endOfName = Identifier.IndexOf(':');
-                return Identifier.Substring(0, endOfName);
+                var endOfName = Identifier.IndexOf(Separator, StringComparison.Ordinal);
+                return IsUnknown ? UnknownNameIdentifier : Identifier.Substring(0, endOfName);
             }
         }
 
@@ -40,14 +48,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Others
         {
             get
             {
-                var startOfDescription = Identifier.IndexOf(':') + 1;
-                return Identifier.Substring(startOfDescription);
+                var startOfDescription = Identifier.IndexOf(Separator, StringComparison.Ordinal) + 1;
+                return IsUnknown ? UnknownNameIdentifier : Identifier.Substring(startOfDescription);
             }
         }
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

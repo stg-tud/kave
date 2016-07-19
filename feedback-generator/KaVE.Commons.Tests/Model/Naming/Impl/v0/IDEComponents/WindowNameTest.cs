@@ -14,32 +14,56 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 {
     internal class WindowNameTest
     {
-        private IWindowName _uut;
-
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void DefaultValues()
         {
-            _uut = new WindowName("windowType Window Caption");
+            var sut = new WindowName();
+            Assert.AreEqual("???", sut.Type);
+            Assert.AreEqual("???", sut.Caption);
+            Assert.IsTrue(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new WindowName().IsUnknown);
+            Assert.True(new WindowName("???").IsUnknown);
+            Assert.False(new WindowName("someType someCaption").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new WindowName(null);
         }
 
         [Test]
         public void ShouldParseType()
         {
-            Assert.AreEqual("windowType", _uut.Type);
+            Assert.AreEqual("someType", new WindowName("someType someCaption").Type);
         }
 
         [Test]
         public void ShouldParseCaption()
         {
-            Assert.AreEqual("Window Caption", _uut.Caption);
+            Assert.AreEqual("someCaption", new WindowName("someType someCaption").Caption);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectNameWithoutSpaces()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new WindowName("OnlyTypeOrCaption");
         }
     }
 }

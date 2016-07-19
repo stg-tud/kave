@@ -62,5 +62,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 
             Assert.AreEqual("C:\\Project\\File.txt", uut.Name);
         }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectNameWithoutSpaces()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new ProjectItemName("C:\\No\\Type\\Only\\File.cs");
+        }
     }
 }

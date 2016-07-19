@@ -15,17 +15,26 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class WindowName : BaseName, IWindowName
     {
         public WindowName() : base(UnknownNameIdentifier) {}
-        public WindowName(string identifier) : base(identifier) {}
+
+        public WindowName([NotNull] string identifier) : base(identifier)
+        {
+            if (!UnknownNameIdentifier.Equals(identifier))
+            {
+                Asserts.That(identifier.Contains(" "));
+            }
+        }
 
         public string Type
         {
-            get { return Identifier.Substring(0, Identifier.IndexOf(' ')); }
+            get { return IsUnknown ? UnknownNameIdentifier : Identifier.Substring(0, Identifier.IndexOf(' ')); }
         }
 
         public string Caption
@@ -33,13 +42,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
             get
             {
                 var startOfWindowCaption = Type.Length + 1;
-                return Identifier.Substring(startOfWindowCaption);
+                return IsUnknown ? UnknownNameIdentifier : Identifier.Substring(startOfWindowCaption);
             }
         }
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

@@ -16,5 +16,13 @@
 
 namespace KaVE.Commons.Model.Naming.Others
 {
-    public interface IReSharperLiveTemplateName : IName {}
+    /// <summary>
+    ///     Template names follow the scheme "&lt;template name&gt;:&lt;template description&gt;".
+    /// </summary>
+    public interface IReSharperLiveTemplateName : IName
+    {
+        string Name { get; }
+
+        string Description { get; }
+    }
 }

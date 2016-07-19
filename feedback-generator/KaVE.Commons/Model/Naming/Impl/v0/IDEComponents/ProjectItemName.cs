@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
@@ -22,7 +23,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
     public class ProjectItemName : BaseName, IProjectItemName
     {
         public ProjectItemName() : base("?") {}
-        public ProjectItemName([NotNull] string identifier) : base(identifier) {}
+
+        public ProjectItemName([NotNull] string identifier) : base(identifier)
+        {
+            if (!"?".Equals(identifier))
+            {
+                Asserts.That(identifier.Contains(" "));
+            }
+        }
 
         private string[] _parts;
 
