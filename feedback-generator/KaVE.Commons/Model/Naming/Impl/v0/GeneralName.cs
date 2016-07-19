@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-using System;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0
 {
     public class GeneralName : BaseName
     {
         public GeneralName() : base(UnknownNameIdentifier) {}
-        public GeneralName(string identifier) : base(identifier) {}
+        public GeneralName([NotNull] string identifier) : base(identifier) {}
 
         public override bool IsUnknown
         {
-            get { throw new NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

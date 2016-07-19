@@ -15,27 +15,19 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class LambdaName : BaseName, ILambdaName
     {
         public LambdaName() : base(UnknownNameIdentifier) {}
-        public LambdaName(string identifier) : base(identifier) {}
+        public LambdaName([NotNull] string identifier) : base(identifier) {}
 
-        public string Signature
-        {
-            get
-            {
-                var startOfSignature = Identifier.IndexOf('(');
-                return Identifier.Substring(startOfSignature);
-            }
-        }
-
-        public IList<IParameterName> Parameters
+        public IKaVEList<IParameterName> Parameters
         {
             get { return Identifier.GetParameterNames(); }
         }
@@ -58,7 +50,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public override bool IsUnknown
         {
-            get { throw new NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

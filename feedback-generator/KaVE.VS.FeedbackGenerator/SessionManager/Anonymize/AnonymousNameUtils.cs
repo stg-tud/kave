@@ -331,12 +331,11 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             return identifier;
         }
 
-        private static IEnumerable<ITypeParameterName> ToAnonymousTypeParameters(this IList<ITypeName> typeParameters,
+        private static IEnumerable<ITypeParameterName> ToAnonymousTypeParameters(
+            this IList<ITypeParameterName> typeParameters,
             bool anonymizeShortNames)
         {
-            return
-                typeParameters.OfType<ITypeParameterName>()
-                              .Select(tp => ToAnonymousTypeParameter(anonymizeShortNames)(tp));
+            return typeParameters.Select(tp => ToAnonymousTypeParameter(anonymizeShortNames)(tp));
         }
 
         private static Func<ITypeParameterName, ITypeParameterName> ToAnonymousTypeParameter(bool anonymizeShortNames)

@@ -28,7 +28,7 @@ namespace KaVE.Commons.Model.Naming.Impl
         {
             IMethodName m = new MethodName(input);
             var name = m.Name;
-            var sig = m.Signature;
+            var sig = "";
             var decl = m.DeclaringType.Identifier;
             var ret = m.ReturnType.Identifier;
             if (m.IsConstructor)

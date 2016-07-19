@@ -537,11 +537,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             return false;
         }
 
-        public IList<ITypeName> TypeParameters
+        public IKaVEList<ITypeParameterName> TypeParameters
         {
             get
             {
-                List<ITypeName> typePara = new KaVEList<ITypeName>();
+                var typePara = new KaVEList<ITypeParameterName>();
                 if (HasTypeParameters)
                 {
                     if (RegularHasTypeParameters())
@@ -549,7 +549,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                         var genericParams = GetGenericParams();
                         foreach (var p in genericParams)
                         {
-                            typePara.Add(Names.Type(p.typeParameter().GetText()));
+                            typePara.Add(Names.Type(p.typeParameter().GetText()).AsTypeParameterName);
                         }
                     }
                     else if (ArrayTypeNameHasTypeParameters())

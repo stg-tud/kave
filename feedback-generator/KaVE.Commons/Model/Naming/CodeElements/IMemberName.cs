@@ -21,6 +21,7 @@ namespace KaVE.Commons.Model.Naming.CodeElements
     public interface IMemberName : IName
     {
         ITypeName DeclaringType { get; }
+        ITypeName ValueType { get; }
         bool IsStatic { get; }
         string Name { get; }
     }

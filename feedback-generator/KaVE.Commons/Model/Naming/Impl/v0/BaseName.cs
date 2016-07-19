@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Commons.Model.Naming.Impl.v0
 {
     public abstract class BaseName : IName
@@ -24,7 +27,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         public abstract bool IsUnknown { get; }
 
-        public virtual bool IsHashed
+        public bool IsHashed
         {
             // The hash of a substring of the name is the Base64-encoded MD5 hash of the original substring.
             // Base64 works by encoding groups of 3 bytes. If the length of the input string is not divisible
@@ -35,8 +38,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             get { return Identifier.Contains("=="); }
         }
 
-        protected BaseName(string identifier)
+        protected BaseName([NotNull] string identifier)
         {
+            Asserts.NotNull(identifier);
             Identifier = identifier;
         }
 
@@ -56,6 +60,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return (Identifier != null ? Identifier.GetHashCode() : 0);
         }
 
+        // TODO NameUpdate: remove operators (check for usages before)!
         public static bool operator ==(BaseName n1, IName n2)
         {
             return Equals(n1, n2);

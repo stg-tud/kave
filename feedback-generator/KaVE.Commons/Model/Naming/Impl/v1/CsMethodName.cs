@@ -31,7 +31,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         public CsMethodName(TypeNamingParser.MethodContext ctx)
         {
             Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
-            this.Ctx = ctx;
+            Ctx = ctx;
         }
 
         public string Signature
@@ -144,6 +144,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
+        public ITypeName ValueType
+        {
+            get { return ReturnType; }
+        }
+
         public bool IsStatic
         {
             get
@@ -203,16 +208,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
-        public IList<ITypeName> TypeParameters
+        public IKaVEList<ITypeParameterName> TypeParameters
         {
             get
             {
-                List<ITypeName> typePara = new KaVEList<ITypeName>();
+                var typePara = Lists.NewList<ITypeParameterName>();
                 if (HasTypeParameters)
                 {
                     foreach (var p in Ctx.regularMethod().customMethod().genericTypePart().genericParam())
                     {
-                        typePara.Add(Names.Type(p.typeParameter().GetText()));
+                        typePara.Add(Names.Type(p.typeParameter().GetText()).AsTypeParameterName);
                     }
                 }
                 return typePara;

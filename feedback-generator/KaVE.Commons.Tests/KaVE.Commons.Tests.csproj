@@ -92,10 +92,12 @@
     <Compile Include="Model\Events\InfoEventTest.cs" />
     <Compile Include="Model\Events\UserProfiles\UserProfileEventTest.cs" />
     <Compile Include="Model\Naming\BuiltInTypeAliasesTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\CodeElements\MemberTestBase.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\CommandBarControlNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\CommandNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\SolutionNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Others\ReSharperLiveTemplateNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\TestUtilsV0.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\AssemblyNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyNameTest.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="Model\Naming\Impl\v0\Types\AssemblyNameTest2.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\AssemblyVersionTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\NamespaceNameTest.cs" />
-    <Compile Include="Model\Naming\Impl\v0\NameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\GeneralNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\ParameterNameTest.cs" />
     <Compile Include="Model\Naming\NamesTest.cs" />
     <Compile Include="Model\Naming\NameUtilsTest.cs" />

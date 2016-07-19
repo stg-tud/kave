@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
@@ -22,93 +24,93 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
     internal class ParameterNameTest
     {
         [Test]
-        public void ShouldImplementIsUnknown()
+        public void DefaultValues()
         {
-            Assert.That(Names.Parameter("?").IsUnknown);
+            var sut = new ParameterName();
+            Assert.AreEqual("???", sut.Name);
+            Assert.AreEqual(new TypeName(), sut.ValueType);
+            Assert.True(sut.IsUnknown);
+            Assert.False(sut.IsOutput);
+            Assert.False(sut.IsPassedByReference);
+            Assert.False(sut.IsExtensionMethodParameter);
+            Assert.False(sut.IsOptional);
+            Assert.False(sut.IsParameterArray);
         }
 
         [Test]
-        public void ShouldBeSimpleParameter()
+        public void ShouldRecognizeUnknownName()
         {
-            var parameterName = Names.Parameter("[ValueType, Assembly, 1.2.3.4] ParameterName");
+            Assert.True(new ParameterName().IsUnknown);
+            Assert.True(new ParameterName("[?] ???").IsUnknown);
+            Assert.False(new ParameterName("[T,P] p").IsUnknown);
+        }
 
-            Assert.AreEqual("ValueType, Assembly, 1.2.3.4", parameterName.ValueType.Identifier);
-            Assert.AreEqual("ParameterName", parameterName.Name);
-            Assert.IsFalse(parameterName.IsOptional);
-            Assert.IsFalse(parameterName.IsOutput);
-            Assert.IsFalse(parameterName.IsParameterArray);
-            Assert.IsFalse(parameterName.IsExtensionMethodParameter);
-            Assert.IsTrue(parameterName.IsPassedByReference);
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new ParameterName(null);
+        }
+
+        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        public void ShouldParseBasicInformation(string typeId)
+        {
+            var id = string.Format("[{0}] p", typeId);
+            var sut = new ParameterName(id);
+
+            Assert.AreEqual(typeId, sut.ValueType.Identifier);
+            Assert.AreEqual("p", sut.Name);
+            Assert.IsFalse(sut.IsOptional);
+            Assert.IsFalse(sut.IsOutput);
+            Assert.IsFalse(sut.IsParameterArray);
+            Assert.IsFalse(sut.IsExtensionMethodParameter);
+        }
+
+        [Test]
+        public void IsPassedByReferenceDepends()
+        {
+            Assert.False(new ParameterName("[?] p").IsPassedByReference);
+            Assert.False(new ParameterName("[System.Int32, mscorlib, 4.0.0.0] p").IsPassedByReference);
+            Assert.True(new ParameterName("ref [System.Int32, mscorlib, 4.0.0.0] p").IsPassedByReference);
+            Assert.True(new ParameterName("ref [T,P] p").IsPassedByReference);
         }
 
         [Test]
         public void ShouldBeOutputParameter()
         {
-            var parameterName = Names.Parameter("out [VT, A, 1.0.0.0] PName");
-
-            Assert.AreEqual("VT, A, 1.0.0.0", parameterName.ValueType.Identifier);
-            Assert.AreEqual("PName", parameterName.Name);
-            Assert.IsTrue(parameterName.IsOutput);
-        }
-
-        [Test]
-        public void ShouldBeValueParameter()
-        {
-            var parameterName = Names.Parameter("[System.Single, mscore, 4.0.0.0] i");
-
-            Assert.IsFalse(parameterName.IsPassedByReference);
-        }
-
-        [Test]
-        public void ShouldBeReferenceParameter()
-        {
-            var parameterName = Names.Parameter("ref [System.Single, mscore, 4.0.0.0] i");
-
-            Assert.IsTrue(parameterName.IsPassedByReference);
+            Assert.False(new ParameterName("[T,P] p").IsOutput);
+            Assert.True(new ParameterName("out [T,P] p").IsOutput);
         }
 
         [Test]
         public void ShouldBeParameterArray()
         {
-            var parameterName = Names.Parameter("params [T, P, 1.3.2.4] name");
-
-            Assert.IsTrue(parameterName.IsParameterArray);
+            Assert.False(new ParameterName("[T, P] p").IsParameterArray);
+            Assert.False(new ParameterName("[T, P] p").IsParameterArray);
+            Assert.False(new ParameterName("[T[], P] p").IsParameterArray);
+            Assert.True(new ParameterName("params [T[], P] p").IsParameterArray);
         }
 
-        [Test]
-        public void ShouldNoBeParameterArray()
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectParamsWithoutArrayType()
         {
-            var parameterName = Names.Parameter("[arr(1):T, P, 1.3.2.4] name");
-
-            Assert.IsTrue(parameterName.ValueType.IsArrayType);
-            Assert.IsFalse(parameterName.IsParameterArray);
+            // ReSharper disable once ObjectCreationAsStatement
+            new ParameterName("params [T, P] p");
         }
 
         [Test]
         public void ShouldHaveDefaultValue()
         {
-            var parameterName = Names.Parameter("opt [T, A, 4.3.2.1] p");
-
-            Assert.IsTrue(parameterName.IsOptional);
+            Assert.False(new ParameterName("[T,P] p").IsOptional);
+            Assert.True(new ParameterName("opt [T,P] p").IsOptional);
         }
 
         [Test]
         public void ShouldBeExtensionMethodParameter()
         {
-            var parameterName = Names.Parameter("this [T, A, 4.3.2.1] p");
-
-            Assert.IsTrue(parameterName.IsExtensionMethodParameter);
-        }
-
-        [Test, Ignore]
-        public void ShouldBeOptionalReferenceParameter()
-        {
-            var parameterName = Names.Parameter("opt ref [System.Double, mscore, 4.0.0.0] param");
-
-            Assert.IsTrue(parameterName.IsOptional);
-            Assert.IsTrue(parameterName.IsPassedByReference);
-            Assert.IsFalse(parameterName.IsOutput);
-            Assert.IsFalse(parameterName.IsParameterArray);
+            Assert.False(new ParameterName("[T,P] p").IsExtensionMethodParameter);
+            Assert.True(new ParameterName("this [T,P] p").IsExtensionMethodParameter);
         }
     }
 }

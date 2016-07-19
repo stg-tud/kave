@@ -15,17 +15,18 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class AliasName : BaseName, IAliasName
     {
         public AliasName() : base(UnknownNameIdentifier) {}
-        public AliasName(string identifier) : base(identifier) {}
+        public AliasName([NotNull] string identifier) : base(identifier) {}
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

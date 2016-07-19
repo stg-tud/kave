@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
 {
-    internal class AliasNameTest
+    internal class GeneralNameTest
     {
-        [Test]
-        public void DefaultValues()
-        {
-            var sut = new AliasName();
-            Assert.True(sut.IsUnknown);
-            Assert.False(sut.IsHashed);
-        }
-
         [Test]
         public void ShouldRecognizeUnknownName()
         {
-            Assert.True(new AliasName().IsUnknown);
-            Assert.True(new AliasName("???").IsUnknown);
+            Assert.True(new GeneralName().IsUnknown);
+            Assert.True(new GeneralName("???").IsUnknown);
+            Assert.False(new GeneralName("x").IsUnknown);
         }
 
         [Test, ExpectedException(typeof(AssertException))]
@@ -42,13 +35,22 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         {
             // ReSharper disable once ObjectCreationAsStatement
             // ReSharper disable once AssignNullToNotNullAttribute
-            new AliasName(null);
+            new GeneralName(null);
         }
 
-        [Test, Ignore]
-        public void AddValidExampleOfAnAliasName()
+        [Test]
+        public void ShouldImplementIsHashed()
         {
-            Assert.Fail();
+            Assert.IsTrue(new GeneralName("72launbJW34oSO9wR5XBdw==").IsHashed);
+            Assert.IsFalse(new GeneralName("x").IsHashed);
+        }
+
+        [Test]
+        public void ShouldNotChangeOrCloneIdentfier()
+        {
+            var expected = "x";
+            var actual = new GeneralName(expected).Identifier;
+            Assert.AreSame(expected, actual);
         }
     }
 }

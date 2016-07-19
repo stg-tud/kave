@@ -210,7 +210,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
-        public SSTPrintingContext TypeParameters(IList<ITypeName> typeParameters)
+        public SSTPrintingContext TypeParameters(IList<ITypeParameterName> typeParameters)
         {
             LeftAngleBracket();
 

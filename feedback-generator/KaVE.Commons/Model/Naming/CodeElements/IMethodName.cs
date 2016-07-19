@@ -21,7 +21,6 @@ namespace KaVE.Commons.Model.Naming.CodeElements
 {
     public interface IMethodName : IMemberName, IGenericName
     {
-        string Signature { get; }
         IList<IParameterName> Parameters { get; }
         bool HasParameters { get; }
         bool IsConstructor { get; }

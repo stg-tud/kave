@@ -15,6 +15,8 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
@@ -22,9 +24,50 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
     internal class LocalVariableNameTest
     {
         [Test]
-        public void ShouldImplementIsUnknown()
+        public void DefaultValues()
         {
-            Assert.That(new LocalVariableName().IsUnknown);
+            var sut = new LocalVariableName();
+            Assert.AreEqual("???", sut.Name);
+            Assert.AreEqual(new TypeName(), sut.ValueType);
+            Assert.True(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldRecognizeUnknownName()
+        {
+            Assert.True(new LocalVariableName().IsUnknown);
+            Assert.True(new LocalVariableName("[?] ???").IsUnknown);
+            Assert.False(new LocalVariableName("[T,P] o").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new LocalVariableName(null);
+        }
+
+        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        public void ShouldParseType(string typeId)
+        {
+            var id = string.Format("[{0}] id", typeId);
+            var sut = new LocalVariableName(id);
+
+            var actual = sut.ValueType;
+            var expected = TypeUtils.CreateTypeName(typeId);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        public void ShouldParseVariableName(string typeId)
+        {
+            var id = string.Format("[{0}] id", typeId);
+            var sut = new LocalVariableName(id);
+
+            var actual = sut.Name;
+            var expected = "id";
+            Assert.AreEqual(expected, actual);
         }
     }
 }

@@ -86,9 +86,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return false; }
         }
 
-        public IList<ITypeName> TypeParameters
+        public IKaVEList<ITypeParameterName> TypeParameters
         {
-            get { return Lists.NewList<ITypeName>(); }
+            get { return Lists.NewList<ITypeParameterName>(); }
         }
 
         public IAssemblyName Assembly
@@ -346,7 +346,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return Identifier; }
         }
 
-        public IList<IParameterName> Parameters
+        public IKaVEList<IParameterName> Parameters
         {
             get { return Lists.NewList<IParameterName>(); }
         }
@@ -379,11 +379,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         ITypeName IDelegateTypeName.ReturnType
         {
             get { return Get(typeof(ITypeName)); }
-        }
-
-        string IMethodName.Signature
-        {
-            get { return Identifier; }
         }
 
         IList<IParameterName> IMethodName.Parameters

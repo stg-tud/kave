@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
@@ -26,7 +27,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         protected MemberName(string identifier) : base(identifier) {}
 
-        public string Modifiers
+        protected string Modifiers
         {
             get { return Identifier.Substring(0, Identifier.IndexOf('[')); }
         }
@@ -39,7 +40,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var startOfDecarlingType = Identifier.StartOfNextTypeIdentifier(endOfValueType) + 1;
                 var endOfDeclaringType = Identifier.EndOfNextTypeIdentifier(endOfValueType) - 1;
                 var lengthOfDeclaringType = endOfDeclaringType - startOfDecarlingType;
-                return Names.Type(Identifier.Substring(startOfDecarlingType, lengthOfDeclaringType));
+                return TypeUtils.CreateTypeName(Identifier.Substring(startOfDecarlingType, lengthOfDeclaringType));
             }
         }
 
@@ -67,7 +68,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var startOfValueType = Identifier.StartOfNextTypeIdentifier(0) + 1;
                 var endOfValueType = Identifier.EndOfNextTypeIdentifier(0) - 1;
                 var lengthOfValueTypeIdentifier = endOfValueType - startOfValueType;
-                return Names.Type(Identifier.Substring(startOfValueType, lengthOfValueTypeIdentifier));
+                return TypeUtils.CreateTypeName(Identifier.Substring(startOfValueType, lengthOfValueTypeIdentifier));
             }
         }
     }

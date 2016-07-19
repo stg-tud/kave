@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming
 {
@@ -28,6 +29,6 @@ namespace KaVE.Commons.Model.Naming
         /// </summary>
         bool HasTypeParameters { get; }
 
-        IList<ITypeName> TypeParameters { get; }
+        IKaVEList<ITypeParameterName> TypeParameters { get; }
     }
 }

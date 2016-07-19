@@ -15,10 +15,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -118,9 +118,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
         }
 
-        public IList<ITypeName> TypeParameters
+        public IKaVEList<ITypeParameterName> TypeParameters
         {
-            get { return HasTypeParameters ? FullName.ParseTypeParameters() : new List<ITypeName>(); }
+            get { return HasTypeParameters ? FullName.ParseTypeParameters() : Lists.NewList<ITypeParameterName>(); }
         }
 
         public bool IsGenericEntity

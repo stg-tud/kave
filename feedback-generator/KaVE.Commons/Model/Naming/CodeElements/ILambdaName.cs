@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.CodeElements
 {
     public interface ILambdaName : IName
     {
-        string Signature { get; }
-        IList<IParameterName> Parameters { get; }
-        bool HasParameters { get; }
         ITypeName ReturnType { get; }
+        bool HasParameters { get; }
+        IKaVEList<IParameterName> Parameters { get; }
     }
 }

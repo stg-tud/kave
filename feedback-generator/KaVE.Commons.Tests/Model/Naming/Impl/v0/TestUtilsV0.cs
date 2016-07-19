@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
-using NUnit.Framework;
-
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
 {
-    internal class NameTest
+    internal class TestUtilsV0
     {
-        [Test]
-        public void ShouldImplementIsUnknown()
+        public static string[] TypeSource()
         {
-            Assert.Fail();
-            //Assert.That(BaseName.UnknownName.IsUnknown);
-        }
-
-        [Test]
-        public void ShouldImplementIsHashed()
-        {
-            Assert.IsFalse(new TypeName("System.Int32, mscore, 4.0.0.0").IsHashed);
-            Assert.IsTrue(
-                new TypeName("pNX6Dym0JEkqjiMC-A8XnQ==.J5Ork5yYgIPYJrg19qjg5A==, 72launbJW34oSO9wR5XBdw==").IsHashed);
+            return new[] {"?", "T,P", "T[],P", "d:[?] [n.C+D].()", "T'1[[P -> T2,P]],P"};
         }
     }
 }

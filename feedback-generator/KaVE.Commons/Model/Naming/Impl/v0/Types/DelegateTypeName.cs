@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.JetBrains.Annotations;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -45,8 +45,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return identifier;
         }
 
-        public DelegateTypeName() : base("d:[?] [?].()") { }
-        public DelegateTypeName(string identifier) : base(identifier) { }
+        public DelegateTypeName() : base("d:[?] [?].()") {}
+        public DelegateTypeName(string identifier) : base(identifier) {}
 
         private IMethodName DelegateMethod
         {
@@ -213,7 +213,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return DelegateType.HasTypeParameters; }
         }
 
-        public IList<ITypeName> TypeParameters
+        public IKaVEList<ITypeParameterName> TypeParameters
         {
             get { return DelegateType.TypeParameters; }
         }

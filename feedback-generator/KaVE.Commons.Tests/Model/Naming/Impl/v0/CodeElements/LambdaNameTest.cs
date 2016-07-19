@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
@@ -22,33 +26,49 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
     internal class LambdaNameTest
     {
         [Test]
-        public void ReturnType()
+        public void DefaultValues()
         {
-            var name = Names.GetLambdaName("[System.String, mscorlib, 4.0.0.0] ()");
-
-            Assert.AreEqual("System.String, mscorlib, 4.0.0.0", name.ReturnType.Identifier);
+            var sut = new LambdaName();
+            Assert.AreEqual(new TypeName(), sut.ReturnType);
+            Assert.True(sut.IsUnknown);
+            Assert.False(sut.HasParameters);
+            Assert.AreEqual(Lists.NewList<IParameterName>(), sut.Parameters);
         }
 
         [Test]
-        public void WithoutParameters()
+        public void ShouldRecognizeUnknownName()
         {
-            var name = Names.GetLambdaName("[System.String, mscorlib, 4.0.0.0] ()");
+            Assert.True(new LambdaName().IsUnknown);
+            Assert.True(new LambdaName("???").IsUnknown);
+            Assert.False(new LambdaName("[?] ()").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new LambdaName(null);
+        }
+
+        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        public void WithoutParameters(string typeId)
+        {
+            var name = new LambdaName("[System.String, mscorlib, 4.0.0.0] ()");
 
             Assert.False(name.HasParameters);
             CollectionAssert.IsEmpty(name.Parameters);
-            Assert.AreEqual("()", name.Signature);
         }
 
-        [Test]
-        public void WithParameters()
+        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        public void WithParameters(string typeId)
         {
-            var name = Names.GetLambdaName("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)");
+            var name = new LambdaName("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)");
 
             Assert.True(name.HasParameters);
             CollectionAssert.AreEqual(
-                new[] {Names.Parameter("[C, A] p1"), Names.Parameter("[C, B] p2")},
+                new[] {new ParameterName("[C, A] p1"), new ParameterName("[C, B] p2")},
                 name.Parameters);
-            Assert.AreEqual("([C, A] p1, [C, B] p2)", name.Signature);
         }
     }
 }

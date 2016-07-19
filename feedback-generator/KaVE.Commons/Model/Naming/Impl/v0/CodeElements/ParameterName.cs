@@ -15,20 +15,32 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class ParameterName : BaseName, IParameterName
     {
+        private const string UnknownParameterNameIdentifier = "[?] ???";
+
         public const string PassByReferenceModifier = "ref";
         public const string OutputModifier = "out";
         public const string VarArgsModifier = "params";
         public const string OptionalModifier = "opt";
         public const string ExtensionMethodModifier = "this";
 
-        public ParameterName() : base("[?] ???") {}
-        public ParameterName(string identifier) : base(identifier) {}
+        public ParameterName() : base(UnknownParameterNameIdentifier) {}
+
+        public ParameterName([NotNull] string identifier) : base(identifier)
+        {
+            if (IsParameterArray)
+            {
+                Asserts.That(ValueType.IsArrayType);
+            }
+        }
 
         public ITypeName ValueType
         {
@@ -37,7 +49,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 var startOfValueTypeIdentifier = Identifier.IndexOf('[') + 1;
                 var endOfValueTypeIdentifier = Identifier.LastIndexOf(']');
                 var lengthOfValueTypeIdentifier = endOfValueTypeIdentifier - startOfValueTypeIdentifier;
-                return Names.Type(Identifier.Substring(startOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
+                return
+                    TypeUtils.CreateTypeName(
+                        Identifier.Substring(startOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
             }
         }
 
@@ -78,7 +92,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownParameterNameIdentifier.Equals(Identifier); }
         }
     }
 }

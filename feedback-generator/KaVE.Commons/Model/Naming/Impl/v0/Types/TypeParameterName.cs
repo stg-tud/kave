@@ -18,12 +18,13 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     // TODO NameUpdate: strange... this type seems to create endless loops for all properties!? check changes...
-    public class TypeParameterName : BaseName, ITypeName
+    public class TypeParameterName : BaseName, ITypeParameterName
     {
         /// <summary>
         ///     The separator between the parameter type's short name and its type.
@@ -66,7 +67,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return TypeParameterType.HasTypeParameters; }
         }
 
-        public IList<ITypeName> TypeParameters
+        public IKaVEList<ITypeParameterName> TypeParameters
         {
             get { return TypeParameterType.TypeParameters; }
         }

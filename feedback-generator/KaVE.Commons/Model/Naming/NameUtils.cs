@@ -16,9 +16,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming
 {
@@ -28,9 +32,9 @@ namespace KaVE.Commons.Model.Naming
         ///     Parses the type parameter list from a type's full name or a method's signature.
         /// </summary>
         /// <param name="fullNameOrSignature">Expected to contain a type-parameter list.</param>
-        public static List<ITypeName> ParseTypeParameters(this string fullNameOrSignature)
+        public static IKaVEList<ITypeParameterName> ParseTypeParameters(this string fullNameOrSignature)
         {
-            var parameters = new List<ITypeName>();
+            var parameters = Lists.NewList<ITypeParameterName>();
             var openBraces = 0;
             var startIndex = fullNameOrSignature.IndexOf('[') + 1;
             for (var currentIndex = startIndex; currentIndex < fullNameOrSignature.Length; currentIndex++)
@@ -52,7 +56,7 @@ namespace KaVE.Commons.Model.Naming
                         var descriptor = fullNameOrSignature.Substring(
                             indexAfterOpeningBrace,
                             lengthToBeforeClosingBrace);
-                        var parameterTypeName = Names.Type(descriptor);
+                        var parameterTypeName = new TypeParameterName(descriptor);
                         parameters.Add(parameterTypeName);
                         startIndex = fullNameOrSignature.IndexOf('[', currentIndex);
                     }
@@ -136,9 +140,74 @@ namespace KaVE.Commons.Model.Naming
             return (startOfParameters > 0 && identifierWithparameters[startOfParameters + 1] != ')');
         }
 
-        public static IList<IParameterName> GetParameterNames(this string identifierWithParameters)
+        public static bool HasParametersXX(this string id)
         {
-            var parameters = new List<IParameterName>();
+            return GetParamListFromMethod(id).Length > 0;
+        }
+
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        private static string GetParamListFromMethod(string id)
+        {
+            var openRT = id.IndexOf("[", StringComparison.Ordinal);
+            var closeRT = id.FindCorrespondingCloseBracket(openRT);
+
+            var openDT = id.FindNext(closeRT, '[');
+            var closeDT = id.FindCorrespondingCloseBracket(openDT);
+
+
+            var nextGeneric = id.FindNext(closeDT, '`');
+            if (nextGeneric == -1)
+            {
+                nextGeneric = id.Length;
+            }
+            var nextParam = id.FindNext(closeDT, '(');
+            var isGeneric = nextGeneric < nextParam;
+
+            int openParams;
+            if (isGeneric)
+            {
+                var openGeneric = id.FindNext(closeDT, '[');
+                var closeGeneric = id.FindCorrespondingCloseBracket(openGeneric);
+
+                openParams = id.FindNext(closeGeneric, '(');
+            }
+            else
+            {
+                openParams = id.FindNext(closeDT, '(');
+            }
+            var closeParams = id.FindCorrespondingCloseBracket(openParams);
+
+            var paramId = id.Substring(openParams + 1, closeParams - openParams - 1);
+            return paramId.Trim();
+        }
+
+        public static IKaVEList<IParameterName> GetParameterNamesFromMethod(this string id)
+        {
+            var names = Lists.NewList<IParameterName>();
+            var paramsId = GetParamListFromMethod(id);
+
+            var cur = 0;
+            while (cur < paramsId.Length)
+            {
+                var openType = paramsId.FindNext(cur, '[');
+                var closeType = paramsId.FindCorrespondingCloseBracket(openType);
+                var endParam = paramsId.FindNext(closeType, ',');
+                if (endParam == -1)
+                {
+                    endParam = paramsId.Length;
+                }
+                var curId = paramsId.Substring(cur, endParam - cur).Trim();
+                names.Add(new ParameterName(curId));
+
+                cur = endParam;
+                cur++; // comma (does not hurt for end of brace)
+            }
+            return names;
+        }
+
+        public static IKaVEList<IParameterName> GetParameterNames(this string identifierWithParameters)
+        {
+            var parameters = Lists.NewList<IParameterName>();
             var endOfParameters = identifierWithParameters.LastIndexOf(')');
             var hasNoBrackets = endOfParameters == -1;
             if (hasNoBrackets)

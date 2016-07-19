@@ -14,72 +14,65 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
 {
-    internal class PropertyNameTest
+    internal class PropertyNameTest : MemberTestBase
     {
+        protected override IMemberName GetMemberNameForBaseTests(string basicMemberSignature)
+        {
+            // TODO NameUpdate: think again about this "()" at the end
+            return new PropertyName(string.Format("get set {0}()", basicMemberSignature));
+        }
+
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new PropertyName();
+            Assert.AreEqual(new TypeName(), sut.DeclaringType);
+            Assert.AreEqual(new TypeName(), sut.ValueType);
+            Assert.False(sut.IsStatic);
+            Assert.AreEqual("[?] [?].???", sut.Identifier);
+            Assert.AreEqual("???", sut.Name);
+            Assert.True(sut.IsUnknown);
+            Assert.False(sut.IsHashed);
+            Assert.False(sut.HasGetter);
+            Assert.False(sut.HasSetter);
+        }
+
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(new PropertyName().IsUnknown);
+            Assert.True(new PropertyName().IsUnknown);
+            Assert.True(new PropertyName("[?] [?].???").IsUnknown);
+            Assert.False(new PropertyName("[T1,P] [T2,P].f").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new PropertyName(null);
         }
 
         [Test]
-        public void ShouldBeSimpleProperty()
+        public void ShouldParseGetter()
         {
-            const string valueTypeIdentifier = "A, B, 1.0.0.0";
-            const string declaringTypeIdentifier = "C, D, 0.9.8.7";
-            var propertyName =
-                Names.Property("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
-
-            Assert.AreEqual("Property", propertyName.Name);
-            Assert.AreEqual(valueTypeIdentifier, propertyName.ValueType.Identifier);
-            Assert.AreEqual(declaringTypeIdentifier, propertyName.DeclaringType.Identifier);
-            Assert.IsFalse(propertyName.IsStatic);
+            Assert.IsFalse(new PropertyName("[T,P] [T,P].Prop").HasGetter);
+            Assert.IsTrue(new PropertyName("get [T,P] [T,P].Prop").HasGetter);
         }
 
         [Test]
-        public void ShoudBePropertyWithGetter()
+        public void ShouldParseSetter()
         {
-            var propertyName =
-                Names.Property("get [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
-            Assert.IsTrue(propertyName.HasGetter);
-        }
-
-        [Test]
-        public void ShoudBePropertyWithSetter()
-        {
-            var propertyName =
-                Names.Property("set [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
-            Assert.IsTrue(propertyName.HasSetter);
-        }
-
-        [Test]
-        public void ShouldBeStaticProperty()
-        {
-            var propertyName =
-                Names.Property("static [A, B, 1.2.3.4] [C, D, 5.6.7.8].E");
-            Assert.IsTrue(propertyName.IsStatic);
-        }
-
-        [Test]
-        public void HandlesDelegateValueType()
-        {
-            var propertyName =
-                Names.Property("[d:[R,A] [D,A].m()] [D,B].P");
-            Assert.AreEqual("P", propertyName.Name);
-        }
-
-        [Test]
-        public void PropertyNameIsSimpleName()
-        {
-            var propertyName =
-                Names.Property("[TR,P] [TD,P].P()");
-            Assert.AreEqual("P", propertyName.Name);
+            Assert.IsFalse(new PropertyName("[T,P] [T,P].Prop").HasSetter);
+            Assert.IsTrue(new PropertyName("set [T,P] [T,P].Prop").HasSetter);
         }
     }
 }

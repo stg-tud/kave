@@ -15,14 +15,18 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class LocalVariableName : BaseName, ILocalVariableName
     {
-        public LocalVariableName() : base("[?] ???") {}
-        public LocalVariableName(string identifier) : base(identifier) {}
+        private const string UnknownLocalVariableName = "[?] ???";
+
+        public LocalVariableName() : base(UnknownLocalVariableName) {}
+        public LocalVariableName([NotNull] string identifier) : base(identifier) {}
 
         public string Name
         {
@@ -38,13 +42,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get
             {
                 var lengthOfTypeIdentifier = Identifier.LastIndexOf(']') - 1;
-                return Names.Type(Identifier.Substring(1, lengthOfTypeIdentifier));
+                return TypeUtils.CreateTypeName(Identifier.Substring(1, lengthOfTypeIdentifier));
             }
         }
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownLocalVariableName.Equals(Identifier); }
         }
     }
 }

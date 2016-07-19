@@ -20,10 +20,40 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     public class TypeUtils
     {
-        // TODO NameUpdate: get rid of this artifcat method
         public static ITypeName CreateTypeName(string identifier)
         {
-            return NamesV0.Type(identifier);
+            // checked first, because it's a special case
+            if (identifier == string.Empty || UnknownTypeName.IsUnknownTypeIdentifier(identifier))
+            {
+                return UnknownTypeName.Instance;
+            }
+            // checked second, since type parameters can have any kind of type
+            if (TypeParameterName.IsTypeParameterIdentifier(identifier))
+            {
+                return new TypeParameterName(identifier);
+            }
+            // checked third, since the array's value type can have any kind of type
+            if (ArrayTypeName.IsArrayTypeIdentifier(identifier))
+            {
+                return new ArrayTypeName(identifier);
+            }
+            if (InterfaceTypeName.IsInterfaceTypeIdentifier(identifier))
+            {
+                return new InterfaceTypeName(identifier);
+            }
+            if (StructTypeName.IsStructTypeIdentifier(identifier))
+            {
+                return new StructTypeName(identifier);
+            }
+            if (EnumTypeName.IsEnumTypeIdentifier(identifier))
+            {
+                return new EnumTypeName(identifier);
+            }
+            if (DelegateTypeName.IsDelegateTypeIdentifier(identifier))
+            {
+                return new DelegateTypeName(DelegateTypeName.FixLegacyDelegateNames(identifier));
+            }
+            return new TypeName(identifier);
         }
     }
 }

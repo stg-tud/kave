@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
@@ -25,7 +26,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public PropertyName() : base(UnknownMemberIdentifier) {}
 
-        public PropertyName(string identifier) : base(identifier) {}
+        public PropertyName([NotNull] string identifier) : base(identifier) {}
 
         public override bool IsUnknown
         {

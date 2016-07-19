@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
@@ -23,7 +22,7 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
-    public class CsLambdaName : ILambdaName, IName
+    public class CsLambdaName : ILambdaName
     {
         private readonly TypeNamingParser.LambdaNameContext _ctx;
 
@@ -48,12 +47,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return Identifier.Contains("=="); }
         }
 
-        public string Signature
-        {
-            get { return _ctx.realLambdaName().methodSignature().GetText(); }
-        }
-
-        public IList<IParameterName> Parameters
+        public IKaVEList<IParameterName> Parameters
         {
             get
             {

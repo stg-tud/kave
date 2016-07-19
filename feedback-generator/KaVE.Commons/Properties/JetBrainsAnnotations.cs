@@ -40,7 +40,7 @@ namespace KaVE.JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(
-        AttributeTargets.Method | AttributeTargets.Parameter |
+        AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Parameter |
         AttributeTargets.Property | AttributeTargets.Delegate |
         AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class CanBeNullAttribute : Attribute {}
@@ -54,7 +54,7 @@ namespace KaVE.JetBrains.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(
-        AttributeTargets.Method | AttributeTargets.Parameter |
+        AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Parameter |
         AttributeTargets.Property | AttributeTargets.Delegate |
         AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class NotNullAttribute : Attribute {}

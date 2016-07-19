@@ -84,7 +84,6 @@
     <Compile Include="Model\Naming\IDEComponents\ISolutionName.cs" />
     <Compile Include="Model\Naming\IDEComponents\IWindowName.cs" />
     <Compile Include="Model\Naming\Impl\v0\GeneralName.cs" />
-    <Compile Include="Model\Naming\Impl\v0\NamesV0.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeUtils.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyName.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyVersion.cs" />

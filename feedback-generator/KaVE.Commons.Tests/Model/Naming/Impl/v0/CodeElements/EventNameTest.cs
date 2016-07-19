@@ -14,37 +14,48 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
 {
-    internal class EventNameTest
+    internal class EventNameTest : MemberTestBase
     {
+        protected override IMemberName GetMemberNameForBaseTests(string basicMemberSignature)
+        {
+            return new EventName(basicMemberSignature);
+        }
+
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new EventName();
+            Assert.AreEqual(new TypeName(), sut.DeclaringType);
+            Assert.AreEqual(new TypeName(), sut.ValueType);
+            Assert.False(sut.IsStatic);
+            Assert.AreEqual("[?] [?].???", sut.Identifier);
+            Assert.AreEqual("???", sut.Name);
+            Assert.True(sut.IsUnknown);
+            Assert.False(sut.IsHashed);
+        }
+
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(new EventName().IsUnknown);
+            Assert.True(new EventName().IsUnknown);
+            Assert.True(new EventName("[?] [?].???").IsUnknown);
+            Assert.False(new EventName("[T1,P] [T2,P].e").IsUnknown);
         }
 
-        [Test]
-        public void ShouldBeSimpleEvent()
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
         {
-            var eventName = Names.Event("[ChangedEventHandler, IO, 1.2.3.4] [TextBox, GUI, 0.8.7.6].Changed");
-
-            Assert.AreEqual("ChangedEventHandler", eventName.HandlerType.FullName);
-            Assert.AreEqual("TextBox", eventName.DeclaringType.FullName);
-            Assert.AreEqual("Changed", eventName.Name);
-        }
-
-        [Test]
-        public void ShouldBeUnknownEvent()
-        {
-            Assert.AreSame(UnknownTypeName.Instance, new EventName().HandlerType);
-            Assert.AreSame(UnknownTypeName.Instance, new EventName().DeclaringType);
-            Assert.AreEqual("???", new EventName().Name);
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new EventName(null);
         }
     }
 }

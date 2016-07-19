@@ -16,9 +16,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
@@ -28,7 +32,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public MethodName() : base(UnknownMethodIdentifier) {}
 
-        public MethodName(string identifier) : base(identifier) {}
+        public MethodName([NotNull] string identifier) : base(identifier)
+        {
+            if (IsConstructor)
+            {
+                Asserts.That(ReturnType.IsVoidType);
+            }
+        }
 
         public override bool IsUnknown
         {
@@ -44,14 +54,52 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get { return SignatureSyntax.Match(Identifier).Groups[3].Value; }
         }
 
+        private string _fullName;
+
         private string FullName
         {
-            get { return SignatureSyntax.Match(Identifier).Groups[2].Value; }
+            get { return _fullName ?? (_fullName = GetFullNameFromMethod(Identifier)); }
         }
 
-        public IList<ITypeName> TypeParameters
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        private static string GetFullNameFromMethod(string id)
         {
-            get { return HasTypeParameters ? FullName.ParseTypeParameters() : new List<ITypeName>(); }
+            var openRT = id.IndexOf("[", StringComparison.Ordinal);
+            var closeRT = id.FindCorrespondingCloseBracket(openRT);
+
+            var openDT = id.FindNext(closeRT, '[');
+            var closeDT = id.FindCorrespondingCloseBracket(openDT);
+
+            var dot = id.FindNext(closeDT, '.');
+
+            var nextGeneric = id.FindNext(dot, '`');
+            if (nextGeneric == -1)
+            {
+                nextGeneric = id.Length;
+            }
+            var nextParam = id.FindNext(dot, '(');
+            var isGeneric = nextGeneric < nextParam;
+
+            int openParams;
+            if (isGeneric)
+            {
+                var openGeneric = id.FindNext(dot, '[');
+                var closeGeneric = id.FindCorrespondingCloseBracket(openGeneric);
+
+                openParams = id.FindNext(closeGeneric, '(');
+            }
+            else
+            {
+                openParams = id.FindNext(dot, '(');
+            }
+            int afterDot = dot + 1;
+            var fullName = id.Substring(afterDot, openParams - afterDot).Trim();
+            return fullName;
+        }
+
+        public IKaVEList<ITypeParameterName> TypeParameters
+        {
+            get { return HasTypeParameters ? FullName.ParseTypeParameters() : Lists.NewList<ITypeParameterName>(); }
         }
 
         public bool HasTypeParameters
@@ -64,26 +112,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get { return HasTypeParameters; }
         }
 
+        private IKaVEList<IParameterName> _parameters;
+
         public IList<IParameterName> Parameters
         {
-            get
-            {
-                try
-                {
-                    return Identifier.GetParameterNames();
-                }
-                catch (Exception e)
-                {
-                    // TODO improve handling in NameUtils
-                    Console.WriteLine("Error getting params for '{0}', falling back to none", Identifier);
-                    return new List<IParameterName>();
-                }
-            }
+            get { return _parameters ?? (_parameters = Identifier.GetParameterNamesFromMethod()); }
         }
 
         public bool HasParameters
         {
-            get { return Identifier.HasParameters(); }
+            get { return Parameters.Count > 0; }
         }
 
         public bool IsConstructor
@@ -93,12 +131,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public ITypeName ReturnType
         {
+            // TODO NameUpdate: Technically, this is not correct! the value type of a method is a delegate
             get { return ValueType; }
-        }
-
-        public string Signature
-        {
-            get { return SignatureSyntax.Match(Identifier).Groups[1].Value; }
         }
 
         public bool IsExtensionMethod
