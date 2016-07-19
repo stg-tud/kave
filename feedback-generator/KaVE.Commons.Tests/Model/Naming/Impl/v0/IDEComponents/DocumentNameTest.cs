@@ -15,23 +15,58 @@
  */
 
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 {
     internal class DocumentNameTest
     {
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new DocumentName();
+            Assert.AreEqual("???", sut.Language);
+            Assert.AreEqual("???", sut.FileName);
+            Assert.IsTrue(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new DocumentName().IsUnknown);
+            Assert.True(new DocumentName("???").IsUnknown);
+            Assert.False(new DocumentName("C# f.cs").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new DocumentName(null);
+        }
+
         [TestCase("CSharp C:\\File.cs", "CSharp", "C:\\File.cs"),
          TestCase(" \\File.ext", "", "\\File.ext"),
          TestCase("Basic Code.vb", "Basic", "Code.vb"),
          TestCase("C/C++ Code.c", "C/C++", "Code.c"),
-         TestCase("Plain Text Readme.txt", "Plain Text", "Readme.txt")]
+         TestCase("Plain Text Readme.txt", "Plain Text", "Readme.txt"),
+         TestCase("Plain Text Path With Spaces\\Readme.txt", "Plain Text", "Path With Spaces\\Readme.txt")]
         public void ParsesName(string identifier, string language, string fileName)
         {
             var uut = Names.Document(identifier);
 
             Assert.AreEqual(language, uut.Language);
             Assert.AreEqual(fileName, uut.FileName);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectNameWithoutSpaces()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new DocumentName("C:\\No\\Type\\Only\\File.cs");
         }
     }
 }

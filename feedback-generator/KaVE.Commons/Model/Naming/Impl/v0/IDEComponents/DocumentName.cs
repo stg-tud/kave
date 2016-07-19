@@ -15,36 +15,57 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class DocumentName : BaseName, IDocumentName
     {
         public DocumentName() : base(UnknownNameIdentifier) {}
-        public DocumentName(string identifier) : base(identifier) {}
 
-        private string[] Parts()
+        public DocumentName([NotNull] string identifier) : base(identifier)
         {
-            if (Identifier.StartsWith("Plain Text "))
+            if (!UnknownNameIdentifier.Equals(identifier))
             {
-                return new[] {"Plain Text", Identifier.Substring(11)};
+                Asserts.That(identifier.Contains(" "));
             }
-            return Identifier.Split(new[] {' '}, 2);
+        }
+
+        private string[] _parts;
+
+        private string[] Parts
+        {
+            get
+            {
+                if (_parts == null)
+                {
+                    if (Identifier.StartsWith("Plain Text "))
+                    {
+                        _parts = new[] {"Plain Text", Identifier.Substring(11)};
+                    }
+                    else
+                    {
+                        _parts = Identifier.Split(new[] {' '}, 2);
+                    }
+                }
+                return _parts;
+            }
         }
 
         public string Language
         {
-            get { return Parts()[0]; }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[0]; }
         }
 
         public string FileName
         {
-            get { return Parts()[1]; }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[1]; }
         }
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }
