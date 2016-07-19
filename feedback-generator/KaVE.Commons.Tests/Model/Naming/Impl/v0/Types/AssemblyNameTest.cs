@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
@@ -23,41 +24,63 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
     internal class AssemblyNameTest
     {
         [Test]
-        public void HappyPath()
+        public void DefaultValues()
         {
-            var n = Names.Assembly("A, 1.2.3.4");
-            AssertName(n, "A");
-            AssertVersion(n, "1.2.3.4");
+            var sut = new AssemblyName();
+            Assert.IsFalse(sut.IsLocalProject);
+            Assert.AreEqual("???", sut.Name);
+            Assert.AreEqual(new AssemblyVersion(), sut.Version);
+            Assert.IsTrue(sut.IsUnknown);
         }
 
         [Test]
-        public void NoVersion()
+        public void HappyPath_Assembly()
         {
-            var n = Names.Assembly("A");
-            AssertName(n, "A");
-            AssertVersion(n, "?");
+            var sut = new AssemblyName("A, 1.2.3.4");
+            Assert.IsFalse(sut.IsLocalProject);
+            Assert.AreEqual("A", sut.Name);
+            Assert.AreEqual(new AssemblyVersion("1.2.3.4"), sut.Version);
+            Assert.IsFalse(sut.IsUnknown);
         }
 
         [Test]
-        public void KommasInName()
+        public void HappyPath_LocalProject()
         {
-            var n = Names.Assembly("A (B, C)");
-            AssertName(n, "A (B, C)");
-            AssertVersion(n, Names.UnknownAssemblyVersion);
+            var sut = new AssemblyName("P");
+            Assert.IsTrue(sut.IsLocalProject);
+            Assert.AreEqual("P", sut.Name);
+            Assert.AreEqual(new AssemblyVersion(), sut.Version);
+            Assert.IsFalse(sut.IsUnknown);
         }
 
         [Test]
-        public void KommasInNameAndVersion()
+        public void AnUnknownVersionDoesNotMakeALocalProject()
         {
-            var n = Names.Assembly("A (B, C), 1.2.3.4");
-            AssertName(n, "A (B, C)");
-            AssertVersion(n, "1.2.3.4");
+            Assert.IsFalse(new AssemblyName("P, -1.-1.-1.-1").IsLocalProject);
+        }
+
+        [ExpectedException(typeof(AssertException)), //
+         TestCase("("), TestCase(")"), //
+         TestCase("["), TestCase("]"), //
+         TestCase("{"), TestCase("}"), //
+         TestCase(","), TestCase(";"), TestCase(":"), TestCase(" ")]
+        public void SpecialCharsInNameAreNotAllowed(string specialChar)
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new AssemblyName("a" + specialChar + "b, 1.2.3.4");
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void VersionNeedsToBeParseable()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new AssemblyName("P, 1.2.3.4a");
         }
 
         [Test]
         public void LotOfWhitespace()
         {
-            var n = Names.Assembly(" A , 1.2.3.4");
+            var n = new AssemblyName(" A , 1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
@@ -65,13 +88,27 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void NoWhitespace()
         {
-            var n = Names.Assembly("A,1.2.3.4");
+            var n = new AssemblyName("A,1.2.3.4");
             AssertName(n, "A");
             AssertVersion(n, "1.2.3.4");
         }
 
-        // Clustering (K-Means, MeanShift)
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(new AssemblyName().IsUnknown);
+        }
 
+        [Test]
+        public void ShouldBeMSCorLibAssembly()
+        {
+            const string identifier = "mscorlib, 4.0.0.0";
+            var mscoreAssembly = new AssemblyName(identifier);
+
+            Assert.AreEqual("mscorlib", mscoreAssembly.Name);
+            Assert.AreEqual("4.0.0.0", mscoreAssembly.Version.Identifier);
+            Assert.AreEqual(identifier, mscoreAssembly.Identifier);
+        }
 
         private static void AssertName(IAssemblyName assemblyName, string expected)
         {
@@ -79,15 +116,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(expected, actual);
         }
 
-        private static void AssertVersion(IAssemblyName actual, IAssemblyVersion expected)
-        {
-            AssertVersion(actual, expected.Identifier);
-        }
-
-        private static void AssertVersion(IAssemblyName assemblyName, string expected)
+        private static void AssertVersion(IAssemblyName assemblyName, string expectedVersion)
         {
             var actual = assemblyName.Version;
-            Assert.AreEqual(expected, actual.Identifier);
+            Assert.AreEqual(new AssemblyVersion(expectedVersion), actual);
         }
     }
 }

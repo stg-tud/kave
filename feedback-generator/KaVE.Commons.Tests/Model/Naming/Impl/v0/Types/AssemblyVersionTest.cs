@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
@@ -22,63 +23,90 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
     internal class AssemblyVersionTest
     {
         [Test]
-        public void ShouldImplementIsUnknown()
+        public void DefaultValues()
         {
-            Assert.That(new AssemblyVersion().IsUnknown);
+            var sut = new AssemblyVersion();
+            Assert.AreEqual(-1, sut.Major);
+            Assert.AreEqual(-1, sut.Minor);
+            Assert.AreEqual(-1, sut.Build);
+            Assert.AreEqual(-1, sut.Revision);
+            Assert.IsTrue(sut.IsUnknown);
         }
 
         [Test]
-        public void ShouldEqualsSameVersion()
+        public void ShouldParseNumbers()
         {
-            var v1 = new AssemblyVersion("1.2.3.4");
-            var v2 = new AssemblyVersion("1.2.3.4");
-
-            Assert.AreEqual(v1, v2);
-            Assert.IsTrue(v1 == v2);
+            var sut = new AssemblyVersion("1.2.3.4");
+            Assert.AreEqual(1, sut.Major);
+            Assert.AreEqual(2, sut.Minor);
+            Assert.AreEqual(3, sut.Build);
+            Assert.AreEqual(4, sut.Revision);
+            Assert.IsFalse(sut.IsUnknown);
         }
 
         [Test]
-        public void ShouldParseVersion()
+        public void ShouldRecognizeUnknownName()
         {
-            var uut = new AssemblyVersion("4.6.3.5");
+            Assert.True(new AssemblyVersion().IsUnknown);
+            Assert.True(new AssemblyVersion("???").IsUnknown);
+            Assert.False(new AssemblyVersion("1.2.3.4").IsUnknown);
+        }
 
-            Assert.AreEqual(4, uut.Major);
-            Assert.AreEqual(6, uut.Minor);
-            Assert.AreEqual(3, uut.Build);
-            Assert.AreEqual(5, uut.Revision);
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new AssemblyVersion(null);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectIdentifiersWithInsufficientNumberOfDots()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new AssemblyVersion("1.2.3");
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectIdentifiersWithNonNumbers()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new AssemblyVersion("1.2.3.a");
         }
 
         [Test]
         public void ShouldBeGreaterThenPreviousVersions()
         {
-            var assemblyVersion = new AssemblyVersion("4.3.2.1");
+            Assert.IsTrue(V("0.2.3.4") < V("1.2.3.4"));
+            Assert.IsTrue(V("1.1.3.4") < V("1.2.3.4"));
+            Assert.IsTrue(V("1.2.2.4") < V("1.2.3.4"));
+            Assert.IsTrue(V("1.2.3.3") < V("1.2.3.4"));
+        }
 
-            Assert.IsTrue(new AssemblyVersion("3.4.2.1") < assemblyVersion);
-            Assert.IsTrue(new AssemblyVersion("4.2.99.10") < assemblyVersion);
-            Assert.IsTrue(new AssemblyVersion("4.3.1.23") < assemblyVersion);
-            Assert.IsTrue(new AssemblyVersion("4.3.2.0") < assemblyVersion);
+        [Test]
+        public void ShouldEqualsSameVersion()
+        {
+            var v1 = V("1.2.3.4");
+            var v2 = V("1.2.3.4");
+
+            Assert.AreEqual(v1, v2);
+            Assert.IsTrue(v1 <= v2);
+            Assert.IsTrue(v1 == v2);
+            Assert.IsTrue(v1 >= v2);
         }
 
         [Test]
         public void ShouldBeSmallerThenLaterVersions()
         {
-            var assemblyVersion = new AssemblyVersion("4.3.2.1");
-
-            Assert.IsTrue(new AssemblyVersion("5.3.2.1") > assemblyVersion);
-            Assert.IsTrue(new AssemblyVersion("4.13.0.0") > assemblyVersion);
-            Assert.IsTrue(new AssemblyVersion("4.3.1337.69") > assemblyVersion);
-            Assert.IsTrue(new AssemblyVersion("4.3.2.666") > assemblyVersion);
+            Assert.IsTrue(V("2.2.3.4") > V("1.2.3.4"));
+            Assert.IsTrue(V("1.3.3.4") > V("1.2.3.4"));
+            Assert.IsTrue(V("1.2.4.4") > V("1.2.3.4"));
+            Assert.IsTrue(V("1.2.3.5") > V("1.2.3.4"));
         }
 
-        [Test]
-        public void ShouldBeUnknown()
+        private static AssemblyVersion V(string id)
         {
-            var uut = new AssemblyVersion();
-
-            Assert.AreEqual(-1, uut.Major);
-            Assert.AreEqual(-1, uut.Minor);
-            Assert.AreEqual(-1, uut.Build);
-            Assert.AreEqual(-1, uut.Revision);
+            return new AssemblyVersion(id);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class AliasName : BaseName, IAliasName
     {
-        public AliasName() : base(UnknownNameIdentifier) {}
+        public AliasName() : this(UnknownNameIdentifier) {}
         public AliasName([NotNull] string identifier) : base(identifier) {}
 
         public override bool IsUnknown

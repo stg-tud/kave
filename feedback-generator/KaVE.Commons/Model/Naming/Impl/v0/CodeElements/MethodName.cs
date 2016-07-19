@@ -30,7 +30,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
     {
         private const string UnknownMethodIdentifier = UnknownMemberIdentifier + "()";
 
-        public MethodName() : base(UnknownMethodIdentifier) {}
+        public MethodName() : this(UnknownMethodIdentifier) {}
 
         public MethodName([NotNull] string identifier) : base(identifier)
         {

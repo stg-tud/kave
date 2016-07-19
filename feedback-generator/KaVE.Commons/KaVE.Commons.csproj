@@ -227,7 +227,6 @@
     <Compile Include="Model\Naming\Impl\v0\Types\StructTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeParameterName.cs" />
-    <Compile Include="Model\Naming\Impl\v0\Types\UnknownTypeName.cs" />
     <Compile Include="Model\Naming\Types\IAssemblyName.cs" />
     <Compile Include="Model\Naming\Types\IAssemblyVersion.cs" />
     <Compile Include="Model\Naming\CodeElements\IEventName.cs" />

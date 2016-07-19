@@ -57,7 +57,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         public override int GetHashCode()
         {
-            return (Identifier != null ? Identifier.GetHashCode() : 0);
+            return Identifier != null ? Identifier.GetHashCode() : 0;
         }
 
         // TODO NameUpdate: remove operators (check for usages before)!

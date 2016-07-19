@@ -22,7 +22,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class WindowName : BaseName, IWindowName
     {
-        public WindowName() : base(UnknownNameIdentifier) {}
+        public WindowName() : this(UnknownNameIdentifier) {}
 
         public WindowName([NotNull] string identifier) : base(identifier)
         {

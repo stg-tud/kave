@@ -21,7 +21,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class SolutionName : BaseName, ISolutionName
     {
-        public SolutionName() : base("?") {}
+        public SolutionName() : this("?") {}
 
         public SolutionName([NotNull] string identifier) : base(identifier) {}
 

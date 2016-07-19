@@ -15,43 +15,52 @@
  */
 
 using System;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     public class AssemblyVersion : BaseName, IAssemblyVersion
     {
-        public AssemblyVersion() : base(UnknownNameIdentifier) {}
+        private readonly Regex _isValidVersionRegex = new Regex("^-?\\d\\.-?\\d\\.-?\\d\\.-?\\d$");
 
-        public AssemblyVersion(string identifier) : base(identifier) {}
+        public AssemblyVersion() : this(UnknownNameIdentifier) {}
+
+        public AssemblyVersion([NotNull] string identifier) : base(identifier)
+        {
+            if (!UnknownNameIdentifier.Equals(identifier))
+            {
+                Asserts.That(_isValidVersionRegex.IsMatch(identifier));
+            }
+        }
+
+        private int[] _fragments;
 
         private int[] Fragments
         {
-            get
-            {
-                var identifier = IsUnknown ? "-1.-1.-1.-1" : Identifier;
-                return Array.ConvertAll(identifier.Split('.'), int.Parse);
-            }
+            get { return _fragments ?? (_fragments = Array.ConvertAll(Identifier.Split('.'), int.Parse)); }
         }
 
         public int Major
         {
-            get { return Fragments[0]; }
+            get { return IsUnknown ? -1 : Fragments[0]; }
         }
 
         public int Minor
         {
-            get { return Fragments[1]; }
+            get { return IsUnknown ? -1 : Fragments[1]; }
         }
 
         public int Build
         {
-            get { return Fragments[2]; }
+            get { return IsUnknown ? -1 : Fragments[2]; }
         }
 
         public int Revision
         {
-            get { return Fragments[3]; }
+            get { return IsUnknown ? -1 : Fragments[3]; }
         }
 
         // TODO NameUpdate: What about the custom ordering operators for AsmVersions?
@@ -102,7 +111,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public override bool IsUnknown
         {
-            get { throw new NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

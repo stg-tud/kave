@@ -25,7 +25,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
     {
         private const string UnknownLocalVariableName = "[?] ???";
 
-        public LocalVariableName() : base(UnknownLocalVariableName) {}
+        public LocalVariableName() : this(UnknownLocalVariableName) {}
         public LocalVariableName([NotNull] string identifier) : base(identifier) {}
 
         public string Name

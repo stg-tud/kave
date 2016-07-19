@@ -22,7 +22,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class ProjectItemName : BaseName, IProjectItemName
     {
-        public ProjectItemName() : base("?") {}
+        public ProjectItemName() : this("?") {}
 
         public ProjectItemName([NotNull] string identifier) : base(identifier)
         {

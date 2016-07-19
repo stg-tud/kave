@@ -22,7 +22,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class DocumentName : BaseName, IDocumentName
     {
-        public DocumentName() : base(UnknownNameIdentifier) {}
+        public DocumentName() : this(UnknownNameIdentifier) {}
 
         public DocumentName([NotNull] string identifier) : base(identifier)
         {

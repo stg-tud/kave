@@ -25,7 +25,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class LambdaName : BaseName, ILambdaName
     {
-        public LambdaName() : base(UnknownNameIdentifier) {}
+        public LambdaName() : this(UnknownNameIdentifier) {}
         public LambdaName([NotNull] string identifier) : base(identifier) {}
 
         public IKaVEList<IParameterName> Parameters

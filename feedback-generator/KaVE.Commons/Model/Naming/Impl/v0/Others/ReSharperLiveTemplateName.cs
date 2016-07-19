@@ -25,7 +25,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Others
     {
         private const string Separator = ":";
 
-        public ReSharperLiveTemplateName() : base(UnknownNameIdentifier) {}
+        public ReSharperLiveTemplateName() : this(UnknownNameIdentifier) {}
 
         public ReSharperLiveTemplateName([NotNull] string identifier) : base(identifier)
         {

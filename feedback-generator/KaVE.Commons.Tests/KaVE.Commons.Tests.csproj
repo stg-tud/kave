@@ -104,7 +104,6 @@
     <Compile Include="Model\Naming\Impl\v1\CSharpNameUtilsTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsNamespaceTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\DelegateTypeNameTest.cs" />
-    <Compile Include="Model\Naming\Impl\v0\Types\GlobalNamespaceTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\LambdaNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\LocalVariableNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\EventNameTest.cs" />
@@ -112,7 +111,6 @@
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MethodNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\PropertyNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\AliasNameTest.cs" />
-    <Compile Include="Model\Naming\Impl\v0\Types\AssemblyNameTest2.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\AssemblyVersionTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\NamespaceNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\GeneralNameTest.cs" />

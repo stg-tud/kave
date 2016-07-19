@@ -15,39 +15,43 @@
  */
 
 using System;
-using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     public class AssemblyName : BaseName, IAssemblyName
     {
-        private readonly Regex _isValidVersionRegex = new Regex("^\\d\\.\\d\\.\\d\\.\\d$");
+        public AssemblyName() : this(UnknownNameIdentifier) {}
 
-
-        public AssemblyName() : base(UnknownNameIdentifier) {}
-        public AssemblyName(string identifier) : base(identifier) {}
-
-        public IAssemblyVersion Version
+        public AssemblyName(string identifier) : base(identifier)
         {
-            get
+            Version = new AssemblyVersion();
+
+            if (!UnknownNameIdentifier.Equals(identifier) && !identifier.Contains(","))
             {
-                var fragments = GetFragments();
-                return fragments.Length <= 1
-                    ? new AssemblyVersion()
-                    : new AssemblyVersion(fragments[1]);
+                IsLocalProject = true;
             }
+
+            foreach (var c in new[] {"(", ")", "[", "]", "{", "}", ",", ";", ":", " "})
+            {
+                Asserts.Not(Name.Contains(c));
+            }
+
+            var fragments = GetFragments();
+            Version = fragments.Length <= 1
+                ? new AssemblyVersion()
+                : new AssemblyVersion(fragments[1]);
         }
+
+        public IAssemblyVersion Version { get; private set; }
 
         public string Name
         {
             get { return GetFragments()[0]; }
         }
 
-        public bool IsLocalProject
-        {
-            get { return Version.Equals(Names.UnknownAssembly.Version); }
-        }
+        public bool IsLocalProject { get; private set; }
 
         private string[] GetFragments()
         {
@@ -60,14 +64,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             var version = Identifier.Substring(split + 1).Trim();
 
 
-            return _isValidVersionRegex.IsMatch(version)
-                ? new[] {name, version}
-                : new[] {Identifier};
+            return new[] {name, version};
         }
 
         public override bool IsUnknown
         {
-            get { throw new NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }

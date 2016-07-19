@@ -32,7 +32,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         public const string OptionalModifier = "opt";
         public const string ExtensionMethodModifier = "this";
 
-        public ParameterName() : base(UnknownParameterNameIdentifier) {}
+        public ParameterName() : this(UnknownParameterNameIdentifier) {}
 
         public ParameterName([NotNull] string identifier) : base(identifier)
         {

@@ -21,7 +21,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class FieldName : MemberName, IFieldName
     {
-        public FieldName() : base(UnknownMemberIdentifier) {}
+        public FieldName() : this(UnknownMemberIdentifier) {}
 
         public FieldName([NotNull] string identifier) : base(identifier) {}
 

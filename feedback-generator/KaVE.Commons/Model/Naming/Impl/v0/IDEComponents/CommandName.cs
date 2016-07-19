@@ -21,7 +21,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class CommandName : BaseName, ICommandName
     {
-        public CommandName() : base(UnknownNameIdentifier) {}
+        public CommandName() : this(UnknownNameIdentifier) {}
         public CommandName([NotNull] string identifier) : base(identifier) {}
 
         private string[] _parts;

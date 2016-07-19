@@ -24,7 +24,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         public const string SetterModifier = "set";
         public const string GetterModifier = "get";
 
-        public PropertyName() : base(UnknownMemberIdentifier) {}
+        public PropertyName() : this(UnknownMemberIdentifier) {}
 
         public PropertyName([NotNull] string identifier) : base(identifier) {}
 

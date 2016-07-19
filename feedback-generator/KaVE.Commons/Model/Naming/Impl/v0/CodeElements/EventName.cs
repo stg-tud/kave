@@ -22,7 +22,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
     public class EventName : MemberName, IEventName
     {
-        public EventName() : base(UnknownMemberIdentifier) {}
+        public EventName() : this(UnknownMemberIdentifier) {}
 
         public EventName([NotNull] string identifier) : base(identifier) {}
 

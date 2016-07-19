@@ -24,7 +24,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
     {
         public const char HierarchySeperator = '|';
 
-        public CommandBarControlName() : base(UnknownNameIdentifier) {}
+        public CommandBarControlName() : this(UnknownNameIdentifier) {}
 
         public CommandBarControlName([NotNull] string identifier) : base(identifier)
         {
