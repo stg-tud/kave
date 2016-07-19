@@ -15,12 +15,38 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
 {
     internal class ProjectItemNameTest
     {
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new ProjectItemName();
+            Assert.AreEqual("???", sut.Type);
+            Assert.AreEqual("???", sut.Name);
+            Assert.IsTrue(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.True(new ProjectItemName().IsUnknown);
+            Assert.True(new ProjectItemName("?").IsUnknown);
+            Assert.False(new ProjectItemName("someType someName").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new ProjectItemName(null);
+        }
+
         [Test]
         public void ShouldParseType()
         {

@@ -15,27 +15,35 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
 {
     public class ProjectItemName : BaseName, IProjectItemName
     {
         public ProjectItemName() : base("?") {}
-        public ProjectItemName(string identifier) : base(identifier) {}
+        public ProjectItemName([NotNull] string identifier) : base(identifier) {}
+
+        private string[] _parts;
+
+        private string[] Parts
+        {
+            get { return _parts ?? (_parts = Identifier.Split(new[] {' '}, 2)); }
+        }
 
         public string Type
         {
-            get { return Identifier.Split(new[] {' '}, 2)[0]; }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[0]; }
         }
 
         public string Name
         {
-            get { return Identifier.Split(new[] {' '}, 2)[1]; }
+            get { return IsUnknown ? UnknownNameIdentifier : Parts[1]; }
         }
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return "?".Equals(Identifier); }
         }
     }
 }
