@@ -19,8 +19,8 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Model.TypeShapes;
@@ -216,13 +216,13 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
             foreach (var p in typeParameters)
             {
-                if (p.IsUnknownType || ((ITypeParameterName) p).TypeParameterType.IsUnknownType)
+                if (p.IsUnknownType || p.TypeParameterType.IsUnknownType)
                 {
                     TypeParameterShortName(Names.UnknownType.Identifier);
                 }
                 else
                 {
-                    Type(((ITypeParameterName) p).TypeParameterType);
+                    Type(p.TypeParameterType);
                 }
 
                 if (!ReferenceEquals(p, typeParameters.Last()))

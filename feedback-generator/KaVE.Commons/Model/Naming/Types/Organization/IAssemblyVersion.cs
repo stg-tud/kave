@@ -16,7 +16,7 @@
 
 using System;
 
-namespace KaVE.Commons.Model.Naming.Types
+namespace KaVE.Commons.Model.Naming.Types.Organization
 {
     public interface IAssemblyVersion : IName, IComparable<IAssemblyVersion>
     {

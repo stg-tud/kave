@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
 {
     internal class AssemblyVersionTest
     {

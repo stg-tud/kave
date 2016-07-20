@@ -17,7 +17,7 @@
 using System.Text;
 using Antlr4.Runtime.Misc;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {

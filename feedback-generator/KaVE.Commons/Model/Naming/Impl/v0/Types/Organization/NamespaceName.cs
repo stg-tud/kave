@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 
-namespace KaVE.Commons.Model.Naming.Impl.v0.Types
+namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
 {
     public class NamespaceName : BaseName, INamespaceName
     {
-        public const string GlobalNamespaceIdentifier = "";
-
-        public static readonly INamespaceName GlobalNamespace = new NamespaceName(GlobalNamespaceIdentifier);
-
-        public NamespaceName() : base(UnknownNameIdentifier) {}
+        public NamespaceName() : this(UnknownNameIdentifier) {}
         public NamespaceName(string identifier) : base(identifier) {}
 
         public INamespaceName ParentNamespace
@@ -37,8 +33,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 }
                 var lastSeperatorIndex = Identifier.LastIndexOf('.');
                 return lastSeperatorIndex == -1
-                    ? GlobalNamespace
-                    : Names.Namespace(Identifier.Substring(0, lastSeperatorIndex));
+                    ? new NamespaceName("")
+                    : new NamespaceName(Identifier.Substring(0, lastSeperatorIndex));
             }
         }
 
@@ -53,7 +49,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public bool IsGlobalNamespace
         {
-            get { return Identifier.Equals(GlobalNamespaceIdentifier); }
+            get { return Identifier.Equals(""); }
         }
 
         public override bool IsUnknown

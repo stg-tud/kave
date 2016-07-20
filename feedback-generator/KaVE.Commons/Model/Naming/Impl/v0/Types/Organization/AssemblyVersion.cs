@@ -16,11 +16,11 @@
 
 using System;
 using System.Text.RegularExpressions;
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.Model.Naming.Impl.v0.Types
+namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
 {
     public class AssemblyVersion : BaseName, IAssemblyVersion
     {

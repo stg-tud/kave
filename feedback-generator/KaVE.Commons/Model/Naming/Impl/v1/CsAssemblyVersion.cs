@@ -15,9 +15,9 @@
  */
 
 using System;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {

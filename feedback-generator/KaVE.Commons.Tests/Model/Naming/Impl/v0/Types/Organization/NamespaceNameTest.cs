@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
 {
     public class NamespaceNameTest
     {
@@ -32,6 +32,16 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         {
             _testNamespaceName = new NamespaceName(TestNamespaceIdentifier);
             _testNamespaceParentName = _testNamespaceName.ParentNamespace;
+        }
+
+        [Test]
+        public void GlobalNamespace()
+        {
+            var sut = new NamespaceName("");
+            Assert.IsEmpty(sut.Name);
+            Assert.IsTrue(sut.IsGlobalNamespace);
+            Assert.IsEmpty(sut.Identifier);
+            Assert.IsNull(sut.ParentNamespace);
         }
 
         [Test]
@@ -75,7 +85,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldHaveGlobalNamespaceAsGrandParent()
         {
-            Assert.AreEqual(NamespaceName.GlobalNamespace, _testNamespaceParentName.ParentNamespace);
+            Assert.AreEqual(new NamespaceName(""), _testNamespaceParentName.ParentNamespace);
         }
 
         [Test]
@@ -84,7 +94,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             var uut = new NamespaceName();
 
             Assert.AreEqual("???", uut.Identifier);
-            Assert.AreSame(NamespaceName.GlobalNamespace, uut.ParentNamespace);
+            Assert.AreSame(new NamespaceName(""), uut.ParentNamespace);
         }
     }
 }

@@ -21,6 +21,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;

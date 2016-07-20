@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 
 namespace KaVE.Commons.TestUtils.Model.Naming
 {

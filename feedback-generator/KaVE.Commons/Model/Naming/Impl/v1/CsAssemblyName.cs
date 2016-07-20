@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
@@ -48,7 +48,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return ctx.regularAssembly().assemblyName().GetText(); }
         }
 
-        public bool IsLocalProject {
+        public bool IsLocalProject
+        {
             // TODO NameUpdate: Implement
             get { throw new NotImplementedException(); }
         }

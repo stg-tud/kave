@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-namespace KaVE.Commons.Model.Naming.Types
+using KaVE.JetBrains.Annotations;
+
+namespace KaVE.Commons.Model.Naming.Types.Organization
 {
-    public interface INamespaceName : IName
+    public interface IAssemblyName : IName
     {
-        INamespaceName ParentNamespace { get; }
+        [NotNull]
+        IAssemblyVersion Version { get; }
+
+        [NotNull]
         string Name { get; }
 
-        /// <summary>
-        ///     <returns>Wheather this is the global (or default) namespace</returns>
-        /// </summary>
-        bool IsGlobalNamespace { get; }
+        bool IsLocalProject { get; }
     }
 }

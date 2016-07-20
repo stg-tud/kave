@@ -33,6 +33,7 @@ using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 

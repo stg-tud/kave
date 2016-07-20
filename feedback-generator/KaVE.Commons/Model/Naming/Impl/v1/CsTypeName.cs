@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 

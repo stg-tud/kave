@@ -24,11 +24,13 @@ using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Impl.v1;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
-using AssemblyVersionName = KaVE.Commons.Model.Naming.Impl.v0.Types.AssemblyVersion;
+using AssemblyVersionName = KaVE.Commons.Model.Naming.Impl.v0.Types.Organization.AssemblyVersion;
 
 namespace KaVE.Commons.Model.Naming
 {

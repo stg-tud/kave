@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1

@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 
