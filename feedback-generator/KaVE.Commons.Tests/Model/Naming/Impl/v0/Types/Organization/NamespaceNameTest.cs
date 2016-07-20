@@ -15,23 +15,37 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
-using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
 {
     public class NamespaceNameTest
     {
-        private const string TestNamespaceIdentifier = "foo.bar";
-
-        private INamespaceName _testNamespaceName;
-        private INamespaceName _testNamespaceParentName;
-
-        [SetUp]
-        public void SetUpTestNamespace()
+        [Test]
+        public void DefaultValues()
         {
-            _testNamespaceName = new NamespaceName(TestNamespaceIdentifier);
-            _testNamespaceParentName = _testNamespaceName.ParentNamespace;
+            var sut = new NamespaceName();
+            Assert.IsFalse(sut.IsGlobalNamespace);
+            Assert.IsTrue(sut.IsUnknown);
+            Assert.AreEqual("???", sut.Name);
+            Assert.AreEqual(new NamespaceName(), sut.ParentNamespace);
+        }
+
+        [Test]
+        public void ShouldRecognizeUnknownName()
+        {
+            Assert.True(new NamespaceName().IsUnknown);
+            Assert.True(new NamespaceName("???").IsUnknown);
+            Assert.False(new NamespaceName("a.b.c").IsUnknown);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldAvoidNullParameters()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            // ReSharper disable once AssignNullToNotNullAttribute
+            new NamespaceName(null);
         }
 
         [Test]
@@ -44,57 +58,16 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
             Assert.IsNull(sut.ParentNamespace);
         }
 
-        [Test]
-        public void ShouldImplementIsUnknown()
+        [TestCase("", ""), TestCase("a", "a"), TestCase("a.b", "b"), TestCase("a.b.c", "c")]
+        public void ShoulParseName(string id, string name)
         {
-            Assert.That(new NamespaceName().IsUnknown);
+            Assert.AreEqual(name, new NamespaceName(id).Name);
         }
 
-        [Test]
-        public void ShouldHaveLastIdentifierSegmentAsName()
+        [TestCase("a", ""), TestCase("a.b", "a"), TestCase("a.b.c", "a.b")]
+        public void ShoulParseParent(string id, string parentId)
         {
-            Assert.AreEqual("bar", _testNamespaceName.Name);
-        }
-
-        [Test]
-        public void ShouldNotBeGlobalNamespace()
-        {
-            Assert.IsFalse(_testNamespaceName.IsGlobalNamespace);
-        }
-
-        [Test]
-        public void ShouldHaveFullqualifiedIdentifier()
-        {
-            Assert.AreEqual(TestNamespaceIdentifier, _testNamespaceName.Identifier);
-        }
-
-        [Test]
-        public void ShouldHaveParentNamespaceName()
-        {
-            Assert.IsNotNull(_testNamespaceParentName);
-        }
-
-        [Test]
-        public void ShouldHaveParentNamespaceFoo()
-        {
-            Assert.AreEqual("foo", _testNamespaceParentName.Name);
-            Assert.AreEqual("foo", _testNamespaceParentName.Identifier);
-            Assert.IsFalse(_testNamespaceParentName.IsGlobalNamespace);
-        }
-
-        [Test]
-        public void ShouldHaveGlobalNamespaceAsGrandParent()
-        {
-            Assert.AreEqual(new NamespaceName(""), _testNamespaceParentName.ParentNamespace);
-        }
-
-        [Test]
-        public void ShouldBeUnknownNamespace()
-        {
-            var uut = new NamespaceName();
-
-            Assert.AreEqual("???", uut.Identifier);
-            Assert.AreSame(new NamespaceName(""), uut.ParentNamespace);
+            Assert.AreEqual(new NamespaceName(parentId), new NamespaceName(id).ParentNamespace);
         }
     }
 }

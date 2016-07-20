@@ -15,13 +15,14 @@
  */
 
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
 {
     public class NamespaceName : BaseName, INamespaceName
     {
         public NamespaceName() : this(UnknownNameIdentifier) {}
-        public NamespaceName(string identifier) : base(identifier) {}
+        public NamespaceName([NotNull] string identifier) : base(identifier) {}
 
         public INamespaceName ParentNamespace
         {
@@ -30,6 +31,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
                 if (IsGlobalNamespace)
                 {
                     return null;
+                }
+                if (IsUnknown)
+                {
+                    return new NamespaceName();
                 }
                 var lastSeperatorIndex = Identifier.LastIndexOf('.');
                 return lastSeperatorIndex == -1
@@ -54,7 +59,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
 
         public override bool IsUnknown
         {
-            get { throw new System.NotImplementedException(); }
+            get { return UnknownNameIdentifier.Equals(Identifier); }
         }
     }
 }
