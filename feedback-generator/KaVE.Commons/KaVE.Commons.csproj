@@ -84,6 +84,7 @@
     <Compile Include="Model\Naming\IDEComponents\ISolutionName.cs" />
     <Compile Include="Model\Naming\IDEComponents\IWindowName.cs" />
     <Compile Include="Model\Naming\Impl\v0\GeneralName.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\BaseTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeUtils.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyName.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyVersion.cs" />
@@ -212,11 +213,9 @@
     <Compile Include="Model\Naming\Impl\v0\Types\Organization\AssemblyVersion.cs" />
     <Compile Include="Model\Naming\BuiltInTypeAliases.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\DelegateTypeName.cs" />
-    <Compile Include="Model\Naming\Impl\v0\Types\EnumTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\EventName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\FieldName.cs" />
     <Compile Include="Model\Naming\NameUtils.cs" />
-    <Compile Include="Model\Naming\Impl\v0\Types\InterfaceTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\LocalVariableName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MemberName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MethodName.cs" />
@@ -224,7 +223,6 @@
     <Compile Include="Model\Naming\Impl\v0\Types\Organization\NamespaceName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\ParameterName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\PropertyName.cs" />
-    <Compile Include="Model\Naming\Impl\v0\Types\StructTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeParameterName.cs" />
     <Compile Include="Model\Naming\Types\Organization\IAssemblyName.cs" />

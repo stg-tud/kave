@@ -22,7 +22,6 @@ namespace KaVE.Commons.Model.Naming.Types
     public interface IDelegateTypeName : ITypeName
     {
         ITypeName DelegateType { get; }
-        string Signature { get; }
         IList<IParameterName> Parameters { get; }
         bool HasParameters { get; }
         ITypeName ReturnType { get; }

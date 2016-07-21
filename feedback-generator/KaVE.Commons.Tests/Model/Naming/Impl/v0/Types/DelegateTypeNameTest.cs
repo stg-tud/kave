@@ -16,6 +16,7 @@
 
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
 
@@ -54,7 +55,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(delegateType.IsSimpleType);
             Assert.IsFalse(delegateType.IsStructType);
             Assert.IsFalse(delegateType.IsTypeParameter);
-            Assert.IsFalse(delegateType.IsUnknownType);
+            Assert.IsFalse(delegateType.IsUnknown);
             Assert.IsFalse(delegateType.IsValueType);
             Assert.IsFalse(delegateType.IsVoidType);
         }
@@ -87,14 +88,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         public void IsNotNested()
         {
             Assert.IsFalse(new DelegateTypeName("d:[R, P] [D, P].()").IsNestedType);
-        }
-
-        [Test]
-        public void ParsesSignature()
-        {
-            Assert.AreEqual("DelegateType()", LegacyDelegateName.Signature);
-            Assert.AreEqual("DelegateType()", ParameterlessDelegateName.Signature);
-            Assert.AreEqual("DelegateType([C, A, 1.2.3.4] p1, [D, A, 1.2.3.4] p2)", ParameterizedDelegateName.Signature);
         }
 
         [Test]
@@ -159,7 +152,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void IsDelegateTypeName()
         {
-            Assert.True(DelegateTypeName.IsDelegateTypeIdentifier("d:[System.Void, mscorlib, 4.0.0.0] [System.AppDomainInitializer, mscorlib, 4.0.0.0].([System.String[], mscorlib, 4.0.0.0] args)"));
+            Assert.True(
+                TypeUtils.IsDelegateTypeIdentifier(
+                    "d:[System.Void, mscorlib, 4.0.0.0] [System.AppDomainInitializer, mscorlib, 4.0.0.0].([System.String[], mscorlib, 4.0.0.0] args)"));
         }
 
         [Test]

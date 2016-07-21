@@ -56,7 +56,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void ShouldBeArrayType(string identifier)
         {
-            Assert.IsTrue(ArrayTypeName.IsArrayTypeIdentifier(identifier));
+            Assert.IsTrue(TypeUtils.IsArrayTypeIdentifier(identifier));
             Assert.IsTrue(new ArrayTypeName(identifier).IsArrayType);
         }
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Types
@@ -37,13 +38,14 @@ namespace KaVE.Commons.Model.Naming.Types
         [NotNull]
         INamespaceName Namespace { get; }
 
+        /// <summary>
+        ///     not 100% sure, I think the intention is to have the typename, incl. the typeParamters, but no assembly?
+        /// </summary>
         [NotNull]
         string FullName { get; }
 
         [NotNull]
         string Name { get; }
-
-        bool IsUnknownType { get; }
 
         bool IsVoidType { get; }
 
@@ -87,6 +89,7 @@ namespace KaVE.Commons.Model.Naming.Types
         ///     The name of the type declaring this type or
         ///     <code>null</code> if this type is not nested.
         /// </summary>
+        [CanBeNull]
         ITypeName DeclaringType { get; }
 
         bool IsDelegateType { get; }

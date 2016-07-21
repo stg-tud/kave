@@ -99,6 +99,7 @@
     <Compile Include="Model\Naming\Impl\v0\Others\ReSharperLiveTemplateNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\TestUtilsV0.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\ArrayTypeNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\IntegrationTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\Organization\AssemblyNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\CSharpNameUtilsTest.cs" />

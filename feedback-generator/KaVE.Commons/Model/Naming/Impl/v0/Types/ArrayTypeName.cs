@@ -17,52 +17,85 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class ArrayTypeName : TypeName, IArrayTypeName
+    public class ArrayTypeName : BaseTypeName, IArrayTypeName
     {
         private static readonly Regex ArrayTypeNameSuffix = new Regex("(\\[[,]*\\])([^()]*)$");
 
-        internal static bool IsArrayTypeIdentifier(string id)
+        internal ArrayTypeName(string identifier) : base(identifier)
         {
-            if (id.StartsWith("d:"))
-            {
-                var idx = id.LastIndexOf(')');
-                if (id.Length > (idx + 1) && id[idx + 1] == '[')
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                var idx = id.IndexOf('[');
-                if (idx == -1)
-                {
-                    return false;
-                }
-                while ((idx + 1) < id.Length && id[++idx] == ',') {}
-                if (id[idx] == ']')
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            Asserts.Not(TypeUtils.IsUnknownTypeIdentifier(identifier));
         }
+
+        public ITypeName ArrayBaseType
+        {
+            get
+            {
+                var id = Identifier;
+
+                var idx = id.StartsWith("d:")
+                    ? id.LastIndexOf(')') + 1
+                    : id.IndexOf('[');
+
+                var startIdx = idx;
+                while (id[++idx] == ',') {}
+                var endIdx = idx;
+
+                var newId = id.Substring(0, startIdx) + id.Substring(endIdx + 1);
+                return Names.Type(newId);
+            }
+        }
+
+        public int Rank
+        {
+            get { return GetArrayRank(this); }
+        }
+
+        public override string Name
+        {
+            get { return ArrayBaseType.Name + CreateArrayMarker(Rank); }
+        }
+
+        public override string FullName
+        {
+            get { return ArrayBaseType.FullName + CreateArrayMarker(Rank); }
+        }
+
+        public override INamespaceName Namespace
+        {
+            get { return ArrayBaseType.Namespace; }
+        }
+
+        public override IAssemblyName Assembly
+        {
+            get { return ArrayBaseType.Assembly; }
+        }
+
+        public override bool IsNestedType
+        {
+            get { return false; }
+        }
+
+        public override ITypeName DeclaringType
+        {
+            get { return null; }
+        }
+
+        #region static helpers
 
         /// <summary>
         ///     Derives an array-type name from this type name.
         /// </summary>
         /// <param name="baseType">The array's base type</param>
         /// <param name="rank">the rank of the array; must be greater than 0</param>
-        public static ArrayTypeName From(ITypeName baseType, int rank)
+        public static IArrayTypeName From(ITypeName baseType, int rank)
         {
             Asserts.That(rank > 0, "rank smaller than 1");
-            var typeName = Get(DeriveArrayTypeNameIdentifier(baseType, rank));
-            return (ArrayTypeName) typeName;
+            return new ArrayTypeName(DeriveArrayTypeNameIdentifier(baseType, rank));
         }
 
         private static string DeriveArrayTypeNameIdentifier(ITypeName baseType, int rank)
@@ -112,53 +145,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return identifier.Insert(endOfRawName, arrayMarker);
         }
 
-        [UsedImplicitly]
-        internal new static ITypeName Get(string identifier)
-        {
-            return Names.Type(identifier);
-        }
-
-        internal ArrayTypeName(string identifier) : base(identifier) {}
-
-        public override bool IsArrayType
-        {
-            get { return true; }
-        }
-
-        public override ITypeName ArrayBaseType
-        {
-            get
-            {
-                var id = Identifier;
-                int startIdx = -1;
-                int endIdx = -1;
-
-                var idx = id.StartsWith("d:")
-                    ? id.LastIndexOf(')') + 1
-                    : id.IndexOf('[');
-
-                startIdx = idx;
-                while (id[++idx] == ',') {}
-                endIdx = idx;
-
-                var newId = id.Substring(0, startIdx) + id.Substring(endIdx + 1);
-                return Names.Type(newId);
-            }
-        }
-
-        public int Rank
-        {
-            get { return GetArrayRank(this); }
-        }
-
-        public override string FullName
-        {
-            get { return ArrayBaseType.FullName + CreateArrayMarker(Rank); }
-        }
-
-        public override IAssemblyName Assembly
-        {
-            get { return ArrayBaseType.Assembly; }
-        }
+        #endregion
     }
 }

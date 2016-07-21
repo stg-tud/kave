@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    // TODO NameUpdate: strange... this type seems to create endless loops for all properties!? check changes...
     public class TypeParameterName : BaseName, ITypeParameterName
     {
         /// <summary>
@@ -31,31 +29,15 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         /// </summary>
         public const string ParameterNameTypeSeparater = " -> ";
 
-        internal static bool IsTypeParameterIdentifier(string identifier)
+        internal TypeParameterName(string identifier) : base(identifier)
         {
-            if (UnknownTypeName.IsUnknownTypeIdentifier(identifier))
-            {
-                return false;
-            }
-            return IsFreeTypeParameterIdentifier(identifier) || IsBoundTypeParameterIdentifier(identifier);
+            Asserts.Not(TypeUtils.IsUnknownTypeIdentifier(identifier));
         }
 
-        private static bool IsFreeTypeParameterIdentifier(string identifier)
+        public override bool IsUnknown
         {
-            return !identifier.Contains(",") && !identifier.Contains("[");
+            get { return false; }
         }
-
-        private static bool IsBoundTypeParameterIdentifier(string identifier)
-        {
-            // "T -> System.Void, mscorlib, ..." is a type parameter, because it contains the separator.
-            // "System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], ..." is not, because
-            // the separator is only in the type's parameter-type list, i.e., after the '`'.
-            var indexOfMapping = identifier.IndexOf(ParameterNameTypeSeparater, StringComparison.Ordinal);
-            var endOfTypeName = identifier.IndexOf('`');
-            return indexOfMapping >= 0 && (endOfTypeName == -1 || endOfTypeName > indexOfMapping);
-        }
-
-        internal TypeParameterName(string identifier) : base(identifier) {}
 
         public bool IsGenericEntity
         {
@@ -95,11 +77,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public string Name
         {
             get { return TypeParameterType.Name; }
-        }
-
-        public bool IsUnknownType
-        {
-            get { return TypeParameterType.IsUnknownType; }
         }
 
         public bool IsVoidType
@@ -176,9 +153,32 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return true; }
         }
 
-        public IDelegateTypeName AsDelegateTypeName { get; private set; }
-        public IArrayTypeName AsArrayTypeName { get; private set; }
-        public ITypeParameterName AsTypeParameterName { get; private set; }
+        public IDelegateTypeName AsDelegateTypeName
+        {
+            get
+            {
+                Asserts.Fail("impossible");
+                return null;
+            }
+        }
+
+        public IArrayTypeName AsArrayTypeName
+        {
+            get
+            {
+                Asserts.Fail("impossible");
+                return null;
+            }
+        }
+
+        public ITypeParameterName AsTypeParameterName
+        {
+            get
+            {
+                Asserts.Fail("impossible");
+                return null;
+            }
+        }
 
         [NotNull]
         public string TypeParameterShortName
@@ -196,16 +196,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get
             {
                 var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparater.Length;
-                // TODO NameUpdate: breaks caching
                 return startOfTypeName >= Identifier.Length
-                    ? UnknownTypeName.Instance
+                    ? new TypeName()
                     : TypeUtils.CreateTypeName(Identifier.Substring(startOfTypeName));
             }
-        }
-
-        public override bool IsUnknown
-        {
-            get { return false; }
         }
     }
 }

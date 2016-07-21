@@ -30,6 +30,7 @@ using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 using AssemblyVersionName = KaVE.Commons.Model.Naming.Impl.v0.Types.Organization.AssemblyVersion;
 
 namespace KaVE.Commons.Model.Naming
@@ -201,7 +202,8 @@ namespace KaVE.Commons.Model.Naming
         ///     parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type
         ///     identifier being either the identifier of a type name, as declared above, or another parameter-type name.
         /// </summary>
-        public static ITypeName Type(string input)
+        [NotNull]
+        public static ITypeName Type([NotNull] string input)
         {
             try
             {

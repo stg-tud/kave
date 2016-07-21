@@ -16,8 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Model.Naming.Impl.v0.Types;
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.SSTPrinter;
 using NUnit.Framework;
@@ -35,11 +34,11 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
             namespaces.Add(Names.Namespace("System"));
             namespaces.Add(Names.Namespace("System.Collections.Generic"));
             namespaces.Add(Names.Namespace("A"));
-            namespaces.Add(NamespaceName.GlobalNamespace);
+            namespaces.Add(Names.Namespace(""));
 
             var context = new SSTPrintingContext();
             namespaces.FormatAsUsingList(context);
-            var expected = String.Join(
+            var expected = string.Join(
                 Environment.NewLine,
                 "using A;",
                 "using System;",
@@ -49,12 +48,11 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         }
 
         [Test]
-        public void UnknownNameIsNotAddedToList()
+        public void UnknownNameAndGlobalNamespaceAreNotAddedToList()
         {
             var namespaces = Sets.NewHashSet<INamespaceName>();
             namespaces.Add(Names.UnknownNamespace);
-            // TODO NamesUpdate: get rid of this reference (fidn a second one above)
-            namespaces.Add(NamespaceName.GlobalNamespace);
+            namespaces.Add(Names.Namespace(""));
 
             var context = new SSTPrintingContext();
             namespaces.FormatAsUsingList(context);

@@ -205,7 +205,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 
         private static ITypeName ToAnonymousName(ITypeName type)
         {
-            if (type.IsUnknownType)
+            if (type.IsUnknown)
             {
                 return type;
             }
@@ -347,7 +347,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
                                                 (((ITypeParameterName) typeParameter.TypeParameterType)
                                                     .TypeParameterType == null ||
                                                  ((ITypeParameterName) typeParameter.TypeParameterType)
-                                                     .TypeParameterType.IsUnknownType);
+                                                     .TypeParameterType.IsUnknown);
                 return Names.TypeParameter(
                     anonymizeShortNames
                         ? typeParameter.TypeParameterShortName.ToHash()
@@ -370,7 +370,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 
         private static bool IsDeclaredInEnclosingProjectOrUnknown(this ITypeName type)
         {
-            return type.IsUnknownType || type.Assembly.IsLocalProject;
+            return type.IsUnknown || type.Assembly.IsLocalProject;
         }
 
         private static IAliasName ToAnonymousName(IAliasName alias)

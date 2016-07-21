@@ -342,11 +342,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return Get(typeof(ITypeName)); }
         }
 
-        string IDelegateTypeName.Signature
-        {
-            get { return Identifier; }
-        }
-
         public IKaVEList<IParameterName> Parameters
         {
             get { return Lists.NewList<IParameterName>(); }

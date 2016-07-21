@@ -46,7 +46,6 @@ namespace KaVE.Commons.Tests.Model.Naming.CSharp.Parser
             Assert.AreEqual(testCase.DeclaringType, type.DeclaringType.Identifier);
             Assert.AreEqual(testCase.DeclaringType, type.DelegateType.Identifier);
             Assert.AreEqual(testCase.ReturnType, type.ReturnType.Identifier);
-            Assert.AreEqual(testCase.Signature, type.Signature);
             AssertStrings(testCase.TypeParameters, type.TypeParameters);
             AssertStrings(testCase.Parameters, type.Parameters);
         }

@@ -15,8 +15,10 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Impl.v1;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
@@ -28,21 +30,21 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldImplementIsUnknown()
         {
-            Assert.That(UnknownTypeName.Instance.IsUnknown);
+            Assert.That(new TypeName().IsUnknown);
         }
 
         [Test]
         public void ShouldGetNamespaceFromTypeInGlobalNamespace()
         {
-            var uut = Commons.Model.Naming.Names.Type("MyType, Assembly, 1.2.3.4");
+            var uut = TypeUtils.CreateTypeName("MyType, Assembly, 1.2.3.4");
 
-            Assert.AreEqual(NamespaceName.GlobalNamespace, uut.Namespace);
+            Assert.AreEqual(new NamespaceName(""), uut.Namespace);
         }
 
         [Test]
         public void ShouldBeVoidType()
         {
-            var uut = Commons.Model.Naming.Names.Type("System.Void, mscorlib, 4.0.0.0");
+            var uut = TypeUtils.CreateTypeName("System.Void, mscorlib, 4.0.0.0");
 
             Assert.IsTrue(uut.IsVoidType);
         }
@@ -51,7 +53,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("T -> System.Int32, mscorlib, 4.0.0.0")]
         public void ShouldNotBeVoidType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(uut.IsVoidType);
         }
@@ -72,7 +74,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("T -> System.Int32, mscorlib, 4.0.0.0")]
         public void ShouldBeSimpleType(string identifer)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifer);
+            var uut = TypeUtils.CreateTypeName(identifer);
 
             Assert.IsTrue(uut.IsSimpleType);
         }
@@ -82,7 +84,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("?")]
         public void ShouldNotBeSimpleType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(uut.IsSimpleType);
         }
@@ -91,7 +93,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("T -> System.Nullable`1[[T -> System.UInt64, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0")]
         public void ShouldBeNullableType(string identifier)
         {
-            var nullableTypeName = Commons.Model.Naming.Names.Type(identifier);
+            var nullableTypeName = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsTrue(nullableTypeName.IsNullableType);
         }
@@ -101,7 +103,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("?")]
         public void ShouldNotBeNullableType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(uut.IsNullableType);
         }
@@ -113,7 +115,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("s:My.Struct, A, 1.0.0.0")]
         public void ShouldBeStructType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsTrue(uut.IsStructType);
         }
@@ -122,7 +124,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("?")]
         public void ShouldNotBeStructType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(uut.IsStructType);
         }
@@ -130,7 +132,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldBeEnumType()
         {
-            var uut = Commons.Model.Naming.Names.Type("e:My.EnumType, E, 3.9.5.6");
+            var uut = TypeUtils.CreateTypeName("e:My.EnumType, E, 3.9.5.6");
 
             Assert.IsTrue(uut.IsEnumType);
         }
@@ -138,7 +140,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldNotBeEnumType()
         {
-            var uut = Commons.Model.Naming.Names.Type("Non.Enum.Type, E, 7.9.3.5");
+            var uut = TypeUtils.CreateTypeName("Non.Enum.Type, E, 7.9.3.5");
 
             Assert.IsFalse(uut.IsEnumType);
         }
@@ -150,7 +152,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("T -> System.Boolean, mscorlib, 4.0.0.0")]
         public void ShouldBeValueType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsTrue(uut.IsValueType);
         }
@@ -159,7 +161,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("?")]
         public void ShouldNotBeValueType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(uut.IsValueType);
         }
@@ -168,7 +170,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("TI -> i:MyInterface, Is, 3.8.67.0")]
         public void ShouldBeInterfaceType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsTrue(uut.IsInterfaceType);
         }
@@ -176,7 +178,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldNotBeInterfaceType()
         {
-            var uut = Commons.Model.Naming.Names.Type("Some.Class, C, 3.2.1.0");
+            var uut = TypeUtils.CreateTypeName("Some.Class, C, 3.2.1.0");
 
             Assert.IsFalse(uut.IsInterfaceType);
         }
@@ -187,17 +189,17 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("TP")]
         public void ShouldBeUnknownType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
-            Assert.IsTrue(uut.IsUnknownType);
+            Assert.IsTrue(uut.IsUnknown);
         }
 
         [Test]
         public void ShouldNotBeUnknownType()
         {
-            var uut = Commons.Model.Naming.Names.Type("Some.Known.Type, A, 1.2.3.4");
+            var uut = TypeUtils.CreateTypeName("Some.Known.Type, A, 1.2.3.4");
 
-            Assert.IsFalse(uut.IsUnknownType);
+            Assert.IsFalse(uut.IsUnknown);
         }
 
         [TestCase("System.Object, mscorlib, 4.0.0.0"),
@@ -205,7 +207,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("T -> Another.Class, F, 4.7.55.6")]
         public void ShouldBeClassType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsTrue(uut.IsClassType);
         }
@@ -216,7 +218,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("?")]
         public void ShouldNotBeClassType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(uut.IsClassType);
         }
@@ -226,7 +228,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("Vt[], A, 5.2.7.8")]
         public void ShouldBeReferenceType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsTrue(uut.IsReferenceType);
         }
@@ -235,7 +237,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("?")]
         public void ShouldNotBeReferenceType(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(uut.IsReferenceType);
         }
@@ -254,7 +256,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
              "Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]]")]
         public void ShouldDetermineFullName(string identifier, string expectedFullName)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.AreEqual(expectedFullName, uut.FullName);
         }
@@ -271,7 +273,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Task")]
         public void ShouldDetermineName(string identifier, string expectedName)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.AreEqual(expectedName, uut.Name);
         }
@@ -281,10 +283,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer"),
-         TestCase("GlobalType, A, 5.6.7.4", NamespaceName.GlobalNamespaceIdentifier)]
+         TestCase("GlobalType, A, 5.6.7.4", "")]
         public void ShouldDetermineNamespace(string identifier, string expectedNamespace)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.AreEqual(expectedNamespace, uut.Namespace.Identifier);
         }
@@ -292,7 +294,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void UnknownTypeShouldNotHaveNamespace()
         {
-            var uut = Commons.Model.Naming.Names.Type("?");
+            var uut = TypeUtils.CreateTypeName("?");
 
             Assert.AreSame(UnknownName.Get(typeof(INamespaceName)), uut.Namespace);
         }
@@ -302,7 +304,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("T -> Type.Parameter, A, 1.2.3.4", "A, 1.2.3.4")]
         public void ShouldDetermineAssembly(string identifier, string expectedAssemblyIdentifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.AreEqual(expectedAssemblyIdentifier, uut.Assembly.Identifier);
         }
@@ -310,7 +312,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void UnknownTypeShouldHaveUnknownAssembly()
         {
-            var uut = Commons.Model.Naming.Names.Type("?");
+            var uut = TypeUtils.CreateTypeName("?");
 
             Assert.AreSame(UnknownName.Get(typeof(IAssemblyName)), uut.Assembly);
         }
@@ -322,7 +324,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             const string intIdentifier = "I -> System.Int32, mscore, 4.0.0.0";
 
             var parameterizedTypeName =
-                Commons.Model.Naming.Names.Type(
+                TypeUtils.CreateTypeName(
                     "pack.age.MyType`2[[" + stringIdentifier + "],[" + intIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.AreEqual(TestAssemblyIdentifier, parameterizedTypeName.Assembly.Identifier);
@@ -338,7 +340,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldHaveUninstantiatedTypeParameters()
         {
-            var typeName = Commons.Model.Naming.Names.Type("OuterType`1+InnerType, Assembly, 1.2.3.4");
+            var typeName = TypeUtils.CreateTypeName("OuterType`1+InnerType, Assembly, 1.2.3.4");
 
             Assert.IsTrue(typeName.IsGenericEntity);
             Assert.IsFalse(typeName.HasTypeParameters);
@@ -349,7 +351,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldBeTopLevelType()
         {
-            var typeName = Commons.Model.Naming.Names.Type("this.is.a.top.level.ValueType, " + TestAssemblyIdentifier);
+            var typeName = TypeUtils.CreateTypeName("this.is.a.top.level.ValueType, " + TestAssemblyIdentifier);
 
             Assert.IsFalse(typeName.IsNestedType);
             Assert.IsNull(typeName.DeclaringType);
@@ -363,10 +365,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         public void ShouldBeNestedType(string nestedTypeFullName, string expectedDeclaringTypeFullName)
         {
             var expected = expectedDeclaringTypeFullName.Equals("?")
-                ? UnknownTypeName.Instance
-                : Commons.Model.Naming.Names.Type(expectedDeclaringTypeFullName + ", " + TestAssemblyIdentifier);
+                ? new TypeName()
+                : TypeUtils.CreateTypeName(expectedDeclaringTypeFullName + ", " + TestAssemblyIdentifier);
 
-            var nestedTypeName = Commons.Model.Naming.Names.Type(nestedTypeFullName + ", " + TestAssemblyIdentifier);
+            var nestedTypeName = TypeUtils.CreateTypeName(nestedTypeFullName + ", " + TestAssemblyIdentifier);
             var actual = nestedTypeName.DeclaringType;
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
@@ -379,7 +381,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             const string paramIdentifier = "T -> p.OP, A, 1.0.0.0";
 
             var nestedTypeName =
-                Commons.Model.Naming.Names.Type("p.O`1+I[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
+                TypeUtils.CreateTypeName("p.O`1+I[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
             Assert.IsTrue(nestedTypeName.HasTypeParameters);
@@ -401,7 +403,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             const string p3Identifier = "C -> IP2, B, 5.1.0.9";
 
             var nestedTypeName =
-                Commons.Model.Naming.Names.Type(
+                TypeUtils.CreateTypeName(
                     "p.O`1+I`2[[" + p1Identifier + "],[" + p2Identifier + "],[" + p3Identifier + "]], " +
                     TestAssemblyIdentifier);
 
@@ -425,7 +427,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             const string paramIdentifier = "on.PT`1[[" + paramParamIdentifier + "]], Y, 1.0.0.0";
 
             var typeName =
-                Commons.Model.Naming.Names.Type("n.OT`1[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
+                TypeUtils.CreateTypeName("n.OT`1[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.IsTrue(typeName.HasTypeParameters);
             Assert.AreEqual(1, typeName.TypeParameters.Count);
@@ -441,7 +443,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         public void ShouldBeDeeplyNestedTypeWithLotsOfTypeParameters()
         {
             var typeName =
-                Commons.Model.Naming.Names.Type(
+                TypeUtils.CreateTypeName(
                     "p.O`1+M`1+I`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0],[V -> p.P3, A, 1.0.0.0]], " +
                     TestAssemblyIdentifier);
 
@@ -455,7 +457,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("TParam")]
         public void ShouldBeTypeParameter(string identifier)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsTrue(uut.IsTypeParameter);
         }
@@ -465,7 +467,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("TParam", "TParam")]
         public void ShouldExtractTypeParameterShortName(string identifier, string expectedShortName)
         {
-            var uut = Commons.Model.Naming.Names.Type(identifier);
+            var uut = TypeUtils.CreateTypeName(identifier);
 
             Assert.AreEqual(expectedShortName, ((ITypeParameterName) uut).TypeParameterShortName);
         }
@@ -473,7 +475,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void TypeParameterTypeShouldBeConcreteType()
         {
-            var uut = Commons.Model.Naming.Names.Type("T -> System.String, mscorlib, 4.0.0.0");
+            var uut = TypeUtils.CreateTypeName("T -> System.String, mscorlib, 4.0.0.0");
 
             Assert.AreEqual(false, ((ITypeParameterName) uut).TypeParameterType.IsTypeParameter);
         }
@@ -481,7 +483,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void TypeParameterTypeShouldBeShortName()
         {
-            var uut = Commons.Model.Naming.Names.Type("T -> T");
+            var uut = TypeUtils.CreateTypeName("T -> T");
 
             Assert.AreEqual(true, ((ITypeParameterName) uut).TypeParameterType.IsTypeParameter);
         }
@@ -489,7 +491,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldNotHaveTypeParameterShortName()
         {
-            var uut = Commons.Model.Naming.Names.Type("Non.Parameter.Type, As, 1.2.3.4");
+            var uut = TypeUtils.CreateTypeName("Non.Parameter.Type, As, 1.2.3.4");
 
             Assert.AreEqual("", ((ITypeParameterName) uut).TypeParameterShortName);
         }
@@ -497,7 +499,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldNotHaveTypeParameterType()
         {
-            var uut = Commons.Model.Naming.Names.Type("Non.Parameter.Type, As, 1.2.3.4");
+            var uut = TypeUtils.CreateTypeName("Non.Parameter.Type, As, 1.2.3.4");
 
             Assert.IsNull(((ITypeParameterName) uut).TypeParameterType);
         }
@@ -506,7 +508,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("System.Object, mscorlib, 4.0.0.0")]
         public void ShouldBeNotTypeParameter(string identifier)
         {
-            var genericType = Commons.Model.Naming.Names.Type(identifier);
+            var genericType = TypeUtils.CreateTypeName(identifier);
 
             Assert.IsFalse(genericType.IsTypeParameter);
         }

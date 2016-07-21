@@ -129,7 +129,7 @@ namespace KaVE.Commons.Model.ObjectUsage
             {
                 return name.DeclaringType.ToName() + "$" + name.Name;
             }
-            if (name.IsUnknownType)
+            if (name.IsUnknown)
             {
                 return "LUnknown";
             }

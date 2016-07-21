@@ -238,7 +238,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void AddIf(ITypeName t, ISet<IAssemblyName> apis)
         {
-            if (t.IsUnknownType)
+            if (t.IsUnknown)
             {
                 return;
             }
