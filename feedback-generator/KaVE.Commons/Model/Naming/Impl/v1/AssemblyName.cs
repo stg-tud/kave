@@ -14,22 +14,44 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.CodeElements;
+using System;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
-    public class CsLambdaName : ILambdaName
+    public class AssemblyName : IAssemblyName
     {
-        private readonly TypeNamingParser.LambdaNameContext _ctx;
+        private readonly TypeNamingParser.AssemblyContext _ctx;
 
-        public CsLambdaName(TypeNamingParser.LambdaNameContext ctx)
+        public AssemblyName(TypeNamingParser.AssemblyContext ctx)
         {
             Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
             _ctx = ctx;
+        }
+
+        public IAssemblyVersion Version
+        {
+            get
+            {
+                if (_ctx.regularAssembly().assemblyVersion() != null)
+                {
+                    return new AssemblyVersion(_ctx.regularAssembly().assemblyVersion());
+                }
+                return UnknownName.Get(typeof(IAssemblyVersion));
+            }
+        }
+
+        public string Name
+        {
+            get { return _ctx.regularAssembly().assemblyName().GetText(); }
+        }
+
+        public bool IsLocalProject
+        {
+            // TODO NameUpdate: Implement
+            get { throw new NotImplementedException(); }
         }
 
         public string Identifier
@@ -45,36 +67,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         public bool IsHashed
         {
             get { return Identifier.Contains("=="); }
-        }
-
-        public IKaVEList<IParameterName> Parameters
-        {
-            get
-            {
-                var parameters = Lists.NewList<IParameterName>();
-                if (_ctx.realLambdaName().methodSignature() != null)
-                {
-                    foreach (var p in _ctx.realLambdaName().methodSignature().formalParam())
-                    {
-                        parameters.Add(Names.Parameter(p.GetText()));
-                    }
-                }
-                return parameters;
-            }
-        }
-
-        public bool HasParameters
-        {
-            get
-            {
-                return _ctx.realLambdaName() != null && _ctx.realLambdaName().methodSignature() != null &&
-                       _ctx.realLambdaName().methodSignature().formalParam().Length != 0;
-            }
-        }
-
-        public ITypeName ReturnType
-        {
-            get { return new CsTypeName(_ctx.realLambdaName().type()); }
         }
 
         public override bool Equals(object other)

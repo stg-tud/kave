@@ -21,11 +21,11 @@ using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
-    public class CsMemberName : IMemberName, IName, IFieldName, IPropertyName, IEventName
+    public class MemberName : IFieldName, IPropertyName, IEventName
     {
         private readonly TypeNamingParser.MemberNameContext _ctx;
 
-        public CsMemberName(TypeNamingParser.MemberNameContext ctx)
+        public MemberName(TypeNamingParser.MemberNameContext ctx)
         {
             Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
             _ctx = ctx;
@@ -64,7 +64,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 
         private ITypeName GetDeclaringType(TypeNamingParser.MethodDefinitionContext signature)
         {
-            return new CsTypeName(signature.type(1));
+            return new TypeName(signature.type(1));
         }
 
         public bool IsStatic
@@ -146,7 +146,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 
         private ITypeName GetValueType(TypeNamingParser.MethodDefinitionContext signature)
         {
-            return new CsTypeName(signature.type(0));
+            return new TypeName(signature.type(0));
         }
 
         public ITypeName HandlerType

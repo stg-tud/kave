@@ -24,11 +24,11 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
-    class CsMethodName : IMethodName
+    public class MethodName : IMethodName
     {
         protected TypeNamingParser.MethodContext Ctx;
 
-        public CsMethodName(TypeNamingParser.MethodContext ctx)
+        public MethodName(TypeNamingParser.MethodContext ctx)
         {
             Asserts.Null(ctx.UNKNOWN(), "ctx.UNKNOWN() != null");
             Ctx = ctx;
@@ -95,7 +95,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 {
                     if (Ctx.regularMethod().customMethod().methodDefinition().type()[0].UNKNOWN() == null)
                     {
-                        return new CsTypeName(Ctx.regularMethod().customMethod().methodDefinition().type()[0]);
+                        return new TypeName(Ctx.regularMethod().customMethod().methodDefinition().type()[0]);
                     }
                 }
                 return UnknownName.Get(typeof(ITypeName));
@@ -131,14 +131,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                       Ctx.regularMethod().nonStaticCtor().type().UNKNOWN() == null)))
                 {
                     return
-                        new CsTypeName(
+                        new TypeName(
                             Ctx.regularMethod().staticCctor() != null
                                 ? Ctx.regularMethod().staticCctor().type()
                                 : Ctx.regularMethod().nonStaticCtor().type());
                 }
                 if (Ctx.regularMethod().customMethod().methodDefinition().type(1).UNKNOWN() == null)
                 {
-                    return new CsTypeName(Ctx.regularMethod().customMethod().methodDefinition().type(1));
+                    return new TypeName(Ctx.regularMethod().customMethod().methodDefinition().type(1));
                 }
                 return UnknownName.Get(typeof(ITypeName));
             }

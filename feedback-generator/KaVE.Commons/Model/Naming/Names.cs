@@ -31,7 +31,14 @@ using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
+using AssemblyName = KaVE.Commons.Model.Naming.Impl.v1.AssemblyName;
 using AssemblyVersionName = KaVE.Commons.Model.Naming.Impl.v0.Types.Organization.AssemblyVersion;
+using LambdaName = KaVE.Commons.Model.Naming.Impl.v1.LambdaName;
+using MemberName = KaVE.Commons.Model.Naming.Impl.v1.MemberName;
+using MethodName = KaVE.Commons.Model.Naming.Impl.v1.MethodName;
+using NamespaceName = KaVE.Commons.Model.Naming.Impl.v1.NamespaceName;
+using ParameterName = KaVE.Commons.Model.Naming.Impl.v1.ParameterName;
+using TypeName = KaVE.Commons.Model.Naming.Impl.v1.TypeName;
 
 namespace KaVE.Commons.Model.Naming
 {
@@ -92,15 +99,15 @@ namespace KaVE.Commons.Model.Naming
             {typeof(ILambdaName), "1e"},
             {typeof(LocalVariableName), "1f"},
             {typeof(IMethodName), "1g"},
-            {typeof(CsMethodName), "1g"},
+            {typeof(MethodName), "1g"},
             {typeof(GeneralName), "1h"},
             {typeof(INamespaceName), "1i"},
             {typeof(IParameterName), "1j"},
             {typeof(IPropertyName), "1k"},
+            {typeof(Impl.v0.Types.TypeName), "1l"},
             {typeof(TypeName), "1l"},
-            {typeof(CsTypeName), "1l"},
             {typeof(ITypeName), "1l"},
-            {typeof(CsAssemblyName), "1b"}
+            {typeof(AssemblyName), "1b"}
         };
 
         public static IName ParseJson(string input)
@@ -212,7 +219,7 @@ namespace KaVE.Commons.Model.Naming
                 {
                     return UnknownName.Get(typeof(ITypeName));
                 }
-                return new CsTypeName(ctx);
+                return new TypeName(ctx);
             }
             catch (Exception)
             {
@@ -223,7 +230,7 @@ namespace KaVE.Commons.Model.Naming
                     {
                         return UnknownName.Get(typeof(ITypeName));
                     }
-                    return new CsTypeName(ctx);
+                    return new TypeName(ctx);
                 }
                 catch (Exception)
                 {
@@ -269,7 +276,7 @@ namespace KaVE.Commons.Model.Naming
                 {
                     return UnknownName.Get(typeof(IMethodName));
                 }
-                return new CsMethodName(ctx);
+                return new MethodName(ctx);
             }
             catch (Exception)
             {
@@ -280,7 +287,7 @@ namespace KaVE.Commons.Model.Naming
                     {
                         return UnknownName.Get(typeof(IMethodName));
                     }
-                    return new CsMethodName(ctx);
+                    return new MethodName(ctx);
                 }
                 catch (Exception)
                 {
@@ -311,7 +318,7 @@ namespace KaVE.Commons.Model.Naming
             try
             {
                 var ctx = TypeNameParseUtil.ValidateNamespaceName(input);
-                return new CsNamespaceName(ctx);
+                return new NamespaceName(ctx);
             }
             catch (Exception)
             {
@@ -342,7 +349,7 @@ namespace KaVE.Commons.Model.Naming
             try
             {
                 var ctx = TypeNameParseUtil.ValidateAssemblyName(input);
-                return new CsAssemblyName(ctx);
+                return new AssemblyName(ctx);
             }
             catch (Exception)
             {
@@ -408,7 +415,7 @@ namespace KaVE.Commons.Model.Naming
             try
             {
                 var ctx = TypeNameParseUtil.ValidateParameterName(input);
-                return new CsParameterName(ctx);
+                return new ParameterName(ctx);
             }
             catch (AssertException)
             {
@@ -416,14 +423,14 @@ namespace KaVE.Commons.Model.Naming
             }
         }
 
-        private static CsMemberName GetMemberName(string input)
+        private static MemberName GetMemberName(string input)
         {
             try
             {
                 var ctx = TypeNameParseUtil.ValidateMemberName(input);
                 if (ctx.UNKNOWN() == null)
                 {
-                    return new CsMemberName(ctx);
+                    return new MemberName(ctx);
                 }
                 return null;
             }
@@ -510,7 +517,7 @@ namespace KaVE.Commons.Model.Naming
 
         public static IAssemblyName UnknownAssembly
         {
-            get { return new AssemblyName(); }
+            get { return new Impl.v0.Types.Organization.AssemblyName(); }
         }
 
         public static IAssemblyVersion UnknownAssemblyVersion
@@ -520,7 +527,7 @@ namespace KaVE.Commons.Model.Naming
 
         public static ILambdaName UnknownLambda
         {
-            get { return new LambdaName(); }
+            get { return new Impl.v0.CodeElements.LambdaName(); }
         }
 
         public static ITypeParameterName TypeParameter(string n)
@@ -576,7 +583,7 @@ namespace KaVE.Commons.Model.Naming
                 {
                     return UnknownName.Get(typeof(ILambdaName));
                 }
-                return new CsLambdaName(ctx);
+                return new LambdaName(ctx);
             }
             catch (AssertException)
             {
@@ -591,7 +598,7 @@ namespace KaVE.Commons.Model.Naming
 
         public static ILambdaName Lambda(string n)
         {
-            return new LambdaName(n);
+            return new Impl.v0.CodeElements.LambdaName(n);
         }
 
         /// <summary>
@@ -668,12 +675,12 @@ namespace KaVE.Commons.Model.Naming
 
         public static INamespaceName UnknownNamespace
         {
-            get { return new NamespaceName(); }
+            get { return new Impl.v0.Types.Organization.NamespaceName(); }
         }
 
         public static IParameterName UnknownParameter
         {
-            get { return new ParameterName(); }
+            get { return new Impl.v0.CodeElements.ParameterName(); }
         }
 
         public static ILocalVariableName UnknownLocalVariable

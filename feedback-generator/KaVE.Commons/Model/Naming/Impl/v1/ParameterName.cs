@@ -20,18 +20,18 @@ using KaVE.Commons.Model.Naming.Types;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
-    public class CsParameterName : IName, IParameterName
+    public class ParameterName : IParameterName
     {
-        private readonly TypeNamingParser.FormalParamContext ctx;
+        private readonly TypeNamingParser.FormalParamContext _ctx;
 
-        public CsParameterName(TypeNamingParser.FormalParamContext ctx)
+        public ParameterName(TypeNamingParser.FormalParamContext ctx)
         {
-            this.ctx = ctx;
+            _ctx = ctx;
         }
 
         public string Identifier
         {
-            get { return ctx.GetText(); }
+            get { return _ctx.GetText(); }
         }
 
         public bool IsUnknown
@@ -46,41 +46,41 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 
         public ITypeName ValueType
         {
-            get { return new CsTypeName(ctx.type()); }
+            get { return new TypeName(_ctx.type()); }
         }
 
         public string Name
         {
-            get { return ctx.id().GetText(); }
+            get { return _ctx.id().GetText(); }
         }
 
         public bool IsPassedByReference
         {
             get
             {
-                return (ctx.parameterModifier() != null && ctx.parameterModifier().refModifier() != null) ||
+                return (_ctx.parameterModifier() != null && _ctx.parameterModifier().refModifier() != null) ||
                        ValueType.IsReferenceType;
             }
         }
 
         public bool IsOutput
         {
-            get { return ctx.parameterModifier() != null && ctx.parameterModifier().outModifier() != null; }
+            get { return _ctx.parameterModifier() != null && _ctx.parameterModifier().outModifier() != null; }
         }
 
         public bool IsParameterArray
         {
-            get { return ctx.parameterModifier() != null && ctx.parameterModifier().paramsModifier() != null; }
+            get { return _ctx.parameterModifier() != null && _ctx.parameterModifier().paramsModifier() != null; }
         }
 
         public bool IsOptional
         {
-            get { return ctx.parameterModifier() != null && ctx.parameterModifier().optsModifier() != null; }
+            get { return _ctx.parameterModifier() != null && _ctx.parameterModifier().optsModifier() != null; }
         }
 
         public bool IsExtensionMethodParameter
         {
-            get { return ctx.parameterModifier() != null && ctx.parameterModifier().extensionModifier() != null; }
+            get { return _ctx.parameterModifier() != null && _ctx.parameterModifier().extensionModifier() != null; }
         }
 
         public override bool Equals(object other)

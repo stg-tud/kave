@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-using System;
-using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
+using System.Text;
+using Antlr4.Runtime.Misc;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types.Organization;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
-    public class CsAssemblyVersion : IAssemblyVersion
+    public class NamespaceName : INamespaceName
     {
-        private readonly TypeNamingParser.AssemblyVersionContext ctx;
+        [NotNull]
+        private readonly TypeNamingParser.NamespaceContext _ctx;
 
-        public CsAssemblyVersion(TypeNamingParser.AssemblyVersionContext ctx)
+        public NamespaceName(TypeNamingParser.NamespaceContext ctx)
         {
-            this.ctx = ctx;
+            _ctx = ctx;
         }
 
         public string Identifier
         {
-            get { return ctx.GetText(); }
+            get { return _ctx.GetText(); }
         }
 
         public bool IsUnknown
@@ -45,49 +46,38 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return Identifier.Contains("=="); }
         }
 
-        public int CompareTo(IAssemblyVersion other)
+        public INamespaceName ParentNamespace
         {
-            var otherVersion = other as AssemblyVersion;
-            if (otherVersion == null || other.IsUnknown || IsUnknown)
+            get
             {
-                return int.MinValue;
+                var s = GetTextFromIdWithoutLast(_ctx.id());
+                return Names.Namespace(s);
             }
-            var majorDiff = Major - otherVersion.Major;
-            if (majorDiff != 0)
-            {
-                return majorDiff;
-            }
-            var minorDiff = Minor - otherVersion.Minor;
-            if (minorDiff != 0)
-            {
-                return minorDiff;
-            }
-            var buildDiff = Build - otherVersion.Build;
-            if (buildDiff != 0)
-            {
-                return buildDiff;
-            }
-            return Revision - otherVersion.Revision;
         }
 
-        public int Major
+        private string GetTextFromIdWithoutLast(TypeNamingParser.IdContext[] id)
         {
-            get { return Int32.Parse(ctx.num(0).GetText()); }
+            var s = new StringBuilder();
+            for (int i = 0; i < id.Length; i++)
+            {
+                if (i == id.Length - 1)
+                {
+                    break;
+                }
+                s.Append(id[i].GetText());
+                s.Append(".");
+            }
+            return s.ToString();
         }
 
-        public int Minor
+        public string Name
         {
-            get { return Int32.Parse(ctx.num(1).GetText()); }
+            get { return _ctx.id(_ctx.id().Length - 1).GetText(); }
         }
 
-        public int Build
+        public bool IsGlobalNamespace
         {
-            get { return Int32.Parse(ctx.num(2).GetText()); }
-        }
-
-        public int Revision
-        {
-            get { return Int32.Parse(ctx.num(3).GetText()); }
+            get { return Identifier.Equals(""); }
         }
 
         public override bool Equals(object other)
