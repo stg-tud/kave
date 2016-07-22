@@ -43,7 +43,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
             if (IsDelegateTypeIdentifier(identifier))
             {
-                return new DelegateTypeName(FixLegacyDelegateNames(identifier));
+                return new DelegateTypeName(identifier);
             }
             return new TypeName(identifier);
         }
@@ -82,20 +82,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         internal static bool IsDelegateTypeIdentifier(string identifier)
         {
             return identifier.StartsWith(BaseTypeName.PrefixDelegate);
-        }
-
-        internal static string FixLegacyDelegateNames(string identifier)
-        {
-            // fix legacy delegate names
-            if (!identifier.Contains("("))
-            {
-                identifier = string.Format(
-                    "{0}[{1}] [{2}].()",
-                    BaseTypeName.PrefixDelegate,
-                    new TypeName().Identifier,
-                    identifier.Substring(BaseTypeName.PrefixDelegate.Length));
-            }
-            return identifier;
         }
 
 

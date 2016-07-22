@@ -24,9 +24,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     class DelegateTypeNameTest
     {
-        private static readonly IDelegateTypeName LegacyDelegateName =
-            new DelegateTypeName("d:Some.DelegateType, A, 1.0.0.0");
-
         private static readonly IDelegateTypeName ParameterlessDelegateName =
             new DelegateTypeName("d:[R, A, 1.0.0.0] [Some.DelegateType, A, 1.0.0.0].()");
 
@@ -36,7 +33,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
         private static readonly IDelegateTypeName[] DelegateTypeNames =
         {
-            LegacyDelegateName,
             ParameterlessDelegateName,
             ParameterizedDelegateName
         };
@@ -93,7 +89,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void HasNoParameters()
         {
-            Assert.IsFalse(LegacyDelegateName.HasParameters);
             Assert.IsFalse(ParameterlessDelegateName.HasParameters);
         }
 
@@ -106,7 +101,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ParsesParameters()
         {
-            CollectionAssert.IsEmpty(LegacyDelegateName.Parameters);
             CollectionAssert.IsEmpty(ParameterlessDelegateName.Parameters);
             CollectionAssert.AreEqual(
                 new[] {new ParameterName("[C, A, 1.2.3.4] p1"), new ParameterName("[D, A, 1.2.3.4] p2")},
@@ -164,12 +158,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
             Assert.IsTrue(typeName.HasTypeParameters);
             CollectionAssert.AreEqual(new[] {new TypeParameterName("T -> String, mscorlib")}, typeName.TypeParameters);
-        }
-
-        [Test]
-        public void FixesLegacyDelegateTypeNameFormat()
-        {
-            Assert.AreEqual("d:[?] [Some.DelegateType, A, 1.0.0.0].()", LegacyDelegateName.Identifier);
         }
     }
 }
