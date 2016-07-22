@@ -29,11 +29,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("d:[RT, A] [DT, A].()", "d:[RT, A] [DT, A].()[]"),
          TestCase("d:[RT[], A] [DT, A].([PT[], A] p)", "d:[RT[], A] [DT, A].([PT[], A] p)[]"),
          TestCase("A[], B", "A[,], B"),
-         TestCase("A[,,], B", "A[,,,], B"),
+         TestCase("A[,,], B", "A[,,,], B"), // seems strange, but is because of [,,][] becomes [,,,]
          TestCase("T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void DerivesFrom(string baseTypeIdentifer, string expectedDerivedNameIdentifier)
         {
-            var arrayTypeName = ArrayTypeName.From(new TypeName(baseTypeIdentifer), 1);
+            var arrayTypeName = ArrayTypeName.From(TypeUtils.CreateTypeName(baseTypeIdentifer), 1);
 
             Assert.AreEqual(new ArrayTypeName(expectedDerivedNameIdentifier), arrayTypeName);
         }
@@ -43,7 +43,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         {
             var arrayTypeName = ArrayTypeName.From(new TypeName("SomeType, Assembly, 1.2.3.4"), 2);
 
-            Assert.AreSame(new ArrayTypeName("SomeType[,], Assembly, 1.2.3.4"), arrayTypeName);
+            Assert.AreEqual(new ArrayTypeName("SomeType[,], Assembly, 1.2.3.4"), arrayTypeName);
         }
 
         [TestCase("ValueType[,,], As, 9.8.7.6"),
@@ -65,14 +65,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4",
              "a.Foo`1[[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4"),
          TestCase("A[]", "A"),
-         TestCase("T -> System.String[], mscorlib, 4.0.0.0", "System.String, mscorlib, 4.0.0.0"),
          TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0"),
          TestCase("d:[RT, A] [DT, A].()[]", "d:[RT, A] [DT, A].()"),
          TestCase("d:[RT[], A] [DT, A].([PT[], A] p)[]", "d:[RT[], A] [DT, A].([PT[], A] p)"),
          TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void ShouldGetArrayBaseType(string identifier, string expected)
         {
-            Assert.AreEqual(expected, new ArrayTypeName(identifier).ArrayBaseType.Identifier);
+            var sut = TypeUtils.CreateTypeName(identifier).AsArrayTypeName;
+            Assert.AreEqual(expected, sut.ArrayBaseType.Identifier);
         }
 
         [TestCase("ValueType[,,], As, 9.8.7.6", 3),
@@ -123,16 +123,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual("N", uut.Namespace.Identifier);
             Assert.AreEqual("DT[]", uut.Name);
             Assert.AreEqual("AA, 1.2.3.4", uut.Assembly.Identifier);
-            Assert.AreEqual("N.O, AA, 1.2.3.4", uut.DeclaringType.Identifier);
         }
 
         [Test]
-        public void HandlesGenericDelegateBaseType()
+        public void TypeDetection()
         {
-            var uut = new ArrayTypeName("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)[]");
-
-            Assert.IsTrue(uut.HasTypeParameters);
-            CollectionAssert.AreEqual(new[] {new TypeParameterName("T -> String, mscorlib")}, uut.TypeParameters);
+            var id = "d:[RT, A] [N.O+DT, AA, 1.2.3.4].()[]";
+            Assert.IsTrue(TypeUtils.IsArrayTypeIdentifier(id));
+            Assert.IsFalse(TypeUtils.IsDelegateTypeIdentifier(id));
         }
     }
 }

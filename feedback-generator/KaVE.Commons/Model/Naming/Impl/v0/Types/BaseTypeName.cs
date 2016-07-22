@@ -112,9 +112,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 if (_typeParameters == null)
                 {
-                    if (IsArrayType || IsDelegateType)
+                    if (IsArrayType)
                     {
                         _typeParameters = Lists.NewList<ITypeParameterName>();
+                    }
+                    else if (IsDelegateType)
+                    {
+                        _typeParameters = AsDelegateTypeName.DelegateType.TypeParameters;
                     }
                     else
                     {
@@ -138,6 +142,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public bool IsTypeParameter
         {
+            // ReSharper disable once SuspiciousTypeConversion.Global
             get { return this is ITypeParameterName; }
         }
 
@@ -146,8 +151,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                Asserts.That(IsDelegateType);
-                return this as IDelegateTypeName;
+                var dtn = this as IDelegateTypeName;
+                Asserts.NotNull(dtn);
+                return dtn;
             }
         }
 
@@ -155,8 +161,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                Asserts.That(IsDelegateType);
-                return this as IArrayTypeName;
+                var atn = this as IArrayTypeName;
+                Asserts.NotNull(atn);
+                return atn;
             }
         }
 
@@ -164,8 +171,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                Asserts.That(IsDelegateType);
-                return this as ITypeParameterName;
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                var tpn = this as ITypeParameterName;
+                Asserts.NotNull(tpn);
+                return tpn;
             }
         }
     }

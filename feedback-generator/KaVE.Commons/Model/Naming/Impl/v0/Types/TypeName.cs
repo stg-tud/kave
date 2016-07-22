@@ -32,6 +32,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
+                if (IsUnknown)
+                {
+                    return new AssemblyName();
+                }
                 if (IsDelegateType)
                 {
                     return DeclaringType.Assembly;
@@ -60,11 +64,17 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
+                if (IsUnknown)
+                {
+                    return new NamespaceName();
+                }
                 if (IsDelegateType)
                 {
                     return DeclaringType.Namespace;
                 }
+
                 var id = RawFullName;
+
                 var endIndexOfNamespaceIdentifier = id.LastIndexOf('.');
                 return endIndexOfNamespaceIdentifier < 0
                     ? new NamespaceName("")
@@ -80,7 +90,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var fn = Identifier.Substring(0, length);
                 if (IsEnumType || IsInterfaceType || IsStructType)
                 {
-                    // TODO NameUPdate: strip prefix
+                    var startIdx = fn.IndexOf(":", StringComparison.Ordinal) + 1;
+                    return fn.Substring(startIdx);
                 }
                 return fn;
             }

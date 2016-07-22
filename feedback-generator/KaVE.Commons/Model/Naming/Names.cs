@@ -93,7 +93,7 @@ namespace KaVE.Commons.Model.Naming
             {typeof(LocalVariableName), "1f"},
             {typeof(IMethodName), "1g"},
             {typeof(CsMethodName), "1g"},
-            {typeof(BaseName), "1h"},
+            {typeof(GeneralName), "1h"},
             {typeof(INamespaceName), "1i"},
             {typeof(IParameterName), "1j"},
             {typeof(IPropertyName), "1k"},

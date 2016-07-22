@@ -116,7 +116,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public IList<IParameterName> Parameters
         {
-            get { return _parameters ?? (_parameters = Identifier.GetParameterNamesFromMethod()); }
+            get { return _parameters ?? (_parameters = this.GetParameterNamesFromMethod()); }
         }
 
         public bool HasParameters

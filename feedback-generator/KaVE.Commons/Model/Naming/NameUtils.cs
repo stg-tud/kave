@@ -140,11 +140,6 @@ namespace KaVE.Commons.Model.Naming
             return (startOfParameters > 0 && identifierWithparameters[startOfParameters + 1] != ')');
         }
 
-        public static bool HasParametersXX(this string id)
-        {
-            return GetParamListFromMethod(id).Length > 0;
-        }
-
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         private static string GetParamListFromMethod(string id)
         {
@@ -181,8 +176,9 @@ namespace KaVE.Commons.Model.Naming
             return paramId.Trim();
         }
 
-        public static IKaVEList<IParameterName> GetParameterNamesFromMethod(this string id)
+        public static IKaVEList<IParameterName> GetParameterNamesFromMethod(this IMethodName name)
         {
+            var id = name.Identifier;
             var names = Lists.NewList<IParameterName>();
             var paramsId = GetParamListFromMethod(id);
 
@@ -205,8 +201,9 @@ namespace KaVE.Commons.Model.Naming
             return names;
         }
 
-        public static IKaVEList<IParameterName> GetParameterNames(this string identifierWithParameters)
+        public static IKaVEList<IParameterName> GetParameterNamesFromLambda(this ILambdaName name)
         {
+            var identifierWithParameters = name.Identifier;
             var parameters = Lists.NewList<IParameterName>();
             var endOfParameters = identifierWithParameters.LastIndexOf(')');
             var hasNoBrackets = endOfParameters == -1;
@@ -238,7 +235,7 @@ namespace KaVE.Commons.Model.Naming
 
                 var lengthOfSubstring = endOfParam - startOfParam;
                 var paramSubstring = identifierWithParameters.Substring(startOfParam, lengthOfSubstring);
-                parameters.Add(Names.Parameter(paramSubstring.Trim()));
+                parameters.Add(new ParameterName(paramSubstring.Trim()));
             }
 
             return parameters;

@@ -29,7 +29,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
     /// </summary>
     internal class RegressionTest
     {
-        [Test]
+        private string[] toTest = {"d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)[]"};
+
+        [Test, Ignore]
         public void test0()
         {
             const string id = "d:[System.Void, mscorlib, 4.0.0.0] [System.Action, mscorlib, 4.0.0.0].()";

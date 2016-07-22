@@ -134,13 +134,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ParsesDelegateTypeOfMemberValueType()
         {
-            var eventName =
-                new EventName(
-                    "[d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)] [C, TestProject].Event");
-            Assert.AreSame(
-                new DelegateTypeName(
-                    "d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)"),
-                eventName.HandlerType);
+            var delegateTypeId =
+                "d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)";
+            var eventName = new EventName(string.Format("[{0}] [C, TestProject].Event", delegateTypeId));
+            Assert.AreEqual(new DelegateTypeName(delegateTypeId), eventName.HandlerType);
         }
 
         [Test]

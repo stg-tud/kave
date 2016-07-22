@@ -16,6 +16,9 @@
 
 using System;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming
@@ -36,61 +39,52 @@ namespace KaVE.Commons.Tests.Model.Naming
         }
 
         [Test]
-        public void ParsesParametersWithParameterizedType()
+        public void ParsesEmptyParameters()
         {
-            var parameterNames = "M([A`1[[B, P]], P] p)".GetParameterNames();
-            Assert.AreEqual(Names.Parameter("[A`1[[B, P]], P] p"), parameterNames[0]);
+            var methodName = new MethodName("[?] [?].M()");
+            var lambdaName = new LambdaName("[?] ()");
+            var expected = Lists.NewList<IParameterName>();
+
+            Assert.AreEqual(expected, methodName.GetParameterNamesFromMethod());
+            Assert.AreEqual(expected, lambdaName.GetParameterNamesFromLambda());
         }
 
-        [Test]
-        public void ParsesParametersWithDelegateType()
+        [TestCase("([A`1[[B, P]], P] p)", "[A`1[[B, P]], P] p"),
+         TestCase("([d:[?] [?].()] p)", "[d:[?] [?].()] p"),
+         TestCase("(  out [T,P] p   )", "out [T,P] p")]
+        public void ParsesParameters(string parameters, string parameterId)
         {
-            var parameterNames = "M([[DR, P] [D, P].()] p)".GetParameterNames();
-            Assert.AreEqual(Names.Parameter("[[DR, P] [D, P].()] p"), parameterNames[0]);
+            var methodName = new MethodName("[?] [?].M" + parameters);
+            var lambdaName = new LambdaName("[?] " + parameters);
+            var expected = Lists.NewList(new ParameterName(parameterId));
+
+            Assert.AreEqual(expected, methodName.GetParameterNamesFromMethod());
+            Assert.AreEqual(expected, lambdaName.GetParameterNamesFromLambda());
         }
 
-        [Test]
-        public void ParsesMultipleParameters()
+        [TestCase("([T1,P] a, [T2,P] b)", "[T1,P] a", "[T2,P] b)"),
+         TestCase("(out [T,P] p, ref [T,P] q)", "out [T,P] p", "ref [T,P] q")]
+        public void ParsesMultipleParameters(string parameters, string paramId1, string paramId2)
         {
-            var parameterNames = "M([T1,P] a, [T2,P] b)".GetParameterNames();
-            Assert.AreEqual(2, parameterNames.Count);
-            Assert.AreEqual(Names.Parameter("[T1,P] a"), parameterNames[0]);
-            Assert.AreEqual(Names.Parameter("[T2,P] b"), parameterNames[1]);
+            var methodName = new MethodName("[?] [?].M" + parameters);
+            var lambdaName = new LambdaName("[?] " + parameters);
+            var expected = Lists.NewList(new ParameterName(paramId1), new ParameterName(paramId2));
+
+            Assert.AreEqual(expected, methodName.GetParameterNamesFromMethod());
+            Assert.AreEqual(expected, lambdaName.GetParameterNamesFromLambda());
         }
 
         [Test]
         public void ParsesUnknownNames()
         {
-            var parameterNames = "???".GetParameterNames();
-            Assert.AreEqual(0, parameterNames.Count);
+            var expected = Lists.NewList<IParameterName>();
+
+            Assert.AreEqual(expected, new MethodName().GetParameterNamesFromMethod());
+            Assert.AreEqual(expected, new LambdaName().GetParameterNamesFromLambda());
         }
 
         [Test]
-        public void ParsesEmptyParameters()
-        {
-            var parameterNames = "M()".GetParameterNames();
-            Assert.AreEqual(0, parameterNames.Count);
-        }
-
-        [Test]
-        public void ParsesParametersWithModifiers()
-        {
-            var parameterNames = "M(out [T,P] p, out [T,P] q)".GetParameterNames();
-            Assert.AreEqual(2, parameterNames.Count);
-            Assert.AreEqual(Names.Parameter("out [T,P] p"), parameterNames[0]);
-            Assert.AreEqual(Names.Parameter("out [T,P] q"), parameterNames[1]);
-        }
-
-        [Test]
-        public void ParsesParametersWithAdditionalWhitespace()
-        {
-            var parameterNames = "M(  out [T,P] p   )".GetParameterNames();
-            Assert.AreEqual(1, parameterNames.Count);
-            Assert.AreEqual(Names.Parameter("out [T,P] p"), parameterNames[0]);
-        }
-
-        [Test]
-        public void DoesNotHurtNonGenericNAmes()
+        public void DoesNotBreakNonGenericNames()
         {
             var actual = Names.Method("[T,P] [T,P].Add()").RemoveGenerics();
             var expected = Names.Method("[T,P] [T,P].Add()");

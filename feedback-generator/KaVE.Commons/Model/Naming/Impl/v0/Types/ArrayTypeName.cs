@@ -46,7 +46,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var endIdx = idx;
 
                 var newId = id.Substring(0, startIdx) + id.Substring(endIdx + 1);
-                return Names.Type(newId);
+                return TypeUtils.CreateTypeName(newId);
             }
         }
 

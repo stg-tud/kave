@@ -73,7 +73,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             // "System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], ..." is not, because
             // the separator is only in the type's parameter-type list, i.e., after the '`'.
             var indexOfMapping = identifier.IndexOf(
-                TypeParameterName.ParameterNameTypeSeparater,
+                TypeParameterName.ParameterNameTypeSeparator,
                 StringComparison.Ordinal);
             var endOfTypeName = identifier.IndexOf('`');
             return indexOfMapping >= 0 && (endOfTypeName == -1 || endOfTypeName > indexOfMapping);
@@ -81,7 +81,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         internal static bool IsDelegateTypeIdentifier(string identifier)
         {
-            return identifier.StartsWith(BaseTypeName.PrefixDelegate);
+            return identifier.StartsWith(BaseTypeName.PrefixDelegate) && !IsArrayTypeIdentifier(identifier);
         }
 
 

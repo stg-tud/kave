@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
@@ -22,12 +23,12 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class TypeParameterName : BaseName, ITypeParameterName
+    public class TypeParameterName : BaseName, ITypeParameterName, IArrayTypeName
     {
         /// <summary>
         ///     The separator between the parameter type's short name and its type.
         /// </summary>
-        public const string ParameterNameTypeSeparater = " -> ";
+        public const string ParameterNameTypeSeparator = " -> ";
 
         internal TypeParameterName(string identifier) : base(identifier)
         {
@@ -136,7 +137,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public bool IsArrayType
         {
-            get { return TypeParameterType.IsArrayType; }
+            get { return IsThisArrayType || TypeParameterType.IsArrayType; }
+        }
+
+        private bool IsThisArrayType
+        {
+            get { return TypeParameterShortName.Contains("[") && TypeParameterShortName.Contains("]"); }
         }
 
         // TODO test this method
@@ -145,7 +151,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             Asserts.That(rank > 0, "rank smaller than 1");
             var typeParameterShortName = TypeParameterShortName;
             var suffix = Identifier.Substring(typeParameterShortName.Length);
-            return Names.Type(string.Format("{0}[{1}]{2}", typeParameterShortName, new string(',', rank - 1), suffix));
+            return
+                new TypeParameterName(
+                    string.Format("{0}[{1}]{2}", typeParameterShortName, new string(',', rank - 1), suffix));
         }
 
         public bool IsTypeParameter
@@ -164,20 +172,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public IArrayTypeName AsArrayTypeName
         {
-            get
-            {
-                Asserts.Fail("impossible");
-                return null;
-            }
+            get { return this; }
         }
 
         public ITypeParameterName AsTypeParameterName
         {
-            get
-            {
-                Asserts.Fail("impossible");
-                return null;
-            }
+            get { return this; }
         }
 
         [NotNull]
@@ -195,10 +195,33 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparater.Length;
+                var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparator.Length;
                 return startOfTypeName >= Identifier.Length
                     ? new TypeName()
                     : TypeUtils.CreateTypeName(Identifier.Substring(startOfTypeName));
+            }
+        }
+
+        public int Rank
+        {
+            get
+            {
+                Asserts.That(IsThisArrayType);
+                var start = TypeParameterShortName.IndexOf("[", StringComparison.Ordinal);
+                var end = TypeParameterShortName.IndexOf("]", StringComparison.Ordinal);
+                return end - start;
+            }
+        }
+
+        public ITypeName ArrayBaseType
+        {
+            get
+            {
+                Asserts.That(IsThisArrayType);
+                var tpn = Identifier.Substring(0, TypeParameterShortName.IndexOf("[", StringComparison.Ordinal));
+                var rest = Identifier.Substring(TypeParameterShortName.Length);
+                var newId = string.Format("{0}{1}{2}", tpn, ParameterNameTypeSeparator, rest);
+                return new TypeParameterName(newId);
             }
         }
     }

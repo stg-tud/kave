@@ -30,7 +30,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public IKaVEList<IParameterName> Parameters
         {
-            get { return Identifier.GetParameterNames(); }
+            get { return this.GetParameterNamesFromLambda(); }
         }
 
         public bool HasParameters

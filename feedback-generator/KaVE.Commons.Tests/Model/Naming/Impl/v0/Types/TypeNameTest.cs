@@ -16,9 +16,7 @@
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
-using KaVE.Commons.Model.Naming.Impl.v1;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Model.Naming.Types.Organization;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
@@ -184,9 +182,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [TestCase(""),
-         TestCase("?"),
-         TestCase("T -> ?"),
-         TestCase("TP")]
+         TestCase("?")]
         public void ShouldBeUnknownType(string identifier)
         {
             var uut = TypeUtils.CreateTypeName(identifier);
@@ -288,15 +284,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         {
             var uut = TypeUtils.CreateTypeName(identifier);
 
-            Assert.AreEqual(expectedNamespace, uut.Namespace.Identifier);
+            Assert.AreEqual(new NamespaceName(expectedNamespace), uut.Namespace);
         }
 
         [Test]
-        public void UnknownTypeShouldNotHaveNamespace()
+        public void UnknownTypeShouldHaveUnknownNamespace()
         {
-            var uut = TypeUtils.CreateTypeName("?");
-
-            Assert.AreSame(UnknownName.Get(typeof(INamespaceName)), uut.Namespace);
+            Assert.AreEqual(new NamespaceName(), new TypeName().Namespace);
         }
 
         [TestCase("System.Object, mscorlib, 4.0.0.0", "mscorlib, 4.0.0.0"),
@@ -312,9 +306,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void UnknownTypeShouldHaveUnknownAssembly()
         {
-            var uut = TypeUtils.CreateTypeName("?");
-
-            Assert.AreSame(UnknownName.Get(typeof(IAssemblyName)), uut.Assembly);
+            Assert.AreEqual(new AssemblyName(), new TypeName().Assembly);
         }
 
         [Test]
@@ -359,8 +351,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
         [TestCase("a.p.T+N", "a.p.T"),
          TestCase("N.O+M+I", "N.O+M"),
-         TestCase("n.T+A`1[[T1 -> e:n.T+B, P]], P", "n.T, P"),
-         TestCase("n.T`1+U`1[[T2 -> T2]], P", "n.T`1[[T2 -> T2]], P")]
+         TestCase("n.T+A`1[[T1 -> e:n.T+B, P]]", "n.T"),
+         TestCase("n.T`1+U`1[[T2 -> T2]]", "n.T`1[[T2 -> T2]]")]
         // obviously an error in the analysis, second typeparam missing
         public void ShouldBeNestedType(string nestedTypeFullName, string expectedDeclaringTypeFullName)
         {
@@ -423,20 +415,17 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldBeParameterizedTypeWithParameterizedTypeParameter()
         {
-            const string paramParamIdentifier = "T -> yan.PTPT, Z, 1.0.0.0";
-            const string paramIdentifier = "on.PT`1[[" + paramParamIdentifier + "]], Y, 1.0.0.0";
+            const string paramParamIdentifier = "T -> x.A, P1";
+            const string paramIdentifier = "y.B`1[[" + paramParamIdentifier + "]], P2";
 
             var typeName =
-                TypeUtils.CreateTypeName("n.OT`1[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
+                TypeUtils.CreateTypeName("z.C`1[[" + paramIdentifier + "]], P3");
 
             Assert.IsTrue(typeName.HasTypeParameters);
             Assert.AreEqual(1, typeName.TypeParameters.Count);
-
             var typeParameter = typeName.TypeParameters[0];
-            Assert.AreEqual(paramIdentifier, typeParameter.Identifier);
-            Assert.IsTrue(typeParameter.HasTypeParameters);
-            Assert.AreEqual(1, typeParameter.TypeParameters.Count);
-            Assert.AreEqual(paramParamIdentifier, typeParameter.TypeParameters[0].Identifier);
+
+            Assert.AreEqual(new TypeParameterName(paramIdentifier), typeParameter);
         }
 
         [Test]
@@ -489,19 +478,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [Test]
-        public void ShouldNotHaveTypeParameterShortName()
+        public void RegularTypeIsNoTypeParameter()
         {
             var uut = TypeUtils.CreateTypeName("Non.Parameter.Type, As, 1.2.3.4");
 
-            Assert.AreEqual("", ((ITypeParameterName) uut).TypeParameterShortName);
-        }
-
-        [Test]
-        public void ShouldNotHaveTypeParameterType()
-        {
-            var uut = TypeUtils.CreateTypeName("Non.Parameter.Type, As, 1.2.3.4");
-
-            Assert.IsNull(((ITypeParameterName) uut).TypeParameterType);
+            Assert.False(uut.IsTypeParameter);
         }
 
         [TestCase("SomeType`1[[T -> Foo, Bar, 1.2.3.4]], A, 1.2.3.4"),
