@@ -22,6 +22,7 @@ using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming
@@ -239,104 +240,6 @@ namespace KaVE.Commons.Model.Naming
             }
 
             return parameters;
-        }
-
-
-        public static int FindNext(this string str, int currentIndex, params char[] characters)
-        {
-            for (var i = currentIndex; i < str.Length; i++)
-            {
-                var c = str[i];
-                if (characters.Contains(c))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        public static int FindPrevious(this string str, int currentIndex, char character)
-        {
-            for (var i = currentIndex; i >= 0; i--)
-            {
-                if (str[i] == character)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        public static int FindCorrespondingOpenBracket(this string str, int currentIndex)
-        {
-            var open = str[currentIndex];
-            var close = open.GetCorresponding();
-
-            var depth = 0;
-            for (var i = currentIndex; i > 0; i--)
-            {
-                depth = UpdateDepth(depth, open, close, str[i]);
-                if (depth == 0)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        private static int UpdateDepth(int depth, char open, char close, char current)
-        {
-            if (current == open)
-            {
-                return depth + 1;
-            }
-            if (current == close)
-            {
-                return depth - 1;
-            }
-            return depth;
-        }
-
-        public static int FindCorrespondingCloseBracket(this string str, int currentIndex)
-        {
-            var open = str[currentIndex];
-            var close = open.GetCorresponding();
-
-            var depth = 0;
-            for (var i = currentIndex; i < str.Length; i++)
-            {
-                depth = UpdateDepth(depth, open, close, str[i]);
-                if (depth == 0)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        public static char GetCorresponding(this char c)
-        {
-            switch (c)
-            {
-                case '(':
-                    return ')';
-                case ')':
-                    return '(';
-                case '{':
-                    return '}';
-                case '}':
-                    return '{';
-                case '[':
-                    return ']';
-                case ']':
-                    return '[';
-                case '<':
-                    return '>';
-                case '>':
-                    return '<';
-                default:
-                    throw new ArgumentException(string.Format("no supported bracket type: {0}", c));
-            }
         }
 
         /// <summary>

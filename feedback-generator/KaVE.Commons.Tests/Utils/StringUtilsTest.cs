@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using System;
 using System.Globalization;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils
 {
-    [TestFixture]
     internal class StringUtilsTest
     {
         [Test]
@@ -49,6 +49,174 @@ namespace KaVE.Commons.Tests.Utils
         public void ContainsAny(string[] needles, bool expected)
         {
             Assert.AreEqual(expected, "myfoobar".ContainsAny(needles));
+        }
+
+        [Test]
+        public void Format()
+        {
+            var actual = "a{0}c".FormatEx("b");
+            var expected = "abc";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void FindNext()
+        {
+            var actual = "abcabcabc".FindNext(1, 'a');
+            Assert.AreEqual(3, actual);
+        }
+
+        [Test]
+        public void FindNext_array()
+        {
+            var actual = "ccccab".FindNext(1, 'a', 'b');
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindNext_array2()
+        {
+            var actual = "ccccba".FindNext(1, 'a', 'b');
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindNext_NotFound()
+        {
+            var actual = "abbb".FindNext(1, 'a');
+            Assert.AreEqual(-1, actual);
+        }
+
+        [Test]
+        public void FindPrevious()
+        {
+            var actual = "abcabcabc".FindPrevious(5, 'a');
+            Assert.AreEqual(3, actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Round_Open()
+        {
+            var actual = '('.GetCorresponding();
+            Assert.AreEqual(')', actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Round_Close()
+        {
+            var actual = ')'.GetCorresponding();
+            Assert.AreEqual('(', actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Curly_Open()
+        {
+            var actual = '{'.GetCorresponding();
+            Assert.AreEqual('}', actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Curly_Close()
+        {
+            var actual = '}'.GetCorresponding();
+            Assert.AreEqual('{', actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Array_Open()
+        {
+            var actual = '['.GetCorresponding();
+            Assert.AreEqual(']', actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Array_Close()
+        {
+            var actual = ']'.GetCorresponding();
+            Assert.AreEqual('[', actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Pointy_Open()
+        {
+            var actual = '<'.GetCorresponding();
+            Assert.AreEqual('>', actual);
+        }
+
+        [Test]
+        public void GetCorresponding_Pointy_Close()
+        {
+            var actual = '>'.GetCorresponding();
+            Assert.AreEqual('<', actual);
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void GetCorresponding_EverythingElse()
+        {
+            'x'.GetCorresponding();
+        }
+
+        [Test]
+        public void FindPrevious_NotFound()
+        {
+            var actual = "bbb".FindPrevious(1, 'a');
+            Assert.AreEqual(-1, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingCloseBracket_Round()
+        {
+            var actual = "((()))".FindCorrespondingCloseBracket(1);
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingCloseBracket_Courly()
+        {
+            var actual = "{{{}}}".FindCorrespondingCloseBracket(1);
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingCloseBracket_Array()
+        {
+            var actual = "[[[]]]".FindCorrespondingCloseBracket(1);
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingCloseBracket_Pointy()
+        {
+            var actual = "<<<>>>".FindCorrespondingCloseBracket(1);
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingOpenBracket_Round()
+        {
+            var actual = "((()))".FindCorrespondingOpenBracket(4);
+            Assert.AreEqual(1, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingOpenBracket_Courly()
+        {
+            var actual = "{{{}}}".FindCorrespondingOpenBracket(4);
+            Assert.AreEqual(1, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingOpenBracket_Array()
+        {
+            var actual = "[[[]]]".FindCorrespondingOpenBracket(4);
+            Assert.AreEqual(1, actual);
+        }
+
+        [Test]
+        public void FindCorrespondingOpenBracket_Pointy()
+        {
+            var actual = "<<<>>>".FindCorrespondingOpenBracket(4);
+            Assert.AreEqual(1, actual);
         }
     }
 }

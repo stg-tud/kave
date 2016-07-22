@@ -15,10 +15,10 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils
 {
@@ -26,19 +26,19 @@ namespace KaVE.Commons.Utils
     {
         public static byte[] AsBytes(this string str)
         {
-            var bytes = new byte[str.Length*sizeof (char)];
+            var bytes = new byte[str.Length*sizeof(char)];
             Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
         public static string AsString(this byte[] bytes)
         {
-            var chars = new char[bytes.Length/sizeof (char)];
+            var chars = new char[bytes.Length/sizeof(char)];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
         }
 
-        public static Boolean Contains(this string value,
+        public static bool Contains(this string value,
             string needle,
             CompareOptions compareOptions = CompareOptions.None)
         {
@@ -54,6 +54,109 @@ namespace KaVE.Commons.Utils
         public static bool StartsWithAny(this string value, IList<string> needles, StringComparison options)
         {
             return needles.Any(n => n.StartsWith(value, options));
+        }
+
+        [StringFormatMethod("value")]
+        public static string FormatEx(this string value, params object[] args)
+        {
+            return string.Format(value, args);
+        }
+
+        public static int FindNext(this string str, int currentIndex, params char[] characters)
+        {
+            for (var i = currentIndex; i < str.Length; i++)
+            {
+                var c = str[i];
+                if (characters.Contains(c))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static int FindPrevious(this string str, int currentIndex, char character)
+        {
+            for (var i = currentIndex; i >= 0; i--)
+            {
+                if (str[i] == character)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static int FindCorrespondingOpenBracket(this string str, int currentIndex)
+        {
+            var open = str[currentIndex];
+            var close = open.GetCorresponding();
+
+            var depth = 0;
+            for (var i = currentIndex; i > 0; i--)
+            {
+                depth = UpdateDepth(depth, open, close, str[i]);
+                if (depth == 0)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private static int UpdateDepth(int depth, char open, char close, char current)
+        {
+            if (current == open)
+            {
+                return depth + 1;
+            }
+            if (current == close)
+            {
+                return depth - 1;
+            }
+            return depth;
+        }
+
+        public static int FindCorrespondingCloseBracket(this string str, int currentIndex)
+        {
+            var open = str[currentIndex];
+            var close = open.GetCorresponding();
+
+            var depth = 0;
+            for (var i = currentIndex; i < str.Length; i++)
+            {
+                depth = UpdateDepth(depth, open, close, str[i]);
+                if (depth == 0)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static char GetCorresponding(this char c)
+        {
+            switch (c)
+            {
+                case '(':
+                    return ')';
+                case ')':
+                    return '(';
+                case '{':
+                    return '}';
+                case '}':
+                    return '{';
+                case '[':
+                    return ']';
+                case ']':
+                    return '[';
+                case '<':
+                    return '>';
+                case '>':
+                    return '<';
+                default:
+                    throw new ArgumentException(string.Format("no supported bracket type: {0}", c));
+            }
         }
     }
 }
