@@ -17,7 +17,7 @@
 using KaVE.Commons.Model.Naming.Impl;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v1
 {
     public class CsNameFixerTest
     {

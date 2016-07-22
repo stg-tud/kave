@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 {
     public class TypeParameterNameTestSuite : TestCaseBaseTestSuite
     {

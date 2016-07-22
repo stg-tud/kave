@@ -17,7 +17,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 {
     [TestFixture]
     public class TestCaseProviderTest

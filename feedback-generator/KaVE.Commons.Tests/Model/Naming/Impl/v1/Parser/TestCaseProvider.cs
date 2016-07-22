@@ -19,7 +19,7 @@ using System.IO;
 using System.Linq;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 {
     class TestCaseProvider
     {

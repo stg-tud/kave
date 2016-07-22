@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 {
     class TypeNameTestSuite : TestCaseBaseTestSuite
     {

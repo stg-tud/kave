@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 {
     public class TypeParameterNameTestCase : ITestCase
     {

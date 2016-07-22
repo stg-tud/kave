@@ -16,7 +16,7 @@
 
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Commons.Tests.Model.Naming.CSharp.Parser
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 {
     public class TypeNameTestCase : ITestCase
     {
