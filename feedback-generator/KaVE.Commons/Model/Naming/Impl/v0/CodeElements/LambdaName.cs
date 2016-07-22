@@ -18,6 +18,7 @@ using System;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
@@ -32,7 +33,23 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public IKaVEList<IParameterName> Parameters
         {
-            get { return _parameters ?? (_parameters = this.GetParameterNamesFromLambda()); }
+            get
+            {
+                if (_parameters == null)
+                {
+                    if (IsUnknown)
+                    {
+                        _parameters = Lists.NewList<IParameterName>();
+                    }
+                    else
+                    {
+                        var endOfParameters = Identifier.LastIndexOf(')');
+                        var startOfParameters = Identifier.FindCorrespondingOpenBracket(endOfParameters);
+                        _parameters = Identifier.GetParameterNamesFromSignature(startOfParameters, endOfParameters);
+                    }
+                }
+                return _parameters;
+            }
         }
 
         public bool HasParameters

@@ -106,6 +106,7 @@
     <Compile Include="Model\Naming\Impl\v1\Parser\TypeNamingParser.cs" />
     <Compile Include="Model\Naming\Impl\v1\Parser\TypeNamingVisitor.cs" />
     <Compile Include="Model\Naming\CodeElements\ILocalVariableName.cs" />
+    <Compile Include="Model\Naming\NameUtils.cs" />
     <Compile Include="Model\Naming\Others\IReSharperLiveTemplateName.cs" />
     <Compile Include="Model\Naming\Types\IArrayTypeName.cs" />
     <Compile Include="Model\Naming\Types\IDelegateTypeName.cs" />
@@ -215,7 +216,7 @@
     <Compile Include="Model\Naming\Impl\v0\Types\DelegateTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\EventName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\FieldName.cs" />
-    <Compile Include="Model\Naming\NameUtils.cs" />
+    <Compile Include="Model\Naming\Impl\v0\NameUtils.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\LocalVariableName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MemberName.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MethodName.cs" />

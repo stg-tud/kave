@@ -23,7 +23,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
     {
         protected abstract IMemberName GetMemberNameForBaseTests(string basicMemberSignature);
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseDeclaringType(string typeId)
         {
             var id = string.Format("[T,P] [{0}].M", typeId);
@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.AreEqual(typeId, sut.DeclaringType.Identifier);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseValueType(string typeId)
         {
             var id = string.Format("[{0}] [T,P].M", typeId);
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.AreEqual(typeId, sut.ValueType.Identifier);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseMemberName(string typeId)
         {
             var id = string.Format("[{0}] [{0}].M", typeId);
@@ -50,7 +50,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.AreEqual("M", sut.Name);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldRecognizeStaticFieldName(string typeId)
         {
             var staticId = string.Format("static [{0}] [{0}].M", typeId);

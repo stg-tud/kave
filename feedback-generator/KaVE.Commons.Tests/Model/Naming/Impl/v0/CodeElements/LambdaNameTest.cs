@@ -51,7 +51,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             new LambdaName(null);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void WithoutParameters(string typeId)
         {
             var name = new LambdaName("[System.String, mscorlib, 4.0.0.0] ()");
@@ -60,7 +60,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             CollectionAssert.IsEmpty(name.Parameters);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void WithParameters(string typeId)
         {
             var name = new LambdaName("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)");

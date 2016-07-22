@@ -16,7 +16,7 @@
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
 {
-    internal class TestUtilsV0
+    internal class TestUtils
     {
         public static string[] TypeSource()
         {

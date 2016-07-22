@@ -48,7 +48,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             new LocalVariableName(null);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseType(string typeId)
         {
             var id = string.Format("[{0}] id", typeId);
@@ -59,7 +59,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseVariableName(string typeId)
         {
             var id = string.Format("[{0}] id", typeId);

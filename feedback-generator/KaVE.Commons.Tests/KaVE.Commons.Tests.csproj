@@ -97,7 +97,7 @@
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\CommandNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\SolutionNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Others\ReSharperLiveTemplateNameTest.cs" />
-    <Compile Include="Model\Naming\Impl\v0\TestUtilsV0.cs" />
+    <Compile Include="Model\Naming\Impl\v0\TestUtils.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\LegacyFixesTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\RegressionTest.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="Model\Naming\Impl\v0\GeneralNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\ParameterNameTest.cs" />
     <Compile Include="Model\Naming\NamesTest.cs" />
-    <Compile Include="Model\Naming\NameUtilsTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\NameUtilsTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsNameUtilTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\Parser\ArrayTypeNameTestCase.cs" />
     <Compile Include="Model\Naming\Impl\v1\Parser\ArrayTypeNameTestSuite.cs" />
@@ -139,6 +139,7 @@
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\ProjectItemNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\ProjectNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\WindowNameTest.cs" />
+    <Compile Include="Model\Naming\NameUtilsTest.cs" />
     <Compile Include="Model\ObjectUsage\CallSitesTest.cs" />
     <Compile Include="Model\ObjectUsage\CallSiteTest.cs" />
     <Compile Include="Model\ObjectUsage\CoReFieldNameTest.cs" />

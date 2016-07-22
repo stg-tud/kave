@@ -129,7 +129,17 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public IList<IParameterName> Parameters
         {
-            get { return _parameters ?? (_parameters = this.GetParameterNamesFromMethod()); }
+            get
+            {
+                if (_parameters == null)
+                {
+                    var endOfParameters = Identifier.LastIndexOf(')');
+                    var startOfParameters = Identifier.FindCorrespondingOpenBracket(endOfParameters);
+                    _parameters = Identifier.GetParameterNamesFromSignature(startOfParameters, endOfParameters);
+                }
+
+                return _parameters;
+            }
         }
 
         public bool HasParameters

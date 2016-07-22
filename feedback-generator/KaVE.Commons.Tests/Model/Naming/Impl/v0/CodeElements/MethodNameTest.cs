@@ -69,7 +69,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             new MethodName(null);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseSingleParameter(string typeId)
         {
             var paramId = string.Format("[{0}] p", typeId);
@@ -80,7 +80,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.AreEqual(paramId, sut.Parameters[0].Identifier);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseMultipleParameters(string typeId)
         {
             var param1Id = string.Format("[{0}] p", typeId);
@@ -94,7 +94,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         }
 
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseSingleUnboundTypeParameters(string typeId)
         {
             var sut = new MethodName(string.Format("[{0}] [{0}].M`1[[T]]([{0}] p)", typeId));
@@ -104,7 +104,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.AreEqual(expecteds, sut.TypeParameters);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseSingleBoundTypeParameters(string typeId)
         {
             var sut = new MethodName(string.Format("[{0}] [{0}].M`1[[T -> {0}]]([{0}] p)", typeId));
@@ -114,7 +114,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.AreEqual(expecteds, sut.TypeParameters);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseMultipleTypeParameters(string typeId)
         {
             var sut = new MethodName(string.Format("[{0}] [{0}].M`1[[T -> {0}],[U]]([{0}] p)", typeId));

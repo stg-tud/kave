@@ -53,7 +53,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             new ParameterName(null);
         }
 
-        [TestCaseSource(typeof(TestUtilsV0), "TypeSource")]
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldParseBasicInformation(string typeId)
         {
             var id = string.Format("[{0}] p", typeId);

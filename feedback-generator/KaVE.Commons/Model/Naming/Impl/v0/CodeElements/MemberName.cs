@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 {
@@ -30,18 +31,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         protected string Modifiers
         {
             get { return Identifier.Substring(0, Identifier.IndexOf('[')); }
-        }
-
-        public ITypeName DeclaringType
-        {
-            get
-            {
-                var endOfValueType = Identifier.EndOfNextTypeIdentifier(0);
-                var startOfDecarlingType = Identifier.StartOfNextTypeIdentifier(endOfValueType) + 1;
-                var endOfDeclaringType = Identifier.EndOfNextTypeIdentifier(endOfValueType) - 1;
-                var lengthOfDeclaringType = endOfDeclaringType - startOfDecarlingType;
-                return TypeUtils.CreateTypeName(Identifier.Substring(startOfDecarlingType, lengthOfDeclaringType));
-            }
         }
 
         public bool IsStatic
@@ -65,10 +54,27 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         {
             get
             {
-                var startOfValueType = Identifier.StartOfNextTypeIdentifier(0) + 1;
-                var endOfValueType = Identifier.EndOfNextTypeIdentifier(0) - 1;
-                var lengthOfValueTypeIdentifier = endOfValueType - startOfValueType;
-                return TypeUtils.CreateTypeName(Identifier.Substring(startOfValueType, lengthOfValueTypeIdentifier));
+                var openValType = Identifier.FindNext(0, '[');
+                var closeValType = Identifier.FindCorrespondingCloseBracket(openValType);
+                // ignore open bracket
+                openValType++;
+                var declTypeIdentifier = Identifier.Substring(openValType, closeValType - openValType);
+                return TypeUtils.CreateTypeName(declTypeIdentifier);
+            }
+        }
+
+        public ITypeName DeclaringType
+        {
+            get
+            {
+                var openValType = Identifier.FindNext(0, '[');
+                var closeValType = Identifier.FindCorrespondingCloseBracket(openValType);
+                var openDeclType = Identifier.FindNext(closeValType, '[');
+                var closeDeclType = Identifier.FindCorrespondingCloseBracket(openDeclType);
+                // ignore open bracket
+                openDeclType++;
+                var declTypeIdentifier = Identifier.Substring(openDeclType, closeDeclType - openDeclType);
+                return TypeUtils.CreateTypeName(declTypeIdentifier);
             }
         }
     }
