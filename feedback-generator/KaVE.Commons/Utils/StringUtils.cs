@@ -158,5 +158,11 @@ namespace KaVE.Commons.Utils
                     throw new ArgumentException(string.Format("no supported bracket type: {0}", c));
             }
         }
+
+        public static string TakeUntil(this string s, params char[] stopChars)
+        {
+            var count = s.TakeWhile(c => !stopChars.Contains(c)).Count();
+            return s.Substring(0, count);
+        }
     }
 }

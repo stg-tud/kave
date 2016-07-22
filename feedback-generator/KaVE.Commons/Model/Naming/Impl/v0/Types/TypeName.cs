@@ -142,7 +142,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var fullName = FullName;
                 if (HasTypeParameters)
                 {
-                    fullName = TakeUntilChar(fullName, new[] {'[', ','});
+                    fullName = fullName.TakeUntil('[', ',');
                 }
                 var endOfDeclaringTypeName = fullName.LastIndexOf('+');
                 if (endOfDeclaringTypeName == -1)
@@ -174,21 +174,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 }
                 return TypeUtils.CreateTypeName(declaringTypeName + ", " + Assembly);
             }
-        }
-
-        private static string TakeUntilChar(string fullName, char[] stopChars)
-        {
-            var i = 0;
-            foreach (var c in fullName)
-            {
-                if (stopChars.Contains(c))
-                {
-                    break;
-                }
-                i++;
-            }
-
-            return fullName.Substring(0, i);
         }
 
         public ITypeName DeriveArrayTypeName(int rank)

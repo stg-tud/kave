@@ -218,5 +218,41 @@ namespace KaVE.Commons.Tests.Utils
             var actual = "<<<>>>".FindCorrespondingOpenBracket(4);
             Assert.AreEqual(1, actual);
         }
+
+        [Test]
+        public void TakeUntil_noChar()
+        {
+            const string strIn = "abcd";
+            var actual = strIn.TakeUntil();
+            const string expected = "abcd";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TakeUntil_singleChar()
+        {
+            const string strIn = "abcd";
+            var actual = strIn.TakeUntil('b');
+            const string expected = "a";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TakeUntil_multiChar()
+        {
+            const string strIn = "abcd";
+            var actual = strIn.TakeUntil('b', 'c');
+            const string expected = "a";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TakeUntil_notFound()
+        {
+            const string strIn = "abcd";
+            var actual = strIn.TakeUntil('x');
+            const string expected = "abcd";
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
