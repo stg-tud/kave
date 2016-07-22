@@ -19,6 +19,7 @@ using System.Linq;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -73,7 +74,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                     return DeclaringType.Namespace;
                 }
 
-                var id = RawFullName;
+                var id = RemoveTypeParameterListButKeepTicks(FullName);
 
                 var endIndexOfNamespaceIdentifier = id.LastIndexOf('.');
                 return endIndexOfNamespaceIdentifier < 0
@@ -97,25 +98,23 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
         }
 
-        public string RawFullName
+        private static string RemoveTypeParameterListButKeepTicks(string fullName)
         {
-            get
+            var startIdx = fullName.IndexOf('[');
+            if (startIdx != -1)
             {
-                var fullName = FullName;
-                var indexOfGenericList = fullName.IndexOf("[[", StringComparison.Ordinal);
-                if (indexOfGenericList < 0)
-                {
-                    indexOfGenericList = fullName.IndexOf(", ", StringComparison.Ordinal);
-                }
-                return indexOfGenericList < 0 ? fullName : fullName.Substring(0, indexOfGenericList);
+                var endIdx = fullName.FindCorrespondingCloseBracket(startIdx);
+                var genericInfo = fullName.Substring(startIdx, endIdx - startIdx);
+                return fullName.Replace(genericInfo, "");
             }
+            return fullName;
         }
 
         public override string Name
         {
             get
             {
-                var rawFullName = RawFullName;
+                var rawFullName = RemoveTypeParameterListButKeepTicks(FullName);
                 var endOfOutTypeName = rawFullName.LastIndexOf('+');
                 if (endOfOutTypeName > -1)
                 {
@@ -199,7 +198,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public override bool IsNestedType
         {
-            get { return RawFullName.Contains("+"); }
+            get { return RemoveTypeParameterListButKeepTicks(FullName).Contains("+"); }
         }
     }
 }

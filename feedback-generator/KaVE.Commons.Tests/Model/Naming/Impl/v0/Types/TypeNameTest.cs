@@ -494,6 +494,20 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(genericType.IsTypeParameter);
         }
 
+        [TestCase("a.b.TC`1[[T1]]+NC`1[[T2]], P", "a.b.TC`1[[T1]]+NC`1[[T2]]", "NC"),
+         TestCase("e:n.E,P", "n.E", "E"),
+         TestCase("n.T,P", "n.T", "T"),
+         TestCase("n.T[],P", "n.T[]", "T[]"),
+         TestCase("d:[?] [T+D,P].()", "T+D", "D"),
+         TestCase("n.T`1[T2],P", "n.T`1[T2]", "T")
+        ]
+        public void ShouldParseFullAndSimpleNames(string typeId, string fullName, string simpleName)
+        {
+            var sut = TypeUtils.CreateTypeName(typeId);
+            Assert.AreEqual(fullName, sut.FullName);
+            Assert.AreEqual(simpleName, sut.Name);
+        }
+
         [Test]
         public void TypeParameterParsingIsCached()
         {

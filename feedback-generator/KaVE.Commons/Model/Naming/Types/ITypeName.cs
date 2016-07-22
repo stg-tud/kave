@@ -39,11 +39,22 @@ namespace KaVE.Commons.Model.Naming.Types
         INamespaceName Namespace { get; }
 
         /// <summary>
-        ///     not 100% sure, I think the intention is to have the typename, incl. the typeParamters, but no assembly?
+        ///     typename, incl. namespace and typeParamters, but no assembly
+        ///     e:n.E,P-> n.E
+        ///     nT[],P -> n.T[]
+        ///     d:[?] [<x>].() -> <x.FullName>
         /// </summary>
         [NotNull]
         string FullName { get; }
 
+        /// <summary>
+        ///     simple name of the type
+        ///     n.T,P -> T
+        ///     n.T`1[..],P->T
+        ///     e:n.E->E
+        ///     nT[],P -> T[]
+        ///     d:[?] [<x>].() -> <x.Name>
+        /// </summary>
         [NotNull]
         string Name { get; }
 
