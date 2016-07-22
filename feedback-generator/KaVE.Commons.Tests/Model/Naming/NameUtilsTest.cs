@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
@@ -25,19 +24,6 @@ namespace KaVE.Commons.Tests.Model.Naming
 {
     internal class NameUtilsTest
     {
-        [Test]
-        public void HasParameters()
-        {
-            Assert.IsTrue("M([C,P] p)".HasParameters());
-            Assert.IsTrue("M([[DR, P] [D, P].()] p)".HasParameters());
-        }
-
-        [Test]
-        public void HasNoParameters()
-        {
-            Assert.IsFalse("M()".HasParameters());
-        }
-
         [Test]
         public void ParsesEmptyParameters()
         {

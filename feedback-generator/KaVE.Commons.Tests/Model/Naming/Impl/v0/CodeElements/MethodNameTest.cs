@@ -188,9 +188,15 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         }
 
         [Test]
-        public void WhitespacesInParamListDoNotCount()
+        public void ShouldHandleWhitespacesInParamList()
         {
             Assert.False(new MethodName("[R,P] [D,P].M( )").HasParameters);
+            Assert.AreEqual(
+                Lists.NewList(new ParameterName("[?] p")),
+                new MethodName("[R,P] [D,P].M( [?] p )").Parameters);
+            Assert.AreEqual(
+                Lists.NewList(new ParameterName("[?] p"), new ParameterName("[?] q")),
+                new MethodName("[R,P] [D,P].M( [?] p , [?] q )").Parameters);
         }
 
         [Test]

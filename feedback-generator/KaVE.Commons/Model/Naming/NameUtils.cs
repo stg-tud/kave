@@ -17,12 +17,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming
@@ -135,15 +135,10 @@ namespace KaVE.Commons.Model.Naming
             return res;
         }
 
-        public static bool HasParameters(this string identifierWithparameters)
-        {
-            var startOfParameters = identifierWithparameters.IndexOf('(');
-            return (startOfParameters > 0 && identifierWithparameters[startOfParameters + 1] != ')');
-        }
-
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        private static string GetParamListFromMethod(string id)
+        public static IKaVEList<IParameterName> GetParameterNamesFromMethod(this IMethodName name)
         {
+            var id = name.Identifier;
             var openRT = id.IndexOf("[", StringComparison.Ordinal);
             var closeRT = id.FindCorrespondingCloseBracket(openRT);
 
@@ -173,58 +168,33 @@ namespace KaVE.Commons.Model.Naming
             }
             var closeParams = id.FindCorrespondingCloseBracket(openParams);
 
-            var paramId = id.Substring(openParams + 1, closeParams - openParams - 1);
-            return paramId.Trim();
+            return id.GetParameterNamesFromSignature(openParams, closeParams);
         }
 
-        public static IKaVEList<IParameterName> GetParameterNamesFromMethod(this IMethodName name)
+        private static IKaVEList<IParameterName> GetParameterNamesFromSignature(this string identifierWithParameters,
+            int idxOpeningBrace,
+            int idxClosingBrace)
         {
-            var id = name.Identifier;
-            var names = Lists.NewList<IParameterName>();
-            var paramsId = GetParamListFromMethod(id);
+            // remove opening bracket
+            idxOpeningBrace++;
 
-            var cur = 0;
-            while (cur < paramsId.Length)
+            // strip leading whitespace
+            while (identifierWithParameters[idxOpeningBrace] == ' ')
             {
-                var openType = paramsId.FindNext(cur, '[');
-                var closeType = paramsId.FindCorrespondingCloseBracket(openType);
-                var endParam = paramsId.FindNext(closeType, ',');
-                if (endParam == -1)
-                {
-                    endParam = paramsId.Length;
-                }
-                var curId = paramsId.Substring(cur, endParam - cur).Trim();
-                names.Add(new ParameterName(curId));
-
-                cur = endParam;
-                cur++; // comma (does not hurt for end of brace)
+                idxOpeningBrace++;
             }
-            return names;
-        }
 
-        public static IKaVEList<IParameterName> GetParameterNamesFromLambda(this ILambdaName name)
-        {
-            var identifierWithParameters = name.Identifier;
             var parameters = Lists.NewList<IParameterName>();
-            var endOfParameters = identifierWithParameters.LastIndexOf(')');
-            var hasNoBrackets = endOfParameters == -1;
-            if (hasNoBrackets)
-            {
-                return parameters;
-            }
-
-            var startOfParameters = identifierWithParameters.FindCorrespondingOpenBracket(endOfParameters);
-            var current = startOfParameters;
-
-            var hasNoParams = startOfParameters == (endOfParameters - 1);
+            var hasNoParams = idxOpeningBrace == idxClosingBrace;
             if (hasNoParams)
             {
                 return parameters;
             }
 
-            while (current != endOfParameters)
+            var current = idxOpeningBrace;
+            while (current < idxClosingBrace)
             {
-                var startOfParam = ++current;
+                var startOfParam = current;
 
                 if (identifierWithParameters[current] != '[')
                 {
@@ -237,9 +207,26 @@ namespace KaVE.Commons.Model.Naming
                 var lengthOfSubstring = endOfParam - startOfParam;
                 var paramSubstring = identifierWithParameters.Substring(startOfParam, lengthOfSubstring);
                 parameters.Add(new ParameterName(paramSubstring.Trim()));
+
+                // ignore comma
+                current++;
             }
 
             return parameters;
+        }
+
+        public static IKaVEList<IParameterName> GetParameterNamesFromLambda(this ILambdaName name)
+        {
+            if (name.IsUnknown)
+            {
+                return Lists.NewList<IParameterName>();
+            }
+            var identifierWithParameters = name.Identifier;
+            var endOfParameters = identifierWithParameters.LastIndexOf(')');
+            Asserts.That(endOfParameters != -1);
+            var startOfParameters = identifierWithParameters.FindCorrespondingOpenBracket(endOfParameters);
+
+            return identifierWithParameters.GetParameterNamesFromSignature(startOfParameters, endOfParameters);
         }
 
         /// <summary>
