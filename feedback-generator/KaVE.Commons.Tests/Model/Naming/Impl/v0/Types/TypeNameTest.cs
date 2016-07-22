@@ -493,5 +493,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
             Assert.IsFalse(genericType.IsTypeParameter);
         }
+
+        [Test]
+        public void TypeParameterParsingIsCached()
+        {
+            var sut = new TypeName("T,P");
+            var a = sut.TypeParameters;
+            var b = sut.TypeParameters;
+            Assert.AreSame(a, b);
+        }
     }
 }

@@ -70,5 +70,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
                 new[] {new ParameterName("[C, A] p1"), new ParameterName("[C, B] p2")},
                 name.Parameters);
         }
+
+        [Test]
+        public void ParameterParsingIsCached()
+        {
+            var sut = new LambdaName();
+            var a = sut.Parameters;
+            var b = sut.Parameters;
+            Assert.AreSame(a, b);
+        }
     }
 }

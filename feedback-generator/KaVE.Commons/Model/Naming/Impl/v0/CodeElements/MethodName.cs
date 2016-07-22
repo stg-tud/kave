@@ -98,14 +98,26 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             return fullName;
         }
 
+        private IKaVEList<ITypeParameterName> _typeParameters;
+
         public IKaVEList<ITypeParameterName> TypeParameters
         {
-            get { return HasTypeParameters ? FullName.ParseTypeParameters() : Lists.NewList<ITypeParameterName>(); }
+            get
+            {
+                if (_typeParameters == null)
+                {
+                    _typeParameters = FullName.Contains("[[")
+                        ? FullName.ParseTypeParameters()
+                        : Lists.NewList<ITypeParameterName>();
+                }
+
+                return _typeParameters;
+            }
         }
 
         public bool HasTypeParameters
         {
-            get { return FullName.Contains("[["); }
+            get { return TypeParameters.Count > 0; }
         }
 
         public bool IsGenericEntity

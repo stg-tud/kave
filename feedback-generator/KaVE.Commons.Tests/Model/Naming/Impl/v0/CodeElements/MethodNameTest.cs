@@ -192,5 +192,23 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         {
             Assert.False(new MethodName("[R,P] [D,P].M( )").HasParameters);
         }
+
+        [Test]
+        public void ParameterParsingIsCached()
+        {
+            var sut = new MethodName();
+            var a = sut.Parameters;
+            var b = sut.Parameters;
+            Assert.AreSame(a, b);
+        }
+
+        [Test]
+        public void TypeParameterParsingIsCached()
+        {
+            var sut = new MethodName();
+            var a = sut.TypeParameters;
+            var b = sut.TypeParameters;
+            Assert.AreSame(a, b);
+        }
     }
 }

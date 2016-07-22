@@ -28,14 +28,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         public LambdaName() : this(UnknownNameIdentifier) {}
         public LambdaName([NotNull] string identifier) : base(identifier) {}
 
+        private IKaVEList<IParameterName> _parameters;
+
         public IKaVEList<IParameterName> Parameters
         {
-            get { return this.GetParameterNamesFromLambda(); }
+            get { return _parameters ?? (_parameters = this.GetParameterNamesFromLambda()); }
         }
 
         public bool HasParameters
         {
-            get { return Identifier.HasParameters(); }
+            get { return Parameters.Count > 0; }
         }
 
         public ITypeName ReturnType

@@ -132,5 +132,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsTrue(TypeUtils.IsArrayTypeIdentifier(id));
             Assert.IsFalse(TypeUtils.IsDelegateTypeIdentifier(id));
         }
+
+        [Test]
+        public void TypeParameterParsingIsCached()
+        {
+            var sut = new ArrayTypeName("T[],P");
+            var a = sut.TypeParameters;
+            var b = sut.TypeParameters;
+            Assert.AreSame(a, b);
+        }
     }
 }
