@@ -66,7 +66,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                     foreach (var p in Ctx.regularMethod().methodSignature().formalParam())
                     {
                         // TODO the getText call seems to break the context concept here
-                        paras.Add(Names.Parameter(p.GetText()));
+                        paras.Add(NamesV1.Parameter(p.GetText()));
                     }
                 }
                 return paras;
@@ -217,7 +217,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 {
                     foreach (var p in Ctx.regularMethod().customMethod().genericTypePart().genericParam())
                     {
-                        typePara.Add(Names.Type(p.typeParameter().GetText()).AsTypeParameterName);
+                        typePara.Add(NamesV1.Type(p.typeParameter().GetText()).AsTypeParameterName);
                     }
                 }
                 return typePara;

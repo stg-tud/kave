@@ -18,7 +18,7 @@ using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
+namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
 {
     internal class LegacyFixesTest
     {

@@ -51,7 +51,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get
             {
                 var s = GetTextFromIdWithoutLast(_ctx.id());
-                return Names.Namespace(s);
+                return NamesV1.Namespace(s);
             }
         }
 

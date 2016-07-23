@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
@@ -56,8 +55,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.IDEComponents
          TestCase("Plain Text Path With Spaces\\Readme.txt", "Plain Text", "Path With Spaces\\Readme.txt")]
         public void ParsesName(string identifier, string language, string fileName)
         {
-            var uut = Names.Document(identifier);
-
+            var uut = new DocumentName(identifier);
             Assert.AreEqual(language, uut.Language);
             Assert.AreEqual(fileName, uut.FileName);
         }

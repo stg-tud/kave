@@ -88,7 +88,7 @@ namespace KaVE.RS.SolutionAnalysis
                     if (type[0].Equals("CSharp.PropertyName"))
                     {
                         typeNameCount++;
-                        var name = Names.ParseJson(s);
+                        var name = NameSerialization.ParseJson(s);
                         if (name.Identifier == "?")
                         {
                             wrongSyntaxTypeName.Add(new Tuple<string, string>(s, t.Item1));

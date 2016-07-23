@@ -30,8 +30,7 @@ namespace KaVE.Commons.Utils.Json
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            //writer.WriteValue(_converter.ConvertToString(value));
-            writer.WriteValue(Names.ToJson((IName) value));
+            writer.WriteValue(NameSerialization.ToJson((IName) value));
         }
 
         public override object ReadJson(JsonReader reader,
@@ -44,8 +43,7 @@ namespace KaVE.Commons.Utils.Json
                 return null;
             }
             var serialization = ReadSerializationFrom(reader);
-            return Names.ParseJson(serialization);
-            //return _converter.ConvertFromString(serialization);
+            return NameSerialization.ParseJson(serialization);
         }
 
         private static string ReadSerializationFrom(JsonReader reader)
@@ -60,20 +58,10 @@ namespace KaVE.Commons.Utils.Json
         private static string ReadLegacyFormatFrom(JsonReader reader)
         {
             var jObject = JObject.Load(reader);
-            var type = GetType(jObject);
-            var identifier = GetIdentifier(jObject);
+            var type = jObject.GetValue(TypePropertyName).ToString();
+            var idToken = jObject.GetValue(IdentifierPropertyName) ?? jObject.GetValue(OldIdentifierPropertyName);
+            var identifier = idToken.ToString();
             return type + PropertySeparator + identifier;
-        }
-
-        private static string GetType(JObject jObject)
-        {
-            return jObject.GetValue(TypePropertyName).ToString();
-        }
-
-        private static string GetIdentifier(JObject jName)
-        {
-            var idToken = jName.GetValue(IdentifierPropertyName) ?? jName.GetValue(OldIdentifierPropertyName);
-            return idToken.ToString();
         }
 
         public override bool CanConvert(Type objectType)

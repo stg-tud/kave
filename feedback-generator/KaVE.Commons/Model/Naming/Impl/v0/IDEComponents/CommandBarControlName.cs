@@ -38,7 +38,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
                 var endOfParentIdentifier = Identifier.LastIndexOf(HierarchySeperator);
                 return endOfParentIdentifier < 0
                     ? null
-                    : Names.CommandBarControl(Identifier.Substring(0, endOfParentIdentifier));
+                    : new CommandBarControlName(Identifier.Substring(0, endOfParentIdentifier));
             }
         }
 

@@ -55,7 +55,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 {
                     if (Ctx.typeParameter().notTypeParameter() != null)
                     {
-                        return Names.Type(Ctx.typeParameter().notTypeParameter().GetText()).Assembly;
+                        return NamesV1.Type(Ctx.typeParameter().notTypeParameter().GetText()).Assembly;
                     }
                 }
                 return UnknownName.Get(typeof(IAssemblyName));
@@ -89,7 +89,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 }
                 else if (Ctx.typeParameter() != null && Ctx.typeParameter().notTypeParameter() != null)
                 {
-                    return Names.Type(Ctx.typeParameter().notTypeParameter().GetText()).Namespace;
+                    return NamesV1.Type(Ctx.typeParameter().notTypeParameter().GetText()).Namespace;
                 }
                 return UnknownName.Get(typeof(INamespaceName));
             }
@@ -112,7 +112,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 if (Ctx.regularType() != null && IsNestedType)
                 {
                     return
-                        Names.Type(
+                        NamesV1.Type(
                             Ctx.regularType().nestedType().nestedTypeName().GetText() + "," +
                             Ctx.regularType().assembly().GetText());
                 }
@@ -166,7 +166,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 {
                     if (Ctx.typeParameter().notTypeParameter() != null)
                     {
-                        return Names.Type(Ctx.typeParameter().notTypeParameter().GetText()).FullName;
+                        return NamesV1.Type(Ctx.typeParameter().notTypeParameter().GetText()).FullName;
                     }
                 }
                 else if (Ctx.UNKNOWN() != null)
@@ -202,7 +202,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 {
                     if (Ctx.typeParameter().notTypeParameter() != null)
                     {
-                        return Names.Type(Ctx.typeParameter().notTypeParameter().GetText()).Name;
+                        return NamesV1.Type(Ctx.typeParameter().notTypeParameter().GetText()).Name;
                     }
                     return UnknownName.Get(typeof(ITypeName)).FullName;
                 }
@@ -479,7 +479,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 {
                     if (Ctx.typeParameter().notTypeParameter() != null)
                     {
-                        return Names.Type(Ctx.typeParameter().notTypeParameter().GetText());
+                        return NamesV1.Type(Ctx.typeParameter().notTypeParameter().GetText());
                     }
                     return UnknownName.Get(typeof(ITypeParameterName));
                 }
@@ -550,7 +550,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                         var genericParams = GetGenericParams();
                         foreach (var p in genericParams)
                         {
-                            typePara.Add(Names.Type(p.typeParameter().GetText()).AsTypeParameterName);
+                            typePara.Add(NamesV1.Type(p.typeParameter().GetText()).AsTypeParameterName);
                         }
                     }
                     else if (ArrayTypeNameHasTypeParameters())
