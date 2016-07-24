@@ -166,7 +166,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
                 if (!sut.IsTypeParameter)
                 {
-                    Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier(id));
+                    Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(id));
                 }
             }
         }

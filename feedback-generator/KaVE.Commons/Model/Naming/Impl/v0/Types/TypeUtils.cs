@@ -31,7 +31,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 return UnknownTypeInstance;
             }
             // checked second, since type parameters can have any kind of type
-            if (TypeParameterName.IsTypeParameterIdentifier(identifier))
+            if (TypeParameterName.IsTypeParameterNameIdentifier(identifier))
             {
                 return new TypeParameterName(identifier);
             }

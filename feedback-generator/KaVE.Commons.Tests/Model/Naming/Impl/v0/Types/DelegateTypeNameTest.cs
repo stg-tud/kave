@@ -85,7 +85,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsTrue(DelegateTypeName.IsDelegateTypeNameIdentifier(delegateId));
             Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(delegateId));
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(delegateId));
-            Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier(delegateId));
+            Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(delegateId));
         }
 
         [TestCaseSource("DelegateTypeNames")]

@@ -32,13 +32,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         {
             // ReSharper disable once ObjectCreationAsStatement
             new TypeParameterName("?");
-            Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier("?"));
+            Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier("?"));
         }
 
         [TestCaseSource("TypeParametersSource")]
         public void ShouldIdentifyValidTypeParameterNames(string typeParameter, string shortName, string boundType)
         {
-            Assert.IsTrue(TypeParameterName.IsTypeParameterIdentifier(typeParameter));
+            Assert.IsTrue(TypeParameterName.IsTypeParameterNameIdentifier(typeParameter));
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(typeParameter));
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(typeParameter));
         }
@@ -173,13 +173,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [TestCaseSource("ValidTypeParamIds")]
         public void IsTypeParameterId(string typeId)
         {
-            Assert.IsTrue(TypeParameterName.IsTypeParameterIdentifier(typeId));
+            Assert.IsTrue(TypeParameterName.IsTypeParameterNameIdentifier(typeId));
         }
 
         [TestCaseSource("InvalidTypeParamIds")]
         public void IsNoTypeParameterId(string typeId)
         {
-            Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier(typeId));
+            Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(typeId));
         }
 
         internal static string[] ValidTypeParamIds()

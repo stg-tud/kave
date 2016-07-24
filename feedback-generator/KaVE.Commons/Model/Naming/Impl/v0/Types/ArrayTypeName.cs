@@ -110,7 +110,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                     return true;
                 }
             }
-            else if (TypeParameterName.IsTypeParameterIdentifier(id))
+            else if (TypeParameterName.IsTypeParameterNameIdentifier(id))
             {
                 return false;
             }
