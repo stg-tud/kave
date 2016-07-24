@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
@@ -33,26 +34,33 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return id.FixLegacyDelegateNames().FixMissingGenericTicks();
         }
 
+        // originally, we did not store delegates as method signatures, but only the "delegate type"
         private static string FixLegacyDelegateNames(this string id)
         {
-            if (!TypeUtils.IsDelegateTypeIdentifier(id))
+            if (!(id.StartsWith("d:") || id.Contains("-> d:") || id.Contains("[d:")))
             {
                 return id;
             }
 
-            // originally, we did not store delegates as method signatures, but only the "delegate type"
-            if (!id.Contains("("))
+            if (id.StartsWith("d:") && !id.Contains("("))
             {
-                id = string.Format(
+                return string.Format(
                     "{0}[{1}] [{2}].()",
                     BaseTypeName.PrefixDelegate,
                     new TypeName().Identifier,
                     id.Substring(BaseTypeName.PrefixDelegate.Length));
             }
+
+            if (id.Contains("-> d:"))
+            {
+                var arrow = id.IndexOf("-> d:", StringComparison.Ordinal);
+                // 
+            }
+
             return id;
         }
 
-        private static readonly Regex MissingTicks = new Regex("\\+([a-zA-Z0-9]+)(\\[\\[.*)");
+        private static readonly Regex MissingTicks = new Regex("\\+([a-zA-Z0-9]+)(\\[,*\\])?(\\[\\[.*)");
 
         private static string FixMissingGenericTicks(this string id)
         {
@@ -62,9 +70,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                 return id;
             }
 
-            var type = string.Format("+{0}[[", match.Groups[1]);
-            var numTicks = FindNumTicksInRest(match.Groups[2].ToString());
-            var newType = string.Format("+{0}`{1}[[", match.Groups[1], numTicks);
+            var type = string.Format("+{0}{1}[[", match.Groups[1], match.Groups[2]);
+            var numTicks = FindNumTicksInRest(match.Groups[3].ToString());
+            var newType = string.Format("+{0}`{1}{2}[[", match.Groups[1], numTicks, match.Groups[2]);
             var newId = id.Replace(type, newType);
             return newId.FixMissingGenericTicks();
         }

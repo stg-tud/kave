@@ -109,6 +109,27 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO more tests with delegates (in method name test)
+        [TestCase("d:n.D,P", "d:[?] [n.D,P].()"),
+         TestCase("T -> d:n.D,P", "T -> d:[?] [n.D,P].()"),
+         TestCase("C`1[[T -> d:n.D,P]],P", "C`1[[T -> d:[?] [n.D,P].()]],P"),
+         TestCase("[?] [?].M([d:n.D,P] p)",
+             "[?] [?].M([d:[?] [n.D,P].()] p)")]
+        public void FixesLegacyDelegateTypeNameFormat(string legacy, string corrected)
+        {
+            Assert.AreEqual(corrected, legacy.FixLegacyFormats());
+        }
+
+        [TestCase("n.C1`1[[T1]]+C2[[T2]]+C3[[T3]], P", "n.C1`1[[T1]]+C2`1[[T2]]+C3`1[[T3]], P"),
+         TestCase("n.C1`1[[T1]]+C2[[T2],[T3]]+C3[[T3]], P", "n.C1`1[[T1]]+C2`2[[T2],[T3]]+C3`1[[T3]], P"),
+         TestCase("n.C1`1[[T1]]+C2[[T2] , [T3] ]+C3[[T3]], P", "n.C1`1[[T1]]+C2`2[[T2] , [T3] ]+C3`1[[T3]], P"),
+         TestCase("N.C1`1[[T1]]+C2[][[T2]],P", "N.C1`1[[T1]]+C2`1[][[T2]],P"),
+         TestCase("N.C1`1[[T1]]+C2[,][[T2]],P", "N.C1`1[[T1]]+C2`1[,][[T2]],P"),
+         TestCase("N.C1`1[[T1]]+C2[,,][[T2]],P", "N.C1`1[[T1]]+C2`1[,,][[T2]],P")]
+        public void MissingGenericTicksAreAdded(string legacy, string corrected)
+        {
+            var actual = legacy.FixLegacyFormats();
+            var expected = corrected;
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

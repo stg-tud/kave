@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using NUnit.Framework;
 
@@ -22,99 +21,24 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     internal class TypeUtilsTest
     {
-        #region fixes
-
         [Test]
-        public void FixesLegacyDelegateTypeNameFormat()
+        public void ShouldRecognizeUnknownType()
         {
-            var actual = "d:Some.DelegateType, A, 1.0.0.0".FixLegacyFormats();
-            var expected = "d:[?] [Some.DelegateType, A, 1.0.0.0].()";
-            Assert.AreEqual(expected, actual);
+            foreach (var id in new[] {null, "", "?"})
+            {
+                Assert.IsTrue(TypeUtils.IsUnknownTypeIdentifier(id));
+                Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(id));
+                Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
+                Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier(id));
+            }
         }
 
-        [Test]
-        public void MissingGenericTicksAreAdded()
+        [TestCase("T[],P", "ArrayTypeName"), TestCase("d:[?] [?].()", "DelegateTypeName"),
+         TestCase("T", "TypeParameterName"), TestCase("T,P", "TypeName")]
+        public void ShouldRecognizeNameTypes(string typeId, string typeOfName)
         {
-            var actual = "n.C1`1[[T1]]+C2[[T2]]+C3[[T3]], P".FixLegacyFormats();
-            var expected = "n.C1`1[[T1]]+C2`1[[T2]]+C3`1[[T3]], P";
-            Assert.AreEqual(expected, actual);
+            var sut = TypeUtils.CreateTypeName(typeId);
+            Assert.AreEqual(typeOfName, sut.GetType().Name);
         }
-
-        [Test]
-        public void MissingGenericTicksAreAdded_Multiple()
-        {
-            var actual = "n.C1`1[[T1]]+C2[[T2],[T3]]+C3[[T3]], P";
-            var expected = "n.C1`1[[T1]]+C2`2[[T2],[T3]]+C3`1[[T3]], P";
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void MissingGenericTicksAreAdded_WithWhitespace()
-        {
-            var actual = "n.C1`1[[T1]]+C2[[T2] , [T3] ]+C3[[T3]], P";
-            var expected = "n.C1`1[[T1]]+C2`2[[T2] , [T3] ]+C3`1[[T3]], P";
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void MissingGenericTicksAreAdded_Array()
-        {
-            var actual = "N.C1`1[[T1]]+C2[][[T2]],P";
-            var expected = "N.C1`1[[T1]]+C2`1[][[T2]],P";
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void MissingGenericTicksAreAdded_Array2D()
-        {
-            var actual = "N.C1`1[[T1]]+C2[,][[T2]],P";
-            var expected = "N.C1`1[[T1]]+C2`1[,][[T2]],P";
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void MissingGenericTicksAreAdded_Array3D()
-        {
-            var actual = "N.C1`1[[T1]]+C2[,,][[T2]],P";
-            var expected = "N.C1`1[[T1]]+C2`1[,,][[T2]],P";
-            Assert.AreEqual(expected, actual);
-        }
-
-        #endregion
-
-        #region is xy tests
-
-        [TestCase("n.C1`1[][[T1]],P"), TestCase("n.C1+C2[],P"), TestCase("n.C1`1[[T1]]+C2[],P"),
-         TestCase("n.C1+C2`1[][[T1]],P")]
-        public void IsArray(string typeId)
-        {
-            Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(typeId));
-        }
-
-        [TestCase("n.C1`1[[T1->T[],P]],P")]
-        public void IsNoArray(string typeId)
-        {
-            Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(typeId));
-        }
-
-        [TestCase("d:[?] [?].()")]
-        public void IsDelegate(string typeId)
-        {
-            Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(typeId));
-        }
-
-        [TestCase("?"), TestCase("d:[?] [?].()[]"), TestCase("d:[?] [?].()[,]")]
-        public void IsNoDelegate(string typeId)
-        {
-            Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(typeId));
-        }
-
-       
-
-        #endregion
-
-        #region create type tests
-
-        #endregion
     }
 }

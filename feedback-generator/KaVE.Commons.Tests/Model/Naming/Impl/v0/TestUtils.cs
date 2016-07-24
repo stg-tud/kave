@@ -20,7 +20,23 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
     {
         public static string[] TypeSource()
         {
-            return new[] {"?", "T,P", "T[],P", "d:[?] [n.C+D].()", "T'1[[P -> T2,P]],P"};
+            return new[]
+            {
+                // unknown
+                "?",
+                // regular
+                "T",
+                "T -> T,P",
+                "T,P",
+                "T[],P",
+                "d:[?] [n.C+D].()",
+                "T`1[[P -> T2,P]],P",
+                // arrays
+                "T[]",
+                "T[] -> T,P",
+                "T[],P",
+                "d:[?] [?].()[]"
+            };
         }
     }
 }
