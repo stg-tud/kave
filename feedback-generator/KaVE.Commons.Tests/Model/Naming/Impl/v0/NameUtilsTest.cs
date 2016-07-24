@@ -112,8 +112,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
         [TestCase("d:n.D,P", "d:[?] [n.D,P].()"),
          TestCase("T -> d:n.D,P", "T -> d:[?] [n.D,P].()"),
          TestCase("C`1[[T -> d:n.D,P]],P", "C`1[[T -> d:[?] [n.D,P].()]],P"),
-         TestCase("[?] [?].M([d:n.D,P] p)",
-             "[?] [?].M([d:[?] [n.D,P].()] p)")]
+         TestCase("[?] [d:n.D,P].M([?] p)",
+             "[?] [d:[?] [n.D,P].()].M([?] p)"),
+         TestCase("C`2[[T -> d:n.D,P],[T -> d:n.D2,P]],P", "C`2[[T -> d:[?] [n.D,P].()],[T -> d:[?] [n.D2,P].()]],P"),
+         TestCase("[d:n.D,P] [d:n.D2,P].M([?] p)",
+             "[d:[?] [n.D,P].()] [d:[?] [n.D2,P].()].M([?] p)")]
         public void FixesLegacyDelegateTypeNameFormat(string legacy, string corrected)
         {
             Assert.AreEqual(corrected, legacy.FixLegacyFormats());

@@ -34,37 +34,32 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return id.FixLegacyDelegateNames().FixMissingGenericTicks();
         }
 
-        // originally, we did not store delegates as method signatures, but only the "delegate type"
+
+        private static readonly Regex LegacyDelegateMatcher = new Regex("(d:[^\\[])");
+
+        // initially, we did not store delegates as method signatures, but only the "delegate type"
         private static string FixLegacyDelegateNames(this string id)
         {
-            if (!(id.StartsWith("d:") || id.Contains("-> d:") || id.Contains("[d:")))
+            var delegateInBrackets = LegacyDelegateMatcher.Match(id);
+
+            if (!delegateInBrackets.Success)
             {
                 return id;
             }
+            var matchingDelegate = delegateInBrackets.Groups[1].ToString();
+            var startDelegate = id.IndexOf(matchingDelegate, StringComparison.Ordinal);
+            var closeBracket = id.FindNext(startDelegate, ']');
+            var startType = startDelegate + BaseTypeName.PrefixDelegate.Length;
+            var endType = closeBracket != -1 ? closeBracket : id.Length;
+            var oldDelegateId = id.Substring(startType, endType - startType);
+            var newDelegateId = ToFixedDelegate(oldDelegateId);
+            var newId = id.Replace(BaseTypeName.PrefixDelegate + oldDelegateId, newDelegateId);
+            return newId.FixLegacyDelegateNames();
+        }
 
-            if (id.StartsWith("d:") && !id.Contains("("))
-            {
-                return string.Format(
-                    "{0}[{1}] [{2}].()",
-                    BaseTypeName.PrefixDelegate,
-                    new TypeName().Identifier,
-                    id.Substring(BaseTypeName.PrefixDelegate.Length));
-            }
-
-            if (id.Contains("-> d:"))
-            {
-                // a) until open bracket (and till close)
-                // b) until start (and till end)
-                var arrow = id.IndexOf("-> d:", StringComparison.Ordinal);
-            }
-
-            if (id.Contains("[d:"))
-            {
-                // open bracket until close
-                var arrow = id.IndexOf("-> d:", StringComparison.Ordinal);
-            }
-
-            return id;
+        private static string ToFixedDelegate(string substring)
+        {
+            return "{0}[{1}] [{2}].()".FormatEx(BaseTypeName.PrefixDelegate, new TypeName().Identifier, substring);
         }
 
         private static readonly Regex MissingTicks = new Regex("\\+([a-zA-Z0-9]+)(\\[,*\\])?(\\[\\[.*)");
