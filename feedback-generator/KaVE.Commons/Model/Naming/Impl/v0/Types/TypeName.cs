@@ -176,11 +176,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
         }
 
-        public ITypeName DeriveArrayTypeName(int rank)
-        {
-            return ArrayTypeName.From(this, rank);
-        }
-
         public override bool IsNestedType
         {
             get { return RemoveTypeParameterListButKeepTicks(FullName).Contains("+"); }
