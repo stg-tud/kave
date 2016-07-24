@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Assertion;
@@ -48,17 +49,17 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         // delegating the execution
         public bool IsVoidType
         {
-            get { return TypeUtils.IsVoidTypeIdentifier(Identifier); }
+            get { return IsVoidTypeIdentifier(Identifier); }
         }
 
         public bool IsSimpleType
         {
-            get { return TypeUtils.IsSimpleTypeIdentifier(Identifier); }
+            get { return IsSimpleTypeIdentifier(Identifier); }
         }
 
         public bool IsNullableType
         {
-            get { return TypeUtils.IsNullableTypeIdentifier(Identifier); }
+            get { return IsNullableTypeIdentifier(Identifier); }
         }
 
         // composed checks
@@ -90,11 +91,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public bool IsStructType
         {
-            get { return !IsArray && TypeUtils.IsStructTypeIdentifier(Identifier); }
+            get { return !IsArray && IsStructTypeIdentifier(Identifier); }
         }
 
         // generic info
-         public bool HasTypeParameters
+        public bool HasTypeParameters
         {
             get { return TypeParameters.Count > 0; }
         }
@@ -107,13 +108,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 if (_typeParameters == null)
                 {
-                    if (IsArray)
+                    if (IsArray || IsDelegateType)
                     {
                         _typeParameters = Lists.NewList<ITypeParameterName>();
-                    }
-                    else if (IsDelegateType)
-                    {
-                        _typeParameters = AsDelegateTypeName.DelegateType.TypeParameters;
                     }
                     else
                     {
@@ -172,5 +169,73 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 return tpn;
             }
         }
+
+        #region static helper
+
+        private static bool IsStructTypeIdentifier(string identifier)
+        {
+            if (ArrayTypeName.IsArrayTypeNameIdentifier(identifier))
+            {
+                return false;
+            }
+            return identifier.StartsWith(PrefixStruct) ||
+                   IsSimpleTypeIdentifier(identifier) ||
+                   IsNullableTypeIdentifier(identifier) ||
+                   IsVoidTypeIdentifier(identifier);
+        }
+
+
+        private static bool IsVoidTypeIdentifier(string identifier)
+        {
+            return identifier.StartsWith("System.Void,");
+        }
+
+        private static bool IsSimpleTypeIdentifier(string identifier)
+        {
+            return IsNumericTypeName(identifier) || identifier.StartsWith("System.Boolean,");
+        }
+
+        private static bool IsNumericTypeName(string identifier)
+        {
+            return IsIntegralTypeName(identifier) ||
+                   IsFloatingPointTypeName(identifier) ||
+                   identifier.StartsWith("System.Decimal,");
+        }
+
+        private static readonly string[] IntegralTypeNames =
+        {
+            "System.SByte,",
+            "System.Byte,",
+            "System.Int16,",
+            "System.UInt16,",
+            "System.Int32,",
+            "System.UInt32,",
+            "System.Int64,",
+            "System.UInt64,",
+            "System.Char,"
+        };
+
+        private static bool IsIntegralTypeName(string identifier)
+        {
+            return IntegralTypeNames.Any(identifier.StartsWith);
+        }
+
+        private static readonly string[] FloatingPointTypeNames =
+        {
+            "System.Single,",
+            "System.Double,"
+        };
+
+        private static bool IsFloatingPointTypeName(string identifier)
+        {
+            return FloatingPointTypeNames.Any(identifier.StartsWith);
+        }
+
+        internal static bool IsNullableTypeIdentifier(string identifier)
+        {
+            return identifier.StartsWith("System.Nullable`1[[");
+        }
+
+        #endregion
     }
 }

@@ -39,7 +39,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         public void ShouldIdentifyValidTypeParameterNames(string typeParameter, string shortName, string boundType)
         {
             Assert.IsTrue(TypeParameterName.IsTypeParameterIdentifier(typeParameter));
-            Assert.IsFalse(TypeUtils.IsDelegateTypeIdentifier(typeParameter));
+            Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(typeParameter));
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(typeParameter));
         }
 

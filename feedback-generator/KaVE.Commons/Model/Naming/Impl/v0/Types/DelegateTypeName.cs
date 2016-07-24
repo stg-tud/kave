@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -89,6 +90,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public ITypeName ReturnType
         {
             get { return DelegateMethod.ReturnType; }
+        }
+
+        public static bool IsDelegateTypeNameIdentifier([NotNull] string identifier)
+        {
+            return !TypeUtils.IsUnknownTypeIdentifier(identifier) && identifier.StartsWith(PrefixDelegate) &&
+                   !ArrayTypeName.IsArrayTypeNameIdentifier(identifier);
         }
     }
 }

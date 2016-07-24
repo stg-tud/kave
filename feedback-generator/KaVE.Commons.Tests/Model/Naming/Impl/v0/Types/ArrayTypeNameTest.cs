@@ -162,16 +162,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 Assert.IsFalse(sut.IsValueType);
                 Assert.IsFalse(sut.IsVoidType);
 
-                Assert.IsFalse(TypeUtils.IsDelegateTypeIdentifier(id));
-                Assert.IsFalse(TypeUtils.IsNullableTypeIdentifier(id));
-                Assert.IsFalse(TypeUtils.IsSimpleTypeIdentifier(id));
-                Assert.IsFalse(TypeUtils.IsStructTypeIdentifier(id));
+                Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
+                Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
                 if (!sut.IsTypeParameter)
                 {
                     Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier(id));
                 }
-                Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
-                Assert.IsFalse(TypeUtils.IsVoidTypeIdentifier(id));
             }
         }
 

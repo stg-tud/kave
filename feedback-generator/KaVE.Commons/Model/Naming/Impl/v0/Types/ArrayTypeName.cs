@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -91,11 +92,19 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         #region static helpers
 
-        internal static bool IsArrayTypeNameIdentifier(string id)
+        internal static bool IsArrayTypeNameIdentifier([NotNull] string id)
         {
+            if (TypeUtils.IsUnknownTypeIdentifier(id))
+            {
+                return false;
+            }
             if (id.StartsWith("d:"))
             {
                 var idx = id.LastIndexOf(')');
+                if (idx == -1)
+                {
+                    return false;
+                }
                 if (id.FindNext(idx, '[') != -1)
                 {
                     return true;

@@ -217,7 +217,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         private static readonly Regex FreeTypeParameterMatcher = new Regex("^[^ ,0-9\\[\\](){}<>-][^ ,\\[\\](){}<>-]*$");
 
-        public static bool IsTypeParameterIdentifier(string identifier)
+        public static bool IsTypeParameterIdentifier([NotNull] string identifier)
         {
             if (TypeUtils.IsUnknownTypeIdentifier(identifier))
             {

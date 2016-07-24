@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
-using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
-    class DelegateTypeNameTest
+    internal class DelegateTypeNameTest
     {
         private static readonly IDelegateTypeName ParameterlessDelegateName =
             new DelegateTypeName("d:[R, A, 1.0.0.0] [Some.DelegateType, A, 1.0.0.0].()");
@@ -31,17 +33,39 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             new DelegateTypeName(
                 "d:[R, A, 1.0.0.0] [Some.DelegateType, A, 1.0.0.0].([C, A, 1.2.3.4] p1, [D, A, 1.2.3.4] p2)");
 
-        private static readonly IDelegateTypeName[] DelegateTypeNames =
+        private static IEnumerable<string[]> DelegateTypeNames()
         {
-            ParameterlessDelegateName,
-            ParameterizedDelegateName
-        };
+            var delegateIds = Sets.NewHashSet<string[]>();
+            foreach (var typeId in TestUtils.TypeSource())
+            {
+                delegateIds.Add(new[] {"d:[{0}] [{0}].()".FormatEx(typeId), typeId});
+                delegateIds.Add(new[] {"d:[{0}] [{0}].([{0}] p1)".FormatEx(typeId), typeId});
+                delegateIds.Add(new[] {"d:[{0}] [{0}].([{0}] p1, [{0}] p2)".FormatEx(typeId), typeId});
+            }
+            return delegateIds;
+        }
+
+        [Test]
+        public void DefaultValues()
+        {
+            Assert.IsTrue(new DelegateTypeName().IsUnknown);
+            Assert.IsTrue(new DelegateTypeName("d:[?] [?].()").IsUnknown);
+        }
 
         [TestCaseSource("DelegateTypeNames")]
-        public void TypeClassification(IDelegateTypeName delegateType)
+        public void TypeClassification(string delegateId, string delegateTypeId)
         {
+            var delegateType = new DelegateTypeName(delegateId);
             Assert.IsTrue(delegateType.IsDelegateType);
             Assert.IsTrue(delegateType.IsReferenceType);
+
+            if (!delegateType.Identifier.StartsWith("d:[?]"))
+            {
+                Assert.IsFalse(delegateType.IsUnknown);
+            }
+            Assert.IsFalse(delegateType.IsHashed);
+
+            Assert.IsFalse(delegateType.HasTypeParameters);
 
             Assert.IsFalse(delegateType.IsArray);
             Assert.IsFalse(delegateType.IsClassType);
@@ -51,27 +75,70 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(delegateType.IsSimpleType);
             Assert.IsFalse(delegateType.IsStructType);
             Assert.IsFalse(delegateType.IsTypeParameter);
-            Assert.IsFalse(delegateType.IsUnknown);
             Assert.IsFalse(delegateType.IsValueType);
             Assert.IsFalse(delegateType.IsVoidType);
         }
 
         [TestCaseSource("DelegateTypeNames")]
-        public void ParsesFullName(IDelegateTypeName delegateType)
+        public void ShouldRecognizeDelegateNames(string delegateId, string delegateTypeId)
         {
-            Assert.AreEqual("Some.DelegateType", delegateType.FullName);
+            Assert.IsTrue(DelegateTypeName.IsDelegateTypeNameIdentifier(delegateId));
+            Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(delegateId));
+            Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(delegateId));
+            Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier(delegateId));
         }
 
         [TestCaseSource("DelegateTypeNames")]
-        public void ParsesName(IDelegateTypeName delegateType)
+        public void ShouldRecognizeNonDelegateNames(string delegateId, string delegateTypeId)
         {
-            Assert.AreEqual("DelegateType", delegateType.Name);
+            if (DelegateTypeName.IsDelegateTypeNameIdentifier(delegateTypeId))
+            {
+                Assert.Ignore();
+            }
+            else
+            {
+                Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(delegateTypeId));
+            }
         }
 
         [TestCaseSource("DelegateTypeNames")]
-        public void ParsesNamespace(IDelegateTypeName delegateType)
+        public void ShouldParseDelegateType(string delegateId, string delegateTypeId)
         {
-            Assert.AreEqual(new NamespaceName("Some"), delegateType.Namespace);
+            var actual = new DelegateTypeName(delegateId).DelegateType;
+            var expected = TypeUtils.CreateTypeName(delegateTypeId);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCaseSource("DelegateTypeNames")]
+        public void ShouldParseFullName(string delegateId, string delegateTypeId)
+        {
+            var actual = new DelegateTypeName(delegateId).FullName;
+            var expected = TypeUtils.CreateTypeName(delegateTypeId).FullName;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCaseSource("DelegateTypeNames")]
+        public void ShouldParseName(string delegateId, string delegateTypeId)
+        {
+            var actual = new DelegateTypeName(delegateId).Name;
+            var expected = TypeUtils.CreateTypeName(delegateTypeId).Name;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCaseSource("DelegateTypeNames")]
+        public void ShouldParseNamespace(string delegateId, string delegateTypeId)
+        {
+            var actual = new DelegateTypeName(delegateId).Namespace;
+            var expected = TypeUtils.CreateTypeName(delegateTypeId).Namespace;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCaseSource("DelegateTypeNames")]
+        public void ShouldParseAssembly(string delegateId, string delegateTypeId)
+        {
+            var actual = new DelegateTypeName(delegateId).Assembly;
+            var expected = TypeUtils.CreateTypeName(delegateTypeId).Assembly;
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -98,6 +165,20 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsTrue(ParameterizedDelegateName.HasParameters);
         }
 
+        [TestCaseSource("DelegateTypeNames")]
+        public void ShouldParseParameters(string delegateId, string delegateTypeId)
+        {
+            if (!delegateId.EndsWith("()"))
+            {
+                var sut = new DelegateTypeName(delegateId);
+                Assert.IsTrue(sut.HasParameters);
+            }
+            else
+            {
+                Assert.Ignore();
+            }
+        }
+
         [Test]
         public void ParsesParameters()
         {
@@ -105,56 +186,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             CollectionAssert.AreEqual(
                 new[] {new ParameterName("[C, A, 1.2.3.4] p1"), new ParameterName("[D, A, 1.2.3.4] p2")},
                 ParameterizedDelegateName.Parameters);
-        }
-
-        [Test]
-        public void OtherTypeNameIsNoDelegateType()
-        {
-            var uut = new TypeName("My.NonDelegate.Type, ND, 6.6.6.6");
-
-            Assert.IsFalse(uut.IsDelegateType);
-        }
-
-        [Test]
-        public void ParsesDelegateTypeOfMethodParameter()
-        {
-            var methodName = new MethodName("[R, A] [D, A].M([d:[DR, A] [DD, A].()] p)");
-            var delegateParameter = methodName.Parameters[0];
-            Assert.AreEqual(new ParameterName("[d:[DR, A] [DD, A].()] p"), delegateParameter);
-        }
-
-        [Test]
-        public void ParsesDelegateTypeOfLambdaParameter()
-        {
-            var lambdaName = new LambdaName("[R, P] ([d:[DR, A] [DD, A].()] p)");
-            var delegateParameter = lambdaName.Parameters[0];
-            Assert.AreEqual(new ParameterName("[d:[DR, A] [DD, A].()] p"), delegateParameter);
-        }
-
-        [Test]
-        public void ParsesDelegateTypeOfMemberValueType()
-        {
-            var delegateTypeId =
-                "d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)";
-            var eventName = new EventName(string.Format("[{0}] [C, TestProject].Event", delegateTypeId));
-            Assert.AreEqual(new DelegateTypeName(delegateTypeId), eventName.HandlerType);
-        }
-
-        [Test]
-        public void IsDelegateTypeName()
-        {
-            Assert.True(
-                TypeUtils.IsDelegateTypeIdentifier(
-                    "d:[System.Void, mscorlib, 4.0.0.0] [System.AppDomainInitializer, mscorlib, 4.0.0.0].([System.String[], mscorlib, 4.0.0.0] args)"));
-        }
-
-        [Test]
-        public void ParsesTypeParameters()
-        {
-            var typeName = new DelegateTypeName("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)");
-
-            Assert.IsTrue(typeName.HasTypeParameters);
-            CollectionAssert.AreEqual(new[] {new TypeParameterName("T -> String, mscorlib")}, typeName.TypeParameters);
         }
 
         [Test]
