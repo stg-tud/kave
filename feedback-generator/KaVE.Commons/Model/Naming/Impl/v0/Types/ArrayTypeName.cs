@@ -33,17 +33,23 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
+                // can not be TypeParameter)
+
                 var id = Identifier;
+                string newId;
 
-                var idx = id.StartsWith("d:")
-                    ? id.LastIndexOf(')') + 1
-                    : id.IndexOf('[');
+                if (id.StartsWith("d:")) // base is delegate
+                {
+                    newId = id.Substring(0, id.LastIndexOf(')') + 1);
+                    return TypeUtils.CreateTypeName(newId);
+                }
 
-                var startIdx = idx;
-                while (id[++idx] == ',') {}
-                var endIdx = idx;
+                var openArr = FindArrayMarkerIndex(id);
+                Asserts.Not(openArr == -1);
+                var closeArr = id.FindCorrespondingCloseBracket(openArr);
+                Asserts.Not(closeArr == -1);
 
-                var newId = id.Substring(0, startIdx) + id.Substring(endIdx + 1);
+                newId = id.Remove(openArr, closeArr - openArr + 1);
                 return TypeUtils.CreateTypeName(newId);
             }
         }
@@ -101,33 +107,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
             else
             {
-                var closeBracket = id.LastIndexOf(']');
-                if (closeBracket == -1)
-                {
-                    return false;
-                }
-                var cur = closeBracket;
-
-                // regular (multi-dimensional) array
-                while (cur - 1 > 0 && id[--cur] == ',') {}
-                if (id[cur] == '[')
-                {
-                    return true;
-                }
-                // generic
-                var openGeneric = id.FindCorrespondingOpenBracket(closeBracket);
-                var tick = id.FindPrevious(openGeneric, '`');
-                var openArr = id.FindNext(tick, '[');
-                if (openArr == openGeneric)
-                {
-                    return false;
-                }
-                cur = openArr;
-                while (cur + 1 < id.Length && id[++cur] == ',') {}
-                if (id[cur] == ']')
-                {
-                    return true;
-                }
+                return FindArrayMarkerIndex(id) != -1;
             }
 
             return false;
@@ -135,20 +115,22 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public static int GetArrayRank(ITypeName typeName)
         {
-            if (!typeName.IsArray)
+            var id = typeName.Identifier;
+            var arrOpen = FindArrayMarkerIndex(id);
+            if (arrOpen == -1)
             {
                 return 0;
             }
-            if (!(typeName is ArrayTypeName))
-            {
-                return typeName.AsArrayTypeName.Rank;
-            }
+            var arrClose = id.FindCorrespondingCloseBracket(arrOpen);
+            return arrClose - arrOpen;
+        }
 
-            var id = typeName.Identifier;
+        private static int FindArrayMarkerIndex(string id)
+        {
             var closeBracket = id.LastIndexOf(']');
             if (closeBracket == -1)
             {
-                return 0;
+                return -1;
             }
             var cur = closeBracket;
 
@@ -156,7 +138,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             while (cur - 1 > 0 && id[--cur] == ',') {}
             if (id[cur] == '[')
             {
-                return closeBracket - cur;
+                return cur;
             }
 
             // generic
@@ -165,16 +147,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             var openArr = id.FindNext(tick, '[');
             if (openArr == openGeneric)
             {
-                return 0;
+                return -1;
             }
-            cur = openArr;
-            while (cur + 1 < id.Length && id[++cur] == ',') {}
-            if (id[cur] == ']')
-            {
-                return cur - openArr;
-            }
-
-            return 0;
+            return openArr;
         }
 
         /// <summary>
@@ -190,25 +165,26 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         private static string DeriveArrayTypeNameIdentifier(ITypeName baseType, int rank)
         {
-            if (baseType.IsArray)
+            var realBase = baseType.IsArray ? baseType.AsArrayTypeName.ArrayBaseType : baseType;
+            var realRank = baseType.IsArray ? baseType.AsArrayTypeName.Rank + rank : rank;
+            var arrMarker = CreateArrayMarker(realRank);
+
+            if (realBase.IsTypeParameter)
             {
-                rank += GetArrayRank(baseType);
-                baseType = baseType.AsArrayTypeName.ArrayBaseType;
+                if (realBase.AsTypeParameterName.IsBound)
+                {
+                    var paramType = baseType.AsTypeParameterName.TypeParameterType;
+                    return "{0}{1} -> {2}".FormatEx(realBase.Name, arrMarker, paramType.Identifier);
+                }
+                return "{0}{1}".FormatEx(realBase.Name, arrMarker);
             }
 
-            var identifier = baseType.Identifier;
-            var arrayMarker = CreateArrayMarker(rank);
+            if (realBase.IsDelegateType)
+            {
+                return realBase.Identifier + arrMarker;
+            }
 
-            string derivedIdentifier;
-            if (baseType.IsDelegateType)
-            {
-                derivedIdentifier = identifier + arrayMarker;
-            }
-            else
-            {
-                derivedIdentifier = InsertMarkerAfterRawName(identifier, arrayMarker);
-            }
-            return derivedIdentifier;
+            return InsertMarkerAfterRawName(realBase, arrMarker);
         }
 
         private static string CreateArrayMarker(int rank)
@@ -216,18 +192,29 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return String.Format("[{0}]", new string(',', rank - 1));
         }
 
-        private static string InsertMarkerAfterRawName(string identifier, string arrayMarker)
+        private static string InsertMarkerAfterRawName(ITypeName baseType, string arrayMarker)
         {
-            var endOfRawName = identifier.IndexOf('[');
-            if (endOfRawName < 0)
+            Asserts.Not(baseType.IsArray);
+            Asserts.Not(baseType.IsDelegateType);
+            Asserts.Not(baseType.IsTypeParameter);
+
+            var id = baseType.Identifier;
+            var arrIdx = -1;
+
+            if (baseType.HasTypeParameters)
             {
-                endOfRawName = identifier.IndexOf(',');
+                var closeGeneric = id.LastIndexOf("]", StringComparison.Ordinal);
+                arrIdx = id.FindCorrespondingOpenBracket(closeGeneric);
             }
-            if (endOfRawName < 0)
+            else
             {
-                endOfRawName = identifier.Length;
+                var beforeAssemble = id.Length - baseType.Assembly.Identifier.Length;
+                var comma = id.FindPrevious(beforeAssemble, ',');
+                arrIdx = comma;
             }
-            return identifier.Insert(endOfRawName, arrayMarker);
+
+            Asserts.Not(arrIdx == -1);
+            return id.Insert(arrIdx, arrayMarker);
         }
 
         #endregion
