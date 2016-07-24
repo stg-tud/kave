@@ -53,8 +53,15 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
             if (id.Contains("-> d:"))
             {
+                // a) until open bracket (and till close)
+                // b) until start (and till end)
                 var arrow = id.IndexOf("-> d:", StringComparison.Ordinal);
-                // 
+            }
+
+            if (id.Contains("[d:"))
+            {
+                // open bracket until close
+                var arrow = id.IndexOf("-> d:", StringComparison.Ordinal);
             }
 
             return id;
