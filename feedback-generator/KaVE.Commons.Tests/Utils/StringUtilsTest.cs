@@ -76,7 +76,7 @@ namespace KaVE.Commons.Tests.Utils
         [Test]
         public void FindNext_array2()
         {
-            var actual = "ccccba".FindNext(1, 'a', 'b');
+            var actual = "ccccba".FindNext(1, 'b', 'a');
             Assert.AreEqual(4, actual);
         }
 
@@ -92,6 +92,27 @@ namespace KaVE.Commons.Tests.Utils
         {
             var actual = "abcabcabc".FindPrevious(5, 'a');
             Assert.AreEqual(3, actual);
+        }
+
+        [Test]
+        public void FindPrevious_arr()
+        {
+            var actual = "abcabcabc".FindPrevious(5, 'a', 'b');
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindPrevious_arr2()
+        {
+            var actual = "abcabcabc".FindPrevious(5, 'b', 'a');
+            Assert.AreEqual(4, actual);
+        }
+
+        [Test]
+        public void FindPrevious_NotFound()
+        {
+            var actual = "abcabcabc".FindPrevious(5, 'x');
+            Assert.AreEqual(-1, actual);
         }
 
         [Test]
@@ -154,13 +175,6 @@ namespace KaVE.Commons.Tests.Utils
         public void GetCorresponding_EverythingElse()
         {
             'x'.GetCorresponding();
-        }
-
-        [Test]
-        public void FindPrevious_NotFound()
-        {
-            var actual = "bbb".FindPrevious(1, 'a');
-            Assert.AreEqual(-1, actual);
         }
 
         [Test]

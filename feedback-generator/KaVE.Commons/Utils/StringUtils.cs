@@ -75,11 +75,12 @@ namespace KaVE.Commons.Utils
             return -1;
         }
 
-        public static int FindPrevious(this string str, int currentIndex, char character)
+        public static int FindPrevious(this string str, int currentIndex, params char[] characters)
         {
             for (var i = currentIndex; i >= 0; i--)
             {
-                if (str[i] == character)
+                var c = str[i];
+                if (characters.Contains(c))
                 {
                     return i;
                 }
