@@ -39,6 +39,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             return name;
         }
 
+        public bool IsBound
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public static IMethodName Method()
         {
             return Get(typeof(IMethodName));

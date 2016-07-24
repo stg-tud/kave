@@ -471,6 +471,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
+        public bool IsBound
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public ITypeName TypeParameterType
         {
             get

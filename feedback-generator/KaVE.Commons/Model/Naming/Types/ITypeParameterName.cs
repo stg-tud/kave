@@ -19,6 +19,7 @@ namespace KaVE.Commons.Model.Naming.Types
     public interface ITypeParameterName : ITypeName
     {
         string TypeParameterShortName { get; }
+        bool IsBound { get; }
         ITypeName TypeParameterType { get; }
     }
 }

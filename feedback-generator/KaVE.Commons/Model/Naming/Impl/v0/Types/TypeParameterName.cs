@@ -176,6 +176,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
         }
 
+        public bool IsBound
+        {
+            get { return Identifier.Contains(ParameterNameTypeSeparator); }
+        }
+
         [NotNull]
         public ITypeName TypeParameterType
         {

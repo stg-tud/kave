@@ -163,6 +163,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             return tps;
         }
 
+        [Test]
+        public void ShouldParseIsBound()
+        {
+            Assert.IsFalse(new TypeParameterName("T").IsBound);
+            Assert.IsTrue(new TypeParameterName("T -> ?").IsBound);
+        }
+
         [TestCaseSource("ValidTypeParamIds")]
         public void IsTypeParameterId(string typeId)
         {
