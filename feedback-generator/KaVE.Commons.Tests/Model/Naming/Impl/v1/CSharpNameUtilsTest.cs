@@ -19,7 +19,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v1
 {
-    [TestFixture]
+    [Ignore]
     internal class CSharpNameUtilsTest
     {
         [Test]

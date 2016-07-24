@@ -19,6 +19,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v1
 {
+    [Ignore]
     public class CsNameFixerTest
     {
         [TestCase("n.T+T1,a", "n:n.T+T1,a"),

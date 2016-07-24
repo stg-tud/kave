@@ -19,6 +19,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v1
 {
+    [Ignore]
     public class CsNamespaceTest
     {
         [TestCase("a.b.c.", "a.b."),

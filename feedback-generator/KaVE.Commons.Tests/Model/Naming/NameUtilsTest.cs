@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using NUnit.Framework;
+using NameUtilsV0 = KaVE.Commons.Model.Naming.Impl.v0.NameUtils;
 
 namespace KaVE.Commons.Tests.Model.Naming
 {
@@ -27,12 +28,14 @@ namespace KaVE.Commons.Tests.Model.Naming
         [Test, ExpectedException(typeof(NotImplementedException))]
         public void RemoveGenerics_Method()
         {
+            // TODO NameUpdate: implement seperate handling for v0 and v1
             ((IMethodName) null).RemoveGenerics();
         }
 
         [Test, ExpectedException(typeof(NotImplementedException))]
         public void RemoveGenerics_Type()
         {
+            // TODO NameUpdate: implement seperate handling for v0 and v1
             ((ITypeName) null).RemoveGenerics();
         }
     }

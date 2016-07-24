@@ -19,6 +19,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v1
 {
+    [Ignore]
     public class CsAssemblyNameTest
     {
         [TestCase("T, a, 0.0.0.0", "0.0.0.0"),
