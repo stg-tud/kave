@@ -21,116 +21,168 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 {
     internal class ArrayTypeNameTest
     {
-        [TestCase("T, P", "T[], P"),
-         TestCase("A, B, 1.2.3.4", "A[], B, 1.2.3.4"),
-         TestCase("GT`1[[T -> PT, A]], A", "GT`1[][[T -> PT, A]], A"),
-         TestCase("T", "T[]"),
-         TestCase("s:S, P", "s:S[], P"),
-         TestCase("d:[RT, A] [DT, A].()", "d:[RT, A] [DT, A].()[]"),
-         TestCase("d:[RT[], A] [DT, A].([PT[], A] p)", "d:[RT[], A] [DT, A].([PT[], A] p)[]"),
-         TestCase("A[], B", "A[,], B"),
-         TestCase("A[,,], B", "A[,,,], B"), // seems strange, but is because of [,,][] becomes [,,,]
-         TestCase("T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
-        public void DerivesFrom(string baseTypeIdentifer, string expectedDerivedNameIdentifier)
+        private static string[][] ArrayIds()
         {
-            var arrayTypeName = ArrayTypeName.From(TypeUtils.CreateTypeName(baseTypeIdentifer), 1);
-
-            Assert.AreEqual(new ArrayTypeName(expectedDerivedNameIdentifier), arrayTypeName);
+            // base type, arr1D, arr2d
+            string[][] names =
+            {
+                new[] // nullable
+                {
+                    "System.Nullable`1[[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4",
+                    "System.Nullable`1[][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4",
+                    "System.Nullable`1[,][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4"
+                },
+                new[] // simple type
+                {
+                    "System.Int64, mscorlib, 1.2.3.4",
+                    "System.Int64[], mscorlib, 1.2.3.4",
+                    "System.Int64[,], mscorlib, 1.2.3.4"
+                },
+                new[] {"T, P", "T[], P", "T[,], P"}, // regular class type (project specific)
+                new[] {"A, B, 1.2.3.4", "A[], B, 1.2.3.4", "A[,], B, 1.2.3.4"}, // regular class type (assembly)
+                new[] {"s:S, P", "s:S[], P", "s:S[,], P"}, // struct
+                new[] {"T", "T[]", "T[,]"}, // type parameter (free)
+                new[] {"T -> ?", "T[] -> ?", "T[,] -> ?"}, // type parameter (bound)
+                new[] {"GT`1[[T -> PT, A]], A", "GT`1[][[T -> PT, A]], A", "GT`1[,][[T -> PT, A]], A"},
+                new[] {"d:[RT, A] [DT, A].()", "d:[RT, A] [DT, A].()[]", "d:[RT, A] [DT, A].()[,]"},
+                new[] // delegate
+                {
+                    "d:[RT[], A] [DT, A].([PT[], A] p)",
+                    "d:[RT[], A] [DT, A].([PT[], A] p)[]",
+                    "d:[RT[], A] [DT, A].([PT[], A] p)[,]"
+                },
+                new[]
+                {
+                    "T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P",
+                    "T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P",
+                    "T`1[,][[T -> d:[TR] [T2, P2].([T] arg)]], P"
+                },
+                new[] {"n.C1+C2,P", "n.C1+C2[],P", "n.C1+C2[,],P"}, // nested
+                new[] {"C1`1[[T1]],P", "C1`1[][[T1]],P", "C1`1[,][[T1]],P"}, // generic
+                new[] {"C1+C2`1[[T2]],P", "C1+C2`1[][[T2]],P", "C1+C2`1[,][[T2]],P"}, // nested generic
+                new[] {"C1`1[[T1]]+C2`1[[T2]],P", "C1`1[[T1]]+C2`1[][[T2]],P", "C1`1[[T1]]+C2`1[,][[T2]],P"},
+                // nested generic+generic
+                new[] {"T -> T[],P", "T[] -> T[],P", "T[,] -> T[],P"}, // type parameter bound to array
+                new[] // the most arrays I could imagine
+                {
+                    "T1`1[][[T2 -> T3[],P]]+T4`1[][[T5 -> T6[],P]]+T7`1[[T8 -> T9[],P]], P",
+                    "T1`1[][[T2 -> T3[],P]]+T4`1[][[T5 -> T6[],P]]+T7`1[][[T8 -> T9[],P]], P",
+                    "T1`1[][[T2 -> T3[],P]]+T4`1[][[T5 -> T6[],P]]+T7`1[,][[T8 -> T9[],P]], P"
+                }
+            };
+            return names;
         }
 
-        [Test]
-        public void DerivesMultiDimensionalArray()
+        [TestCaseSource("ArrayIds")]
+        public void ShouldDerive1DArray(string baseTypeId, string expected1DId, string expected2DId)
         {
-            var arrayTypeName = ArrayTypeName.From(new TypeName("SomeType, Assembly, 1.2.3.4"), 2);
-
-            Assert.AreEqual(new ArrayTypeName("SomeType[,], Assembly, 1.2.3.4"), arrayTypeName);
+            var baseType = TypeUtils.CreateTypeName(baseTypeId);
+            var expected1D = TypeUtils.CreateTypeName(expected1DId);
+            var actual1D = ArrayTypeName.From(baseType, 1);
+            Assert.AreEqual(expected1D, actual1D);
         }
 
-        [TestCase("ValueType[,,], As, 9.8.7.6"),
-         TestCase("ValueType[], As, 5.4.3.2"),
-         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], Y, 4.3.6.1"),
-         TestCase("A[]"),
-         TestCase("T -> System.String[], mscorlib, 4.0.0.0"),
-         TestCase("System.Int32[], mscorlib, 4.0.0.0"),
-         TestCase("d:[RT, A] [DT, A].()[]"),
-         TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
-        public void ShouldBeArrayType(string identifier)
+        [TestCaseSource("ArrayIds")]
+        public void ShouldDerive2DArray(string baseTypeId, string expected1DId, string expected2DId)
         {
-            Assert.IsTrue(TypeUtils.IsArrayTypeIdentifier(identifier));
-            Assert.IsTrue(new ArrayTypeName(identifier).IsArrayType);
+            var baseType = TypeUtils.CreateTypeName(baseTypeId);
+            var expected2D = TypeUtils.CreateTypeName(expected2DId);
+            var actual2D = ArrayTypeName.From(baseType, 2);
+            Assert.AreEqual(expected2D, actual2D);
         }
 
-        [TestCase("ValueType[,,], As, 9.8.7.6", "ValueType, As, 9.8.7.6"),
-         TestCase("ValueType[], As, 5.4.3.2", "ValueType, As, 5.4.3.2"),
-         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4",
-             "a.Foo`1[[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4"),
-         TestCase("A[]", "A"),
-         TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0"),
-         TestCase("d:[RT, A] [DT, A].()[]", "d:[RT, A] [DT, A].()"),
-         TestCase("d:[RT[], A] [DT, A].([PT[], A] p)[]", "d:[RT[], A] [DT, A].([PT[], A] p)"),
-         TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P")]
-        public void ShouldGetArrayBaseType(string identifier, string expected)
+        [TestCaseSource("ArrayIds")]
+        public void ShouldDerive1To2DArray(string baseTypeId, string expected1DId, string expected2DId)
         {
-            var sut = TypeUtils.CreateTypeName(identifier).AsArrayTypeName;
-            Assert.AreEqual(expected, sut.ArrayBaseType.Identifier);
+            var expected1D = TypeUtils.CreateTypeName(expected1DId);
+            var expected2D = TypeUtils.CreateTypeName(expected2DId);
+            var actual1To2D = ArrayTypeName.From(expected1D, 1);
+            Assert.AreEqual(expected2D, actual1To2D);
         }
 
-        [TestCase("ValueType[,,], As, 9.8.7.6", 3),
-         TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P", 1)]
-        public void ShouldIdentifyRank(string id, int expectedRank)
+        [TestCaseSource("ArrayIds")]
+        public void ShouldParseRank(string baseTypeId, string expected1DId, string expected2DId)
         {
-            var actualRank = ArrayTypeName.GetArrayRank(new ArrayTypeName(id));
-            Assert.AreEqual(expectedRank, actualRank);
+            var arr1D = TypeUtils.CreateTypeName(expected1DId).AsArrayTypeName;
+            var arr2D = TypeUtils.CreateTypeName(expected2DId).AsArrayTypeName;
+            Assert.AreEqual(1, arr1D.Rank);
+            Assert.AreEqual(2, arr2D.Rank);
         }
 
-        [Test]
-        public void ArrayOfNullablesShouldNotBeNullable()
+        [TestCaseSource("ArrayIds")]
+        public void ShouldParseBaseType(string baseTypeId, string expected1DId, string expected2DId)
         {
-            const string id = "System.Nullable`1[][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4";
-            Assert.IsFalse(new ArrayTypeName(id).IsNullableType);
+            var baseType = TypeUtils.CreateTypeName(baseTypeId);
+            foreach (var id in new[] {expected1DId, expected2DId})
+            {
+                var arr = TypeUtils.CreateTypeName(id).AsArrayTypeName;
+                Assert.AreEqual(baseType, arr.ArrayBaseType);
+            }
         }
 
-        [Test]
-        public void ArrayOfSimpleTypesShouldNotBeSimpleType()
+        [TestCaseSource("ArrayIds")]
+        public void IsArray(string baseTypeId, string expected1DId, string expected2DId)
         {
-            var actual = new ArrayTypeName("System.Int64[], mscorlib, 1.2.3.4");
-
-            Assert.IsFalse(actual.IsSimpleType);
+            Assert.IsFalse(TypeUtils.CreateTypeName(baseTypeId).IsArray);
+            foreach (var id in new[] {expected1DId, expected2DId})
+            {
+                Assert.IsTrue(TypeUtils.CreateTypeName(id).IsArray);
+            }
         }
 
-        [Test]
-        public void ArrayOfCustomStructsShouldNotBeStruct()
+        [TestCaseSource("ArrayIds")]
+        public void IsArrayName(string baseTypeId, string expected1DId, string expected2DId)
         {
-            var actual = new ArrayTypeName("s:My.Custom.Struct[], A, 1.2.3.4");
-
-            Assert.IsFalse(actual.IsStructType);
+            Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(baseTypeId));
+            var n = TypeUtils.CreateTypeName(baseTypeId);
+            if (!n.IsTypeParameter)
+            {
+                Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(expected1DId));
+                Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(expected2DId));
+            }
         }
 
-        [Test]
-        public void ShouldHaveArrayBracesInName()
+        [TestCaseSource("ArrayIds")]
+        public void ArraysAreNothingElse(string baseTypeId, string expected1DId, string expected2DId)
         {
-            var uut = new ArrayTypeName("ValueType[,,], As, 9.8.7.6");
+            foreach (var id in new[] {expected1DId, expected2DId})
+            {
+                var sut = TypeUtils.CreateTypeName(id);
 
-            Assert.AreEqual("ValueType[,,]", uut.Name);
+                Assert.IsFalse(sut.IsClassType);
+                Assert.IsFalse(sut.IsDelegateType);
+                Assert.IsFalse(sut.IsEnumType);
+                Assert.IsFalse(sut.IsInterfaceType);
+                Assert.IsFalse(sut.IsNestedType);
+                Assert.IsFalse(sut.IsNullableType);
+                Assert.IsTrue(sut.IsReferenceType);
+                Assert.IsTrue(sut.IsArray);
+                Assert.IsFalse(sut.IsSimpleType);
+                Assert.IsFalse(sut.IsStructType);
+                Assert.IsFalse(sut.IsValueType);
+                Assert.IsFalse(sut.IsVoidType);
+
+                Assert.IsFalse(TypeUtils.IsDelegateTypeIdentifier(id));
+                Assert.IsFalse(TypeUtils.IsNullableTypeIdentifier(id));
+                Assert.IsFalse(TypeUtils.IsSimpleTypeIdentifier(id));
+                Assert.IsFalse(TypeUtils.IsStructTypeIdentifier(id));
+                if (!sut.IsTypeParameter)
+                {
+                    Assert.IsFalse(TypeParameterName.IsTypeParameterIdentifier(id));
+                }
+                Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
+                Assert.IsFalse(TypeUtils.IsVoidTypeIdentifier(id));
+            }
         }
 
-        [Test]
-        public void HandlesDelegateBaseType()
+        [TestCaseSource("ArrayIds")]
+        public void ShouldHaveArrayBracesInName(string baseTypeId, string expected1DId, string expected2DId)
         {
-            var uut = new ArrayTypeName("d:[RT, A] [N.O+DT, AA, 1.2.3.4].()[]");
+            var arr1D = TypeUtils.CreateTypeName(expected1DId);
+            Assert.IsTrue(arr1D.Name.EndsWith("[]"));
 
-            Assert.AreEqual("N.O+DT[]", uut.FullName);
-            Assert.AreEqual("N", uut.Namespace.Identifier);
-            Assert.AreEqual("DT[]", uut.Name);
-            Assert.AreEqual("AA, 1.2.3.4", uut.Assembly.Identifier);
-        }
-
-        [Test]
-        public void TypeDetection()
-        {
-            var id = "d:[RT, A] [N.O+DT, AA, 1.2.3.4].()[]";
-            Assert.IsTrue(TypeUtils.IsArrayTypeIdentifier(id));
-            Assert.IsFalse(TypeUtils.IsDelegateTypeIdentifier(id));
+            var arr2D = TypeUtils.CreateTypeName(expected2DId);
+            Assert.IsTrue(arr2D.Name.EndsWith("[,]"));
         }
 
         [Test]

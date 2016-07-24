@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Text.RegularExpressions;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
@@ -42,23 +41,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         protected BaseName([NotNull] string identifier)
         {
             Asserts.NotNull(identifier);
-            Identifier = FixMissingGenericTicks(identifier);
-        }
-
-        private static readonly Regex MissingTicks = new Regex("\\+([a-zA-Z0-9]+)\\[\\[");
-
-        private static string FixMissingGenericTicks(string id)
-        {
-            var match = MissingTicks.Match(id);
-            if (!match.Success)
-            {
-                return id;
-            }
-
-            var type = string.Format("+{0}[[", match.Groups[1]);
-            var newType = string.Format("+{0}`0[[", match.Groups[1]);
-            var newId = id.Replace(type, newType);
-            return FixMissingGenericTicks(newId);
+            Identifier = identifier;
         }
 
         public override bool Equals(object other)

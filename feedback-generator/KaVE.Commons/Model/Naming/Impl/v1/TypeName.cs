@@ -335,7 +335,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 
         public bool IsEnumType
         {
-            get { return IsRegularTypeEnum() || (IsArrayType && ArrayBaseType.IsEnumType); }
+            get { return IsRegularTypeEnum() || (IsArray && ArrayBaseType.IsEnumType); }
         }
 
         private bool IsRegularTypeEnum()
@@ -356,7 +356,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get
             {
                 return IsSimpleType || IsVoidType || IsNullableType || IsRegularTypeStruct() ||
-                       (IsArrayType && ArrayBaseType.IsStructType);
+                       (IsArray && ArrayBaseType.IsStructType);
             }
         }
 
@@ -387,12 +387,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 
         public bool IsReferenceType
         {
-            get { return IsClassType || IsInterfaceType || IsArrayType || IsDelegateType; }
+            get { return IsClassType || IsInterfaceType || IsArray || IsDelegateType; }
         }
 
         public bool IsClassType
         {
-            get { return !IsValueType && !IsInterfaceType && !IsArrayType && !IsDelegateType && !IsUnknownType; }
+            get { return !IsValueType && !IsInterfaceType && !IsArray && !IsDelegateType && !IsUnknownType; }
         }
 
         public bool IsInterfaceType
@@ -400,7 +400,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get
             {
                 return (Ctx.regularType() != null && (IsRegularInterface() || IsNestedInterface())) ||
-                       (IsArrayType && ArrayBaseType.IsInterfaceType);
+                       (IsArray && ArrayBaseType.IsInterfaceType);
             }
         }
 
@@ -444,14 +444,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
-        public bool IsArrayType
+        public bool IsArray
         {
             get { return Ctx.arrayType() != null; }
         }
 
         public ITypeName ArrayBaseType
         {
-            get { return IsArrayType ? new TypeName(Ctx.arrayType().type()) : null; }
+            get { return IsArray ? new TypeName(Ctx.arrayType().type()) : null; }
         }
 
         public bool IsTypeParameter
@@ -487,14 +487,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
-        public bool IsGenericEntity
-        {
-            get
-            {
-                return RegularHasTypeParameters() || DelegateHasTypeParameters() || ArrayTypeNameHasTypeParameters();
-            }
-        }
-
         public bool HasTypeParameters
         {
             get
@@ -511,7 +503,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
 
         private bool DelegateHasTypeParameters()
         {
-            return (Ctx.delegateType() != null && new MethodName(Ctx.delegateType().method()).IsGenericEntity);
+            return (Ctx.delegateType() != null && new MethodName(Ctx.delegateType().method()).HasTypeParameters);
         }
 
         private bool RegularHasTypeParameters()
@@ -649,7 +641,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         {
             get
             {
-                if (IsArrayType)
+                if (IsArray)
                 {
                     return Int32.Parse(Ctx.arrayType().POSNUM().GetText());
                 }
@@ -673,7 +665,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         {
             get
             {
-                if (IsArrayType)
+                if (IsArray)
                 {
                     return this;
                 }

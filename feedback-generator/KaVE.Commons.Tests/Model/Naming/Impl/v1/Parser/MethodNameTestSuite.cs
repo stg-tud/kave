@@ -43,7 +43,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
             AssertStrings(testCase.Parameters, type.Parameters);
             AssertStrings(testCase.TypeParameters, type.TypeParameters);
             Assert.AreEqual(testCase.IsStatic, type.IsStatic);
-            Assert.AreEqual(testCase.IsGeneric, type.IsGenericEntity);
+            Assert.AreEqual(testCase.HasTypeParameters, type.HasTypeParameters);
             Assert.AreEqual(testCase.SimpleName, type.Name);
         }
 

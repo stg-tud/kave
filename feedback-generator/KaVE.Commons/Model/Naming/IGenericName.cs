@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Collections;
 
@@ -22,8 +21,6 @@ namespace KaVE.Commons.Model.Naming
 {
     public interface IGenericName : IName
     {
-        bool IsGenericEntity { get; }
-
         /// <summary>
         ///     Whether the name contains a list of type parameters.
         /// </summary>

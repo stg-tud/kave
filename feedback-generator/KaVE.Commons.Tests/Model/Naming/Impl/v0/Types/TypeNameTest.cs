@@ -321,23 +321,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
             Assert.AreEqual(TestAssemblyIdentifier, parameterizedTypeName.Assembly.Identifier);
             Assert.AreEqual("MyType", parameterizedTypeName.Name);
-            Assert.IsTrue(parameterizedTypeName.IsGenericEntity);
             Assert.IsTrue(parameterizedTypeName.HasTypeParameters);
-            Assert.IsFalse(parameterizedTypeName.IsArrayType);
+            Assert.IsFalse(parameterizedTypeName.IsArray);
             Assert.AreEqual(2, parameterizedTypeName.TypeParameters.Count);
             Assert.AreEqual(stringIdentifier, parameterizedTypeName.TypeParameters[0].Identifier);
             Assert.AreEqual(intIdentifier, parameterizedTypeName.TypeParameters[1].Identifier);
-        }
-
-        [Test]
-        public void ShouldHaveUninstantiatedTypeParameters()
-        {
-            var typeName = TypeUtils.CreateTypeName("OuterType`1+InnerType, Assembly, 1.2.3.4");
-
-            Assert.IsTrue(typeName.IsGenericEntity);
-            Assert.IsFalse(typeName.HasTypeParameters);
-            Assert.AreEqual("OuterType`1+InnerType", typeName.FullName);
-            Assert.AreEqual("OuterType`1", typeName.DeclaringType.FullName);
         }
 
         [Test]

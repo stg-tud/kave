@@ -69,37 +69,32 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public bool IsReferenceType
         {
-            get { return IsClassType || IsInterfaceType || IsArrayType || IsDelegateType; }
+            get { return IsClassType || IsInterfaceType || IsArray || IsDelegateType; }
         }
 
         public bool IsClassType
         {
-            get { return !IsValueType && !IsInterfaceType && !IsArrayType && !IsDelegateType && !IsUnknown; }
+            get { return !IsValueType && !IsInterfaceType && !IsArray && !IsDelegateType && !IsUnknown; }
         }
 
         // checks for prefix
         public bool IsEnumType
         {
-            get { return !IsArrayType && Identifier.StartsWith(PrefixEnum); }
+            get { return !IsArray && Identifier.StartsWith(PrefixEnum); }
         }
 
         public bool IsInterfaceType
         {
-            get { return !IsArrayType && Identifier.StartsWith(PrefixInterface); }
+            get { return !IsArray && Identifier.StartsWith(PrefixInterface); }
         }
 
         public bool IsStructType
         {
-            get { return !IsArrayType && TypeUtils.IsStructTypeIdentifier(Identifier); }
+            get { return !IsArray && TypeUtils.IsStructTypeIdentifier(Identifier); }
         }
 
         // generic info
-        public bool IsGenericEntity
-        {
-            get { return Identifier.IndexOf('`') > 0; }
-        }
-
-        public bool HasTypeParameters
+         public bool HasTypeParameters
         {
             get { return TypeParameters.Count > 0; }
         }
@@ -112,7 +107,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 if (_typeParameters == null)
                 {
-                    if (IsArrayType)
+                    if (IsArray)
                     {
                         _typeParameters = Lists.NewList<ITypeParameterName>();
                     }
@@ -135,7 +130,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return this is IDelegateTypeName; }
         }
 
-        public bool IsArrayType
+        public bool IsArray
         {
             get { return this is IArrayTypeName; }
         }

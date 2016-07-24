@@ -16,7 +16,9 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -32,12 +34,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 return UnknownTypeInstance;
             }
             // checked second, since type parameters can have any kind of type
-            if (IsTypeParameterIdentifier(identifier))
+            if (TypeParameterName.IsTypeParameterIdentifier(identifier))
             {
                 return new TypeParameterName(identifier);
             }
             // checked third, since the array's value type can have any kind of type
-            if (IsArrayTypeIdentifier(identifier))
+            if (ArrayTypeName.IsArrayTypeNameIdentifier(identifier))
             {
                 return new ArrayTypeName(identifier);
             }
@@ -53,67 +55,19 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return BaseTypeName.UnknownTypeIdentifier.Equals(identifier);
         }
 
-        internal static bool IsTypeParameterIdentifier(string identifier)
-        {
-            if (IsUnknownTypeIdentifier(identifier))
-            {
-                return false;
-            }
-            return IsFreeTypeParameterIdentifier(identifier) || IsBoundTypeParameterIdentifier(identifier);
-        }
-
-        private static bool IsFreeTypeParameterIdentifier(string identifier)
-        {
-            return !identifier.Contains(",") && !identifier.Contains("[");
-        }
-
-        private static bool IsBoundTypeParameterIdentifier(string identifier)
-        {
-            // "T -> System.Void, mscorlib, ..." is a type parameter, because it contains the separator.
-            // "System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], ..." is not, because
-            // the separator is only in the type's parameter-type list, i.e., after the '`'.
-            var indexOfMapping = identifier.IndexOf(
-                TypeParameterName.ParameterNameTypeSeparator,
-                StringComparison.Ordinal);
-            var endOfTypeName = identifier.IndexOf('`');
-            return indexOfMapping >= 0 && (endOfTypeName == -1 || endOfTypeName > indexOfMapping);
-        }
 
         internal static bool IsDelegateTypeIdentifier(string identifier)
         {
-            return identifier.StartsWith(BaseTypeName.PrefixDelegate) && !IsArrayTypeIdentifier(identifier);
-        }
-
-
-        internal static bool IsArrayTypeIdentifier(string id)
-        {
-            if (id.StartsWith("d:"))
-            {
-                var idx = id.LastIndexOf(')');
-                if (id.Length > (idx + 1) && id[idx + 1] == '[')
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                var idx = id.IndexOf('[');
-                if (idx == -1)
-                {
-                    return false;
-                }
-                while ((idx + 1) < id.Length && id[++idx] == ',') {}
-                if (id[idx] == ']')
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return identifier.StartsWith(BaseTypeName.PrefixDelegate) &&
+                   !ArrayTypeName.IsArrayTypeNameIdentifier(identifier);
         }
 
         internal static bool IsStructTypeIdentifier(string identifier)
         {
+            if (ArrayTypeName.IsArrayTypeNameIdentifier(identifier))
+            {
+                return false;
+            }
             return identifier.StartsWith(BaseTypeName.PrefixStruct) ||
                    IsSimpleTypeIdentifier(identifier) ||
                    IsNullableTypeIdentifier(identifier) ||

@@ -38,7 +38,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         {
             if (IsParameterArray)
             {
-                Asserts.That(ValueType.IsArrayType);
+                Asserts.That(ValueType.IsArray);
             }
         }
 

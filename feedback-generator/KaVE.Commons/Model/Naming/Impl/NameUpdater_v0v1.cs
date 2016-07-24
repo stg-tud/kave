@@ -108,12 +108,12 @@ namespace KaVE.Commons.Model.Naming.Impl
             {
                 return "d:" + HandleOldMethodNames(input.Substring(2, input.Length - 2));
             }
-            if (typeName.IsArrayType)
+            if (typeName.IsArray)
             {
                 ArrayTypeName name = (ArrayTypeName) typeName;
                 return "arr(" + name.Rank + "):" + HandleOldTypeNames(name.ArrayBaseType.Identifier);
             }
-            if (typeName.IsGenericEntity)
+            if (typeName.HasTypeParameters)
             {
                 var paras = typeName.TypeParameters;
                 var n = typeName.Namespace.Identifier;

@@ -48,7 +48,6 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.False(sut.HasTypeParameters);
             Assert.False(sut.IsConstructor);
             Assert.False(sut.IsExtensionMethod);
-            Assert.False(sut.IsGenericEntity);
             Assert.AreEqual(Lists.NewList<IParameterName>(), sut.Parameters);
             Assert.AreEqual(Lists.NewList<ITypeParameterName>(), sut.TypeParameters);
         }

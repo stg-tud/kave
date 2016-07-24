@@ -190,21 +190,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { throw new NotImplementedException(); }
         }
 
-        public bool IsGenericEntity
-        {
-            get
-            {
-                return !IsConstructor && !IsUnknown &&
-                       Ctx.regularMethod() != null && Ctx.regularMethod().customMethod() != null &&
-                       Ctx.regularMethod().customMethod().genericTypePart() != null;
-            }
-        }
-
         public bool HasTypeParameters
         {
             get
             {
-                return IsGenericEntity && Ctx.regularMethod().customMethod().genericTypePart().genericParam() != null;
+                var isGenericEntity = !IsConstructor && !IsUnknown &&
+                       Ctx.regularMethod() != null && Ctx.regularMethod().customMethod() != null &&
+                       Ctx.regularMethod().customMethod().genericTypePart() != null;
+                return isGenericEntity && Ctx.regularMethod().customMethod().genericTypePart().genericParam() != null;
             }
         }
 

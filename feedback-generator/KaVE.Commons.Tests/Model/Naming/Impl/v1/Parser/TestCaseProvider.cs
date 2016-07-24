@@ -37,7 +37,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 
         public static string[] LoadTestFile(string file)
         {
-            return File.ReadAllLines(file).Where(s => !s.Equals("") && !s.StartsWith("#") && !s.StartsWith("Identifier")).ToArray();
+            return
+                File.ReadAllLines(file)
+                    .Where(s => !s.Equals("") && !s.StartsWith("#") && !s.StartsWith("Identifier"))
+                    .ToArray();
         }
 
         public static IKaVEList<T> LoadTestCase<T>(string path) where T : ITestCase
@@ -47,7 +50,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
             foreach (var line in lines)
             {
                 var fields = line.Split('\t');
-                var t = (T)CreateTestCase(fields, typeof(T));
+                var t = (T) CreateTestCase(fields, typeof(T));
                 testcases.Add(t);
             }
             return testcases;
@@ -57,7 +60,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
         {
             if (type == typeof(MethodNameTestCase))
             {
-                return new MethodNameTestCase()
+                return new MethodNameTestCase
                 {
                     Identifier = fields[0],
                     DeclaringType = fields[1],
@@ -66,12 +69,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
                     Parameters = GetList(fields[4]),
                     TypeParameters = GetList(fields[5]),
                     IsStatic = GetBoolean(fields[6]),
-                    IsGeneric = GetBoolean(fields[7])
+                    HasTypeParameters = GetBoolean(fields[7])
                 };
             }
-            else if (type == typeof(TypeNameTestCase))
+            if (type == typeof(TypeNameTestCase))
             {
-                return new TypeNameTestCase()
+                return new TypeNameTestCase
                 {
                     Identifier = fields[0],
                     Namespace = fields[1],
@@ -87,9 +90,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
                     IsNestedType = GetBoolean(fields[11])
                 };
             }
-            else if (type == typeof(DelegateTypeNameTestCase))
+            if (type == typeof(DelegateTypeNameTestCase))
             {
-                return new DelegateTypeNameTestCase()
+                return new DelegateTypeNameTestCase
                 {
                     Identifier = fields[0],
                     Namespace = fields[1],
@@ -103,9 +106,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
                     TypeParameters = GetList(fields[9])
                 };
             }
-            else if (type == typeof(ArrayTypeNameTestCase))
+            if (type == typeof(ArrayTypeNameTestCase))
             {
-                return new ArrayTypeNameTestCase()
+                return new ArrayTypeNameTestCase
                 {
                     Identifier = fields[0],
                     Namespace = fields[1],
@@ -119,13 +122,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
                     IsStructType = GetBoolean(fields[9]),
                     IsNestedType = GetBoolean(fields[10]),
                     IsDelgateType = GetBoolean(fields[11]),
-                    IsGenericEntity = GetBoolean(fields[12]),
+                    HasTypeParameters = GetBoolean(fields[12]),
                     Rank = GetInt(fields[13])
                 };
             }
-            else if (type == typeof(TypeParameterNameTestCase))
+            if (type == typeof(TypeParameterNameTestCase))
             {
-                return new TypeParameterNameTestCase()
+                return new TypeParameterNameTestCase
                 {
                     Identifier = fields[0],
                     Namespace = fields[1],
@@ -162,7 +165,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 
         public static IKaVEList<string> InvalidTypeNames()
         {
-            return KaVE.Commons.Utils.Collections.Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidTypeFile));
+            return Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidTypeFile));
         }
 
         public static IKaVEList<DelegateTypeNameTestCase> ValidDelegates()
@@ -172,7 +175,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 
         public static IKaVEList<string> InvalidDelegates()
         {
-            return KaVE.Commons.Utils.Collections.Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidDelegatesFile));
+            return Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidDelegatesFile));
         }
 
         public static IKaVEList<ArrayTypeNameTestCase> ValidArrayTypes()
@@ -182,7 +185,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 
         public static IKaVEList<string> InvalidArrayTypes()
         {
-            return KaVE.Commons.Utils.Collections.Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidArrayTypesFile));
+            return Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidArrayTypesFile));
         }
 
         public static IKaVEList<MethodNameTestCase> ValidMethodNames()
@@ -192,7 +195,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 
         public static IKaVEList<string> InvalidMethodNames()
         {
-            return KaVE.Commons.Utils.Collections.Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidMethodFile));
+            return Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidMethodFile));
         }
 
         public static IKaVEList<TypeParameterNameTestCase> ValidTypeParameterNames()
@@ -202,9 +205,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
 
         public static IKaVEList<string> InvalidTypeParameterNames()
         {
-            return KaVE.Commons.Utils.Collections.Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidTypeParameterFile));
+            return Lists.NewList(LoadTestFile(TestSourceRootFolder + InvalidTypeParameterFile));
         }
     }
 
-    internal interface ITestCase { }
+    internal interface ITestCase {}
 }

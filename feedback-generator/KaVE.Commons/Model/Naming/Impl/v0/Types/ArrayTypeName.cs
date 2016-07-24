@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-using System.Linq;
-using System.Text.RegularExpressions;
+using System;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     public class ArrayTypeName : BaseTypeName, IArrayTypeName
     {
-        private static readonly Regex ArrayTypeNameSuffix = new Regex("(\\[[,]*\\])([^()]*)$");
-
         internal ArrayTypeName(string identifier) : base(identifier)
         {
             Asserts.Not(TypeUtils.IsUnknownTypeIdentifier(identifier));
@@ -87,6 +85,98 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         #region static helpers
 
+        internal static bool IsArrayTypeNameIdentifier(string id)
+        {
+            if (id.StartsWith("d:"))
+            {
+                var idx = id.LastIndexOf(')');
+                if (id.FindNext(idx, '[') != -1)
+                {
+                    return true;
+                }
+            }
+            else if (TypeParameterName.IsTypeParameterIdentifier(id))
+            {
+                return false;
+            }
+            else
+            {
+                var closeBracket = id.LastIndexOf(']');
+                if (closeBracket == -1)
+                {
+                    return false;
+                }
+                var cur = closeBracket;
+
+                // regular (multi-dimensional) array
+                while (cur - 1 > 0 && id[--cur] == ',') {}
+                if (id[cur] == '[')
+                {
+                    return true;
+                }
+                // generic
+                var openGeneric = id.FindCorrespondingOpenBracket(closeBracket);
+                var tick = id.FindPrevious(openGeneric, '`');
+                var openArr = id.FindNext(tick, '[');
+                if (openArr == openGeneric)
+                {
+                    return false;
+                }
+                cur = openArr;
+                while (cur + 1 < id.Length && id[++cur] == ',') {}
+                if (id[cur] == ']')
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static int GetArrayRank(ITypeName typeName)
+        {
+            if (!typeName.IsArray)
+            {
+                return 0;
+            }
+            if (!(typeName is ArrayTypeName))
+            {
+                return typeName.AsArrayTypeName.Rank;
+            }
+
+            var id = typeName.Identifier;
+            var closeBracket = id.LastIndexOf(']');
+            if (closeBracket == -1)
+            {
+                return 0;
+            }
+            var cur = closeBracket;
+
+            // regular (multi-dimensional) array
+            while (cur - 1 > 0 && id[--cur] == ',') {}
+            if (id[cur] == '[')
+            {
+                return closeBracket - cur;
+            }
+
+            // generic
+            var openGeneric = id.FindCorrespondingOpenBracket(closeBracket);
+            var tick = id.FindPrevious(openGeneric, '`');
+            var openArr = id.FindNext(tick, '[');
+            if (openArr == openGeneric)
+            {
+                return 0;
+            }
+            cur = openArr;
+            while (cur + 1 < id.Length && id[++cur] == ',') {}
+            if (id[cur] == ']')
+            {
+                return cur - openArr;
+            }
+
+            return 0;
+        }
+
         /// <summary>
         ///     Derives an array-type name from this type name.
         /// </summary>
@@ -100,7 +190,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         private static string DeriveArrayTypeNameIdentifier(ITypeName baseType, int rank)
         {
-            if (baseType.IsArrayType)
+            if (baseType.IsArray)
             {
                 rank += GetArrayRank(baseType);
                 baseType = baseType.AsArrayTypeName.ArrayBaseType;
@@ -121,14 +211,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return derivedIdentifier;
         }
 
-        public static int GetArrayRank(ITypeName arrayTypeName)
-        {
-            return ArrayTypeNameSuffix.Match(arrayTypeName.Identifier).Groups[1].Value.Count(c => c == ',') + 1;
-        }
-
         private static string CreateArrayMarker(int rank)
         {
-            return string.Format("[{0}]", new string(',', rank - 1));
+            return String.Format("[{0}]", new string(',', rank - 1));
         }
 
         private static string InsertMarkerAfterRawName(string identifier, string arrayMarker)

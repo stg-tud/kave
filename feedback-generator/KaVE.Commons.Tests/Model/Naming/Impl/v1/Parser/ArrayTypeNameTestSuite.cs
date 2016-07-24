@@ -50,7 +50,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
             Assert.AreEqual(testCase.IsStructType, type.IsStructType);
             Assert.AreEqual(testCase.IsNestedType, type.IsNestedType);
             Assert.AreEqual(testCase.IsDelgateType, type.IsDelegateType);
-            Assert.AreEqual(testCase.IsGenericEntity, type.IsGenericEntity);
+            Assert.AreEqual(testCase.HasTypeParameters, type.HasTypeParameters);
             Assert.AreEqual(testCase.Rank, type.Rank);
         }
 

@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
         public string ReturnType { get; set; }
         public string SimpleName { get; set; }
         public bool IsStatic { get; set; }
-        public bool IsGeneric { get; set; }
+        public bool HasTypeParameters { get; set; }
         public IKaVEList<string> Parameters { get; set; }
         public IKaVEList<string> TypeParameters { get; set; }
     }

@@ -28,21 +28,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public DelegateTypeName() : this(UnknownDelegateIdentifier) {}
 
-        public DelegateTypeName(string identifier) : base(FixLegacyDelegateNames(identifier)) {}
+        public DelegateTypeName(string identifier) : base(identifier) {}
 
-        internal static string FixLegacyDelegateNames(string identifier)
-        {
-            // fix legacy delegate names
-            if (!identifier.Contains("("))
-            {
-                identifier = string.Format(
-                    "{0}[{1}] [{2}].()",
-                    PrefixDelegate,
-                    new TypeName().Identifier,
-                    identifier.Substring(PrefixDelegate.Length));
-            }
-            return identifier;
-        }
 
         public override bool IsUnknown
         {

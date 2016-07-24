@@ -15,17 +15,81 @@
  */
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0
 {
     public static class NameUtils
     {
+        public static string FixLegacyFormats(this string id)
+        {
+            return id.FixLegacyDelegateNames().FixMissingGenericTicks();
+        }
+
+        private static string FixLegacyDelegateNames(this string id)
+        {
+            if (!TypeUtils.IsDelegateTypeIdentifier(id))
+            {
+                return id;
+            }
+
+            // originally, we did not store delegates as method signatures, but only the "delegate type"
+            if (!id.Contains("("))
+            {
+                id = string.Format(
+                    "{0}[{1}] [{2}].()",
+                    BaseTypeName.PrefixDelegate,
+                    new TypeName().Identifier,
+                    id.Substring(BaseTypeName.PrefixDelegate.Length));
+            }
+            return id;
+        }
+
+        private static readonly Regex MissingTicks = new Regex("\\+([a-zA-Z0-9]+)(\\[\\[.*)");
+
+        private static string FixMissingGenericTicks(this string id)
+        {
+            var match = MissingTicks.Match(id);
+            if (!match.Success)
+            {
+                return id;
+            }
+
+            var type = string.Format("+{0}[[", match.Groups[1]);
+            var numTicks = FindNumTicksInRest(match.Groups[2].ToString());
+            var newType = string.Format("+{0}`{1}[[", match.Groups[1], numTicks);
+            var newId = id.Replace(type, newType);
+            return newId.FixMissingGenericTicks();
+        }
+
+        private static int FindNumTicksInRest(string rest)
+        {
+            Asserts.Not(string.IsNullOrEmpty(rest));
+            Asserts.That(rest[0] == '[');
+
+            var endGenerics = rest.FindCorrespondingCloseBracket(0);
+
+            var numTicks = 0;
+            var current = 1; // skip opening bracket
+            while (current != -1 && current < endGenerics)
+            {
+                numTicks++;
+                var tpOpen = rest.FindNext(current, '[');
+                var tpClose = rest.FindCorrespondingCloseBracket(tpOpen);
+                tpClose++; // skip closing bracket
+                current = rest.FindNext(tpClose, ',', ']');
+            }
+
+            return numTicks;
+        }
+
         /// <summary>
         ///     Parses the type parameter list from a type's full name or a method's signature.
         /// </summary>

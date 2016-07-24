@@ -43,7 +43,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsTrue(delegateType.IsDelegateType);
             Assert.IsTrue(delegateType.IsReferenceType);
 
-            Assert.IsFalse(delegateType.IsArrayType);
+            Assert.IsFalse(delegateType.IsArray);
             Assert.IsFalse(delegateType.IsClassType);
             Assert.IsFalse(delegateType.IsEnumType);
             Assert.IsFalse(delegateType.IsInterfaceType);

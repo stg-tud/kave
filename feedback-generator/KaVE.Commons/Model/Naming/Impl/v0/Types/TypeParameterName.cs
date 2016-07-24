@@ -15,8 +15,11 @@
  */
 
 using System;
+using System.Text.RegularExpressions;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -30,7 +33,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         /// </summary>
         public const string ParameterNameTypeSeparator = " -> ";
 
-        internal TypeParameterName(string identifier) : base(identifier)
+        internal TypeParameterName([NotNull] string identifier) : base(identifier)
         {
             Asserts.Not(TypeUtils.IsUnknownTypeIdentifier(identifier));
         }
@@ -40,120 +43,99 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return false; }
         }
 
-        public bool IsGenericEntity
-        {
-            get { return TypeParameterType.IsGenericEntity; }
-        }
-
         public bool HasTypeParameters
         {
-            get { return TypeParameterType.HasTypeParameters; }
+            get { return false; }
         }
 
         public IKaVEList<ITypeParameterName> TypeParameters
         {
-            get { return TypeParameterType.TypeParameters; }
+            get { return Lists.NewList<ITypeParameterName>(); }
         }
 
         public IAssemblyName Assembly
         {
-            get { return TypeParameterType.Assembly; }
+            get { return new AssemblyName(); }
         }
 
         public INamespaceName Namespace
         {
-            get { return TypeParameterType.Namespace; }
+            get { return new NamespaceName(); }
         }
 
         public ITypeName DeclaringType
         {
-            get { return TypeParameterType.DeclaringType; }
+            get { return null; }
         }
 
         public string FullName
         {
-            get { return TypeParameterType.FullName; }
+            get { return TypeParameterShortName; }
         }
 
         public string Name
         {
-            get { return TypeParameterType.Name; }
+            get { return TypeParameterShortName; }
         }
 
         public bool IsVoidType
         {
-            get { return TypeParameterType.IsVoidType; }
+            get { return false; }
         }
 
         public bool IsValueType
         {
-            get { return TypeParameterType.IsValueType; }
+            get { return false; }
         }
 
         public bool IsSimpleType
         {
-            get { return TypeParameterType.IsSimpleType; }
+            get { return false; }
         }
 
         public bool IsEnumType
         {
-            get { return TypeParameterType.IsEnumType; }
+            get { return false; }
         }
 
         public bool IsStructType
         {
-            get { return TypeParameterType.IsStructType; }
+            get { return false; }
         }
 
         public bool IsNullableType
         {
-            get { return TypeParameterType.IsNullableType; }
+            get { return false; }
         }
 
         public bool IsReferenceType
         {
-            get { return TypeParameterType.IsReferenceType; }
+            get { return IsArray; }
         }
 
         public bool IsClassType
         {
-            get { return TypeParameterType.IsClassType; }
+            get { return false; }
         }
 
         public bool IsInterfaceType
         {
-            get { return TypeParameterType.IsInterfaceType; }
+            get { return false; }
         }
 
         public bool IsDelegateType
         {
-            get { return TypeParameterType.IsDelegateType; }
+            get { return false; }
         }
 
         public bool IsNestedType
         {
-            get { return TypeParameterType.IsNestedType; }
+            get { return false; }
         }
 
-        public bool IsArrayType
-        {
-            get { return IsThisArrayType || TypeParameterType.IsArrayType; }
-        }
-
-        private bool IsThisArrayType
+        public bool IsArray
         {
             get { return TypeParameterShortName.Contains("[") && TypeParameterShortName.Contains("]"); }
-        }
-
-        // TODO test this method
-        public ITypeName DeriveArrayTypeName(int rank)
-        {
-            Asserts.That(rank > 0, "rank smaller than 1");
-            var typeParameterShortName = TypeParameterShortName;
-            var suffix = Identifier.Substring(typeParameterShortName.Length);
-            return
-                new TypeParameterName(
-                    string.Format("{0}[{1}]{2}", typeParameterShortName, new string(',', rank - 1), suffix));
         }
 
         public bool IsTypeParameter
@@ -172,7 +154,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public IArrayTypeName AsArrayTypeName
         {
-            get { return this; }
+            get
+            {
+                Asserts.That(IsArray);
+                return this;
+            }
         }
 
         public ITypeParameterName AsTypeParameterName
@@ -185,7 +171,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                var endOfTypeParameterName = Identifier.IndexOf(' ');
+                var endOfTypeParameterName = Identifier.IndexOf(ParameterNameTypeSeparator, StringComparison.Ordinal);
                 return endOfTypeParameterName == -1 ? Identifier : Identifier.Substring(0, endOfTypeParameterName);
             }
         }
@@ -206,7 +192,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                Asserts.That(IsThisArrayType);
+                Asserts.That(IsArray);
                 var start = TypeParameterShortName.IndexOf("[", StringComparison.Ordinal);
                 var end = TypeParameterShortName.IndexOf("]", StringComparison.Ordinal);
                 return end - start;
@@ -217,12 +203,54 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                Asserts.That(IsThisArrayType);
+                Asserts.That(IsArray);
                 var tpn = Identifier.Substring(0, TypeParameterShortName.IndexOf("[", StringComparison.Ordinal));
                 var rest = Identifier.Substring(TypeParameterShortName.Length);
-                var newId = string.Format("{0}{1}{2}", tpn, ParameterNameTypeSeparator, rest);
-                return new TypeParameterName(newId);
+                return new TypeParameterName("{0}{1}".FormatEx(tpn, rest));
             }
+        }
+
+        private static readonly Regex FreeTypeParameterMatcher = new Regex("^[^ ,0-9\\[\\](){}<>-][^ ,\\[\\](){}<>-]*$");
+
+        public static bool IsTypeParameterIdentifier(string identifier)
+        {
+            if (TypeUtils.IsUnknownTypeIdentifier(identifier))
+            {
+                return false;
+            }
+
+            var idxArrow = identifier.IndexOf(ParameterNameTypeSeparator, StringComparison.Ordinal);
+            if (idxArrow != -1)
+            {
+                var before = identifier.Substring(0, idxArrow);
+                return IsTypeParameterIdentifier(before);
+            }
+
+            return FreeTypeParameterMatcher.IsMatch(identifier) || IsTypeParameterArray(identifier);
+        }
+
+        private static bool IsTypeParameterArray(string id)
+        {
+            id = id.Trim();
+
+            var arrClose = id.LastIndexOf(']');
+            if (arrClose == -1)
+            {
+                return false;
+            }
+            var cur = arrClose;
+            while (cur - 1 > 0 && id[--cur] == ',') {}
+            if (id[cur] != '[')
+            {
+                return false;
+            }
+
+            var before = id.Substring(0, cur);
+            if (before.ContainsAny(" ", ",") || arrClose != id.Length - 1)
+            {
+                return false;
+            }
+            return FreeTypeParameterMatcher.IsMatch(before.Trim());
         }
     }
 }

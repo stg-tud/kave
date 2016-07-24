@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v1.Parser
         public bool IsStructType { get; set; }
         public bool IsNestedType { get; set; }
         public bool IsDelgateType { get; set; }
-        public bool IsGenericEntity { get; set; }
+        public bool HasTypeParameters { get; set; }
         public int Rank { get; set; }
     }
 }

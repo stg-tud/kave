@@ -267,7 +267,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return false; }
         }
 
-        public bool IsArrayType
+        public bool IsArray
         {
             get { return false; }
         }

@@ -120,11 +120,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get { return TypeParameters.Count > 0; }
         }
 
-        public bool IsGenericEntity
-        {
-            get { return HasTypeParameters; }
-        }
-
         private IKaVEList<IParameterName> _parameters;
 
         public IList<IParameterName> Parameters

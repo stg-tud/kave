@@ -121,7 +121,7 @@ namespace KaVE.Commons.Model.ObjectUsage
             {
                 return "LSystem/Object";
             }
-            if (name.IsArrayType)
+            if (name.IsArray)
             {
                 return "[" + name.AsArrayTypeName.ArrayBaseType.ToName();
             }

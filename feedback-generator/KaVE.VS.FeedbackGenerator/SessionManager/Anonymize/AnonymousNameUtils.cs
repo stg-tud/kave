@@ -213,7 +213,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             {
                 return ToAnonymousType_Nested(type);
             }
-            if (type.IsArrayType)
+            if (type.IsArray)
             {
                 return ToAnonymousType_Array(type.AsArrayTypeName);
             }

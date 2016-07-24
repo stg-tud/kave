@@ -60,24 +60,20 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(sut.IsNestedType);
 
             // generics
-            Assert.IsFalse(sut.IsGenericEntity);
             Assert.IsFalse(sut.HasTypeParameters);
             Assert.AreEqual(Lists.NewList<ITypeParameterName>(), sut.TypeParameters);
 
-
             // arrays
-            Assert.IsFalse(sut.IsArrayType);
+            Assert.IsFalse(sut.IsArray);
             var sutAsArray = sut.AsArrayTypeName;
             Assert.AreEqual(TypeUtils.CreateTypeName("i:a.b.I, P"), sutAsArray.ArrayBaseType);
             Assert.AreEqual(1, sutAsArray.Rank);
-
 
             // type parameter
             Assert.IsFalse(sut.IsTypeParameter);
             var sutAsTypeParam = sut.AsTypeParameterName;
             Assert.AreEqual("...", sutAsTypeParam.TypeParameterShortName);
             Assert.AreEqual(TypeUtils.CreateTypeName("..."), sutAsTypeParam.TypeParameterType);
-
 
             // delegate
             Assert.IsTrue(sut.IsDelegateType);
