@@ -19,7 +19,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class TypeUtils
+    public static class TypeUtils
     {
         private static readonly ITypeName UnknownTypeInstance = new TypeName();
 

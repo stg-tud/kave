@@ -22,6 +22,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.Commons.Utils.Naming;
 
 namespace KaVE.RS.SolutionAnalysis
 {
@@ -88,7 +89,7 @@ namespace KaVE.RS.SolutionAnalysis
                     if (type[0].Equals("CSharp.PropertyName"))
                     {
                         typeNameCount++;
-                        var name = NameSerialization.ParseJson(s);
+                        var name = s.Deserialize<IName>();
                         if (name.Identifier == "?")
                         {
                             wrongSyntaxTypeName.Add(new Tuple<string, string>(s, t.Item1));

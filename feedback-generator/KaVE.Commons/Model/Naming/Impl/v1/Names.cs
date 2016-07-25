@@ -24,36 +24,19 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
-    public class NamesV1
+    public class Names
     {
         [NotNull]
         public static ITypeName Type([NotNull] string input)
         {
-            try
-            {
-                var ctx = TypeNameParseUtil.ValidateTypeName(input);
-                if (ctx.UNKNOWN() != null)
-                {
-                    return UnknownName.Get(typeof(ITypeName));
-                }
-                return new TypeName(ctx);
-            }
-            catch (Exception)
-            {
-                try
-                {
-                    var ctx = TypeNameParseUtil.ValidateTypeName(CsNameFixer.HandleOldTypeNames(input));
-                    if (ctx.UNKNOWN() != null)
-                    {
-                        return UnknownName.Get(typeof(ITypeName));
-                    }
-                    return new TypeName(ctx);
-                }
-                catch (Exception)
-                {
-                    return UnknownName.Get(typeof(ITypeName));
-                }
-            }
+            var ctx = TypeNameParseUtil.ValidateTypeName(input);
+            return new TypeName(ctx);
+        }
+
+        public static IName ArrayType([NotNull] string input)
+        {
+            var ctx = TypeNameParseUtil.ValidateTypeName(input);
+            return new ArrayTypeName(ctx);
         }
 
         public static INamespaceName Namespace(string input)

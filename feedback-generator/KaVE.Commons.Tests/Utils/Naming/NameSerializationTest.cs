@@ -1,0 +1,134 @@
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Naming;
+using NUnit.Framework;
+using NamesV1 = KaVE.Commons.Model.Naming.Impl.v1.Names;
+
+namespace KaVE.Commons.Tests.Utils.Naming
+{
+    internal class NameSerializationTest
+    {
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void ShouldFailForUnknownPrefixes()
+        {
+            "x:...".Deserialize<IName>();
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void ShouldFailForUnknownTypes()
+        {
+            new TestName().Serialize();
+        }
+
+        [TestCase("T,P", "CSharp.TypeName", "0T", typeof(TypeName)),
+         TestCase("T[],P", "CSharp.TypeName", "0T", typeof(ArrayTypeName)),
+         TestCase("T", "CSharp.TypeName", "0T", typeof(TypeParameterName)),
+         TestCase("T -> T,P", "CSharp.TypeName", "0T", typeof(TypeParameterName)),
+         TestCase("d:[?] [T,P].()", "CSharp.TypeName", "0T", typeof(DelegateTypeName))]
+        public void ShouldDeserializeV0Types(string id, string oldPrefix, string newPrefix, Type expectedType)
+        {
+            foreach (var prefix in new[] {oldPrefix, newPrefix})
+            {
+                var input = "{0}:{1}".FormatEx(prefix, id);
+
+                var objExpected = TypeUtils.CreateTypeName(id);
+                var objActual = input.Deserialize<IName>();
+                Assert.AreEqual(objExpected, objActual);
+                Assert.True(expectedType.IsInstanceOfType(objActual));
+
+                var outputActual = objActual.Serialize();
+                var outputExpected = "{0}:{1}".FormatEx(newPrefix, id);
+                Assert.AreEqual(outputExpected, outputActual);
+            }
+        }
+
+        [ // code elements
+            TestCase("A -> ?", "CSharp.AliasName", "0Alias", typeof(TypeName)),
+            TestCase("[R,P] [D,P]._e", "CSharp.EventName", "0E", typeof(EventName)),
+            TestCase("", "CSharp.FieldName", "0F", typeof(TypeName)),
+            TestCase("", "CSharp.LambdaName", "0L", typeof(TypeName)),
+            TestCase("", "CSharp.LocalVariableName", "0LocalVar", typeof(TypeName)),
+            TestCase("", "CSharp.MethodName", "0M", typeof(TypeName)),
+            TestCase("", "CSharp.ParameterName", "0Param", typeof(TypeName)),
+            TestCase("", "CSharp.PropertyName", "0P", typeof(TypeName)),
+            // ide components
+            TestCase("", "CSharp.CommandBarControlName", "0Ctrl", typeof(TypeName)),
+            TestCase("", "CSharp.CommandName", "0Cmd", typeof(TypeName)),
+            TestCase("", "CSharp.DocumentName", "0Doc", typeof(TypeName)),
+            TestCase("", "CSharp.ProjectItemName", "0Itm", typeof(TypeName)),
+            TestCase("", "CSharp.ProjectName", "0Prj", typeof(TypeName)),
+            TestCase("", "CSharp.SolutionName", "0Sln", typeof(TypeName)),
+            TestCase("", "CSharp.WindowName", "0Win", typeof(TypeName)),
+            // other
+            TestCase("", "CSharp.ReSharperLiveTemplateName", "0RSTpl", typeof(TypeName)),
+            // types/organization
+            TestCase("", "CSharp.AssemblyName", "0A", typeof(TypeName)),
+            TestCase("", "CSharp.AssemblyVersion", "0V", typeof(TypeName)),
+            TestCase("", "CSharp.NamespaceName", "0N", typeof(TypeName)),
+            // types
+            TestCase("T,P", "CSharp.TypeName", "0T", typeof(TypeName))]
+        public void ShouldDeserializeV0Names(string id, string oldPrefix, string newPrefix, Type expectedType)
+        {
+            foreach (var prefix in new[] {oldPrefix, newPrefix})
+            {
+                var input = "{0}:{1}".FormatEx(prefix, id);
+                var obj = input.Deserialize<IName>();
+
+                Assert.True(expectedType.IsInstanceOfType(obj));
+
+                var actual = obj.Serialize();
+                var expected = "{0}:{1}".FormatEx(newPrefix, id);
+                Assert.AreEqual(expected, actual);
+            }
+        }
+
+        [TestCase("1T", "T,P", typeof(Commons.Model.Naming.Impl.v1.TypeName)),
+         TestCase("1Ta", "arr(1):T,P", typeof(Commons.Model.Naming.Impl.v1.ArrayTypeName))]
+        public void ShouldDeserializeV1Types(string prefix, string id, Type expectedType)
+        {
+            var input = "{0}:{1}".FormatEx(prefix, id);
+            var expected = NamesV1.Type(id);
+            var actual = input.Deserialize<IName>();
+            Assert.AreEqual(expected, actual);
+            Assert.True(expectedType.IsInstanceOfType(actual));
+            Assert.AreEqual(input, actual.Serialize());
+        }
+
+        private class TestName : IName
+        {
+            public string Identifier
+            {
+                get { return ""; }
+            }
+
+            public bool IsUnknown
+            {
+                get { return false; }
+            }
+
+            public bool IsHashed
+            {
+                get { return false; }
+            }
+        }
+    }
+}
