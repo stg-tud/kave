@@ -28,8 +28,8 @@ namespace KaVE.Commons.Utils.Naming
         {
             Serializers = new List<INameSerializer>
             {
-                new NameSerializerV0(),
-                new NameSerializerV1()
+                new NameSerializerV0()
+                //new NameSerializerV1()
             };
         }
 

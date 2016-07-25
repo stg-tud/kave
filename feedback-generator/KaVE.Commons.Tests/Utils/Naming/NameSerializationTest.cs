@@ -16,8 +16,12 @@
 
 using System;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.Impl.v0.Others;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Naming;
 using NUnit.Framework;
@@ -61,31 +65,32 @@ namespace KaVE.Commons.Tests.Utils.Naming
             }
         }
 
-        [ // code elements
-            TestCase("A -> ?", "CSharp.AliasName", "0Alias", typeof(TypeName)),
-            TestCase("[R,P] [D,P]._e", "CSharp.EventName", "0E", typeof(EventName)),
-            TestCase("", "CSharp.FieldName", "0F", typeof(TypeName)),
-            TestCase("", "CSharp.LambdaName", "0L", typeof(TypeName)),
-            TestCase("", "CSharp.LocalVariableName", "0LocalVar", typeof(TypeName)),
-            TestCase("", "CSharp.MethodName", "0M", typeof(TypeName)),
-            TestCase("", "CSharp.ParameterName", "0Param", typeof(TypeName)),
-            TestCase("", "CSharp.PropertyName", "0P", typeof(TypeName)),
-            // ide components
-            TestCase("", "CSharp.CommandBarControlName", "0Ctrl", typeof(TypeName)),
-            TestCase("", "CSharp.CommandName", "0Cmd", typeof(TypeName)),
-            TestCase("", "CSharp.DocumentName", "0Doc", typeof(TypeName)),
-            TestCase("", "CSharp.ProjectItemName", "0Itm", typeof(TypeName)),
-            TestCase("", "CSharp.ProjectName", "0Prj", typeof(TypeName)),
-            TestCase("", "CSharp.SolutionName", "0Sln", typeof(TypeName)),
-            TestCase("", "CSharp.WindowName", "0Win", typeof(TypeName)),
-            // other
-            TestCase("", "CSharp.ReSharperLiveTemplateName", "0RSTpl", typeof(TypeName)),
-            // types/organization
-            TestCase("", "CSharp.AssemblyName", "0A", typeof(TypeName)),
-            TestCase("", "CSharp.AssemblyVersion", "0V", typeof(TypeName)),
-            TestCase("", "CSharp.NamespaceName", "0N", typeof(TypeName)),
-            // types
-            TestCase("T,P", "CSharp.TypeName", "0T", typeof(TypeName))]
+        [TestCase("xyz", "CSharp.Name", "0General", typeof(GeneralName)),
+        // code elements
+         TestCase("A -> ?", "CSharp.AliasName", "0Alias", typeof(AliasName)),
+         TestCase("[VT,P] [DT,P]._e", "CSharp.EventName", "0E", typeof(EventName)),
+         TestCase("[VT,P] [DT,P]._f", "CSharp.FieldName", "0F", typeof(FieldName)),
+         TestCase("[RT,P] ()", "CSharp.LambdaName", "0L", typeof(LambdaName)),
+         TestCase("[T,P] v", "CSharp.LocalVariableName", "0LocalVar", typeof(LocalVariableName)),
+         TestCase("[RT,P] [DT,P].M()", "CSharp.MethodName", "0M", typeof(MethodName)),
+         TestCase("[PT,P] p", "CSharp.ParameterName", "0Param", typeof(ParameterName)),
+         TestCase("[VT,P] [DT,P].P()", "CSharp.PropertyName", "0P", typeof(PropertyName)),
+        // ide components
+         TestCase("a|b|c", "VisualStudio.CommandBarControlName", "0Ctrl", typeof(CommandBarControlName)),
+         TestCase("a:1:abc", "VisualStudio.CommandName", "0Cmd", typeof(CommandName)),
+         TestCase("CSharp C:\\File.cs", "VisualStudio.DocumentName", "0Doc", typeof(DocumentName)),
+         TestCase("File C:\\Project\\File.txt", "VisualStudio.ProjectItemName", "0Itm", typeof(ProjectItemName)),
+         TestCase("ProjectType C:\\Project.csproj", "VisualStudio.ProjectName", "0Prj", typeof(ProjectName)),
+         TestCase("C:\\File\\To\\S.sln", "VisualStudio.SolutionName", "0Sln", typeof(SolutionName)),
+         TestCase("someType someCaption", "VisualStudio.WindowName", "0Win", typeof(WindowName)),
+        // other
+         TestCase("someType:someCaption", "ReSharper.LiveTemplateName", "0RSTpl", typeof(ReSharperLiveTemplateName)),
+        // types/organization
+         TestCase("A, 1.2.3.4", "CSharp.AssemblyName", "0A", typeof(AssemblyName)),
+         TestCase("1.2.3.4", "CSharp.AssemblyVersion", "0V", typeof(AssemblyVersion)),
+         TestCase("a.b.c", "CSharp.NamespaceName", "0N", typeof(NamespaceName)),
+        // types
+         TestCase("T,P", "CSharp.TypeName", "0T", typeof(TypeName))]
         public void ShouldDeserializeV0Names(string id, string oldPrefix, string newPrefix, Type expectedType)
         {
             foreach (var prefix in new[] {oldPrefix, newPrefix})

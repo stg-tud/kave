@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.Others;
@@ -27,6 +28,8 @@ namespace KaVE.Commons.Utils.Naming
     {
         protected override void RegisterTypes()
         {
+            Register(typeof(GeneralName), General, "0General", "CSharp.Name");
+
             // code elements
             Register(typeof(AliasName), Alias, "0Alias", "CSharp.AliasName");
             Register(typeof(EventName), Event, "0E", "CSharp.EventName");
@@ -38,20 +41,16 @@ namespace KaVE.Commons.Utils.Naming
             Register(typeof(PropertyName), Property, "0P", "CSharp.PropertyName");
 
             // ide components
-            Register(typeof(CommandBarControlName), CommandBarControl, "0Ctrl", "CSharp.CommandBarControlName");
-            Register(typeof(CommandName), Command, "0Cmd", "CSharp.CommandName");
-            Register(typeof(DocumentName), Document, "0Doc", "CSharp.DocumentName");
-            Register(typeof(ProjectItemName), ProjectItem, "0Itm", "CSharp.ProjectItemName");
-            Register(typeof(ProjectName), Project, "0Prj", "CSharp.ProjectName");
-            Register(typeof(SolutionName), Solution, "0Sln", "CSharp.SolutionName");
-            Register(typeof(WindowName), Window, "0Win", "CSharp.WindowName");
+            Register(typeof(CommandBarControlName), CommandBarControl, "0Ctrl", "VisualStudio.CommandBarControlName");
+            Register(typeof(CommandName), Command, "0Cmd", "VisualStudio.CommandName");
+            Register(typeof(DocumentName), Document, "0Doc", "VisualStudio.DocumentName");
+            Register(typeof(ProjectItemName), ProjectItem, "0Itm", "VisualStudio.ProjectItemName");
+            Register(typeof(ProjectName), Project, "0Prj", "VisualStudio.ProjectName");
+            Register(typeof(SolutionName), Solution, "0Sln", "VisualStudio.SolutionName");
+            Register(typeof(WindowName), Window, "0Win", "VisualStudio.WindowName");
 
             // others
-            Register(
-                typeof(ReSharperLiveTemplateName),
-                ReSharperLiveTemplate,
-                "0RSTpl",
-                "CSharp.ReSharperLiveTemplateName");
+            Register(typeof(ReSharperLiveTemplateName), ReSharperLiveTemplate, "0RSTpl", "ReSharper.LiveTemplateName");
 
             // types/organization
             Register(typeof(AssemblyName), Assembly, "0A", "CSharp.AssemblyName");
@@ -67,114 +66,119 @@ namespace KaVE.Commons.Utils.Naming
             Register(typeof(TypeName), Type, "0T", "CSharp.TypeName");
         }
 
+        private static IName General(string id)
+        {
+            return new GeneralName(id);
+        }
+
         #region code elements
 
-        private IName Alias(string arg)
+        private static IName Alias(string id)
         {
-            throw new System.NotImplementedException();
+            return new AliasName(id);
         }
 
-        private IName Event(string arg)
+        private static IName Event(string id)
         {
-            return new EventName(arg);
+            return new EventName(id);
         }
 
-        private IName Field(string arg)
+        private static IName Field(string id)
         {
-            throw new System.NotImplementedException();
+            return new FieldName(id);
         }
 
-        private IName Lambda(string arg)
+        private static IName Lambda(string id)
         {
-            throw new System.NotImplementedException();
+            return new LambdaName(id);
         }
 
-        private IName LocalVar(string arg)
+        private static IName LocalVar(string id)
         {
-            throw new System.NotImplementedException();
+            return new LocalVariableName(id);
         }
 
-        private IName Method(string arg)
+        private static IName Method(string id)
         {
-            throw new System.NotImplementedException();
+            return new MethodName(id);
         }
 
-        private IName Parameter(string arg)
+        private static IName Parameter(string id)
         {
-            throw new System.NotImplementedException();
+            return new ParameterName(id);
         }
 
-        private IName Property(string arg)
+        private static IName Property(string id)
         {
-            throw new System.NotImplementedException();
+            return new PropertyName(id);
         }
 
         #endregion
 
         #region ide components & other
 
-        private IName CommandBarControl(string arg)
+        private static IName CommandBarControl(string id)
         {
-            throw new System.NotImplementedException();
+            return new CommandBarControlName(id);
         }
 
-        private IName Command(string arg)
+        private static IName Command(string id)
         {
-            throw new System.NotImplementedException();
+            return new CommandName(id);
         }
 
-        private IName Document(string arg)
+        private static IName Document(string id)
         {
-            throw new System.NotImplementedException();
+            return new DocumentName(id);
         }
 
-        private IName ProjectItem(string arg)
+        private static IName ProjectItem(string id)
         {
-            throw new System.NotImplementedException();
+            return new ProjectItemName(id);
         }
 
-        private IName Project(string arg)
+        private static IName Project(string id)
         {
-            throw new System.NotImplementedException();
+            return new ProjectName(id);
         }
 
-        private IName Solution(string arg)
+        private static IName Solution(string id)
         {
-            throw new System.NotImplementedException();
+            return new SolutionName(id);
         }
 
-        private IName Window(string arg)
+        private static IName Window(string id)
         {
-            throw new System.NotImplementedException();
+            return new WindowName(id);
         }
 
-        private IName ReSharperLiveTemplate(string arg)
+        private static IName ReSharperLiveTemplate(string id)
         {
-            throw new System.NotImplementedException();
+            return new ReSharperLiveTemplateName(id);
         }
 
         #endregion
 
         #region types
 
-        private static IName Assembly(string input)
+        private static IName Assembly(string id)
         {
-            return TypeUtils.CreateTypeName(input);
+            return new AssemblyName(id);
         }
 
-        private static IName AssemblyVersion(string input)
+        private static IName AssemblyVersion(string id)
         {
-            return TypeUtils.CreateTypeName(input);
+            return new AssemblyVersion(id);
         }
 
-        private static IName Namespace(string input)
+        private static IName Namespace(string id)
         {
-            return TypeUtils.CreateTypeName(input);
+            return new NamespaceName(id);
         }
 
-        private static IName Type(string input)
+        private static IName Type(string id)
         {
-            return TypeUtils.CreateTypeName(input);
+            return TypeUtils.CreateTypeName(id);
         }
 
         #endregion
