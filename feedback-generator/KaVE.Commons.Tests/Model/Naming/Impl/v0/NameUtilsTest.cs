@@ -128,7 +128,18 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
          TestCase("N.C1`1[[T1]]+C2[][[T2]],P", "N.C1`1[[T1]]+C2`1[][[T2]],P"),
          TestCase("N.C1`1[[T1]]+C2[,][[T2]],P", "N.C1`1[[T1]]+C2`1[,][[T2]],P"),
          TestCase("N.C1`1[[T1]]+C2[,,][[T2]],P", "N.C1`1[[T1]]+C2`1[,,][[T2]],P")]
-        public void MissingGenericTicksAreAdded(string legacy, string corrected)
+        public void FixesMissingGenericTicks(string legacy, string corrected)
+        {
+            var actual = legacy.FixLegacyFormats();
+            var expected = corrected;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase("n.T1`1+T2`1[[G1],[G2]], P", "n.T1`1[[G1]]+T2`1[[G2]], P"),
+         TestCase("n.T1`1+T2[[G1]], P", "n.T1`1[[G1]]+T2, P"),
+         TestCase("n.T1`1+T2`2+T3`1[[G1 -> P1,P],[G2 -> P2,P],[G3 -> P3, P],[G4 -> P4, P]], P",
+             "n.T1`1[[G1 -> P1,P]]+T2`2[[G2 -> P2,P],[G3 -> P3, P]]+T3`1[[G4 -> P4, P]], P")]
+        public void FixesLegacyTypeParameterLists(string legacy, string corrected)
         {
             var actual = legacy.FixLegacyFormats();
             var expected = corrected;

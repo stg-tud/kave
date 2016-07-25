@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
@@ -31,9 +32,80 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
     {
         public static string FixLegacyFormats(this string id)
         {
-            return id.FixLegacyDelegateNames().FixMissingGenericTicks();
+            return id.FixLegacyTypeParameterLists().FixLegacyDelegateNames().FixMissingGenericTicks();
         }
 
+        private static readonly Regex IsLegacyTypeParameterList = new Regex("([^+.]+`([0-9]+))\\+");
+        private static readonly Regex AllLegacyTypeParameterLists = new Regex("([^+.]+`([0-9]+))");
+
+        // initially, we used markers on the types (e.g., T`1) and only had a single typeParameterList at the end
+        private static string FixLegacyTypeParameterLists(this string id)
+        {
+            if (!IsLegacyTypeParameterList.IsMatch(id))
+            {
+                return id;
+            }
+            var matches = AllLegacyTypeParameterLists.Match(id);
+
+            var endParams = id.LastIndexOf(']');
+            Asserts.Not(endParams == -1);
+            var startParams = id.FindCorrespondingOpenBracket(endParams);
+
+            var parameters = id.ParseParams(startParams, endParams);
+            var before = id.Substring(0, startParams);
+            var after = id.Substring(endParams + 1, id.Length - endParams - 1);
+
+            var alreadyTaken = 0;
+            for (; matches.Success; matches = matches.NextMatch())
+            {
+                var hit = matches.Groups[1].ToString();
+                var tick = matches.Groups[2].ToString();
+                var tickNum = int.Parse(tick);
+
+                var sb = new StringBuilder().Append('[');
+                var takeUntil = alreadyTaken + tickNum;
+                var shouldAddComma = false;
+                for (var i = alreadyTaken; i < takeUntil && i < parameters.Count; i++)
+                {
+                    if (shouldAddComma)
+                    {
+                        sb.Append(',');
+                    }
+                    shouldAddComma = true;
+                    sb.Append('[').Append(parameters[i]).Append(']');
+                    alreadyTaken++;
+                }
+                var paramList = sb.Append(']').ToString();
+
+                var replacement = "{0}{1}".FormatEx(hit, paramList);
+                before = before.Replace(hit, replacement);
+            }
+
+            return before + after;
+        }
+
+        private static IList<string> ParseParams(this string id, int open, int close)
+        {
+            var parameters = Lists.NewList<string>();
+            var cur = open + 1; // skip outer bracket
+            while (cur != -1 && cur < close)
+            {
+                var openParam = id.FindNext(cur, '[', ']');
+                if (id[openParam] == ']')
+                {
+                    cur = close;
+                }
+                else
+                {
+                    var closeParam = id.FindCorrespondingCloseBracket(openParam);
+                    openParam++; // skip bracket
+                    var paramId = id.Substring(openParam, closeParam - openParam);
+                    parameters.Add(paramId);
+                    cur = closeParam + 1;
+                }
+            }
+            return parameters;
+        }
 
         private static readonly Regex LegacyDelegateMatcher = new Regex("(d:[^\\[])");
 
