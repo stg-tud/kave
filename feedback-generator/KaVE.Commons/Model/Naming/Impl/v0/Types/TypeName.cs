@@ -134,51 +134,44 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                if (!IsNestedType)
+                var plus = FindPlus(Identifier);
+                if (plus == -1)
                 {
                     return null;
                 }
 
-                var fullName = FullName;
-                if (HasTypeParameters)
-                {
-                    fullName = fullName.TakeUntil('[', ',');
-                }
-                var endOfDeclaringTypeName = fullName.LastIndexOf('+');
-                if (endOfDeclaringTypeName == -1)
-                {
-                    return new TypeName();
-                }
+                var start = Identifier.StartsWith(PrefixEnum)
+                    ? PrefixEnum.Length
+                    : Identifier.StartsWith(PrefixInterface)
+                        ? PrefixInterface.Length
+                        : Identifier.StartsWith(PrefixStruct) ? PrefixStruct.Length : 0;
 
-                var declaringTypeName = fullName.Substring(0, endOfDeclaringTypeName);
-                if (declaringTypeName.IndexOf('`') > -1 && HasTypeParameters)
-                {
-                    var startIndex = 0;
-                    var numberOfParameters = 0;
-                    while ((startIndex = declaringTypeName.IndexOf('`', startIndex) + 1) > 0)
-                    {
-                        var endIndex = declaringTypeName.IndexOf('+', startIndex);
-                        if (endIndex > -1)
-                        {
-                            numberOfParameters +=
-                                int.Parse(declaringTypeName.Substring(startIndex, endIndex - startIndex));
-                        }
-                        else
-                        {
-                            numberOfParameters += int.Parse(declaringTypeName.Substring(startIndex));
-                        }
-                    }
-                    var outerTypeParameters = TypeParameters.Take(numberOfParameters).ToList();
-                    declaringTypeName += "[[" + String.Join("],[", outerTypeParameters.Select(t => t.Identifier)) +
-                                         "]]";
-                }
-                return TypeUtils.CreateTypeName(declaringTypeName + ", " + Assembly);
+                var declTypeId = Identifier.Substring(start, plus - start);
+
+                return new TypeName("{0}, {1}".FormatEx(declTypeId, Assembly.Identifier));
             }
         }
 
         public override bool IsNestedType
         {
-            get { return RemoveTypeParameterListButKeepTicks(FullName).Contains("+"); }
+            get { return FindPlus(Identifier) != -1; }
+        }
+
+        private int FindPlus(string id)
+        {
+            var comma = id.Length - Assembly.Identifier.Length;
+            var plus = id.FindPrevious(comma, '+', ']');
+            if (plus == -1)
+            {
+                return -1;
+            }
+            // is generic
+            if (id[plus] == ']')
+            {
+                var closeGeneric = id.FindCorrespondingOpenBracket(plus);
+                plus = id.FindPrevious(closeGeneric, '+');
+            }
+            return plus;
         }
     }
 }
