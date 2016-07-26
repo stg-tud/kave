@@ -127,7 +127,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
          TestCase("n.C1`1[[T1]]+C2[[T2] , [T3] ]+C3[[T3]], P", "n.C1`1[[T1]]+C2`2[[T2] , [T3] ]+C3`1[[T3]], P"),
          TestCase("N.C1`1[[T1]]+C2[][[T2]],P", "N.C1`1[[T1]]+C2`1[][[T2]],P"),
          TestCase("N.C1`1[[T1]]+C2[,][[T2]],P", "N.C1`1[[T1]]+C2`1[,][[T2]],P"),
-         TestCase("N.C1`1[[T1]]+C2[,,][[T2]],P", "N.C1`1[[T1]]+C2`1[,,][[T2]],P")]
+         TestCase("N.C1`1[[T1]]+C2[,,][[T2]],P", "N.C1`1[[T1]]+C2`1[,,][[T2]],P"),
+        // artifiacial example to make sure that a '.' is used in the regexp and not a wildcard
+         TestCase("!C[[T0]], P", "!C[[T0]], P"),
+         TestCase("n.C[[T0]], P", "n.C`1[[T0]], P"),
+         TestCase("C[[T0]], P", "C`1[[T0]], P")]
         public void FixesMissingGenericTicks(string legacy, string corrected)
         {
             var actual = legacy.FixLegacyFormats();

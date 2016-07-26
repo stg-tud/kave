@@ -157,7 +157,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return "{0}[{1}] [{2}].()".FormatEx(BaseTypeName.PrefixDelegate, new TypeName().Identifier, substring);
         }
 
-        private static readonly Regex MissingTicks = new Regex("\\+([a-zA-Z0-9]+)(\\[,*\\])?(\\[\\[.*)");
+        private static readonly Regex MissingTicks = new Regex("(?:\\+|^|\\.)([a-zA-Z0-9_]+)(\\[,*\\])?(\\[\\[.*)");
 
         private static string FixMissingGenericTicks(this string id)
         {
@@ -167,9 +167,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                 return id;
             }
 
-            var type = string.Format("+{0}{1}[[", match.Groups[1], match.Groups[2]);
+            var type = string.Format("{0}{1}[[", match.Groups[1], match.Groups[2]);
             var numTicks = FindNumTicksInRest(match.Groups[3].ToString());
-            var newType = string.Format("+{0}`{1}{2}[[", match.Groups[1], numTicks, match.Groups[2]);
+            var newType = string.Format("{0}`{1}{2}[[", match.Groups[1], numTicks, match.Groups[2]);
             var newId = id.Replace(type, newType);
             return newId.FixMissingGenericTicks();
         }
