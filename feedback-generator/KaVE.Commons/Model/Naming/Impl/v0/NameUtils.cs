@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
@@ -32,7 +33,29 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
     {
         public static string FixLegacyFormats(this string id)
         {
-            return id.FixLegacyTypeParameterLists().FixLegacyDelegateNames().FixMissingGenericTicks();
+            return id.FixLegacyTypeParameterLists().FixLegacyDelegateNames().FixMissingGenericTicks().FixJaggedArrays();
+        }
+
+        private static readonly Regex JaggedArrays = new Regex("(\\[,*\\](\\[,*\\])+)");
+
+        // initially, we captured jagged arrays, but simplified all of them to [,,] later
+        private static string FixJaggedArrays(this string id)
+        {
+            var matches = JaggedArrays.Match(id);
+            if (!matches.Success)
+            {
+                return id;
+            }
+
+            for (; matches.Success; matches = matches.NextMatch())
+            {
+                var arr = matches.Groups[1].ToString();
+                var rank = arr.Count(c => c.Equals('[') || c.Equals(','));
+                var newArr = '[' + new string(',', rank - 1) + ']';
+                id = id.Replace(arr, newArr);
+            }
+
+            return id;
         }
 
         private static readonly Regex IsLegacyTypeParameterList = new Regex("([^+.]+`([0-9]+))\\+");

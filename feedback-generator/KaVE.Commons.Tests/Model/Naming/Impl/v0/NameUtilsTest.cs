@@ -146,9 +146,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.AreEqual(expected, actual);
         }
 
-        [Ignore, TestCase("A[], B", "A[], B"),
+        [TestCase("A[], B", "A[], B"),
          TestCase("A[][], B", "A[,], B"),
-         TestCase("A[][][], B", "A[,], B")]
+         TestCase("A[][][], B", "A[,,], B"),
+         TestCase("A[,][,], B", "A[,,,], B"),
+         TestCase("A[,][][,][,], B", "A[,,,,,,], B")]
         public void FixesLegacyArrayFormat(string legacy, string corrected)
         {
             var actual = legacy.FixLegacyFormats();
