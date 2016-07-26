@@ -139,11 +139,29 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.AreEqual(expected, actual);
         }
 
+
         [TestCase("n.T1`1+T2`1[[G1],[G2]], P", "n.T1`1[[G1]]+T2`1[[G2]], P"),
          TestCase("n.T1`1+T2[[G1]], P", "n.T1`1[[G1]]+T2, P"),
          TestCase("n.T1`1+T2`2+T3`1[[G1 -> P1,P],[G2 -> P2,P],[G3 -> P3, P],[G4 -> P4, P]], P",
              "n.T1`1[[G1 -> P1,P]]+T2`2[[G2 -> P2,P],[G3 -> P3, P]]+T3`1[[G4 -> P4, P]], P")]
         public void FixesLegacyTypeParameterLists(string legacy, string corrected)
+        {
+            var actual = legacy.FixLegacyFormats();
+            var expected = corrected;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase("T`1,P", "T`1,P"), // in general, invalid names are recognized and ignored
+         TestCase("T`1!],P", "T`1!],P"), // artificial (invalid) example to test robustness
+         TestCase("System.Collections.Generic.Dictionary`2+KeyCollection, mscorlib, 4.0.0.0",
+             "System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+KeyCollection, mscorlib, 4.0.0.0"),
+        // should not be hit/changed...
+         TestCase("{661F-8B...} SomeClass`1.cs", "{661F-8B...} SomeClass`1.cs"),
+         TestCase("vsWindowTypeDocument SomeClass`2.cs", "vsWindowTypeDocument SomeClass`2.cs"),
+         TestCase("CSharp SomeClass`2.cs", "CSharp SomeClass`2.cs")
+        ]
+        public void FixesLegacyTypeParameterLists_SomeInvalidsAreHardcodedRestGetsIgnored(string legacy,
+            string corrected)
         {
             var actual = legacy.FixLegacyFormats();
             var expected = corrected;

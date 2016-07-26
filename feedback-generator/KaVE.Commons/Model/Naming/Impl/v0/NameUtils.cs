@@ -58,22 +58,62 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return id;
         }
 
-        private static readonly Regex IsLegacyTypeParameterList = new Regex("([^+.]+`([0-9]+))\\+");
+        private static readonly Dictionary<string, string> ManualTypeParameterFixes = new Dictionary<string, string>
+        {
+            {
+                "System.Collections.Generic.Dictionary`2+KeyCollection, mscorlib, 4.0.0.0",
+                "System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+KeyCollection, mscorlib, 4.0.0.0"
+            },
+            {
+                "System.Collections.ObjectModel.ReadOnlyDictionary`2+KeyCollection, mscorlib, 4.0.0.0",
+                "System.Collections.ObjectModel.ReadOnlyDictionary`2[[TKey],[TValue]]+KeyCollection, mscorlib, 4.0.0.0"
+            },
+            {
+                "System.Collections.ObjectModel.ReadOnlyDictionary`2+ValueCollection, mscorlib, 4.0.0.0",
+                "System.Collections.ObjectModel.ReadOnlyDictionary`2[[TKey],[TValue]]+ValueCollection, mscorlib, 4.0.0.0"
+            },
+            {
+                "s:System.Collections.Generic.Dictionary`2+Enumerator, mscorlib, 4.0.0.0",
+                "s:System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+Enumerator, mscorlib, 4.0.0.0"
+            },
+            {
+                "s:System.Collections.Immutable.ImmutableArray`1+Enumerator, System.Collections.Immutable, 1.1.37.0",
+                "s:System.Collections.Immutable.ImmutableArray`1[[T]]+Enumerator, System.Collections.Immutable, 1.1.37.0"
+            }
+        };
+
+        private static readonly Regex IsLegacyTypeParameterList = new Regex("([^+.]+`([0-9]+))[^\\[]");
         private static readonly Regex AllLegacyTypeParameterLists = new Regex("([^+.]+`([0-9]+))");
 
         // initially, we used markers on the types (e.g., T`1) and only had a single typeParameterList at the end
         private static string FixLegacyTypeParameterLists(this string id)
         {
-            if (!IsLegacyTypeParameterList.IsMatch(id))
+            if (id.StartsWith("vsWindowTypeDocument ") || id.StartsWith("CSharp ") || id.EndsWith(".cs") ||
+                !IsLegacyTypeParameterList.IsMatch(id))
             {
                 return id;
             }
+
             var matches = AllLegacyTypeParameterLists.Match(id);
 
             var endParams = id.LastIndexOf(']');
-            Asserts.Not(endParams == -1);
+            if (endParams == -1)
+            {
+                if (!ManualTypeParameterFixes.Keys.Contains(id))
+                {
+                    Console.WriteLine("has tick, but no type parameters: '{0}'", id);
+                }
+                foreach (var invalidId in ManualTypeParameterFixes.Keys)
+                {
+                    id = id.Replace(invalidId, ManualTypeParameterFixes[invalidId]);
+                }
+                return id;
+            }
             var startParams = id.FindCorrespondingOpenBracket(endParams);
-
+            if (startParams == -1)
+            {
+                return id;
+            }
             var parameters = id.ParseParams(startParams, endParams);
             var before = id.Substring(0, startParams);
             var after = id.Substring(endParams + 1, id.Length - endParams - 1);
