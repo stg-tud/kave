@@ -56,6 +56,9 @@ namespace KaVE.Commons.Tests.Utils.Naming
          TestCase("T[],P", "CSharp.TypeName", "0T", typeof(ArrayTypeName)),
          TestCase("T", "CSharp.TypeName", "0T", typeof(TypeParameterName)),
          TestCase("T -> T,P", "CSharp.TypeName", "0T", typeof(TypeParameterName)),
+         TestCase("e:n.E,P", "CSharp.EnumTypeName", "0T", typeof(TypeName)),
+         TestCase("i:n.I,P", "CSharp.InterfaceTypeName", "0T", typeof(TypeName)),
+         TestCase("s:n.S,P", "CSharp.StructTypeName", "0T", typeof(TypeName)),
          TestCase("d:[?] [T,P].()", "CSharp.TypeName", "0T", typeof(DelegateTypeName)),
          TestCase("d:[?] [T,P].()", "CSharp.DelegateTypeName", "0T", typeof(DelegateTypeName))]
         public void ShouldDeserializeV0Types(string id, string oldPrefix, string newPrefix, Type expectedType)

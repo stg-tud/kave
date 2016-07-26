@@ -69,7 +69,10 @@ namespace KaVE.Commons.Utils.Naming
                 "0T",
                 "CSharp.TypeName",
                 "CSharp.UnknownTypeName",
-                "CSharp.DelegateTypeName");
+                "CSharp.DelegateTypeName",
+                "CSharp.EnumTypeName",
+                "CSharp.InterfaceTypeName",
+                "CSharp.StructTypeName");
         }
 
         protected override string FixLegacyIdentifiers(string id)
