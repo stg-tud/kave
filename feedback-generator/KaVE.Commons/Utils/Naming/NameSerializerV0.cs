@@ -72,6 +72,11 @@ namespace KaVE.Commons.Utils.Naming
                 "CSharp.DelegateTypeName");
         }
 
+        protected override string FixLegacyIdentifiers(string id)
+        {
+            return id.FixLegacyFormats();
+        }
+
         private static IName General(string id)
         {
             return new GeneralName(id);

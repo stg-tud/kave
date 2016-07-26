@@ -67,7 +67,13 @@ namespace KaVE.Commons.Utils.Naming
         public IName Deserialize(string prefix, string id)
         {
             Asserts.That(_idToFactory.ContainsKey(prefix));
-            return _idToFactory[prefix](id);
+            return _idToFactory[prefix](FixLegacyIdentifiers(id));
+        }
+
+        // this method can be overridden in serializers to fix broken ids
+        protected virtual string FixLegacyIdentifiers(string id)
+        {
+            return id;
         }
 
         public bool CanSerialize(IName name)

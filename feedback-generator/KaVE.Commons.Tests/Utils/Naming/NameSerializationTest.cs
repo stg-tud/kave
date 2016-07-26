@@ -22,6 +22,7 @@ using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
 using KaVE.Commons.Model.Naming.Impl.v0.Others;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Naming;
 using NUnit.Framework;
@@ -41,6 +42,14 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldFailForUnknownTypes()
         {
             new TestName().Serialize();
+        }
+
+        [Test]
+        public void ShouldApplyV0NameFixes()
+        {
+            var actual = "0T:d:T,P".Deserialize<IDelegateTypeName>();
+            var expected = new DelegateTypeName("d:[?] [T,P].()");
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase("T,P", "CSharp.TypeName", "0T", typeof(TypeName)),
