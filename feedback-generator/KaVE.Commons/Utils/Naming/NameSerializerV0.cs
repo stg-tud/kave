@@ -69,6 +69,7 @@ namespace KaVE.Commons.Utils.Naming
                 "0T",
                 "CSharp.TypeName",
                 "CSharp.UnknownTypeName",
+                "CSharp.ArrayTypeName",
                 "CSharp.DelegateTypeName",
                 "CSharp.EnumTypeName",
                 "CSharp.InterfaceTypeName",
