@@ -17,6 +17,7 @@
 using System;
 using System.Globalization;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils
@@ -87,6 +88,18 @@ namespace KaVE.Commons.Tests.Utils
             Assert.AreEqual(-1, actual);
         }
 
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindNext_IndexTooLow()
+        {
+            "abc".FindNext(-1, 'a');
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindNext_IndexTooHigh()
+        {
+            "abc".FindNext(3, 'a');
+        }
+
         [Test]
         public void FindPrevious()
         {
@@ -113,6 +126,18 @@ namespace KaVE.Commons.Tests.Utils
         {
             var actual = "abcabcabc".FindPrevious(5, 'x');
             Assert.AreEqual(-1, actual);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindPrevious_IndexTooLow()
+        {
+            "abc".FindPrevious(-1, 'a');
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindPrevious_IndexTooHigh()
+        {
+            "abc".FindPrevious(3, 'a');
         }
 
         [Test]

@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils
@@ -64,6 +65,7 @@ namespace KaVE.Commons.Utils
 
         public static int FindNext(this string str, int currentIndex, params char[] characters)
         {
+            AssertIndexBoundaries(str, currentIndex);
             for (var i = currentIndex; i < str.Length; i++)
             {
                 var c = str[i];
@@ -75,8 +77,17 @@ namespace KaVE.Commons.Utils
             return -1;
         }
 
+        private static void AssertIndexBoundaries(string str, int currentIndex)
+        {
+            if (currentIndex < 0 || currentIndex >= str.Length)
+            {
+                Asserts.Fail("index '{0}' is out of bounds for string '{1}'", currentIndex, str);
+            }
+        }
+
         public static int FindPrevious(this string str, int currentIndex, params char[] characters)
         {
+            AssertIndexBoundaries(str, currentIndex);
             for (var i = currentIndex; i >= 0; i--)
             {
                 var c = str[i];
