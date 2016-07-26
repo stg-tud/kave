@@ -157,5 +157,15 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             var expected = corrected;
             Assert.AreEqual(expected, actual);
         }
+
+        [Ignore, TestCase("[R,P] [D,P]..ctor()", "[System.Void, mscorlib, 4.0.0.0] [D,P]..ctor()"),
+         TestCase("[R,P] [D,P]..ctor()", "[System.Void, mscorlib, 4.0.0.0] [D,P]..cctor()"),
+         TestCase("[R,P] [D,P].M()", "[R,P] [D,P].M()")]
+        public void FixesCtorsWithNonVoidReturn(string legacy, string corrected)
+        {
+            var actual = legacy.FixLegacyFormats();
+            var expected = corrected;
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
