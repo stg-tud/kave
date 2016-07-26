@@ -189,5 +189,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             var b = sut.TypeParameters;
             Assert.AreSame(a, b);
         }
+
+        [TestCase("T[[T0]],P"), TestCase("TT0],P")]
+        public void ShouldNotCrashForInvalidNames(string invalidId)
+        {
+            Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(invalidId));
+            Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(invalidId));
+            Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(invalidId));
+        }
     }
 }

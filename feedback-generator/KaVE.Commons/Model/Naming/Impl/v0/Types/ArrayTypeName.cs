@@ -152,7 +152,15 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
             // generic
             var openGeneric = id.FindCorrespondingOpenBracket(closeBracket);
+            if (openGeneric == -1)
+            {
+                return -1;
+            }
             var tick = id.FindPrevious(openGeneric, '`');
+            if (tick == -1)
+            {
+                return -1;
+            }
             var openArr = id.FindNext(tick, '[');
             if (openArr == openGeneric)
             {
