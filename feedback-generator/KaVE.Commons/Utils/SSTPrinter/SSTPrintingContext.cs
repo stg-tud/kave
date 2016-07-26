@@ -182,6 +182,10 @@ namespace KaVE.Commons.Utils.SSTPrinter
         /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext TypeNameOnly(ITypeName typeName)
         {
+            if (typeName.IsTypeParameter)
+            {
+                return Text(typeName.AsTypeParameterName.TypeParameterShortName);
+            }
             var translatedTypeName = BuiltInTypeAliases.GetTypeAliasFromFullTypeName(typeName.FullName);
             return Text(translatedTypeName == typeName.FullName ? typeName.Name : translatedTypeName);
         }
@@ -198,6 +202,21 @@ namespace KaVE.Commons.Utils.SSTPrinter
         /// <returns>The context after appending.</returns>
         public SSTPrintingContext Type(ITypeName typeName)
         {
+            if (typeName.IsDelegateType)
+            {
+                return Type(typeName.AsDelegateTypeName.DelegateType);
+            }
+
+            if (typeName.IsTypeParameter)
+            {
+                var tpn = typeName.AsTypeParameterName;
+                if (tpn.IsBound)
+                {
+                    return Type(tpn.TypeParameterType);
+                }
+                return TypeNameOnly(tpn);
+            }
+
             _seenNamespaces.Add(typeName.Namespace);
 
             TypeNameOnly(typeName);
@@ -216,9 +235,9 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
             foreach (var p in typeParameters)
             {
-                if (p.IsUnknown || p.TypeParameterType.IsUnknown)
+                if (!p.IsBound)
                 {
-                    TypeParameterShortName(Names.UnknownType.Identifier);
+                    TypeParameterShortName(p.TypeParameterShortName);
                 }
                 else
                 {

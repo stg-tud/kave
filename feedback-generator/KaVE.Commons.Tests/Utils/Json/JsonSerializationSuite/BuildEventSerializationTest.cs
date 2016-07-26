@@ -26,7 +26,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var buildEvent = new BuildEvent
+            var e = new BuildEvent
             {
                 Action = "SomeAction",
                 Scope = "SomeScope",
@@ -47,7 +47,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.BuildEvent, KaVE.Commons\",\"Scope\":\"SomeScope\",\"Action\":\"SomeAction\",\"Targets\":[{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.BuildTarget, KaVE.Commons\",\"Project\":\"SomeProject\",\"ProjectConfiguration\":\"SomeConfiguration\",\"Platform\":\"SomePlatform\",\"SolutionConfiguration\":\"SomeOtherConfiguration\",\"StartedAt\":\"2014-01-01T13:45:54\",\"Duration\":\"00:00:01\",\"Successful\":true}],\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(buildEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var editEvent = new EditEvent
+            var e = new EditEvent
             {
                 NumberOfChanges = 42,
                 SizeOfChanges = 1024
@@ -33,7 +33,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.EditEvent, KaVE.Commons\",\"NumberOfChanges\":42,\"SizeOfChanges\":1024,\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(editEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         public void DefaultValues()
         {
             var sut = new DelegateDeclaration();
-            Assert.AreEqual(Names.UnknownType, sut.Name);
+            Assert.AreEqual(Names.UnknownDelegateType, sut.Name);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

@@ -25,14 +25,15 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var commandEvent = new CommandEvent
+            var e = new CommandEvent
             {
                 CommandId = "SomeId"
             };
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.CommandEvent, KaVE.Commons\",\"CommandId\":\"SomeId\",\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(commandEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

@@ -40,6 +40,14 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         }
 
         [Test]
+        public void VerifyFromJson_Legacy_BeforeVersionedNames()
+        {
+            var actual = GetExampleJson_Legacy_BeforeVersionedNames().ParseJsonTo<ITypeShape>();
+            var expected = GetExample();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void VerifyFromJson_Legacy_BeforeRestructuringProjects()
         {
             var actual = GetExampleJson_Legacy_BeforeRestructuringProjects().ParseJsonTo<ITypeShape>();
@@ -87,6 +95,13 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         }
 
         private static string GetExampleJson_Current()
+        {
+            // do not change! keep for checking exception free reading of old formats!
+            return
+                "{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeShape, KaVE.Commons\",\"TypeHierarchy\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"0T:T,P\",\"Extends\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"0T:S,P\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"0T:I,P\",\"Implements\":[]}]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.MethodHierarchy, KaVE.Commons\",\"Element\":\"0M:[T,P] [T,P].M1()\",\"Super\":\"0M:[T,P] [T,P].M2()\",\"First\":\"0M:[T,P] [T,P].M3()\"}]}";
+        }
+
+        private static string GetExampleJson_Legacy_BeforeVersionedNames()
         {
             // do not change! keep for checking exception free reading of old formats!
             return

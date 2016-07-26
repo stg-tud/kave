@@ -260,10 +260,32 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new DelegateDeclaration
             {
-                Name = Names.Type("d:[R, P] [Some.DelegateType`1[[T -> T]], P].([T] p1)").AsDelegateTypeName
+                Name = Names.Type("d:[R, P] [Some.DelegateType`1[[T]], P].([T] p1)").AsDelegateTypeName
+            };
+
+            AssertPrint(sst, "delegate DelegateType<T>(T p1);");
+        }
+
+        [Test]
+        public void DelegateDeclaration_Generic2()
+        {
+            var sst = new DelegateDeclaration
+            {
+                Name = Names.Type("d:[R, P] [Some.DelegateType`1[[T -> ?]], P].([T -> ?] p1)").AsDelegateTypeName
             };
 
             AssertPrint(sst, "delegate DelegateType<?>(? p1);");
+        }
+
+        [Test]
+        public void DelegateDeclaration_Generic3()
+        {
+            var sst = new DelegateDeclaration
+            {
+                Name = Names.Type("d:[R, P] [Some.DelegateType`1[[T -> n.G1,P]], P].([T -> n.G1,P] p1)").AsDelegateTypeName
+            };
+
+            AssertPrint(sst, "delegate DelegateType<G1>(G1 p1);");
         }
 
         [Test]
@@ -557,7 +579,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 
             AssertPrint(
                 sst,
-                "ReturnType M<?>(? p) { }");
+                "ReturnType M<T>(T p) { }");
         }
 
         [Test]

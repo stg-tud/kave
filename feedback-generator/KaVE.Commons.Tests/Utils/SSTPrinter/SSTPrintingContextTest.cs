@@ -49,15 +49,15 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         public void TypeNameFormat_UnknownGenericType()
         {
             // these TypeNames are equivalent
-            AssertTypeFormat("C<?>", "C`1[[T]],P");
+            AssertTypeFormat("C<T>", "C`1[[T]],P");
             AssertTypeFormat("C<?>", "C`1[[T -> ?]],P");
-            AssertTypeFormat("C<?>", "C`1[[T -> T]],P");
+            AssertTypeFormat("C<T>", "C`1[[T -> T]],P");
         }
 
         [Test]
         public void TypeNameFormat_UnknownToUnknownGenericType()
         {
-            AssertTypeFormat("Task<?>", "Task`1[[TResult -> T]], mscorlib, 4.0.0.0");
+            AssertTypeFormat("Task<T>", "Task`1[[TResult -> T]], mscorlib, 4.0.0.0");
         }
 
         [Test]

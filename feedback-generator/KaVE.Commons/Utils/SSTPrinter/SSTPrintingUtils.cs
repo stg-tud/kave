@@ -25,7 +25,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
     {
         public static void FormatAsUsingList(this IEnumerable<INamespaceName> namespaces, SSTPrintingContext context)
         {
-            var filteredNamespaceStrings = namespaces.Where(n => n.IsUnknown)
+            var filteredNamespaceStrings = namespaces.Where(n => !n.IsUnknown)
                                                      .Select(n => n.Identifier.Trim())
                                                      .Where(n => !string.IsNullOrWhiteSpace(n))
                                                      .OrderBy(n => n, StringComparer.OrdinalIgnoreCase);

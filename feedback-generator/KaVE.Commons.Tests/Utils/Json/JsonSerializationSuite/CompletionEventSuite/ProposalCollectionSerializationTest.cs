@@ -15,24 +15,27 @@
  */
 
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
-    [TestFixture]
-    class ProposalCollectionSerializationTest
+    internal class ProposalCollectionSerializationTest
     {
+        private const string SingleProposal = "{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42}";
+
         [Test]
         public void DeserializeCurrent()
         {
-            "[{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42}]".ParseJsonTo<IProposalCollection>();
+            "[{0}]".FormatEx(SingleProposal).ParseJsonTo<ProposalCollection>();
         }
 
         [Test]
         public void DeserializeLegacy()
         {
-            "{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\",\"Proposals\":[{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42}]}".ParseJsonTo<IProposalCollection>();
+            "{{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\",\"Proposals\":[{0}]}}".FormatEx(SingleProposal)
+                .ParseJsonTo<ProposalCollection>();
         }
     }
 }

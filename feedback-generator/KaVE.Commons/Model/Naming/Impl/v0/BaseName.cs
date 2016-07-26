@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
@@ -52,6 +53,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         private bool Equals(IName other)
         {
+            if (this is ITypeName && other is ITypeName)
+            {
+                if (IsUnknown)
+                {
+                    return other.IsUnknown;
+                }
+            }
             return string.Equals(Identifier, other.Identifier);
         }
 

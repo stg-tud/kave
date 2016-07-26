@@ -29,8 +29,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         {
             var solutionEvent = new SolutionEvent
             {
-                ActiveDocument = Names.Document("SomeDocument"),
-                ActiveWindow = Names.Window("SomeWindow"),
+                ActiveDocument = Names.Document("d SomeDocument"),
+                ActiveWindow = Names.Window("w SomeWindow"),
                 Action = SolutionEvent.SolutionAction.RenameSolution,
                 Duration = new TimeSpan(0, 0, 1),
                 IDESessionUUID = "0xDEADBEEF",
@@ -39,7 +39,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
                 TriggeredBy = IDEEvent.Trigger.Click
             };
             const string expected =
-                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.SolutionEvent, KaVE.Commons\",\"Action\":1,\"Target\":\"VisualStudio.SolutionName:SomeSolution\",\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.SolutionEvent, KaVE.Commons\",\"Action\":1,\"Target\":\"0Sln:SomeSolution\",\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"0Win:w SomeWindow\",\"ActiveDocument\":\"0Doc:d SomeDocument\"}";
 
             JsonAssert.SerializesTo(solutionEvent, expected);
         }

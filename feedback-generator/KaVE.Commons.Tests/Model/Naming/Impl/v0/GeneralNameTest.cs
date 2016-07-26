@@ -15,6 +15,8 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
@@ -28,6 +30,33 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.True(new GeneralName().IsUnknown);
             Assert.True(new GeneralName("???").IsUnknown);
             Assert.False(new GeneralName("x").IsUnknown);
+        }
+
+        [Test]
+        public void AllUnknownTypesAreEqual()
+        {
+            var unknowns = new ITypeName[] {new TypeName(), new DelegateTypeName()};
+
+            foreach (var u1 in unknowns)
+            {
+                foreach (var u2 in unknowns)
+                {
+                    Assert.AreEqual(u1, u2);
+                    Assert.AreEqual(u2, u1);
+                }
+            }
+        }
+
+        [Test]
+        public void UnknownTypesAreNotEqualToOtherNames()
+        {
+            var unknowns = new ITypeName[] {new TypeName(), new DelegateTypeName()};
+
+            foreach (var u in unknowns)
+            {
+                Assert.AreNotEqual(u, new GeneralName());
+                Assert.AreNotEqual(new GeneralName(), u);
+            }
         }
 
         [Test, ExpectedException(typeof(AssertException))]

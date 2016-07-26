@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var debuggerEvent = new DebuggerEvent
+            var e = new DebuggerEvent
             {
                 Action = "SomeAction",
                 Mode = DebuggerEvent.DebuggerMode.Design,
@@ -34,7 +34,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.DebuggerEvent, KaVE.Commons\",\"Mode\":0,\"Reason\":\"SomeReason\",\"Action\":\"SomeAction\",\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(debuggerEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

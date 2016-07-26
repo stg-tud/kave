@@ -96,10 +96,10 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
                 "a",
                 new Query
                 {
-                    type = Type("T,P")
+                    type = Type("T")
                 });
             var actual = sut.GetStaticType("a");
-            var expected = Type("T,P");
+            var expected = Type("T");
             Assert.AreEqual(expected, actual);
         }
 
@@ -111,12 +111,12 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
                 "a",
                 new Query
                 {
-                    type = Type("T,P")
+                    type = Type("T")
                 });
             var sut = new ScopedNameResolver(parent);
 
             var actual = sut.GetStaticType("a");
-            var expected = Type("T,P");
+            var expected = Type("T");
             Assert.AreEqual(expected, actual);
         }
 

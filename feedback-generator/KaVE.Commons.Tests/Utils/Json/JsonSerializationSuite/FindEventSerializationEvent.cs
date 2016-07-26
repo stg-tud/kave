@@ -25,14 +25,15 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var findEvent = new FindEvent
+            var e = new FindEvent
             {
                 Cancelled = false
             };
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.FindEvent, KaVE.Commons\",\"Cancelled\":false,\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(findEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

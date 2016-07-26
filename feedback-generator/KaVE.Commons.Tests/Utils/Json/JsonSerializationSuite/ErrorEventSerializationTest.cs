@@ -25,7 +25,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var errorEvent = new ErrorEvent
+            var e = new ErrorEvent
             {
                 Content = "SomeContent",
                 StackTrace = new[] {"line1", "line2"}
@@ -33,7 +33,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.ErrorEvent, KaVE.Commons\",\"Content\":\"SomeContent\",\"StackTrace\":[\"line1\",\"line2\"],\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(errorEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

@@ -28,10 +28,10 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             var windowEvent = new WindowEvent
             {
                 Action = WindowEvent.WindowAction.Activate,
-                Window = Names.Window("SomeProcessedWindow")
+                Window = Names.Window("w SomeProcessedWindow")
             };
             const string expected =
-                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.WindowEvent, KaVE.Commons\",\"Window\":\"VisualStudio.WindowName:SomeProcessedWindow\",\"Action\":1,\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.WindowEvent, KaVE.Commons\",\"Window\":\"0Win:w SomeProcessedWindow\",\"Action\":1,\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(windowEvent, expected);
         }

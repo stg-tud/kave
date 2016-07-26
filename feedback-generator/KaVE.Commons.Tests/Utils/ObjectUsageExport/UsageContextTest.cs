@@ -283,7 +283,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
 
         private static IMethodName Method(ITypeName type, string methodName)
         {
-            return Names.Method(string.Format("[T,P] [{0},P].{1}()", type, methodName));
+            return Names.Method(string.Format("[T,P] [{0}].{1}()", type, methodName));
         }
 
         private static DefinitionSite DefinitionByReturn(string methodName, ITypeName returnType)

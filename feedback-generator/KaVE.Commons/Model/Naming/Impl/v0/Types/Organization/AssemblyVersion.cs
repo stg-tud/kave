@@ -17,6 +17,7 @@
 using System;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
@@ -24,7 +25,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
 {
     public class AssemblyVersion : BaseName, IAssemblyVersion
     {
-        private readonly Regex _isValidVersionRegex = new Regex("^-?\\d\\.-?\\d\\.-?\\d\\.-?\\d$");
+        private readonly Regex _isValidVersionRegex = new Regex("^-?\\d+\\.-?\\d+\\.-?\\d+\\.-?\\d+$");
 
         public AssemblyVersion() : this(UnknownNameIdentifier) {}
 
@@ -32,7 +33,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
         {
             if (!UnknownNameIdentifier.Equals(identifier))
             {
-                Asserts.That(_isValidVersionRegex.IsMatch(identifier));
+                Asserts.That(
+                    _isValidVersionRegex.IsMatch(identifier),
+                    "invalid assembly version '{0}'".FormatEx(identifier));
             }
         }
 

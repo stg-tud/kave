@@ -47,7 +47,8 @@ namespace KaVE.Commons.Tests.Utils.Naming
          TestCase("T[],P", "CSharp.TypeName", "0T", typeof(ArrayTypeName)),
          TestCase("T", "CSharp.TypeName", "0T", typeof(TypeParameterName)),
          TestCase("T -> T,P", "CSharp.TypeName", "0T", typeof(TypeParameterName)),
-         TestCase("d:[?] [T,P].()", "CSharp.TypeName", "0T", typeof(DelegateTypeName))]
+         TestCase("d:[?] [T,P].()", "CSharp.TypeName", "0T", typeof(DelegateTypeName)),
+         TestCase("d:[?] [T,P].()", "CSharp.DelegateTypeName", "0T", typeof(DelegateTypeName))]
         public void ShouldDeserializeV0Types(string id, string oldPrefix, string newPrefix, Type expectedType)
         {
             foreach (var prefix in new[] {oldPrefix, newPrefix})
@@ -63,6 +64,20 @@ namespace KaVE.Commons.Tests.Utils.Naming
                 var outputExpected = "{0}:{1}".FormatEx(newPrefix, id);
                 Assert.AreEqual(outputExpected, outputActual);
             }
+        }
+
+        [Test]
+        public void ShouldHandleOldUnknownType()
+        {
+            var objExpected = new TypeName();
+            var objActual = "CSharp.UnknownTypeName:?".Deserialize<IName>();
+
+            Assert.AreEqual(objExpected, objActual);
+            Assert.True(objActual is TypeName);
+
+            var outputActual = objActual.Serialize();
+            var outputExpected = "0T:?";
+            Assert.AreEqual(outputExpected, outputActual);
         }
 
         [TestCase("xyz", "CSharp.Name", "0General", typeof(GeneralName)),
@@ -106,7 +121,7 @@ namespace KaVE.Commons.Tests.Utils.Naming
             }
         }
 
-        [TestCase("1T", "T,P", typeof(Commons.Model.Naming.Impl.v1.TypeName)),
+        [Ignore, TestCase("1T", "T,P", typeof(Commons.Model.Naming.Impl.v1.TypeName)),
          TestCase("1Ta", "arr(1):T,P", typeof(Commons.Model.Naming.Impl.v1.ArrayTypeName))]
         public void ShouldDeserializeV1Types(string prefix, string id, Type expectedType)
         {

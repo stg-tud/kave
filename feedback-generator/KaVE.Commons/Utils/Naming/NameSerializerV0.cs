@@ -63,7 +63,13 @@ namespace KaVE.Commons.Utils.Naming
                 typeof(ArrayTypeName),
                 typeof(DelegateTypeName),
                 typeof(TypeParameterName));
-            Register(typeof(TypeName), Type, "0T", "CSharp.TypeName");
+            Register(
+                typeof(TypeName),
+                Type,
+                "0T",
+                "CSharp.TypeName",
+                "CSharp.UnknownTypeName",
+                "CSharp.DelegateTypeName");
         }
 
         private static IName General(string id)

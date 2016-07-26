@@ -69,7 +69,7 @@ namespace KaVE.Commons.Model.Naming
             if (alias.EndsWith("?"))
             {
                 var underlyingType = GetFullTypeNameFromTypeAlias(alias.TrimEnd('?'));
-                return "System.Nullable`1[[" + underlyingType + "]]";
+                return "System.Nullable`1[[T -> " + underlyingType + "]]";
             }
 
             if (SimpleTypeToFullNameMap.ContainsKey(alias))

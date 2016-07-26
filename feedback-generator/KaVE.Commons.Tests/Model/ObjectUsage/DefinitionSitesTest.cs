@@ -93,7 +93,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         [Test]
         public void InitDefinitionByMethodNameIsCorrectInitialized()
         {
-            var methodName = Names.Method("[RType,P1] [Decl,P1]..ctor()");
+            var methodName = Names.Method("[System.Void, mscorlib, 4.0.0.0] [Decl,P1]..ctor()");
             var actual = DefinitionSites.CreateDefinitionByConstructor(methodName);
             var expected = new DefinitionSite
             {

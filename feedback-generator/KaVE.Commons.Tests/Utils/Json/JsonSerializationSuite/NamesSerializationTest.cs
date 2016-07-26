@@ -135,18 +135,10 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         }
 
         [Test]
-        public void ShouldDeserializeJaggedArrayToMultidimensional()
-        {
-            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[], B\"", Names.Type("A[], B"));
-            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][], B\"", Names.Type("A[,], B"));
-            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][][][], B\"", Names.Type("A[,,,], B"));
-        }
-
-        [Test]
         public void ShouldSerializeNameToStringContainingTypeAndIdentifier()
         {
             var name = Names.Type("My.Custom.Type, AnAssembly, 1.5.2.4");
-            const string expected = "\"CSharp.TypeName:My.Custom.Type, AnAssembly, 1.5.2.4\"";
+            const string expected = "\"0T:My.Custom.Type, AnAssembly, 1.5.2.4\"";
             JsonAssert.SerializesTo(name, expected);
         }
 
@@ -178,7 +170,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         public void ShouldSerializeNameToStringContainingTypeAndIdentifierWhenFormatting()
         {
             var name = Names.Type("My.Custom.Type, AnAssembly, 1.5.2.4");
-            const string expected = "\"CSharp.TypeName:My.Custom.Type, AnAssembly, 1.5.2.4\"";
+            const string expected = "\"0T:My.Custom.Type, AnAssembly, 1.5.2.4\"";
             var actual = name.ToFormattedJson();
             Assert.AreEqual(expected, actual);
         }

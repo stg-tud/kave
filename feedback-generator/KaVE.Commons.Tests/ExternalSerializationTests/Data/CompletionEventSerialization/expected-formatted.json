@@ -6,14 +6,14 @@
             "$type": "KaVE.Commons.Model.TypeShapes.TypeShape, KaVE.Commons",
             "TypeHierarchy": {
                 "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
-                "Element": "CSharp.UnknownTypeName:?",
+                "Element": "0T:?",
                 "Implements": []
             },
             "MethodHierarchies": []
         },
         "SST": {
             "$type": "[SST:SST]",
-            "EnclosingType": "CSharp.TypeName:T,P",
+            "EnclosingType": "0T:T,P",
             "PartialClassIdentifier": "",
             "Fields": [],
             "Properties": [],
@@ -25,12 +25,12 @@
     "ProposalCollection": [
         {
             "$type": "KaVE.Commons.Model.Events.CompletionEvents.Proposal, KaVE.Commons",
-            "Name": "CSharp.MethodName:[T1,P1] [T1,P2].M1()",
+            "Name": "0M:[T1,P1] [T1,P2].M1()",
             "Relevance": 42
         },
         {
             "$type": "KaVE.Commons.Model.Events.CompletionEvents.Proposal, KaVE.Commons",
-            "Name": "CSharp.MethodName:[T1,P1] [T1,P2].M2()",
+            "Name": "0M:[T1,P1] [T1,P2].M2()",
             "Relevance": 42
         }
     ],
@@ -39,7 +39,7 @@
             "$type": "KaVE.Commons.Model.Events.CompletionEvents.ProposalSelection, KaVE.Commons",
             "Proposal": {
                 "$type": "KaVE.Commons.Model.Events.CompletionEvents.Proposal, KaVE.Commons",
-                "Name": "CSharp.MethodName:[T1,P1] [T1,P2].M1()",
+                "Name": "0M:[T1,P1] [T1,P2].M1()",
                 "Relevance": 42
             },
             "SelectedAfter": "18:54:59.6720000",
@@ -49,7 +49,7 @@
             "$type": "KaVE.Commons.Model.Events.CompletionEvents.ProposalSelection, KaVE.Commons",
             "Proposal": {
                 "$type": "KaVE.Commons.Model.Events.CompletionEvents.Proposal, KaVE.Commons",
-                "Name": "CSharp.MethodName:[T1,P1] [T1,P2].M2()",
+                "Name": "0M:[T1,P1] [T1,P2].M2()",
                 "Relevance": 42
             },
             "SelectedAfter": "18:54:59.7830000",
@@ -59,7 +59,7 @@
             "$type": "KaVE.Commons.Model.Events.CompletionEvents.ProposalSelection, KaVE.Commons",
             "Proposal": {
                 "$type": "KaVE.Commons.Model.Events.CompletionEvents.Proposal, KaVE.Commons",
-                "Name": "CSharp.MethodName:[T1,P1] [T1,P2].M1()",
+                "Name": "0M:[T1,P1] [T1,P2].M1()",
                 "Relevance": 42
             },
             "SelectedAfter": "18:54:59.8940000",
@@ -74,6 +74,6 @@
     "TriggeredAt": "2012-02-23T18:54:59.549",
     "TriggeredBy": 0,
     "Duration": "00:00:02",
-    "ActiveWindow": "VisualStudio.WindowName:vsWindowTypeDocument File.cs",
-    "ActiveDocument": "VisualStudio.DocumentName:\\Path\\To\\File.cs"
+    "ActiveWindow": "0Win:vsWindowTypeDocument File.cs",
+    "ActiveDocument": "0Doc:d \\Path\\To\\File.cs"
 }

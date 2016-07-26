@@ -47,7 +47,8 @@ namespace KaVE.Commons.Utils.Naming
                     return (T) s.Deserialize(prefix, id);
                 }
             }
-            throw new ArgumentException("no matching deserializer found for prefix '{0}')".FormatEx(prefix));
+            throw new ArgumentException(
+                "no matching deserializer found for prefix '{0}' (id: '{1}')".FormatEx(prefix, id));
         }
 
         public static string Serialize(this IName n)
@@ -59,7 +60,7 @@ namespace KaVE.Commons.Utils.Naming
                     return s.Serialize(n);
                 }
             }
-            throw new ArgumentException("no matching serializer found for type '{0}')".FormatEx(n.GetType().FullName));
+            throw new ArgumentException("no matching serializer found for type '{0}'".FormatEx(n.GetType().FullName));
         }
     }
 

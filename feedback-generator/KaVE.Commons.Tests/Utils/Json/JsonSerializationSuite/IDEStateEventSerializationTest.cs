@@ -25,16 +25,17 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var ideStateEvent = new IDEStateEvent
+            var e = new IDEStateEvent
             {
                 IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Runtime,
-                OpenDocuments = new[] {Names.Document("SomeOpenDocument")},
-                OpenWindows = new[] {Names.Window("SomeOpenWindow")}
+                OpenDocuments = new[] {Names.Document("d SomeOpenDocument")},
+                OpenWindows = new[] {Names.Window("w SomeOpenWindow")}
             };
             const string expected =
-                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.IDEStateEvent, KaVE.Commons\",\"IDELifecyclePhase\":2,\"OpenWindows\":[\"VisualStudio.WindowName:SomeOpenWindow\"],\"OpenDocuments\":[\"VisualStudio.DocumentName:SomeOpenDocument\"],\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.IDEStateEvent, KaVE.Commons\",\"IDELifecyclePhase\":2,\"OpenWindows\":[\"0Win:w SomeOpenWindow\"],\"OpenDocuments\":[\"0Doc:d SomeOpenDocument\"],\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(ideStateEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

@@ -153,7 +153,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
                     Element = DefaultClassContext,
                     Extends = new TypeHierarchy
                     {
-                        Element = Type("TSuper,P")
+                        Element = Type("TSuper")
                     }
                 },
                 new MethodHierarchy
@@ -169,7 +169,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             var expected = new Query
             {
                 type = Type("A").ToCoReName(),
-                classCtx = Type("TSuper,P").ToCoReName(),
+                classCtx = Type("TSuper").ToCoReName(),
                 methodCtx = DefaultMethodContext.ToCoReName(),
                 definition = DefinitionSites.CreateUnknownDefinitionSite(),
                 sites =
@@ -220,7 +220,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
                     Element = DefaultClassContext,
                     Extends = new TypeHierarchy
                     {
-                        Element = Type("TSuper,P")
+                        Element = Type("TSuper")
                     }
                 },
                 new MethodHierarchy
@@ -235,7 +235,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
             var expected = new Query
             {
                 type = Type("TSuper").ToCoReName(),
-                classCtx = Type("TSuper,P").ToCoReName(),
+                classCtx = Type("TSuper").ToCoReName(),
                 methodCtx = DefaultMethodContext.ToCoReName(),
                 definition = DefinitionSites.CreateDefinitionByThis(),
                 sites =

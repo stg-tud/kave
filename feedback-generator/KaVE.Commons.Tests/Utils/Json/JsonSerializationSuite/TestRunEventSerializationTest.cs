@@ -72,7 +72,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         private static string GetExampleJson()
         {
             return
-                "{\"$type\":\"KaVE.Commons.Model.Events.TestRunEvents.TestRunEvent, KaVE.Commons\",\"WasAborted\":true,\"Tests\":[{\"$type\":\"KaVE.Commons.Model.Events.TestRunEvents.TestCaseResult, KaVE.Commons\",\"TestMethod\":\"CSharp.MethodName:[T,P] [T,P].M()\",\"Parameters\":\"asd\",\"Duration\":\"00:00:03\",\"Result\":4}],\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.TestRunEvents.TestRunEvent, KaVE.Commons\",\"WasAborted\":true,\"Tests\":[{\"$type\":\"KaVE.Commons.Model.Events.TestRunEvents.TestCaseResult, KaVE.Commons\",\"TestMethod\":\"0M:[T,P] [T,P].M()\",\"Parameters\":\"asd\",\"Duration\":\"00:00:03\",\"Result\":4}],\"TriggeredBy\":0}";
         }
     }
 }

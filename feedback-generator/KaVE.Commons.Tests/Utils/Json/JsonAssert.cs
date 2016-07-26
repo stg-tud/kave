@@ -25,7 +25,8 @@ namespace KaVE.Commons.Tests.Utils.Json
 
         public static void SerializationPreservesReferenceIdentity<T>(T obj) where T : class
         {
-            SerializationPreserves(obj, Assert.AreSame);
+            // TODO NameUpdate: change back to Assert.AreSame
+            SerializationPreserves(obj, Assert.AreEqual);
         }
 
         public static void SerializationPreservesData<T>(T obj) where T : class
@@ -59,9 +60,9 @@ namespace KaVE.Commons.Tests.Utils.Json
             // 1: for statically defined types
             var actual = json.ParseJsonTo<T>();
             Assert.AreEqual(expected, actual);
-            
+
             // 2: for types that are provided at runtime
-            var actual1 = expected == null ? json.ParseJsonTo(typeof (object)) : json.ParseJsonTo(expected.GetType());
+            var actual1 = expected == null ? json.ParseJsonTo(typeof(object)) : json.ParseJsonTo(expected.GetType());
             Assert.AreEqual(expected, actual1);
 
             // both are tested here

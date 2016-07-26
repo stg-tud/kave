@@ -267,7 +267,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             {
                 TypeReference = Names.Type("T`1[[G]],P")
             };
-            AssertPrint(sst, "T<?>.$");
+            AssertPrint(sst, "T<G>.$");
         }
 
         [Test]

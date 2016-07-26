@@ -38,7 +38,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 
         public DelegateDeclaration()
         {
-            Name = Names.UnknownType.AsDelegateTypeName;
+            Name = Names.UnknownDelegateType;
         }
 
         private bool Equals(DelegateDeclaration other)

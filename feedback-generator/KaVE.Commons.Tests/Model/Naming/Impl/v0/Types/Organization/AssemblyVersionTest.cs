@@ -45,6 +45,28 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
         }
 
         [Test]
+        public void ShouldParseNumbers_Zeros()
+        {
+            var sut = new AssemblyVersion("0.0.0.0");
+            Assert.AreEqual(0, sut.Major);
+            Assert.AreEqual(0, sut.Minor);
+            Assert.AreEqual(0, sut.Build);
+            Assert.AreEqual(0, sut.Revision);
+            Assert.IsFalse(sut.IsUnknown);
+        }
+
+        [Test]
+        public void ShouldParseNumbersMultiDigit()
+        {
+            var sut = new AssemblyVersion("11.22.33.44");
+            Assert.AreEqual(11, sut.Major);
+            Assert.AreEqual(22, sut.Minor);
+            Assert.AreEqual(33, sut.Build);
+            Assert.AreEqual(44, sut.Revision);
+            Assert.IsFalse(sut.IsUnknown);
+        }
+
+        [Test]
         public void ShouldRecognizeUnknownName()
         {
             Assert.True(new AssemblyVersion().IsUnknown);
@@ -68,7 +90,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
         }
 
         [Test, ExpectedException(typeof(AssertException))]
-        public void ShouldRejectIdentifiersWithNonNumbers()
+        public void ShouldRejectIdentifiers_WithNonNumbers()
         {
             // ReSharper disable once ObjectCreationAsStatement
             new AssemblyVersion("1.2.3.a");

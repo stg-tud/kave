@@ -25,15 +25,16 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeToString()
         {
-            var documentEvent = new DocumentEvent
+            var e = new DocumentEvent
             {
                 Action = DocumentEvent.DocumentAction.Saved,
-                Document = Names.Document("SomeProcessedDocument")
+                Document = Names.Document("x SomeProcessedDocument")
             };
             const string expected =
-                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.DocumentEvent, KaVE.Commons\",\"Document\":\"VisualStudio.DocumentName:SomeProcessedDocument\",\"Action\":1,\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.DocumentEvent, KaVE.Commons\",\"Document\":\"0Doc:x SomeProcessedDocument\",\"Action\":1,\"TriggeredBy\":0}";
 
-            JsonAssert.SerializesTo(documentEvent, expected);
+            JsonAssert.SerializesTo(e, expected);
+            JsonAssert.DeserializesTo(expected, e);
         }
     }
 }

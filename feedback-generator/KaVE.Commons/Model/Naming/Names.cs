@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.Commons.Model.Naming.Impl.v0;
+using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.IDEComponents;
+using KaVE.Commons.Model.Naming.Impl.v0.Others;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
+using KaVE.Commons.Model.Naming.Others;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
-using KaVE.JetBrains.Annotations;
 using AssemblyVersionName = KaVE.Commons.Model.Naming.Impl.v0.Types.Organization.AssemblyVersion;
 
 namespace KaVE.Commons.Model.Naming
@@ -29,6 +34,253 @@ namespace KaVE.Commons.Model.Naming
     /// </summary>
     public class Names
     {
+        public static IName General(string id, params object[] args)
+        {
+            return new GeneralName(string.Format(id, args));
+        }
+
+        #region code elements
+
+        public static IAliasName Alias(string id, params object[] args)
+        {
+            return new AliasName(string.Format(id, args));
+        }
+
+        public static IEventName Event(string id, params object[] args)
+        {
+            return new EventName(string.Format(id, args));
+        }
+
+        public static IFieldName Field(string id, params object[] args)
+        {
+            return new FieldName(string.Format(id, args));
+        }
+
+        public static ILambdaName Lambda(string id, params object[] args)
+        {
+            return new LambdaName(string.Format(id, args));
+        }
+
+        public static ILocalVariableName LocalVariable(string id, params object[] args)
+        {
+            return new LocalVariableName(string.Format(id, args));
+        }
+
+        public static IMethodName Method(string id, params object[] args)
+        {
+            return new MethodName(string.Format(id, args));
+        }
+
+        public static IParameterName Parameter(string id, params object[] args)
+        {
+            return new ParameterName(string.Format(id, args));
+        }
+
+        public static IPropertyName Property(string id, params object[] args)
+        {
+            return new PropertyName(string.Format(id, args));
+        }
+
+        #endregion
+
+        #region ide components & other
+
+        public static ICommandBarControlName CommandBarControl(string id, params object[] args)
+        {
+            return new CommandBarControlName(string.Format(id, args));
+        }
+
+        public static ICommandName Command(string id, params object[] args)
+        {
+            return new CommandName(string.Format(id, args));
+        }
+
+        public static IDocumentName Document(string id, params object[] args)
+        {
+            return new DocumentName(string.Format(id, args));
+        }
+
+        public static IProjectItemName ProjectItem(string id, params object[] args)
+        {
+            return new ProjectItemName(string.Format(id, args));
+        }
+
+        public static IProjectName Project(string id, params object[] args)
+        {
+            return new ProjectName(string.Format(id, args));
+        }
+
+        public static ISolutionName Solution(string id, params object[] args)
+        {
+            return new SolutionName(string.Format(id, args));
+        }
+
+        public static IWindowName Window(string id, params object[] args)
+        {
+            return new WindowName(string.Format(id, args));
+        }
+
+        public static IReSharperLiveTemplateName ReSharperLiveTemplate(string id, params object[] args)
+        {
+            return new ReSharperLiveTemplateName(string.Format(id, args));
+        }
+
+        #endregion
+
+        #region types
+
+        public static IAssemblyName Assembly(string id, params object[] args)
+        {
+            return new AssemblyName(string.Format(id, args));
+        }
+
+        public static IAssemblyVersion AssemblyVersion(string id, params object[] args)
+        {
+            return new AssemblyVersion(string.Format(id, args));
+        }
+
+        public static INamespaceName Namespace(string id, params object[] args)
+        {
+            return new NamespaceName(string.Format(id, args));
+        }
+
+        public static ITypeName Type(string id, params object[] args)
+        {
+            return TypeUtils.CreateTypeName(string.Format(id, args));
+        }
+
+        public static IArrayTypeName ArrayType(int rank, ITypeName baseType)
+        {
+            return ArrayTypeName.From(baseType, rank);
+        }
+
+        public static ITypeParameterName TypeParameter(string shortName)
+        {
+            return new TypeParameterName(shortName);
+        }
+
+        public static ITypeParameterName TypeParameter(string shortName, string boundType)
+        {
+            return new TypeParameterName(shortName + " -> " + boundType);
+        }
+
+        #endregion
+
+        #region unknowns
+
+        public static IAssemblyName UnknownAssembly
+        {
+            get { return new AssemblyName(); }
+        }
+
+        public static IAssemblyVersion UnknownAssemblyVersion
+        {
+            get { return new AssemblyVersion(); }
+        }
+
+        public static ILambdaName UnknownLambda
+        {
+            get { return new LambdaName(); }
+        }
+
+        public static ITypeName UnknownType
+        {
+            get { return new TypeName(); }
+        }
+
+        public static IMethodName UnknownMethod
+        {
+            get { return new MethodName(); }
+        }
+
+        public static IName UnknownGeneral
+        {
+            get { return new GeneralName(); }
+        }
+
+        public static IEventName UnknownEvent
+        {
+            get { return new EventName(); }
+        }
+
+        public static IFieldName UnknownField
+        {
+            get { return new FieldName(); }
+        }
+
+        public static IPropertyName UnknownProperty
+        {
+            get { return new PropertyName(); }
+        }
+
+        public static INamespaceName UnknownNamespace
+        {
+            get { return new NamespaceName(); }
+        }
+
+        public static IParameterName UnknownParameter
+        {
+            get { return new ParameterName(); }
+        }
+
+        public static ILocalVariableName UnknownLocalVariable
+        {
+            get { return new LocalVariableName(); }
+        }
+
+        public static IAliasName UnknownAlias
+        {
+            get { return new AliasName(); }
+        }
+
+        public static ISolutionName UnknownSolution
+        {
+            get { return new SolutionName(); }
+        }
+
+        public static IDocumentName UnknownDocument
+        {
+            get { return new DocumentName(); }
+        }
+
+        public static IProjectItemName UnknownProjectItem
+        {
+            get { return new ProjectItemName(); }
+        }
+
+        public static IProjectName UnknownProject
+        {
+            get { return new ProjectName(); }
+        }
+
+        public static IWindowName UnknownWindow
+        {
+            get { return new WindowName(); }
+        }
+
+        public static ICommandName UnknownCommand
+        {
+            get { return new CommandName(); }
+        }
+
+        public static ICommandBarControlName UnknownCommandBarControl
+        {
+            get { return new CommandBarControlName(); }
+        }
+
+        public static IReSharperLiveTemplateName UnknownReSharperLiveTemplate
+        {
+            get { return new ReSharperLiveTemplateName(); }
+        }
+
+        public static IDelegateTypeName UnknownDelegateType
+        {
+            get { return new DelegateTypeName(); }
+        }
+
+        #endregion
+
+        /*
         public static IName General(string s)
         {
             throw new NotImplementedException();
@@ -258,82 +510,82 @@ namespace KaVE.Commons.Model.Naming
 
         public static IAssemblyName UnknownAssembly
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IAssemblyVersion UnknownAssemblyVersion
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static ILambdaName UnknownLambda
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static ITypeName UnknownType
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IMethodName UnknownMethod
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IName UnknownGeneral
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IEventName UnknownEvent
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IFieldName UnknownField
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IPropertyName UnknownProperty
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static INamespaceName UnknownNamespace
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IParameterName UnknownParameter
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static ILocalVariableName UnknownLocalVariable
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IAliasName UnknownAlias
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static ISolutionName UnknownSolution
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IProjectItemName UnknownProjectItem
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         public static IProjectName UnknownProject
         {
-            get { throw new NotImplementedException(); }
+            get { return new Name(); }
         }
 
         #endregion
@@ -471,5 +723,6 @@ namespace KaVE.Commons.Model.Naming
         }
 
         #endregion
+        */
     }
 }

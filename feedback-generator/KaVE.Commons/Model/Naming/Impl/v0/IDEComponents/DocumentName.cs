@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.IDEComponents;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
@@ -28,7 +29,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.IDEComponents
         {
             if (!UnknownNameIdentifier.Equals(identifier))
             {
-                Asserts.That(identifier.Contains(" "));
+                Asserts.That(identifier.Contains(" "), "document name is missing a space '{0}'".FormatEx(identifier));
             }
         }
 

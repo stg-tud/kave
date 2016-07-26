@@ -17,6 +17,8 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Utils.Naming;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -38,7 +40,36 @@ namespace KaVE.Commons.Utils.Json
             {
                 var proposalCollection = JObject.Load(reader);
                 var proposals = proposalCollection.GetValue("Proposals");
-                return new ProposalCollection(proposals.ToObject<IEnumerable<Proposal>>());
+
+                var res = new ProposalCollection();
+                foreach (var proposal in proposals)
+                {
+                    var p = new Proposal();
+
+                    var propObj = (JObject) proposal;
+                    var valName = propObj.GetValue("Name") as JValue;
+                    if (valName != null)
+                    {
+                        var name = valName.Value as string;
+                        if (name != null)
+                        {
+                            p.Name = name.Deserialize<IName>();
+                        }
+                    }
+                    else
+                    {
+                        p.Name = Names.UnknownGeneral;
+                    }
+                    var valRelevance = propObj.GetValue("Relevance") as JValue;
+                    if (valRelevance != null)
+                    {
+                        var relevance = (long) valRelevance.Value;
+                        p.Relevance = unchecked((int) relevance);
+                    }
+
+                    res.Add(p);
+                }
+                return res;
             }
             if (reader.TokenType == JsonToken.StartArray)
             {

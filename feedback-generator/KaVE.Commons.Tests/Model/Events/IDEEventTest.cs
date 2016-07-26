@@ -47,8 +47,8 @@ namespace KaVE.Commons.Tests.Model.Events
             var sut = new TestIDEEvent
             {
                 Id = "1",
-                ActiveDocument = Names.Document("d"),
-                ActiveWindow = Names.Window("w"),
+                ActiveDocument = Names.Document("d d"),
+                ActiveWindow = Names.Window("w w"),
                 // Duration is automatically set
                 IDESessionUUID = "2",
                 KaVEVersion = "3",
@@ -57,8 +57,8 @@ namespace KaVE.Commons.Tests.Model.Events
                 TriggeredBy = IDEEvent.Trigger.Click
             };
             Assert.AreEqual("1", sut.Id);
-            Assert.AreEqual(Names.Document("d"), sut.ActiveDocument);
-            Assert.AreEqual(Names.Window("w"), sut.ActiveWindow);
+            Assert.AreEqual(Names.Document("d d"), sut.ActiveDocument);
+            Assert.AreEqual(Names.Window("w w"), sut.ActiveWindow);
             Assert.AreEqual(TimeSpan.FromDays(1), sut.Duration);
             Assert.AreEqual("2", sut.IDESessionUUID);
             Assert.AreEqual("3", sut.KaVEVersion);
@@ -82,8 +82,8 @@ namespace KaVE.Commons.Tests.Model.Events
             var a = new TestIDEEvent
             {
                 Id = "1",
-                ActiveDocument = Names.Document("d"),
-                ActiveWindow = Names.Window("w"),
+                ActiveDocument = Names.Document("d d"),
+                ActiveWindow = Names.Window("w w"),
                 // Duration is automatically set
                 IDESessionUUID = "2",
                 KaVEVersion = "3",
@@ -94,8 +94,8 @@ namespace KaVE.Commons.Tests.Model.Events
             var b = new TestIDEEvent
             {
                 Id = "1",
-                ActiveDocument = Names.Document("d"),
-                ActiveWindow = Names.Window("w"),
+                ActiveDocument = Names.Document("d d"),
+                ActiveWindow = Names.Window("w w"),
                 // Duration is automatically set
                 IDESessionUUID = "2",
                 KaVEVersion = "3",

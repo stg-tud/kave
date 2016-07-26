@@ -32,8 +32,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             {
                 IDESessionUUID = "0xDEADBEEF",
                 KaVEVersion = "1.2.3.4",
-                ActiveDocument = Names.Document("Random"),
-                ActiveWindow = Names.Window("Random"),
+                ActiveDocument = Names.Document("d Random"),
+                ActiveWindow = Names.Window("w Random"),
                 TriggeredBy = IDEEvent.Trigger.Click,
                 TriggeredAt = System.DateTime.Now,
                 Duration = TimeSpan.FromSeconds(5)
@@ -47,8 +47,8 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         {
             var ideEvent = new TestIDEEvent
             {
-                ActiveDocument = Names.Document("SomeDocument"),
-                ActiveWindow = Names.Window("SomeWindow"),
+                ActiveDocument = Names.Document("d SomeDocument"),
+                ActiveWindow = Names.Window("w SomeWindow"),
                 Duration = new TimeSpan(0, 0, 1),
                 IDESessionUUID = "0xDEADBEEF",
                 KaVEVersion = "1.2.3.4",
@@ -57,7 +57,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             };
 
             const string expected =
-                "{\"$type\":\"KaVE.Commons.TestUtils.Model.Events.TestIDEEvent, KaVE.Commons.TestUtils\",\"IDESessionUUID\":\"0xDEADBEEF\",\"KaVEVersion\":\"1.2.3.4\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+                "{\"$type\":\"KaVE.Commons.TestUtils.Model.Events.TestIDEEvent, KaVE.Commons.TestUtils\",\"IDESessionUUID\":\"0xDEADBEEF\",\"KaVEVersion\":\"1.2.3.4\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"0Win:w SomeWindow\",\"ActiveDocument\":\"0Doc:d SomeDocument\"}";
 
             JsonAssert.SerializesTo(ideEvent, expected);
         }

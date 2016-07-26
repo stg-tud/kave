@@ -41,7 +41,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
 
         [TestCase("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m([N.P, A, 1.0.0.0] arg)", "LN/T.m(LN/P;)LSys/V;"),
          TestCase("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m`1[[G]]([G] arg)", "LN/T.m(LSystem/Object;)LSys/V;"),
-         TestCase("[N.T, A, 1.0.0.0] [N.T, A, 1.0.0.0]..ctor()", "LN/T.<init>()LSystem/Void;"),
+         TestCase("[System.Void, mscorlib, 4.0.0.0] [N.T, A, 1.0.0.0]..ctor()", "LN/T.<init>()LSystem/Void;"),
          TestCase("[?] [?].???()", "LUnknown.unknown()LUnknown;")]
         public void ShouldConvertMethodNames(string iName, string coReName)
         {
