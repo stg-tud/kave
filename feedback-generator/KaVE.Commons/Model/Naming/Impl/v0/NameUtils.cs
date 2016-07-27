@@ -61,8 +61,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         private static readonly Dictionary<string, string> ManualTypeParameterFixes = new Dictionary<string, string>
         {
             {
+                "s:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1+Enumerator, EntityFramework, 6.0.0.0",
+                "s:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1[[T]]+Enumerator, EntityFramework, 6.0.0.0"
+            },
+            {
                 "System.Collections.Generic.Dictionary`2+KeyCollection, mscorlib, 4.0.0.0",
                 "System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+KeyCollection, mscorlib, 4.0.0.0"
+            },
+            {
+                "System.Collections.Generic.Dictionary`2+ValueCollection, mscorlib, 4.0.0.0",
+                "System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+ValueCollection, mscorlib, 4.0.0.0"
             },
             {
                 "System.Collections.ObjectModel.ReadOnlyDictionary`2+KeyCollection, mscorlib, 4.0.0.0",

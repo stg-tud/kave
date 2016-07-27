@@ -36,8 +36,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         {
             if (IsConstructor)
             {
-                // TODO NameUpdate: write fix and reenable check (+test).
+                // TODO NameUpdate: write fix and reenable check (+test, +repair).
                 //Asserts.That(ReturnType.IsVoidType);
+                if (".cctor".Equals(Name))
+                {
+                    //Asserts.That(IsStatic);
+                }
+                // else: Asserts.Not(IsStatic);
             }
         }
 

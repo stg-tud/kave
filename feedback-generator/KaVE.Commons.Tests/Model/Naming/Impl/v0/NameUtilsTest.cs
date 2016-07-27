@@ -182,7 +182,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
 
         [Ignore, TestCase("[R,P] [D,P]..ctor()", "[System.Void, mscorlib, 4.0.0.0] [D,P]..ctor()"),
          TestCase("[R,P] [D,P]..ctor()", "[System.Void, mscorlib, 4.0.0.0] [D,P]..cctor()"),
-         TestCase("[R,P] [D,P].M()", "[R,P] [D,P].M()")]
+         TestCase("[R,P] [D,P].M()", "[R,P] [D,P].M()"),
+        // resilient to parsing issues
+         TestCase("[xxx)", "[xxx)"),
+         TestCase("[R,P]xxx)", "[R,P]xxx)"),
+         TestCase("[?] [xxx)", "[?] [xxx)"),
+         TestCase("[?] [?].)", "[?] [?].)"),
+         TestCase("[?] [?].()", "[?] [?].()"),
+         TestCase("[?] [?].M()", "[?] [?].M()")]
         public void FixesCtorsWithNonVoidReturn(string legacy, string corrected)
         {
             var actual = legacy.FixLegacyFormats();
