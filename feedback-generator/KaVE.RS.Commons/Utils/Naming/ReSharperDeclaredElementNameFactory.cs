@@ -227,24 +227,27 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return Names.Type(
-                typeParameter.ShortName + TypeParameterArrow +
-                typeParameter.GetAssemblyQualifiedNameFromActualType(substitution, seenElements));
-        }
-
-        private static string GetAssemblyQualifiedNameFromActualType(this ITypeParameter typeParameter,
-            ISubstitution substitution,
-            IDictionary<DeclaredElementInstance, IName> seenElements)
-        {
-            if (substitution.Domain.Contains(typeParameter))
+            string id;
+            if (typeParameter.IsBound(substitution))
             {
                 var type = substitution[typeParameter];
-                if (type.Classify != TypeClassification.UNKNOWN)
-                {
-                    return type.GetName(seenElements).Identifier;
-                }
+                var target = type.GetName(seenElements).Identifier;
+                id = "{0} -> {1}".FormatEx(typeParameter.ShortName, target);
             }
-            return Names.UnknownType.Identifier;
+            else
+            {
+                id = typeParameter.ShortName;
+            }
+            return Names.Type(id);
+        }
+
+        private static bool IsBound(this ITypeParameter typeParameter, ISubstitution substitution)
+        {
+            if (!substitution.Domain.Contains(typeParameter))
+            {
+                return false;
+            }
+            return !substitution.IsId();
         }
 
         [NotNull]
@@ -280,7 +283,6 @@ namespace KaVE.RS.Commons.Utils.Naming
             var typeParametersOwner = function as ITypeParametersOwner;
             if (typeParametersOwner != null && typeParametersOwner.TypeParameters.Any())
             {
-                identifier.Append('`').Append(typeParametersOwner.TypeParameters.Count);
                 identifier.Append(typeParametersOwner.GetTypeParametersList(substitution, seenElements));
             }
             identifier.AppendParameters(function, substitution, seenElements);
@@ -417,14 +419,21 @@ namespace KaVE.RS.Commons.Utils.Naming
 
             string myName;
             var parent = type.GetContainingType();
+            var myFullName = clrTypeName.FullName;
             if (parent != null)
             {
-                var parentName = parent.GetName<ITypeName>(substitution).FullName;
-                myName = string.Format("{0}+{1}", parentName, clrTypeName.ShortName);
+                var parentName = parent.GetName<ITypeName>(substitution);
+                // including the generic `N ticks
+                var parentFullName = parentName.FullName;
+                // shortName does not include the generic `N ticks, so we have to find it in the fullname...
+                var startOfShortName = myFullName.IndexOf(clrTypeName.ShortName, StringComparison.Ordinal);
+                //  ... and ignore the leading part
+                var fullShortName = myFullName.Substring(startOfShortName);
+                myName = string.Format("{0}+{1}", parentFullName, fullShortName);
             }
             else
             {
-                myName = clrTypeName.FullName;
+                myName = myFullName;
             }
 
             return String.Format(
@@ -434,7 +443,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                 moduleName);
         }
 
-        private static String GetTypeParametersList(this ITypeParametersOwner typeParametersOwner,
+        private static string GetTypeParametersList(this ITypeParametersOwner typeParametersOwner,
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
@@ -448,7 +457,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                 var name = tp.GetName(substitution, seenElements);
                 tps.Add(name.Identifier);
             }
-            return "[[" + tps.Join("],[") + "]]";
+            return "[[{0}]]".FormatEx(tps.Join("],["));
         }
 
         /// <summary>

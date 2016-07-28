@@ -44,6 +44,7 @@ namespace KaVE.Commons.Model.Naming.Types
         ///     nT[],P --> n.T[]
         ///     d:[?] [<x>].() --> <x.FullName>
         ///     T -> ... --> T
+        ///     T`1[[..]] --> T`1
         /// </summary>
         [NotNull]
         string FullName { get; }
@@ -56,6 +57,7 @@ namespace KaVE.Commons.Model.Naming.Types
         ///     nT[],P --> T[]
         ///     d:[?] [<x>].() --> <x.Name>
         ///     T -> ... --> T
+        ///     T`1[[..]] --> T
         /// </summary>
         [NotNull]
         string Name { get; }

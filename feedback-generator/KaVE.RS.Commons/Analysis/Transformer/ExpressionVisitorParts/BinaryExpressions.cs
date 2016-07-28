@@ -29,7 +29,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
     public partial class ExpressionVisitor
     {
         #region logical
-
+        
         public override IAssignableExpression VisitConditionalAndExpression(IConditionalAndExpression expr,
             IList<IStatement> context)
         {
