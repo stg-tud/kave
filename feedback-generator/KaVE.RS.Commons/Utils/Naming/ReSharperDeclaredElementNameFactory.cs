@@ -297,6 +297,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             var typeParametersOwner = function as ITypeParametersOwner;
             if (typeParametersOwner != null && typeParametersOwner.TypeParameters.Any())
             {
+                identifier.Append("`{0}".FormatEx(typeParametersOwner.TypeParameters.Count));
                 identifier.Append(typeParametersOwner.GetTypeParametersList(substitution, seenElements));
             }
             identifier.AppendParameters(function, substitution, seenElements);
@@ -440,7 +441,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                 // including the generic `N ticks
                 var parentFullName = parentName.FullName;
                 // shortName does not include the generic `N ticks, so we have to find it in the fullname...
-                var startOfShortName = myFullName.IndexOf(clrTypeName.ShortName, StringComparison.Ordinal);
+                var startOfShortName = myFullName.LastIndexOf("+", StringComparison.Ordinal) + 1;
                 //  ... and ignore the leading part
                 var fullShortName = myFullName.Substring(startOfShortName);
                 myName = string.Format("{0}+{1}", parentFullName, fullShortName);

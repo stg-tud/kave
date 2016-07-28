@@ -234,6 +234,7 @@
     <Compile Include="TestLogger.cs" />
     <Compile Include="Utils\LookupItemUtilsTest.cs" />
     <Compile Include="Utils\Naming\ReSharperDeclaredElementNameFactoryTest.cs" />
+    <Compile Include="Utils\Naming\ReSharperDeclaredElementNameFactoryTestSuite\Members.cs" />
     <Compile Include="Utils\Naming\ReSharperDeclaredElementNameFactoryTestSuite\NameFactoryBaseTest.cs" />
     <Compile Include="Utils\Naming\ReSharperDeclaredElementNameFactoryTestSuite\Types.cs" />
     <Compile Include="Utils\RegistryTest.cs" />
