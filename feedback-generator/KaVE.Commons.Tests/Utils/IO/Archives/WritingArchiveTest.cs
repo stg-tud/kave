@@ -38,7 +38,7 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
             File.Delete(_zipPath);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void DirectoryHastoExist()
         {
             // ReSharper disable once ObjectCreationAsStatement

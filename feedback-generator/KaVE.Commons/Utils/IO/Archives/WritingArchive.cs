@@ -73,14 +73,12 @@ namespace KaVE.Commons.Utils.IO.Archives
 
                 foreach (var entry in _entries)
                 {
-                    var fileName = string.Format("{0}.json", num++);
-                    s.PutNextEntry(new ZipEntry(fileName));
-
                     var bytes = Encoding.UTF8.GetBytes(entry);
+                    var fileName = string.Format("{0}.json", num++);
+                    s.PutNextEntry(new ZipEntry(fileName) {Size = bytes.Length});
                     s.Write(bytes, 0, bytes.Length);
                 }
                 s.Finish();
-                s.Close();
             }
 
             _entries.Clear();
