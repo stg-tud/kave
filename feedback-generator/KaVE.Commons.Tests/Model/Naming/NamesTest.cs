@@ -118,6 +118,14 @@ namespace KaVE.Commons.Tests.Model.Naming
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void DoesNotBreakForRegularStringsThatDoNotNeedToBeReplaced()
+        {
+            var actual = Names.General("CombinedLookupItem:public override ToString() { ... }");
+            var expected = new GeneralName("CombinedLookupItem:public override ToString() { ... }");
+            Assert.AreEqual(expected, actual);
+        }
+
         private static void AssertUnknown(IName actual, IName expected)
         {
             Assert.IsTrue(actual.IsUnknown);

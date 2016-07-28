@@ -36,7 +36,7 @@ namespace KaVE.Commons.Model.Naming
     {
         public static IName General(string id, params object[] args)
         {
-            return new GeneralName(string.Format(id, args));
+            return args.Length == 0 ? new GeneralName(id) : new GeneralName(string.Format(id, args));
         }
 
         #region code elements
