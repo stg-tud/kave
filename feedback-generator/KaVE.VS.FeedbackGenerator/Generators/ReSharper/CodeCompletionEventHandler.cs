@@ -73,6 +73,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         {
             ContextAnalysis.Analyse(
                 context.NodeInFile,
+                null,
                 _logger,
                 OnSuccess,
                 delegate { },

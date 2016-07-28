@@ -59,7 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         public delegate void ContextProviderChangedHandler(ContextGenerator generator);
 
-        public static event ContextProviderChangedHandler ContextGeneratorCreated = delegate {};
+        public static event ContextProviderChangedHandler ContextGeneratorCreated = delegate { };
 
         public Context GetCurrentContext([NotNull] Document vsDocument)
         {
@@ -153,6 +153,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
         {
             ContextAnalysis.Analyse(
                 node,
+                null,
                 _logger,
                 context => { CurrentContext = context; },
                 delegate { },

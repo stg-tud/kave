@@ -103,6 +103,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
             ContextAnalysis.Analyse(
                 context.NodeInFile,
+                null,
                 _logger,
                 onSuccess,
                 delegate { },

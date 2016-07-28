@@ -61,7 +61,6 @@ namespace KaVE.RS.SolutionAnalysis
             _logger.Info("Analyzing project '{0}'....", project.Name);
 
             var psiModules = _solution.PsiModules();
-            // TODO RS9: make sure "Default" is the right framework id
             var primaryPsiModule =
                 psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default).NotNull("no psi module");
             var csharpSourceFiles = primaryPsiModule.SourceFiles.Where(IsCSharpFile);
@@ -76,9 +75,8 @@ namespace KaVE.RS.SolutionAnalysis
         private IEnumerable<Context> AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
         {
             _logger.Info(" - Analyzing file '{0}'...", psiSourceFile.DisplayName);
-
             var psiFile = ParseFile(psiSourceFile, primaryPsiModule);
-            return AnalyzeTypeAndNamespaceHolder(psiFile);
+            return AnalyzeTypeAndNamespaceHolder(psiFile, psiSourceFile);
         }
 
         private static ICSharpFile ParseFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
@@ -93,30 +91,35 @@ namespace KaVE.RS.SolutionAnalysis
             return psiFile;
         }
 
-        private IEnumerable<Context> AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile)
+        private IEnumerable<Context> AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile,
+            IPsiSourceFile psiSourceFile)
         {
             var contexts = new List<Context>();
-            contexts.AddRange(psiFile.TypeDeclarations.SelectMany(AnalyzeType));
-            contexts.AddRange(psiFile.NamespaceDeclarations.SelectMany(AnalyzeTypeAndNamespaceHolder));
+            contexts.AddRange(psiFile.TypeDeclarations.SelectMany(td => AnalyzeType(td, psiSourceFile)));
+            contexts.AddRange(
+                psiFile.NamespaceDeclarations.SelectMany(
+                    psiFile1 => AnalyzeTypeAndNamespaceHolder(psiFile1, psiSourceFile)));
             return contexts;
         }
 
-        private IEnumerable<Context> AnalyzeType(ICSharpTypeDeclaration aType)
+        private IEnumerable<Context> AnalyzeType(ICSharpTypeDeclaration aType, IPsiSourceFile psiSourceFile)
         {
             var contexts = new List<Context>();
             if (aType is IClassDeclaration || aType is IStructDeclaration)
             {
                 _logger.Info("   - Analyzing type '{0}'...", aType.CLRName);
 
-                contexts.Add(ContextAnalysis.Analyze(aType, _logger).Context);
+                contexts.Add(ContextAnalysis.Analyze(aType, psiSourceFile, _logger).Context);
             }
-            contexts.AddRange(AnalyzeInnerTypes(aType));
+            contexts.AddRange(AnalyzeInnerTypes(aType, psiSourceFile));
             return contexts;
         }
 
-        private IEnumerable<Context> AnalyzeInnerTypes(ITypeDeclarationHolder aType)
+        private IEnumerable<Context> AnalyzeInnerTypes(ITypeDeclarationHolder aType, IPsiSourceFile psiSourceFile)
         {
-            return aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>().SelectMany(AnalyzeType);
+            return
+                aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>()
+                     .SelectMany(aType1 => AnalyzeType(aType1, psiSourceFile));
         }
     }
 }

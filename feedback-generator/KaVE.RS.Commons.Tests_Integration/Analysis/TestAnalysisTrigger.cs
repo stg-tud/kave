@@ -33,7 +33,7 @@ using KaVE.RS.Commons.Utils;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
-    [Language(typeof (CSharpLanguage))]
+    [Language(typeof(CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBasic
     {
         public static bool IsPrintingType = false;
@@ -72,7 +72,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
             LastException = null;
-            var analysisResult = ContextAnalysis.Analyze(context.NodeInFile, MockLogger());
+            var analysisResult = ContextAnalysis.Analyze(context.NodeInFile, null, MockLogger());
             LastContext = analysisResult.Context;
             LastEntryPoints = analysisResult.EntryPoints;
             LastCompletionMarker = analysisResult.CompletionMarker;

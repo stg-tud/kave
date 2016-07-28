@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.Events.CompletionEvents;
@@ -43,36 +44,39 @@ namespace KaVE.RS.Commons.Analysis
 
         private static readonly FifoCache<int, Context> ResultCache = new FifoCache<int, Context>(4);
 
-        public static ContextAnalysisResult Analyze(ITreeNode node, ILogger logger)
+        public static ContextAnalysisResult Analyze(ITreeNode node, IPsiSourceFile srcFile, ILogger logger)
         {
             lock (Lock)
             {
-                var res = AnalyseAsyncInternal(node, logger, CancellationToken.None);
+                var res = AnalyseAsyncInternal(node, srcFile, logger, CancellationToken.None);
                 return res;
             }
         }
 
         public static void Analyse(ITreeNode node,
+            IPsiSourceFile srcFile,
             ILogger logger,
             Action<Context> onSuccess,
             Action<Exception> onFailure,
             Action onTimeout,
             int timeLimitInMs = DefaultTimeLimitInMs)
         {
-            var context = AnalyseWithCache(node, logger);
+            var context = AnalyseWithCache(node, srcFile, logger);
             onSuccess(context);
         }
 
         private static ContextAnalysisResult AnalyseAsyncInternal(ITreeNode node,
+            IPsiSourceFile srcFile,
             ILogger logger,
             CancellationToken token)
         {
-            var analysis = new ContextAnalysisInternal(logger, token);
+            var analysis = new ContextAnalysisInternal(srcFile, logger, token);
             var result = analysis.AnalyzeInternal(node);
             return result;
         }
 
         private static Context AnalyseWithCache(ITreeNode node,
+            IPsiSourceFile srcFile,
             ILogger logger)
         {
             lock (Lock)
@@ -85,7 +89,7 @@ namespace KaVE.RS.Commons.Analysis
                     return ResultCache.GetValue(hashCode);
                 }
 
-                var res = AnalyseAsyncInternal(node, logger, token);
+                var res = AnalyseAsyncInternal(node, srcFile, logger, token);
                 ResultCache.SetValue(hashCode, res.Context);
 
                 return res.Context;
@@ -111,10 +115,12 @@ namespace KaVE.RS.Commons.Analysis
             private readonly ILogger _logger;
             private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
             private readonly CompletionTargetAnalysis _completionTargetAnalysis = new CompletionTargetAnalysis();
+            private readonly IPsiSourceFile _srcFile;
             private readonly CancellationToken _token;
 
-            public ContextAnalysisInternal(ILogger logger, CancellationToken token)
+            public ContextAnalysisInternal(IPsiSourceFile srcFile, ILogger logger, CancellationToken token)
             {
+                _srcFile = srcFile;
                 _token = token;
                 _logger = logger;
             }
@@ -150,9 +156,9 @@ namespace KaVE.RS.Commons.Analysis
                     if (classDeclaration.IsPartial)
                     {
                         var file = nodeInFile.GetSourceFile();
-                        sst.PartialClassIdentifier = file == null
-                            ? "partial"
-                            : file.DisplayName;
+                        sst.PartialClassIdentifier = file != null
+                            ? file.DisplayName
+                            : _srcFile != null ? _srcFile.DisplayName : "partial";
                     }
 
                     res.CompletionMarker = _completionTargetAnalysis.Analyze(nodeInFile);

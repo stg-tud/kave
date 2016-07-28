@@ -37,5 +37,46 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
             ");
             Assert.IsNotNull(ResultContext);
         }
+
+        [Test]
+        public void ShouldIdentifNonPartialClasses()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    public class C
+                    {
+                        public void M()
+                        {
+                            $
+                        }
+                    }
+                }
+            ");
+            Assert.IsFalse(ResultSST.IsPartialClass);
+            Assert.Null(ResultSST.PartialClassIdentifier);
+        }
+
+        [Test]
+        public void ShouldIdentifyClassNameOfPartialClasses()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    public partial class C
+                    {
+                        public void M()
+                        {
+                            $
+                        }
+                    }
+                }
+            ");
+            Assert.That(ResultSST.IsPartialClass);
+            var pcid = ResultSST.PartialClassIdentifier;
+            Assert.NotNull(pcid);
+            var isValid = pcid.EndsWith(".cs");
+            Assert.IsTrue(isValid, "unexpected identifier for partial class '{0}'", pcid);
+        }
     }
 }
