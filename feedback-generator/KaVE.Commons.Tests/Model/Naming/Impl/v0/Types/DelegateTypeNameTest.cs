@@ -196,5 +196,24 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             var b = sut.TypeParameters;
             Assert.AreSame(a, b);
         }
+
+        [Test]
+        public void RecursiveDelegates1()
+        {
+            const string id = "d:[n.C+D, P] [n.C+D, P].()";
+            var a = new DelegateTypeName(id);
+            var b = a.ReturnType;
+            Assert.AreEqual(a, b);
+        }
+
+        [Test]
+        public void RecursiveDelegates2()
+        {
+            const string id = "d:[T`1[[n.C+D, P]], P] [n.C+D, P].()";
+            const string returnId = "T`1[[d:[T`1[[n.C+D, P]], P] [n.C+D, P].()]], P";
+            var a = new DelegateTypeName(id).ReturnType;
+            var b = TypeUtils.CreateTypeName(returnId);
+            Assert.AreEqual(a, b);
+        }
     }
 }

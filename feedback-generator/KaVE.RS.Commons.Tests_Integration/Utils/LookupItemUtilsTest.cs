@@ -368,7 +368,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
 
             ThenProposalCollectionContains(
                 "[C`1[[T -> C`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject]], TestProject] ccs");
-
         }
 
         [Test]
@@ -870,27 +869,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
         }
 
         [Test]
-        public void ShouldNotCrash()
-        {
-            CompleteInCSharpFile(@"
-                namespace N {
-                    class C1 {
-                        public delegate IEnumerable<D> D();
-                    }
-                    class C2{
-                        void M(C1.D$){}
-                    }   
-                }
-            ");
-
-            // strange enough, if the delegte is used in the same class, then the delegate name
-            // is identified correctly in the SST, but the proposal list does not include the
-            // namespace. Seems to be a problem in the comde completion
-            ThenProposalCollectionContains(
-                "d:[i:System.Collections.Generic.IEnumerable`1[[T]], mscorlib, 4.0.0.0] [N.C1+D, TestProject].()");
-        }
-
-        [Test]
         public void TranslatesArrayOfGenericType()
         {
             CompleteInFile(@"
@@ -904,7 +882,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[i:System.Collections.Generic.IList`1[][[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [C, TestProject].M()");
+            ThenProposalCollectionContains(
+                "[i:System.Collections.Generic.IList`1[][[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [C, TestProject].M()");
         }
 
         [TearDown]

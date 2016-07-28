@@ -232,22 +232,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
         [Test]
         public void Regression_WildCombination()
         {
-            CompleteInCSharpFile(@"
-                namespace N
-                {
-                    class Outer<T0>
+            CompleteInNamespace(@"
+                class Outer<T0> {
+                    public class C1<T1>
                     {
-                        public class C1<T1>
-                        {
-                            public class C2<T2> {}
-                        }
+                        public class C2<T2> {}
+                    }
 
-                        public class C
+                    public class C
+                    {
+                        public void M(C1<int>.C2<int> p)
                         {
-                            public void M(C1<int>.C2<int> p)
-                            {
-                                $
-                            }
+                            $
                         }
                     }
                 }
@@ -256,6 +252,61 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
             AssertParameterTypes("N.Outer`1[[T0]]+C1`1[[T1 -> {0}]]+C2`1[[T2 -> {0}]], TestProject".FormatEx(Fix.Int));
         }
 
+        [Test]
+        public void RecursiveDefinition1()
+        {
+            CompleteInNamespace(@"
+                class C {
+                    public delegate D D();
+                    void M(D d){ $ }
+                }   
+            ");
+
+            const string delType = "N.C+D, TestProject";
+            AssertParameterTypes("d:[{0}] [{0}].()".FormatEx(delType));
+        }
+
+        [Test]
+        public void RecursiveDefinition2()
+        {
+            CompleteInNamespace(@"
+                class C {
+                    public delegate IEnumerable<D> D();
+                    void M(D d){ $ }
+                }   
+            ");
+
+            const string delType = "N.C+D, TestProject";
+            AssertParameterTypes(
+                "d:[i:System.Collections.Generic.IEnumerable`1[[T -> {0}]], mscorlib, 4.0.0.0] [{0}].()".FormatEx(
+                    delType));
+        }
+
+        [Test]
+        public void RecursiveDefinition3()
+        {
+            CompleteInNamespace(@"
+                class C1 {
+                    public delegate IEnumerable<D> D();
+                }
+                class C2 {
+                    void M(C1.D d){ $ }
+                }   
+            ");
+
+            const string delType = "N.C1+D, TestProject";
+            AssertParameterTypes(
+                "d:[i:System.Collections.Generic.IEnumerable`1[[T -> {0}]], mscorlib, 4.0.0.0] [{0}].()".FormatEx(
+                    delType));
+        }
+
         #endregion
+    }
+
+    class C
+    {
+        public delegate D D();
+
+        void M(D d) {}
     }
 }

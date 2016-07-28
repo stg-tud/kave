@@ -33,6 +33,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
@@ -185,13 +186,18 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
+            var dei = new DeclaredElementInstance(delegateElement, substitution);
+            var elemTypeId = delegateElement.GetAssemblyQualifiedName(substitution, seenElements);
+            seenElements[dei] = TypeUtils.CreateTypeName(elemTypeId);
+
             var invokeMethod = delegateElement.InvokeMethod;
+
             var identifier = new StringBuilder("d:");
-            identifier.AppendType(invokeMethod.ReturnType, seenElements)
-                      .Append(" [")
-                      .Append(delegateElement.GetAssemblyQualifiedName(substitution, seenElements))
-                      .Append("].")
-                      .AppendParameters(invokeMethod, substitution, seenElements);
+            identifier.AppendType(invokeMethod.ReturnType, seenElements);
+            identifier.Append(" [");
+            identifier.Append(elemTypeId);
+            identifier.Append("].");
+            identifier.AppendParameters(invokeMethod, substitution, seenElements);
             return Names.Type(identifier.ToString());
         }
 
@@ -392,11 +398,12 @@ namespace KaVE.RS.Commons.Utils.Naming
             IType valueType,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            identifier.AppendType(valueType, seenElements)
-                      .Append(' ')
-                      .AppendType(member.GetContainingType(), substitution, seenElements)
-                      .Append('.')
-                      .Append(member.ShortName);
+            identifier.AppendType(valueType, seenElements);
+            identifier.Append(' ');
+            var containingType = member.GetContainingType();
+            identifier.AppendType(containingType, substitution, seenElements);
+            identifier.Append('.');
+            identifier.Append(member.ShortName);
         }
 
         private static StringBuilder AppendType(this StringBuilder identifier,

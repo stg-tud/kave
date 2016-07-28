@@ -89,7 +89,20 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public ITypeName ReturnType
         {
-            get { return DelegateMethod.ReturnType; }
+            get
+            {
+                var rt = DelegateMethod.ReturnType;
+
+                // simple case
+                if (!rt.Identifier.Contains(DelegateType.Identifier))
+                {
+                    return rt;
+                }
+
+                // recursive case
+                var nrtId = rt.Identifier.Replace(DelegateType.Identifier, Identifier);
+                return TypeUtils.CreateTypeName(nrtId);
+            }
         }
 
         public static bool IsDelegateTypeNameIdentifier([NotNull] string identifier)
