@@ -47,6 +47,16 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         }
 
         [Test]
+        public void DifferentStylesOfPartialClassIdentifierAreEqual()
+        {
+            var a = new SST {PartialClassIdentifier = null};
+            var b = new SST {PartialClassIdentifier = ""};
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+
+        [Test]
         public void SettingValues()
         {
             var sut = new SST

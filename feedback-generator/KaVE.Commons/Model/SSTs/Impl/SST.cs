@@ -87,8 +87,11 @@ namespace KaVE.Commons.Model.SSTs.Impl
 
         private bool Equals(SST other)
         {
+            var areBothNonPartial = string.IsNullOrEmpty(PartialClassIdentifier) &&
+                                    string.IsNullOrEmpty(other.PartialClassIdentifier);
+            var pciEq = areBothNonPartial || string.Equals(PartialClassIdentifier, other.PartialClassIdentifier);
             return EnclosingType.Equals(other.EnclosingType) &&
-                   string.Equals(PartialClassIdentifier, other.PartialClassIdentifier) && Fields.Equals(other.Fields) &&
+                   pciEq && Fields.Equals(other.Fields) &&
                    Properties.Equals(other.Properties) && Methods.Equals(other.Methods) && Events.Equals(other.Events) &&
                    Delegates.Equals(other.Delegates);
         }
@@ -98,7 +101,7 @@ namespace KaVE.Commons.Model.SSTs.Impl
             unchecked
             {
                 var hashCode = EnclosingType.GetHashCode();
-                if (PartialClassIdentifier != null)
+                if (!string.IsNullOrEmpty(PartialClassIdentifier))
                 {
                     hashCode = (hashCode*397) ^ PartialClassIdentifier.GetHashCode();
                 }
