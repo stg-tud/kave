@@ -28,6 +28,7 @@ using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Util;
 using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
@@ -218,6 +219,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             var structName = structElement.GetAssemblyQualifiedName(substitution, seenElements);
             var typeNameCandidate = Names.Type(structName);
             // predefined structs are recognized as such without flagging them
+            // TODO NameUpdate: Get rid of this special handling (think about predefined type names, e.g., p:int)
             var isPredefinedStruct = typeNameCandidate.IsStructType;
             return isPredefinedStruct ? typeNameCandidate : Names.Type("s:" + structName);
         }
@@ -247,7 +249,19 @@ namespace KaVE.RS.Commons.Utils.Naming
             {
                 return false;
             }
-            return !substitution.IsId();
+            if (substitution.IsId())
+            {
+                return false;
+            }
+            var targetType = substitution[typeParameter];
+            var targetTypeParameter = targetType.GetTypeElement<ITypeParameter>();
+            if (targetTypeParameter == null)
+            {
+                return true;
+            }
+            var o1 = typeParameter.Owner;
+            var o2 = targetTypeParameter.Owner;
+            return !o1.Equals(o2);
         }
 
         [NotNull]

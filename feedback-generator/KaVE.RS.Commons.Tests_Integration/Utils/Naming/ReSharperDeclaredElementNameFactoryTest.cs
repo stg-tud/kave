@@ -106,33 +106,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming
         }
 
         [Test]
-        public void Regression_IncorrecDeclaringTypeForC2()
-        {
-            CompleteInCSharpFile(@"
-                namespace N
-                {
-                    class Outer<T0>
-                    {
-                        public class C1<T1>
-                        {
-                            public class C2<T2> {}
-                        }
-
-                        public class C
-                        {
-                            public void M(C1<int>.C2<int> p)
-                            {
-                                $
-                            }
-                        }
-                    }
-                }
-            ");
-
-            AssertParameterTypes("N.Outer`1[[T0]]+C1`1[[T1 -> {0}]]+C2`1[[T2 -> {0}]], TestProject".FormatEx(Fix.Int));
-        }
-
-        [Test]
         public void Regression_ArrayIsIncorrectlyDerivedAndPutOntoC1()
         {
             CompleteInCSharpFile(@"

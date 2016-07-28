@@ -14,47 +14,116 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Utils;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
-
-
-namespace N
-{
-    public class C1<T1> {}
-
-    public class C<T2>
-    {
-        public void M(C1<T2>[] p) {}
-    }
-}
 
 namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElementNameFactoryTestSuite
 {
     internal class Types : NameFactoryBaseTest
     {
+        #region basic cases
+
         [Test]
-        public void Basic_Interfaces()
+        public void Arrays()
         {
-            Assert.Fail();
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public void M(int[] ns) { $ }
+                }
+            ");
+
+            AssertParameterTypes(Fix.IntArray.Identifier);
+        }
+
+        [Test]
+        public void Delegates()
+        {
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public delegate void D(int i);
+                    public void M(D d) { $ }
+                }
+            ");
+
+            var delType = "d:[{0}] [N.C+D, TestProject].([{1}] i)".FormatEx(Fix.Void, Fix.Int);
+            AssertParameterTypes(delType);
+        }
+
+        [Test]
+        public void Delegates_BuiltIn()
+        {
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public void M(Action<int> a) { $ }
+                }
+            ");
+
+            var id = "d:[{0}] [System.Action`1[[T -> {1}]], mscorlib, 4.0.0.0].([T] obj)".FormatEx(Fix.Void, Fix.Int);
+            AssertParameterTypes(id);
         }
 
         [Test]
         public void Basic_Enums()
         {
-            Assert.Fail();
+            CompleteInNamespace(@"
+                public enum E {}
+                public class C
+                {
+                    public void M(E d) { $ }
+                }
+            ");
+
+            AssertParameterTypes("e:N.E, TestProject");
+        }
+
+        [Test]
+        public void Basic_Interfaces()
+        {
+            CompleteInNamespace(@"
+                public interface I {}
+                public class C
+                {
+                    public void M(I i) { $ }
+                }
+            ");
+
+            AssertParameterTypes("i:N.I, TestProject");
         }
 
         [Test]
         public void Basic_Structs()
         {
-            Assert.Fail();
+            CompleteInNamespace(@"
+                public struct S {}
+                public class C
+                {
+                    public void M(S s) { $ }
+                }
+            ");
+
+            AssertParameterTypes("s:N.S, TestProject");
         }
 
-        [Test]
+        [Test, Ignore("Special handling for built-in types is inconsistent, but ignored for now")]
         public void Basic_Structs_BuiltIn()
         {
-            Assert.Fail();
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public void M(int i) { $ }
+                }
+            ");
+
+            AssertParameterTypes("s:System.Int32, mscorlib, 4.0.0.0");
         }
+
+        #endregion
+
+        #region generics
 
         [Test]
         public void Generics_Free()
@@ -139,5 +208,54 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
 
             AssertSingleMethodName("[{0}] [N.C`1[[G1]], TestProject].M([N.G`1[[G1 -> G1]], TestProject] p)", Fix.Void);
         }
+
+        [Test]
+        public void Generics_Combination()
+        {
+            CompleteInNamespace(@"
+                class G<G1> {}
+                class C<G2>
+                {
+                    public void M(G2 p1, G<G2> p2, G<int> p3)
+                    {
+                        $
+                    }
+                }
+            ");
+
+            AssertSingleMethodName(
+                "[{0}] [N.C`1[[G2]], TestProject].M([G2] p1, [N.G`1[[G1 -> G2]], TestProject] p2, [N.G`1[[G1 -> {1}]], TestProject] p3)",
+                Fix.Void,
+                Fix.Int);
+        }
+
+        [Test]
+        public void Regression_WildCombination()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    class Outer<T0>
+                    {
+                        public class C1<T1>
+                        {
+                            public class C2<T2> {}
+                        }
+
+                        public class C
+                        {
+                            public void M(C1<int>.C2<int> p)
+                            {
+                                $
+                            }
+                        }
+                    }
+                }
+            ");
+
+            AssertParameterTypes("N.Outer`1[[T0]]+C1`1[[T1 -> {0}]]+C2`1[[T2 -> {0}]], TestProject".FormatEx(Fix.Int));
+        }
+
+        #endregion
     }
 }
