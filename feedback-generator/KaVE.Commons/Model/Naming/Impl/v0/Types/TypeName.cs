@@ -159,6 +159,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         private int FindPlus(string id)
         {
             var comma = id.Length - Assembly.Identifier.Length;
+            // unknown type
+            if (comma < 0)
+            {
+                return -1;
+            }
             var plus = id.FindPrevious(comma, '+', ']');
             if (plus == -1)
             {
