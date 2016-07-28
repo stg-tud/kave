@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
@@ -98,6 +99,12 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             var b = new Context();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void ImplementsCustomToString()
+        {
+            ToStringAssert.Reflection(new Context());
         }
     }
 }

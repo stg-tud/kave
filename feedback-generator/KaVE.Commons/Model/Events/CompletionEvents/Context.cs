@@ -74,5 +74,10 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }
