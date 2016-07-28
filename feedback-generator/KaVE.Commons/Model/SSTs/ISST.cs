@@ -27,7 +27,7 @@ namespace KaVE.Commons.Model.SSTs
         [NotNull]
         ITypeName EnclosingType { get; }
 
-        [NotNull]
+        [CanBeNull]
         string PartialClassIdentifier { get; }
 
         bool IsPartialClass { get; }

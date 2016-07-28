@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             var sut = new SST();
 
             Assert.AreEqual(Names.UnknownType, sut.EnclosingType);
-            Assert.AreEqual("", sut.PartialClassIdentifier);
+            Assert.Null(sut.PartialClassIdentifier);
             Assert.False(sut.IsPartialClass);
             Assert.AreEqual(Lists.NewList<IDelegateDeclaration>(), sut.Delegates);
             Assert.AreEqual(Lists.NewList<IEventDeclaration>(), sut.Events);
@@ -68,6 +68,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             Assert.AreEqual(Lists.NewList(new FieldDeclaration()), sut.Fields);
             Assert.AreEqual(Lists.NewList(new MethodDeclaration()), sut.Methods);
             Assert.AreEqual(Lists.NewList(new PropertyDeclaration()), sut.Properties);
+        }
+
+        [Test]
+        public void IsPartialCanHandleBothEmptyStringsAndNulls()
+        {
+            Assert.IsFalse(new SST {PartialClassIdentifier = null}.IsPartialClass);
+            Assert.IsFalse(new SST {PartialClassIdentifier = ""}.IsPartialClass);
+            Assert.IsTrue(new SST {PartialClassIdentifier = "p"}.IsPartialClass);
         }
 
         [Test]

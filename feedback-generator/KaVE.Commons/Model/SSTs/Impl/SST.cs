@@ -37,7 +37,7 @@ namespace KaVE.Commons.Model.SSTs.Impl
 
         public bool IsPartialClass
         {
-            get { return !Equals("", PartialClassIdentifier); }
+            get { return !string.IsNullOrEmpty(PartialClassIdentifier); }
         }
 
         [DataMember]
@@ -73,7 +73,6 @@ namespace KaVE.Commons.Model.SSTs.Impl
         public SST()
         {
             EnclosingType = Names.UnknownType;
-            PartialClassIdentifier = "";
             Fields = Sets.NewHashSet<IFieldDeclaration>();
             Properties = Sets.NewHashSet<IPropertyDeclaration>();
             Methods = Sets.NewHashSet<IMethodDeclaration>();
@@ -99,7 +98,10 @@ namespace KaVE.Commons.Model.SSTs.Impl
             unchecked
             {
                 var hashCode = EnclosingType.GetHashCode();
-                hashCode = (hashCode*397) ^ PartialClassIdentifier.GetHashCode();
+                if (PartialClassIdentifier != null)
+                {
+                    hashCode = (hashCode*397) ^ PartialClassIdentifier.GetHashCode();
+                }
                 hashCode = (hashCode*397) ^ Fields.GetHashCode();
                 hashCode = (hashCode*397) ^ Properties.GetHashCode();
                 hashCode = (hashCode*397) ^ Methods.GetHashCode();
