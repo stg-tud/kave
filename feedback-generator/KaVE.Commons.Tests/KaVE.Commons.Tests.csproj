@@ -117,7 +117,7 @@
     <Compile Include="Model\Naming\Impl\v0\Types\Organization\NamespaceNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\GeneralNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\ParameterNameTest.cs" />
-    <Compile Include="Model\Names\VisualStudio\TypeNamePropertyDebuggerTest.cs" />
+    <Compile Include="Model\Naming\TypeNamePropertyDebuggerTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\NamesV1Test.cs" />
     <Compile Include="Utils\Naming\AnonymousNameUtilsTest.cs" />
     <Compile Include="Utils\Naming\NameSerializationTest.cs" />

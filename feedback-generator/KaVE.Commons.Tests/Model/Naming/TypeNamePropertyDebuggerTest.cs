@@ -16,16 +16,16 @@
 
 using System;
 using System.Collections;
-using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Model.Names.VisualStudio
+namespace KaVE.Commons.Tests.Model.Naming
 {
     internal class TypeNamePropertyDebuggerTest
     {
         public void Process(string typeId)
         {
-            var sut = TypeName.Get(typeId);
+            var sut = Names.Type(typeId);
             var type = sut.GetType();
             Console.WriteLine("### '{0}' ###", typeId);
             Console.WriteLine("Type: {0}", type);
