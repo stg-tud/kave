@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
@@ -38,10 +36,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             {
                 // TODO NameUpdate: write fix and reenable check (+test, +repair).
                 //Asserts.That(ReturnType.IsVoidType);
-                if (".cctor".Equals(Name))
-                {
-                    //Asserts.That(IsStatic);
-                }
+                //if (".cctor".Equals(Name))
+                //{
+                //Asserts.That(IsStatic);
+                //}
                 // else: Asserts.Not(IsStatic);
             }
         }
@@ -60,49 +58,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get { return SignatureSyntax.Match(Identifier).Groups[3].Value; }
         }
 
-        private string _fullName;
-
-        private string FullName
-        {
-            get { return _fullName ?? (_fullName = GetFullNameFromMethod(Identifier)); }
-        }
-
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        private static string GetFullNameFromMethod(string id)
-        {
-            var openRT = id.IndexOf("[", StringComparison.Ordinal);
-            var closeRT = id.FindCorrespondingCloseBracket(openRT);
-
-            var openDT = id.FindNext(closeRT, '[');
-            var closeDT = id.FindCorrespondingCloseBracket(openDT);
-
-            var dot = id.FindNext(closeDT, '.');
-
-            var nextGeneric = id.FindNext(dot, '`');
-            if (nextGeneric == -1)
-            {
-                nextGeneric = id.Length;
-            }
-            var nextParam = id.FindNext(dot, '(');
-            var isGeneric = nextGeneric < nextParam;
-
-            int openParams;
-            if (isGeneric)
-            {
-                var openGeneric = id.FindNext(dot, '[');
-                var closeGeneric = id.FindCorrespondingCloseBracket(openGeneric);
-
-                openParams = id.FindNext(closeGeneric, '(');
-            }
-            else
-            {
-                openParams = id.FindNext(dot, '(');
-            }
-            int afterDot = dot + 1;
-            var fullName = id.Substring(afterDot, openParams - afterDot).Trim();
-            return fullName;
-        }
-
         private IKaVEList<ITypeParameterName> _typeParameters;
 
         public IKaVEList<ITypeParameterName> TypeParameters
@@ -112,7 +67,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 if (_typeParameters == null)
                 {
                     _typeParameters = FullName.Contains("[[")
-                        ? FullName.ParseTypeParameters()
+                        ? FullName.ParseTypeParameterList(0, 10)
                         : Lists.NewList<ITypeParameterName>();
                 }
 

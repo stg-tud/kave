@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
@@ -97,6 +98,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
                 }
                 return UnknownName.Get(typeof(IMemberName)).FullName;
             }
+        }
+
+        public string FullName
+        {
+            get { throw new NotImplementedException(); }
         }
 
         private string GetName(TypeNamingParser.MethodDefinitionContext signature)

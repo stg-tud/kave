@@ -60,6 +60,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 new[] {"n.C1+C2,P", "n.C1+C2[],P", "n.C1+C2[,],P"}, // nested
                 new[] {"C1`1[[T1]],P", "C1`1[][[T1]],P", "C1`1[,][[T1]],P"}, // generic
                 new[] {"C1+C2`1[[T2]],P", "C1+C2`1[][[T2]],P", "C1+C2`1[,][[T2]],P"}, // nested generic
+                new[] {"C1`1[[T2]]+C2,P", "C1`1[[T2]]+C2[],P", "C1`1[[T2]]+C2[,],P"}, // generic nested
                 new[] {"C1`1[[T1]]+C2`1[[T2]],P", "C1`1[[T1]]+C2`1[][[T2]],P", "C1`1[[T1]]+C2`1[,][[T2]],P"},
                 // nested generic+generic
                 new[] {"T -> T[],P", "T[] -> T[],P", "T[,] -> T[],P"}, // type parameter bound to array

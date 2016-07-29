@@ -191,7 +191,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void TypeParameterParsingIsCached()
         {
-            var sut = new DelegateTypeName("d:[?] [n.C+D`1[[T]]].()");
+            var sut = new DelegateTypeName("d:[?] [n.C+D`1[[T]], P].()");
             var a = sut.TypeParameters;
             var b = sut.TypeParameters;
             Assert.AreSame(a, b);

@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
@@ -26,7 +27,22 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
     {
         public TypeName() : this(UnknownTypeIdentifier) {}
 
-        public TypeName(string identifier) : base(identifier) {}
+        public TypeName(string identifier) : base(identifier)
+        {
+            if (UnknownTypeIdentifier.Equals(identifier))
+            {
+                return;
+            }
+
+            var hasComma = identifier.Contains(",") &&
+                           identifier.LastIndexOf(',') > identifier.LastIndexOf(']');
+            if (!hasComma)
+            {
+                throw new ValidationException(
+                    "does not contain a correct assembly name: '{0}'".FormatEx(identifier),
+                    null);
+            }
+        }
 
         public override IAssemblyName Assembly
         {
@@ -85,18 +101,23 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             }
         }
 
+        private string _fullName;
+
         public override string FullName
         {
             get
             {
-                var length = GetLengthOfTypeName();
-                var fn = Identifier.Substring(0, length);
-                if (IsEnumType || IsInterfaceType || IsStructType)
+                if (_fullName == null)
                 {
-                    var startIdx = fn.IndexOf(":", StringComparison.Ordinal) + 1;
-                    return fn.Substring(startIdx);
+                    var length = GetLengthOfTypeName();
+                    _fullName = Identifier.Substring(0, length);
+                    if (IsEnumType || IsInterfaceType || IsStructType)
+                    {
+                        var startIdx = _fullName.IndexOf(":", StringComparison.Ordinal) + 1;
+                        _fullName = _fullName.Substring(startIdx);
+                    }
                 }
-                return fn;
+                return _fullName;
             }
         }
 

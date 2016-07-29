@@ -17,6 +17,7 @@
 using System.Linq;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
@@ -108,13 +109,15 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 if (_typeParameters == null)
                 {
-                    if (IsArray || IsDelegateType)
+                    var close = FullName.FindPrevious(FullName.Length - 1, '+', ']');
+                    if (IsArray || IsDelegateType || close == -1 || FullName[close] == '+')
                     {
                         _typeParameters = Lists.NewList<ITypeParameterName>();
                     }
                     else
                     {
-                        _typeParameters = FullName.ParseTypeParameters();
+                        var open = FullName.FindCorrespondingOpenBracket(close);
+                        _typeParameters = FullName.ParseTypeParameterList(open, close);
                     }
                 }
                 return _typeParameters;

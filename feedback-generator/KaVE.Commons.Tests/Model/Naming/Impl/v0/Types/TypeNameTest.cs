@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
@@ -66,6 +67,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(Lists.NewList<ITypeParameterName>(), sut.TypeParameters);
         }
 
+        [Test]
+        public void ShouldCacheFullName()
+        {
+            var sut = new TypeName("T,P");
+            Assert.AreSame(sut.FullName, sut.FullName);
+        }
 
         public IEnumerable<string[]> ValidTypes()
         {
@@ -82,6 +89,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             ids.Add(new[] {"n.T1`1[[T2]], P", "P", "n", "n.T1`1[[T2]]", "T1"});
             ids.Add(new[] {"n.T1+T2, P", "P", "n", "n.T1+T2", "T2"});
             ids.Add(new[] {"n.T1`1[[T2]]+T3`1[[T4]], P", "P", "n", "n.T1`1[[T2]]+T3`1[[T4]]", "T3"});
+            ids.Add(new[] {"n.C+N`1[[T]],P", "P", "n", "n.C+N`1[[T]]", "N"});
+            ids.Add(new[] {"n.C`1[[T]]+N,P", "P", "n", "n.C`1[[T]]+N", "N"});
+            ids.Add(new[] {"n.C`1[[T]]+N`1[[T]],P", "P", "n", "n.C`1[[T]]+N`1[[T]]", "N"});
             return ids;
         }
 
@@ -182,7 +192,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             {
                 Assert.Null(sut.DeclaringType);
             }
-            Assert.AreEqual(typeId.Contains("`"), sut.HasTypeParameters);
+            var hasTypeParams = sut.Identifier.Contains("`") &
+                                sut.Identifier.LastIndexOf('`') > sut.Identifier.LastIndexOf('+');
+            Assert.AreEqual(hasTypeParams, sut.HasTypeParameters);
         }
 
         [Test]
@@ -354,7 +366,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [Test]
-        public void ShouldHaveTypeParameters()
+        public void ShouldParseTypeParameters()
         {
             const string stringIdentifier = "S -> System.String, mscore, 4.0.0.0";
             const string intIdentifier = "I -> System.Int32, mscore, 4.0.0.0";
@@ -370,6 +382,27 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(2, parameterizedTypeName.TypeParameters.Count);
             Assert.AreEqual(stringIdentifier, parameterizedTypeName.TypeParameters[0].Identifier);
             Assert.AreEqual(intIdentifier, parameterizedTypeName.TypeParameters[1].Identifier);
+        }
+
+        public object[] TypeParameterSource()
+        {
+            return new[]
+            {
+                new object[] {"T", false},
+                new object[] {"T,P", false},
+                new object[] {"T`1[[T]], P", true},
+                new object[] {"T+N, P", false},
+                new object[] {"T`1[[T]]+N, P", false},
+                new object[] {"T+N`1[[T]], P", true},
+                new object[] {"T`1[[T]]+N`1[[T]], P", true}
+            };
+        }
+
+        [TestCaseSource("TypeParameterSource")]
+        public void ShouldHaveTypeParameters(string id, bool hasTypeParameters)
+        {
+            var sut = TypeUtils.CreateTypeName(id);
+            Assert.AreEqual(hasTypeParameters, sut.HasTypeParameters);
         }
 
         [Test]
@@ -471,6 +504,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             var a = sut.TypeParameters;
             var b = sut.TypeParameters;
             Assert.AreSame(a, b);
+        }
+
+        [ExpectedException(typeof(ValidationException)), //
+         TestCase("T`1[[G1]]"), TestCase("T`1[[G1 -> T,P]]")]
+        public void TypeNameNeedsComma(string invalidTypeName)
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new TypeName(invalidTypeName);
         }
 
         [TestCaseSource("NestedTypes")]

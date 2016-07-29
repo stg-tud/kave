@@ -51,6 +51,15 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         }
 
         [TestCaseSource(typeof(TestUtils), "TypeSource")]
+        public void ShouldParseFullMemberName(string typeId)
+        {
+            var id = string.Format("[{0}] [{0}].M", typeId);
+            var sut = GetMemberNameForBaseTests(id);
+
+            Assert.AreEqual("{0}.M", sut.FullName);
+        }
+
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void ShouldRecognizeStaticFieldName(string typeId)
         {
             var staticId = string.Format("static [{0}] [{0}].M", typeId);

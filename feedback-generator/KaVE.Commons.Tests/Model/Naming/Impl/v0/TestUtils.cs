@@ -35,7 +35,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
                 "T[]",
                 "T[] -> T,P",
                 "T[],P",
-                "d:[?] [?].()[]"
+                "d:[?] [?].()[]",
+                // nested
+                "n.C+D`1[[T]], P",
+                "n.C`1[[T]]+D, P"
             };
         }
     }

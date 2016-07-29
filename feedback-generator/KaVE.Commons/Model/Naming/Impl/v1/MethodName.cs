@@ -175,6 +175,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
+        public string FullName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public string Identifier
         {
             get { return Ctx.GetText(); }

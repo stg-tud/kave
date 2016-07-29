@@ -144,7 +144,18 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
         public string[] Types()
         {
-            return new[] {"?", "T", "T,P", "s:n.S,P", "i:n:I,P", "n.T+T2,P", "n.T`1[[T -> ?]]", "d:[?] [?].()", "T[],P"};
+            return new[]
+            {
+                "?",
+                "T",
+                "T,P",
+                "s:n.S,P",
+                "i:n:I,P",
+                "n.T+T2,P",
+                "n.T`1[[T -> ?]],P",
+                "d:[?] [?].()",
+                "T[],P"
+            };
         }
 
         public IEnumerable<string[]> TypeParametersSource()

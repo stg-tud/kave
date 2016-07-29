@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -50,6 +51,30 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.False(sut.IsExtensionMethod);
             Assert.AreEqual(Lists.NewList<IParameterName>(), sut.Parameters);
             Assert.AreEqual(Lists.NewList<ITypeParameterName>(), sut.TypeParameters);
+        }
+
+        [Test]
+        public void ShouldParseTypeParameters()
+        {
+            var types = new[] {"T,P", "T[],P", "T`1[[G1]],P", "T`1[[G1 -> T,P]],P"};
+
+            foreach (var typeId in types)
+            {
+                var m0 = new MethodName("[?] [{0}].M([{0}] p)".FormatEx(typeId));
+                Assert.IsFalse(m0.HasTypeParameters);
+
+                var m1 = new MethodName("[?] [{0}].M`1[[G1 -> {0}]]([{0}] p)".FormatEx(typeId));
+                Assert.IsTrue(m1.HasTypeParameters);
+                Assert.AreEqual(Lists.NewList(new TypeParameterName("G1 -> {0}".FormatEx(typeId))), m1.TypeParameters);
+
+                var m2 = new MethodName("[?] [{0}].M`2[[G1 -> {0}],[G2 -> {0}]]([{0}] p)".FormatEx(typeId));
+                Assert.IsTrue(m2.HasTypeParameters);
+                Assert.AreEqual(
+                    Lists.NewList(
+                        new TypeParameterName("G1 -> {0}".FormatEx(typeId)),
+                        new TypeParameterName("G2 -> {0}".FormatEx(typeId))),
+                    m2.TypeParameters);
+            }
         }
 
         [Test]

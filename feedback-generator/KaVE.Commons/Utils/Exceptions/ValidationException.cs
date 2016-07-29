@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Types;
+using System;
 
-namespace KaVE.Commons.Model.Naming.CodeElements
+namespace KaVE.Commons.Utils.Exceptions
 {
-    public interface IMemberName : IName
+    public class ValidationException : KaVEException
     {
-        ITypeName DeclaringType { get; }
-        ITypeName ValueType { get; }
-        bool IsStatic { get; }
-
-        /// <summary>
-        /// short name (e.g., _f)
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// full name (e.g.: n.C._f)
-        /// </summary>
-        string FullName { get; }
+        public ValidationException(string message, Exception cause) : base(message, cause) {}
     }
 }

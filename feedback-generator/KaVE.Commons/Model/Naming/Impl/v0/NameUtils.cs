@@ -243,39 +243,27 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return numTicks;
         }
 
-        /// <summary>
-        ///     Parses the type parameter list from a type's full name or a method's signature.
-        /// </summary>
-        /// <param name="fullNameOrSignature">Expected to contain a type-parameter list.</param>
-        public static IKaVEList<ITypeParameterName> ParseTypeParameters(this string fullNameOrSignature)
+        public static IKaVEList<ITypeParameterName> ParseTypeParameterList(this string id, int open, int close)
         {
+            Asserts.That(id[open] == '[');
+            Asserts.That(id[close] == ']');
+
             var parameters = Lists.NewList<ITypeParameterName>();
-            var openBraces = 0;
-            var startIndex = fullNameOrSignature.IndexOf('[') + 1;
-            for (var currentIndex = startIndex; currentIndex < fullNameOrSignature.Length; currentIndex++)
+            for (var cur = open; cur < close;)
             {
-                var c = fullNameOrSignature[currentIndex];
+                cur++; // skip open bracket or comma
 
-                if (c == '[')
-                {
-                    openBraces++;
-                }
-                else if (c == ']')
-                {
-                    openBraces--;
+                cur = id.FindNext(cur, '[');
+                var closeParam = id.FindCorrespondingCloseBracket(cur);
 
-                    if (openBraces == 0)
-                    {
-                        var indexAfterOpeningBrace = startIndex + 1;
-                        var lengthToBeforeClosingBrace = currentIndex - startIndex - 1;
-                        var descriptor = fullNameOrSignature.Substring(
-                            indexAfterOpeningBrace,
-                            lengthToBeforeClosingBrace);
-                        var parameterTypeName = new TypeParameterName(descriptor);
-                        parameters.Add(parameterTypeName);
-                        startIndex = fullNameOrSignature.IndexOf('[', currentIndex);
-                    }
-                }
+                cur++; // skip bracket
+
+                var tpId = id.Substring(cur, closeParam - cur);
+                parameters.Add(new TypeParameterName(tpId));
+
+                closeParam++; // skip bracket
+
+                cur = id.FindNext(closeParam, ',', ']');
             }
             return parameters;
         }

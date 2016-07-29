@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
@@ -48,6 +50,49 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                     ? nameWithBraces.Substring(0, endIdx)
                     : nameWithBraces;
             }
+        }
+
+        private string _fullName;
+
+        public string FullName
+        {
+            get { return _fullName ?? (_fullName = GetFullName(Identifier)); }
+        }
+
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        private static string GetFullName(string id)
+        {
+            var openRT = id.IndexOf("[", StringComparison.Ordinal);
+            var closeRT = id.FindCorrespondingCloseBracket(openRT);
+
+            var openDT = id.FindNext(closeRT, '[');
+            var closeDT = id.FindCorrespondingCloseBracket(openDT);
+
+            var dot = id.FindNext(closeDT, '.');
+
+            var nextGeneric = id.FindNext(dot, '`');
+            if (nextGeneric == -1)
+            {
+                nextGeneric = id.Length;
+            }
+            var nextParam = id.FindNext(dot, '(');
+            var isGeneric = nextGeneric < nextParam;
+
+            int openParams;
+            if (isGeneric)
+            {
+                var openGeneric = id.FindNext(dot, '[');
+                var closeGeneric = id.FindCorrespondingCloseBracket(openGeneric);
+
+                openParams = id.FindNext(closeGeneric, '(');
+            }
+            else
+            {
+                openParams = id.FindNext(dot, '(');
+            }
+            int afterDot = dot + 1;
+            var fullName = id.Substring(afterDot, openParams - afterDot).Trim();
+            return fullName;
         }
 
         public ITypeName ValueType
