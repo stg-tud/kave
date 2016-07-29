@@ -95,10 +95,13 @@ namespace KaVE.Commons.Utils.Naming
         {
             var identifier = new StringBuilder();
             identifier.AppendAnonymousMemberName(method, method.ReturnType);
-            identifier.AppendIf(method.HasTypeParameters, "`" + method.TypeParameters.Count);
-            var inLocalProject = method.DeclaringType.IsDeclaredInEnclosingProjectOrUnknown();
-            identifier.AppendTypeParameters(method, inLocalProject);
-            identifier.AppendParameters(method.Parameters, inLocalProject);
+            if (method.HasTypeParameters)
+            {
+                identifier.Append('`').Append(method.TypeParameters.Count);
+            }
+            var anonymize = method.DeclaringType.IsUnknown || method.DeclaringType.Assembly.IsLocalProject;
+            identifier.AppendTypeParameters(method, anonymize);
+            identifier.AppendParameters(method.Parameters, anonymize);
             return Names.Method(identifier.ToString());
         }
 
@@ -139,9 +142,9 @@ namespace KaVE.Commons.Utils.Naming
             bool parameterNameWasAnonymized = false)
         {
             identifier.Append('[');
-            if (type.IsTypeParameter && parameterNameWasAnonymized)
+            if (parameterNameWasAnonymized && type.IsTypeParameter && !type.AsTypeParameterName.IsBound)
             {
-                identifier.Append(((ITypeParameterName) type).TypeParameterShortName.ToHash());
+                identifier.Append(type.AsTypeParameterName.TypeParameterShortName.ToHash());
             }
             else
             {
@@ -178,10 +181,13 @@ namespace KaVE.Commons.Utils.Naming
             IMemberName member,
             ITypeName valueType)
         {
-            identifier.AppendIf(member.IsStatic, MemberName.StaticModifier + " ");
+            if (member.IsStatic)
+            {
+                identifier.Append(MemberName.StaticModifier).Append(" ");
+            }
             identifier.AppendAnonymousTypeName(valueType).Append(' ');
             identifier.AppendAnonymousTypeName(member.DeclaringType).Append('.');
-            var originatesInAssembly = !member.DeclaringType.IsDeclaredInEnclosingProjectOrUnknown();
+            var originatesInAssembly = !member.DeclaringType.IsUnknown && !member.DeclaringType.Assembly.IsLocalProject;
             var isCtor = member.Name.Equals(".ctor");
             var isCctor = member.Name.Equals(".cctor");
             var nameShouldNotBeHashed = originatesInAssembly || isCctor || isCtor;
@@ -211,10 +217,6 @@ namespace KaVE.Commons.Utils.Naming
             {
                 return ToAnonymousType_Delegate(type.AsDelegateTypeName);
             }
-            if (type.IsNestedType)
-            {
-                return ToAnonymousType_Nested(type);
-            }
             if (type.IsArray)
             {
                 return ToAnonymousType_Array(type.AsArrayTypeName);
@@ -230,11 +232,6 @@ namespace KaVE.Commons.Utils.Naming
             }
 
             return ToAnonymousType_Regular(type);
-        }
-
-        private static ITypeName ToAnonymousType_Nested(ITypeName type)
-        {
-            throw new NotImplementedException();
         }
 
         private static IArrayTypeName ToAnonymousType_Array(IArrayTypeName type)
@@ -262,8 +259,8 @@ namespace KaVE.Commons.Utils.Naming
         {
             var identifier = new StringBuilder();
             identifier.AppendTypeKindPrefix(type);
-            var inEnclosingProject = type.IsDeclaredInEnclosingProjectOrUnknown();
-            identifier.Append(inEnclosingProject ? type.AnonymizedFullName() : type.FullName);
+            var inEnclosingProject = type.Assembly.IsLocalProject;
+            identifier.Append(type.AnonymizedFullName(inEnclosingProject));
             identifier.AppendTypeParameters(type, inEnclosingProject).Append(", ");
             identifier.Append(type.Assembly.ToAnonymousName());
             return Names.Type(identifier.ToString());
@@ -278,39 +275,31 @@ namespace KaVE.Commons.Utils.Naming
             }
         }
 
-        private static string AnonymizedFullName(this ITypeName type)
+        private static string AnonymizedFullName(this ITypeName type, bool anonymize)
         {
-            // We want to keep the number of type parameters (`1), array braces ([]), nesting markers (+), and the
-            // separation between the namespace and the class name. Examples of raw names in the cases we,
-            // therefore, handle are:
-            // * Namespace.TypeName`1
-            // * OuterType+InnerType[]
-            // * TypeName`2[,]
-            var @namespace = type.Namespace;
-            var rawFullName = type.FullName;
-            rawFullName = rawFullName.Substring(@namespace.Identifier.Length);
-            var baseName = rawFullName;
-            var suffix = "";
-            var indexOfDelimiter = rawFullName.IndexOfAny(new[] {'`', '['});
-            if (indexOfDelimiter > -1)
+            var sb = new StringBuilder();
+            if (type.IsNestedType)
             {
-                suffix = rawFullName.Substring(indexOfDelimiter);
-                baseName = rawFullName.Substring(0, indexOfDelimiter);
-            }
-            var baseNameParts = baseName.Split('+');
-            if (baseNameParts.Length > 0)
-            {
-                baseName = string.Join("+", baseNameParts.Select(ToHash));
+                Asserts.NotNull(type.DeclaringType);
+                var dt = anonymize ? type.DeclaringType.AnonymizedFullName(true) : type.DeclaringType.Identifier;
+                sb.Append(dt).Append('+');
             }
             else
             {
-                baseName = baseName.ToHash();
+                var ns = type.Namespace;
+                if (!ns.IsGlobalNamespace)
+                {
+                    sb.Append(anonymize ? ns.ToAnonymousName().Identifier : ns.Identifier).Append(".");
+                }
             }
-            if (@namespace.IsGlobalNamespace)
+
+            sb.Append(anonymize ? type.Name.ToHash() : type.Name);
+            if (type.HasTypeParameters)
             {
-                return baseName + suffix;
+                sb.Append("`{0}".FormatEx(type.TypeParameters.Count));
             }
-            return @namespace.ToAnonymousName() + "." + baseName + suffix;
+
+            return sb.ToString();
         }
 
         private static StringBuilder AppendTypeParameters(this StringBuilder identifier,
@@ -319,19 +308,22 @@ namespace KaVE.Commons.Utils.Naming
         {
             if (type.HasTypeParameters)
             {
-                identifier.Append("[[");
-                identifier.Append(
-                    string.Join("],[", type.TypeParameters.ToAnonymousTypeParameters(anonymizeShortNames)));
-                identifier.Append("]]");
+                bool isFirst = true;
+                identifier.Append("[");
+                foreach (var tp in type.TypeParameters)
+                {
+                    if (!isFirst)
+                    {
+                        identifier.Append(',');
+                    }
+                    isFirst = false;
+                    identifier.Append('[');
+                    identifier.Append(ToAnonymousTypeParameter(tp, anonymizeShortNames));
+                    identifier.Append("]");
+                }
+                identifier.Append("]");
             }
             return identifier;
-        }
-
-        private static IEnumerable<ITypeParameterName> ToAnonymousTypeParameters(
-            this IList<ITypeParameterName> typeParameters,
-            bool anonymizeShortNames)
-        {
-            return typeParameters.Select(tp => ToAnonymousTypeParameter(tp, anonymizeShortNames));
         }
 
         private static ITypeParameterName ToAnonymousTypeParameter(ITypeParameterName typeParameter,
@@ -346,7 +338,16 @@ namespace KaVE.Commons.Utils.Naming
                 return Names.TypeParameter(l);
             }
 
-            var r = typeParameter.TypeParameterType.ToAnonymousName().Identifier;
+            string r;
+            if (typeParameter.TypeParameterType.IsTypeParameter &&
+                !typeParameter.TypeParameterType.AsTypeParameterName.IsBound)
+            {
+                r = typeParameter.TypeParameterType.AsTypeParameterName.TypeParameterShortName.ToHash();
+            }
+            else
+            {
+                r = typeParameter.TypeParameterType.ToAnonymousName().Identifier;
+            }
 
             return Names.TypeParameter(l, r);
         }
@@ -359,11 +360,6 @@ namespace KaVE.Commons.Utils.Naming
         private static IAssemblyName ToAnonymousName(IAssemblyName assembly)
         {
             return assembly.IsLocalProject ? Names.Assembly(assembly.Identifier.ToHash()) : assembly;
-        }
-
-        private static bool IsDeclaredInEnclosingProjectOrUnknown(this ITypeName type)
-        {
-            return type.IsUnknown || type.Assembly.IsLocalProject;
         }
 
         private static IAliasName ToAnonymousName(IAliasName alias)

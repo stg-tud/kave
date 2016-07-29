@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Utils.Naming;
 using KaVE.JetBrains.Annotations;
@@ -203,7 +204,7 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldKeepNamespaceToTypeSeparatorWhenAnonymizingTypeName()
         {
             var original = Names.Type("My.Namespace.MyType, MyProject");
-            var expected = Names.Type("L5-7Qmufwl5lDD-ks5-QzQ==.T3GwyBT-NeFSuHH-NHnMzQ==, zRLpydQJBMrk8DCiP3BwEQ==");
+            var expected = Names.Type("L5-7Qmufwl5lDD-ks5-QzQ==.Q-vTVCo_g8yayGGoDdH7BA==, zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -265,7 +266,7 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldAnonymizeInterfaceTypeNameFromEnclosingProject()
         {
             var original = Names.Type("i:My.Interface, EnclosingProject");
-            var expected = Names.Type("i:S7JFQ1Qpzr6dQZksNAcR7A==.6e_eXMoTYXtpcGd2wrWE-A==, qfFVtSOtve-XEFJXWTbfXw==");
+            var expected = Names.Type("i:S7JFQ1Qpzr6dQZksNAcR7A==.A5028p0XwGGVTyGQASY_Xw==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -274,7 +275,7 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldAnonymizeEnumTypeNameFromEnclosingProject()
         {
             var original = Names.Type("e:My.Enum, EnclosingProject");
-            var expected = Names.Type("e:S7JFQ1Qpzr6dQZksNAcR7A==.klRY89gvVPCkpyaQ3MurVQ==, qfFVtSOtve-XEFJXWTbfXw==");
+            var expected = Names.Type("e:S7JFQ1Qpzr6dQZksNAcR7A==.aFaMOQla8-d2rbQGUGlWZw==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -285,7 +286,7 @@ namespace KaVE.Commons.Tests.Utils.Naming
             var original = Names.Type("d:[Void, CL, 4.0.0.0] [My.Delegate, EnclosingProject].()");
             var expected =
                 Names.Type(
-                    "d:[Void, CL, 4.0.0.0] [S7JFQ1Qpzr6dQZksNAcR7A==.ssIB3MfpFeOROPNn2-P9xg==, qfFVtSOtve-XEFJXWTbfXw==].()");
+                    "d:[Void, CL, 4.0.0.0] [S7JFQ1Qpzr6dQZksNAcR7A==.lE454GH4mIh5XOQtJhX9ng==, qfFVtSOtve-XEFJXWTbfXw==].()");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -314,8 +315,9 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldAnonymizeCustomStructTypeNameFromEnclosingProject()
         {
             var original = Names.Type("s:My.Struct, EnclosingProject");
-            var expected = Names.Type("s:S7JFQ1Qpzr6dQZksNAcR7A==.Csl4y2WI7aP5CjXqBQ8QRQ==, qfFVtSOtve-XEFJXWTbfXw==");
+            var expected = Names.Type("s:S7JFQ1Qpzr6dQZksNAcR7A==.pPXyIgQrF3lffm_A0yqnCw==, qfFVtSOtve-XEFJXWTbfXw==");
 
+            HashDebug("Interface", "Enum", "Struct");
             AssertAnonymizedEquals(original, expected);
         }
 
@@ -335,7 +337,7 @@ namespace KaVE.Commons.Tests.Utils.Naming
                 "d:[VT, A] [ConsoleApplication1.Program+TestDelegate, A].()[]");
             var expected =
                 Names.Type(
-                    "d:[3sO2hZAKj3g4-Zk_E0A-_w==, ghTRAD9op9mwNWwMvX7uGg==] [IJXZZxKP9BYUXNF-zFV4Mg==.o4DFluOfxaQkPRb-pAXvpg==+qXAvOqA3UCqSEhbDeHkp3A==, ghTRAD9op9mwNWwMvX7uGg==].()[]");
+                    "d:[3sO2hZAKj3g4-Zk_E0A-_w==, ghTRAD9op9mwNWwMvX7uGg==] [IJXZZxKP9BYUXNF-zFV4Mg==.3hvdSyh3QO13K3vH3w7KxA==+qXAvOqA3UCqSEhbDeHkp3A==, ghTRAD9op9mwNWwMvX7uGg==].()[]");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -665,6 +667,14 @@ namespace KaVE.Commons.Tests.Utils.Naming
         {
             var actual = original.ToAnonymousName();
             Assert.AreEqual(expected, actual);
+        }
+
+        private static void HashDebug(params string[] strs)
+        {
+            foreach (var str in strs)
+            {
+                Console.WriteLine("{0} ==> {1}", str, str.ToHash());
+            }
         }
     }
 }
