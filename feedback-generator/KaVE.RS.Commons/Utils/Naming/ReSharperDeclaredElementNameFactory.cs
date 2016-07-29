@@ -156,12 +156,21 @@ namespace KaVE.RS.Commons.Utils.Naming
             ISubstitution substitution,
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            return
-                IfElementIs<IDelegate>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
+            if (typeElement == null)
+            {
+                return Names.UnknownType;
+            }
+
+            var typeName =
+                IfElementIs<IDelegate>(typeElement, GetName, substitution, seenElements, Names.UnknownDelegateType) ??
                 IfElementIs<IEnum>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
                 IfElementIs<IInterface>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
                 IfElementIs<IStruct>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
                 Names.Type(typeElement.GetAssemblyQualifiedName(substitution, seenElements));
+
+            var dei = new DeclaredElementInstance(typeElement, substitution);
+            seenElements[dei] = typeName;
+            return typeName;
         }
 
         private static ITypeName IfElementIs<TE>(ITypeElement typeElement,

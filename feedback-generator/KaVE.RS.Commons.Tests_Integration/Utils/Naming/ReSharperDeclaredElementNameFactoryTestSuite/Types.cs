@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+using JetBrains.Util;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -300,13 +306,63 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
                     delType));
         }
 
+        [Test]
+        public void Right_NewHandler()
+        {
+            CompleteInClass(@"
+                private event Handler E;
+                private delegate void Handler(int i);
+                private void Listener(int i) { }
+
+                public void M()
+                {
+                    E += new Handler(Listener);
+                    $
+                }
+            ");
+
+            var en = ResultSST.Methods.GetEnumerator();
+            en.MoveNext(); // .Listener
+            en.MoveNext(); // .M
+            Assert.NotNull(en.Current);
+            var stmt = en.Current.Body.FirstOrDefault(new EventSubscriptionStatement());
+            var esStmt = stmt as IEventSubscriptionStatement;
+            Assert.NotNull(esStmt);
+            var inv = esStmt.Expression as IInvocationExpression;
+            Assert.NotNull(inv);
+            var actual = inv.MethodName;
+
+            var delegateType = Names.Type("d:[{0}] [N.C+Handler, TestProject].([{1}] i)", Fix.Void, Fix.Int);
+            var parameter = Names.Parameter("[{0}] target", delegateType);
+            var ctor = Fix.Ctor(delegateType, parameter);
+
+            Assert.AreEqual(ctor, actual);
+        }
+
+        [Test]
+        public void Nullable()
+        {
+            CompleteInNamespace(@"
+                class C {
+                    void M(int? i){ $ }
+                }   
+            ");
+            AssertParameterTypes("System.Nullable`1[[T -> {0}]], mscorlib, 4.0.0.0".FormatEx(Fix.Int));
+        }
+
+        [Test]
+        public void GlobalNamespace()
+        {
+            CompleteInCSharpFile(@"
+                class C {
+                    void M(){ $ }
+                }   
+            ");
+            var type = ResultSST.EnclosingType;
+            Assert.AreEqual(new NamespaceName(""), type.Namespace);
+            Assert.IsTrue(type.Namespace.IsGlobalNamespace);
+        }
+
         #endregion
-    }
-
-    class C
-    {
-        public delegate D D();
-
-        void M(D d) {}
     }
 }
