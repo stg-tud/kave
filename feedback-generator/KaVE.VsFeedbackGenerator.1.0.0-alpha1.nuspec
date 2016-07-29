@@ -31,6 +31,7 @@
         <file src="3rd-party\UserNotification.dll" target="DotFiles" />
         <file src="3rd-party\smileNet.dll" target="DotFiles" />
         <file src="3rd-party\System.Net.Http.dll" target="DotFiles" />
+        <file src="3rd-party\Antlr4.Runtime.dll" target="DotFiles" />
 
         <!-- Localization -->
         <file src="KaVE.VS.FeedbackGenerator\bin\Debug\de\*.resources.dll" target="DotFiles\de" />
