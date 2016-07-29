@@ -42,9 +42,12 @@ namespace KaVE.Commons.Model.Naming.Types
         ///     typename, incl. namespace and typeParamters, but no assembly
         ///     e:n.E,P --> n.E
         ///     nT[],P --> n.T[]
-        ///     d:[?] [<x>].() --> <x.FullName>
-        ///     T -> ... --> T
-        ///     T`1[[..]] --> T`1
+        ///     d:[?] [
+        ///     <x>
+        ///         ].() -->
+        ///         <x.FullName>
+        ///             T -> ... --> T
+        ///             T`1[[..]] --> T`1
         /// </summary>
         [NotNull]
         string FullName { get; }
@@ -55,9 +58,12 @@ namespace KaVE.Commons.Model.Naming.Types
         ///     n.T`1[..],P --> T
         ///     e:n.E --> E
         ///     nT[],P --> T[]
-        ///     d:[?] [<x>].() --> <x.Name>
-        ///     T -> ... --> T
-        ///     T`1[[..]] --> T
+        ///     d:[?] [
+        ///     <x>
+        ///         ].() -->
+        ///         <x.Name>
+        ///             T -> ... --> T
+        ///             T`1[[..]] --> T
         /// </summary>
         [NotNull]
         string Name { get; }
@@ -108,12 +114,18 @@ namespace KaVE.Commons.Model.Naming.Types
         ITypeName DeclaringType { get; }
 
         bool IsDelegateType { get; }
+
+        [NotNull]
         IDelegateTypeName AsDelegateTypeName { get; }
 
         bool IsArray { get; }
+
+        [NotNull]
         IArrayTypeName AsArrayTypeName { get; }
 
         bool IsTypeParameter { get; }
+
+        [NotNull]
         ITypeParameterName AsTypeParameterName { get; }
     }
 }

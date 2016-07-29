@@ -25,6 +25,7 @@ using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Others;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.JetBrains.Annotations;
 using AssemblyVersionName = KaVE.Commons.Model.Naming.Impl.v0.Types.Organization.AssemblyVersion;
 
 namespace KaVE.Commons.Model.Naming
@@ -34,6 +35,7 @@ namespace KaVE.Commons.Model.Naming
     /// </summary>
     public class Names
     {
+        [NotNull]
         public static IName General(string id, params object[] args)
         {
             return args.Length == 0 ? new GeneralName(id) : new GeneralName(string.Format(id, args));
@@ -41,41 +43,49 @@ namespace KaVE.Commons.Model.Naming
 
         #region code elements
 
+        [NotNull]
         public static IAliasName Alias(string id, params object[] args)
         {
             return new AliasName(string.Format(id, args));
         }
 
+        [NotNull]
         public static IEventName Event(string id, params object[] args)
         {
             return new EventName(string.Format(id, args));
         }
 
+        [NotNull]
         public static IFieldName Field(string id, params object[] args)
         {
             return new FieldName(string.Format(id, args));
         }
 
+        [NotNull]
         public static ILambdaName Lambda(string id, params object[] args)
         {
             return new LambdaName(string.Format(id, args));
         }
 
+        [NotNull]
         public static ILocalVariableName LocalVariable(string id, params object[] args)
         {
             return new LocalVariableName(string.Format(id, args));
         }
 
+        [NotNull]
         public static IMethodName Method(string id, params object[] args)
         {
             return new MethodName(string.Format(id, args));
         }
 
+        [NotNull]
         public static IParameterName Parameter(string id, params object[] args)
         {
             return new ParameterName(string.Format(id, args));
         }
 
+        [NotNull]
         public static IPropertyName Property(string id, params object[] args)
         {
             return new PropertyName(string.Format(id, args));
@@ -92,7 +102,7 @@ namespace KaVE.Commons.Model.Naming
 
         public static ICommandName Command(string id, params object[] args)
         {
-            return new CommandName(string.Format(id, args));
+            return args.Length == 0 ? new CommandName(id) : new CommandName(string.Format(id, args));
         }
 
         public static IDocumentName Document(string id, params object[] args)
@@ -129,36 +139,43 @@ namespace KaVE.Commons.Model.Naming
 
         #region types
 
+        [NotNull]
         public static IAssemblyName Assembly(string id, params object[] args)
         {
             return new AssemblyName(string.Format(id, args));
         }
 
+        [NotNull]
         public static IAssemblyVersion AssemblyVersion(string id, params object[] args)
         {
             return new AssemblyVersion(string.Format(id, args));
         }
 
+        [NotNull]
         public static INamespaceName Namespace(string id, params object[] args)
         {
             return new NamespaceName(string.Format(id, args));
         }
 
+        [NotNull]
         public static ITypeName Type(string id, params object[] args)
         {
             return TypeUtils.CreateTypeName(string.Format(id, args));
         }
 
+        [NotNull]
         public static IArrayTypeName ArrayType(int rank, ITypeName baseType)
         {
             return ArrayTypeName.From(baseType, rank);
         }
 
+        [NotNull]
         public static ITypeParameterName TypeParameter(string shortName)
         {
             return new TypeParameterName(shortName);
         }
 
+        [NotNull]
         public static ITypeParameterName TypeParameter(string shortName, string boundType)
         {
             return new TypeParameterName(shortName + " -> " + boundType);

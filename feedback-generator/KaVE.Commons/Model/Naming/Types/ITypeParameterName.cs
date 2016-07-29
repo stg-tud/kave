@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Commons.Model.Naming.Types
 {
     public interface ITypeParameterName : ITypeName
     {
+        [NotNull]
         string TypeParameterShortName { get; }
+
         bool IsBound { get; }
+
+        [NotNull]
         ITypeName TypeParameterType { get; }
     }
 }
