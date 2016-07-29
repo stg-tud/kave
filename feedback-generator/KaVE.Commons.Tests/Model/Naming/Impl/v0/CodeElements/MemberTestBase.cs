@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
@@ -56,7 +57,25 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             var id = string.Format("[{0}] [{0}].M", typeId);
             var sut = GetMemberNameForBaseTests(id);
 
-            Assert.AreEqual("{0}.M", sut.FullName);
+            Assert.AreEqual("M".FormatEx(typeId), sut.FullName);
+        }
+
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
+        public void ShouldParseFullMemberNameGenericUnbound(string typeId)
+        {
+            var id = string.Format("[{0}] [{0}].M`1[[G1]]", typeId);
+            var sut = GetMemberNameForBaseTests(id);
+
+            Assert.AreEqual("M`1[[G1]]".FormatEx(typeId), sut.FullName);
+        }
+
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
+        public void ShouldParseFullMemberNameGenericBound(string typeId)
+        {
+            var id = string.Format("[{0}] [{0}].M`1[[G1 -> {0}]]", typeId);
+            var sut = GetMemberNameForBaseTests(id);
+
+            Assert.AreEqual("M`1[[G1 -> {0}]]".FormatEx(typeId), sut.FullName);
         }
 
         [TestCaseSource(typeof(TestUtils), "TypeSource")]

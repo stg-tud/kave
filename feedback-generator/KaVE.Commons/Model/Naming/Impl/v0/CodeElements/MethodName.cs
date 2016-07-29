@@ -66,9 +66,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             {
                 if (_typeParameters == null)
                 {
-                    _typeParameters = FullName.Contains("[[")
-                        ? FullName.ParseTypeParameterList(0, 10)
-                        : Lists.NewList<ITypeParameterName>();
+                    if (FullName.Contains("`"))
+                    {
+                        var start = FullName.IndexOf('[');
+                        var end = FullName.LastIndexOf(']');
+                        _typeParameters = FullName.ParseTypeParameterList(start, end);
+                    }
+                    else
+                    {
+                        _typeParameters = Lists.NewList<ITypeParameterName>();
+                    }
                 }
 
                 return _typeParameters;

@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
@@ -56,43 +55,30 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public string FullName
         {
-            get { return _fullName ?? (_fullName = GetFullName(Identifier)); }
+            get { return _fullName ?? (_fullName = GetFullName()); }
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        private static string GetFullName(string id)
+        private string GetFullName()
         {
-            var openRT = id.IndexOf("[", StringComparison.Ordinal);
-            var closeRT = id.FindCorrespondingCloseBracket(openRT);
+            var id = Identifier;
+            var openR = id.IndexOf("[", StringComparison.Ordinal);
+            var closeR = id.FindCorrespondingCloseBracket(openR);
 
-            var openDT = id.FindNext(closeRT, '[');
-            var closeDT = id.FindCorrespondingCloseBracket(openDT);
+            var openD = id.FindNext(closeR, '[');
+            var closeD = id.FindCorrespondingCloseBracket(openD);
 
-            var dot = id.FindNext(closeDT, '.');
-
-            var nextGeneric = id.FindNext(dot, '`');
-            if (nextGeneric == -1)
+            var dot = id.FindNext(closeD, '.');
+            var openP = id.FindNext(dot, '(', '`');
+            if (openP != -1 && id[openP] == '`')
             {
-                nextGeneric = id.Length;
+                var openGen = id.FindNext(openP, '[');
+                var closeGen = id.FindCorrespondingCloseBracket(openGen);
+                openP = id.FindNext(closeGen, '(');
             }
-            var nextParam = id.FindNext(dot, '(');
-            var isGeneric = nextGeneric < nextParam;
 
-            int openParams;
-            if (isGeneric)
-            {
-                var openGeneric = id.FindNext(dot, '[');
-                var closeGeneric = id.FindCorrespondingCloseBracket(openGeneric);
-
-                openParams = id.FindNext(closeGeneric, '(');
-            }
-            else
-            {
-                openParams = id.FindNext(dot, '(');
-            }
-            int afterDot = dot + 1;
-            var fullName = id.Substring(afterDot, openParams - afterDot).Trim();
-            return fullName;
+            var start = dot + 1;
+            var end = openP == -1 ? id.Length : openP;
+            return id.Substring(start, end - start).Trim();
         }
 
         public ITypeName ValueType

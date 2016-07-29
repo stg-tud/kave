@@ -50,7 +50,7 @@ namespace KaVE.Commons.Tests.Model.Naming
             Console.WriteLine();
         }
 
-        [Test]
+        [Test, Ignore]
         public void Process()
         {
             foreach (
