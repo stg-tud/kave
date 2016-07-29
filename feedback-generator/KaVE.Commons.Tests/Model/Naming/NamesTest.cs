@@ -119,10 +119,18 @@ namespace KaVE.Commons.Tests.Model.Naming
         }
 
         [Test]
-        public void DoesNotBreakForRegularStringsThatDoNotNeedToBeReplaced()
+        public void DoesNotBreakForRegularStringsThatDoNotNeedToBeReplaced_General()
         {
             var actual = Names.General("CombinedLookupItem:public override ToString() { ... }");
             var expected = new GeneralName("CombinedLookupItem:public override ToString() { ... }");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DoesNotBreakForRegularStringsThatDoNotNeedToBeReplaced_Command()
+        {
+            var actual = Names.Command("{E272D1B...}:42:SomeId");
+            var expected = new CommandName("{E272D1B...}:42:SomeId");
             Assert.AreEqual(expected, actual);
         }
 

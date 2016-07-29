@@ -32,12 +32,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         {
             var actionEvent = new WindowEvent
             {
-                Window = Names.Window("MyWindow"),
+                Window = Names.Window("w MyWindow"),
                 Action = WindowEvent.WindowAction.Create
             };
-            string expected = string.Join(
+            var expected = string.Join(
                 Environment.NewLine,
-                "    \"Window\": \"MyWindow\"",
+                "    \"Window\": \"w MyWindow\"",
                 "    \"Action\": \"Create\"");
             var actual = actionEvent.GetDetailsAsJson();
             Assert.AreEqual(expected, actual);
@@ -118,8 +118,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         {
             var actionEvent = new CommandEvent
             {
-                ActiveDocument = Names.Document("Doc"),
-                ActiveWindow = Names.Window("Window"),
+                ActiveDocument = Names.Document("d Doc"),
+                ActiveWindow = Names.Window("w Window"),
                 IDESessionUUID = "UUID",
                 TerminatedAt = DateTime.Now,
                 TriggeredAt = DateTime.Now,

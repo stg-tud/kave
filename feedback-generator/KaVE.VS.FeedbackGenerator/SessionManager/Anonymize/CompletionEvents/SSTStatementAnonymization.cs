@@ -28,6 +28,7 @@ using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Naming;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents

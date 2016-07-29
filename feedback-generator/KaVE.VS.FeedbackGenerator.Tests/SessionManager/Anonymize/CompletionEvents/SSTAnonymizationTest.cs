@@ -17,7 +17,7 @@
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
-using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.Commons.Utils.Naming;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 

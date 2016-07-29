@@ -17,6 +17,7 @@
 using System.Linq;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Naming;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {

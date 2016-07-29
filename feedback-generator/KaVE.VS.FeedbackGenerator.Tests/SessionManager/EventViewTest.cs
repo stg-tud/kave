@@ -234,7 +234,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 
             var view = new EventViewModel(completionEvent);
             Assert.AreEqual(
-                "\r\n\r\n<Span Foreground=\"Blue\">class</Span> <Span Foreground=\"#2B91AF\">C</Span>&lt;<Bold>?</Bold>&gt;\r\n{\r\n}",
+                "\r\n\r\n<Span Foreground=\"Blue\">class</Span> <Span Foreground=\"#2B91AF\">C</Span>&lt;<Bold>T</Bold>&gt;\r\n{\r\n}",
                 view.XamlContextRepresentation);
         }
 

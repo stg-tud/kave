@@ -43,8 +43,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
         {
             _proposalCollection = LookupItemsMockUtils.MockLookupItemList(5).ToProposalCollection();
             var now = DateTime.Now;
-            var activeWindow = Names.Window("testWindow");
-            var activeDocument = Names.Document("testDocument");
+            var activeWindow = Names.Window("w testWindow");
+            var activeDocument = Names.Document("d testDocument");
 
             _event = new CompletionEvent
             {

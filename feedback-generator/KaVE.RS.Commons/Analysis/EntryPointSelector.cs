@@ -113,7 +113,8 @@ namespace KaVE.RS.Commons.Analysis
 
         private bool IsDefiniteEntryPoint(IMethodName methodName)
         {
-            return _typeShape.MethodHierarchies.Any(mh => mh.Element == methodName && mh.IsDeclaredInParentHierarchy);
+            return
+                _typeShape.MethodHierarchies.Any(mh => mh.Element.Equals(methodName) && mh.IsDeclaredInParentHierarchy);
         }
 
         private void AnalyzeTransitiveCallsIn(MethodRef ep)

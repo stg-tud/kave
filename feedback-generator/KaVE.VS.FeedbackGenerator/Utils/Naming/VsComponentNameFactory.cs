@@ -33,24 +33,13 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Naming
         [ContractAnnotation("notnull => notnull"), CanBeNull]
         public static IWindowName GetName([CanBeNull] this Window window)
         {
-            return window == null ? null : GetWindowName(window.Type.ToString(), window.Caption);
-        }
-
-        [NotNull]
-        public static IWindowName GetWindowName([NotNull] string vsWindowType, [NotNull] string caption)
-        {
-            return Names.Window(vsWindowType + " " + caption);
+            return window == null ? null : Names.Window(window.Type + " " + window.Caption);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
         public static ISolutionName GetName([CanBeNull] this Solution solution)
         {
-            return solution == null ? null : GetSolutionName(solution.FullName);
-        }
-
-        public static ISolutionName GetSolutionName(string fullName)
-        {
-            return Names.Solution(fullName);
+            return solution == null ? null : Names.Solution(solution.FullName);
         }
 
         [NotNull]
@@ -74,13 +63,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Naming
             }
             var documentName = document.GetSolutionRelativeName();
             var language = document.Language;
-            return GetDocumentName(language, documentName);
-        }
-
-        [NotNull]
-        public static IDocumentName GetDocumentName([NotNull] string language, [NotNull] string fileName)
-        {
-            return Names.Document(language + " " + fileName);
+            return Names.Document(language + " " + documentName);
         }
 
         private static string GetSolutionRelativeName(this Document document)

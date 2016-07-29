@@ -61,7 +61,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
             return new CompletionEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = Names.Document(Guid.NewGuid().ToString()),
+                ActiveDocument = Names.Document(Guid.NewGuid() + " "),
                 TerminatedState = ts,
                 Selections =
                 {
@@ -81,7 +81,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventStatistics
             return new ActivityEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = Names.Document(Guid.NewGuid().ToString())
+                ActiveDocument = Names.Document(Guid.NewGuid() + " x")
             };
         }
 

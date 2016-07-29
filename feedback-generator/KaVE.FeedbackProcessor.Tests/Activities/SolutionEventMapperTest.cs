@@ -33,7 +33,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new SolutionEvent
             {
-                Target = Names.Document(""),
+                Target = Names.Document("d d"),
                 Action = SolutionEvent.SolutionAction.AddProject
             };
             // TODO I'm not sure about the correct category...

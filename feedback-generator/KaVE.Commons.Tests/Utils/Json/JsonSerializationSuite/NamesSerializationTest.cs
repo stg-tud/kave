@@ -116,7 +116,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeDelegateTypeName()
         {
-            var name = Names.Type("d:MyDelegate, Assembly, 1.2.3.4");
+            var name = Names.Type("d:[R,P] [MyDelegate, Assembly, 1.2.3.4].()");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 

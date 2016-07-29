@@ -21,6 +21,7 @@ using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Naming;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
@@ -54,7 +55,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 
         public IDelegateDeclaration Anonymize(IDelegateDeclaration d)
         {
-            var defaultName = Names.UnknownType.AsDelegateTypeName;
+            var defaultName = Names.UnknownDelegateType;
             var isDefaultName = defaultName.Equals(d.Name);
             return new DelegateDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }

@@ -18,7 +18,7 @@ using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.Commons.Utils.Naming;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 

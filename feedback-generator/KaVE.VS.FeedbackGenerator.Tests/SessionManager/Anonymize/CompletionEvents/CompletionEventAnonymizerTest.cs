@@ -20,7 +20,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.Commons.Utils.Naming;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents

@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.VS.FeedbackGenerator.Utils.Naming;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
@@ -27,14 +27,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             return new WindowEvent
             {
                 Action = WindowEvent.WindowAction.Activate,
-                Window = VsComponentNameFactory.GetWindowName("vsWindowType", "Solution Explorer")
+                Window = Names.Window("vsWindowType Solution Explorer")
             };
         }
 
         [Test]
         public void ShouldAnonymizeWindowNameIfRemoveNamesIsSetAndCaptionContainsFileName()
         {
-            OriginalEvent.Window = VsComponentNameFactory.GetWindowName("vsSomeWindowType", "\\Contains\\File.Name");
+            OriginalEvent.Window = Names.Window("vsSomeWindowType \\Contains\\File.Name");
             AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
@@ -45,9 +45,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldNotChangeWindowNameIfRemoveNamesIsSetButCaptionContainsNoFileName()
         {
-            OriginalEvent.Window = VsComponentNameFactory.GetWindowName(
-                "vsToolWindow",
-                "Unit Test Sessions - DocumentEventAnonymizerTest");
+            OriginalEvent.Window = Names.Window(
+                "vsToolWindow Unit Test Sessions - DocumentEventAnonymizerTest");
             AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();

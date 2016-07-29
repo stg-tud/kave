@@ -300,7 +300,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Naming
             ISubstitution substitution) where TDeclaredElement : class, IDeclaredElement where TName : IName
         {
             var actual = declaredElement.GetName(substitution);
-            Assert.AreSame(expected, actual);
+            // TODO NameUpdate: was AreSame
+            Assert.AreEqual(expected, actual);
         }
 
         private static ITypeParameter MockTypeParameter(string value)

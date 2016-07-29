@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using Moq;
@@ -51,10 +52,10 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             var ce3 = new CompletionEvent {Id = "3"};
             var ce4 = new CompletionEvent {Id = "4"};
 
-            var ctx1 = Mock.Of<Context>();
-            var ctx2 = Mock.Of<Context>();
-            var ctx3 = Mock.Of<Context>();
-            var ctx4 = Mock.Of<Context>();
+            var ctx1 = new Context {SST = new SST {PartialClassIdentifier = "1"}};
+            var ctx2 = new Context {SST = new SST {PartialClassIdentifier = "2"}};
+            var ctx3 = new Context {SST = new SST {PartialClassIdentifier = "3"}};
+            var ctx4 = new Context {SST = new SST {PartialClassIdentifier = "4"}};
 
             Mock.Get(_ioHelper)
                 .Setup(io => io.ReadCompletionEvents("a"))
@@ -131,7 +132,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
 
             _sut.Run();
 
-            Mock.Get(_microCommitGenerator).Verify(t => t.FindFirstAndLast(It.IsAny<List<CompletionEvent>>()), Times.Never);
+            Mock.Get(_microCommitGenerator)
+                .Verify(t => t.FindFirstAndLast(It.IsAny<List<CompletionEvent>>()), Times.Never);
         }
     }
 }

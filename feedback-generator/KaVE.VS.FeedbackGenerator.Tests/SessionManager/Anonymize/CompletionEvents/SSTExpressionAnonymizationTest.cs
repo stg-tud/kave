@@ -20,7 +20,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.Commons.Utils.Naming;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
@@ -186,7 +186,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             AssertAnonymization(new InvocationExpression(), new InvocationExpression());
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void LambdaExpression()
         {
             _sut.Visit(new LambdaExpression(), 0);
@@ -260,7 +260,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             AssertAnonymization(new BinaryExpression(), new BinaryExpression());
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void LoopHeaderBlockExpression()
         {
             _sut.Visit(new LoopHeaderBlockExpression(), 0);

@@ -92,7 +92,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             return new UserProfileEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = Names.Document(Guid.NewGuid().ToString()),
+                ActiveDocument = Names.Document(Guid.NewGuid() + " x"),
                 ProfileId = string.Format("{0}", pid)
             };
         }
@@ -102,7 +102,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             return new ActivityEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = Names.Document(Guid.NewGuid().ToString()),
+                ActiveDocument = Names.Document(Guid.NewGuid() + " x"),
                 IDESessionUUID = string.Format("{0}", sid)
             };
         }
@@ -112,7 +112,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
             return new ActivityEvent
             {
                 // this is invalid but Ok for this test!
-                ActiveDocument = Names.Document(Guid.NewGuid().ToString())
+                ActiveDocument = Names.Document(Guid.NewGuid() + " x")
             };
         }
 

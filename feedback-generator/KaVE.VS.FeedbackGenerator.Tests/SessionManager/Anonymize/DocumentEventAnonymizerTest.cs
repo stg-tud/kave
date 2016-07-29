@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.VS.FeedbackGenerator.Utils.Naming;
+using KaVE.Commons.Model.Naming;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
@@ -27,7 +27,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             return new DocumentEvent
             {
                 Action = DocumentEvent.DocumentAction.Saved,
-                Document = VsComponentNameFactory.GetDocumentName("CSharp", "D:\\MyProject\\MyDocument.ext")
+                Document = Names.Document("CSharp D:\\MyProject\\MyDocument.ext")
             };
         }
 

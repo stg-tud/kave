@@ -294,7 +294,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             ");
 
             Assert.AreEqual(Names.Type("N.C, TestProject"), ResultSST.EnclosingType);
-            Assert.AreEqual("", ResultSST.PartialClassIdentifier);
+            Assert.Null(ResultSST.PartialClassIdentifier);
         }
 
         [Test]
