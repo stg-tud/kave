@@ -108,6 +108,7 @@
     <Compile Include="Model\Naming\Impl\v1\Parser\TypeNamingParser.cs" />
     <Compile Include="Model\Naming\Impl\v1\Parser\TypeNamingVisitor.cs" />
     <Compile Include="Model\Naming\CodeElements\ILocalVariableName.cs" />
+    <Compile Include="Utils\Naming\AnonymousNameUtils.cs" />
     <Compile Include="Utils\Naming\NameSerialization.cs" />
     <Compile Include="Utils\Naming\NameSerializerBase.cs" />
     <Compile Include="Utils\Naming\NameSerializerV0.cs" />

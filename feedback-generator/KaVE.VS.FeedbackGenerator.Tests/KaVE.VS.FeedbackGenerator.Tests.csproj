@@ -231,7 +231,6 @@
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
-    <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymizationBaseTest.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizerTest.cs" />

@@ -118,6 +118,7 @@
     <Compile Include="Model\Naming\Impl\v0\GeneralNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\ParameterNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\NamesV1Test.cs" />
+    <Compile Include="Utils\Naming\AnonymousNameUtilsTest.cs" />
     <Compile Include="Utils\Naming\NameSerializationTest.cs" />
     <Compile Include="Model\Naming\NamesTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\NameUtilsTest.cs" />

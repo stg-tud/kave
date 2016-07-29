@@ -15,11 +15,11 @@
  */
 
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Utils.Naming;
 using KaVE.JetBrains.Annotations;
-using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.Commons.Tests.Utils.Naming
 {
     internal class AnonymousNameUtilsTest
     {
@@ -486,8 +486,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeParamsParameterName()
         {
-            var original = Names.Parameter("params [System.Int32, mscorlib, 4.0.0.0] name");
-            var expected = Names.Parameter("params [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
+            var original = Names.Parameter("params [System.Int32[], mscorlib, 4.0.0.0] name");
+            var expected = Names.Parameter("params [System.Int32[], mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
