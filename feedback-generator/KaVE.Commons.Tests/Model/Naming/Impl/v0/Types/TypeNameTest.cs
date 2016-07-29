@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -68,6 +69,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
         public IEnumerable<string[]> ValidTypes()
         {
+            // use only ',P' Assemblies
             var ids = Sets.NewHashSet<string[]>();
             ids.Add(new[] {"T,P", "P", "", "T", "T"});
             ids.Add(new[] {"n.T,P", "P", "n", "n.T", "T"});
@@ -103,7 +105,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             string fullName,
             string name)
         {
-            Assert.AreEqual(new AssemblyName(assemblyId), T(typeId).Assembly);
+            var onlyTypeId = typeId.Substring(0, typeId.LastIndexOf(','));
+            foreach (var asmId in new[] {"P", "A, 1.2.3.4"})
+            {
+                typeId = "{0}, {1}".FormatEx(onlyTypeId, asmId);
+                Assert.AreEqual(new AssemblyName(asmId), T(typeId).Assembly);
+            }
         }
 
         [TestCaseSource("ValidTypes")]

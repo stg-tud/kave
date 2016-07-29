@@ -40,24 +40,27 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 {
                     return DeclaringType.Assembly;
                 }
-                var endOfTypeName = GetLengthOfTypeName(Identifier);
+                var endOfTypeName = GetLengthOfTypeName();
                 var assemblyIdentifier = Identifier.Substring(endOfTypeName).Trim(' ', ',');
                 return new AssemblyName(assemblyIdentifier);
             }
         }
 
-        protected static int GetLengthOfTypeName(string identifier)
+        protected int GetLengthOfTypeName()
         {
-            if (TypeUtils.IsUnknownTypeIdentifier(identifier))
+            var id = Identifier;
+            if (TypeUtils.IsUnknownTypeIdentifier(id))
             {
-                return identifier.Length;
+                return id.Length;
             }
-            var length = identifier.LastIndexOf(']') + 1;
-            if (length > 0)
+
+            var lastComma = id.LastIndexOf(',');
+            var x = id.FindPrevious(lastComma - 1, ',', ']', '+');
+            if (x == -1)
             {
-                return length;
+                return lastComma;
             }
-            return identifier.IndexOf(',');
+            return id[x] == ',' ? x : id.FindNext(x, ',');
         }
 
         public override INamespaceName Namespace
@@ -86,7 +89,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
-                var length = GetLengthOfTypeName(Identifier);
+                var length = GetLengthOfTypeName();
                 var fn = Identifier.Substring(0, length);
                 if (IsEnumType || IsInterfaceType || IsStructType)
                 {
