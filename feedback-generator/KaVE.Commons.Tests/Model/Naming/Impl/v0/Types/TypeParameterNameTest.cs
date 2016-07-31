@@ -185,6 +185,15 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsTrue(new TypeParameterName("T -> ?").IsBound);
         }
 
+        [Test]
+        public void ShouldDifferentiateTypeParamAndArray(string shortName, string fullName, string id)
+        {
+            Assert.IsFalse(new TypeParameterName("T").IsArray);
+            Assert.IsTrue(new TypeParameterName("T[]").IsArray);
+            Assert.IsTrue(new TypeParameterName("T").IsTypeParameter);
+            Assert.IsFalse(new TypeParameterName("T[]").IsTypeParameter);
+        }
+
         [TestCaseSource("ValidTypeParamIds")]
         public void IsTypeParameterId(string typeId)
         {

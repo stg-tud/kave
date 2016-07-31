@@ -15,6 +15,9 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
@@ -45,6 +48,40 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [TestCaseSource("PredefinedTypeSource")]
+        public void ShouldParseShortName(string shortName, string fullName, string id)
+        {
+            Assert.AreEqual(shortName, new PredefinedTypeName(id).Name);
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void ShouldParseFullName(string shortName, string fullName, string id)
+        {
+            Assert.AreEqual(shortName, new PredefinedTypeName(id).FullName);
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void ShouldParseNamespace(string shortName, string fullName, string id)
+        {
+            Assert.AreEqual(new NamespaceName("System"), new PredefinedTypeName(id).Namespace);
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void ShouldParseAssembly(string shortName, string fullName, string id)
+        {
+            Assert.AreEqual(
+                new AssemblyName("mscorlib, {0}".FormatEx(new AssemblyVersion().Identifier)),
+                new PredefinedTypeName(id).Assembly);
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void ShouldReturnFullType(string shortName, string fullName, string id)
+        {
+            Assert.AreEqual(
+                new TypeName("{0}, mscorlib, {1}".FormatEx(fullName, new AssemblyVersion().Identifier)),
+                new PredefinedTypeName(id).FullType);
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
         public void ShouldRecognizeIdentifier(string shortName, string fullName, string id)
         {
             Assert.IsTrue(PredefinedTypeName.IsPredefinedTypeNameIdentifier(id));
@@ -52,6 +89,52 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
             Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(id));
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
+        }
+
+        [Test, ExpectedException(typeof(ValidationException))]
+        public void ShouldRejectUnknownIds()
+        {
+            const string invalidId = "p:...";
+            Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(invalidId));
+            new PredefinedTypeName(invalidId);
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void DefaultValues(string shortName, string fullName, string id)
+        {
+            var sut = new PredefinedTypeName(id);
+
+            Assert.IsTrue(sut.IsUnknown);
+            Assert.IsTrue(sut.IsHashed);
+
+            Assert.IsTrue(sut.IsArray);
+            Assert.IsTrue(sut.IsClassType);
+            Assert.IsTrue(sut.IsDelegateType);
+            Assert.IsTrue(sut.IsEnumType);
+            Assert.IsTrue(sut.IsInterfaceType);
+            Assert.IsTrue(sut.IsNestedType);
+            Assert.IsTrue(sut.IsNullableType);
+            Assert.IsTrue(sut.IsPredefined);
+            Assert.IsTrue(sut.IsReferenceType);
+            Assert.IsTrue(sut.IsSimpleType);
+            Assert.IsTrue(sut.IsStructType);
+            Assert.IsTrue(sut.IsTypeParameter);
+            Assert.IsTrue(sut.IsValueType);
+            Assert.IsTrue(sut.IsVoidType);
+
+            Assert.IsTrue(sut.HasTypeParameters);
+
+            Assert.AreSame(sut, sut.AsArrayTypeName);
+            Assert.AreSame(sut, sut.AsPredefinedTypeName);
+        }
+
+        [Test]
+        public void ShouldDifferentiatePreDefTypeAndArray(string shortName, string fullName, string id)
+        {
+            Assert.IsFalse(new PredefinedTypeName("p:int").IsArray);
+            Assert.IsTrue(new PredefinedTypeName("p:int[]").IsArray);
+            Assert.IsTrue(new PredefinedTypeName("p:int").IsPredefined);
+            Assert.IsFalse(new PredefinedTypeName("p:int[]").IsPredefined);
         }
     }
 }

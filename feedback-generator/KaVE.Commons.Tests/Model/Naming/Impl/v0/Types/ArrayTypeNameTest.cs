@@ -32,12 +32,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                     "System.Nullable`1[][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4",
                     "System.Nullable`1[,][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4"
                 },
-                new[] // simple type
-                {
-                    "System.Int64, mscorlib, 1.2.3.4",
-                    "System.Int64[], mscorlib, 1.2.3.4",
-                    "System.Int64[,], mscorlib, 1.2.3.4"
-                },
+                new[] {"p:int", "p:int[]", "p:int[,]"}, // predefined type
                 new[] {"T, P", "T[], P", "T[,], P"}, // regular class type (project specific)
                 new[] {"A, B, 1.2.3.4", "A[], B, 1.2.3.4", "A[,], B, 1.2.3.4"}, // regular class type (assembly)
                 new[] {"s:S, P", "s:S[], P", "s:S[,], P"}, // struct
