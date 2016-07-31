@@ -26,6 +26,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             // base type, arr1D, arr2d
             string[][] names =
             {
+                new[] {"?", "?[]", "?[,]"}, // unknown
+                new[] {"p:int", "p:int[]", "p:int[,]"}, // predefined type
                 new[] // nullable
                 {
                     "System.Nullable`1[[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4",
@@ -109,6 +111,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         {
             var actual = ArrayTypeName.From(new PredefinedTypeName("p:int"), 1);
             var expected = new PredefinedTypeName("p:int[]");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldDeriveUnknownArray()
+        {
+            var actual = ArrayTypeName.From(new TypeName(), 1);
+            var expected = new ArrayTypeName("?[]");
             Assert.AreEqual(expected, actual);
         }
 

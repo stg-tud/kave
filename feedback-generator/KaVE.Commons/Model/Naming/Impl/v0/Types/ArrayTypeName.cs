@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
@@ -92,38 +93,33 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         #region static helpers
 
+        private static readonly Regex UnknownArrayMatcher = new Regex("\\?\\[,*\\]");
+
         internal static bool IsArrayTypeNameIdentifier([NotNull] string id)
         {
             if (TypeUtils.IsUnknownTypeIdentifier(id))
             {
                 return false;
             }
+            if (UnknownArrayMatcher.IsMatch(id))
+            {
+                return true;
+            }
             if (id.StartsWith("d:"))
             {
                 var idx = id.LastIndexOf(')');
-                if (idx == -1)
-                {
-                    return false;
-                }
-                if (id.FindNext(idx, '[') != -1)
-                {
-                    return true;
-                }
+                return idx != -1 && id.FindNext(idx, '[') != -1;
             }
-            else if (TypeParameterName.IsTypeParameterNameIdentifier(id))
+            if (TypeParameterName.IsTypeParameterNameIdentifier(id))
             {
                 return false;
             }
-            else if (id.StartsWith("p:"))
+            if (id.StartsWith("p:"))
             {
                 return false;
-            }
-            else
-            {
-                return FindArrayMarkerIndex(id) != -1;
             }
 
-            return false;
+            return FindArrayMarkerIndex(id) != -1;
         }
 
         public static int GetArrayRank(ITypeName typeName)
@@ -201,10 +197,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 return new PredefinedTypeName(baseType.Identifier + arrMarker);
             }
 
-            if (baseType.IsDelegateType)
+            if (baseType.IsDelegateType || baseType.IsUnknown)
             {
                 return new ArrayTypeName(baseType.Identifier + arrMarker);
-                ;
             }
 
             return new ArrayTypeName(InsertMarkerAfterRawName(baseType, arrMarker));

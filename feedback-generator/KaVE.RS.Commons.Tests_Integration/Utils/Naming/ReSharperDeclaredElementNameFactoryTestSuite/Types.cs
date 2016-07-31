@@ -85,6 +85,32 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
         }
 
         [Test]
+        public void Unknown()
+        {
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public void M(XXX ns) { $ }
+                }
+            ");
+
+            AssertParameterTypes(Fix.Unknown.Identifier);
+        }
+
+        [Test]
+        public void Unknown_Array()
+        {
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public void M(XXX[] ns) { $ }
+                }
+            ");
+
+            AssertParameterTypes(Fix.Unknown.Identifier + "[]");
+        }
+
+        [Test]
         public void Arrays()
         {
             CompleteInNamespace(@"
@@ -166,19 +192,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
             ");
 
             AssertParameterTypes("s:N.S, TestProject");
-        }
-
-        [Test, Ignore("Special handling for built-in types is inconsistent, but ignored for now")]
-        public void Basic_Structs_BuiltIn()
-        {
-            CompleteInNamespace(@"
-                public class C
-                {
-                    public void M(int i) { $ }
-                }
-            ");
-
-            AssertParameterTypes("s:System.Int32, mscorlib, 4.0.0.0");
         }
 
         #endregion

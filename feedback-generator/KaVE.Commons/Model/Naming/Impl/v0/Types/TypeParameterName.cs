@@ -241,12 +241,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 return false;
             }
-
+            if (identifier.StartsWith("?")) // e.g., unknown arrays
+            {
+                return false;
+            }
             if (identifier.StartsWith("p:"))
             {
                 return false;
             }
-
             var idxArrow = identifier.IndexOf(ParameterNameTypeSeparator, StringComparison.Ordinal);
             if (idxArrow != -1)
             {

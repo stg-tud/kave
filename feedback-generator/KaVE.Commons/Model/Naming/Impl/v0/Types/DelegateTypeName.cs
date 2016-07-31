@@ -107,8 +107,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public static bool IsDelegateTypeNameIdentifier([NotNull] string identifier)
         {
-            return !TypeUtils.IsUnknownTypeIdentifier(identifier) && identifier.StartsWith(PrefixDelegate) &&
-                   !ArrayTypeName.IsArrayTypeNameIdentifier(identifier);
+            if (TypeUtils.IsUnknownTypeIdentifier(identifier))
+            {
+                return false;
+            }
+            var startsWithD = identifier.StartsWith(PrefixDelegate);
+            var isArrayTypeNameIdentifier = ArrayTypeName.IsArrayTypeNameIdentifier(identifier);
+            return startsWithD && !isArrayTypeNameIdentifier;
         }
     }
 }
