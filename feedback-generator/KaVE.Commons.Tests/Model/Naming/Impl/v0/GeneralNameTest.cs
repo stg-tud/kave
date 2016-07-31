@@ -17,7 +17,7 @@
 using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
@@ -30,6 +30,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.True(new GeneralName().IsUnknown);
             Assert.True(new GeneralName("???").IsUnknown);
             Assert.False(new GeneralName("x").IsUnknown);
+        }
+
+        [Test]
+        public void ShouldDifferentiateEqualityOnRuntimeTypeToo()
+        {
+            var a = new PredefinedTypeName("p:int");
+            var b = new GeneralName("p:int");
+            Assert.AreNotEqual(a, b);
         }
 
         [Test]

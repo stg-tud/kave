@@ -63,7 +63,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                     return other.IsUnknown;
                 }
             }
-            return string.Equals(Identifier, other.Identifier);
+            return GetType() == other.GetType() && string.Equals(Identifier, other.Identifier);
         }
 
         public override int GetHashCode()
