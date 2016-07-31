@@ -126,6 +126,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(sut.IsEnumType);
             Assert.IsFalse(sut.IsInterfaceType);
             Assert.IsFalse(sut.IsNestedType);
+            Assert.Null(sut.DeclaringType);
             Assert.IsFalse(sut.IsNullableType);
             Assert.IsFalse(sut.IsTypeParameter);
             Assert.IsFalse(sut.HasTypeParameters);
@@ -159,6 +160,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 Assert.IsFalse(sut.IsEnumType);
                 Assert.IsFalse(sut.IsInterfaceType);
                 Assert.IsFalse(sut.IsNestedType);
+                Assert.Null(sut.DeclaringType);
                 Assert.IsFalse(sut.IsNullableType);
                 Assert.IsFalse(sut.IsPredefined);
                 Assert.IsTrue(sut.IsReferenceType);

@@ -184,7 +184,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return false; }
         }
 
-        public ITypeName DeclaringType { get; private set; }
+        public ITypeName DeclaringType
+        {
+            get { return null; }
+        }
 
         public bool IsDelegateType
         {
