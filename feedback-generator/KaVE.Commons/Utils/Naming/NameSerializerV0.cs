@@ -62,7 +62,8 @@ namespace KaVE.Commons.Utils.Naming
                 typeof(TypeName),
                 typeof(ArrayTypeName),
                 typeof(DelegateTypeName),
-                typeof(TypeParameterName));
+                typeof(TypeParameterName),
+                typeof(PredefinedTypeName));
             Register(
                 typeof(TypeName),
                 Type,
@@ -74,6 +75,7 @@ namespace KaVE.Commons.Utils.Naming
                 "CSharp.EnumTypeName",
                 "CSharp.InterfaceTypeName",
                 "CSharp.StructTypeName",
+                "CSharp.PredefinedTypeName",
                 "CSharp.TypeParameterName");
         }
 
