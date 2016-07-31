@@ -140,7 +140,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public bool IsTypeParameter
         {
-            get { return true; }
+            get { return !IsArray; }
         }
 
         public IDelegateTypeName AsDelegateTypeName

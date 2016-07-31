@@ -115,7 +115,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(sut.IsUnknown);
             Assert.IsFalse(sut.IsHashed);
 
-            Assert.IsFalse(sut.IsArray);
+            // IsArray is disabled here and checked in the ArrayTypeName tests
             Assert.IsFalse(sut.HasTypeParameters);
             Assert.IsFalse(sut.IsClassType);
             Assert.IsFalse(sut.IsDelegateType);
@@ -186,7 +186,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [Test]
-        public void ShouldDifferentiateTypeParamAndArray(string shortName, string fullName, string id)
+        public void ShouldDifferentiateTypeParamAndArray()
         {
             Assert.IsFalse(new TypeParameterName("T").IsArray);
             Assert.IsTrue(new TypeParameterName("T[]").IsArray);
