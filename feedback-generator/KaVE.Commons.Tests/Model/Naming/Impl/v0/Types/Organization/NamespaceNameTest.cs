@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
@@ -40,7 +40,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
             Assert.False(new NamespaceName("a.b.c").IsUnknown);
         }
 
-        [Test, ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void ShouldAvoidNullParameters()
         {
             // ReSharper disable once ObjectCreationAsStatement

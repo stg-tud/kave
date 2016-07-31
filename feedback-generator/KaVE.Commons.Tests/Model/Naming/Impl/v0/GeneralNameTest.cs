@@ -59,7 +59,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             }
         }
 
-        [Test, ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void ShouldAvoidNullParameters()
         {
             // ReSharper disable once ObjectCreationAsStatement

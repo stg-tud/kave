@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
@@ -37,7 +37,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.True(new AliasName("???").IsUnknown);
         }
 
-        [Test, ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void ShouldAvoidNullParameters()
         {
             // ReSharper disable once ObjectCreationAsStatement

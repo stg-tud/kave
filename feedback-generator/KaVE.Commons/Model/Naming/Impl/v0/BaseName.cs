@@ -15,7 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.Types;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0
@@ -41,7 +41,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         protected BaseName([NotNull] string identifier)
         {
-            Asserts.NotNull(identifier);
+            if (identifier == null)
+            {
+                throw new ValidationException("identifier must not be null", null);
+            }
             Identifier = identifier;
         }
 
