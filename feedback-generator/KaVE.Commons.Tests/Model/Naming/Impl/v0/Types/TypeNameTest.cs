@@ -55,6 +55,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(sut.IsInterfaceType);
             Assert.IsFalse(sut.IsNestedType);
             Assert.IsFalse(sut.IsNullableType);
+            Assert.IsFalse(sut.IsPredefined);
             Assert.IsFalse(sut.IsReferenceType);
             Assert.IsFalse(sut.IsSimpleType);
             Assert.IsFalse(sut.IsStructType);
@@ -106,6 +107,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(typeId));
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(typeId));
             Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(typeId));
+            Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(typeId));
         }
 
         [TestCaseSource("ValidTypes")]

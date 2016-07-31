@@ -163,6 +163,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 Assert.IsFalse(sut.IsValueType);
                 Assert.IsFalse(sut.IsVoidType);
 
+                Assert.IsFalse(sut.IsTypeParameter);
+                Assert.IsFalse(sut.IsDelegateType);
+                Assert.IsFalse(sut.IsPredefined);
+
                 Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
                 Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
                 if (!sut.IsTypeParameter)
@@ -197,6 +201,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(invalidId));
             Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(invalidId));
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(invalidId));
+            Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(invalidId));
+            Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(invalidId));
         }
     }
 }

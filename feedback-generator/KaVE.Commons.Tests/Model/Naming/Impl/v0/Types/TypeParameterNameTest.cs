@@ -41,6 +41,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsTrue(TypeParameterName.IsTypeParameterNameIdentifier(typeParameter));
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(typeParameter));
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(typeParameter));
+            Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(typeParameter));
+            Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(typeParameter));
         }
 
         [TestCaseSource("TypeParametersSource")]
@@ -113,6 +115,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(sut.IsUnknown);
             Assert.IsFalse(sut.IsHashed);
 
+            Assert.IsFalse(sut.IsArray);
             Assert.IsFalse(sut.HasTypeParameters);
             Assert.IsFalse(sut.IsClassType);
             Assert.IsFalse(sut.IsDelegateType);
@@ -120,6 +123,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(sut.IsInterfaceType);
             Assert.IsFalse(sut.IsNestedType);
             Assert.IsFalse(sut.IsNullableType);
+            Assert.IsFalse(sut.IsPredefined);
             if (!sut.IsArray)
             {
                 Assert.IsFalse(sut.IsReferenceType);

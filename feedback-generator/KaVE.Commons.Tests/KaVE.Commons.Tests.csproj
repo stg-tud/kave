@@ -100,6 +100,7 @@
     <Compile Include="Model\Naming\Impl\v0\TestUtils.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\Organization\AssemblyNameTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\Types\PredefinedTypeNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeParameterNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeUtilsTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\CsAssemblyNameTest.cs" />

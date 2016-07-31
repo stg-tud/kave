@@ -68,6 +68,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(delegateType.HasTypeParameters);
 
             Assert.IsFalse(delegateType.IsArray);
+            Assert.IsFalse(delegateType.IsTypeParameter);
+            Assert.IsFalse(delegateType.IsPredefined);
+
             Assert.IsFalse(delegateType.IsClassType);
             Assert.IsFalse(delegateType.IsEnumType);
             Assert.IsFalse(delegateType.IsInterfaceType);
@@ -86,6 +89,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(delegateId));
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(delegateId));
             Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(delegateId));
+            Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(delegateId));
         }
 
         [TestCaseSource("DelegateTypeNames")]

@@ -30,6 +30,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(id));
                 Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
                 Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(id));
+                Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(id));
             }
         }
 
