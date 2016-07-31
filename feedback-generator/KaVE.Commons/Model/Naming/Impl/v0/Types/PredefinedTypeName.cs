@@ -15,17 +15,21 @@
  */
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     public class PredefinedTypeName : BaseName, IPredefinedTypeName, IArrayTypeName
     {
-        private static readonly IDictionary<string, string> SimpleTypeToFullNameMap = new Dictionary<string, string>
+        private static readonly IDictionary<string, string> IdToFullName = new Dictionary<string, string>
         {
             {"p:sbyte", "System.SByte"},
             {"p:byte", "System.Byte"},
@@ -47,10 +51,23 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {"p:string", "System.String"}
         };
 
+        private static readonly Regex ValidNameMatcher = new Regex("^p:[a-z]+(\\[,*\\])?$");
 
         public PredefinedTypeName([NotNull] string identifier) : base(identifier)
         {
-            Asserts.That(identifier.StartsWith("p:"));
+            Validate(ValidNameMatcher.IsMatch(identifier), "invalid id '{0}'".FormatEx(identifier));
+            Validate(!IsArray || !ArrayBaseType.IsVoidType, "impossible to create void array");
+            var baseId = IsArray ? ArrayBaseType.Identifier : Identifier;
+            Validate(IdToFullName.ContainsKey(baseId), "uknown id '{0}'".FormatEx(identifier));
+        }
+
+        // ReSharper disable once UnusedParameter.Local
+        private static void Validate(bool condition, string msg)
+        {
+            if (!condition)
+            {
+                throw new ValidationException(msg, null);
+            }
         }
 
         public override bool IsUnknown
@@ -63,25 +80,104 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return false; }
         }
 
-        public IKaVEList<ITypeParameterName> TypeParameters { get; private set; }
-        public IAssemblyName Assembly { get; private set; }
-        public INamespaceName Namespace { get; private set; }
-        public string FullName { get; private set; }
-        public string Name { get; private set; }
+        public IKaVEList<ITypeParameterName> TypeParameters
+        {
+            get { return Lists.NewList<ITypeParameterName>(); }
+        }
+
+        public IAssemblyName Assembly
+        {
+            get { return new AssemblyName("mscorlib, {0}".FormatEx(new AssemblyVersion().Identifier)); }
+        }
+
+        public INamespaceName Namespace
+        {
+            get { return new NamespaceName("System"); }
+        }
+
+        public string FullName
+        {
+            get { return IdToFullName[Identifier]; }
+        }
+
+        public string Name
+        {
+            get { return Identifier.Substring(Identifier.IndexOf(':') + 1); }
+        }
 
         public bool IsVoidType
         {
-            get { return "p:void".Equals(Identifier); }
+            get { return Is("p:void"); }
         }
 
-        public bool IsValueType { get; private set; }
-        public bool IsSimpleType { get; private set; }
-        public bool IsEnumType { get; private set; }
-        public bool IsStructType { get; private set; }
-        public bool IsNullableType { get; private set; }
-        public bool IsReferenceType { get; private set; }
-        public bool IsClassType { get; private set; }
-        public bool IsInterfaceType { get; private set; }
+        public bool IsValueType
+        {
+            get { return IsStructType; }
+        }
+
+        public bool IsSimpleType
+        {
+            get { return Is("p:bool") || IsNumeric; }
+        }
+
+        #region helper
+
+        private bool Is([NotNull] string id)
+        {
+            return id.Equals(Identifier);
+        }
+
+        private bool IsNumeric
+        {
+            get { return Is("p:decimal") || IsIntegral || IsFloatingPoint; }
+        }
+
+        private bool IsFloatingPoint
+        {
+            get { return Is("p:float") || Is("p:double"); }
+        }
+
+        private bool IsIntegral
+        {
+            get
+            {
+                return Is("p:sbyte") || Is("p:byte") || Is("p:short") || Is("p:ushort") || Is("p:int") || Is("p:uint") ||
+                       Is("p:long") || Is("p:ulong") || Is("p:char");
+            }
+        }
+
+        #endregion
+
+        public bool IsEnumType
+        {
+            get { return false; }
+        }
+
+        public bool IsStructType
+        {
+            get { return !IsReferenceType; }
+        }
+
+        public bool IsNullableType
+        {
+            get { return false; }
+        }
+
+        public bool IsReferenceType
+        {
+            get { return IsArray || IsClassType; }
+        }
+
+        public bool IsClassType
+        {
+            get { return Is("p:object") || Is("p:string"); }
+        }
+
+        public bool IsInterfaceType
+        {
+            get { return false; }
+        }
+
 
         public bool IsNestedType
         {
@@ -95,34 +191,89 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return false; }
         }
 
-        public IDelegateTypeName AsDelegateTypeName { get; private set; }
+        public IDelegateTypeName AsDelegateTypeName
+        {
+            get
+            {
+                Asserts.Fail("impossible");
+                return null;
+            }
+        }
 
         public bool IsArray
         {
-            get { return false; }
+            get { return Identifier.EndsWith("]"); }
         }
 
-        public IArrayTypeName AsArrayTypeName { get; private set; }
+        public IArrayTypeName AsArrayTypeName
+        {
+            get
+            {
+                Asserts.That(IsArray);
+                return this;
+            }
+        }
 
         public bool IsTypeParameter
         {
             get { return false; }
         }
 
-        public ITypeParameterName AsTypeParameterName { get; private set; }
-        public bool IsPredefined { get; private set; }
-
-        public IPredefinedTypeName AsPredefinedTypeName { get; private set; }
-
-        public ITypeName FullType { get; private set; }
-
-        public static bool IsPredefinedTypeNameIdentifier(string id)
+        public ITypeParameterName AsTypeParameterName
         {
-            return false; //SimpleTypeToFullNameMap.ContainsKey(id);
+            get
+            {
+                Asserts.Fail("impossible");
+                return null;
+            }
         }
 
-        public int Rank { get; private set; }
+        public bool IsPredefined
+        {
+            get { return !IsArray; }
+        }
 
-        public ITypeName ArrayBaseType { get; private set; }
+        public IPredefinedTypeName AsPredefinedTypeName
+        {
+            get
+            {
+                Asserts.That(IsPredefined);
+                return this;
+            }
+        }
+
+        public ITypeName FullType
+        {
+            get
+            {
+                Asserts.That(!IsArray);
+                var id = "{0}{1}, {2}".FormatEx(IsStructType ? "s:" : "", FullName, Assembly.Identifier);
+                return new TypeName(id);
+            }
+        }
+
+        public int Rank
+        {
+            get
+            {
+                var openArr = Identifier.IndexOf('[');
+                var closeArr = Identifier.IndexOf(']');
+                return closeArr - openArr;
+            }
+        }
+
+        public ITypeName ArrayBaseType
+        {
+            get
+            {
+                var openArr = Identifier.IndexOf('[');
+                return new PredefinedTypeName(Identifier.Substring(0, openArr));
+            }
+        }
+
+        public static bool IsPredefinedTypeNameIdentifier([NotNull] string id)
+        {
+            return !string.IsNullOrEmpty(id) && ValidNameMatcher.IsMatch(id);
+        }
     }
 }

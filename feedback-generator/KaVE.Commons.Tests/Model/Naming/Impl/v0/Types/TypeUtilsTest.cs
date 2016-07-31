@@ -35,7 +35,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [TestCase("T[],P", "ArrayTypeName"), TestCase("d:[?] [?].()", "DelegateTypeName"),
-         TestCase("T", "TypeParameterName"), TestCase("T,P", "TypeName")]
+         TestCase("T", "TypeParameterName"), TestCase("p:int", "PredefinedTypeName"), TestCase("T,P", "TypeName")]
         public void ShouldRecognizeNameTypes(string typeId, string typeOfName)
         {
             var sut = TypeUtils.CreateTypeName(typeId);

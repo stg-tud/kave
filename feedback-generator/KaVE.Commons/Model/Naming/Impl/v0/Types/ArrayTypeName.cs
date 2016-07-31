@@ -114,6 +114,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 return false;
             }
+            else if (id.StartsWith("p:"))
+            {
+                return false;
+            }
             else
             {
                 return FindArrayMarkerIndex(id) != -1;
@@ -177,31 +181,33 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public static IArrayTypeName From(ITypeName baseType, int rank)
         {
             Asserts.That(rank > 0, "rank smaller than 1");
-            return new ArrayTypeName(DeriveArrayTypeNameIdentifier(baseType, rank));
-        }
+            rank = baseType.IsArray ? baseType.AsArrayTypeName.Rank + rank : rank;
+            baseType = baseType.IsArray ? baseType.AsArrayTypeName.ArrayBaseType : baseType;
+            var arrMarker = CreateArrayMarker(rank);
 
-        private static string DeriveArrayTypeNameIdentifier(ITypeName baseType, int rank)
-        {
-            var realBase = baseType.IsArray ? baseType.AsArrayTypeName.ArrayBaseType : baseType;
-            var realRank = baseType.IsArray ? baseType.AsArrayTypeName.Rank + rank : rank;
-            var arrMarker = CreateArrayMarker(realRank);
-
-            if (realBase.IsTypeParameter)
+            if (baseType.IsTypeParameter)
             {
-                if (realBase.AsTypeParameterName.IsBound)
+                if (baseType.AsTypeParameterName.IsBound)
                 {
                     var paramType = baseType.AsTypeParameterName.TypeParameterType;
-                    return "{0}{1} -> {2}".FormatEx(realBase.Name, arrMarker, paramType.Identifier);
+                    return
+                        new TypeParameterName("{0}{1} -> {2}".FormatEx(baseType.Name, arrMarker, paramType.Identifier));
                 }
-                return "{0}{1}".FormatEx(realBase.Name, arrMarker);
+                return new TypeParameterName("{0}{1}".FormatEx(baseType.Name, arrMarker));
             }
 
-            if (realBase.IsDelegateType)
+            if (baseType.IsPredefined)
             {
-                return realBase.Identifier + arrMarker;
+                return new PredefinedTypeName(baseType.Identifier + arrMarker);
             }
 
-            return InsertMarkerAfterRawName(realBase, arrMarker);
+            if (baseType.IsDelegateType)
+            {
+                return new ArrayTypeName(baseType.Identifier + arrMarker);
+                ;
+            }
+
+            return new ArrayTypeName(InsertMarkerAfterRawName(baseType, arrMarker));
         }
 
         private static string CreateArrayMarker(int rank)
@@ -214,6 +220,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             Asserts.Not(baseType.IsArray);
             Asserts.Not(baseType.IsDelegateType);
             Asserts.Not(baseType.IsTypeParameter);
+            Asserts.Not(baseType.IsPredefined);
 
             var id = baseType.Identifier;
             var arrIdx = -1;

@@ -48,15 +48,21 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [TestCaseSource("TypeParametersSource")]
         public void ShouldParseShortName(string typeParameter, string shortName, string boundType)
         {
-            var sut = TypeUtils.CreateTypeName(typeParameter).AsTypeParameterName;
-            Assert.AreEqual(shortName, sut.TypeParameterShortName);
+            if (!typeParameter.StartsWith("T["))
+            {
+                var sut = TypeUtils.CreateTypeName(typeParameter).AsTypeParameterName;
+                Assert.AreEqual(shortName, sut.TypeParameterShortName);
+            }
         }
 
         [TestCaseSource("TypeParametersSource")]
         public void ShouldParseTypeParameterType(string typeParameter, string shortName, string boundType)
         {
-            var sut = TypeUtils.CreateTypeName(typeParameter).AsTypeParameterName;
-            Assert.AreEqual(boundType, sut.TypeParameterType.Identifier);
+            if (!typeParameter.StartsWith("T["))
+            {
+                var sut = TypeUtils.CreateTypeName(typeParameter).AsTypeParameterName;
+                Assert.AreEqual(boundType, sut.TypeParameterType.Identifier);
+            }
         }
 
         [TestCaseSource("TypeParametersSource")]
@@ -66,7 +72,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             {
                 if (typeParameter.StartsWith(expectedShortName))
                 {
-                    var sut = TypeUtils.CreateTypeName(typeParameter).AsTypeParameterName;
+                    var sut = TypeUtils.CreateTypeName(typeParameter);
                     Assert.AreEqual(expectedShortName, sut.Name);
                     Assert.AreEqual(expectedShortName, sut.FullName);
                     return;
@@ -110,12 +116,16 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [TestCaseSource("TypeParametersSource")]
         public void AllChecksShouldBeFalse(string typeParameter, string shortName, string boundType)
         {
-            var sut = TypeUtils.CreateTypeName(typeParameter).AsTypeParameterName;
+            var sut = TypeUtils.CreateTypeName(typeParameter);
 
             Assert.IsFalse(sut.IsUnknown);
             Assert.IsFalse(sut.IsHashed);
 
-            // IsArray is disabled here and checked in the ArrayTypeName tests
+            var isArray = typeParameter.StartsWith("T[");
+            Assert.AreEqual(isArray, sut.IsArray);
+            Assert.AreEqual(isArray, sut.IsReferenceType);
+            Assert.AreEqual(!isArray, sut.IsTypeParameter);
+
             Assert.IsFalse(sut.HasTypeParameters);
             Assert.IsFalse(sut.IsClassType);
             Assert.IsFalse(sut.IsDelegateType);
@@ -124,13 +134,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(sut.IsNestedType);
             Assert.IsFalse(sut.IsNullableType);
             Assert.IsFalse(sut.IsPredefined);
-            if (!sut.IsArray)
-            {
-                Assert.IsFalse(sut.IsReferenceType);
-            }
             Assert.IsFalse(sut.IsSimpleType);
             Assert.IsFalse(sut.IsStructType);
-            Assert.IsTrue(sut.IsTypeParameter);
             Assert.IsFalse(sut.IsValueType);
             Assert.IsFalse(sut.IsVoidType);
 
@@ -138,11 +143,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
             Assert.AreEqual(new AssemblyName(), sut.Assembly);
             Assert.AreEqual(new NamespaceName(), sut.Namespace);
+
             Assert.Null(sut.DeclaringType);
         }
 
         public string[] ValidTypeParameterNamesSource()
         {
+            // for the test, the shortnames must be T, to make it easy to detect arrays
             return new[] {"T", "T[]", "T[,]"};
         }
 
@@ -238,6 +245,20 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 "{",
                 "}"
             };
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashIfConversionIsNotAppropriate_Array()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new TypeParameterName("T[]").AsTypeParameterName;
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashIfConversionIsNotAppropriate_NonArray()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new TypeParameterName("T").AsArrayTypeName;
         }
     }
 }

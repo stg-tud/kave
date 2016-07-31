@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
@@ -56,7 +58,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [TestCaseSource("PredefinedTypeSource")]
         public void ShouldParseFullName(string shortName, string fullName, string id)
         {
-            Assert.AreEqual(shortName, new PredefinedTypeName(id).FullName);
+            Assert.AreEqual(fullName, new PredefinedTypeName(id).FullName);
         }
 
         [TestCaseSource("PredefinedTypeSource")]
@@ -76,9 +78,19 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [TestCaseSource("PredefinedTypeSource")]
         public void ShouldReturnFullType(string shortName, string fullName, string id)
         {
+            var sut = new PredefinedTypeName(id);
+
+            var structPart = sut.IsStructType ? "s:" : "";
             Assert.AreEqual(
-                new TypeName("{0}, mscorlib, {1}".FormatEx(fullName, new AssemblyVersion().Identifier)),
-                new PredefinedTypeName(id).FullType);
+                new TypeName("{0}{1}, mscorlib, {2}".FormatEx(structPart, fullName, new AssemblyVersion().Identifier)),
+                sut.FullType);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashWhenFullTypeIsRequestedFromArray()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new PredefinedTypeName("p:int[]").FullType;
         }
 
         [TestCaseSource("PredefinedTypeSource")]
@@ -104,37 +116,144 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         {
             var sut = new PredefinedTypeName(id);
 
-            Assert.IsTrue(sut.IsUnknown);
-            Assert.IsTrue(sut.IsHashed);
+            Assert.IsFalse(sut.IsUnknown);
+            Assert.IsFalse(sut.IsHashed);
 
-            Assert.IsTrue(sut.IsArray);
-            Assert.IsTrue(sut.IsClassType);
-            Assert.IsTrue(sut.IsDelegateType);
-            Assert.IsTrue(sut.IsEnumType);
-            Assert.IsTrue(sut.IsInterfaceType);
-            Assert.IsTrue(sut.IsNestedType);
-            Assert.IsTrue(sut.IsNullableType);
             Assert.IsTrue(sut.IsPredefined);
-            Assert.IsTrue(sut.IsReferenceType);
-            Assert.IsTrue(sut.IsSimpleType);
-            Assert.IsTrue(sut.IsStructType);
-            Assert.IsTrue(sut.IsTypeParameter);
-            Assert.IsTrue(sut.IsValueType);
-            Assert.IsTrue(sut.IsVoidType);
 
-            Assert.IsTrue(sut.HasTypeParameters);
+            Assert.IsFalse(sut.IsArray);
+            Assert.IsFalse(sut.IsDelegateType);
+            Assert.IsFalse(sut.IsEnumType);
+            Assert.IsFalse(sut.IsInterfaceType);
+            Assert.IsFalse(sut.IsNestedType);
+            Assert.IsFalse(sut.IsNullableType);
+            Assert.IsFalse(sut.IsTypeParameter);
+            Assert.IsFalse(sut.HasTypeParameters);
 
-            Assert.AreSame(sut, sut.AsArrayTypeName);
-            Assert.AreSame(sut, sut.AsPredefinedTypeName);
+            AssertIsTrueIf(sut.IsClassType, shortName, "object", "string");
+            AssertIsTrueIf(sut.IsReferenceType, shortName, "object", "string");
+            AssertIsFalseIf(sut.IsSimpleType, shortName, "object", "string", "void");
+            AssertIsFalseIf(sut.IsStructType, shortName, "object", "string");
+            AssertIsFalseIf(sut.IsValueType, shortName, "object", "string");
+            AssertIsTrueIf(sut.IsVoidType, shortName, "void");
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void ArrayHandling(string shortName, string fullName, string id)
+        {
+            if ("void".Equals(shortName))
+            {
+                return;
+            }
+            // ran kand basetype are tested in ArrayTypeNameTest
+            foreach (var arrSuffix in new[] {"[]", "[,]"})
+            {
+                var sut = new PredefinedTypeName(id + arrSuffix);
+
+                Assert.IsFalse(sut.IsUnknown);
+                Assert.IsFalse(sut.IsHashed);
+
+                Assert.IsTrue(sut.IsArray);
+                Assert.IsFalse(sut.IsClassType);
+                Assert.IsFalse(sut.IsDelegateType);
+                Assert.IsFalse(sut.IsEnumType);
+                Assert.IsFalse(sut.IsInterfaceType);
+                Assert.IsFalse(sut.IsNestedType);
+                Assert.IsFalse(sut.IsNullableType);
+                Assert.IsFalse(sut.IsPredefined);
+                Assert.IsTrue(sut.IsReferenceType);
+                Assert.IsFalse(sut.IsSimpleType);
+                Assert.IsFalse(sut.IsStructType);
+                Assert.IsFalse(sut.IsTypeParameter);
+                Assert.IsFalse(sut.IsValueType);
+                Assert.IsFalse(sut.IsVoidType);
+                Assert.IsFalse(sut.HasTypeParameters);
+            }
         }
 
         [Test]
-        public void ShouldDifferentiatePreDefTypeAndArray(string shortName, string fullName, string id)
+        public void ShouldReturnItselfOnConversion_Array()
+        {
+            var sut = new PredefinedTypeName("p:int[]");
+            Assert.AreSame(sut, sut.AsArrayTypeName);
+        }
+
+        [Test]
+        public void ShouldReturnItselfOnConversion_Predef()
+        {
+            var sut = new PredefinedTypeName("p:int");
+            Assert.AreSame(sut, sut.AsPredefinedTypeName);
+        }
+
+        private static void AssertIsFalseIf(bool actual, string shortName, params string[] isFalseSet)
+        {
+            var expected = !isFalseSet.Contains(shortName);
+            Assert.AreEqual(expected, actual);
+        }
+
+        private static void AssertIsTrueIf(bool actual, string shortName, params string[] isTrueSet)
+        {
+            var expected = isTrueSet.Contains(shortName);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldDifferentiatePredefinedTypeAndArray()
         {
             Assert.IsFalse(new PredefinedTypeName("p:int").IsArray);
             Assert.IsTrue(new PredefinedTypeName("p:int[]").IsArray);
             Assert.IsTrue(new PredefinedTypeName("p:int").IsPredefined);
             Assert.IsFalse(new PredefinedTypeName("p:int[]").IsPredefined);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashIfConversionIsNotAppropriate_Array()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new PredefinedTypeName("p:int[]").AsPredefinedTypeName;
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashIfConversionIsNotAppropriate_NonArray()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new PredefinedTypeName("p:int").AsArrayTypeName;
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashIfConversionIsNotAppropriate_TypeParameter()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new PredefinedTypeName("p:int").AsTypeParameterName;
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashIfConversionIsNotAppropriate_Delegate()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new PredefinedTypeName("p:int").AsDelegateTypeName;
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldCrashIfConversionIsNotAppropriate_FullType()
+        {
+            // ReSharper disable once UnusedVariable
+            var n = new PredefinedTypeName("p:int[]").FullType;
+        }
+
+        [Test, ExpectedException(typeof(ValidationException))]
+        public void ShouldRejectVoidArrays()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new PredefinedTypeName("p:void[]");
+        }
+
+        [ExpectedException(typeof(ValidationException)), TestCase("p:int["), TestCase("p:int]"), TestCase("p:int]["),
+         TestCase(null)]
+        public void ShouldRejectInvalidNames(string invalidId)
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new PredefinedTypeName(invalidId);
         }
     }
 }

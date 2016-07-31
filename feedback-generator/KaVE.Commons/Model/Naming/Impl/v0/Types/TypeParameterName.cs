@@ -163,7 +163,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public ITypeParameterName AsTypeParameterName
         {
-            get { return this; }
+            get
+            {
+                Asserts.That(IsTypeParameter);
+                return this;
+            }
         }
 
         public bool IsPredefined
@@ -234,6 +238,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public static bool IsTypeParameterNameIdentifier([NotNull] string identifier)
         {
             if (TypeUtils.IsUnknownTypeIdentifier(identifier))
+            {
+                return false;
+            }
+
+            if (identifier.StartsWith("p:"))
             {
                 return false;
             }

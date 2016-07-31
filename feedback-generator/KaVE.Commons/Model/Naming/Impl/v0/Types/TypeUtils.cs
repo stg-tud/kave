@@ -30,12 +30,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 return UnknownTypeInstance;
             }
-            // checked second, since type parameters can have any kind of type
+            if (PredefinedTypeName.IsPredefinedTypeNameIdentifier(identifier))
+            {
+                return new PredefinedTypeName(identifier);
+            }
             if (TypeParameterName.IsTypeParameterNameIdentifier(identifier))
             {
                 return new TypeParameterName(identifier);
             }
-            // checked third, since the array's value type can have any kind of type
             if (ArrayTypeName.IsArrayTypeNameIdentifier(identifier))
             {
                 return new ArrayTypeName(identifier);

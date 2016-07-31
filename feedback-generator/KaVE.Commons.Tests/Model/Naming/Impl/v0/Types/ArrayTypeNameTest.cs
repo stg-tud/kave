@@ -96,6 +96,22 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(expected2D, actual1To2D);
         }
 
+        [Test]
+        public void ShouldDeriveTypeParameterFromTypeParameter()
+        {
+            var actual = ArrayTypeName.From(new TypeParameterName("T"), 1);
+            var expected = new TypeParameterName("T[]");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldDerivePredefinedFromPredefined()
+        {
+            var actual = ArrayTypeName.From(new PredefinedTypeName("p:int"), 1);
+            var expected = new PredefinedTypeName("p:int[]");
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestCaseSource("ArrayIds")]
         public void ShouldParseRank(string baseTypeId, string expected1DId, string expected2DId)
         {
