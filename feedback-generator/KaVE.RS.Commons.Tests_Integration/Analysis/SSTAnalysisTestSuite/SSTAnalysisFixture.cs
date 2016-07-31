@@ -36,85 +36,65 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
     {
         internal static readonly ITypeName TestClass = Names.Type("N.C, TestProject");
 
-        internal static readonly ITypeName Int =
-            Names.Type("System.Int32, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Int = Names.Type("p:int");
 
-        internal static readonly ITypeName Byte =
-            Names.Type("System.Byte, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Byte = Names.Type("p:byte");
 
-        internal static readonly ITypeName Float =
-            Names.Type("System.Single, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Float = Names.Type("p:float");
 
-        internal static readonly ITypeName Double =
-            Names.Type("System.Double, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Double = Names.Type("p:double");
 
-        internal static readonly ITypeName IntArray =
-            Names.Type("System.Int32[], mscorlib, 4.0.0.0");
+        internal static readonly ITypeName IntArray = Names.Type("p:int[]");
 
-        internal static readonly ITypeName Void =
-            Names.Type("System.Void, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Void = Names.Type("p:void");
 
         internal static readonly ITypeName Unknown = Names.UnknownType;
 
-        internal static readonly ITypeName String =
-            Names.Type("System.String, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName String = Names.Type("p:string");
 
-        internal static readonly ITypeName Bool =
-            Names.Type("System.Boolean, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Bool = Names.Type("p:bool");
 
-        internal static readonly ITypeName Object =
-            Names.Type("System.Object, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Object = Names.Type("p:object");
 
-        internal static readonly ITypeName Exception =
-            Names.Type("System.Exception, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Exception = Names.Type("System.Exception, mscorlib, 4.0.0.0");
 
-        internal static readonly ITypeName IOException =
-            Names.Type("System.IO.IOException, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName IOException = Names.Type("System.IO.IOException, mscorlib, 4.0.0.0");
 
-        internal static readonly ITypeName Type =
-            Names.Type("System.Type, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Type = Names.Type("System.Type, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName ListOfInt =
-            Names.Type(
-                "System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
+            Names.Type("System.Collections.Generic.List`1[[T -> {0}]], mscorlib, 4.0.0.0", Int);
 
         internal static readonly ITypeName ListOfObject =
-            Names.Type(
-                "System.Collections.Generic.List`1[[T -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
+            Names.Type("System.Collections.Generic.List`1[[T -> {0}]], mscorlib, 4.0.0.0", Object);
 
-        internal static readonly ITypeName Action =
-            Names.Type(
-                "d:[System.Void, mscorlib, 4.0.0.0] [System.Action, mscorlib, 4.0.0.0].()");
+        internal static readonly ITypeName Action = Names.Type("d:[{0}] [System.Action, mscorlib, 4.0.0.0].()", Void);
 
         internal static readonly ITypeName ActionOfInt =
-            Names.Type(
-                "d:[System.Void, mscorlib, 4.0.0.0] [System.Action`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] obj)");
+            Names.Type("d:[{0}] [System.Action`1[[T -> {1}]], mscorlib, 4.0.0.0].([T] obj)", Void, Int);
 
         internal static readonly ITypeName FuncOfIntAndInt =
-            Names.Type(
-                "d:[TResult] [System.Func`2[[T -> System.Int32, mscorlib, 4.0.0.0],[TResult -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] arg)");
+            Names.Type("d:[TResult] [System.Func`2[[T -> {0}],[TResult -> {0}]], mscorlib, 4.0.0.0].([T] arg)", Int);
 
         // ReSharper disable once InconsistentNaming
-        internal static readonly IMethodName Object_GetHashCode =
-            Names.Method("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+        internal static readonly IMethodName Object_GetHashCode = Names.Method("[{0}] [{1}].GetHashCode()", Int, Object);
 
         // ReSharper disable once InconsistentNaming
-        internal static readonly IMethodName Int_GetHashCode =
-            Names.Method("[System.Int32, mscorlib, 4.0.0.0] [System.Int32, mscorlib, 4.0.0.0].GetHashCode()");
+        internal static readonly IMethodName Int_GetHashCode = Names.Method("[{0}] [{0}].GetHashCode()", Int);
 
         // ReSharper disable once InconsistentNaming
-        internal static readonly IMethodName Object_Init =
-            Names.Method("[System.Void, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0]..ctor()");
+        internal static readonly IMethodName Object_Init = Names.Method("[{0}] [{1}]..ctor()", Void, Object);
 
         // ReSharper disable once InconsistentNaming
         internal static IMethodName ListOfInt_Init =
-            Names.Method(
-                "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]..ctor()");
+            Names.Method("[{0}] [System.Collections.Generic.List`1[[T -> {1}]], mscorlib, 4.0.0.0]..ctor()", Void, Int);
 
         // ReSharper disable once InconsistentNaming
         internal static IMethodName ListOfInt_Add =
             Names.Method(
-                "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Add([T] item)");
+                "[{0}] [System.Collections.Generic.List`1[[T -> {1}]], mscorlib, 4.0.0.0].Add([T] item)",
+                Void,
+                Int);
 
         // ReSharper disable once InconsistentNaming
         internal static IMethodName ListOfObject_Add =
@@ -124,9 +104,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 Object);
 
         // ReSharper disable once InconsistentNaming
-        internal static readonly IMethodName String_Format =
-            Names.Method(
-                "static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Format([System.String, mscorlib, 4.0.0.0] format)");
+        internal static readonly IMethodName String_Format = Names.Method(
+            "static [{0}] [{0}].Format([{0}] format)",
+            String);
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_static_Equals =

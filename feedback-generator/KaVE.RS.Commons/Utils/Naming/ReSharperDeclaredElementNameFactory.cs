@@ -173,10 +173,34 @@ namespace KaVE.RS.Commons.Utils.Naming
             return name;
         }
 
-        private static ITypeName GetSimplePredefinedType(this ITypeElement typeElem)
+        private static ITypeName GetSimplePredefinedType([NotNull] this ITypeElement typeElem)
         {
-            // TODO NameUpdate: implement me
-            return null;
+            var predefinedType = typeElem.Module.GetPredefinedType();
+
+            return IfTypeIsPredefined(typeElem, predefinedType.Object, "p:object") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.String, "p:string") ??
+                   //
+                   IfTypeIsPredefined(typeElem, predefinedType.Bool, "p:bool") ??
+                   //
+                   IfTypeIsPredefined(typeElem, predefinedType.Decimal, "p:decimal") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Char, "p:char") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Float, "p:float") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Double, "p:double") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Sbyte, "p:sbyte") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Byte, "p:byte") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Short, "p:short") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Ushort, "p:ushort") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Int, "p:int") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Uint, "p:uint") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Long, "p:long") ??
+                   IfTypeIsPredefined(typeElem, predefinedType.Ulong, "p:ulong") ??
+                   //
+                   IfTypeIsPredefined(typeElem, predefinedType.Void, "p:void");
+        }
+
+        private static ITypeName IfTypeIsPredefined(ITypeElement typeElem, IDeclaredType targetElemen, string id)
+        {
+            return Equals(typeElem, targetElemen.GetTypeElement()) ? Names.Type(id) : null;
         }
 
         private static ITypeName IfElementIs<TE>(ITypeElement typeElement,

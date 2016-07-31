@@ -60,6 +60,7 @@ namespace KaVE.Commons.Tests.Model.Naming
             AssertInit(Names.Type("T"), typeof(TypeParameterName));
             AssertInit(Names.Type("T[],P"), typeof(ArrayTypeName));
             AssertInit(Names.Type("d:[?] [?].()"), typeof(DelegateTypeName));
+            AssertInit(Names.Type("p:int"), typeof(PredefinedTypeName));
         }
 
         [Test]
