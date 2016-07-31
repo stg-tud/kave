@@ -130,11 +130,32 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         public void IsArrayName(string baseTypeId, string expected1DId, string expected2DId)
         {
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(baseTypeId));
-            var n = TypeUtils.CreateTypeName(baseTypeId);
-            if (!n.IsTypeParameter)
+            foreach (var arrId in new[] {expected1DId, expected2DId})
             {
-                Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(expected1DId));
-                Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(expected2DId));
+                if (TypeParameterName.IsTypeParameterNameIdentifier(baseTypeId))
+                {
+                    Assert.IsTrue(TypeParameterName.IsTypeParameterNameIdentifier(arrId));
+                    Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(arrId));
+                    Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(arrId));
+                    Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(arrId));
+                    Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(arrId));
+                }
+                else if (PredefinedTypeName.IsPredefinedTypeNameIdentifier(baseTypeId))
+                {
+                    Assert.IsTrue(PredefinedTypeName.IsPredefinedTypeNameIdentifier(arrId));
+                    Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(arrId));
+                    Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(arrId));
+                    Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(arrId));
+                    Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(arrId));
+                }
+                else
+                {
+                    Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(arrId));
+                    Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(arrId));
+                    Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(arrId));
+                    Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(arrId));
+                    Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(arrId));
+                }
             }
         }
 
@@ -164,9 +185,17 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
 
                 Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
                 Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
-                if (!sut.IsTypeParameter)
+                if (TypeParameterName.IsTypeParameterNameIdentifier(baseTypeId))
                 {
-                    Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(id));
+                    Assert.IsTrue(TypeParameterName.IsTypeParameterNameIdentifier(id));
+                }
+                if (PredefinedTypeName.IsPredefinedTypeNameIdentifier(baseTypeId))
+                {
+                    Assert.IsTrue(PredefinedTypeName.IsPredefinedTypeNameIdentifier(id));
+                }
+                if (DelegateTypeName.IsDelegateTypeNameIdentifier(baseTypeId))
+                {
+                    Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
                 }
             }
         }
