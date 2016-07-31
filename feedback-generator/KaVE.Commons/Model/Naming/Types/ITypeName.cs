@@ -127,5 +127,10 @@ namespace KaVE.Commons.Model.Naming.Types
 
         [NotNull]
         ITypeParameterName AsTypeParameterName { get; }
+
+        bool IsPredefined { get; }
+
+        [NotNull]
+        ITypeParameterName AsPredefinedTypeName { get; }
     }
 }

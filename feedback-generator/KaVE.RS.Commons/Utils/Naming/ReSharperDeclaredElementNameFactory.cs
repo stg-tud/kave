@@ -152,25 +152,31 @@ namespace KaVE.RS.Commons.Utils.Naming
             where TN : class, IName;
 
         [NotNull]
-        private static ITypeName GetName(this ITypeElement typeElement,
+        private static ITypeName GetName(this ITypeElement typeElem,
             ISubstitution substitution,
-            IDictionary<DeclaredElementInstance, IName> seenElements)
+            IDictionary<DeclaredElementInstance, IName> seenElems)
         {
-            if (typeElement == null)
+            if (typeElem == null)
             {
                 return Names.UnknownType;
             }
 
-            var typeName =
-                IfElementIs<IDelegate>(typeElement, GetName, substitution, seenElements, Names.UnknownDelegateType) ??
-                IfElementIs<IEnum>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
-                IfElementIs<IInterface>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
-                IfElementIs<IStruct>(typeElement, GetName, substitution, seenElements, Names.UnknownType) ??
-                Names.Type(typeElement.GetAssemblyQualifiedName(substitution, seenElements));
+            var name = typeElem.GetSimplePredefinedType() ??
+                       IfElementIs<IDelegate>(typeElem, GetName, substitution, seenElems, Names.UnknownDelegateType) ??
+                       IfElementIs<IEnum>(typeElem, GetName, substitution, seenElems, Names.UnknownType) ??
+                       IfElementIs<IInterface>(typeElem, GetName, substitution, seenElems, Names.UnknownType) ??
+                       IfElementIs<IStruct>(typeElem, GetName, substitution, seenElems, Names.UnknownType) ??
+                       Names.Type(typeElem.GetAssemblyQualifiedName(substitution, seenElems));
 
-            var dei = new DeclaredElementInstance(typeElement, substitution);
-            seenElements[dei] = typeName;
-            return typeName;
+            var dei = new DeclaredElementInstance(typeElem, substitution);
+            seenElems[dei] = name;
+            return name;
+        }
+
+        private static ITypeName GetSimplePredefinedType(this ITypeElement typeElem)
+        {
+            // TODO NameUpdate: implement me
+            return null;
         }
 
         private static ITypeName IfElementIs<TE>(ITypeElement typeElement,

@@ -16,6 +16,7 @@
 
 using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -29,6 +30,59 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
     internal class Types : NameFactoryBaseTest
     {
         #region basic cases
+
+        private static string[][] PredefinedTypeSource()
+        {
+            return new[]
+            {
+                new[] {"sbyte", "System.SByte", "p:sbyte"},
+                new[] {"byte", "System.Byte", "p:byte"},
+                new[] {"short", "System.Int16", "p:short"},
+                new[] {"ushort", "System.UInt16", "p:ushort"},
+                new[] {"int", "System.Int32", "p:int"},
+                new[] {"uint", "System.UInt32", "p:uint"},
+                new[] {"long", "System.Int64", "p:long"},
+                new[] {"ulong", "System.UInt64", "p:ulong"},
+                new[] {"char", "System.Char", "p:char"},
+                new[] {"float", "System.Single", "p:float"},
+                new[] {"double", "System.Double", "p:double"},
+                new[] {"bool", "System.Boolean", "p:bool"},
+                new[] {"decimal", "System.Decimal", "p:decimal"},
+                new[] {"void", "System.Void", "p:void"},
+                new[] {"object", "System.Object", "p:object"},
+                new[] {"string", "System.String", "p:string"}
+            };
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void ShouldParseShortNamesOfSimpleTypes(string shortName, string fullName, string typeId)
+        {
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public void M(" + shortName + @" p) { $ }
+                }
+            ");
+
+            var actual = AssertSingleParameter().ValueType;
+            var expected = new PredefinedTypeName(typeId);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCaseSource("PredefinedTypeSource")]
+        public void ShouldParseFullNamesOfSimpleTypes(string shortName, string fullName, string typeId)
+        {
+            CompleteInNamespace(@"
+                public class C
+                {
+                    public void M(" + fullName + @" p) { $ }
+                }
+            ");
+
+            var actual = AssertSingleParameter().ValueType;
+            var expected = new PredefinedTypeName(typeId);
+            Assert.AreEqual(expected, actual);
+        }
 
         [Test]
         public void Arrays()

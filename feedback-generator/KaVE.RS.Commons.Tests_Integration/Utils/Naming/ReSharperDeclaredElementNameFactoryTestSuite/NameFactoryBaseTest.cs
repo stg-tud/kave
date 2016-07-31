@@ -16,6 +16,7 @@
 
 using System.Linq;
 using JetBrains.Util;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -36,6 +37,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
             var actualTypes = m.Name.Parameters.Select(p => p.ValueType);
             var expectedTypes = Lists.NewList(paramTypes).Select(TypeUtils.CreateTypeName);
             CollectionAssert.AreEqual(expectedTypes, actualTypes);
+        }
+
+        protected IParameterName AssertSingleParameter()
+        {
+            var m = AssertSingleMethod();
+            Assert.AreEqual(1, m.Name.Parameters.Count);
+            return m.Name.Parameters[0];
         }
 
         protected IMethodDeclaration AssertSingleMethod()
