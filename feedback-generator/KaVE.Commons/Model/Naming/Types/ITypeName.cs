@@ -48,6 +48,7 @@ namespace KaVE.Commons.Model.Naming.Types
         ///         <x.FullName>
         ///             T -> ... --> T
         ///             T`1[[..]] --> T`1
+        ///             p:int -> System.Int32
         /// </summary>
         [NotNull]
         string FullName { get; }
@@ -64,6 +65,7 @@ namespace KaVE.Commons.Model.Naming.Types
         ///         <x.Name>
         ///             T -> ... --> T
         ///             T`1[[..]] --> T
+        ///             p:int -> int
         /// </summary>
         [NotNull]
         string Name { get; }
@@ -131,6 +133,6 @@ namespace KaVE.Commons.Model.Naming.Types
         bool IsPredefined { get; }
 
         [NotNull]
-        ITypeParameterName AsPredefinedTypeName { get; }
+        IPredefinedTypeName AsPredefinedTypeName { get; }
     }
 }

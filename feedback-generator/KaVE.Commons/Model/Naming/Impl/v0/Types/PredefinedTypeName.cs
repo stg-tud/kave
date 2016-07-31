@@ -23,7 +23,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
-    public class PredefinedTypeName : BaseName, IPredefinedTypeName
+    public class PredefinedTypeName : BaseName, IPredefinedTypeName, IArrayTypeName
     {
         private static readonly IDictionary<string, string> SimpleTypeToFullNameMap = new Dictionary<string, string>
         {
@@ -110,11 +110,19 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         }
 
         public ITypeParameterName AsTypeParameterName { get; private set; }
+        public bool IsPredefined { get; private set; }
+
+        public IPredefinedTypeName AsPredefinedTypeName { get; private set; }
+
         public ITypeName FullType { get; private set; }
 
-        public static bool IsPredefinedTypeName(string id)
+        public static bool IsPredefinedTypeNameIdentifier(string id)
         {
             return false; //SimpleTypeToFullNameMap.ContainsKey(id);
         }
+
+        public int Rank { get; private set; }
+
+        public ITypeName ArrayBaseType { get; private set; }
     }
 }

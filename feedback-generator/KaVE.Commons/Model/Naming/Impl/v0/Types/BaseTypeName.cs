@@ -141,6 +141,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return this is ITypeParameterName; }
         }
 
+        public bool IsPredefined
+        {
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            get { return this is IPredefinedTypeName; }
+        }
+
         // casts
         public IDelegateTypeName AsDelegateTypeName
         {
@@ -170,6 +176,17 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var tpn = this as ITypeParameterName;
                 Asserts.NotNull(tpn);
                 return tpn;
+            }
+        }
+
+        public IPredefinedTypeName AsPredefinedTypeName
+        {
+            get
+            {
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                var pdt = this as IPredefinedTypeName;
+                Asserts.NotNull(pdt);
+                return pdt;
             }
         }
 

@@ -166,6 +166,20 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return this; }
         }
 
+        public bool IsPredefined
+        {
+            get { return false; }
+        }
+
+        public IPredefinedTypeName AsPredefinedTypeName
+        {
+            get
+            {
+                Asserts.Fail("impossible");
+                return null;
+            }
+        }
+
         [NotNull]
         public string TypeParameterShortName
         {

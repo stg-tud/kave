@@ -312,6 +312,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return Get(typeof(ITypeParameterName)); }
         }
 
+        public bool IsPredefined { get; private set; }
+        public IPredefinedTypeName AsPredefinedTypeName { get; private set; }
+
         public int Rank
         {
             get { return -1; }

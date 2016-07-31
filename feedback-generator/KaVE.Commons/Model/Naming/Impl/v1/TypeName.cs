@@ -690,6 +690,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
+        public bool IsPredefined { get; private set; }
+        public IPredefinedTypeName AsPredefinedTypeName { get; private set; }
+
         public override bool Equals(object other)
         {
             var otherName = other as IName;
