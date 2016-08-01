@@ -77,6 +77,7 @@ namespace KaVE.Commons.Utils.IO.Archives
                     var fileName = string.Format("{0}.json", num++);
                     s.PutNextEntry(new ZipEntry(fileName) {Size = bytes.Length});
                     s.Write(bytes, 0, bytes.Length);
+                    s.Flush();
                 }
                 s.Finish();
             }
