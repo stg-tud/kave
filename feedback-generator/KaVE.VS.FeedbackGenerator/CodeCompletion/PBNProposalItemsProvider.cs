@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.BaseInfrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Info;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
@@ -40,7 +39,7 @@ using KaVE.RS.Commons.Utils.LookupItems;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
-    [Language(typeof (CSharpLanguage))]
+    [Language(typeof(CSharpLanguage))]
     public class PBNProposalItemsProvider : CSharpItemsProviderBasic
     {
         private readonly ILogger _logger;
@@ -51,7 +50,9 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         private Query _currentQuery;
 
-        public PBNProposalItemsProvider(IPBNRecommenderStore store, ILogger logger, RandomizedModelEnabler randomizedEnabler)
+        public PBNProposalItemsProvider(IPBNRecommenderStore store,
+            ILogger logger,
+            RandomizedModelEnabler randomizedEnabler)
         {
             _models = new Dictionary<CoReTypeName, IPBNRecommender>();
             _store = store;
@@ -69,14 +70,24 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         {
             // written this way to prevent unnecessary file read
             return _randomizedEnabler.IsEnabled(_currentQuery.type.Name) &&
-                (_models.ContainsKey(_currentQuery.type) || _store.IsAvailable(_currentQuery.type));
+                   (_models.ContainsKey(_currentQuery.type) || _store.IsAvailable(_currentQuery.type));
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
             Action<Context> onSuccess = kaveContext =>
             {
-                _currentQuery = _queryGen.Extract(kaveContext);
+                // TODO NameUpdate: untested addition (try/catch)
+                try
+                {
+                    _currentQuery = _queryGen.Extract(kaveContext);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "error while extracting query");
+                    _currentQuery = null;
+                }
+
                 if (_currentQuery != null && IsAvailable())
                 {
                     var rec = LoadIfAvailable();
