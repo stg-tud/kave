@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
@@ -27,6 +28,8 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTReferenceAnonymization : AbstractNodeVisitor<int, IReference>
     {
+        public SSTExpressionAnonymization ExprAnon { get; set; }
+
         public override IReference Visit(IEventReference eventRef, int context)
         {
             return new EventReference
@@ -42,6 +45,14 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             {
                 Reference = Anonymize(eventRef.Reference),
                 FieldName = eventRef.FieldName.ToAnonymousName()
+            };
+        }
+
+        public override IReference Visit(IIndexAccessReference idxRef, int context)
+        {
+            return new IndexAccessReference
+            {
+                Expression = (IIndexAccessExpression) ExprAnon.Visit(idxRef.Expression, context)
             };
         }
 

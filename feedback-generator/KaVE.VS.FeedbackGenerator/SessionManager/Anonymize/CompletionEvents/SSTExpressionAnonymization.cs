@@ -39,6 +39,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
         public SSTExpressionAnonymization(SSTReferenceAnonymization refAnon)
         {
             _refAnon = refAnon;
+            _refAnon.ExprAnon = this;
         }
 
         public override IExpression Visit(ICastExpression entity, int context)
