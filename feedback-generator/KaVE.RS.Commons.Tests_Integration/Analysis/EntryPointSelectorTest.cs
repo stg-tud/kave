@@ -16,7 +16,9 @@
 
 using System.Linq;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Utils;
 using NUnit.Framework;
+using Fix = KaVE.Commons.TestUtils.Model.Naming.NameFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
@@ -326,8 +328,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 }");
 
             AssertNumberOfEntryPoints(1);
-            AssertEntryPoint(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].E([System.Object, mscorlib, 4.0.0.0] o)");
+            AssertEntryPoint("[{0}] [C, TestProject].E([{1}] o)".FormatEx(Fix.Void, Fix.Object));
         }
 
         [Test]
@@ -346,8 +347,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 }");
 
             AssertNumberOfEntryPoints(1);
-            AssertEntryPoint(
-                "[System.Void, mscorlib, 4.0.0.0] [A, TestProject].E([System.Object, mscorlib, 4.0.0.0] o)");
+            AssertEntryPoint("[{0}] [A, TestProject].E([{1}] o)".FormatEx(Fix.Void, Fix.Object));
         }
 
         [Test]
@@ -363,12 +363,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
         {
             AssertNumberOfEntryPoints(entryPointNames.Length);
 
-            foreach (string epName in entryPointNames)
+            foreach (var epName in entryPointNames)
             {
                 var idx = epName.IndexOf('.');
                 var className = epName.Substring(0, idx);
                 var methodName = epName.Substring(idx + 1);
-                var ep = "[System.Void, mscorlib, 4.0.0.0] [" + className + ", TestProject]." + methodName + "()";
+                var ep = "[{0}] [{1}, TestProject].{2}()".FormatEx(Fix.Void, className, methodName);
                 AssertEntryPoint(ep);
             }
         }

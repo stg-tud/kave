@@ -18,7 +18,9 @@ using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils;
 using NUnit.Framework;
+using Fix = KaVE.Commons.TestUtils.Model.Naming.NameFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 {
@@ -506,9 +508,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var expected = new HashSet<MethodHierarchy>
             {
                 CompleteDecl(
-                    "[System.Void, mscorlib, 4.0.0.0] [N.C`1[[T]], TestProject].M([T] p)",
-                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[U -> T]], TestProject].M([U] p)",
-                    "[System.Void, mscorlib, 4.0.0.0] [i:N.I`1[[V -> T]], TestProject].M([V] p)")
+                    "[{0}] [N.C`1[[T]], TestProject].M([T] p)".FormatEx(Fix.Void),
+                    "[{0}] [N.S`1[[U -> T]], TestProject].M([U] p)".FormatEx(Fix.Void),
+                    "[{0}] [i:N.I`1[[V -> T]], TestProject].M([V] p)".FormatEx(Fix.Void))
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
@@ -542,9 +544,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var expected = new HashSet<MethodHierarchy>
             {
                 CompleteDecl(
-                    "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M([System.String, mscorlib, 4.0.0.0] p)",
-                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject].M([T] p)",
-                    "[System.Void, mscorlib, 4.0.0.0] [i:N.I`1[[U -> System.String, mscorlib, 4.0.0.0]], TestProject].M([U] p)")
+                    "[{0}] [N.C, TestProject].M([{1}] p)".FormatEx(Fix.Void, Fix.String),
+                    "[{0}] [N.S`1[[T -> {1}]], TestProject].M([T] p)".FormatEx(Fix.Void, Fix.String),
+                    "[{0}] [i:N.I`1[[U -> {1}]], TestProject].M([U] p)".FormatEx(Fix.Void, Fix.String))
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
@@ -578,9 +580,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var expected = new HashSet<MethodHierarchy>
             {
                 CompleteDecl(
-                    "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M([System.String, mscorlib, 4.0.0.0] p)",
-                    "[System.Void, mscorlib, 4.0.0.0] [N.S`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject].M([T] p)",
-                    "[System.Void, mscorlib, 4.0.0.0] [N.F`1[[U -> System.String, mscorlib, 4.0.0.0]], TestProject].M([U] p)")
+                    "[{0}] [N.C, TestProject].M([{1}] p)".FormatEx(Fix.Void, Fix.String),
+                    "[{0}] [N.S`1[[T -> {1}]], TestProject].M([T] p)".FormatEx(Fix.Void, Fix.String),
+                    "[{0}] [N.F`1[[U -> {1}]], TestProject].M([U] p)".FormatEx(Fix.Void, Fix.String))
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
@@ -637,9 +639,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 
         private static MethodHierarchy Decl(string encType, string superType, string firstType)
         {
-            var elem = "[System.Void, mscorlib, 4.0.0.0] [" + encType + ", TestProject].M()";
-            var super = "[System.Void, mscorlib, 4.0.0.0] [" + superType + ", TestProject].M()";
-            var first = "[System.Void, mscorlib, 4.0.0.0] [" + firstType + ", TestProject].M()";
+            var elem = "[{0}] [{1}, TestProject].M()".FormatEx(Fix.Void, encType);
+            var super = "[{0}] [{1}, TestProject].M()".FormatEx(Fix.Void, superType);
+            var first = "[{0}] [{1}, TestProject].M()".FormatEx(Fix.Void, firstType);
             return CompleteDecl(elem, superType == null ? null : super, firstType == null ? null : first);
         }
     }

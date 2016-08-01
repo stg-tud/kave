@@ -29,6 +29,7 @@ using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Unit.Utils.Naming
 {
+    [Ignore("right now, mocking does not work for built-in types")]
     public class ReSharperDeclaredElementNameFactoryTest
     {
         [Test]

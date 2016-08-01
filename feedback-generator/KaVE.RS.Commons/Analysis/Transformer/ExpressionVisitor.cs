@@ -50,7 +50,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public partial class ExpressionVisitor : TreeNodeVisitor<IList<IStatement>, IAssignableExpression>
     {
-        public readonly ITypeName Bool = Names.Type("System.Boolean, mscorlib, 4.0.0.0");
+        // TODO NameUpdate: put to central place
+        public readonly ITypeName Bool = Names.Type("p:bool");
 
         private readonly UniqueVariableNameGenerator _nameGen;
         private readonly CompletionTargetMarker _marker;

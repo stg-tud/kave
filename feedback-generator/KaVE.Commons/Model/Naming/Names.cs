@@ -76,7 +76,7 @@ namespace KaVE.Commons.Model.Naming
         [NotNull]
         public static IMethodName Method(string id, params object[] args)
         {
-            return new MethodName(string.Format(id, args));
+            return args.Length == 0 ? new MethodName(id) : new MethodName(string.Format(id, args));
         }
 
         [NotNull]

@@ -21,6 +21,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
+using NFix = KaVE.Commons.TestUtils.Model.Naming.NameFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
 {
@@ -39,7 +40,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)")
+                        Name = Names.Lambda("[{0}] ([{1}] i)", NFix.Void, NFix.Int)
                     }),
                 Fix.EmptyCompletion);
         }
@@ -57,7 +58,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Name = Names.Lambda("[{0}] ([{1}] i)", NFix.Void, NFix.Int),
                         Body = {new ReturnStatement {IsVoid = true}}
                     }),
                 Fix.EmptyCompletion);
@@ -76,7 +77,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Name = Names.Lambda("[{0}] ([{0}] i)", NFix.Int),
                         Body =
                         {
                             VarDecl("$0", Fix.Int),
@@ -111,7 +112,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Name = Names.Lambda("[{0}] ([{0}] i)", NFix.Int),
                         Body =
                         {
                             VarDecl("$0", Fix.Int),
@@ -144,7 +145,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Name = Names.Lambda("[{0}] ([{1}] i)", NFix.Void, NFix.Int),
                         Body = {Fix.EmptyCompletion}
                     }));
         }
@@ -160,7 +161,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Void, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Name = Names.Lambda("[{0}] ([{1}] i)", NFix.Void, NFix.Int),
                         Body = {Fix.Return}
                     }),
                 Fix.EmptyCompletion);
@@ -177,7 +178,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Void, mscorlib, 4.0.0.0] ()"),
+                        Name = Names.Lambda("[{0}] ()", Fix.Void),
                         Body = {Fix.EmptyCompletion}
                     }));
         }
@@ -191,7 +192,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
 
             var methodName =
                 Names.Method(
-                    "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].L([System.Int32, mscorlib, 4.0.0.0] i)");
+                    "[{0}] [N.C, TestProject].L([{1}] i)",
+                    NFix.Void,
+                    NFix.Int);
             AssertBody(
                 "M",
                 VarDecl("a", Fix.ActionOfInt),
@@ -210,7 +213,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Void, mscorlib, 4.0.0.0] ()"),
+                        Name = Names.Lambda("[{0}] ()", NFix.Void),
                         Body = {Fix.EmptyCompletion}
                     }),
                 VarDecl("b", Fix.ActionOfInt),
@@ -229,7 +232,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                     "a",
                     new LambdaExpression
                     {
-                        Name = Names.Lambda("[System.Int32, mscorlib, 4.0.0.0] ([System.Int32, mscorlib, 4.0.0.0] i)"),
+                        Name = Names.Lambda("[{0}] ([{0}] i)", NFix.Int),
                         Body =
                         {
                             Fix.EmptyCompletion

@@ -18,7 +18,9 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils;
 using NUnit.Framework;
+using Fix = KaVE.Commons.TestUtils.Model.Naming.NameFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 {
@@ -147,7 +149,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 
             // ReSharper disable once PossibleNullReferenceException
             var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
-            var expected = Names.Type("N.IC`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject");
+            var expected = Names.Type("N.IC`1[[T -> {0}]], TestProject", Fix.Int);
             Assert.AreEqual(expected, actual);
         }
 
@@ -234,7 +236,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                 },
                 Implements =
                 {
-                    new TypeHierarchy("i:N.IB`1[[TB -> System.Int32, mscorlib, 4.0.0.0]], TestProject"),
+                    new TypeHierarchy("i:N.IB`1[[TB -> {0}]], TestProject".FormatEx(Fix.Int)),
                     new TypeHierarchy("i:N.IC, TestProject")
                 }
             };
@@ -306,7 +308,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                 },
                 MethodHierarchies =
                 {
-                    new MethodHierarchy(Names.Method("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].M()"))
+                    new MethodHierarchy(Names.Method("[{0}] [N.C, TestProject].M()", Fix.Int))
                 }
             };
 

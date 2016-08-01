@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-using NUnit.Framework;
-
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
 {
-    internal class SeveralNestedExpressionsAnalysisTest : BaseSSTAnalysisTest
-    {
-    }
+    internal class SeveralNestedExpressionsAnalysisTest : BaseSSTAnalysisTest {}
 }

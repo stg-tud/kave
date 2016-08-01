@@ -105,11 +105,11 @@ namespace KaVE.RS.Commons.Utils.LookupItems
                 return null;
             }
 
-            // strangely, the DE points to the class instead of the constructor. As we don't get
+            // strangely, the IDE points to the class instead of the constructor. As we don't get
             // the method, we introduce an artificial constructor name to at least capture the
             // information that a constructor was selected
             var typeName = de.GetName();
-            return Names.Method(string.Format("[{0}] [{0}]..ctor()", typeName));
+            return Names.Method(string.Format("[p:void] [{0}]..ctor()", typeName));
         }
 
         private static IName TryGetNameFromCombinedLookupItem(ILookupItem lookupItem)

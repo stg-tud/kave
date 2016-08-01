@@ -19,6 +19,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
+using NFix = KaVE.Commons.TestUtils.Model.Naming.NameFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
 {
@@ -73,7 +74,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 $");
 
             AssertBody(
-                VarDecl("arr", Names.Type("System.Int32[,], mscorlib, 4.0.0.0")),
+                VarDecl("arr", Names.Type(NFix.IntArr(2))),
                 VarDecl("i", Fix.Int),
                 VarDecl("$0", Fix.IntArray),
                 Assign(
@@ -219,7 +220,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 $");
 
             AssertBody(
-                VarDecl("arr", Names.Type("System.Int32[,], mscorlib, 4.0.0.0")),
+                VarDecl("arr", Names.Type(NFix.IntArr(2))),
                 VarDecl("$0", Fix.IntArray),
                 Assign(
                     "$0",

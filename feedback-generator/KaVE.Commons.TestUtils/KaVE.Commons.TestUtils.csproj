@@ -65,6 +65,7 @@
     <Compile Include="Model\Events\CompletionEvent\CompletionEventTestFactory.cs" />
     <Compile Include="Model\Events\TestEventFactory.cs" />
     <Compile Include="Model\Events\TestIDEEvent.cs" />
+    <Compile Include="Model\Naming\NameFixture.cs" />
     <Compile Include="Model\Naming\TestNameFactory.cs" />
     <Compile Include="Model\Naming\VsComponentNameTestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

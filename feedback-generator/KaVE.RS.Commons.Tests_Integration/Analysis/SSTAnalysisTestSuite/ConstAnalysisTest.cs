@@ -64,7 +64,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 Sets.NewHashSet(
                     new FieldDeclaration
                     {
-                        Name = Names.Field("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
+                        Name = Names.Field("static [{0}] [N.C, TestProject].SomeConstant", Fix.Int)
                     });
             Assert.AreEqual(expected, ResultSST.Fields);
         }
@@ -78,12 +78,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 Sets.NewHashSet(
                     new FieldDeclaration
                     {
-                        Name = Names.Field("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].SomeConstant")
+                        Name = Names.Field("static [{0}] [N.C, TestProject].SomeConstant", Fix.Int)
                     },
                     new FieldDeclaration
                     {
                         Name =
-                            Names.Field("static [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].OtherConstant")
+                            Names.Field("static [{0}] [N.C, TestProject].OtherConstant", Fix.Int)
                     });
             Assert.AreEqual(expected, ResultSST.Fields);
         }

@@ -15,13 +15,16 @@
  */
 
 using System.Linq;
+using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 using NUnit.Framework;
+using Fix = KaVE.Commons.TestUtils.Model.Naming.NameFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Utils
 {
     internal class LookupItemUtilsTest : BaseCSharpCodeCompletionTest
     {
-        private void ThenProposalCollectionContains(params string[] proposalNameIdentifiers)
+        private void ThenProposalCollectionContainsMulti(params string[] proposalNameIdentifiers)
         {
             foreach (var proposalNameIdentifier in proposalNameIdentifiers)
             {
@@ -29,8 +32,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             }
         }
 
-        private void ThenProposalCollectionContains(string expectedIdentifier)
+        [StringFormatMethod("formatIdentifier")]
+        private void ThenProposalCollectionContains(string formatIdentifier, params object[] args)
         {
+            var expectedIdentifier = args.Length > 0 ? formatIdentifier.FormatEx(args) : formatIdentifier;
             // ReSharper disable once PossibleNullReferenceException
             var proposalCollection = ResultProposalCollection.Proposals.Select(prop => prop.Name.Identifier);
             CollectionAssert.Contains(proposalCollection, expectedIdentifier);
@@ -45,7 +50,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     par$
                 }");
 
-            ThenProposalCollectionContains("[System.Int32, mscorlib, 4.0.0.0] param");
+            ThenProposalCollectionContains("[{0}] param", Fix.Int);
         }
 
         [Test]
@@ -56,7 +61,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 loc$
             ");
 
-            ThenProposalCollectionContains("[System.String, mscorlib, 4.0.0.0] loc");
+            ThenProposalCollectionContains("[{0}] loc", Fix.String);
         }
 
         [Test]
@@ -68,7 +73,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     count$
                 }");
 
-            ThenProposalCollectionContains("[System.Int32, mscorlib, 4.0.0.0] counter");
+            ThenProposalCollectionContains("[{0}] counter", Fix.Int);
         }
 
         [Test]
@@ -113,8 +118,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains(
-                "[System.Object, mscorlib, 4.0.0.0] [C, TestProject].field");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].field", Fix.Object);
         }
 
         [Test]
@@ -129,8 +133,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M()");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].M()", Fix.Void);
         }
 
         [Test]
@@ -145,8 +148,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains(
-                "[System.Object, mscorlib, 4.0.0.0] [C, TestProject].M()");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].M()", Fix.Object);
         }
 
         [Test]
@@ -161,8 +163,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains(
-                "[System.Int32, mscorlib, 4.0.0.0] [C, TestProject].M()");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].M()", Fix.Int);
         }
 
         [Test]
@@ -177,8 +178,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M([System.Object, mscorlib, 4.0.0.0] p)");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].M([{1}] p)", Fix.Void, Fix.Object);
         }
 
         [Test]
@@ -194,7 +194,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(ref [System.Int32, mscorlib, 4.0.0.0] i)");
+                "[{0}] [C, TestProject].M(ref [{1}] i)",
+                Fix.Void,
+                Fix.Int);
         }
 
         [Test]
@@ -210,7 +212,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(out [System.Boolean, mscorlib, 4.0.0.0] b)");
+                "[{0}] [C, TestProject].M(out [{1}] b)",
+                Fix.Void,
+                Fix.Bool);
         }
 
         [Test]
@@ -226,7 +230,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(params [System.Object[], mscorlib, 4.0.0.0] objs)");
+                "[{0}] [C, TestProject].M(params [{1}] objs)",
+                Fix.Void,
+                Fix.ObjectArr(1));
         }
 
         [Test]
@@ -242,7 +248,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(opt [System.Object, mscorlib, 4.0.0.0] obj)");
+                "[{0}] [C, TestProject].M(opt [{1}] obj)",
+                Fix.Void,
+                Fix.Object);
         }
 
         [Test]
@@ -261,7 +269,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)] [C, TestProject].Event");
+                "[d:[{0}] [C+Delegate, TestProject].([{1}] obj)] [C, TestProject].Event",
+                Fix.Void,
+                Fix.Object);
         }
 
         [Test]
@@ -279,7 +289,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "set get [System.Int32, mscorlib, 4.0.0.0] [C, TestProject].Property()");
+                "set get [{0}] [C, TestProject].Property()",
+                Fix.Int);
         }
 
         [Test]
@@ -297,7 +308,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "get [System.Int32, mscorlib, 4.0.0.0] [C, TestProject].Property()");
+                "get [{0}] [C, TestProject].Property()",
+                Fix.Int);
         }
 
         [Test]
@@ -315,7 +327,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "set [System.Int32, mscorlib, 4.0.0.0] [C, TestProject].Property()");
+                "set [{0}] [C, TestProject].Property()",
+                Fix.Int);
         }
 
         [Test]
@@ -336,7 +349,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "get [System.Object, mscorlib, 4.0.0.0] [C, TestProject].Item([System.Int32, mscorlib, 4.0.0.0] i)");
+                "get [{0}] [C, TestProject].Item([{1}] i)",
+                Fix.Object,
+                Fix.Int);
         }
 
         [Test]
@@ -351,7 +366,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M`1[[T]]([T] p)");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].M`1[[T]]([T] p)", Fix.Void);
         }
 
         [Test]
@@ -367,7 +382,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[C`1[[T -> C`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject]], TestProject] ccs");
+                "[C`1[[T -> C`1[[T -> {0}]], TestProject]], TestProject] ccs",
+                Fix.String);
         }
 
         [Test]
@@ -385,7 +401,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M([i:I`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject] ls, [i:I`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject] li)");
+                "[{0}] [C, TestProject].M([i:I`1[[T -> {1}]], TestProject] ls, [i:I`1[[T -> {2}]], TestProject] li)",
+                Fix.Void,
+                Fix.String,
+                Fix.Int);
         }
 
         [Test]
@@ -397,7 +416,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             ");
 
             ThenProposalCollectionContains(
-                "[i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] d");
+                "[i:System.Collections.Generic.IDictionary`2[[TKey -> {0}],[TValue -> {1}]], mscorlib, 4.0.0.0] d",
+                Fix.String,
+                Fix.Object);
         }
 
         [Test]
@@ -410,7 +431,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] i");
+                "[System.Nullable`1[[T -> {0}]], mscorlib, 4.0.0.0] i",
+                Fix.Int);
         }
 
         [Test]
@@ -422,7 +444,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             ");
 
             ThenProposalCollectionContains(
-                "[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] l");
+                "[i:System.Collections.Generic.IList`1[[T -> {0}]], mscorlib, 4.0.0.0] l",
+                Fix.String);
         }
 
         [Test]
@@ -449,11 +472,15 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 dict.$
             ");
 
-            ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Add([TKey] key, [TValue] value)",
-                "get [System.Int32, mscorlib, 4.0.0.0] [i:System.Collections.Generic.ICollection`1[[T -> s:System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Count()",
-                "get [i:System.Collections.Generic.ICollection`1[[T -> TKey]], mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Keys()",
-                "get [i:System.Collections.Generic.ICollection`1[[T -> TValue]], mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Values()",
+            ThenProposalCollectionContainsMulti(
+                "[{0}] [i:System.Collections.Generic.IDictionary`2[[TKey -> {1}],[TValue -> {2}]], mscorlib, 4.0.0.0].Add([TKey] key, [TValue] value)"
+                    .FormatEx(Fix.Void, Fix.String, Fix.Object),
+                "get [{0}] [i:System.Collections.Generic.ICollection`1[[T -> s:System.Collections.Generic.KeyValuePair`2[[TKey -> {1}],[TValue -> {2}]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Count()"
+                    .FormatEx(Fix.Int, Fix.String, Fix.Object),
+                "get [i:System.Collections.Generic.ICollection`1[[T -> TKey]], mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> {0}],[TValue -> {1}]], mscorlib, 4.0.0.0].Keys()"
+                    .FormatEx(Fix.String, Fix.Object),
+                "get [i:System.Collections.Generic.ICollection`1[[T -> TValue]], mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> {0}],[TValue -> {1}]], mscorlib, 4.0.0.0].Values()"
+                    .FormatEx(Fix.String, Fix.Object),
                 // for the indexers R# doesn't give us the type parameter information (Substitution is Identity, instead of map to concrete types)
                 "set get [TValue] [i:System.Collections.Generic.IDictionary`2[[TKey],[TValue]], mscorlib, 4.0.0.0].Item([TKey] key)");
         }
@@ -472,7 +499,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("static [System.String, mscorlib, 4.0.0.0] [C, TestProject].Constant");
+            ThenProposalCollectionContains("static [{0}] [C, TestProject].Constant", Fix.String);
         }
 
         [Test]
@@ -504,7 +531,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("static [System.Boolean, mscorlib, 4.0.0.0] [C, TestProject].M()");
+            ThenProposalCollectionContains("static [{0}] [C, TestProject].M()", Fix.Bool);
         }
 
         [Test]
@@ -521,7 +548,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("static [System.String, mscorlib, 4.0.0.0] [C, TestProject]._field");
+            ThenProposalCollectionContains("static [{0}] [C, TestProject]._field", Fix.String);
         }
 
         [Test]
@@ -560,7 +587,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[C, TestProject] [C, TestProject]..ctor()");
+            ThenProposalCollectionContains("[{0}] [C, TestProject]..ctor()", Fix.Void);
         }
 
         [Test, Ignore]
@@ -579,9 +606,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
 
             // TODO @Sven: how do we fix this inconsistency of ReSharper?
             // -> even though the UI shows a constructor, the declared element points to a class :/
-            // TODO @Sven: Why is the return value of a constructor not void?
             ThenProposalCollectionContains(
-                "[C, TestProject] [C, TestProject]..ctor([System.Object, mscorlib, 4.0.0.0] o)");
+                "[{0}] [C, TestProject]..ctor([{1}] o)",
+                Fix.Void,
+                Fix.Object);
         }
 
         [Test]
@@ -596,7 +624,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[C, TestProject] [C, TestProject]..ctor()");
+            ThenProposalCollectionContains("[{0}] [C, TestProject]..ctor()", Fix.Void);
         }
 
         [Test]
@@ -613,7 +641,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
 
             // completion proposes a constructor in this case
             const string typeName = "MyTestClass`1[[T]], TestProject";
-            ThenProposalCollectionContains(string.Format("[{0}] [{0}]..ctor()", typeName));
+            ThenProposalCollectionContains("[{0}] [{1}]..ctor()", Fix.Void, typeName);
         }
 
         [Test]
@@ -651,7 +679,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             ");
 
             ThenProposalCollectionContains(
-                "[s:SomeStruct, TestProject] [s:SomeStruct, TestProject]..ctor()");
+                "[{0}] [s:SomeStruct, TestProject]..ctor()",
+                Fix.Void);
         }
 
         [Test]
@@ -666,7 +695,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains(
+            ThenProposalCollectionContainsMulti(
                 "CombinedLookupItem:new C[]",
                 "CombinedLookupItem:new [] { }");
         }
@@ -689,11 +718,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains(
-                "[System.Object[,,], mscorlib, 4.0.0.0] [C, TestProject].myJaggedArray",
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].myMethod`1[[R]]([R[]] p)",
-                "[System.Object[,,], mscorlib, 4.0.0.0] [C, TestProject].myMultidimensionalArray",
-                "[System.String[], mscorlib, 4.0.0.0] [C, TestProject].myStringArray");
+            ThenProposalCollectionContainsMulti(
+                "[{0}] [C, TestProject].myJaggedArray".FormatEx(Fix.ObjectArr(3)),
+                "[{0}] [C, TestProject].myMethod`1[[R]]([R[]] p)".FormatEx(Fix.Void),
+                "[{0}] [C, TestProject].myMultidimensionalArray".FormatEx(Fix.ObjectArr(3)),
+                "[{0}] [C, TestProject].myStringArray".FormatEx(Fix.StringArr(1)));
         }
 
         [Test]
@@ -715,8 +744,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             // Actually, for overloaded methods only one proposal shows up in the completion list, which is
             // by default showing the "first" overloading. When it is selected, one can cycle through the
             // overloads.
-            ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].MyMethod([System.Int32, mscorlib, 4.0.0.0] i)");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].MyMethod([{1}] i)", Fix.Void, Fix.Int);
         }
 
         [Test]
@@ -726,7 +754,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 Equa$
             ");
 
-            ThenProposalCollectionContains("CombinedLookupItem:public override Equals(object) { ... }");
+            // ReSharper disable once FormatStringProblem
+            // second parameter is required to not break string.Format
+            ThenProposalCollectionContains("CombinedLookupItem:public override Equals(object) {{ ... }}", "");
         }
 
         [Test]
@@ -743,7 +773,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M1`1[[T]]([T] t)");
+            ThenProposalCollectionContains("[{0}] [N.C, TestProject].M1`1[[T]]([T] t)", Fix.Void);
         }
 
         [Test]
@@ -793,7 +823,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [i:MyInterface, TestProject].M()");
+            ThenProposalCollectionContains("[{0}] [i:MyInterface, TestProject].M()", Fix.Void);
         }
 
         [Test]
@@ -813,7 +843,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Int32, mscorlib, 4.0.0.0] [s:MyStruct, TestProject].i");
+            ThenProposalCollectionContains("[{0}] [s:MyStruct, TestProject].i", Fix.Int);
         }
 
         [Test]
@@ -831,7 +861,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [d:[System.Void, mscorlib, 4.0.0.0] [C+D, TestProject].([System.Int32, mscorlib, 4.0.0.0] i)].Invoke([System.Int32, mscorlib, 4.0.0.0] i)");
+                "[{0}] [d:[{0}] [C+D, TestProject].([{1}] i)].Invoke([{1}] i)",
+                Fix.Void,
+                Fix.Int);
         }
 
         [Test]
@@ -844,7 +876,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M`1[[T]]([T[]] ts)");
+            ThenProposalCollectionContains("[{0}] [C, TestProject].M`1[[T]]([T[]] ts)", Fix.Void);
         }
 
         [Test]
@@ -883,7 +915,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[i:System.Collections.Generic.IList`1[][[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [C, TestProject].M()");
+                "[i:System.Collections.Generic.IList`1[][[T -> {0}]], mscorlib, 4.0.0.0] [C, TestProject].M()",
+                Fix.String);
         }
 
         [TearDown]

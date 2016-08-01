@@ -31,8 +31,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         private readonly ITypeName _streamWriter = Names.Type("System.IO.StreamWriter, mscorlib, 4.0.0.0");
 
         private readonly IMethodName _streamWriterCtor =
-            Names.Method(
-                "[System.Void, mscorlib, 4.0.0.0] [System.IO.StreamWriter, mscorlib, 4.0.0.0]..ctor([System.String, mscorlib, 4.0.0.0] path)");
+            Names.Method("[{0}] [System.IO.StreamWriter, mscorlib, 4.0.0.0]..ctor([{1}] path)", Fix.Void, Fix.String);
 
         [Test]
         public void Default()
