@@ -146,6 +146,13 @@ namespace KaVE.Commons.Tests.Utils.Naming
             AssertAnonymizedEquals(original, original);
         }
 
+        [TestCase("p:int"), TestCase("p:int[]")]
+        public void ShouldKeepPredefinedTypes(string id)
+        {
+            var original = Names.Type(id);
+            AssertAnonymizedEquals(original, original);
+        }
+
         [Test]
         public void ShouldKeepTypeFromOtherAssembly()
         {

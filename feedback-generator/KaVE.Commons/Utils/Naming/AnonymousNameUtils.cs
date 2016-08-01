@@ -213,6 +213,10 @@ namespace KaVE.Commons.Utils.Naming
             {
                 return type;
             }
+            if (type.IsPredefined)
+            {
+                return type;
+            }
             if (type.IsDelegateType)
             {
                 return ToAnonymousType_Delegate(type.AsDelegateTypeName);
