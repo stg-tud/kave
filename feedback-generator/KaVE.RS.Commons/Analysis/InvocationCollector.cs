@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.RS.Commons.Utils.Naming;
@@ -45,7 +47,18 @@ namespace KaVE.RS.Commons.Analysis
             var invocationRef = invocation.Reference;
             if (invocationRef != null)
             {
-                var resolvedRef = invocationRef.Resolve();
+                ResolveResultWithInfo resolvedRef;
+                try
+                {
+                    resolvedRef = invocationRef.Resolve();
+                }
+                catch (NullReferenceException nre)
+                {
+                    // this error sometimes occurs in combination with LINQ expressions, e.g.:
+                    //     M().Where(x => x.A == someLocalVar).Select
+                    return;
+                }
+
                 if (resolvedRef.IsValid() && resolvedRef.DeclaredElement is IMethod)
                 {
                     var method = invocationRef.ResolveMethod();
