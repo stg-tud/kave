@@ -899,11 +899,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             if (expr.BodyBlock != null)
             {
-                if (expr.BodyBlock == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
-                {
-                    lambdaBody.Add(new ExpressionStatement {Expression = new CompletionExpression()});
-                }
-
                 expr.BodyBlock.Accept(bodyVisitor, lambdaBody);
             }
             else if (expr.BodyExpression != null)
@@ -926,11 +921,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var lambdaName = expr.GetName();
             var lambdaBody = new KaVEList<IStatement>();
             var bodyVisitor = new BodyVisitor(_nameGen, _marker);
-
-            if (expr.Body == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
-            {
-                lambdaBody.Add(new ExpressionStatement {Expression = new CompletionExpression()});
-            }
 
             expr.Body.Accept(bodyVisitor, lambdaBody);
 

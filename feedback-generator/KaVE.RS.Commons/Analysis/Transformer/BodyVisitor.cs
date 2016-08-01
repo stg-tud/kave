@@ -680,8 +680,8 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             AddIf(block, CompletionCase.InBody, tryBlock.Body);
             AddIf(block, CompletionCase.InFinally, tryBlock.Finally);
-            Visit(block.Try, tryBlock.Body);
-            Visit(block.FinallyBlock, tryBlock.Finally);
+            VisitBlock(block.Try, tryBlock.Body);
+            VisitBlock(block.FinallyBlock, tryBlock.Finally);
 
             foreach (var clause in block.Catches)
             {
@@ -690,7 +690,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
                 AddIf(clause, CompletionCase.InBody, catchBlock.Body);
 
-                Visit(clause.Body, catchBlock.Body);
+                VisitBlock(clause.Body, catchBlock.Body);
 
                 var generalClause = clause as IGeneralCatchClause;
                 if (generalClause != null)
@@ -817,17 +817,26 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             AddIf(block, CompletionCase.EmptyCompletionAfter, body);
         }
 
-        private void Visit(IBlock block, IKaVEList<IStatement> body)
+        public override void VisitBlock(IBlock block, IList<IStatement> body)
         {
+            // TODO NameUpdate: changed another helper to overriding this method, check if Null check is really necessary now
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (block == null)
             {
                 return;
             }
+            // TODO NameUpdate: untested addition
+            AddIf(block, CompletionCase.EmptyCompletionBefore, body);
+            // TODO NameUpdate: untested addition
+            AddIf(block, CompletionCase.InBody, body);
+
             foreach (var stmt in block.Statements)
             {
                 Execute.AndSupressExceptions(
                     delegate { stmt.Accept(this, body); });
             }
+            // TODO NameUpdate: untested addition
+            AddIf(block, CompletionCase.EmptyCompletionAfter, body);
         }
 
         #endregion

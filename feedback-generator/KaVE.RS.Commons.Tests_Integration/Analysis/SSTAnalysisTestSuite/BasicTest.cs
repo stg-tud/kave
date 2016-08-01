@@ -44,6 +44,22 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
+        public void BlocksAreAnalyzed()
+        {
+            CompleteInMethod(@"
+                { int i; }
+                $
+            ");
+
+            // TODO NameUpdate: Add target test and add separate test file for blocks
+            AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
+
+            AssertBody(
+                VarDecl("i", Fix.Int),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
         public void AssignmentOfConstantValue()
         {
             CompleteInMethod(@"

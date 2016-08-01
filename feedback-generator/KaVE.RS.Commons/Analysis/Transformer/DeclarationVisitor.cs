@@ -269,10 +269,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     }
 
                     accessor.Accept(bodyVisitor, body);
-                    if (_marker.AffectedNode == accessor.Body && _marker.AffectedNode != null)
-                    {
-                        body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
-                    }
                 }
             }
         }
