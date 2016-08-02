@@ -112,7 +112,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private const string StartedMarker = ".started";
         private const string EndMarker = ".ended";
 
-        [TestCaseSource("FindSolutionFiles")]
+        //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string shortenedSolution)
         {
             _currentSolution = shortenedSolution;
