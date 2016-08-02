@@ -29,16 +29,25 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
         [Test]
         public void ShouldNotContainObjectInTypeHierarchy()
         {
-            CompleteInCSharpFile(@"
-                namespace N
+            CompleteInNamespace(@"
+                public class C
                 {
-                    public class C
+                    public void M()
                     {
-                        public void M()
-                        {
-                            $
-                        }
+                        $
                     }
+                }
+            ");
+            Assert.IsNull(ResultContext.TypeShape.TypeHierarchy.Extends);
+        }
+
+        [Test]
+        public void ShouldNotContainValueTypeInTypeHierarchy()
+        {
+            CompleteInNamespace(@"
+                public struct S
+                {
+                    $
                 }
             ");
             Assert.IsNull(ResultContext.TypeShape.TypeHierarchy.Extends);

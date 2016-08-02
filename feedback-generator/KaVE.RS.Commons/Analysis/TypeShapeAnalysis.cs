@@ -87,7 +87,7 @@ namespace KaVE.RS.Commons.Analysis
             ISubstitution substitution,
             IKaVEList<ITypeName> seenTypes)
         {
-            if (type == null || HasTypeSystemObject(type))
+            if (type == null || IsRootType(type))
             {
                 return null;
             }
@@ -127,9 +127,10 @@ namespace KaVE.RS.Commons.Analysis
             return enclosingClassHierarchy;
         }
 
-        private static bool HasTypeSystemObject(ITypeElement type)
+        private static bool IsRootType(ITypeElement type)
         {
-            return "System.Object".Equals(type.GetClrName().FullName);
+            var fullName = type.GetClrName().FullName;
+            return "System.Object".Equals(fullName) || "System.ValueType".Equals(fullName);
         }
     }
 }
