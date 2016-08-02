@@ -44,6 +44,11 @@ namespace KaVE.Commons.Utils.IO.Archives
             _numEntries = 0;
         }
 
+        public object NumItemsAdded
+        {
+            get { return _numEntries; }
+        }
+
         public void Add<T>(T obj)
         {
             if (obj != null)

@@ -69,6 +69,21 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void ShouldCountAdditions()
+        {
+            var wa = new WritingArchive(_zipPath);
+            Assert.AreEqual(0, wa.NumItemsAdded);
+            wa.Add("a");
+            Assert.AreEqual(1, wa.NumItemsAdded);
+            wa.Add((string) null);
+            Assert.AreEqual(1, wa.NumItemsAdded);
+            wa.Add("a");
+            Assert.AreEqual(2, wa.NumItemsAdded);
+            wa.Dispose();
+            Assert.AreEqual(2, wa.NumItemsAdded);
+        }
+
+        [Test]
         public void WriteNullsAreIgnored()
         {
             var input = new[] {null, "a", null, "b", null};
