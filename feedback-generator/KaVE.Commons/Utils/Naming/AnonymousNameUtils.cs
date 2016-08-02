@@ -247,16 +247,10 @@ namespace KaVE.Commons.Utils.Naming
 
         private static IDelegateTypeName ToAnonymousType_Delegate(IDelegateTypeName type)
         {
-            var identifier = new StringBuilder();
-            identifier.AppendTypeKindPrefix(type);
-            identifier.Append("[");
-            identifier.Append(type.ReturnType.ToAnonymousName());
-            identifier.Append("] [");
-            identifier.Append(type.DelegateType.ToAnonymousName());
-            identifier.Append("].");
-            identifier.AppendParameters(type.Parameters, true);
-
-            return Names.Type(identifier.ToString()).AsDelegateTypeName;
+            var recursionSafeId = type.Identifier.Substring(2); // strip "d:"
+            var mid = Names.Method(recursionSafeId);
+            var anonId = mid.ToAnonymousName().Identifier;
+            return Names.Type("d:{0}", anonId).AsDelegateTypeName;
         }
 
         private static ITypeName ToAnonymousType_Regular(ITypeName type)

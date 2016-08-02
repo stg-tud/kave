@@ -16,6 +16,7 @@
 
 using System;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Naming;
 using KaVE.JetBrains.Annotations;
 using NUnit.Framework;
@@ -299,13 +300,34 @@ namespace KaVE.Commons.Tests.Utils.Naming
         }
 
         [Test]
-        public void ShouldAnonymizeDelegateParameterNameFromEnclosingProject()
+        public void ShouldAnonymizeDelegateParameterName_yes()
         {
             var original = Names.Type("d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([P, A] p)");
             var expected =
                 Names.Type(
-                    "d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([aUaDMpYpDqsiSh5nQjiWFw==, ghTRAD9op9mwNWwMvX7uGg==] xBzbwjgZ_3fD0cNcmbedKA==)");
+                    "d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([aUaDMpYpDqsiSh5nQjiWFw==, ghTRAD9op9mwNWwMvX7uGg==] p)");
 
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeDelegateParameterName_no()
+        {
+            var original = Names.Type("d:[Void, CL, 4.0.0.0] [P, A].([D, E, 1.2.3.4] p)");
+            var expected =
+                Names.Type(
+                    "d:[Void, CL, 4.0.0.0] [aUaDMpYpDqsiSh5nQjiWFw==, ghTRAD9op9mwNWwMvX7uGg==].([D, E, 1.2.3.4] xBzbwjgZ_3fD0cNcmbedKA==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeRecursiveDelegate()
+        {
+            var delType = "N.D, P";
+            var delTypeAnon = "{0}.{1}, {2}".FormatEx("N".ToHash(), "D".ToHash(), "P".ToHash());
+            var original = Names.Type("d:[{0}] [{0}].([{0}] p)", delType);
+            var expected = Names.Type("d:[{0}] [{0}].([{0}] {1})", delTypeAnon, "p".ToHash());
             AssertAnonymizedEquals(original, expected);
         }
 
