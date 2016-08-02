@@ -47,40 +47,50 @@ namespace KaVE.RS.Commons.Utils.Naming
         private const string TypeParameterArrow = " -> ";
 
         [NotNull]
-        public static TName GetName<TName>([NotNull] this DeclaredElementInstance instance) where TName : class, IName
+        public static IName GetName([NotNull] this DeclaredElementInstance instance)
         {
-            return (TName) instance.GetName();
+            return instance.GetName<IName>();
         }
 
         [NotNull]
-        public static IName GetName([NotNull] this DeclaredElementInstance instance)
+        public static TName GetName<TName>([NotNull] this DeclaredElementInstance instance) where TName : class, IName
         {
-            return instance.Element.GetName(instance.Substitution);
+            return instance.Element.GetName<TName>(instance.Substitution);
+        }
+
+        [NotNull]
+        public static IName GetName([NotNull] this IClrDeclaredElement element)
+        {
+            return element.GetName<IName>();
         }
 
         [NotNull]
         public static TName GetName<TName>([NotNull] this IClrDeclaredElement element) where TName : class, IName
         {
-            return (TName) element.GetName();
+            return element.GetName<TName>(element.IdSubstitution);
         }
 
         [NotNull]
         public static TName GetName<TName>([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
             where TName : class, IName
         {
-            return (TName) element.GetName(substitution);
-        }
+            var seen = new Dictionary<DeclaredElementInstance, IName>();
+            var name = element.GetName(substitution, seen);
+            var typedName = name as TName;
+            if (typedName != null)
+            {
+                return typedName;
+            }
 
-        [NotNull]
-        public static IName GetName([NotNull] this IClrDeclaredElement element)
-        {
-            return element.GetName(element.IdSubstitution);
-        }
+            // in case of unresolved types in using directives...
+            // maybe this will be replaced when I have a better understanding of how aliases are handled in the R# AST
+            if (typeof(AliasName) == name.GetType() && typeof(TName) == typeof(ITypeName))
+            {
+                return (TName) Names.UnknownType;
+            }
 
-        [NotNull]
-        public static IName GetName([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
-        {
-            return element.GetName(substitution, new Dictionary<DeclaredElementInstance, IName>());
+            throw new InvalidCastException(
+                "Cannot cast {0}({1}) to {2}.".FormatEx(name.GetType().Name, name.Identifier, typeof(TName).Name));
         }
 
         [NotNull]
