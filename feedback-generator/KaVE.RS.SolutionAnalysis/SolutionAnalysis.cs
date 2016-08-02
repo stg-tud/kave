@@ -104,13 +104,12 @@ namespace KaVE.RS.SolutionAnalysis
 
         private IEnumerable<Context> AnalyzeType(ICSharpTypeDeclaration aType, IPsiSourceFile psiSourceFile)
         {
-            var contexts = new List<Context>();
-            if (aType is IClassDeclaration || aType is IStructDeclaration)
-            {
-                _logger.Info("   - Analyzing type '{0}'...", aType.CLRName);
+            _logger.Info("   - Analyzing type '{0}'...", aType.CLRName);
 
-                contexts.Add(ContextAnalysis.Analyze(aType, psiSourceFile, _logger).Context);
-            }
+            var contexts = new List<Context>
+            {
+                ContextAnalysis.Analyze(aType, psiSourceFile, _logger).Context
+            };
             contexts.AddRange(AnalyzeInnerTypes(aType, psiSourceFile));
             return contexts;
         }

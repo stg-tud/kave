@@ -64,19 +64,67 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             node.Children<ICSharpTreeNode>().ForEach(child => child.Accept(this, context));
         }
 
+        #region avoid stepping into nested types
+
+        private bool _isAlreadyInsideTypeDeclaration;
+
+        public override void VisitClassDeclaration(IClassDeclaration decl, SST context)
+        {
+            if (!_isAlreadyInsideTypeDeclaration)
+            {
+                _isAlreadyInsideTypeDeclaration = true;
+                base.VisitClassDeclaration(decl, context);
+                _isAlreadyInsideTypeDeclaration = false;
+            }
+        }
+
+        public override void VisitEnumDeclaration(IEnumDeclaration decl, SST context)
+        {
+            if (!_isAlreadyInsideTypeDeclaration)
+            {
+                _isAlreadyInsideTypeDeclaration = true;
+                base.VisitEnumDeclaration(decl, context);
+                _isAlreadyInsideTypeDeclaration = false;
+            }
+        }
+
+        public override void VisitInterfaceDeclaration(IInterfaceDeclaration decl, SST context)
+        {
+            if (!_isAlreadyInsideTypeDeclaration)
+            {
+                _isAlreadyInsideTypeDeclaration = true;
+                base.VisitInterfaceDeclaration(decl, context);
+                _isAlreadyInsideTypeDeclaration = false;
+            }
+        }
+
+        public override void VisitStructDeclaration(IStructDeclaration decl, SST context)
+        {
+            if (!_isAlreadyInsideTypeDeclaration)
+            {
+                _isAlreadyInsideTypeDeclaration = true;
+                base.VisitStructDeclaration(decl, context);
+                _isAlreadyInsideTypeDeclaration = false;
+            }
+        }
+
+        #endregion
+
         public override void VisitDelegateDeclaration(IDelegateDeclaration decl, SST context)
         {
             if (decl.DeclaredElement != null)
             {
                 var name = decl.DeclaredElement.GetName<IDelegateTypeName>();
 
-                if (IsNestedDeclaration(name, context))
-                {
-                    return;
-                }
-
                 context.Delegates.Add(new DelegateDeclaration {Name = name});
             }
+        }
+
+        public override void VisitEnumMemberDeclaration(IEnumMemberDeclaration decl, SST context)
+        {
+            var shortName = decl.DeclaredName;
+            context.Fields.Add(
+                new FieldDeclaration {Name = Names.Field("[{0}] [{0}].{1}", context.EnclosingType, shortName)});
         }
 
         public override void VisitEventDeclaration(IEventDeclaration decl,
@@ -85,11 +133,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             if (decl.DeclaredElement != null)
             {
                 var name = decl.DeclaredElement.GetName<IEventName>();
-
-                if (IsNestedDeclaration(name, context))
-                {
-                    return;
-                }
 
                 context.Events.Add(new EventDeclaration {Name = name});
             }
@@ -103,11 +146,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             {
                 var name = decl.DeclaredElement.GetName<IFieldName>();
 
-                if (IsNestedDeclaration(name, context))
-                {
-                    return;
-                }
-
                 context.Fields.Add(new FieldDeclaration {Name = name});
             }
         }
@@ -117,11 +155,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             if (decl.DeclaredElement != null)
             {
                 var name = decl.DeclaredElement.GetName<IFieldName>();
-
-                if (IsNestedDeclaration(name, context))
-                {
-                    return;
-                }
 
                 context.Fields.Add(new FieldDeclaration {Name = name});
             }
@@ -137,11 +170,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             if (decl.DeclaredElement != null)
             {
                 var methodName = decl.DeclaredElement.GetName<IMethodName>();
-
-                if (IsNestedDeclaration(methodName, context))
-                {
-                    return;
-                }
 
                 var sstDecl = new MethodDeclaration
                 {
@@ -213,11 +241,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             {
                 var methodName = decl.DeclaredElement.GetName<IMethodName>();
 
-                if (IsNestedDeclaration(methodName, context))
-                {
-                    return;
-                }
-
                 var sstDecl = new MethodDeclaration
                 {
                     Name = methodName,
@@ -246,11 +269,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             {
                 var name = decl.DeclaredElement.GetName<IPropertyName>();
 
-                if (IsNestedDeclaration(name, context))
-                {
-                    return;
-                }
-
                 var propDecl = new PropertyDeclaration {Name = name};
                 context.Properties.Add(propDecl);
 
@@ -271,16 +289,6 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     accessor.Accept(bodyVisitor, body);
                 }
             }
-        }
-
-        private static bool IsNestedDeclaration(IDelegateTypeName name, SST context)
-        {
-            return !name.DeclaringType.Equals(context.EnclosingType);
-        }
-
-        private static bool IsNestedDeclaration(IMemberName name, SST context)
-        {
-            return !name.DeclaringType.Equals(context.EnclosingType);
         }
     }
 }

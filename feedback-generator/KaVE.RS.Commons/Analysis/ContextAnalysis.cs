@@ -143,17 +143,17 @@ namespace KaVE.RS.Commons.Analysis
                 var sst = new SST();
                 context.SST = sst;
 
-                var classDeclaration = FindEnclosing<IClassDeclaration>(nodeInFile);
-                if (classDeclaration != null && classDeclaration.DeclaredElement != null)
+                var typeDecl = FindEnclosing<ICSharpTypeDeclaration>(nodeInFile);
+                if (typeDecl != null && typeDecl.DeclaredElement != null)
                 {
-                    context.TypeShape = _typeShapeAnalysis.Analyze(classDeclaration);
+                    context.TypeShape = _typeShapeAnalysis.Analyze(typeDecl);
 
-                    var entryPointRefs = new EntryPointSelector(classDeclaration, context.TypeShape).GetEntryPoints();
+                    var entryPointRefs = new EntryPointSelector(typeDecl, context.TypeShape).GetEntryPoints();
                     res.EntryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
 
-                    sst.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
+                    sst.EnclosingType = typeDecl.DeclaredElement.GetName<ITypeName>();
 
-                    if (classDeclaration.IsPartial)
+                    if (typeDecl.IsPartial)
                     {
                         var file = nodeInFile.GetSourceFile();
                         sst.PartialClassIdentifier = file != null
@@ -162,7 +162,7 @@ namespace KaVE.RS.Commons.Analysis
                     }
 
                     res.CompletionMarker = _completionTargetAnalysis.Analyze(nodeInFile);
-                    classDeclaration.Accept(
+                    typeDecl.Accept(
                         new DeclarationVisitor(_logger, res.EntryPoints, res.CompletionMarker, _token),
                         sst);
                 }
