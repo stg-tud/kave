@@ -22,15 +22,17 @@ using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
+using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class BulkAnalysisTest : BaseTestWithExistingSolution
     {
-        private const string Root = @"E:\";
+        private const string Root = @"C:\Data\";
         //private const string RepositoryRoot = Root + @"Repositories-Test\";
         //private const string RepositoryRoot = @"C:\Users\seb\versioned_code\AnalysisTestCases\";
         private const string RepositoryRoot = Root + @"Repositories\";
@@ -110,7 +112,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private const string StartedMarker = ".started";
         private const string EndMarker = ".ended";
 
-        //[TestCaseSource("FindSolutionFiles")]
+        [TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string shortenedSolution)
         {
             _currentSolution = shortenedSolution;
@@ -142,23 +144,40 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private void RunAnalysis(Lifetime lifetime, ISolution solution)
         {
             Console.WriteLine("Starting analysis... ({0})", DateTime.Now);
-            var solutionAnalysis = new SolutionAnalysis(solution, _logger);
 
-            var ctxs = solutionAnalysis.AnalyzeAllProjects();
-
-            _logger.EndPossibleErrorBlock();
-
-            using (var wa = new WritingArchive(_zipName))
+            IWritingArchive wa = null;
+            try
             {
-                wa.AddAll(ctxs);
+                wa = new WritingArchive(_zipName);
+                var countWithMethods = 0;
+                Action<Context> cbContext = ctx =>
+                {
+                    // ReSharper disable once AccessToDisposedClosure
+                    wa.Add(ctx);
+                    if (ctx.SST.Methods.Count > 0)
+                    {
+                        countWithMethods++;
+                    }
+                };
+
+                new SolutionAnalysis(solution, _logger, cbContext).AnalyzeAllProjects();
+
+                _logger.EndPossibleErrorBlock();
+
+                Console.WriteLine("Analysis finished! ({0})", DateTime.Now);
+                var count = wa.NumItemsAdded;
+                Console.WriteLine(
+                    "found {0} context(s), {1} contain(s) method declarations",
+                    count,
+                    countWithMethods);
             }
-            Console.WriteLine("Analysis finished! ({0})", DateTime.Now);
-            var count = ctxs.Count;
-            var countWithMethods = ctxs.Where(c => c.SST.Methods.Count > 0).ToList().Count;
-            Console.WriteLine(
-                "found {0} context(s), {1} contain(s) method declarations",
-                count,
-                countWithMethods);
+            finally
+            {
+                if (wa != null)
+                {
+                    wa.Dispose();
+                }
+            }
         }
 
         private static string GetZipName(string relativeSolutionPath)

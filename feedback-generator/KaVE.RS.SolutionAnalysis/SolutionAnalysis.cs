@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
@@ -25,9 +25,9 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Parsing;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.RS.Commons.Analysis;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
@@ -37,46 +37,55 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private readonly ISolution _solution;
         private readonly ILogger _logger;
+        private readonly Action<Context> _cbContext;
 
-        public SolutionAnalysis(ISolution solution, ILogger logger)
+        public SolutionAnalysis(ISolution solution, ILogger logger, Action<Context> cbContext)
         {
             _solution = solution;
             _logger = logger;
+            _cbContext = cbContext;
         }
 
         /// <summary>
         ///     Requires re-entrency guard (ReentrancyGuard.Current.Execute) and read lock (ReadLockCookie.Execute).
         /// </summary>
-        public IList<Context> AnalyzeAllProjects()
+        public void AnalyzeAllProjects()
         {
             var projects = _solution.GetAllProjects();
             projects.Remove(_solution.MiscFilesProject);
             projects.Remove(_solution.SolutionProject);
-            // eager evaluation required, because caller context needs to asure guard/lock
-            return projects.SelectMany(AnalyzeProject).ToList();
+            foreach (var project in projects)
+            {
+                AnalyzeProject(project);
+            }
         }
 
-        private IEnumerable<Context> AnalyzeProject(IProject project)
+        private void AnalyzeProject(IProject project)
         {
-            _logger.Info("Analyzing project '{0}'....", project.Name);
+            _logger.Info("");
+            _logger.Info("");
+            _logger.Info("###### Analyzing project '{0}'... ################################", project.Name);
 
             var psiModules = _solution.PsiModules();
-            var primaryPsiModule =
-                psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default).NotNull("no psi module");
-            var csharpSourceFiles = primaryPsiModule.SourceFiles.Where(IsCSharpFile);
-            return csharpSourceFiles.SelectMany(file => AnalyzeFile(file, primaryPsiModule));
+            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default);
+            Asserts.NotNull(primaryPsiModule, "no psi module");
+
+            foreach (var file in primaryPsiModule.SourceFiles)
+            {
+                var isCSharpFile = file.LanguageType.Is<CSharpProjectFileType>();
+                if (isCSharpFile)
+                {
+                    AnalyzeFile(file, primaryPsiModule);
+                }
+            }
         }
 
-        private static bool IsCSharpFile(IPsiSourceFile file)
+        private void AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
         {
-            return file.LanguageType.Is<CSharpProjectFileType>();
-        }
-
-        private IEnumerable<Context> AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
-        {
-            _logger.Info(" - Analyzing file '{0}'...", psiSourceFile.DisplayName);
+            _logger.Info("");
+            _logger.Info("--- Analyzing file '{0}'... -------------", psiSourceFile.DisplayName);
             var psiFile = ParseFile(psiSourceFile, primaryPsiModule);
-            return AnalyzeTypeAndNamespaceHolder(psiFile, psiSourceFile);
+            AnalyzeTypeAndNamespaceHolder(psiFile, psiSourceFile);
         }
 
         private static ICSharpFile ParseFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
@@ -91,34 +100,30 @@ namespace KaVE.RS.SolutionAnalysis
             return psiFile;
         }
 
-        private IEnumerable<Context> AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile,
+        private void AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile,
             IPsiSourceFile psiSourceFile)
         {
-            var contexts = new List<Context>();
-            contexts.AddRange(psiFile.TypeDeclarations.SelectMany(td => AnalyzeType(td, psiSourceFile)));
-            contexts.AddRange(
-                psiFile.NamespaceDeclarations.SelectMany(
-                    psiFile1 => AnalyzeTypeAndNamespaceHolder(psiFile1, psiSourceFile)));
-            return contexts;
-        }
-
-        private IEnumerable<Context> AnalyzeType(ICSharpTypeDeclaration aType, IPsiSourceFile psiSourceFile)
-        {
-            _logger.Info("   - Analyzing type '{0}'...", aType.CLRName);
-
-            var contexts = new List<Context>
+            foreach (var typeDecl in psiFile.TypeDeclarations)
             {
-                ContextAnalysis.Analyze(aType, psiSourceFile, _logger).Context
-            };
-            contexts.AddRange(AnalyzeInnerTypes(aType, psiSourceFile));
-            return contexts;
+                AnalyzeType(typeDecl, psiSourceFile);
+            }
+            foreach (var nsDecl in psiFile.NamespaceDeclarations)
+            {
+                AnalyzeTypeAndNamespaceHolder(nsDecl, psiSourceFile);
+            }
         }
 
-        private IEnumerable<Context> AnalyzeInnerTypes(ITypeDeclarationHolder aType, IPsiSourceFile psiSourceFile)
+        private void AnalyzeType(ICSharpTypeDeclaration aType, IPsiSourceFile psiSourceFile)
         {
-            return
-                aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>()
-                     .SelectMany(aType1 => AnalyzeType(aType1, psiSourceFile));
+            _logger.Info("Analyzing type '{0}'...", aType.CLRName);
+
+            var ctx = ContextAnalysis.Analyze(aType, psiSourceFile, _logger).Context;
+            _cbContext(ctx);
+
+            foreach (var innerType in aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>())
+            {
+                AnalyzeType(innerType, psiSourceFile);
+            }
         }
     }
 }

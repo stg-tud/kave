@@ -23,6 +23,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.TestUtils.Utils.Exceptions;
+using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
 
@@ -178,11 +179,13 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             var testLogger = Registry.GetComponent<TestLogger>();
             testLogger.InfoLogged += infos.Add;
 
-            IEnumerable<Context> results = null;
+            IList<Context> results = null;
             DoTestSolution(
                 (lifetime, solution) =>
-                    results =
-                        new SolutionAnalysis(solution, testLogger).AnalyzeAllProjects());
+                {
+                    results = Lists.NewList<Context>();
+                    new SolutionAnalysis(solution, testLogger, ctx => results.Add(ctx)).AnalyzeAllProjects();
+                });
 
             testLogger.InfoLogged -= infos.Add;
             return new Results(results, infos);
