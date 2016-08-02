@@ -53,6 +53,18 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             Assert.IsNull(ResultContext.TypeShape.TypeHierarchy.Extends);
         }
 
+        [Test]
+        public void ShouldNotContainEnumTypeInTypeHierarchy()
+        {
+            CompleteInNamespace(@"
+                public enum E
+                {
+                    $
+                }
+            ");
+            Assert.IsNull(ResultContext.TypeShape.TypeHierarchy.Extends);
+        }
+
 
         [Test]
         public void ShouldRetrieveEnclosingType()

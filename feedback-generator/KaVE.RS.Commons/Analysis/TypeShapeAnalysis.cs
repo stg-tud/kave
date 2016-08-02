@@ -129,8 +129,8 @@ namespace KaVE.RS.Commons.Analysis
 
         private static bool IsRootType(ITypeElement type)
         {
-            var fullName = type.GetClrName().FullName;
-            return "System.Object".Equals(fullName) || "System.ValueType".Equals(fullName);
+            var fn = type.GetClrName().FullName;
+            return "System.Object".Equals(fn) || "System.ValueType".Equals(fn) || "System.Enum".Equals(fn);
         }
     }
 }
