@@ -94,9 +94,9 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         public void NothingHappensOnSecondDispose()
         {
             var sut = new WritingArchive(_zipPath);
-            sut.Add("x");
-
             Assert.False(File.Exists(_zipPath));
+            sut.Add("x");
+            Assert.True(File.Exists(_zipPath));
             sut.Dispose();
             Assert.True(File.Exists(_zipPath));
 

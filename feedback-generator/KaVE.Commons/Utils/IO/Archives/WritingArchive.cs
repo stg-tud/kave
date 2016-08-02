@@ -32,7 +32,8 @@ namespace KaVE.Commons.Utils.IO.Archives
     public class WritingArchive : IWritingArchive
     {
         private readonly string _path;
-        private readonly List<string> _entries = new List<string>();
+        private ZipOutputStream _zos;
+        private int _numEntries;
 
         public WritingArchive(string path)
         {
@@ -40,13 +41,22 @@ namespace KaVE.Commons.Utils.IO.Archives
             Asserts.NotNull(parent);
             Asserts.That(Directory.Exists(parent));
             _path = path;
+            _numEntries = 0;
         }
 
         public void Add<T>(T obj)
         {
             if (obj != null)
             {
-                _entries.Add(obj.ToFormattedJson());
+                InitZipIfRequired();
+
+                var json = obj.ToCompactJson();
+                var bytes = Encoding.UTF8.GetBytes(json);
+                var fileName = "{0}.json".FormatEx(_numEntries++);
+
+                _zos.PutNextEntry(new ZipEntry(fileName) {Size = bytes.Length});
+                _zos.Write(bytes, 0, bytes.Length);
+                _zos.Flush();
             }
         }
 
@@ -58,31 +68,26 @@ namespace KaVE.Commons.Utils.IO.Archives
             }
         }
 
+        private void InitZipIfRequired()
+        {
+            if (_zos == null)
+            {
+                _zos = new ZipOutputStream(File.Create(_path))
+                {
+                    UseZip64 = UseZip64.Dynamic
+                };
+                _zos.SetLevel(9); // 0 - store only to 9 - means best compression
+            }
+        }
+
         public void Dispose()
         {
-            if (_entries.Count == 0)
+            if (_zos != null)
             {
-                return;
+                _zos.Finish();
+                _zos.Dispose();
+                _zos = null;
             }
-
-            var num = 0;
-            using (var s = new ZipOutputStream(File.Create(_path)))
-            {
-                s.UseZip64 = UseZip64.Dynamic;
-                s.SetLevel(9); // 0 - store only to 9 - means best compression
-
-                foreach (var entry in _entries)
-                {
-                    var bytes = Encoding.UTF8.GetBytes(entry);
-                    var fileName = string.Format("{0}.json", num++);
-                    s.PutNextEntry(new ZipEntry(fileName) {Size = bytes.Length});
-                    s.Write(bytes, 0, bytes.Length);
-                    s.Flush();
-                }
-                s.Finish();
-            }
-
-            _entries.Clear();
         }
     }
 }

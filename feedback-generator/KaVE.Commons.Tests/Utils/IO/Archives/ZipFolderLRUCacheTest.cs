@@ -210,9 +210,9 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
             wa.Add("something");
             _sut.GetArchive("b");
 
-            Assert.False(File.Exists(expectedFileName));
+            Assert.True(IsFileLocked(expectedFileName));
             _sut.GetArchive("c");
-            Assert.True(File.Exists(expectedFileName));
+            Assert.False(IsFileLocked(expectedFileName));
         }
 
         [Test]
@@ -229,22 +229,48 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void DirectoryHasToExist()
         {
             new ZipFolderLRUCache<string>(@"c:\does\not\exist\", 10);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void DirectoryMustNotBeAFile()
         {
             new ZipFolderLRUCache<string>(@"c:\Windows\notepad.exe", 10);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void CapacityMustBeLargerThanZero()
         {
             new ZipFolderLRUCache<string>(Path.GetTempPath(), 0);
+        }
+
+        private static bool IsFileLocked(string fileName)
+        {
+            var file = new FileInfo(fileName);
+            Assert.IsTrue(file.Exists);
+
+            FileStream stream = null;
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (IOException)
+            {
+                // file is still being written or being processed
+                // (not exist case is asserted before)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+            return false;
         }
     }
 }
