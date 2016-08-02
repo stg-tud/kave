@@ -24,6 +24,7 @@ using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.TestUtils;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
@@ -152,6 +153,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 var countWithMethods = 0;
                 Action<Context> cbContext = ctx =>
                 {
+                    _logger.Info("\t> {0}".FormatEx(ctx.SST.EnclosingType));
                     // ReSharper disable once AccessToDisposedClosure
                     wa.Add(ctx);
                     if (ctx.SST.Methods.Count > 0)
