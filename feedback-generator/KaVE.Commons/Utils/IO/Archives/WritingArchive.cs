@@ -26,14 +26,17 @@ namespace KaVE.Commons.Utils.IO.Archives
 {
     public interface IWritingArchive : IDisposable
     {
+        int NumItemsAdded { get; }
         void Add<T>(T obj);
+        void AddAll<T>(IEnumerable<T> entries);
     }
 
     public class WritingArchive : IWritingArchive
     {
         private readonly string _path;
         private ZipOutputStream _zos;
-        private int _numEntries;
+
+        public int NumItemsAdded { get; private set; }
 
         public WritingArchive(string path)
         {
@@ -41,13 +44,9 @@ namespace KaVE.Commons.Utils.IO.Archives
             Asserts.NotNull(parent);
             Asserts.That(Directory.Exists(parent));
             _path = path;
-            _numEntries = 0;
+            NumItemsAdded = 0;
         }
 
-        public object NumItemsAdded
-        {
-            get { return _numEntries; }
-        }
 
         public void Add<T>(T obj)
         {
@@ -57,7 +56,7 @@ namespace KaVE.Commons.Utils.IO.Archives
 
                 var json = obj.ToCompactJson();
                 var bytes = Encoding.UTF8.GetBytes(json);
-                var fileName = "{0}.json".FormatEx(_numEntries++);
+                var fileName = "{0}.json".FormatEx(NumItemsAdded++);
 
                 _zos.PutNextEntry(new ZipEntry(fileName) {Size = bytes.Length});
                 _zos.Write(bytes, 0, bytes.Length);
