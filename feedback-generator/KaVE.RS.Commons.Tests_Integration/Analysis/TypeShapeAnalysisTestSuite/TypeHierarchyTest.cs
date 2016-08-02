@@ -336,6 +336,121 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void ShouldResolveTypeAliasesInTypeShape()
+        {
+            CompleteInNamespace(@"
+                using I2 = I;
+                using S2 = S;
+                interface I { }
+                class S { }
+                class C : S2, I2
+                {
+                    $
+                }
+            ");
+            var actual = ResultContext.TypeShape;
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy
+                {
+                    Element = Names.Type("N.C, TestProject"),
+                    Extends = new TypeHierarchy
+                    {
+                        Element = Names.Type("N.S, TestProject")
+                    },
+                    Implements =
+                    {
+                        new TypeHierarchy
+                        {
+                            Element = Names.Type("i:N.I, TestProject")
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldResolveTypeAliasesInTypeShape_unresolved()
+        {
+            CompleteInNamespace(@"
+                using I2 = X;
+                using S2 = S;
+                class S { }
+                class C : S2, I2
+                {
+                    $
+                }
+            ");
+            var actual = ResultContext.TypeShape;
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy
+                {
+                    Element = Names.Type("N.C, TestProject"),
+                    Extends = new TypeHierarchy
+                    {
+                        Element = Names.Type("N.S, TestProject")
+                    },
+                    Implements =
+                    {
+                        new TypeHierarchy
+                        {
+                            Element = Names.UnknownType
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test, Ignore("R# runtime always falls back to Enum.")]
+        public void EnumExtends()
+        {
+            CompleteInNamespace(@"
+                public enum E : long { $ }
+            ");
+            var actual = ResultContext.TypeShape;
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy
+                {
+                    Element = Names.Type("e:N.E, TestProject"),
+                    Extends = new TypeHierarchy
+                    {
+                        Element = Names.Type("System.Int64, mscorlib, 4.0.0.0")
+                    }
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void StructImplements()
+        {
+            CompleteInNamespace(@"
+                public interface I {}
+                public struct S : I { $ }
+            ");
+            var actual = ResultContext.TypeShape;
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy
+                {
+                    Element = Names.Type("s:N.S, TestProject"),
+                    Implements =
+                    {
+                        new TypeHierarchy
+                        {
+                            Element = Names.Type("i:N.I, TestProject")
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
         private static ITypeName Type(string typeName)
         {
             return Names.Type("N." + typeName + ", TestProject");

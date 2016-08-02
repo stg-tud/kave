@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -21,6 +22,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
+using IVariableDeclaration = KaVE.Commons.Model.SSTs.Statements.IVariableDeclaration;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
@@ -41,6 +43,29 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             AssertBody(
                 VarDecl("i", Fix.Int),
                 ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void ShouldResolveTypeAliases()
+        {
+            CompleteInNamespace(@"
+                using X = System.String;
+                class C
+                {
+                    void M()
+                    {
+                        X x;
+                        $
+                    }
+                }
+            ");
+
+            Assert.AreEqual(1, ResultSST.Methods.Count);
+            var m = ResultSST.Methods.First();
+            Assert.AreEqual(2, m.Body.Count);
+            var v = m.Body.First() as IVariableDeclaration;
+            Assert.NotNull(v);
+            Assert.AreEqual(Fix.String, v.Type);
         }
 
         [Test]
