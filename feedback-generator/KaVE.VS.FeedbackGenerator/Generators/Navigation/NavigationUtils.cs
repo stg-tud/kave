@@ -91,7 +91,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
 
             return declaredElement == null
                 ? Names.UnknownGeneral
-                : declaredElement.GetName(declaredElement.GetIdSubstitutionSafe());
+                : declaredElement.GetName<IName>(declaredElement.GetIdSubstitutionSafe());
         }
 
         [Pure]

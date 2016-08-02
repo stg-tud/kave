@@ -26,6 +26,7 @@ using JetBrains.ReSharper.UnitTestExplorer.Session.ViewModels;
 using JetBrains.ReSharper.UnitTestFramework;
 using JetBrains.Threading;
 using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Utils.Naming;
@@ -159,7 +160,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                 }
 
                 var substitution = declaredElement.GetIdSubstitutionSafe();
-                var methodName = declaredElement.GetName(substitution) as IMethodName;
+                var methodName = declaredElement.GetName<IName>(substitution) as IMethodName;
                 if (methodName == null)
                 {
                     continue;

@@ -300,7 +300,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Naming
             TName expected,
             ISubstitution substitution) where TDeclaredElement : class, IDeclaredElement where TName : IName
         {
-            var actual = declaredElement.GetName(substitution);
+            var actual = declaredElement.GetName<IName>(substitution);
             // TODO NameUpdate: was AreSame
             Assert.AreEqual(expected, actual);
         }
