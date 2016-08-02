@@ -15,10 +15,12 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
@@ -82,9 +84,37 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return DelegateMethod.HasParameters; }
         }
 
+        public bool IsRecursive
+        {
+            get
+            {
+                var hasRecursiveReturn = DelegateMethod.ReturnType.Identifier.Contains(DelegateType.Identifier);
+                var hasRecursiveParam =
+                    DelegateMethod.Parameters.Any(p => p.Identifier.Contains(DelegateType.Identifier));
+                return hasRecursiveReturn || hasRecursiveParam;
+            }
+        }
+
         public IList<IParameterName> Parameters
         {
-            get { return DelegateMethod.Parameters; }
+            get
+            {
+                var ps = Lists.NewList<IParameterName>();
+                foreach (var p in DelegateMethod.Parameters)
+                {
+                    var isRecursive = p.Identifier.Contains(DelegateType.Identifier);
+                    if (isRecursive)
+                    {
+                        var id = p.Identifier.Replace(DelegateType.Identifier, Identifier);
+                        ps.Add(new ParameterName(id));
+                    }
+                    else
+                    {
+                        ps.Add(p);
+                    }
+                }
+                return ps;
+            }
         }
 
         public ITypeName ReturnType

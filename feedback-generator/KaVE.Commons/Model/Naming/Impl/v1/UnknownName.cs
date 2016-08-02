@@ -360,6 +360,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return false; }
         }
 
+        public bool IsRecursive { get; private set; }
+
         public ITypeName ReturnType
         {
             get { return Get(typeof(ITypeName)); }

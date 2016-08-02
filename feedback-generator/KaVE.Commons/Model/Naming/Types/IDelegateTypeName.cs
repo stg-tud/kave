@@ -24,6 +24,7 @@ namespace KaVE.Commons.Model.Naming.Types
         ITypeName DelegateType { get; }
         IList<IParameterName> Parameters { get; }
         bool HasParameters { get; }
+        bool IsRecursive { get; }
         ITypeName ReturnType { get; }
     }
 }

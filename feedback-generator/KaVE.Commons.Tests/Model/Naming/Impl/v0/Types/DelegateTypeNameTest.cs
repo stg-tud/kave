@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
@@ -202,7 +203,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [Test]
-        public void RecursiveDelegates1()
+        public void RecursiveDelegates1_return()
         {
             const string id = "d:[n.C+D, P] [n.C+D, P].()";
             var a = new DelegateTypeName(id);
@@ -211,13 +212,47 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [Test]
-        public void RecursiveDelegates2()
+        public void RecursiveDelegates2_return()
         {
-            const string id = "d:[T`1[[n.C+D, P]], P] [n.C+D, P].()";
-            const string returnId = "T`1[[d:[T`1[[n.C+D, P]], P] [n.C+D, P].()]], P";
+            const string id = "d:[T`1[[T -> n.C+D, P]], P] [n.C+D, P].()";
+            const string returnId = "T`1[[T -> d:[T`1[[T -> n.C+D, P]], P] [n.C+D, P].()]], P";
             var a = new DelegateTypeName(id).ReturnType;
             var b = TypeUtils.CreateTypeName(returnId);
             Assert.AreEqual(a, b);
+        }
+
+        [Test]
+        public void RecursiveDelegates1_param()
+        {
+            const string id = "d:[?] [n.C+D, P].([n.C+D, P] p)";
+            var ps = new DelegateTypeName(id).Parameters;
+            Assert.AreEqual(1, ps.Count);
+            Assert.AreEqual(id, ps.First().ValueType.Identifier);
+        }
+
+        [Test]
+        public void RecursiveDelegates2_param()
+        {
+            const string id = "d:[?] [n.C+D, P].([T`1[[T -> n.C+D, P]], P] p)";
+            var paramId = "T`1[[T -> {0}]], P".FormatEx(id);
+
+            var ps = new DelegateTypeName(id).Parameters;
+            Assert.AreEqual(1, ps.Count);
+            Assert.AreEqual(paramId, ps.First().ValueType.Identifier);
+        }
+
+        [TestCase("T,P", false), TestCase("D,P", true), TestCase("T`1[[T -> D,P]],P", true)]
+        public void IsRecursiveReturn(string retType, bool isRecursive)
+        {
+            var typeId = "d:[{0}] [D,P].([T,P] p)".FormatEx(retType);
+            Assert.AreEqual(isRecursive, new DelegateTypeName(typeId).IsRecursive);
+        }
+
+        [TestCase("T,P", false), TestCase("D,P", true), TestCase("T`1[[T -> D,P]],P", true)]
+        public void IsRecursiveParameter(string retType, bool isRecursive)
+        {
+            var typeId = "d:[T,P] [D,P].([{0}] p)".FormatEx(retType);
+            Assert.AreEqual(isRecursive, new DelegateTypeName(typeId).IsRecursive);
         }
     }
 }

@@ -637,6 +637,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return IsDelegateType && new MethodName(Ctx.delegateType().method()).HasParameters; }
         }
 
+        public bool IsRecursive { get; private set; }
+
         public ITypeName ReturnType
         {
             get { return IsDelegateType ? new MethodName(Ctx.delegateType().method()).ReturnType : null; }
