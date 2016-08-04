@@ -126,6 +126,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             Console.WriteLine("Opening solution: {0} ({1})\n", ExistingSolutionFilePath, DateTime.Now);
             Console.WriteLine("Log: {0}", _logName);
             Console.WriteLine("Contexts: {0}\n", _zipName);
+            Console.WriteLine("copy&paste: {0}\n", shortenedSolution.Replace(@"\", "/"));
 
             _logger = new TestRunnerLogger(_logName);
 
