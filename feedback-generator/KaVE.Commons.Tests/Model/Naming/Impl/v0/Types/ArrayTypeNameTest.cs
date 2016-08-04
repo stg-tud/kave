@@ -254,5 +254,15 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(invalidId));
             Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(invalidId));
         }
+
+        [Test]
+        public void ShouldRecognizeUnknownArrays()
+        {
+            Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier("?"));
+            Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier("?[]"));
+            Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier("?[,]"));
+            // unknown array is nested somewhere
+            Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier("d:[?] [?].([?[]] p)"));
+        }
     }
 }

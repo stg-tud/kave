@@ -93,7 +93,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         #region static helpers
 
-        private static readonly Regex UnknownArrayMatcher = new Regex("\\?\\[,*\\]");
+        private static readonly Regex UnknownArrayMatcher = new Regex("^\\?\\[,*\\]$");
 
         internal static bool IsArrayTypeNameIdentifier([NotNull] string id)
         {
