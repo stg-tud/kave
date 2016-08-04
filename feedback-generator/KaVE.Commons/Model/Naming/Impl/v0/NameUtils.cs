@@ -296,8 +296,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         public static IKaVEList<ITypeParameterName> ParseTypeParameterList(this string id, int open, int close)
         {
-            Asserts.That(id[open] == '[');
-            Asserts.That(id[close] == ']');
+            if (string.IsNullOrEmpty(id) || open < 0 || close >= id.Length || close < open || id[open] != '[' ||
+                id[close] != ']')
+            {
+                Asserts.Fail("error parsing parameters from '{0}' ({1}, {2})", id, open, close);
+            }
 
             var parameters = Lists.NewList<ITypeParameterName>();
             for (var cur = open; cur < close;)

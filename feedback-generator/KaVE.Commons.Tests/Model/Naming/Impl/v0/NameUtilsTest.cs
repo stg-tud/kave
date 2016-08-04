@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -53,6 +54,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             var expected = Lists.NewList(new ParameterName(paramId1), new ParameterName(paramId2));
             var endIdx = parameters.Length - 1 + 3;
             Assert.AreEqual(expected, sig.GetParameterNamesFromSignature(3, endIdx));
+        }
+
+        [ExpectedException(typeof(AssertException)), TestCase(null, 1, 2), TestCase("", 0, 0), TestCase("a]", 0, 1),
+         TestCase("[b", 0, 1), TestCase("[]", -1, 1), TestCase("[]", 0, 2), TestCase("][", 1, 0)]
+        public void IncorrectCasesAreHandledForParseTypeParameterlist(string id, int startIdx, int endIdx)
+        {
+            id.ParseTypeParameterList(startIdx, endIdx);
         }
 
         [Test]
