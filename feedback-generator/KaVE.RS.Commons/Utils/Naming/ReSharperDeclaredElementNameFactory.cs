@@ -272,11 +272,7 @@ namespace KaVE.RS.Commons.Utils.Naming
             IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             var structName = structElement.GetAssemblyQualifiedName(substitution, seenElements);
-            var typeNameCandidate = Names.Type(structName);
-            // predefined structs are recognized as such without flagging them
-            // TODO NameUpdate: Get rid of this special handling (think about predefined type names, e.g., p:int)
-            var isPredefinedStruct = typeNameCandidate.IsStructType;
-            return isPredefinedStruct ? typeNameCandidate : Names.Type("s:" + structName);
+            return Names.Type("s:{0}", structName);
         }
 
         [NotNull]

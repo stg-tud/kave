@@ -29,7 +29,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
 {
     internal class Types : NameFactoryBaseTest
     {
-        #region basic cases
+        #region predefined types
 
         private static string[][] PredefinedTypeSource()
         {
@@ -325,6 +325,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
             AssertParameterTypes("N.Outer`1[[T0]]+C1`1[[T1 -> {0}]]+C2`1[[T2 -> {0}]], TestProject".FormatEx(Fix.Int));
         }
 
+        #endregion
+
         [Test]
         public void RecursiveDefinition1()
         {
@@ -414,7 +416,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
                     void M(int? i){ $ }
                 }   
             ");
-            AssertParameterTypes("System.Nullable`1[[T -> {0}]], mscorlib, 4.0.0.0".FormatEx(Fix.Int));
+            AssertParameterTypes("s:System.Nullable`1[[T -> {0}]], mscorlib, 4.0.0.0".FormatEx(Fix.Int));
         }
 
         [Test]
@@ -429,7 +431,5 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils.Naming.ReSharperDeclaredElemen
             Assert.AreEqual(new NamespaceName(""), type.Namespace);
             Assert.IsTrue(type.Namespace.IsGlobalNamespace);
         }
-
-        #endregion
     }
 }

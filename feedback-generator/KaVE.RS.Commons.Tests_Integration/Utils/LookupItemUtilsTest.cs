@@ -431,7 +431,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Nullable`1[[T -> {0}]], mscorlib, 4.0.0.0] i",
+                "[s:System.Nullable`1[[T -> {0}]], mscorlib, 4.0.0.0] i",
                 Fix.Int);
         }
 
