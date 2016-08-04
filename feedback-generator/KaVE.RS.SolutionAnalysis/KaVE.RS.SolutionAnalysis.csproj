@@ -194,6 +194,7 @@
     <Compile Include="Episodes\EventStreamGenerator.cs" />
     <Compile Include="EventsExportRunner.cs" />
     <Compile Include="FailingRepoFinder.cs" />
+    <Compile Include="JustReadRunner.cs" />
     <Compile Include="LocCounter.cs" />
     <Compile Include="NameGrabber.cs" />
     <Compile Include="Program.cs" />
