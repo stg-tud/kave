@@ -82,6 +82,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                 return typedName;
             }
 
+            // TODO NameUpdate: should be removable now... is handled in TypeShapeAnalysis now.
             // in case of unresolved types in using directives...
             // maybe this will be replaced when I have a better understanding of how aliases are handled in the R# AST
             if (typeof(AliasName) == name.GetType() && typeof(TName) == typeof(ITypeName))

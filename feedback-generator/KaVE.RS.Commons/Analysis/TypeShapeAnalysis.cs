@@ -100,7 +100,9 @@ namespace KaVE.RS.Commons.Analysis
                 var resolveResult = superType.Resolve();
                 var declElem = resolveResult.DeclaredElement;
                 var isUnresolvedAlias = declElem is IUsingAliasDirective;
-                if (!resolveResult.IsValid() || declElem == null || isUnresolvedAlias)
+                // TODO NameUpdate: "isUnknownOrUnResolvedUntested" required by one analyzed solution, still untested
+                var isUnknownOrUnResolvedUntested = superType.IsUnknown || !superType.IsResolved;
+                if (!resolveResult.IsValid() || declElem == null || isUnresolvedAlias || isUnknownOrUnResolvedUntested)
                 {
                     enclosingClassHierarchy.Implements.Add(new TypeHierarchy());
                     continue;
