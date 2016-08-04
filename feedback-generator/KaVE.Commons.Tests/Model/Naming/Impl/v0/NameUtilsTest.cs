@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -195,6 +197,67 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             var actual = legacy.FixLegacyFormats();
             var expected = corrected;
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCaseSource("PredefinedTypesSource")]
+        public void ShouldFixPredefinedNames(string strIn, string expected)
+        {
+            var actual = strIn.FixLegacyFormats();
+            Assert.AreEqual(expected, actual);
+        }
+
+        public IEnumerable<string[]> PredefinedTypesSource()
+        {
+            // pType --> former type
+            var newToOld = new Dictionary<string, string>
+            {
+                {"p:sbyte", "System.SByte"},
+                {"p:byte", "System.Byte"},
+                {"p:short", "System.Int16"},
+                {"p:ushort", "System.UInt16"},
+                {"p:int", "System.Int32"},
+                {"p:uint", "System.UInt32"},
+                {"p:long", "System.Int64"},
+                {"p:ulong", "System.UInt64"},
+                {"p:char", "System.Char"},
+                {"p:float", "System.Single"},
+                {"p:double", "System.Double"},
+                {"p:bool", "System.Boolean"},
+                {"p:decimal", "System.Decimal"},
+                //
+                {"p:void", "System.Void"},
+                //
+                {"p:object", "System.Object"},
+                {"p:string", "System.String"}
+            };
+
+
+            var cases = Lists.NewList<string[]>();
+            foreach (var newId in newToOld.Keys)
+            {
+                var oldId = "{0}, mscorlib, 1.2.3.4".FormatEx(newToOld[newId]);
+
+                foreach (var caseStr in new[] {"{0}", "T`1[[G -> {0}]],P", "G -> {0}", "[{0}] [?].M()"})
+                {
+                    var oldStr = caseStr.FormatEx(oldId);
+                    var newStr = caseStr.FormatEx(newId);
+
+                    cases.Add(new[] {oldStr, newStr});
+                }
+
+                foreach (var arrPart in new[] {"[]", "[,]"})
+                {
+                    var oldArrId = "{0}{1}, mscorlib, 1.2.3.4".FormatEx(newToOld[newId], arrPart);
+                    var newArrId = "{0}{1}".FormatEx(newId, arrPart);
+                    cases.Add(new[] {oldArrId, newArrId});
+                }
+            }
+
+            const string old1 = "[System.Int32, mscorlib, 1.2.3.4] [System.Single, mscorlib, 2.3.4.5].M()";
+            const string new1 = "[p:int] [p:float].M()";
+            cases.Add(new[] {old1, new1});
+
+            return cases;
         }
     }
 }

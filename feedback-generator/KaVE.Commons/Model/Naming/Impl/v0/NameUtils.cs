@@ -26,27 +26,75 @@ using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0
 {
     public static class NameUtils
     {
-        public static string FixLegacyFormats(this string id)
+        public static string FixLegacyFormats([NotNull] this string id)
         {
-            return id.FixLegacyTypeParameterLists().FixLegacyDelegateNames().FixMissingGenericTicks().FixJaggedArrays();
+            return
+                id.FixPredefinedTypes()
+                  .FixLegacyTypeParameterLists()
+                  .FixLegacyDelegateNames()
+                  .FixMissingGenericTicks()
+                  .FixJaggedArrays();
+        }
+
+        private static readonly IDictionary<string, string> OldToNew = new Dictionary<string, string>
+        {
+            {"Boolean", "p:bool"},
+            {"Byte", "p:byte"},
+            {"Char", "p:char"},
+            {"Decimal", "p:decimal"},
+            {"Double", "p:double"},
+            {"Int16", "p:short"},
+            {"Int32", "p:int"},
+            {"Int64", "p:long"},
+            {"Object", "p:object"},
+            {"SByte", "p:sbyte"},
+            {"Single", "p:float"},
+            {"String", "p:string"},
+            {"UInt16", "p:ushort"},
+            {"UInt32", "p:uint"},
+            {"UInt64", "p:ulong"},
+            {"Void", "p:void"}
+        };
+
+        private static readonly Regex PredefTypesMatcher =
+            new Regex(
+                "(System.(Boolean|Byte|Char|Decimal|Double|Int16|Int32|Int64|Object|SByte|Single|String|UInt16|UInt32|UInt64|Void)((\\[,*\\])?),\\smscorlib,\\s\\d\\.\\d\\.\\d\\.\\d)");
+
+        //new Regex("(System.(Boolean|Byte)((\\[,*\\])?),\\smscorlib,\\s\\d\\.\\d\\.\\d\\.\\d)");
+
+        // Initially, we captured predefined types as regular types (e.g., System.Int32, mscorlib, 4.0.0.0)
+        // Please note the missing "s:", even though most of them are struct types
+        [NotNull]
+        private static string FixPredefinedTypes([NotNull] this string id)
+        {
+            var match = PredefTypesMatcher.Match(id);
+            for (; match.Success; match = match.NextMatch())
+            {
+                var newId = OldToNew[match.Groups[2].ToString()];
+                var arrPart = match.Groups[3].ToString();
+
+                var needle = match.Groups[0].ToString();
+                var repl = newId + arrPart;
+
+                id = id.Replace(needle, repl);
+            }
+
+            return id;
         }
 
         private static readonly Regex JaggedArrays = new Regex("(\\[,*\\](\\[,*\\])+)");
 
         // initially, we captured jagged arrays, but simplified all of them to [,,] later
-        private static string FixJaggedArrays(this string id)
+        [NotNull]
+        private static string FixJaggedArrays([NotNull] this string id)
         {
             var matches = JaggedArrays.Match(id);
-            if (!matches.Success)
-            {
-                return id;
-            }
-
             for (; matches.Success; matches = matches.NextMatch())
             {
                 var arr = matches.Groups[1].ToString();
@@ -94,7 +142,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         private static readonly Regex AllLegacyTypeParameterLists = new Regex("([^+.]+`([0-9]+))");
 
         // initially, we used markers on the types (e.g., T`1) and only had a single typeParameterList at the end
-        private static string FixLegacyTypeParameterLists(this string id)
+        [NotNull]
+        private static string FixLegacyTypeParameterLists([NotNull] this string id)
         {
             if (id.StartsWith("vsWindowTypeDocument ") || id.StartsWith("CSharp ") || id.EndsWith(".cs") ||
                 !IsLegacyTypeParameterList.IsMatch(id))
@@ -181,7 +230,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         private static readonly Regex LegacyDelegateMatcher = new Regex("(d:[^\\[])");
 
         // initially, we did not store delegates as method signatures, but only the "delegate type"
-        private static string FixLegacyDelegateNames(this string id)
+        [NotNull]
+        private static string FixLegacyDelegateNames([NotNull] this string id)
         {
             var delegateInBrackets = LegacyDelegateMatcher.Match(id);
 
@@ -207,7 +257,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         private static readonly Regex MissingTicks = new Regex("(?:\\+|^|\\.)([a-zA-Z0-9_]+)(\\[,*\\])?(\\[\\[.*)");
 
-        private static string FixMissingGenericTicks(this string id)
+        [NotNull]
+        private static string FixMissingGenericTicks([NotNull] this string id)
         {
             var match = MissingTicks.Match(id);
             if (!match.Success)
