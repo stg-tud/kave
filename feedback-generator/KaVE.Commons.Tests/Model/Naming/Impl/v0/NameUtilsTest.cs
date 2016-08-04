@@ -207,6 +207,18 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.AreEqual(expected, actual);
         }
 
+        [TestCase("System.Nullable`1[[T]]...", "s:System.Nullable`1[[T]]..."),
+         TestCase("System.Nullable`1[][[T]]...", "s:System.Nullable`1[][[T]]..."),
+         TestCase("...System.Nullable`1[[T]]...", "...s:System.Nullable`1[[T]]..."),
+         TestCase("s:System.Nullable`1[[T]]...", "s:System.Nullable`1[[T]]..."),
+         TestCase("s:System.Nullable`1[][[T]]...", "s:System.Nullable`1[][[T]]..."),
+         TestCase("...s:System.Nullable`1[[T]]...", "...s:System.Nullable`1[[T]]...")]
+        public void FixesOldNullableNames(string legacy, string expected)
+        {
+            var actual = legacy.FixLegacyFormats();
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestCaseSource("PredefinedTypesSource")]
         public void ShouldFixPredefinedNames(string strIn, string expected)
         {

@@ -35,11 +35,23 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         public static string FixLegacyFormats([NotNull] this string id)
         {
             return
-                id.FixPredefinedTypes()
+                id.FixPredefinedTypes().FixLegacyNullable()
                   .FixLegacyTypeParameterLists()
                   .FixLegacyDelegateNames()
                   .FixMissingGenericTicks()
                   .FixJaggedArrays();
+        }
+
+        private static readonly Regex LegacyNullableMatcher = new Regex("(^|[^:])System.Nullable`1\\[");
+
+        [NotNull]
+        private static string FixLegacyNullable([NotNull] this string id)
+        {
+            if (!LegacyNullableMatcher.IsMatch(id))
+            {
+                return id;
+            }
+            return id.Replace("System.Nullable`1", "s:System.Nullable`1");
         }
 
         private static readonly IDictionary<string, string> OldToNew = new Dictionary<string, string>
