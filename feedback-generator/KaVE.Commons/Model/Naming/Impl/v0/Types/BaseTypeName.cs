@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Linq;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
@@ -50,23 +49,23 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         // delegating the execution
         public bool IsVoidType
         {
-            get { return IsVoidTypeIdentifier(Identifier); }
+            get { return false; }
         }
 
         public bool IsSimpleType
         {
-            get { return IsSimpleTypeIdentifier(Identifier); }
+            get { return false; }
         }
 
         public bool IsNullableType
         {
-            get { return IsNullableTypeIdentifier(Identifier); }
+            get { return Identifier.StartsWith("s:System.Nullable`1[["); }
         }
 
         // composed checks
         public bool IsValueType
         {
-            get { return IsStructType || IsEnumType || IsVoidType; }
+            get { return IsStructType || IsEnumType; }
         }
 
         public bool IsReferenceType
@@ -92,7 +91,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public bool IsStructType
         {
-            get { return !IsArray && IsStructTypeIdentifier(Identifier); }
+            get { return !IsArray && Identifier.StartsWith(PrefixStruct); }
         }
 
         // generic info
@@ -189,73 +188,5 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 return pdt;
             }
         }
-
-        #region static helper
-
-        private static bool IsStructTypeIdentifier(string identifier)
-        {
-            if (ArrayTypeName.IsArrayTypeNameIdentifier(identifier))
-            {
-                return false;
-            }
-            return identifier.StartsWith(PrefixStruct) ||
-                   IsSimpleTypeIdentifier(identifier) ||
-                   IsNullableTypeIdentifier(identifier) ||
-                   IsVoidTypeIdentifier(identifier);
-        }
-
-
-        private static bool IsVoidTypeIdentifier(string identifier)
-        {
-            return identifier.StartsWith("System.Void,");
-        }
-
-        private static bool IsSimpleTypeIdentifier(string identifier)
-        {
-            return IsNumericTypeName(identifier) || identifier.StartsWith("System.Boolean,");
-        }
-
-        private static bool IsNumericTypeName(string identifier)
-        {
-            return IsIntegralTypeName(identifier) ||
-                   IsFloatingPointTypeName(identifier) ||
-                   identifier.StartsWith("System.Decimal,");
-        }
-
-        private static readonly string[] IntegralTypeNames =
-        {
-            "System.SByte,",
-            "System.Byte,",
-            "System.Int16,",
-            "System.UInt16,",
-            "System.Int32,",
-            "System.UInt32,",
-            "System.Int64,",
-            "System.UInt64,",
-            "System.Char,"
-        };
-
-        private static bool IsIntegralTypeName(string identifier)
-        {
-            return IntegralTypeNames.Any(identifier.StartsWith);
-        }
-
-        private static readonly string[] FloatingPointTypeNames =
-        {
-            "System.Single,",
-            "System.Double,"
-        };
-
-        private static bool IsFloatingPointTypeName(string identifier)
-        {
-            return FloatingPointTypeNames.Any(identifier.StartsWith);
-        }
-
-        internal static bool IsNullableTypeIdentifier(string identifier)
-        {
-            return identifier.StartsWith("System.Nullable`1[[");
-        }
-
-        #endregion
     }
 }

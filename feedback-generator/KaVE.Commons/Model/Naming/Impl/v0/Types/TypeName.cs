@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
@@ -25,22 +26,44 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     public class TypeName : BaseTypeName
     {
+        private static readonly string[] InvalidIds =
+        {
+            "System.Boolean, mscorlib,",
+            "System.Decimal, mscorlib,",
+            "System.SByte, mscorlib,",
+            "System.Byte, mscorlib,",
+            "System.Int16, mscorlib,",
+            "System.UInt16, mscorlib,",
+            "System.Int32, mscorlib,",
+            "System.UInt32, mscorlib,",
+            "System.Int64, mscorlib,",
+            "System.UInt64, mscorlib,",
+            "System.Char, mscorlib,",
+            "System.Single, mscorlib,",
+            "System.Double, mscorlib,",
+            //"System.String, mscorlib,",
+            //"System.Object, mscorlib,",
+            "System.Void, mscorlib"
+        };
+
         public TypeName() : this(UnknownTypeIdentifier) {}
 
-        public TypeName(string identifier) : base(identifier)
+        public TypeName(string id) : base(id)
         {
-            if (UnknownTypeIdentifier.Equals(identifier))
+            if (UnknownTypeIdentifier.Equals(id))
             {
                 return;
             }
 
-            var hasComma = identifier.Contains(",") &&
-                           identifier.LastIndexOf(',') > identifier.LastIndexOf(']');
+            if (InvalidIds.Any(id.StartsWith))
+            {
+                throw new ValidationException("rejecting a predefined type: '{0}'".FormatEx(id), null);
+            }
+
+            var hasComma = id.Contains(",") && id.LastIndexOf(',') > id.LastIndexOf(']');
             if (!hasComma)
             {
-                throw new ValidationException(
-                    "does not contain a correct assembly name: '{0}'".FormatEx(identifier),
-                    null);
+                throw new ValidationException("does not contain a correct assembly name: '{0}'".FormatEx(id), null);
             }
         }
 

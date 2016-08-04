@@ -39,11 +39,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new TypeCheckExpression
             {
-                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:int"),
                 Reference = SomeVarRef()
             };
 
-            Assert.AreEqual(Names.Type("System.Int32, mscorlib, 4.0.0.0"), sut.Type);
+            Assert.AreEqual(Names.Type("p:int"), sut.Type);
             Assert.AreEqual(SomeVarRef(), sut.Reference);
         }
 
@@ -61,13 +61,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new TypeCheckExpression
             {
-                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:int"),
                 Reference = SomeVarRef()
             };
 
             var b = new TypeCheckExpression
             {
-                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:int"),
                 Reference = SomeVarRef()
             };
 
@@ -80,13 +80,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new TypeCheckExpression
             {
-                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:int"),
                 Reference = SomeVarRef()
             };
 
             var b = new TypeCheckExpression
             {
-                Type = Names.Type("System.String, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:string"),
                 Reference = SomeVarRef()
             };
 
@@ -99,13 +99,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new TypeCheckExpression
             {
-                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:int"),
                 Reference = SomeVarRef("i")
             };
 
             var b = new TypeCheckExpression
             {
-                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:int"),
                 Reference = SomeVarRef("j")
             };
 

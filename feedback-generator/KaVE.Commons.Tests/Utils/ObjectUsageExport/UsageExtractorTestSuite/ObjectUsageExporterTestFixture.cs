@@ -22,22 +22,18 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
 {
     internal class ObjectUsageExporterTestFixture
     {
-        public static ITypeName Void = Names.Type("System.Void, mscorlib, 4.0.0.0");
-        public static ITypeName Int = Names.Type("System.Int32, mscore, 4.0.0.0");
+        public static ITypeName Void = Names.Type("p:void");
+        public static ITypeName Int = Names.Type("p:int");
 
-        internal static readonly ITypeName Bool =
-            Names.Type("System.Boolean, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Bool = Names.Type("p:bool");
 
-        internal static readonly ITypeName Object =
-            Names.Type("System.Object, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Object = Names.Type("p:object");
 
-        internal static readonly ITypeName Action =
-            Names.Type(
-                "d:[System.Void, mscorlib, 4.0.0.0] [System.Action, mscorlib, 4.0.0.0].()");
+        internal static readonly ITypeName Action = Names.Type("d:[p:void] [System.Action, mscorlib, 4.0.0.0].()");
 
         internal static readonly ITypeName ActionOfInt =
             Names.Type(
-                "d:[System.Void, mscorlib, 4.0.0.0] [System.Action`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].([T] obj)");
+                "d:[p:void] [System.Action`1[[T -> p:int]], mscorlib, 4.0.0.0].([T] obj)");
 
         public static IParameterName IntParam(string paramName)
         {
@@ -45,8 +41,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
         }
 
         // ReSharper disable once InconsistentNaming
-        public static IMethodName Int_GetHashCode =
-            Names.Method("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+        public static IMethodName Int_GetHashCode = Names.Method("[p:int] [p:object].GetHashCode()");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_Equals =

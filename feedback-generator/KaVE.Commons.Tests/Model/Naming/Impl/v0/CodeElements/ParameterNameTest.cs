@@ -72,8 +72,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         public void IsPassedByReferenceDepends()
         {
             Assert.False(new ParameterName("[?] p").IsPassedByReference);
-            Assert.False(new ParameterName("[System.Int32, mscorlib, 4.0.0.0] p").IsPassedByReference);
-            Assert.True(new ParameterName("ref [System.Int32, mscorlib, 4.0.0.0] p").IsPassedByReference);
+            Assert.False(new ParameterName("[p:int] p").IsPassedByReference);
+            Assert.True(new ParameterName("ref [p:int] p").IsPassedByReference);
             Assert.True(new ParameterName("ref [T,P] p").IsPassedByReference);
         }
 

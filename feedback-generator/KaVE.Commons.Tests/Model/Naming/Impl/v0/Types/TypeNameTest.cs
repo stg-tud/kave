@@ -79,6 +79,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         {
             // use only ',P' Assemblies
             var ids = Sets.NewHashSet<string[]>();
+            ids.Add(new[] {"i:n.T1`1[[T2 -> p:int]], P", "P", "n", "n.T1`1[[T2 -> p:int]]", "T1"});
             ids.Add(new[] {"T,P", "P", "", "T", "T"});
             ids.Add(new[] {"n.T,P", "P", "n", "n.T", "T"});
             ids.Add(new[] {"s:T,P", "P", "", "T", "T"});
@@ -94,6 +95,18 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             ids.Add(new[] {"n.C`1[[T]]+N,P", "P", "n", "n.C`1[[T]]+N", "N"});
             ids.Add(new[] {"n.C`1[[T]]+N`1[[T]],P", "P", "n", "n.C`1[[T]]+N`1[[T]]", "N"});
             return ids;
+        }
+
+        [Test]
+        public void ShouldHandleNullableType()
+        {
+            var sut = T("s:System.Nullable`1[[T -> p:sbyte]], mscorlib, 4.0.0.0");
+
+            Assert.AreEqual(new AssemblyName("mscorlib, 4.0.0.0"), sut.Assembly);
+            Assert.AreEqual(new NamespaceName("System"), sut.Namespace);
+            Assert.AreEqual("System.Nullable`1[[T -> p:sbyte]]", sut.FullName);
+            Assert.AreEqual("Nullable", sut.Name);
+            Assert.IsTrue(sut.IsNullableType);
         }
 
         [TestCaseSource("ValidTypes")]
@@ -142,7 +155,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             string fullName,
             string name)
         {
-            Assert.AreEqual(fullName, T(typeId).FullName);
+            var typeName = T(typeId);
+            Assert.AreEqual(fullName, typeName.FullName);
         }
 
         [TestCaseSource("ValidTypes")]
@@ -215,7 +229,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(new NamespaceName(""), uut.Namespace);
         }
 
-        [TestCase("System.Boolean, mscorlib, 4.0.0.0"),
+        [ExpectedException(typeof(ValidationException)),
+         TestCase("System.Boolean, mscorlib, 4.0.0.0"),
          TestCase("System.Decimal, mscorlib, 4.0.0.0"),
          TestCase("System.SByte, mscorlib, 4.0.0.0"),
          TestCase("System.Byte, mscorlib, 4.0.0.0"),
@@ -228,51 +243,30 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
          TestCase("System.Char, mscorlib, 4.0.0.0"),
          TestCase("System.Single, mscorlib, 4.0.0.0"),
          TestCase("System.Double, mscorlib, 4.0.0.0"),
+        //TestCase("System.String, mscorlib, 4.0.0.0"),
+        //TestCase("System.Object, mscorlib, 4.0.0.0"),
          TestCase("System.Void, mscorlib, 4.0.0.0")]
-        public void ShouldRecognizeBuiltInDataStructures(string identifer)
+        public void ShouldRejectBuiltInDataStructures(string identifer)
         {
-            var sut = T(identifer);
-
-            Assert.IsFalse(sut.IsUnknown);
-            Assert.IsFalse(sut.IsHashed);
-
-            Assert.IsFalse(sut.IsArray);
-            Assert.IsFalse(sut.IsClassType);
-            Assert.IsFalse(sut.IsDelegateType);
-            Assert.IsFalse(sut.IsEnumType);
-            Assert.IsFalse(sut.IsInterfaceType);
-            Assert.IsFalse(sut.IsNestedType);
-            Assert.IsFalse(sut.IsNullableType);
-            Assert.IsFalse(sut.IsReferenceType);
-            Assert.AreEqual(!identifer.Contains("Void"), sut.IsSimpleType);
-            Assert.IsTrue(sut.IsStructType);
-            Assert.IsFalse(sut.IsTypeParameter);
-            Assert.IsTrue(sut.IsValueType);
-            Assert.AreEqual(identifer.Contains("Void"), sut.IsVoidType);
-
-            Assert.IsFalse(sut.HasTypeParameters);
+            T(identifer);
         }
 
-        [TestCase("System.Nullable`1[[T]], mscorlib, 4.0.0.0"),
-         TestCase("System.Nullable`1[[T -> System.UInt64, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0")]
+        [TestCase("s:System.Nullable`1[[T]], mscorlib, 4.0.0.0"),
+         TestCase("s:System.Nullable`1[[T -> System.UInt64, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0")]
         public void ShouldBeNullableType(string identifier)
         {
             Assert.IsTrue(T(identifier).IsNullableType);
         }
 
 
-        [TestCase("System.Void, mscorlib, 4.0.0.0"),
-         TestCase("System.Int32, mscorlib, 4.0.0.0"),
-         TestCase("System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0"),
+        [TestCase("s:System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0"),
          TestCase("s:My.Struct, A, 1.0.0.0")]
         public void ShouldRecognizeStructTypes(string identifier)
         {
             Assert.IsTrue(T(identifier).IsStructType);
         }
 
-        [TestCase("System.Int32, mscorlib, 4.0.0.0"),
-         TestCase("s:My.Struct, A, 1.0.0.0"),
-         TestCase("System.Void, mscorlib, 4.0.0.0"),
+        [TestCase("s:My.Struct, A, 1.0.0.0"),
          TestCase("e:My.Enumtype, A, 3.4.5.6")]
         public void ShouldBeValueType(string identifier)
         {
@@ -314,7 +308,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(uut.IsUnknown);
         }
 
-        [TestCase("System.UInt16, mscorlib, 4.0.0.0", "System.UInt16"),
+        [TestCase("System.X, mscorlib, 4.0.0.0", "System.X"),
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Full.Enum.Type"),
          TestCase("i:Full.Interface.Type, E, 1.2.3.4", "Full.Interface.Type"),
          TestCase("s:Full.Struct.Type, E, 1.2.3.4", "Full.Struct.Type"),
@@ -331,11 +325,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(expectedFullName, uut.FullName);
         }
 
-        [TestCase("System.UInt16, mscorlib, 4.0.0.0", "UInt16"),
+        [TestCase("System.X, mscorlib, 4.0.0.0", "X"),
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Type"),
          TestCase("i:Full.Interface.Type, E, 1.2.3.4", "Type"),
          TestCase("s:Full.Struct.Type, E, 1.2.3.4", "Type"),
-         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Nullable"),
+         TestCase("System.Nullable`1[[System.X, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Nullable"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "InnerType"),
          TestCase("?", "?"),
          TestCase("Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Task")]
@@ -346,9 +340,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(expectedName, uut.Name);
         }
 
-        [TestCase("System.UInt16, mscorlib, 4.0.0.0", "System"),
+        [TestCase("System.X, mscorlib, 4.0.0.0", "System"),
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Full.Enum"),
-         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System"),
+         TestCase("System.Nullable`1[[System.X, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer"),
          TestCase("GlobalType, A, 5.6.7.4", "")]
         public void ShouldDetermineNamespace(string identifier, string expectedNamespace)
@@ -358,7 +352,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(new NamespaceName(expectedNamespace), uut.Namespace);
         }
 
-        [TestCase("System.Object, mscorlib, 4.0.0.0", "mscorlib, 4.0.0.0"),
+        [TestCase("System.X, mscorlib, 4.0.0.0", "mscorlib, 4.0.0.0"),
          TestCase("i:Some.Interface, I, 1.2.3.4", "I, 1.2.3.4")]
         public void ShouldDetermineAssembly(string identifier, string expectedAssemblyIdentifier)
         {
@@ -370,8 +364,8 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void ShouldParseTypeParameters()
         {
-            const string stringIdentifier = "S -> System.String, mscore, 4.0.0.0";
-            const string intIdentifier = "I -> System.Int32, mscore, 4.0.0.0";
+            const string stringIdentifier = "S -> System.X, mscore, 4.0.0.0";
+            const string intIdentifier = "I -> System.Y, mscore, 4.0.0.0";
 
             var parameterizedTypeName =
                 T(
@@ -393,6 +387,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 new object[] {"T", false},
                 new object[] {"T,P", false},
                 new object[] {"T`1[[T]], P", true},
+                new object[] {"T`1[[T -> p:int]], P", true},
                 new object[] {"T+N, P", false},
                 new object[] {"T`1[[T]]+N, P", false},
                 new object[] {"T+N`1[[T]], P", true},
@@ -432,7 +427,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(new TypeParameterName(paramIdentifier), typeParameter);
         }
 
-        [TestCase("TR -> System.Int32, mscorelib, 4.0.0.0"),
+        [TestCase("TR -> System.X, mscorelib, 4.0.0.0"),
          TestCase("R -> ?"),
          TestCase("TParam")]
         public void ShouldBeTypeParameter(string identifier)
@@ -442,7 +437,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsTrue(uut.IsTypeParameter);
         }
 
-        [TestCase("TR -> System.Int32, mscorelib, 4.0.0.0", "TR"),
+        [TestCase("TR -> System.X, mscorelib, 4.0.0.0", "TR"),
          TestCase("R -> ?", "R"),
          TestCase("TParam", "TParam")]
         public void ShouldExtractTypeParameterShortName(string identifier, string expectedShortName)
@@ -455,7 +450,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         [Test]
         public void TypeParameterTypeShouldBeConcreteType()
         {
-            var uut = T("T -> System.String, mscorlib, 4.0.0.0");
+            var uut = T("T -> System.S, mscorlib, 4.0.0.0");
 
             Assert.AreEqual(false, ((ITypeParameterName) uut).TypeParameterType.IsTypeParameter);
         }
@@ -477,7 +472,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [TestCase("SomeType`1[[T -> Foo, Bar, 1.2.3.4]], A, 1.2.3.4"),
-         TestCase("System.Object, mscorlib, 4.0.0.0")]
+         TestCase("n.T, A, 1.2.3.4")]
         public void ShouldBeNotTypeParameter(string identifier)
         {
             var genericType = T(identifier);

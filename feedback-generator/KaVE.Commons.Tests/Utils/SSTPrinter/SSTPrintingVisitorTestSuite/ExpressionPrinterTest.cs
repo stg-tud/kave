@@ -308,7 +308,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new CastExpression
             {
-                TargetType = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                TargetType = Names.Type("p:int"),
                 Reference = VarRef("i")
             };
 
@@ -346,7 +346,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new TypeCheckExpression
             {
-                Type = Names.Type("System.Int32, mscorlib, 4.0.0.0"),
+                Type = Names.Type("p:int"),
                 Reference = VarRef("i")
             };
 

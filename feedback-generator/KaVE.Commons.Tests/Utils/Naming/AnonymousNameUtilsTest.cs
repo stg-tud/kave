@@ -250,10 +250,10 @@ namespace KaVE.Commons.Tests.Utils.Naming
         {
             var original =
                 Names.Type(
-                    "Some.Type`3[[T -> MyType, A],[U -> System.Double, mscorlib, 4.0.0.0],[V -> MyOtherType, A]], B, 1.2.3.4");
+                    "Some.Type`3[[T -> MyType, A],[U -> System.D, mscorlib, 4.0.0.0],[V -> MyOtherType, A]], B, 1.2.3.4");
             var expected =
                 Names.Type(
-                    "Some.Type`3[[T -> Q-vTVCo_g8yayGGoDdH7BA==, ghTRAD9op9mwNWwMvX7uGg==],[U -> System.Double, mscorlib, 4.0.0.0],[V -> w20iwoM8jFvdUxBRQsKvhg==, ghTRAD9op9mwNWwMvX7uGg==]], B, 1.2.3.4");
+                    "Some.Type`3[[T -> Q-vTVCo_g8yayGGoDdH7BA==, ghTRAD9op9mwNWwMvX7uGg==],[U -> System.D, mscorlib, 4.0.0.0],[V -> w20iwoM8jFvdUxBRQsKvhg==, ghTRAD9op9mwNWwMvX7uGg==]], B, 1.2.3.4");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -262,10 +262,10 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldAnonymizeParameterizedTypeIfDefinedInEnclosingProject()
         {
             var original =
-                Names.Type("MyTypeFromEnclosingProject`1[[T -> System.Int32, mscorlib, 4.0.0.0]], EnclosingProject");
+                Names.Type("MyTypeFromEnclosingProject`1[[T -> System.X, mscorlib, 4.0.0.0]], EnclosingProject");
             var expected =
                 Names.Type(
-                    "yqUUbRFTqfCBIMxMRH-qDA==`1[[TM6pgLI0nE5n0EEgAKIIFw== -> System.Int32, mscorlib, 4.0.0.0]], qfFVtSOtve-XEFJXWTbfXw==");
+                    "yqUUbRFTqfCBIMxMRH-qDA==`1[[TM6pgLI0nE5n0EEgAKIIFw== -> System.X, mscorlib, 4.0.0.0]], qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -374,8 +374,8 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizeLocalVariableName()
         {
-            var original = Names.LocalVariable("[System.Int32, mscorlib, 4.0.0.0] variable");
-            var expected = Names.LocalVariable("[System.Int32, mscorlib, 4.0.0.0] ex1ycJF4ixZdevwEdEfKcQ==");
+            var original = Names.LocalVariable("[System.X, mscorlib, 4.0.0.0] variable");
+            var expected = Names.LocalVariable("[System.X, mscorlib, 4.0.0.0] ex1ycJF4ixZdevwEdEfKcQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -394,9 +394,9 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldKeepFieldNameIfDeclaredInOtherAssembly()
         {
             var original = Names.Field(
-                "static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4]._field");
+                "static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4]._field");
             var expected = Names.Field(
-                "static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4]._field");
+                "static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4]._field");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -404,10 +404,10 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizeFieldNameIfDeclaredInEnclosingProject()
         {
-            var original = Names.Field("[System.Int32, mscorlib, 4.0.0.0] [Class, Project]._field");
+            var original = Names.Field("[System.X, mscorlib, 4.0.0.0] [Class, Project]._field");
             var expected =
                 Names.Field(
-                    "[System.Int32, mscorlib, 4.0.0.0] [C30g7wWDiaLWDoT99aNK_Q==, Mxp53D4r1Kx8kPEM01ySAA==].gcnTNGyqNJv6QToYz_Vmbg==");
+                    "[System.X, mscorlib, 4.0.0.0] [C30g7wWDiaLWDoT99aNK_Q==, Mxp53D4r1Kx8kPEM01ySAA==].gcnTNGyqNJv6QToYz_Vmbg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -427,10 +427,10 @@ namespace KaVE.Commons.Tests.Utils.Naming
         public void ShouldKeepPropertyNameIfDeclaredInOtherAssembly()
         {
             var original = Names.Property(
-                "set get static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
+                "set get static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
             var expected =
                 Names.Property(
-                    "set get static [System.Int32, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
+                    "set get static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -438,10 +438,10 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizePropertyNameIfDeclaredInEnclosingProject()
         {
-            var original = Names.Property("get [System.Int32, mscorlib, 4.0.0.0] [Declarator, MyProject].Property");
+            var original = Names.Property("get [System.X, mscorlib, 4.0.0.0] [Declarator, MyProject].Property");
             var expected =
                 Names.Property(
-                    "get [System.Int32, mscorlib, 4.0.0.0] [UFthX8igK4OWY-bjuPcWaA==, zRLpydQJBMrk8DCiP3BwEQ==].3_9-BEZu3bkEMnTfk5eHKw==");
+                    "get [System.X, mscorlib, 4.0.0.0] [UFthX8igK4OWY-bjuPcWaA==, zRLpydQJBMrk8DCiP3BwEQ==].3_9-BEZu3bkEMnTfk5eHKw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -508,8 +508,8 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizeRefParameterName()
         {
-            var original = Names.Parameter("ref [System.Int32, mscorlib, 4.0.0.0] name");
-            var expected = Names.Parameter("ref [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
+            var original = Names.Parameter("ref [p:int] name");
+            var expected = Names.Parameter("ref [p:int] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -517,8 +517,8 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizeParamsParameterName()
         {
-            var original = Names.Parameter("params [System.Int32[], mscorlib, 4.0.0.0] name");
-            var expected = Names.Parameter("params [System.Int32[], mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
+            var original = Names.Parameter("params [System.X[], mscorlib, 4.0.0.0] name");
+            var expected = Names.Parameter("params [System.X[], mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -526,8 +526,8 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizeOptParameterName()
         {
-            var original = Names.Parameter("opt [System.Int32, mscorlib, 4.0.0.0] name");
-            var expected = Names.Parameter("opt [System.Int32, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
+            var original = Names.Parameter("opt [System.X, mscorlib, 4.0.0.0] name");
+            var expected = Names.Parameter("opt [System.X, mscorlib, 4.0.0.0] mT62IUL9_OAA7vtSkeTMzg==");
 
             AssertAnonymizedEquals(original, expected);
         }
