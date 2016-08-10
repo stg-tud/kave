@@ -122,7 +122,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             return FindArrayMarkerIndex(id) != -1;
         }
 
-        public static int GetArrayRank(ITypeName typeName)
+        private static int GetArrayRank(ITypeName typeName)
         {
             var id = typeName.Identifier;
             var arrOpen = FindArrayMarkerIndex(id);

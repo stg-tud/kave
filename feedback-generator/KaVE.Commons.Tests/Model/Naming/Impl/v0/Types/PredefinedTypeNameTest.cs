@@ -140,7 +140,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
         }
 
         [TestCaseSource("PredefinedTypeSource")]
-        public void ArrayHandling(string shortName, string fullName, string id)
+        public void ShouldParseArrays(string shortName, string fullName, string id)
         {
             if ("void".Equals(shortName))
             {
@@ -150,6 +150,10 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             foreach (var arrSuffix in new[] {"[]", "[,]"})
             {
                 var sut = new PredefinedTypeName(id + arrSuffix);
+
+                Assert.AreEqual(shortName + arrSuffix, sut.Name);
+                Assert.AreEqual(fullName + arrSuffix, sut.FullName);
+                Assert.AreEqual("[]".Equals(arrSuffix) ? 1 : 2, sut.Rank);
 
                 Assert.IsFalse(sut.IsUnknown);
                 Assert.IsFalse(sut.IsHashed);

@@ -97,7 +97,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public string FullName
         {
-            get { return IdToFullName[Identifier]; }
+            get
+            {
+                if (IsArray)
+                {
+                    return "{0}[{1}]".FormatEx(IdToFullName[ArrayBaseType.Identifier], new string(',', Rank - 1));
+                }
+                return IdToFullName[Identifier];
+            }
         }
 
         public string Name
