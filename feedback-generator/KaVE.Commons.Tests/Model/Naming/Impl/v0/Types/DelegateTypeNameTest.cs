@@ -250,6 +250,22 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(paramId, ps.First().ValueType.Identifier);
         }
 
+        [Test]
+        public void RecursiveDelegates_unknown()
+        {
+            const string id = "d:[?] [?].([?] p)";
+            var sut = new DelegateTypeName(id);
+
+            Assert.IsFalse(sut.IsRecursive);
+
+            var rt = sut.ReturnType;
+            Assert.AreEqual("?", rt.Identifier);
+
+            var ps = sut.Parameters;
+            Assert.AreEqual(1, ps.Count);
+            Assert.AreEqual("[?] p", ps[0].Identifier);
+        }
+
         [TestCase("T,P", false), TestCase("D,P", true), TestCase("T`1[[T -> D,P]],P", true)]
         public void IsRecursiveReturn(string retType, bool isRecursive)
         {

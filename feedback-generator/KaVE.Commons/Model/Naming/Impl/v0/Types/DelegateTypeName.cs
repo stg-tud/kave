@@ -88,6 +88,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         {
             get
             {
+                if (DelegateType.IsUnknown)
+                {
+                    return false;
+                }
                 var hasRecursiveReturn = DelegateMethod.ReturnType.Identifier.Contains(DelegateType.Identifier);
                 var hasRecursiveParam =
                     DelegateMethod.Parameters.Any(p => p.Identifier.Contains(DelegateType.Identifier));
@@ -102,7 +106,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var ps = Lists.NewList<IParameterName>();
                 foreach (var p in DelegateMethod.Parameters)
                 {
-                    var isRecursive = p.Identifier.Contains(DelegateType.Identifier);
+                    var isRecursive = !p.ValueType.IsUnknown && p.Identifier.Contains(DelegateType.Identifier);
                     if (isRecursive)
                     {
                         var id = p.Identifier.Replace(DelegateType.Identifier, Identifier);
