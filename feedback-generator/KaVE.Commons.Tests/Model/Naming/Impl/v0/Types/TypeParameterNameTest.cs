@@ -43,6 +43,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(typeParameter));
             Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(typeParameter));
             Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(typeParameter));
+            Assert.IsFalse(TypeName.IsTypeNameIdentifier(typeParameter));
         }
 
         [TestCaseSource("TypeParametersSource")]

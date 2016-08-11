@@ -46,7 +46,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             {
                 return new DelegateTypeName(identifier);
             }
-            return new TypeName(identifier);
+            if (TypeName.IsTypeNameIdentifier(identifier))
+            {
+                return new TypeName(identifier);
+            }
+
+            return UnknownTypeInstance;
         }
 
         public static bool IsUnknownTypeIdentifier([NotNull] string identifier)

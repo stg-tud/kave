@@ -101,6 +101,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
             Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(id));
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
+            Assert.IsFalse(TypeName.IsTypeNameIdentifier(id));
         }
 
         [Test, ExpectedException(typeof(ValidationException))]

@@ -121,6 +121,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(typeId));
             Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(typeId));
             Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(typeId));
+            Assert.IsTrue(TypeName.IsTypeNameIdentifier(typeId));
         }
 
         [TestCaseSource("ValidTypes")]

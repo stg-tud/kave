@@ -16,6 +16,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
@@ -223,6 +224,41 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 plus = id.FindPrevious(closeGeneric, '+');
             }
             return plus;
+        }
+
+        private static readonly Regex MissingTickForGenericsMatcher = new Regex("[a-zA-Z]\\[\\[");
+
+        public static bool IsTypeNameIdentifier(string id)
+        {
+            if (TypeUtils.IsUnknownTypeIdentifier(id) ||
+                PredefinedTypeName.IsPredefinedTypeNameIdentifier(id) ||
+                TypeParameterName.IsTypeParameterNameIdentifier(id) ||
+                ArrayTypeName.IsArrayTypeNameIdentifier(id) ||
+                DelegateTypeName.IsDelegateTypeNameIdentifier(id))
+            {
+                return false;
+            }
+
+            // unbalanced brackets
+            foreach (var pair in new[] {"[]", "()"})
+            {
+                if (Count(id, pair[0]) != Count(id, pair[1]))
+                {
+                    return false;
+                }
+            }
+
+            if (MissingTickForGenericsMatcher.IsMatch(id))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static int Count(string id, char needle)
+        {
+            return id.Count(c => c == needle);
         }
     }
 }

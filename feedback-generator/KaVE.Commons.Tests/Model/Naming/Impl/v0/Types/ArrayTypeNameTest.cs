@@ -161,6 +161,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 if (TypeParameterName.IsTypeParameterNameIdentifier(baseTypeId))
                 {
                     Assert.IsTrue(TypeParameterName.IsTypeParameterNameIdentifier(arrId));
+                    Assert.IsFalse(TypeName.IsTypeNameIdentifier(arrId));
                     Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(arrId));
                     Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(arrId));
                     Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(arrId));
@@ -169,6 +170,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 else if (PredefinedTypeName.IsPredefinedTypeNameIdentifier(baseTypeId))
                 {
                     Assert.IsTrue(PredefinedTypeName.IsPredefinedTypeNameIdentifier(arrId));
+                    Assert.IsFalse(TypeName.IsTypeNameIdentifier(arrId));
                     Assert.IsFalse(ArrayTypeName.IsArrayTypeNameIdentifier(arrId));
                     Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(arrId));
                     Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(arrId));
@@ -177,6 +179,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 else
                 {
                     Assert.IsTrue(ArrayTypeName.IsArrayTypeNameIdentifier(arrId));
+                    Assert.IsFalse(TypeName.IsTypeNameIdentifier(arrId));
                     Assert.IsFalse(TypeParameterName.IsTypeParameterNameIdentifier(arrId));
                     Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(arrId));
                     Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(arrId));
@@ -209,6 +212,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
                 Assert.IsFalse(sut.IsDelegateType);
                 Assert.IsFalse(sut.IsPredefined);
 
+                Assert.IsFalse(TypeName.IsTypeNameIdentifier(id));
                 Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(id));
                 Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(id));
                 if (TypeParameterName.IsTypeParameterNameIdentifier(baseTypeId))
@@ -253,6 +257,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.IsFalse(DelegateTypeName.IsDelegateTypeNameIdentifier(invalidId));
             Assert.IsFalse(PredefinedTypeName.IsPredefinedTypeNameIdentifier(invalidId));
             Assert.IsFalse(TypeUtils.IsUnknownTypeIdentifier(invalidId));
+            Assert.IsFalse(TypeName.IsTypeNameIdentifier(invalidId));
         }
 
         [Test]
