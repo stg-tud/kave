@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Commons.Model.Naming.Types.Organization
 {
     public interface INamespaceName : IName
     {
+        [CanBeNull]
         INamespaceName ParentNamespace { get; }
+
         string Name { get; }
 
         /// <summary>

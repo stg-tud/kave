@@ -64,10 +64,18 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
             Assert.AreEqual(name, new NamespaceName(id).Name);
         }
 
-        [TestCase("a", ""), TestCase("a.b", "a"), TestCase("a.b.c", "a.b")]
+        [TestCase("", null), TestCase("a", ""), TestCase("a.b", "a"), TestCase("a.b.c", "a.b")]
         public void ShoulParseParent(string id, string parentId)
         {
-            Assert.AreEqual(new NamespaceName(parentId), new NamespaceName(id).ParentNamespace);
+            var parentNamespace = new NamespaceName(id).ParentNamespace;
+            if (parentId == null)
+            {
+                Assert.Null(parentNamespace);
+            }
+            else
+            {
+                Assert.AreEqual(new NamespaceName(parentId), parentNamespace);
+            }
         }
     }
 }
