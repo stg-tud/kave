@@ -146,6 +146,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             Assert.AreEqual(expected, actual);
         }
 
+        [TestCase("d:[?] [?].()", "?"), TestCase("d:[T,P] [T,P].()", "d:[T,P] [T,P].()")]
+        public void ShouldParseReturnType(string delegateId, string returnTypeId)
+        {
+            var actual = new DelegateTypeName(delegateId).ReturnType;
+            var expected = TypeUtils.CreateTypeName(returnTypeId);
+            Assert.AreEqual(expected, actual);
+        }
+
         [Test]
         public void IsNested()
         {

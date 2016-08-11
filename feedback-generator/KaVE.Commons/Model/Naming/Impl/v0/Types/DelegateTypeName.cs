@@ -124,7 +124,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 var rt = DelegateMethod.ReturnType;
 
                 // simple case
-                if (!rt.Identifier.Contains(DelegateType.Identifier))
+                if (rt.IsUnknown || !rt.Identifier.Contains(DelegateType.Identifier))
                 {
                     return rt;
                 }
