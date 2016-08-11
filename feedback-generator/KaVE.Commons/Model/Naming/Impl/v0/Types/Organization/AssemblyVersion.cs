@@ -18,7 +18,7 @@ using System;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
@@ -33,9 +33,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
         {
             if (!UnknownNameIdentifier.Equals(identifier))
             {
-                Asserts.That(
-                    _isValidVersionRegex.IsMatch(identifier),
-                    "invalid assembly version '{0}'".FormatEx(identifier));
+                if (!_isValidVersionRegex.IsMatch(identifier))
+                {
+                    throw new ValidationException("invalid assembly version '{0}'".FormatEx(identifier), null);
+                }
             }
         }
 

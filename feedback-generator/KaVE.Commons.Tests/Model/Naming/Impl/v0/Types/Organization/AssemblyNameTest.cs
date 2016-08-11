@@ -16,7 +16,7 @@
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types.Organization;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
@@ -59,7 +59,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
             Assert.IsFalse(new AssemblyName("P, -1.-1.-1.-1").IsLocalProject);
         }
 
-        [ExpectedException(typeof(AssertException)), //
+        [ExpectedException(typeof(ValidationException)), //
          TestCase("("), TestCase(")"), //
          TestCase("["), TestCase("]"), //
          TestCase("{"), TestCase("}"), //
@@ -70,7 +70,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
             new AssemblyName("a" + specialChar + "b, 1.2.3.4");
         }
 
-        [Test, ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void VersionNeedsToBeParseable()
         {
             // ReSharper disable once ObjectCreationAsStatement

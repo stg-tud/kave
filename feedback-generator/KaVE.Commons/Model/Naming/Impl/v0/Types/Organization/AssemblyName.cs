@@ -16,7 +16,8 @@
 
 using System;
 using KaVE.Commons.Model.Naming.Types.Organization;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
 {
@@ -35,7 +36,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types.Organization
 
             foreach (var c in new[] {"(", ")", "[", "]", "{", "}", ",", ";", ":", " "})
             {
-                Asserts.Not(Name.Contains(c));
+                if (Name.Contains(c))
+                {
+                    throw new ValidationException("identifier must not contain the char '{0}'".FormatEx(c), null);
+                }
             }
 
             var fragments = GetFragments();

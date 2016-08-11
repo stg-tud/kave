@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
@@ -83,14 +82,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
             new AssemblyVersion(null);
         }
 
-        [Test, ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void ShouldRejectIdentifiersWithInsufficientNumberOfDots()
         {
             // ReSharper disable once ObjectCreationAsStatement
             new AssemblyVersion("1.2.3");
         }
 
-        [Test, ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof(ValidationException))]
         public void ShouldRejectIdentifiers_WithNonNumbers()
         {
             // ReSharper disable once ObjectCreationAsStatement
