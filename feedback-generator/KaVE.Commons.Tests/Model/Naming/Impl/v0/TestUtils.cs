@@ -29,7 +29,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
                 "T -> T,P",
                 "T,P",
                 "T[],P",
-                "d:[?] [n.C+D].()",
+                "d:[?] [n.C+D, P].()",
                 "T`1[[P -> T2,P]],P",
                 // arrays
                 "T[]",

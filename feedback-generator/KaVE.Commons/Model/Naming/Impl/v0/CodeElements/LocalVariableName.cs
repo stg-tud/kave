@@ -32,8 +32,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         {
             get
             {
-                var indexOfName = Identifier.LastIndexOf(']') + 2;
-                return Identifier.Substring(indexOfName);
+                var indexOfName = Identifier.LastIndexOf(']') + 1;
+                return Identifier.Substring(indexOfName).Trim();
             }
         }
 

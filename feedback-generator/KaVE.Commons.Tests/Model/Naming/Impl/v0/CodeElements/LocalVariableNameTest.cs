@@ -69,5 +69,13 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             var expected = "id";
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void ShouldNotStripNameIfNoWhitespaceIsUsed()
+        {
+            var sut = new LocalVariableName("[T]t");
+            Assert.AreEqual(TypeUtils.CreateTypeName("T"), sut.ValueType);
+            Assert.AreEqual("t", sut.Name);
+        }
     }
 }
