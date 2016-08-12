@@ -416,5 +416,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         {
             get { return Get(typeof(ITypeName)); }
         }
+
+        public bool IsIndexer
+        {
+            get { return false; }
+        }
     }
 }

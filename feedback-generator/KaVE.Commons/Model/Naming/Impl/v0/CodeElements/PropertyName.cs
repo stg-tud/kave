@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
@@ -43,9 +44,19 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get { return Modifiers.Contains(GetterModifier); }
         }
 
-        public new bool IsStatic
+        public bool IsIndexer
         {
-            get { return Modifiers.Contains(StaticModifier); }
+            get { return false; }
+        }
+
+        public bool HasParameters
+        {
+            get { return false; }
+        }
+
+        public IKaVEList<IParameterName> Parameters
+        {
+            get { return Lists.NewList<IParameterName>(); }
         }
     }
 }

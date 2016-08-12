@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.Naming.Impl.v1
 {
@@ -174,6 +175,21 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         public override int GetHashCode()
         {
             return (Identifier != null ? Identifier.GetHashCode() : 0);
+        }
+
+        public bool IsIndexer
+        {
+            get { return false; }
+        }
+
+        public bool HasParameters
+        {
+            get { return false; }
+        }
+
+        public IKaVEList<IParameterName> Parameters
+        {
+            get { return Lists.NewList<IParameterName>(); }
         }
     }
 }

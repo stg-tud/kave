@@ -25,12 +25,12 @@ namespace KaVE.Commons.Model.Naming.CodeElements
         bool IsStatic { get; }
 
         /// <summary>
-        /// short name (e.g., _f)
+        ///     short name (e.g., _f)
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// full name (e.g.: n.C._f)
+        ///     full name (e.g.: n.C._f)
         /// </summary>
         string FullName { get; }
     }
