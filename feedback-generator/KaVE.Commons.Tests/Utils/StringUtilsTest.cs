@@ -230,6 +230,30 @@ namespace KaVE.Commons.Tests.Utils
             Assert.AreEqual(4, actual);
         }
 
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingCloseBracket_null()
+        {
+            ((string) null).FindCorrespondingCloseBracket(0);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingCloseBracket_indexTooLow()
+        {
+            "x".FindCorrespondingCloseBracket(-1);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingCloseBracket_indexTooHigh()
+        {
+            "x".FindCorrespondingCloseBracket(1);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingCloseBracket_noBracket()
+        {
+            "x".FindCorrespondingCloseBracket(0);
+        }
+
         [Test]
         public void FindCorrespondingOpenBracket_Round()
         {
@@ -256,6 +280,30 @@ namespace KaVE.Commons.Tests.Utils
         {
             var actual = "<<<>>>".FindCorrespondingOpenBracket(4);
             Assert.AreEqual(1, actual);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingOpenBracket_null()
+        {
+            ((string) null).FindCorrespondingOpenBracket(0);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingOpenBracket_indexTooLow()
+        {
+            "x".FindCorrespondingOpenBracket(-1);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingOpenBracket_indexTooHigh()
+        {
+            "x".FindCorrespondingOpenBracket(1);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void FindCorrespondingOpenBracket_noBracket()
+        {
+            "x".FindCorrespondingOpenBracket(0);
         }
 
         [Test]

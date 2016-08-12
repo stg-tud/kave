@@ -79,6 +79,7 @@ namespace KaVE.Commons.Utils
 
         private static void AssertIndexBoundaries(string str, int currentIndex)
         {
+            Asserts.NotNull(str);
             if (currentIndex < 0 || currentIndex >= str.Length)
             {
                 Asserts.Fail("index '{0}' is out of bounds for string '{1}'", currentIndex, str);
@@ -101,6 +102,13 @@ namespace KaVE.Commons.Utils
 
         public static int FindCorrespondingOpenBracket(this string str, int currentIndex)
         {
+            const string closeBrackets = "]}>)";
+            AssertIndexBoundaries(str, currentIndex);
+            if (!closeBrackets.Contains(str[currentIndex]))
+            {
+                Asserts.Fail("invalid closing bracket at index '{0}' for string '{1}'".FormatEx(currentIndex, str));
+            }
+
             var open = str[currentIndex];
             var close = open.GetCorresponding();
 
@@ -131,6 +139,13 @@ namespace KaVE.Commons.Utils
 
         public static int FindCorrespondingCloseBracket(this string str, int currentIndex)
         {
+            const string closeBrackets = "[{<(";
+            AssertIndexBoundaries(str, currentIndex);
+            if (!closeBrackets.Contains(str[currentIndex]))
+            {
+                Asserts.Fail("invalid closing bracket at index '{0}' for string '{1}'".FormatEx(currentIndex, str));
+            }
+
             var open = str[currentIndex];
             var close = open.GetCorresponding();
 
