@@ -28,9 +28,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 {
     public class TypeParameterName : BaseName, ITypeParameterName, IArrayTypeName
     {
-        /// <summary>
-        ///     The separator between the parameter type's short name and its type.
-        /// </summary>
         public const string ParameterNameTypeSeparator = " -> ";
 
         internal TypeParameterName([NotNull] string identifier) : base(identifier)

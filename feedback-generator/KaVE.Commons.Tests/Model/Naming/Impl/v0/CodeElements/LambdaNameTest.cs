@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
@@ -54,7 +55,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void WithoutParameters(string typeId)
         {
-            var name = new LambdaName("[System.String, mscorlib, 4.0.0.0] ()");
+            var name = new LambdaName("[{0}] ()".FormatEx(typeId));
 
             Assert.False(name.HasParameters);
             CollectionAssert.IsEmpty(name.Parameters);
@@ -63,11 +64,11 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [TestCaseSource(typeof(TestUtils), "TypeSource")]
         public void WithParameters(string typeId)
         {
-            var name = new LambdaName("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)");
+            var name = new LambdaName("[{0}] ([{0}] p1, [{0}] p2)".FormatEx(typeId));
 
             Assert.True(name.HasParameters);
             CollectionAssert.AreEqual(
-                new[] {new ParameterName("[C, A] p1"), new ParameterName("[C, B] p2")},
+                new[] {new ParameterName("[{0}] p1".FormatEx(typeId)), new ParameterName("[{0}] p2".FormatEx(typeId))},
                 name.Parameters);
         }
 

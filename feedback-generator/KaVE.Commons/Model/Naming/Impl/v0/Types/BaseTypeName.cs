@@ -31,7 +31,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
         public const string PrefixStruct = "s:";
         public const string PrefixDelegate = "d:";
 
-
         protected BaseTypeName([NotNull] string identifier) : base(identifier) {}
 
         public override bool IsUnknown
