@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v1.Parser;
 using KaVE.Commons.Model.Naming.Types;
@@ -56,11 +55,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
-        public IList<IParameterName> Parameters
+        public IKaVEList<IParameterName> Parameters
         {
             get
             {
-                IList<IParameterName> paras = new KaVEList<IParameterName>();
+                IKaVEList<IParameterName> paras = new KaVEList<IParameterName>();
                 if (HasParameters)
                 {
                     foreach (var p in Ctx.regularMethod().methodSignature().formalParam())

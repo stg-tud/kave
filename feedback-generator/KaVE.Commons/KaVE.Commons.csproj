@@ -99,6 +99,7 @@
     <Compile Include="Model\Naming\Impl\v1\MethodName.cs" />
     <Compile Include="Model\Naming\Impl\v1\UnknownName.cs" />
     <Compile Include="Model\Naming\Impl\NameUpdater_v0v1.cs" />
+    <Compile Include="Model\Naming\IParameterizedName.cs" />
     <Compile Include="Model\Naming\Names.cs" />
     <Compile Include="Model\Naming\Impl\v1\TypeName.cs" />
     <Compile Include="Model\Naming\Impl\v1\Parser\TypeNameParseUtil.cs" />

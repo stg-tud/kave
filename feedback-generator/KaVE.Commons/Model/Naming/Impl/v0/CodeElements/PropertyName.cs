@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
@@ -27,9 +28,13 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public PropertyName() : this(UnknownMemberIdentifier) {}
 
-        public PropertyName([NotNull] string identifier) : base(identifier) {}
+        public PropertyName([NotNull] string identifier) : base(identifier)
+        {
+            // TODO: NameUpdate: Write fix and reenable:
+            //Validate(IsUnknown || identifier.EndsWith(")"), "must contain (empty) parameter list");
+        }
 
-        public override bool IsUnknown
+        public sealed override bool IsUnknown
         {
             get { return Equals(Identifier, UnknownMemberIdentifier); }
         }
@@ -46,17 +51,36 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public bool IsIndexer
         {
-            get { return false; }
+            get { return HasParameters; }
         }
 
         public bool HasParameters
         {
-            get { return false; }
+            get { return Parameters.Count > 0; }
         }
+
+        private IKaVEList<IParameterName> _parameters;
 
         public IKaVEList<IParameterName> Parameters
         {
-            get { return Lists.NewList<IParameterName>(); }
+            get
+            {
+                if (_parameters == null)
+                {
+                    if (IsUnknown)
+                    {
+                        _parameters = Lists.NewList<IParameterName>();
+                    }
+                    else
+                    {
+                        var endOfParameters = Identifier.LastIndexOf(')');
+                        var startOfParameters = Identifier.FindCorrespondingOpenBracket(endOfParameters);
+                        _parameters = Identifier.GetParameterNamesFromSignature(startOfParameters, endOfParameters);
+                    }
+                }
+
+                return _parameters;
+            }
         }
     }
 }

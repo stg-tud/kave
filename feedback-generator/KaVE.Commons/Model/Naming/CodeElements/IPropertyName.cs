@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Utils.Collections;
-
 namespace KaVE.Commons.Model.Naming.CodeElements
 {
-    public interface IPropertyName : IMemberName
+    public interface IPropertyName : IMemberName, IParameterizedName
     {
         bool HasSetter { get; }
         bool HasGetter { get; }
-
         bool IsIndexer { get; }
-        bool HasParameters { get; }
-        IKaVEList<IParameterName> Parameters { get; }
     }
 }

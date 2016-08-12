@@ -40,11 +40,17 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
 
         protected BaseName([NotNull] string identifier)
         {
-            if (identifier == null)
-            {
-                throw new ValidationException("identifier must not be null", null);
-            }
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            Validate(identifier != null, "identifier must not be null");
             Identifier = identifier;
+        }
+
+        protected static void Validate(bool condition, string msg = "invalid identifier")
+        {
+            if (!condition)
+            {
+                throw new ValidationException(msg, null);
+            }
         }
 
         public override bool Equals(object other)

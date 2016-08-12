@@ -28,7 +28,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
     {
         internal ArrayTypeName(string identifier) : base(identifier)
         {
-            Asserts.Not(TypeUtils.IsUnknownTypeIdentifier(identifier));
+            Validate(!TypeUtils.IsUnknownTypeIdentifier(identifier));
         }
 
         public ITypeName ArrayBaseType

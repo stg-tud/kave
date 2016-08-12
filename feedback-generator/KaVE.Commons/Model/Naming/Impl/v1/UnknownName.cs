@@ -387,16 +387,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             get { return Get(typeof(ITypeName)); }
         }
 
-        IList<IParameterName> IMethodName.Parameters
-        {
-            get { return Lists.NewList<IParameterName>(); }
-        }
-
-        bool IMethodName.HasParameters
-        {
-            get { return false; }
-        }
-
         public bool IsConstructor
         {
             get { return false; }

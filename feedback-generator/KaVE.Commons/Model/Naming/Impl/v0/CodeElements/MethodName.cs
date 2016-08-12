@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
@@ -89,7 +88,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         private IKaVEList<IParameterName> _parameters;
 
-        public IList<IParameterName> Parameters
+        public IKaVEList<IParameterName> Parameters
         {
             get
             {

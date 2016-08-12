@@ -22,7 +22,6 @@ using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Naming.Impl.v0.Types
@@ -59,15 +58,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             Validate(!IsArray || !ArrayBaseType.IsVoidType, "impossible to create void array");
             var baseId = IsArray ? ArrayBaseType.Identifier : Identifier;
             Validate(IdToFullName.ContainsKey(baseId), "uknown id '{0}'".FormatEx(identifier));
-        }
-
-        // ReSharper disable once UnusedParameter.Local
-        private static void Validate(bool condition, string msg)
-        {
-            if (!condition)
-            {
-                throw new ValidationException(msg, null);
-            }
         }
 
         public override bool IsUnknown

@@ -33,7 +33,6 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         public DelegateTypeName(string identifier) : base(identifier) {}
 
-
         public override bool IsUnknown
         {
             get { return UnknownDelegateIdentifier.Equals(Identifier); }

@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Commons.Model.Naming.CodeElements
+namespace KaVE.Commons.Model.Naming
 {
-    public interface IMethodName : IMemberName, IGenericName, IParameterizedName
+    public interface IParameterizedName
     {
-        bool IsConstructor { get; }
-        ITypeName ReturnType { get; }
-        bool IsExtensionMethod { get; }
+        bool HasParameters { get; }
+        IKaVEList<IParameterName> Parameters { get; }
     }
 }
