@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Model.Naming.Types;
-
 namespace KaVE.Commons.Model.Naming.CodeElements
 {
-    public interface IFieldName : IMemberName
-    {
-        ITypeName ValueType { get; }
-    }
+    public interface IFieldName : IMemberName {}
 }
