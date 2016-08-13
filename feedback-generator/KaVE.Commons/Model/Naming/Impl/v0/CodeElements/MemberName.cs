@@ -81,23 +81,37 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             return id.Substring(start, end - start).Trim();
         }
 
+        private ITypeName _valueType;
+
         public ITypeName ValueType
         {
             get
             {
+                if (_valueType != null)
+                {
+                    return _valueType;
+                }
+
                 var openValType = Identifier.FindNext(0, '[');
                 var closeValType = Identifier.FindCorrespondingCloseBracket(openValType);
                 // ignore open bracket
                 openValType++;
                 var declTypeIdentifier = Identifier.Substring(openValType, closeValType - openValType);
-                return TypeUtils.CreateTypeName(declTypeIdentifier);
+                return _valueType = TypeUtils.CreateTypeName(declTypeIdentifier);
             }
         }
+
+        private ITypeName _declaringType;
 
         public ITypeName DeclaringType
         {
             get
             {
+                if (_declaringType != null)
+                {
+                    return _declaringType;
+                }
+
                 var openValType = Identifier.FindNext(0, '[');
                 var closeValType = Identifier.FindCorrespondingCloseBracket(openValType);
                 var openDeclType = Identifier.FindNext(closeValType, '[');
@@ -105,7 +119,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 // ignore open bracket
                 openDeclType++;
                 var declTypeIdentifier = Identifier.Substring(openDeclType, closeDeclType - openDeclType);
-                return TypeUtils.CreateTypeName(declTypeIdentifier);
+                return _declaringType = TypeUtils.CreateTypeName(declTypeIdentifier);
             }
         }
     }
