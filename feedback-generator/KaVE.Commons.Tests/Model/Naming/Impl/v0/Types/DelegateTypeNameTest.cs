@@ -66,7 +66,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types
             }
             Assert.IsFalse(delegateType.IsHashed);
 
-            Assert.IsFalse(delegateType.HasTypeParameters);
+            var dt = delegateType.DelegateType;
+
+            Assert.AreEqual(dt.HasTypeParameters, delegateType.HasTypeParameters);
 
             Assert.IsFalse(delegateType.IsArray);
             Assert.IsFalse(delegateType.IsTypeParameter);

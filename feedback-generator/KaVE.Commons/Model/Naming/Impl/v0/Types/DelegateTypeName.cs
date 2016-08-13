@@ -48,9 +48,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
             get { return DelegateType.FullName; }
         }
 
+        private IMethodName _delegateMethod;
+
         private IMethodName DelegateMethod
         {
-            get { return new MethodName(Identifier.Substring(PrefixDelegate.Length)); }
+            get
+            {
+                return _delegateMethod ?? (_delegateMethod = new MethodName(Identifier.Substring(PrefixDelegate.Length)));
+            }
         }
 
         public ITypeName DelegateType
@@ -118,6 +123,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
                 }
                 return ps;
             }
+        }
+
+        public override IKaVEList<ITypeParameterName> TypeParameters
+        {
+            get { return DelegateType.TypeParameters; }
         }
 
         public ITypeName ReturnType

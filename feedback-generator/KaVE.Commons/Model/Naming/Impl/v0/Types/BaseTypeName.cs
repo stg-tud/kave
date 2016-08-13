@@ -101,14 +101,15 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.Types
 
         private IKaVEList<ITypeParameterName> _typeParameters;
 
-        public IKaVEList<ITypeParameterName> TypeParameters
+        public virtual IKaVEList<ITypeParameterName> TypeParameters
         {
             get
             {
                 if (_typeParameters == null)
                 {
+                    Asserts.Not(IsDelegateType);
                     var close = FullName.FindPrevious(FullName.Length - 1, '+', ']');
-                    if (IsArray || IsDelegateType || close == -1 || FullName[close] == '+')
+                    if (IsArray || close == -1 || FullName[close] == '+')
                     {
                         _typeParameters = Lists.NewList<ITypeParameterName>();
                     }
