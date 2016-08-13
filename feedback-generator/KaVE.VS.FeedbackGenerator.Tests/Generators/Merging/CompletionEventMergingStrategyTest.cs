@@ -65,7 +65,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
                 ProposalCollection = new ProposalCollection(_proposalCollection.Proposals.Take(3).ToList()),
                 TerminatedAt = now.AddMilliseconds(300),
                 TerminatedState = TerminationState.Applied,
-                TerminatedBy = IDEEvent.Trigger.Shortcut
+                TerminatedBy = EventTrigger.Shortcut
             };
         }
 
@@ -86,9 +86,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
         /// <summary>
         ///     The first event from a completion process should always be kept, in order to keep the invocation state.
         /// </summary>
-        [TestCase(IDEEvent.Trigger.Shortcut), TestCase(IDEEvent.Trigger.Typing), TestCase(IDEEvent.Trigger.Unknown),
-         TestCase(IDEEvent.Trigger.Click)]
-        public void ShouldNotMergeIfEarlierEventIsTriggeredByShortcut(IDEEvent.Trigger earlierEventTrigger)
+        [TestCase(EventTrigger.Shortcut), TestCase(EventTrigger.Typing), TestCase(EventTrigger.Unknown),
+         TestCase(EventTrigger.Click)]
+        public void ShouldNotMergeIfEarlierEventIsTriggeredByShortcut(EventTrigger earlierEventTrigger)
         {
             GivenEventsMeetMergeConditions();
             _event.TriggeredBy = earlierEventTrigger;
@@ -187,7 +187,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
 
         private void GivenEventsMeetMergeConditions()
         {
-            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
+            _event.TriggeredBy = EventTrigger.Automatic;
             _event.TerminatedState = TerminationState.Filtered;
         }
     }

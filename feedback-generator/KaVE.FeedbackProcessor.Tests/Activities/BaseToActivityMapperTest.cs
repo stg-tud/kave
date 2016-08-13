@@ -82,7 +82,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             @event.IDESessionUUID = "sessionId";
             @event.KaVEVersion = "1.0";
             @event.TriggeredAt = new DateTime(2015, 04, 24, 15, 28, 30);
-            @event.TriggeredBy = IDEEvent.Trigger.Unknown;
+            @event.TriggeredBy = EventTrigger.Unknown;
             @event.Duration = TimeSpan.FromMilliseconds(10);
             @event.ActiveWindow = Names.Window("vsWindowTypeToolWindow Startseite");
         }

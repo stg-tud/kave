@@ -36,7 +36,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         private readonly IDateUtils _dateUtils;
         private readonly IThreading _threading;
 
-        protected EventGeneratorBase([NotNull] IRSEnv env, [NotNull] IMessageBus messageBus, [NotNull] IDateUtils dateUtils, IThreading threading)
+        protected EventGeneratorBase([NotNull] IRSEnv env,
+            [NotNull] IMessageBus messageBus,
+            [NotNull] IDateUtils dateUtils,
+            IThreading threading)
         {
             _env = env;
             _messageBus = messageBus;
@@ -71,13 +74,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             return ideEvent;
         }
 
-        private static IDEEvent.Trigger CurrentTrigger
+        private static EventTrigger CurrentTrigger
         {
             get
             {
                 // we cannot detect mouse click as a trigger, since
                 // mouse-up is what actually triggers the action
-                return IDEEvent.Trigger.Unknown;
+                return EventTrigger.Unknown;
             }
         }
 

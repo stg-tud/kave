@@ -23,7 +23,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
-    [TestFixture]
     internal class MapEquivalentCommandsProcessorTest
     {
         private MapEquivalentCommandsProcessor _uut;
@@ -68,14 +67,14 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldMapLeftSideIfItDoesNotHaveAnUnknownTrigger()
         {
-            var inputEvent = new CommandEvent {CommandId = _saveAllPair.Item1, TriggeredBy = IDEEvent.Trigger.Click};
+            var inputEvent = new CommandEvent {CommandId = _saveAllPair.Item1, TriggeredBy = EventTrigger.Click};
 
             var actualSet = _uut.Map(inputEvent);
 
             var expectedCommandEvent = new CommandEvent
             {
                 CommandId = _saveAllPair.Item2,
-                TriggeredBy = IDEEvent.Trigger.Click
+                TriggeredBy = EventTrigger.Click
             };
             CollectionAssert.AreEquivalent(actualSet, Sets.NewHashSet<IDEEvent>(expectedCommandEvent));
         }
@@ -86,7 +85,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var leftSideEvent = new CommandEvent
             {
                 CommandId = _reSharperToVsPair.Item1,
-                TriggeredBy = IDEEvent.Trigger.Unknown
+                TriggeredBy = EventTrigger.Unknown
             };
 
             var actualSet = _uut.Map(leftSideEvent);
@@ -100,7 +99,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var leftSideEvent = new CommandEvent
             {
                 CommandId = _reSharperToVsPair.Item2,
-                TriggeredBy = IDEEvent.Trigger.Unknown
+                TriggeredBy = EventTrigger.Unknown
             };
 
             var actualSet = _uut.Map(leftSideEvent);
@@ -114,7 +113,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var inputEvent = new CommandEvent
             {
                 CommandId = _saveAllPair.Item2,
-                TriggeredBy = IDEEvent.Trigger.Shortcut
+                TriggeredBy = EventTrigger.Shortcut
             };
 
             var actualSet = _uut.Map(inputEvent);

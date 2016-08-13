@@ -40,7 +40,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         private readonly IActionManager _actionManager;
 
         private IExtendedLookup _currentLookup;
-        private IDEEvent.Trigger? _terminationTrigger;
+        private EventTrigger? _terminationTrigger;
         private ScheduledAction _delayedCancelAction = ScheduledAction.NoOp;
         private string _initialPrefix;
         private string _currentPrefix;
@@ -82,9 +82,9 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             lookup.CurrentItemChanged += HandleCurrentItemChanged;
 
             // R# actions that lead to the completion being finished
-            RegisterAction("ForceCompleteItem", () => _terminationTrigger = IDEEvent.Trigger.Typing);
-            RegisterAction(TextControlActions.ENTER_ACTION_ID, () => _terminationTrigger = IDEEvent.Trigger.Shortcut);
-            RegisterAction(TextControlActions.TAB_ACTION_ID, () => _terminationTrigger = IDEEvent.Trigger.Shortcut);
+            RegisterAction("ForceCompleteItem", () => _terminationTrigger = EventTrigger.Typing);
+            RegisterAction(TextControlActions.ENTER_ACTION_ID, () => _terminationTrigger = EventTrigger.Shortcut);
+            RegisterAction(TextControlActions.TAB_ACTION_ID, () => _terminationTrigger = EventTrigger.Shortcut);
             lookup.MouseDown += HandleMouseDown;
 
             lookup.Closed += HandleClosed;
@@ -178,7 +178,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         /// </summary>
         private void HandleMouseDown(object sender, EventArgs eventArgs)
         {
-            _terminationTrigger = IDEEvent.Trigger.Click;
+            _terminationTrigger = EventTrigger.Click;
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             OnClosed();
             if (isEscapePressed)
             {
-                _terminationTrigger = IDEEvent.Trigger.Shortcut;
+                _terminationTrigger = EventTrigger.Shortcut;
                 OnCancel();
             }
             else
@@ -213,11 +213,11 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         private void OnCancel()
         {
-            OnCancelled(_terminationTrigger.GetValueOrDefault(IDEEvent.Trigger.Unknown));
+            OnCancelled(_terminationTrigger.GetValueOrDefault(EventTrigger.Unknown));
         }
 
         /// <param name="trigger">What triggered the termination.</param>
-        public delegate void CancelledHandler(IDEEvent.Trigger trigger);
+        public delegate void CancelledHandler(EventTrigger trigger);
 
         /// <summary>
         ///     Fired when the code completion is cancelled.
@@ -231,12 +231,12 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             LookupItemInsertType lookupiteminserttype)
         {
             _delayedCancelAction.Cancel();
-            OnApplied(_terminationTrigger.GetValueOrDefault(IDEEvent.Trigger.Typing), lookupitem);
+            OnApplied(_terminationTrigger.GetValueOrDefault(EventTrigger.Typing), lookupitem);
         }
 
         /// <param name="trigger">What triggered the termination.</param>
         /// <param name="appliedItem">The item that is applied.</param>
-        public delegate void AppliedHandler(IDEEvent.Trigger trigger, ILookupItem appliedItem);
+        public delegate void AppliedHandler(EventTrigger trigger, ILookupItem appliedItem);
 
         /// <summary>
         ///     Fired when the code completion is closed due to the application of an item.

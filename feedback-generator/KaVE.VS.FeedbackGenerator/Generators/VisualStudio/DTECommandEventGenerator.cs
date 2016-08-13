@@ -91,7 +91,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             var commandEvent = Create<CommandEvent>();
             if (command.HasPressedKeyBinding())
             {
-                commandEvent.TriggeredBy = IDEEvent.Trigger.Shortcut;
+                commandEvent.TriggeredBy = EventTrigger.Shortcut;
             }
             commandEvent.CommandId = command.GetId();
             return commandEvent;

@@ -27,7 +27,7 @@ namespace KaVE.FeedbackProcessor.Statistics
     internal class EquivalentCommandPairCalculator : BaseEventProcessor
     {
         public Dictionary<SortedCommandPair, int> Statistic { get; private set; }
-        private IDictionary<SortedCommandPair, int> _currentDeveloperStatistic; 
+        private IDictionary<SortedCommandPair, int> _currentDeveloperStatistic;
 
         public readonly Dictionary<SortedCommandPair, int> UnknownTriggerMappings =
             new Dictionary<SortedCommandPair, int>();
@@ -59,8 +59,8 @@ namespace KaVE.FeedbackProcessor.Statistics
                 ConcurrentEventHeuristic.AreConcurrent(_lastCommandEvent, commandEvent) &&
                 _lastCommandEvent.CommandId != commandEvent.CommandId)
             {
-                if (_lastCommandEvent.TriggeredBy != IDEEvent.Trigger.Unknown ||
-                    commandEvent.TriggeredBy != IDEEvent.Trigger.Unknown)
+                if (_lastCommandEvent.TriggeredBy != EventTrigger.Unknown ||
+                    commandEvent.TriggeredBy != EventTrigger.Unknown)
                 {
                     AddEquivalentCommandsToStatistic(
                         _lastCommandEvent.CommandId,
@@ -83,7 +83,8 @@ namespace KaVE.FeedbackProcessor.Statistics
             cleanStats.ToList().ForEach(newMapping => AddOrUpdate(Statistic, newMapping));
         }
 
-        private static void AddOrUpdate(IDictionary<SortedCommandPair, int> statistic, KeyValuePair<SortedCommandPair, int> entry)
+        private static void AddOrUpdate(IDictionary<SortedCommandPair, int> statistic,
+            KeyValuePair<SortedCommandPair, int> entry)
         {
             if (statistic.ContainsKey(entry.Key))
             {
@@ -174,7 +175,7 @@ namespace KaVE.FeedbackProcessor.Statistics
                     "Include",
                     "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove"),
                 SortedCommandPair.NewSortedPair("Include", "Git.Include")
-            },
+            }
         };
 
         public static Dictionary<SortedCommandPair, int> GetCleanMappings(IDictionary<SortedCommandPair, int> mappings,
@@ -202,7 +203,8 @@ namespace KaVE.FeedbackProcessor.Statistics
             return cleanMappings;
         }
 
-        private static IList<KeyValuePair<SortedCommandPair, SortedCommandPair>> GetSpecialMappings(KeyValuePair<SortedCommandPair, int> mapping)
+        private static IList<KeyValuePair<SortedCommandPair, SortedCommandPair>> GetSpecialMappings(
+            KeyValuePair<SortedCommandPair, int> mapping)
         {
             return SpecialMappings.Where(specialMapping => mapping.Key.Equals(specialMapping.Key)).ToList();
         }

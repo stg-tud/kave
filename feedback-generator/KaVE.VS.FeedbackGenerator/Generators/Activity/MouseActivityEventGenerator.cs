@@ -69,7 +69,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Activity
                 if (!HasOpenPeriod())
                 {
                     _currentEvent = Create<ActivityEvent>();
-                    _currentEvent.TriggeredBy = IDEEvent.Trigger.Click;
+                    _currentEvent.TriggeredBy = EventTrigger.Click;
                 }
 
                 _lastActivity = now;

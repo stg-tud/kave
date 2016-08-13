@@ -56,7 +56,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
             MoveMouse();
 
             var actualEvent = GetSinglePublished<ActivityEvent>();
-            Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Click, actualEvent.TriggeredBy);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
             Raise(events => events.MouseMove += null);
 
             var actualEvent = GetSinglePublished<ActivityEvent>();
-            Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Click, actualEvent.TriggeredBy);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
             Raise(events => events.MouseMove += null);
 
             var actualEvent = GetSinglePublished<ActivityEvent>();
-            Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Click, actualEvent.TriggeredBy);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Activity
             Raise(events => events.MouseMove += null);
 
             var actualEvent = GetSinglePublished<ActivityEvent>();
-            Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Click, actualEvent.TriggeredBy);
         }
 
         [Test]

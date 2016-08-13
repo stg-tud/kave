@@ -61,7 +61,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
                 ctrlClickEvent.Target = _navigationUtils.GetTarget(args.TextControl);
                 ctrlClickEvent.Location = newLocation;
                 ctrlClickEvent.TypeOfNavigation = NavigationType.CtrlClick;
-                ctrlClickEvent.TriggeredBy = IDEEvent.Trigger.Click;
+                ctrlClickEvent.TriggeredBy = EventTrigger.Click;
 
                 _currentLocation = ctrlClickEvent.Target;
 
@@ -72,7 +72,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
                 var clickNavigationEvent = Create<NavigationEvent>();
                 clickNavigationEvent.Location = newLocation;
                 clickNavigationEvent.TypeOfNavigation = NavigationType.Click;
-                clickNavigationEvent.TriggeredBy = IDEEvent.Trigger.Click;
+                clickNavigationEvent.TriggeredBy = EventTrigger.Click;
                 Fire(clickNavigationEvent);
             }
         }
@@ -90,7 +90,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Navigation
             var keyboardNavigationEvent = Create<NavigationEvent>();
             keyboardNavigationEvent.Location = newLocation;
             keyboardNavigationEvent.TypeOfNavigation = NavigationType.Keyboard;
-            keyboardNavigationEvent.TriggeredBy = IDEEvent.Trigger.Typing;
+            keyboardNavigationEvent.TriggeredBy = EventTrigger.Typing;
             Fire(keyboardNavigationEvent);
         }
 

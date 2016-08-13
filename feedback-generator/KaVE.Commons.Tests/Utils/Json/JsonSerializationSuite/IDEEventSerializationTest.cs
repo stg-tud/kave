@@ -23,7 +23,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    class IDEEventSerializationTest
+    internal class IDEEventSerializationTest
     {
         [Test]
         public void ShouldSerializeAllFieldsOfEvent()
@@ -34,7 +34,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
                 KaVEVersion = "1.2.3.4",
                 ActiveDocument = Names.Document("d Random"),
                 ActiveWindow = Names.Window("w Random"),
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredBy = EventTrigger.Click,
                 TriggeredAt = System.DateTime.Now,
                 Duration = TimeSpan.FromSeconds(5)
             };
@@ -53,7 +53,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
                 IDESessionUUID = "0xDEADBEEF",
                 KaVEVersion = "1.2.3.4",
                 TriggeredAt = new System.DateTime(2010, 01, 01, 12, 30, 44),
-                TriggeredBy = IDEEvent.Trigger.Click
+                TriggeredBy = EventTrigger.Click
             };
 
             const string expected =

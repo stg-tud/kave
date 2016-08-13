@@ -85,7 +85,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
                 TestDateUtils,
                 textControlManager,
                 _navigationUtils,
-                TestLifetime, 
+                TestLifetime,
                 TestThreading);
         }
 
@@ -109,7 +109,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             var actual = GetSinglePublished<NavigationEvent>();
             Assert.AreEqual(Names.UnknownGeneral, actual.Target);
             Assert.AreEqual(_method1, actual.Location);
-            Assert.AreEqual(IDEEvent.Trigger.Typing, actual.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Typing, actual.TriggeredBy);
             Assert.AreEqual(NavigationType.Keyboard, actual.TypeOfNavigation);
         }
 
@@ -121,7 +121,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
             var actual = GetSinglePublished<NavigationEvent>();
             Assert.AreEqual(Names.UnknownGeneral, actual.Target);
             Assert.AreEqual(_method1, actual.Location);
-            Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Click, actual.TriggeredBy);
             Assert.AreEqual(NavigationType.Click, actual.TypeOfNavigation);
         }
 
@@ -156,7 +156,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Navigation
 
             var actualEvent = GetSinglePublished<NavigationEvent>();
             Assert.AreEqual(NavigationType.CtrlClick, actualEvent.TypeOfNavigation);
-            Assert.AreEqual(IDEEvent.Trigger.Click, actualEvent.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Click, actualEvent.TriggeredBy);
             Assert.AreEqual(_testTarget, actualEvent.Target);
             Assert.AreEqual(_method1, actualEvent.Location);
         }

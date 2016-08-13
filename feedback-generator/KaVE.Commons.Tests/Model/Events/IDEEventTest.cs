@@ -38,7 +38,7 @@ namespace KaVE.Commons.Tests.Model.Events
             Assert.AreEqual(null, sut.KaVEVersion);
             Assert.AreEqual(null, sut.TerminatedAt);
             Assert.AreEqual(null, sut.TriggeredAt);
-            Assert.AreEqual(IDEEvent.Trigger.Unknown, sut.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Unknown, sut.TriggeredBy);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace KaVE.Commons.Tests.Model.Events
                 KaVEVersion = "3",
                 TriggeredAt = DateTime.Today.AddDays(-1),
                 TerminatedAt = DateTime.Today,
-                TriggeredBy = IDEEvent.Trigger.Click
+                TriggeredBy = EventTrigger.Click
             };
             Assert.AreEqual("1", sut.Id);
             Assert.AreEqual(Names.Document("d d"), sut.ActiveDocument);
@@ -64,7 +64,7 @@ namespace KaVE.Commons.Tests.Model.Events
             Assert.AreEqual("3", sut.KaVEVersion);
             Assert.AreEqual(DateTime.Today, sut.TerminatedAt);
             Assert.AreEqual(DateTime.Today.AddDays(-1), sut.TriggeredAt);
-            Assert.AreEqual(IDEEvent.Trigger.Click, sut.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Click, sut.TriggeredBy);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace KaVE.Commons.Tests.Model.Events
                 KaVEVersion = "3",
                 TriggeredAt = DateTime.Today.AddDays(-1),
                 TerminatedAt = DateTime.Today,
-                TriggeredBy = IDEEvent.Trigger.Click
+                TriggeredBy = EventTrigger.Click
             };
             var b = new TestIDEEvent
             {
@@ -101,7 +101,7 @@ namespace KaVE.Commons.Tests.Model.Events
                 KaVEVersion = "3",
                 TriggeredAt = DateTime.Today.AddDays(-1),
                 TerminatedAt = DateTime.Today,
-                TriggeredBy = IDEEvent.Trigger.Click
+                TriggeredBy = EventTrigger.Click
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());

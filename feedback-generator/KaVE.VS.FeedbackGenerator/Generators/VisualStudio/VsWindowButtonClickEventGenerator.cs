@@ -28,6 +28,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Reflection;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
+using EventTrigger = KaVE.Commons.Model.Events.EventTrigger;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using Window = EnvDTE.Window;
 
@@ -133,7 +134,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             try
             {
                 var commandEvent = Create<CommandEvent>();
-                commandEvent.TriggeredBy = IDEEvent.Trigger.Click;
+                commandEvent.TriggeredBy = EventTrigger.Click;
                 commandEvent.CommandId = button.GetId();
                 Fire(commandEvent);
             }

@@ -108,7 +108,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 IDESessionUUID = "0xDEADBEEF",
                 KaVEVersion = "1.0",
                 TriggeredAt = now,
-                TriggeredBy = IDEEvent.Trigger.Unknown,
+                TriggeredBy = EventTrigger.Unknown,
                 Duration = TimeSpan.FromSeconds(2),
                 ActiveWindow = Names.Window("vsWindowTypeDocument File.cs"),
                 ActiveDocument = Names.Document("CSharp \\Path\\To\\File.cs"),
@@ -160,7 +160,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                         SelectedAfter = now.AddMilliseconds(345).TimeOfDay
                     }
                 },
-                TerminatedBy = IDEEvent.Trigger.Typing,
+                TerminatedBy = EventTrigger.Typing,
                 TerminatedState = TerminationState.Applied
             };
         }

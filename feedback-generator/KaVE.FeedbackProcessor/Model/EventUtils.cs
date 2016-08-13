@@ -20,10 +20,10 @@ using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.Model
 {
-    static class EventUtils
+    internal static class EventUtils
     {
         /// <summary>
-        /// Assumes that TriggeredAt is set.
+        ///     Assumes that TriggeredAt is set.
         /// </summary>
         public static DateTime GetTriggeredAt(this IDEEvent ideEvent)
         {
@@ -34,7 +34,7 @@ namespace KaVE.FeedbackProcessor.Model
 
 
         /// <summary>
-        /// Assumes that TriggeredAt is set.
+        ///     Assumes that TriggeredAt is set.
         /// </summary>
         public static DateTime GetTriggerDate(this IDEEvent ideEvent)
         {

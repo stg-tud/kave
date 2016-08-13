@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
              * - None of the right-side events may occur without its left side and with an unknown trigger
              */
 
-            if (IsOnAnySide(commandEvent) && commandEvent.TriggeredBy == IDEEvent.Trigger.Unknown)
+            if (IsOnAnySide(commandEvent) && commandEvent.TriggeredBy == EventTrigger.Unknown)
             {
                 DropCurrentEvent();
             }

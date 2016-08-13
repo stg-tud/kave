@@ -44,7 +44,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
             Assert.AreEqual(new Context(), sut.Context2);
             Assert.AreEqual(new ProposalCollection(), sut.ProposalCollection);
             Assert.AreEqual(Lists.NewList<IProposalSelection>(), sut.Selections);
-            Assert.AreEqual(IDEEvent.Trigger.Unknown, sut.TerminatedBy);
+            Assert.AreEqual(EventTrigger.Unknown, sut.TerminatedBy);
             Assert.AreEqual(TerminationState.Unknown, sut.TerminatedState);
             Assert.AreEqual(0, sut.ProposalCount);
             Assert.AreNotEqual(0, sut.GetHashCode());
@@ -59,13 +59,13 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
                 Context2 = SomeContext,
                 ProposalCollection = {SomeProposal},
                 Selections = {new ProposalSelection()},
-                TerminatedBy = IDEEvent.Trigger.Click,
+                TerminatedBy = EventTrigger.Click,
                 TerminatedState = TerminationState.Filtered
             };
             Assert.AreEqual(SomeContext, sut.Context2);
             Assert.AreEqual(new ProposalCollection {SomeProposal}, sut.ProposalCollection);
             Assert.AreEqual(Lists.NewList(new ProposalSelection()), sut.Selections);
-            Assert.AreEqual(IDEEvent.Trigger.Click, sut.TerminatedBy);
+            Assert.AreEqual(EventTrigger.Click, sut.TerminatedBy);
             Assert.AreEqual(TerminationState.Filtered, sut.TerminatedState);
         }
 
@@ -99,7 +99,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
                 Context2 = SomeContext,
                 ProposalCollection = {new Proposal()},
                 Selections = {new ProposalSelection()},
-                TerminatedBy = IDEEvent.Trigger.Click,
+                TerminatedBy = EventTrigger.Click,
                 TerminatedState = TerminationState.Filtered
             };
             var b = new ComplEvent
@@ -107,7 +107,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
                 Context2 = SomeContext,
                 ProposalCollection = {new Proposal()},
                 Selections = {new ProposalSelection()},
-                TerminatedBy = IDEEvent.Trigger.Click,
+                TerminatedBy = EventTrigger.Click,
                 TerminatedState = TerminationState.Filtered
             };
             Assert.AreEqual(a, b);
@@ -144,7 +144,7 @@ namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
         [Test]
         public void Equality_DifferentTerminatedBy()
         {
-            var a = new ComplEvent {TerminatedBy = IDEEvent.Trigger.Click};
+            var a = new ComplEvent {TerminatedBy = EventTrigger.Click};
             var b = new ComplEvent();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

@@ -46,7 +46,7 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         }
 
         [DataMember]
-        public Trigger TerminatedBy { get; set; }
+        public EventTrigger TerminatedBy { get; set; }
 
         [DataMember]
         public TerminationState TerminatedState { get; set; }

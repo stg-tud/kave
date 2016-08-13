@@ -21,8 +21,7 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Model
 {
-    [TestFixture]
-    class EventUtilsTest
+    internal class EventUtilsTest
     {
         [Test]
         public void GetsTriggeredAtIfSet()

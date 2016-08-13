@@ -25,7 +25,7 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 {
-    class CommandBarEventGeneratorTest : VisualStudioEventGeneratorTestBase
+    internal class CommandBarEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
         private Mock<WindowEvents> _mockWindowEvents;
 
@@ -70,7 +70,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             TestIDESession.MockDTE.Setup(dte => dte.CommandBars).Returns(mockCommandBars);
         }
 
-        private static Mock<CommandBarPopup> MockCommandBarPopup(string popupCaption, params CommandBarControl[] controls)
+        private static Mock<CommandBarPopup> MockCommandBarPopup(string popupCaption,
+            params CommandBarControl[] controls)
         {
             var mockCommandBarPopup = new Mock<CommandBarPopup>();
             mockCommandBarPopup.Setup(popup => popup.Caption).Returns(popupCaption);
@@ -115,9 +116,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
+                KaVEVersion = TestRSEnv.DefaultVersion,
                 TriggeredAt = TestDateUtils.Now,
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredBy = EventTrigger.Click,
                 CommandId = "testButton"
             };
             Assert.AreEqual(expected, actual);
@@ -137,9 +138,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
+                KaVEVersion = TestRSEnv.DefaultVersion,
                 TriggeredAt = TestDateUtils.Now,
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredBy = EventTrigger.Click,
                 CommandId = "testComboBox"
             };
             Assert.AreEqual(expected, actual);
@@ -160,9 +161,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
+                KaVEVersion = TestRSEnv.DefaultVersion,
                 TriggeredAt = TestDateUtils.Now,
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredBy = EventTrigger.Click,
                 CommandId = "menuButton"
             };
             Assert.AreEqual(expected, actual);
@@ -184,9 +185,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
+                KaVEVersion = TestRSEnv.DefaultVersion,
                 TriggeredAt = TestDateUtils.Now,
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredBy = EventTrigger.Click,
                 CommandId = "nestedMenuButton"
             };
             Assert.AreEqual(expected, actual);

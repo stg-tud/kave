@@ -81,7 +81,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                         SelectedAfter = TimeSpan.FromSeconds(3)
                     }
                 },
-                TerminatedBy = IDEEvent.Trigger.Typing,
+                TerminatedBy = EventTrigger.Typing,
                 TerminatedState = TerminationState.Cancelled,
                 ProposalCount = 1
             };
@@ -123,7 +123,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
                 IDESessionUUID = "UUID",
                 TerminatedAt = DateTime.Now,
                 TriggeredAt = DateTime.Now,
-                TriggeredBy = IDEEvent.Trigger.Click
+                TriggeredBy = EventTrigger.Click
             };
             const string expected = "";
             var actual = actionEvent.GetDetailsAsJson();

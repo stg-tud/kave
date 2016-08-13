@@ -51,7 +51,7 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
             return new Commons.Model.Events.CompletionEvents.CompletionEvent
             {
                 TriggeredAt = now,
-                TriggeredBy = IDEEvent.Trigger.Shortcut,
+                TriggeredBy = EventTrigger.Shortcut,
                 TerminatedAt = now.AddTicks(duration*TimeSpan.TicksPerMillisecond)
             };
         }

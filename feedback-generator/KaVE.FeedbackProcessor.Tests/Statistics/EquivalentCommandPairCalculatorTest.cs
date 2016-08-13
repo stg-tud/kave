@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
 {
-    [TestFixture]
     internal class EquivalentCommandPairCalculatorTest
     {
         private EquivalentCommandPairCalculator _uut;
@@ -52,7 +51,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var commandEvent2 = new CommandEvent
             {
                 CommandId = "Copy",
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredBy = EventTrigger.Click,
                 TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
             };
 
@@ -75,7 +74,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var commandEvent1 = new CommandEvent
             {
                 CommandId = "Copy",
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredBy = EventTrigger.Click,
                 TriggeredAt = eventTime
             };
             var commandEvent2 = new CommandEvent
@@ -114,7 +113,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.Statistic.Add(SortedCommandPair.NewSortedPair("Left", "Textcontrol.Left"), frequencyThreshold - 1);
             _uut.OnStreamEnds();
 
-            StringAssert.DoesNotContain(string.Format("Left,Textcontrol.Left,{0}", frequencyThreshold - 1), _uut.StatisticAsCsv());
+            StringAssert.DoesNotContain(
+                string.Format("Left,Textcontrol.Left,{0}", frequencyThreshold - 1),
+                _uut.StatisticAsCsv());
         }
 
         [Test]
@@ -175,9 +176,16 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                           .ForEach(
                               mappingToReplace =>
                               {
-                                  _uut.OnEvent(new CommandEvent{CommandId = mappingToReplace.Item1, TriggeredAt = triggeredAt, TriggeredBy = IDEEvent.Trigger.Click});
+                                  _uut.OnEvent(
+                                      new CommandEvent
+                                      {
+                                          CommandId = mappingToReplace.Item1,
+                                          TriggeredAt = triggeredAt,
+                                          TriggeredBy = EventTrigger.Click
+                                      });
                                   triggeredAt += ConcurrentEventHeuristic.EventTimeDifference;
-                                  _uut.OnEvent(new CommandEvent{CommandId = mappingToReplace.Item2, TriggeredAt = triggeredAt});
+                                  _uut.OnEvent(
+                                      new CommandEvent {CommandId = mappingToReplace.Item2, TriggeredAt = triggeredAt});
                                   triggeredAt += ConcurrentEventHeuristic.EventTimeDifference.Times(2);
                               });
             _uut.OnStreamEnds();
@@ -207,14 +215,14 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             {
                 CommandId = commandEvent1.CommandId,
                 TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference +
-                                        TimeSpan.FromSeconds(1)
+                              TimeSpan.FromSeconds(1)
             };
             var commandEvent4 = new CommandEvent
             {
                 CommandId = commandEvent2.CommandId,
                 TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference +
-                                        TimeSpan.FromSeconds(1) +
-                                        ConcurrentEventHeuristic.EventTimeDifference
+                              TimeSpan.FromSeconds(1) +
+                              ConcurrentEventHeuristic.EventTimeDifference
             };
 
             _uut.OnStreamStarts(TestFactory.SomeDeveloper());

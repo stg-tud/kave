@@ -34,7 +34,7 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
     ///         </item>
     ///     </list>
     /// </summary>
-    public interface ICompletionEvent
+    public interface ICompletionEvent : IIDEEvent
     {
         /// <summary>
         ///     The context in which the completion takes place. These information
@@ -63,7 +63,7 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         /// <summary>
         ///     The kind of interaction that termined the completion, e.g., by a mouse click.
         /// </summary>
-        IDEEvent.Trigger TerminatedBy { get; }
+        EventTrigger TerminatedBy { get; }
 
         /// <summary>
         ///     The status with which the completion terminated, e.g., as cancelled.

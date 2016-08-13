@@ -47,7 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             OriginalEvent.Duration = TimeSpan.FromSeconds(23);
             OriginalEvent.ActiveDocument = Names.Document("CSharp \\P1\\Class1.cs");
             OriginalEvent.ActiveWindow = Names.Window("vsWindowTypeDocument Class1.cs");
-            OriginalEvent.TriggeredBy = IDEEvent.Trigger.Click;
+            OriginalEvent.TriggeredBy = EventTrigger.Click;
         }
 
         /// <summary>

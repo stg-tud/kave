@@ -28,7 +28,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
-    [TestFixture]
     internal class ToConcurrentEventMapperTest
     {
         private static readonly Random Random = new Random();

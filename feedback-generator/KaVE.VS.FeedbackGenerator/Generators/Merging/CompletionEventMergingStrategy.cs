@@ -48,7 +48,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.Merging
 
         private static bool IsMergable(CompletionEvent @event)
         {
-            var eventIsIntermediateFilterEvent = (@event.TriggeredBy == IDEEvent.Trigger.Automatic) &&
+            var eventIsIntermediateFilterEvent = (@event.TriggeredBy == EventTrigger.Automatic) &&
                                                  (@event.TerminatedState == TerminationState.Filtered);
             // If there is no selection, we know that there was no interaction. If there is one selection, it may be
             // the previous selection or an initial selection (if there was no selection before). We cannot distinguish

@@ -134,7 +134,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         {
             _event.TerminatedState = TerminationState.Filtered;
             _event.TerminatedAt = DateTime.Now;
-            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
+            _event.TerminatedBy = EventTrigger.Automatic;
             var lastSelection = _event.Selections.LastOrDefault();
             Fire(_event);
 
@@ -146,7 +146,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             {
                 _event.Selections.Add(lastSelection);
             }
-            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
+            _event.TriggeredBy = EventTrigger.Automatic;
         }
 
         public void HandleClosed()
@@ -154,14 +154,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _event.TerminatedAt = DateTime.Now;
         }
 
-        public void HandleApplied(IDEEvent.Trigger trigger, ILookupItem appliedItem)
+        public void HandleApplied(EventTrigger trigger, ILookupItem appliedItem)
         {
             _event.TerminatedState = TerminationState.Applied;
             _event.TerminatedBy = trigger;
             Fire(_event);
         }
 
-        public void HandleCancelled(IDEEvent.Trigger trigger)
+        public void HandleCancelled(EventTrigger trigger)
         {
             _event.TerminatedState = TerminationState.Cancelled;
             _event.TerminatedBy = trigger;

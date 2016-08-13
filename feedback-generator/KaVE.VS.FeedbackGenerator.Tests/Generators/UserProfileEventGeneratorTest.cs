@@ -18,7 +18,6 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Generators;
-using KaVE.VS.FeedbackGenerator.Settings;
 using Moq;
 using NUnit.Framework;
 
@@ -57,7 +56,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             _settingsStore = Mock.Of<ISettingsStore>();
             Mock.Get(_settingsStore).Setup(s => s.GetSettings<UserProfileSettings>()).Returns(_userSettings);
 
-            _sut = new UserProfileEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _settingsStore, TestThreading);
+            _sut = new UserProfileEventGenerator(
+                TestRSEnv,
+                TestMessageBus,
+                TestDateUtils,
+                _settingsStore,
+                TestThreading);
         }
 
         private void AssertEvent(UserProfileEvent expected)
@@ -67,7 +71,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             // remove information from base event...
             actual.KaVEVersion = null;
             actual.TriggeredAt = null;
-            actual.TriggeredBy = IDEEvent.Trigger.Unknown;
+            actual.TriggeredBy = EventTrigger.Unknown;
             actual.Duration = null;
             actual.ActiveWindow = null;
             actual.ActiveDocument = null;

@@ -249,7 +249,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
-            var detectedTrigger = default(IDEEvent.Trigger);
+            var detectedTrigger = default(EventTrigger);
             _manager.OnCancelled += trigger =>
             {
                 invocations++;
@@ -263,7 +263,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             Thread.Sleep(11000);
 
             Assert.AreEqual(1, invocations);
-            Assert.AreEqual(IDEEvent.Trigger.Unknown, detectedTrigger);
+            Assert.AreEqual(EventTrigger.Unknown, detectedTrigger);
         }
 
         [Test]
@@ -271,7 +271,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
-            var detectedTrigger = default(IDEEvent.Trigger);
+            var detectedTrigger = default(EventTrigger);
             ILookupItem actualAppliedItem = null;
             _manager.OnApplied += (trigger, item) =>
             {
@@ -286,7 +286,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             WhenItemCompletedIsRaised(lookupItems[0]);
 
             Assert.AreEqual(1, invocations);
-            Assert.AreEqual(IDEEvent.Trigger.Typing, detectedTrigger);
+            Assert.AreEqual(EventTrigger.Typing, detectedTrigger);
             Assert.AreEqual(lookupItems[0], actualAppliedItem);
         }
 
@@ -295,7 +295,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
-            var detectedTrigger = default(IDEEvent.Trigger);
+            var detectedTrigger = default(EventTrigger);
             ILookupItem actualAppliedItem = null;
             _manager.OnApplied += (trigger, item) =>
             {
@@ -311,7 +311,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             WhenItemCompletedIsRaised(lookupItems[0]);
 
             Assert.AreEqual(1, invocations);
-            Assert.AreEqual(IDEEvent.Trigger.Click, detectedTrigger);
+            Assert.AreEqual(EventTrigger.Click, detectedTrigger);
             Assert.AreEqual(lookupItems[0], actualAppliedItem);
         }
 
@@ -320,7 +320,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
-            var detectedTrigger = default(IDEEvent.Trigger);
+            var detectedTrigger = default(EventTrigger);
             ILookupItem actualAppliedItem = null;
             _manager.OnApplied += (trigger, item) =>
             {
@@ -337,7 +337,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             WhenItemCompletedIsRaised(lookupItems[1]);
 
             Assert.AreEqual(1, invocations);
-            Assert.AreEqual(IDEEvent.Trigger.Click, detectedTrigger);
+            Assert.AreEqual(EventTrigger.Click, detectedTrigger);
             Assert.AreEqual(lookupItems[1], actualAppliedItem);
         }
 
@@ -346,7 +346,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
-            var detectedTrigger = default(IDEEvent.Trigger);
+            var detectedTrigger = default(EventTrigger);
             ILookupItem actualAppliedItem = null;
             _manager.OnApplied += (trigger, item) =>
             {
@@ -362,7 +362,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             WhenItemCompletedIsRaised(lookupItems[0]);
 
             Assert.AreEqual(1, invocations);
-            Assert.AreEqual(IDEEvent.Trigger.Shortcut, detectedTrigger);
+            Assert.AreEqual(EventTrigger.Shortcut, detectedTrigger);
             Assert.AreEqual(lookupItems[0], actualAppliedItem);
         }
 
@@ -371,7 +371,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
-            var detectedTrigger = default(IDEEvent.Trigger);
+            var detectedTrigger = default(EventTrigger);
             ILookupItem actualAppliedItem = null;
             _manager.OnApplied += (trigger, item) =>
             {
@@ -387,7 +387,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             WhenItemCompletedIsRaised(lookupItems[0]);
 
             Assert.AreEqual(1, invocations);
-            Assert.AreEqual(IDEEvent.Trigger.Shortcut, detectedTrigger);
+            Assert.AreEqual(EventTrigger.Shortcut, detectedTrigger);
             Assert.AreEqual(lookupItems[0], actualAppliedItem);
         }
 

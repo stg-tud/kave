@@ -77,7 +77,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         private void FireCommandBarEvent(CommandBarControl control)
         {
             var commandEvent = Create<CommandEvent>();
-            commandEvent.TriggeredBy = IDEEvent.Trigger.Click;
+            commandEvent.TriggeredBy = EventTrigger.Click;
             commandEvent.CommandId = control.GetFullQualifiedId();
             Fire(commandEvent);
         }

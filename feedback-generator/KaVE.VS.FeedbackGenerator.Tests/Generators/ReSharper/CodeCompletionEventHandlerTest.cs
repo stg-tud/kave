@@ -44,7 +44,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleTriggered("", lookupItems);
             _generator.HandleSelectionChanged(lookupItems[0]);
             _generator.HandleClosed();
-            _generator.HandleApplied(IDEEvent.Trigger.Click, lookupItems[0]);
+            _generator.HandleApplied(EventTrigger.Click, lookupItems[0]);
 
             var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(TerminationState.Applied, ce.TerminatedState);
@@ -60,7 +60,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleSelectionChanged(lookupItems[2]);
             _generator.HandleSelectionChanged(lookupItems[1]);
             _generator.HandleClosed();
-            _generator.HandleApplied(IDEEvent.Trigger.Typing, lookupItems[1]);
+            _generator.HandleApplied(EventTrigger.Typing, lookupItems[1]);
 
             var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(3, ce.Selections.Count);
@@ -76,7 +76,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 
             _generator.HandleTriggered("", lookupItems);
             _generator.HandleClosed();
-            _generator.HandleCancelled(IDEEvent.Trigger.Shortcut);
+            _generator.HandleCancelled(EventTrigger.Shortcut);
 
             var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(TerminationState.Cancelled, ce.TerminatedState);
@@ -92,7 +92,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 
             var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(TerminationState.Filtered, ce.TerminatedState);
-            Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TerminatedBy);
+            Assert.AreEqual(EventTrigger.Automatic, ce.TerminatedBy);
         }
 
         [Test]
@@ -103,10 +103,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleTriggered("", lookupItems);
             _generator.HandlePrefixChanged("a", lookupItems);
             _generator.HandleClosed();
-            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+            _generator.HandleCancelled(EventTrigger.Click);
 
             var ce = GetLastPublished<CompletionEvent>();
-            Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Automatic, ce.TriggeredBy);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleSelectionChanged(lookupItems[0]);
             _generator.HandlePrefixChanged("a", lookupItems);
             _generator.HandleClosed();
-            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+            _generator.HandleCancelled(EventTrigger.Click);
 
             var ce = GetLastPublished<CompletionEvent>();
             Assert.AreEqual(1, ce.Selections.Count);
@@ -134,7 +134,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleSelectionChanged(lookupItems[0]);
             _generator.HandlePrefixChanged("a", new List<ILookupItem>());
             _generator.HandleClosed();
-            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+            _generator.HandleCancelled(EventTrigger.Click);
 
             var ce = GetLastPublished<CompletionEvent>();
             Assert.IsTrue(ce.Selections.IsEmpty());
@@ -148,7 +148,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleTriggered("", lookupItems);
             _generator.HandlePrefixChanged("a", lookupItems);
             _generator.HandleClosed();
-            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+            _generator.HandleCancelled(EventTrigger.Click);
 
             var ce = GetLastPublished<CompletionEvent>();
             Assert.IsTrue(ce.Selections.IsEmpty());
@@ -163,7 +163,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleTriggered("", LookupItemsMockUtils.MockLookupItemList(1));
             _generator.HandleDisplayedItemsChanged(lookupItems);
             _generator.HandleClosed();
-            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+            _generator.HandleCancelled(EventTrigger.Click);
 
             var ce = GetLastPublished<CompletionEvent>();
             Assert.AreEqual(expected, ce.ProposalCollection);
@@ -177,7 +177,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 
             _generator.HandleTriggered("", lookupItems);
             _generator.HandleClosed();
-            _generator.HandleApplied(IDEEvent.Trigger.Typing, lookupItems[1]);
+            _generator.HandleApplied(EventTrigger.Typing, lookupItems[1]);
 
             var completionEvent = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(testProposalCount, completionEvent.ProposalCount);
@@ -192,7 +192,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleTriggered("", lookupItems);
             _generator.HandleSelectionChanged(lookupItems[testIndex]);
             _generator.HandleClosed();
-            _generator.HandleApplied(IDEEvent.Trigger.Typing, lookupItems[1]);
+            _generator.HandleApplied(EventTrigger.Typing, lookupItems[1]);
 
             var actualEvent = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(testIndex, actualEvent.Selections[0].Index);

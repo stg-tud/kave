@@ -124,7 +124,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             WhenCommandExecutes(command);
 
             var actual = GetSinglePublished<CommandEvent>();
-            Assert.AreEqual(IDEEvent.Trigger.Unknown, actual.TriggeredBy);
+            Assert.AreEqual(EventTrigger.Unknown, actual.TriggeredBy);
         }
 
         [TestCase("{5EFC7975-14BC-11CF-9B2B-00AA00573819}", 1096, "View.ObjectBrowsingScope"),

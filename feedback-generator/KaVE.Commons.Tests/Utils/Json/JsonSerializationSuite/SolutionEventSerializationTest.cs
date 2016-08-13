@@ -36,7 +36,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
                 IDESessionUUID = "0xDEADBEEF",
                 Target = Names.Solution("SomeSolution"),
                 TriggeredAt = new System.DateTime(2010, 01, 01, 12, 30, 44),
-                TriggeredBy = IDEEvent.Trigger.Click
+                TriggeredBy = EventTrigger.Click
             };
             const string expected =
                 "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.SolutionEvent, KaVE.Commons\",\"Action\":1,\"Target\":\"0Sln:SomeSolution\",\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"0Win:w SomeWindow\",\"ActiveDocument\":\"0Doc:d SomeDocument\"}";

@@ -22,7 +22,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Import
 {
-    [TestFixture]
     internal class FeedbackImporterWithoutTriggerTimesTest : FeedbackImporterTestBase
     {
         [Test]
@@ -52,13 +51,18 @@ namespace KaVE.FeedbackProcessor.Tests.Import
         public void PreservessOrderFromArchiveWithArtificialTriggerTimes()
         {
             GivenInputArchive("1.zip")
-                .With("0.json", new TestIDEEvent { TriggeredAt = null, TestProperty = "23"})
-                .With("1.json", new TestIDEEvent { TriggeredAt = null, TestProperty = "1" })
-                .With("2.json", new TestIDEEvent { TriggeredAt = null, TestProperty = "42" });
+                .With("0.json", new TestIDEEvent {TriggeredAt = null, TestProperty = "23"})
+                .With("1.json", new TestIDEEvent {TriggeredAt = null, TestProperty = "1"})
+                .With("2.json", new TestIDEEvent {TriggeredAt = null, TestProperty = "42"});
 
             WhenImportIsRun();
 
-            var ideEvents = TestFeedbackDatabase.GetEventsCollection().FindAll().Cast<TestIDEEvent>().OrderBy(evt => evt.TriggeredAt).ToList();
+            var ideEvents =
+                TestFeedbackDatabase.GetEventsCollection()
+                                    .FindAll()
+                                    .Cast<TestIDEEvent>()
+                                    .OrderBy(evt => evt.TriggeredAt)
+                                    .ToList();
             Assert.AreEqual(3, ideEvents.Count);
             Assert.Less(ideEvents[0].TriggeredAt, ideEvents[1].TriggeredAt);
             Assert.Less(ideEvents[1].TriggeredAt, ideEvents[2].TriggeredAt);
