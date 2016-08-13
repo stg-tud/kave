@@ -83,7 +83,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         {
             Assert.True(new MethodName().IsUnknown);
             Assert.True(new MethodName("[?] [?].???()").IsUnknown);
-            Assert.False(new MethodName("[T1,P] [T2,P].f").IsUnknown);
+            Assert.False(new MethodName("[T1,P] [T2,P].M()").IsUnknown);
         }
 
         [Test, ExpectedException(typeof(ValidationException))]

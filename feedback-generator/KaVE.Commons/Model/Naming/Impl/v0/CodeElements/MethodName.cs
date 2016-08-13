@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
@@ -48,13 +47,31 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get { return Equals(Identifier, UnknownMethodIdentifier); }
         }
 
-
-        private static readonly Regex SignatureSyntax =
-            new Regex("\\]\\.((([^([]+)(?:`[0-9]+\\[[^(]+\\]){0,1})\\(.*\\))$");
+        private string _name;
 
         public override string Name
         {
-            get { return SignatureSyntax.Match(Identifier).Groups[3].Value; }
+            get
+            {
+                if (_name == null)
+                {
+                    if (IsUnknown)
+                    {
+                        _name = UnknownNameIdentifier;
+                    }
+                    else
+                    {
+                        var openR = Identifier.IndexOf('[');
+                        var closeR = Identifier.FindCorrespondingCloseBracket(openR);
+                        var openD = Identifier.FindNext(closeR, '[');
+                        var closeD = Identifier.FindCorrespondingCloseBracket(openD);
+                        var startName = Identifier.FindNext(closeD, '.') + 1;
+                        var endName = Identifier.FindNext(startName, '`', '(');
+                        _name = Identifier.Substring(startName, endName - startName);
+                    }
+                }
+                return _name;
+            }
         }
 
         private IKaVEList<ITypeParameterName> _typeParameters;
