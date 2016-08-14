@@ -27,7 +27,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
-    [TestFixture]
     internal class IDECloseEventFixingProcessorTest
     {
         private IDECloseEventFixingProcessor _uut;
@@ -116,7 +115,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             return new IDEStateEvent
             {
-                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Startup,
+                IDELifecyclePhase = IDELifecyclePhase.Startup,
                 TriggeredAt = new DateTime(2015, 4, 7, 13, 20, 51)
             };
         }
@@ -125,7 +124,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var shutdownEvent = new IDEStateEvent
             {
-                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown
+                IDELifecyclePhase = IDELifecyclePhase.Shutdown
             };
             SetTriggeredAtToAfter(shutdownEvent, previousEvent, milliseconds);
             return shutdownEvent;

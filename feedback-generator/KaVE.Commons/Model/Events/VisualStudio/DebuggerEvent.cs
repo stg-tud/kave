@@ -22,15 +22,6 @@ namespace KaVE.Commons.Model.Events.VisualStudio
     [DataContract]
     public class DebuggerEvent : IDEEvent
     {
-        public enum DebuggerMode
-        {
-            Design,
-            Run,
-            Break,
-            ExceptionThrown,
-            ExceptionNotHandled
-        }
-
         [DataMember]
         public DebuggerMode Mode { get; set; }
 
@@ -62,5 +53,14 @@ namespace KaVE.Commons.Model.Events.VisualStudio
                 return hashCode;
             }
         }
+    }
+
+    public enum DebuggerMode
+    {
+        Design,
+        Run,
+        Break,
+        ExceptionThrown,
+        ExceptionNotHandled
     }
 }

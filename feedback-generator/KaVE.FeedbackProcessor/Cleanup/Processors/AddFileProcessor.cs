@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
                 var solutionEvent = new SolutionEvent
                 {
-                    Action = SolutionEvent.SolutionAction.AddProjectItem,
+                    Action = SolutionAction.AddProjectItem,
                     Target = documentEvent.Document
                 };
                 solutionEvent.CopyIDEEventPropertiesFrom(documentEvent);

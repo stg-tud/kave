@@ -48,7 +48,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
         {
             WaitForTimer();
             var publishedEvent = GetSinglePublished<WindowEvent>();
-            Assert.AreEqual(WindowEvent.WindowAction.Activate, publishedEvent.Action);
+            Assert.AreEqual(WindowAction.Activate, publishedEvent.Action);
             Assert.AreEqual(Names.Window(VsFocusEventGenerator.MainWindowName), publishedEvent.Window);
         }
 
@@ -68,7 +68,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             WaitForTimer();
             AssertNumEvent(2);
             var publishedEvent = GetLastPublished<WindowEvent>();
-            Assert.AreEqual(WindowEvent.WindowAction.Deactivate, publishedEvent.Action);
+            Assert.AreEqual(WindowAction.Deactivate, publishedEvent.Action);
             Assert.AreEqual(Names.Window(VsFocusEventGenerator.MainWindowName), publishedEvent.Window);
         }
 

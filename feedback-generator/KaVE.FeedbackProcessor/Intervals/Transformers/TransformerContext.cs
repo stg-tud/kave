@@ -60,7 +60,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         public void ProcessEvent(IDEEvent @event)
         {
             var se = @event as SolutionEvent;
-            if (se != null && se.Action == SolutionEvent.SolutionAction.OpenSolution)
+            if (se != null && se.Action == SolutionAction.OpenSolution)
             {
                 CurrentProject = se.Target.Identifier;
             }

@@ -43,23 +43,23 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         {
             _env = env;
             _logger = logger;
-            FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);
+            FireIDEStateEvent(IDELifecyclePhase.Startup);
             lifetime.AddAction(FireShutdownEvent);
         }
 
         private void FireShutdownEvent()
         {
-            var shutdownEvent = CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown);
+            var shutdownEvent = CreateIDEStateEvent(IDELifecyclePhase.Shutdown);
             shutdownEvent.IDESessionUUID = _env.IDESession.UUID;
             _logger.Shutdown(shutdownEvent);
         }
 
-        private void FireIDEStateEvent(IDEStateEvent.LifecyclePhase phase)
+        private void FireIDEStateEvent(IDELifecyclePhase phase)
         {
             FireNow(CreateIDEStateEvent(phase));
         }
 
-        private IDEStateEvent CreateIDEStateEvent(IDEStateEvent.LifecyclePhase phase)
+        private IDEStateEvent CreateIDEStateEvent(IDELifecyclePhase phase)
         {
             var ideStateEvent = Create<IDEStateEvent>();
             ideStateEvent.IDELifecyclePhase = phase;

@@ -26,7 +26,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         {
             return new IDEStateEvent
             {
-                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown,
+                IDELifecyclePhase = IDELifecyclePhase.Shutdown,
                 OpenDocuments =
                     new[]
                     {

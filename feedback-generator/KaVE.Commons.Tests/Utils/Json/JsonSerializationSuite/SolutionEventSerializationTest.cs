@@ -31,7 +31,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             {
                 ActiveDocument = Names.Document("d SomeDocument"),
                 ActiveWindow = Names.Window("w SomeWindow"),
-                Action = SolutionEvent.SolutionAction.RenameSolution,
+                Action = SolutionAction.RenameSolution,
                 Duration = new TimeSpan(0, 0, 1),
                 IDESessionUUID = "0xDEADBEEF",
                 Target = Names.Solution("SomeSolution"),

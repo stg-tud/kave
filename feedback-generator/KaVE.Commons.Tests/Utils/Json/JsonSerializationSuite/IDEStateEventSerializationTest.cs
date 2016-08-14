@@ -27,7 +27,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         {
             var e = new IDEStateEvent
             {
-                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Runtime,
+                IDELifecyclePhase = IDELifecyclePhase.Runtime,
                 OpenDocuments = new[] {Names.Document("d SomeOpenDocument")},
                 OpenWindows = new[] {Names.Window("w SomeOpenWindow")}
             };

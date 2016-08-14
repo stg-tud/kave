@@ -23,22 +23,6 @@ namespace KaVE.Commons.Model.Events.VisualStudio
     [DataContract]
     public class SolutionEvent : IDEEvent
     {
-        public enum SolutionAction
-        {
-            OpenSolution,
-            RenameSolution,
-            CloseSolution,
-            AddSolutionItem,
-            RenameSolutionItem,
-            RemoveSolutionItem,
-            AddProject,
-            RenameProject,
-            RemoveProject,
-            AddProjectItem,
-            RenameProjectItem,
-            RemoveProjectItem
-        }
-
         [DataMember]
         public SolutionAction Action { get; set; }
 
@@ -65,5 +49,21 @@ namespace KaVE.Commons.Model.Events.VisualStudio
                 return hashCode;
             }
         }
+    }
+
+    public enum SolutionAction
+    {
+        OpenSolution,
+        RenameSolution,
+        CloseSolution,
+        AddSolutionItem,
+        RenameSolutionItem,
+        RemoveSolutionItem,
+        AddProject,
+        RenameProject,
+        RemoveProject,
+        AddProjectItem,
+        RenameProjectItem,
+        RemoveProjectItem
     }
 }

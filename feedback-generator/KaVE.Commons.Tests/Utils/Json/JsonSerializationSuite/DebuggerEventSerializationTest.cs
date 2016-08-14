@@ -19,7 +19,6 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    [TestFixture]
     internal class DebuggerEventSerializationTest
     {
         [Test]
@@ -28,7 +27,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             var e = new DebuggerEvent
             {
                 Action = "SomeAction",
-                Mode = DebuggerEvent.DebuggerMode.Design,
+                Mode = DebuggerMode.Design,
                 Reason = "SomeReason"
             };
             const string expected =

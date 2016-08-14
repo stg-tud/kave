@@ -78,7 +78,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var expectedSolutionEvent = new SolutionEvent
             {
                 Target = documentEvent.Document,
-                Action = SolutionEvent.SolutionAction.AddProjectItem
+                Action = SolutionAction.AddProjectItem
             };
             CollectionAssert.AreEquivalent(new IDEEvent[] {documentEvent, expectedSolutionEvent}, actuals);
         }

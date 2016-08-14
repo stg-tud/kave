@@ -205,22 +205,22 @@ namespace KaVE.FeedbackProcessor.Activities
 
         private static bool IsOpen(WindowEvent @event)
         {
-            return @event.Action == WindowEvent.WindowAction.Create;
+            return @event.Action == WindowAction.Create;
         }
 
         private static bool IsMove(WindowEvent @event)
         {
-            return @event.Action == WindowEvent.WindowAction.Move;
+            return @event.Action == WindowAction.Move;
         }
 
         private static bool IsClose(WindowEvent @event)
         {
-            return @event.Action == WindowEvent.WindowAction.Close;
+            return @event.Action == WindowAction.Close;
         }
 
-        private static Activity GetMainWindowActivity(WindowEvent.WindowAction action)
+        private static Activity GetMainWindowActivity(WindowAction action)
         {
-            return action == WindowEvent.WindowAction.Activate ? Activity.EnterIDE : Activity.LeaveIDE;
+            return action == WindowAction.Activate ? Activity.EnterIDE : Activity.LeaveIDE;
         }
 
         private static Activity[] GetToolWindowActivities(string toolWindowCaption)

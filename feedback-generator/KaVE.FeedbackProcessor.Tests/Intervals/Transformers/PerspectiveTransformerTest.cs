@@ -38,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             {
                 TriggeredAt = TestTime(startOffsetInMinutes),
                 TerminatedAt = TestTime(endOffsetInMinutes),
-                Mode = isStartOfSession ? DebuggerEvent.DebuggerMode.Run : DebuggerEvent.DebuggerMode.Design
+                Mode = isStartOfSession ? DebuggerMode.Run : DebuggerMode.Design
             };
         }
 

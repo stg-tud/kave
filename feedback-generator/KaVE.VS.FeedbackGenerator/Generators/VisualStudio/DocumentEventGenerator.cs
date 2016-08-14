@@ -44,20 +44,20 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         private void HandleDocumentOpened(Document document)
         {
-            Fire(document, DocumentEvent.DocumentAction.Opened);
+            Fire(document, DocumentAction.Opened);
         }
 
         private void HandleDocumentSaved(Document document)
         {
-            Fire(document, DocumentEvent.DocumentAction.Saved);
+            Fire(document, DocumentAction.Saved);
         }
 
         private void HandleDocumentClosing(Document document)
         {
-            Fire(document, DocumentEvent.DocumentAction.Closing);
+            Fire(document, DocumentAction.Closing);
         }
 
-        private void Fire(Document document, DocumentEvent.DocumentAction action)
+        private void Fire(Document document, DocumentAction action)
         {
             var documentEvent = Create<DocumentEvent>();
             documentEvent.Document = document.GetName();

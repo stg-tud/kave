@@ -62,11 +62,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             var isActive = _focusHelper.IsCurrentApplicationActive();
             if (isActive != _wasActive)
             {
-                var windowAction = isActive ? WindowEvent.WindowAction.Activate : WindowEvent.WindowAction.Deactivate;
+                var windowAction = isActive ? WindowAction.Activate : WindowAction.Deactivate;
 
                 var windowEvent = Create<WindowEvent>();
                 windowEvent.Action = windowAction;
-                        windowEvent.Window = Names.Window(MainWindowName);
+                windowEvent.Window = Names.Window(MainWindowName);
                 FireNow(windowEvent);
             }
             _wasActive = isActive;

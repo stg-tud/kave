@@ -33,7 +33,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
             var actionEvent = new WindowEvent
             {
                 Window = Names.Window("w MyWindow"),
-                Action = WindowEvent.WindowAction.Create
+                Action = WindowAction.Create
             };
             var expected = string.Join(
                 Environment.NewLine,

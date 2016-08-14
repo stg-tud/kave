@@ -75,13 +75,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         private void OnWindowCreated(Window window)
         {
             RememberWindow(window);
-            Fire(window, WindowEvent.WindowAction.Create);
+            Fire(window, WindowAction.Create);
         }
 
         private void OnWindowActivated(Window window, Window lostFocus)
         {
             RememberWindow(window);
-            Fire(window, WindowEvent.WindowAction.Activate);
+            Fire(window, WindowAction.Activate);
             // We don't fire lostFocus events, since we track the active window in every event and know that the
             // previously active window looses the focus whenever some other window gains it.
         }
@@ -143,7 +143,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             {
                 if (!_delayedMoveEvents.ContainsKey(window))
                 {
-                    _delayedMoveEvents[window] = CreateWindowEvent(window, WindowEvent.WindowAction.Move);
+                    _delayedMoveEvents[window] = CreateWindowEvent(window, WindowAction.Move);
                 }
                 _delayedMoveEvents[window].TerminatedAt = _dateUtils.Now;
                 _delayedMoveEventFireActions[window] = _callbackManager.RegisterCallback(
@@ -163,16 +163,16 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         private void OnWindowClosed(Window window)
         {
-            Fire(window, WindowEvent.WindowAction.Close);
+            Fire(window, WindowAction.Close);
         }
 
-        private void Fire(Window window, WindowEvent.WindowAction action)
+        private void Fire(Window window, WindowAction action)
         {
             var windowEvent = CreateWindowEvent(window, action);
             FireNow(windowEvent);
         }
 
-        private WindowEvent CreateWindowEvent(Window window, WindowEvent.WindowAction action)
+        private WindowEvent CreateWindowEvent(Window window, WindowAction action)
         {
             var windowEvent = Create<WindowEvent>();
             windowEvent.Window = window.GetName();

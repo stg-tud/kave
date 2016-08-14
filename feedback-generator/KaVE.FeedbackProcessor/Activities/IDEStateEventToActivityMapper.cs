@@ -41,12 +41,12 @@ namespace KaVE.FeedbackProcessor.Activities
 
         private static bool IsIntermediateRuntimeEvent(IDEStateEvent @event)
         {
-            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Runtime;
+            return @event.IDELifecyclePhase == IDELifecyclePhase.Runtime;
         }
 
         private static bool IsStartup(IDEStateEvent @event)
         {
-            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Startup;
+            return @event.IDELifecyclePhase == IDELifecyclePhase.Startup;
         }
     }
 }

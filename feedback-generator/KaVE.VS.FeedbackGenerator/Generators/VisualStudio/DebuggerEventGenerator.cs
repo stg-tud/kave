@@ -49,7 +49,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             ref dbgExceptionAction exceptionAction)
         {
             FireLastEvent();
-            StartEvent(DebuggerEvent.DebuggerMode.ExceptionThrown, name, exceptionAction.ToString());
+            StartEvent(DebuggerMode.ExceptionThrown, name, exceptionAction.ToString());
         }
 
         private void _debuggerEvents_OnExceptionNotHandled(string exceptionType,
@@ -59,27 +59,27 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             ref dbgExceptionAction exceptionAction)
         {
             FireLastEvent();
-            StartEvent(DebuggerEvent.DebuggerMode.ExceptionNotHandled, name, exceptionAction.ToString());
+            StartEvent(DebuggerMode.ExceptionNotHandled, name, exceptionAction.ToString());
         }
 
         private void _debuggerEvents_OnEnterRunMode(dbgEventReason reason)
         {
             FireLastEvent();
-            StartEvent(DebuggerEvent.DebuggerMode.Run, reason.ToString());
+            StartEvent(DebuggerMode.Run, reason.ToString());
             CheckIfDebuggingStopped(reason);
         }
 
         private void _debuggerEvents_OnEnterDesignMode(dbgEventReason reason)
         {
             FireLastEvent();
-            StartEvent(DebuggerEvent.DebuggerMode.Design, reason.ToString());
+            StartEvent(DebuggerMode.Design, reason.ToString());
             CheckIfDebuggingStopped(reason);
         }
 
         private void _debuggerEvents_OnEnterBreakMode(dbgEventReason reason, ref dbgExecutionAction executionAction)
         {
             FireLastEvent();
-            StartEvent(DebuggerEvent.DebuggerMode.Break, reason.ToString(), executionAction.ToString());
+            StartEvent(DebuggerMode.Break, reason.ToString(), executionAction.ToString());
             CheckIfDebuggingStopped(reason);
         }
 
@@ -92,7 +92,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             }
         }
 
-        private void StartEvent(DebuggerEvent.DebuggerMode mode, string reason, string action = null)
+        private void StartEvent(DebuggerMode mode, string reason, string action = null)
         {
             _lastEvent = Create<DebuggerEvent>();
             _lastEvent.Mode = mode;

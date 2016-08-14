@@ -46,10 +46,10 @@ namespace KaVE.FeedbackProcessor.Statistics
         {
             switch (@event.IDELifecyclePhase)
             {
-                case IDEStateEvent.LifecyclePhase.Startup:
+                case IDELifecyclePhase.Startup:
                     Log("  START at {0} - {1}", @event.GetTriggeredAt(), @event.IDESessionUUID);
                     break;
-                case IDEStateEvent.LifecyclePhase.Shutdown:
+                case IDELifecyclePhase.Shutdown:
                     Log("  STOP  at {0} - {1}", @event.GetTriggeredAt(), @event.IDESessionUUID);
                     break;
             }
@@ -61,14 +61,14 @@ namespace KaVE.FeedbackProcessor.Statistics
             {
                 switch (@event.Action)
                 {
-                    case WindowEvent.WindowAction.Activate:
+                    case WindowAction.Activate:
                         Log(
                             "  ACT   at {0} - {1} - {2}",
                             @event.GetTriggeredAt(),
                             @event.IDESessionUUID,
                             @event.Window.Caption);
                         break;
-                    case WindowEvent.WindowAction.Deactivate:
+                    case WindowAction.Deactivate:
                         Log(
                             "  DEACT at {0} - {1} - {2}",
                             @event.GetTriggeredAt(),

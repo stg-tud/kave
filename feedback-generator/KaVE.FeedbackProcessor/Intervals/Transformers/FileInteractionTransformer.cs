@@ -28,7 +28,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         private readonly IList<FileInteractionInterval> _intervals;
         private FileInteractionInterval _currentInterval;
         private DateTime _referenceTime;
-        private TransformerContext _context;
+        private readonly TransformerContext _context;
 
         public FileInteractionTransformer(TransformerContext context)
         {
@@ -50,7 +50,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             {
                 var activeDocumentChanged = _currentInterval.FileName != @event.ActiveDocument.FileName;
                 var classificationChanged = classification != null && _currentInterval.Type != classification;
-               
+
                 if (activeDocumentChanged || classificationChanged)
                 {
                     _currentInterval = null;
@@ -103,11 +103,11 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             var de = ideEvent as DebuggerEvent;
             if (de != null)
             {
-                if (de.Mode == DebuggerEvent.DebuggerMode.Run)
+                if (de.Mode == DebuggerMode.Run)
                 {
                     _currentlyDebugging = true;
                 }
-                if (de.Mode == DebuggerEvent.DebuggerMode.Design)
+                if (de.Mode == DebuggerMode.Design)
                 {
                     _currentlyDebugging = false;
                 }
@@ -127,13 +127,13 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         private bool IsReadingDocumentEvent(IDEEvent ideEvent)
         {
             var de = ideEvent as DocumentEvent;
-            return de != null && de.Action != DocumentEvent.DocumentAction.Saved;
+            return de != null && de.Action != DocumentAction.Saved;
         }
 
         private bool IsTypingDocumentEvent(IDEEvent ideEvent)
         {
             var de = ideEvent as DocumentEvent;
-            return de != null && de.Action == DocumentEvent.DocumentAction.Saved;
+            return de != null && de.Action == DocumentAction.Saved;
         }
 
         public IEnumerable<FileInteractionInterval> SignalEndOfEventStream()

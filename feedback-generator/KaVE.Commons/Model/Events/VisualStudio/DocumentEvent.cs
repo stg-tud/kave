@@ -23,13 +23,6 @@ namespace KaVE.Commons.Model.Events.VisualStudio
     [DataContract]
     public class DocumentEvent : IDEEvent
     {
-        public enum DocumentAction
-        {
-            Opened,
-            Saved,
-            Closing
-        }
-
         [DataMember]
         public IDocumentName Document { get; set; }
 
@@ -56,5 +49,12 @@ namespace KaVE.Commons.Model.Events.VisualStudio
                 return hashCode;
             }
         }
+    }
+
+    public enum DocumentAction
+    {
+        Opened,
+        Saved,
+        Closing
     }
 }

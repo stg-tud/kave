@@ -22,7 +22,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Import
 {
-    [TestFixture]
     internal class FeedbackImporterIDEStateEventNoSessionIdBugTest : FeedbackImporterTestBase
     {
         private readonly TestIDEEvent _completeEvent = new TestIDEEvent
@@ -35,7 +34,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
         {
             IDESessionUUID = null,
             TriggeredAt = DateTime.Now /* just any time */,
-            IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown
+            IDELifecyclePhase = IDELifecyclePhase.Shutdown
         };
 
         [Test]

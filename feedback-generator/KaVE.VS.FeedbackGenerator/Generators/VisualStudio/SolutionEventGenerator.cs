@@ -75,69 +75,69 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
         {
             if (IsNotManaged(projectItem))
             {
-                Fire(SolutionEvent.SolutionAction.AddSolutionItem, projectItem.GetName());
+                Fire(SolutionAction.AddSolutionItem, projectItem.GetName());
             }
         }
 
         private void _solutionItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameSolutionItem, projectItem.GetName());
+            Fire(SolutionAction.RenameSolutionItem, projectItem.GetName());
         }
 
         private void _solutionItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.RemoveSolutionItem, projectItem.GetName());
+            Fire(SolutionAction.RemoveSolutionItem, projectItem.GetName());
         }
 
         private void _solutionEvents_Opened()
         {
-            Fire(SolutionEvent.SolutionAction.OpenSolution, DTE.Solution.GetName());
+            Fire(SolutionAction.OpenSolution, DTE.Solution.GetName());
         }
 
         private void _solutionEvents_ProjectAdded(Project project)
         {
             if (IsNotManaged(project))
             {
-                Fire(SolutionEvent.SolutionAction.AddProject, project.GetName());
+                Fire(SolutionAction.AddProject, project.GetName());
             }
         }
 
         private void _projectItemsEvents_ItemAdded(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.AddProjectItem, projectItem.GetName());
+            Fire(SolutionAction.AddProjectItem, projectItem.GetName());
         }
 
         private void _projectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameProjectItem, projectItem.GetName());
+            Fire(SolutionAction.RenameProjectItem, projectItem.GetName());
         }
 
         private void _projectItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.RemoveProjectItem, projectItem.GetName());
+            Fire(SolutionAction.RemoveProjectItem, projectItem.GetName());
         }
 
         private void _solutionEvents_ProjectRenamed(Project project, string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameProject, project.GetName());
+            Fire(SolutionAction.RenameProject, project.GetName());
         }
 
         private void _solutionEvents_ProjectRemoved(Project project)
         {
             if (IsNotManaged(project))
             {
-                Fire(SolutionEvent.SolutionAction.RemoveProject, project.GetName());
+                Fire(SolutionAction.RemoveProject, project.GetName());
             }
         }
 
         private void _solutionEvents_Renamed(string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameSolution, DTE.Solution.GetName());
+            Fire(SolutionAction.RenameSolution, DTE.Solution.GetName());
         }
 
         private void _solutionEvents_BeforeClosing()
         {
-            Fire(SolutionEvent.SolutionAction.CloseSolution, DTE.Solution.GetName());
+            Fire(SolutionAction.CloseSolution, DTE.Solution.GetName());
         }
 
         private void _selectionEvents_OnChange()
@@ -158,7 +158,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             return !ManagedProjectUniqueNames.Contains(project.UniqueName);
         }
 
-        private void Fire(SolutionEvent.SolutionAction action, IIDEComponentName target)
+        private void Fire(SolutionAction action, IIDEComponentName target)
         {
             var solutionEvent = Create<SolutionEvent>();
             solutionEvent.Action = action;

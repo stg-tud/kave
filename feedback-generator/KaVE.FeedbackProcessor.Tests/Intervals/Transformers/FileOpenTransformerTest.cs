@@ -34,7 +34,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
             {
                 TriggeredAt = TestTime(startOffset),
                 TerminatedAt = TestTime(endOffset),
-                Action = isFileOpen ? DocumentEvent.DocumentAction.Opened : DocumentEvent.DocumentAction.Closing,
+                Action = isFileOpen ? DocumentAction.Opened : DocumentAction.Closing,
                 Document = Names.Document("CSharp " + filename),
                 IDESessionUUID = sessionId
             };

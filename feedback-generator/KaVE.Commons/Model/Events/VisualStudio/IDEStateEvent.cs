@@ -25,24 +25,6 @@ namespace KaVE.Commons.Model.Events.VisualStudio
     [DataContract]
     public class IDEStateEvent : IDEEvent
     {
-        public enum LifecyclePhase
-        {
-            /// <summary>
-            ///     State snapshot is taken immediately after startup, i.e., before first user interactions.
-            /// </summary>
-            Startup,
-
-            /// <summary>
-            ///     State snapshot is taken before shutdown, i.e., after the last user interaction.
-            /// </summary>
-            Shutdown,
-
-            /// <summary>
-            ///     State snapshot is taken somewhen during runtime.
-            /// </summary>
-            Runtime
-        }
-
         public IDEStateEvent()
         {
             OpenWindows = new List<IWindowName>();
@@ -50,7 +32,7 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         }
 
         [DataMember]
-        public LifecyclePhase IDELifecyclePhase { get; set; }
+        public IDELifecyclePhase IDELifecyclePhase { get; set; }
 
         [DataMember]
         public IList<IWindowName> OpenWindows { get; set; }
@@ -85,5 +67,23 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         {
             return this.ToStringReflection();
         }
+    }
+
+    public enum IDELifecyclePhase
+    {
+        /// <summary>
+        ///     State snapshot is taken immediately after startup, i.e., before first user interactions.
+        /// </summary>
+        Startup,
+
+        /// <summary>
+        ///     State snapshot is taken before shutdown, i.e., after the last user interaction.
+        /// </summary>
+        Shutdown,
+
+        /// <summary>
+        ///     State snapshot is taken somewhen during runtime.
+        /// </summary>
+        Runtime
     }
 }

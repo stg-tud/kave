@@ -27,7 +27,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         {
             var windowEvent = new WindowEvent
             {
-                Action = WindowEvent.WindowAction.Activate,
+                Action = WindowAction.Activate,
                 Window = Names.Window("w SomeProcessedWindow")
             };
             const string expected =

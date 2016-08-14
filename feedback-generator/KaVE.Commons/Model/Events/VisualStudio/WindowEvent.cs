@@ -23,15 +23,6 @@ namespace KaVE.Commons.Model.Events.VisualStudio
     [DataContract]
     public class WindowEvent : IDEEvent
     {
-        public enum WindowAction
-        {
-            Create,
-            Activate,
-            Move,
-            Close,
-            Deactivate
-        }
-
         [DataMember]
         public IWindowName Window { get; set; }
 
@@ -58,5 +49,14 @@ namespace KaVE.Commons.Model.Events.VisualStudio
                 return hashCode;
             }
         }
+    }
+
+    public enum WindowAction
+    {
+        Create,
+        Activate,
+        Move,
+        Close,
+        Deactivate
     }
 }

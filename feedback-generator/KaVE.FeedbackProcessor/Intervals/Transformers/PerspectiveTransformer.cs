@@ -27,7 +27,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         private readonly IList<PerspectiveInterval> _intervals;
         private PerspectiveInterval _currentInterval;
         private DateTime _referenceTime;
-        private TransformerContext _context;
+        private readonly TransformerContext _context;
 
         public PerspectiveTransformer(TransformerContext context)
         {
@@ -38,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
         public void ProcessEvent(IDEEvent @event)
         {
-            if (_currentInterval != null && 
+            if (_currentInterval != null &&
                 _currentInterval.Perspective == PerspectiveType.Production &&
                 MarksStartOfDebugSession(@event))
             {
@@ -77,14 +77,14 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
         {
             var debuggerEvent = @event as DebuggerEvent;
             return debuggerEvent != null &&
-                   debuggerEvent.Mode != DebuggerEvent.DebuggerMode.Design;
+                   debuggerEvent.Mode != DebuggerMode.Design;
         }
 
         private static bool MarksEndOfDebugSession(IDEEvent @event)
         {
             var debuggerEvent = @event as DebuggerEvent;
             return debuggerEvent != null &&
-                   debuggerEvent.Mode == DebuggerEvent.DebuggerMode.Design;
+                   debuggerEvent.Mode == DebuggerMode.Design;
         }
 
         public IEnumerable<PerspectiveInterval> SignalEndOfEventStream()

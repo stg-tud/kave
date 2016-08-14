@@ -23,14 +23,13 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Utils
 {
-    [TestFixture]
     internal class EventMappingUtilsTest
     {
         private static readonly object[] MapsSingleEventCorrectlyTestCaseSource =
         {
             new object[] {new CommandEvent {CommandId = "Test"}, "CommandEvent -> Test"},
-            new object[] {new WindowEvent {Action = WindowEvent.WindowAction.Deactivate}, "WindowEvent -> Deactivate"},
-            new object[] {new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened}, "DocumentEvent -> Opened"},
+            new object[] {new WindowEvent {Action = WindowAction.Deactivate}, "WindowEvent -> Deactivate"},
+            new object[] {new DocumentEvent {Action = DocumentAction.Opened}, "DocumentEvent -> Opened"},
             new object[] {new BuildEvent {Action = "vsBuildActionBuild"}, "BuildEvent -> vsBuildActionBuild"},
             new object[] {new EditEvent(), "EditEvent -> "},
             new object[]
@@ -40,12 +39,12 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
             },
             new object[]
             {
-                new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown},
+                new IDEStateEvent {IDELifecyclePhase = IDELifecyclePhase.Shutdown},
                 "IDEStateEvent -> Shutdown"
             },
             new object[]
             {
-                new SolutionEvent {Action = SolutionEvent.SolutionAction.RenameProject},
+                new SolutionEvent {Action = SolutionAction.RenameProject},
                 "SolutionEvent -> RenameProject"
             },
             new object[]

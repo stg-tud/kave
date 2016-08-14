@@ -34,7 +34,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             var @event = new DocumentEvent
             {
                 Document = TestFixtures.SomeProductionDocumentName,
-                Action = DocumentEvent.DocumentAction.Opened
+                Action = DocumentAction.Opened
             };
 
             AssertMapsToActivity(@event, Activity.Navigation);
@@ -46,7 +46,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             var @event = new DocumentEvent
             {
                 Document = TestFixtures.SomeProductionDocumentName,
-                Action = DocumentEvent.DocumentAction.Saved
+                Action = DocumentAction.Saved
             };
 
             AssertMapsToActivity(@event, Activity.Development);
@@ -58,7 +58,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             var @event = new DocumentEvent
             {
                 Document = TestFixtures.SomeProductionDocumentName,
-                Action = DocumentEvent.DocumentAction.Closing
+                Action = DocumentAction.Closing
             };
 
             AssertMapsToActivity(@event, Activity.Navigation);

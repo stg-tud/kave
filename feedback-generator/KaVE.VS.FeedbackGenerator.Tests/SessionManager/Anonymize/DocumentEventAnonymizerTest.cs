@@ -26,7 +26,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         {
             return new DocumentEvent
             {
-                Action = DocumentEvent.DocumentAction.Saved,
+                Action = DocumentAction.Saved,
                 Document = Names.Document("CSharp D:\\MyProject\\MyDocument.ext")
             };
         }

@@ -26,7 +26,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         {
             return new WindowEvent
             {
-                Action = WindowEvent.WindowAction.Activate,
+                Action = WindowAction.Activate,
                 Window = Names.Window("vsWindowType Solution Explorer")
             };
         }

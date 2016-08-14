@@ -35,7 +35,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             {
                 Action = "some action",
                 Reason = "some reason",
-                Mode = DebuggerEvent.DebuggerMode.Run
+                Mode = DebuggerMode.Run
             };
             AssertMapsToActivity(@event, Activity.Development);
         }

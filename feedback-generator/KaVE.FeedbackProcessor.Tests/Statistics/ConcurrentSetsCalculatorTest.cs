@@ -26,7 +26,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
 {
-    [TestFixture]
     internal class ConcurrentSetsCalculatorTest
     {
         private ConcurrentSetsCalculator _uut;
@@ -41,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void CountsEqualSetsCorrectly()
         {
             var commandEvent = new CommandEvent {CommandId = "Test"};
-            var documentEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Saved};
+            var documentEvent = new DocumentEvent {Action = DocumentAction.Saved};
             var concurrentEvent = new ConcurrentEvent
             {
                 ConcurrentEventList = new List<IDEEvent>
@@ -54,7 +53,12 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.OnEvent(concurrentEvent);
             _uut.OnEvent(concurrentEvent);
 
-            Assert.AreEqual(2, _uut.Statistic[Sets.NewHashSet(EventMappingUtils.GetAbstractStringOf(documentEvent), EventMappingUtils.GetAbstractStringOf(commandEvent))]);
+            Assert.AreEqual(
+                2,
+                _uut.Statistic[
+                    Sets.NewHashSet(
+                        EventMappingUtils.GetAbstractStringOf(documentEvent),
+                        EventMappingUtils.GetAbstractStringOf(commandEvent))]);
         }
 
         [Test]

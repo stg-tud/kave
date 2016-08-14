@@ -41,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private void ProcessWindowEvent(WindowEvent windowEvent)
         {
-            if (windowEvent.Action == WindowEvent.WindowAction.Close) DropCurrentEvent();
+            if (windowEvent.Action == WindowAction.Close) DropCurrentEvent();
         }
 
         private void ProcessDocumentEvent(DocumentEvent documentEvent)
@@ -53,7 +53,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
             else
             {
-                if (documentEvent.Action == DocumentEvent.DocumentAction.Closing)
+                if (documentEvent.Action == DocumentAction.Closing)
                 {
                     var commandEvent = new CommandEvent
                     {

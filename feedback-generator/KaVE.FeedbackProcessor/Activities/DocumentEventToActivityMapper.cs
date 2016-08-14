@@ -28,7 +28,7 @@ namespace KaVE.FeedbackProcessor.Activities
 
         private void ProcessDocumentEvent(DocumentEvent @event)
         {
-            var isSave = @event.Action == DocumentEvent.DocumentAction.Saved;
+            var isSave = @event.Action == DocumentAction.Saved;
             var activity = isSave ? Activity.Development : Activity.Navigation;
             InsertActivity(@event, activity);
         }

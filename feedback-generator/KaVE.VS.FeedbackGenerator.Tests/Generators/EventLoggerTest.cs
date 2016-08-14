@@ -30,7 +30,6 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
-    [TestFixture]
     internal class EventLoggerTest
     {
         private Mock<IMessageBus> _mockMessageBus;
@@ -109,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         public void ShouldFlushOnShutdown()
         {
             var anEvent = TestEventFactory.SomeEvent();
-            var shutdownEvent = new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown};
+            var shutdownEvent = new IDEStateEvent {IDELifecyclePhase = IDELifecyclePhase.Shutdown};
 
             WhenLoggerReceives(anEvent);
             _uut.Shutdown(shutdownEvent);

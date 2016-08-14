@@ -26,7 +26,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         {
             return new SolutionEvent
             {
-                Action = SolutionEvent.SolutionAction.OpenSolution,
+                Action = SolutionAction.OpenSolution,
                 Target = Names.Solution("C:\\Solution.sln")
             };
         }

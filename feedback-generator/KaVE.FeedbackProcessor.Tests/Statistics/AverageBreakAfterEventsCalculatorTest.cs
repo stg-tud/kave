@@ -27,7 +27,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
 {
-    [TestFixture]
     internal class AverageBreakAfterEventsCalculatorTest
     {
         private AverageBreakAfterEventsCalculator _uut;
@@ -208,7 +207,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             {
                 TriggeredAt = triggeredAt + _uut.MinBreakTime
             };
-            
+
             var listOfEvents = new List<IDEEvent>
             {
                 firstEvent,
@@ -243,7 +242,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void ShouldAddNextEventWhenEnabled()
         {
             _uut.AddEventAfterBreakToStatistic = true;
-            
+
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
             var someEvent = new TestIDEEvent
@@ -284,7 +283,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var someEvent = new WindowEvent
             {
                 TriggeredAt = triggeredAt,
-                Action = WindowEvent.WindowAction.Move
+                Action = WindowAction.Move
             };
             var eventAfterBreak = new CommandEvent
             {
@@ -309,7 +308,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var someEvent = new WindowEvent
             {
                 TriggeredAt = triggeredAt,
-                Action = WindowEvent.WindowAction.Activate
+                Action = WindowAction.Activate
             };
             var eventAfterBreak = new CommandEvent
             {

@@ -49,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
                 {
                     _context.AdaptIntervalTimeData(_currentIntervals[documentEvent.Document], @event);
 
-                    if (documentEvent.Action == DocumentEvent.DocumentAction.Closing)
+                    if (documentEvent.Action == DocumentAction.Closing)
                     {
                         _intervals.Add(_currentIntervals[documentEvent.Document]);
                         _currentIntervals.Remove(documentEvent.Document);
@@ -57,7 +57,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
                 }
                 else
                 {
-                    if (documentEvent.Action == DocumentEvent.DocumentAction.Opened)
+                    if (documentEvent.Action == DocumentAction.Opened)
                     {
                         _currentIntervals[documentEvent.Document] =
                             _context.CreateIntervalFromEvent<FileOpenInterval>(@event);

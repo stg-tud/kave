@@ -44,7 +44,9 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private readonly FixedSizeQueue<IDEEvent> _eventCache = new FixedSizeQueue<IDEEvent>(0);
 
-        public AverageBreakAfterEventsCalculator(int maxEventsBeforeBreak, TimeSpan minBreakTime, bool addEventAfterBreakToStatistic = true)
+        public AverageBreakAfterEventsCalculator(int maxEventsBeforeBreak,
+            TimeSpan minBreakTime,
+            bool addEventAfterBreakToStatistic = true)
         {
             MaxEventsBeforeBreak = maxEventsBeforeBreak;
             MinBreakTime = minBreakTime;
@@ -88,7 +90,7 @@ namespace KaVE.FeedbackProcessor.Statistics
         public void HandleEvent(IDEEvent @event)
         {
             var windowEvent = @event as WindowEvent;
-            if (windowEvent != null && windowEvent.Action.Equals(WindowEvent.WindowAction.Move))
+            if (windowEvent != null && windowEvent.Action.Equals(WindowAction.Move))
             {
                 return;
             }

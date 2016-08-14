@@ -66,7 +66,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
                                .Returns(ScheduledAction.NoOp);
 
             // ReSharper disable once ObjectCreationAsStatement
-            new WindowEventGenerator(TestRSEnv, TestMessageBus, mockCallbackManager.Object, TestDateUtils, TestThreading);
+            new WindowEventGenerator(
+                TestRSEnv,
+                TestMessageBus,
+                mockCallbackManager.Object,
+                TestDateUtils,
+                TestThreading);
 
             _expected = new WindowEvent
             {
@@ -81,7 +86,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
         [Test]
         public void ShouldFireWindowCreationEvent()
         {
-            _expected.Action = WindowEvent.WindowAction.Create;
+            _expected.Action = WindowAction.Create;
 
             WhenWindowIsCreated(_testWindow);
 
@@ -91,7 +96,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
         [Test]
         public void ShouldFireWindowActivationEvent()
         {
-            _expected.Action = WindowEvent.WindowAction.Activate;
+            _expected.Action = WindowAction.Activate;
 
             WhenWindowIsActivated(_testWindow);
 
@@ -154,7 +159,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             int addHeight,
             int addWidth)
         {
-            _expected.Action = WindowEvent.WindowAction.Move;
+            _expected.Action = WindowAction.Move;
             GivenWindowIsKnown(_testWindow);
 
             WhenWindowIsMoved(
@@ -171,7 +176,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
         [Test]
         public void ShouldFireMoveEventWithCorrectDuration()
         {
-            _expected.Action = WindowEvent.WindowAction.Move;
+            _expected.Action = WindowAction.Move;
             _expected.TriggeredAt = new DateTime(2014, 7, 1, 16, 32, 10);
             _expected.Duration = TimeSpan.FromSeconds(3);
             GivenWindowIsKnown(_testWindow);
@@ -188,7 +193,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
         [Test]
         public void ShouldFireWindowClosingEvent()
         {
-            _expected.Action = WindowEvent.WindowAction.Close;
+            _expected.Action = WindowAction.Close;
 
             _mockWindowEvents.Raise(we => we.WindowClosing += null, _testWindow);
 

@@ -27,7 +27,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         {
             var e = new DocumentEvent
             {
-                Action = DocumentEvent.DocumentAction.Saved,
+                Action = DocumentAction.Saved,
                 Document = Names.Document("x SomeProcessedDocument")
             };
             const string expected =

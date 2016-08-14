@@ -37,21 +37,21 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             _firstEvent = true;
             _ideIsRunning = false;
-            _lastEventTriggerTime = default (DateTime);
+            _lastEventTriggerTime = default(DateTime);
         }
 
         private void ProcessIDEStateEvent(IDEStateEvent @event)
         {
             switch (@event.IDELifecyclePhase)
             {
-                case IDEStateEvent.LifecyclePhase.Startup:
+                case IDELifecyclePhase.Startup:
                     if (_ideIsRunning)
                     {
                         Insert(CreateMissingShutdownEvent(_lastEventTriggerTime));
                     }
                     _ideIsRunning = true;
                     break;
-                case IDEStateEvent.LifecyclePhase.Shutdown:
+                case IDELifecyclePhase.Shutdown:
                     _ideIsRunning = false;
                     break;
             }
@@ -73,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             return new IDEStateEvent
             {
-                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Startup,
+                IDELifecyclePhase = IDELifecyclePhase.Startup,
                 TriggeredAt = subsequentEventTime.AddMilliseconds(-1)
             };
         }
@@ -82,7 +82,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             return new IDEStateEvent
             {
-                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown,
+                IDELifecyclePhase = IDELifecyclePhase.Shutdown,
                 TriggeredAt = previousEventTime.AddMilliseconds(1)
             };
         }

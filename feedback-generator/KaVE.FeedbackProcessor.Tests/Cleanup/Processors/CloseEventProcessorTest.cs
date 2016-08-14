@@ -23,7 +23,6 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
-    [TestFixture]
     internal class CloseEventProcessorTest
     {
         private CloseEventProcessor _uut;
@@ -43,13 +42,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterNonClosingDocumentEvents()
         {
-            ProcessorAssert.DoesNotFilter(_uut, new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened});
+            ProcessorAssert.DoesNotFilter(_uut, new DocumentEvent {Action = DocumentAction.Opened});
         }
 
         [Test]
         public void ReplacesDocumentClosingEventWithCloseEventTest()
         {
-            var closingEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
+            var closingEvent = new DocumentEvent {Action = DocumentAction.Closing};
 
             var resultSet = _uut.Map(closingEvent);
 
@@ -60,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void FiltersWindowCloseEvents()
         {
-            var windowClosingEvent = new WindowEvent {Action = WindowEvent.WindowAction.Close};
+            var windowClosingEvent = new WindowEvent {Action = WindowAction.Close};
 
             var processedEvent = _uut.Map(windowClosingEvent);
 
@@ -70,7 +69,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterNonClosingWindowEvents()
         {
-            ProcessorAssert.DoesNotFilter(_uut, new WindowEvent {Action = WindowEvent.WindowAction.Activate});
+            ProcessorAssert.DoesNotFilter(_uut, new WindowEvent {Action = WindowAction.Activate});
         }
 
         [Test]
@@ -79,7 +78,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var commandCloseEvent = new CommandEvent {CommandId = "Close"};
             _uut.Map(commandCloseEvent);
 
-            var documentEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
+            var documentEvent = new DocumentEvent {Action = DocumentAction.Closing};
             var processedEvent = _uut.Map(documentEvent);
 
             CollectionAssert.IsEmpty(processedEvent);
