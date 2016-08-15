@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using KaVE.Commons.Tests.Model.Naming;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.RS.SolutionAnalysis.CleanUp;
@@ -34,7 +35,8 @@ namespace KaVE.RS.SolutionAnalysis
 {
     internal class Program
     {
-        private const string DirRoot = @"C:\Users\Jonas\Desktop\SST-2016-02-19\Github";
+        //private const string DirRoot = @"C:\Users\Jonas\Desktop\SST-2016-02-19\Github";
+        private const string DirRoot = @"E:\";
         private const string DirEventsAll = DirRoot + @"Events\All\";
 
         private const string DirEventsAll_SortedByUser = DirRoot + @"Events\All-SortedByUser\";
@@ -54,7 +56,13 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void Main(string[] args)
         {
-            Console.WriteLine(@"{0} start", DateTime.Now);
+            //Console.WriteLine(@"{0} start", DateTime.Now);
+
+
+            // new JustReadRunner(DirEventsAll).Run();
+            new JavaNamingTestGenerator().Run();
+
+            return;
 
             /* data preparation */
             RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);

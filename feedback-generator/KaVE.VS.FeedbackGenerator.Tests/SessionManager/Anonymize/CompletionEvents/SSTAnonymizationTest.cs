@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite;
 using KaVE.Commons.Utils.Naming;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
@@ -45,6 +46,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             var actual = _sut.Anonymize(new SST());
             var expected = new SST();
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void SmokeTestWithCompleteSST()
+        {
+            var a = _sut.Anonymize(SSTSerializationTest.GetCurrentExample());
+            var b = _sut.Anonymize(SSTSerializationTest.GetCurrentExample());
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]

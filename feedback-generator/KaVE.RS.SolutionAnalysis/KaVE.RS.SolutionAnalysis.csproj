@@ -37,6 +37,7 @@
     <StartProgram>$(VsInstallDir)devenv.exe</StartProgram>
     <StartArguments>/ReSharper.Plugin $(AssemblyName).dll /ReSharper.Internal</StartArguments>
     <StartWorkingDirectory>$(MSBuildProjectDirectory)\$(OutputPath)</StartWorkingDirectory>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -226,6 +227,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KaVE.Commons.Tests\KaVE.Commons.Tests.csproj">
+      <Project>{fc829d87-127a-498b-965c-9778d223792e}</Project>
+      <Name>KaVE.Commons.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>

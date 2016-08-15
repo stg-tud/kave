@@ -19,6 +19,7 @@ using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -28,6 +29,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
@@ -48,7 +50,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         public void VerifyFromLegacyJson_VersionedNames()
         {
             var actual = GetExampleJson_Legacy_BeforeVersionedNames().ParseJsonTo<ISST>();
-            var expected = GetCurrentExample();
+            var expected = GetCurrentButIncompleteExample();
             Assert.AreEqual(expected, actual);
         }
 
@@ -56,14 +58,14 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         public void VerifyFromCurrentJson()
         {
             var actual = GetExampleJson_Current().ParseJsonTo<ISST>();
-            var expected = GetCurrentExample();
+            var expected = GetCurrentButIncompleteExample();
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public void VerifyToJson()
         {
-            var actual = GetCurrentExample().ToCompactJson();
+            var actual = GetCurrentButIncompleteExample().ToCompactJson();
             var expected = GetExampleJson_Current();
             Assert.AreEqual(expected, actual);
         }
@@ -71,14 +73,14 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
         [Test]
         public void JsonDoesNotContainFullNamespace()
         {
-            var actual = GetCurrentExample().ToCompactJson();
+            var actual = GetCurrentButIncompleteExample().ToCompactJson();
             Assert.False(actual.Contains("KaVE.Commons.Model.SSTs.Impl"));
         }
 
         [Test]
         public void JsonDoesNotContainAssembly()
         {
-            var actual = GetCurrentExample().ToCompactJson();
+            var actual = GetCurrentButIncompleteExample().ToCompactJson();
             Assert.False(actual.Contains(".SST, KaVE.Commons"));
         }
 
@@ -99,7 +101,65 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
             Assert.AreEqual(expected, actual);
         }
 
-        private static ISST GetCurrentExample()
+        public static ISST GetCurrentButIncompleteExample()
+        {
+            return new SST
+            {
+                EnclosingType = Names.Type("T,P"),
+                Delegates =
+                {
+                    new DelegateDeclaration
+                    {
+                        Name = Names.Type("d:[R,P] [T2,P].()").AsDelegateTypeName
+                    }
+                },
+                Events =
+                {
+                    new EventDeclaration
+                    {
+                        Name = Names.Event("[T2,P] [T3,P].E")
+                    }
+                },
+                Fields =
+                {
+                    new FieldDeclaration
+                    {
+                        Name = Names.Field("[T4,P] [T5,P].F")
+                    }
+                },
+                Methods =
+                {
+                    new MethodDeclaration
+                    {
+                        Name = Names.Method("[T6,P] [T7,P].M1()"),
+                        IsEntryPoint = false,
+                        Body = CreateCurrentButIncompleteBody()
+                    },
+                    new MethodDeclaration
+                    {
+                        Name = Names.Method("[T8,P] [T9,P].M2()"),
+                        IsEntryPoint = true
+                    }
+                },
+                Properties =
+                {
+                    new PropertyDeclaration
+                    {
+                        Name = Names.Property("get [T10,P] [T11,P].P".FixIdentifiers()),
+                        Get =
+                        {
+                            new ReturnStatement()
+                        },
+                        Set =
+                        {
+                            new Assignment()
+                        }
+                    }
+                }
+            };
+        }
+
+        public static ISST GetCurrentExample()
         {
             return new SST
             {
@@ -267,7 +327,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 );
         }
 
-        private static IKaVEList<IStatement> CreateCurrentBody()
+        private static IKaVEList<IStatement> CreateCurrentButIncompleteBody()
         {
             // TODO add values to statements to create valid configurations
             //var anyVarRef = new VariableReference();
@@ -320,6 +380,156 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 Nested(new PropertyReference()),
                 Nested(new UnknownReference()),
                 Nested(new VariableReference())
+                //
+                );
+        }
+
+        public static IKaVEList<IStatement> CreateCurrentBody()
+        {
+            var anyVarRef = new VariableReference();
+            var anyStmt = new BreakStatement();
+            var anyExpr = new ConstantValueExpression();
+            var anyBody = Lists.NewList<IStatement>(new BreakStatement());
+
+            return Lists.NewList(
+                //
+                new DoLoop
+                {
+                    Condition = anyExpr,
+                    Body = anyBody
+                },
+                new ForEachLoop
+                {
+                    Declaration = new VariableDeclaration
+                    {
+                        Reference = anyVarRef,
+                        Type = Names.Type("T1,P")
+                    },
+                    LoopedReference = anyVarRef,
+                    Body = anyBody
+                },
+                new ForLoop
+                {
+                    Init = anyBody,
+                    Condition = anyExpr,
+                    Step = anyBody,
+                    Body = anyBody
+                },
+                new IfElseBlock
+                {
+                    Condition = anyExpr,
+                    Then = anyBody,
+                    Else = anyBody
+                },
+                new LockBlock
+                {
+                    Reference = anyVarRef,
+                    Body = anyBody
+                },
+                new SwitchBlock
+                {
+                    Reference = anyVarRef,
+                    Sections =
+                    {
+                        new CaseBlock
+                        {
+                            Label = anyExpr,
+                            Body = anyBody
+                        }
+                    },
+                    DefaultSection = anyBody
+                },
+                new TryBlock
+                {
+                    Body = anyBody,
+                    CatchBlocks =
+                    {
+                        new CatchBlock
+                        {
+                            Parameter = Names.Parameter("[?] p"),
+                            Kind = CatchBlockKind.General,
+                            Body = anyBody
+                        }
+                    },
+                    Finally = anyBody
+                },
+                new UncheckedBlock {Body = anyBody},
+                new UnsafeBlock(),
+                new UsingBlock {Reference = anyVarRef, Body = anyBody},
+                new WhileLoop {Condition = anyExpr, Body = anyBody},
+                //
+                new Assignment
+                {
+                    Reference = anyVarRef,
+                    Expression = anyExpr
+                },
+                new BreakStatement(),
+                new ContinueStatement(),
+                new EventSubscriptionStatement
+                {
+                    Reference = anyVarRef,
+                    Operation = EventSubscriptionOperation.Add,
+                    Expression = anyExpr
+                },
+                new ExpressionStatement {Expression = anyExpr},
+                new GotoStatement {Label = "l"},
+                new LabelledStatement {Label = "l", Statement = anyStmt},
+                new ReturnStatement {Expression = anyExpr, IsVoid = true},
+                new ThrowStatement {Reference = anyVarRef},
+                new UnknownStatement(),
+                new VariableDeclaration {Type = Names.Type("T2, P"), Reference = anyVarRef},
+                //
+                Nested(
+                    new BinaryExpression
+                    {
+                        LeftOperand = anyExpr,
+                        Operator = BinaryOperator.BitwiseAnd,
+                        RightOperand = anyExpr
+                    }),
+                Nested(
+                    new CastExpression
+                    {
+                        Reference = anyVarRef,
+                        Operator = CastOperator.SafeCast,
+                        TargetType = Names.Type("T3, P")
+                    }),
+                Nested(
+                    new CompletionExpression
+                    {
+                        Token = "t",
+                        TypeReference = Names.Type("T4, P"),
+                        VariableReference = anyVarRef
+                    }),
+                Nested(new ComposedExpression {References = {anyVarRef}}),
+                Nested(new IfElseExpression {Condition = anyExpr, ThenExpression = anyExpr, ElseExpression = anyExpr}),
+                Nested(new IndexAccessExpression {Reference = anyVarRef, Indices = {anyExpr}}),
+                Nested(
+                    new InvocationExpression
+                    {
+                        Reference = anyVarRef,
+                        MethodName = Names.Method("[?] [?].M()"),
+                        Parameters = {anyExpr}
+                    }),
+                Nested(new LambdaExpression {Name = Names.Lambda("[?] ()"), Body = anyBody}),
+                Nested(new TypeCheckExpression {Type = Names.Type("T4, P"), Reference = anyVarRef}),
+                Nested(new UnaryExpression {Operator = UnaryOperator.Minus, Operand = anyExpr}),
+                Nested(new LoopHeaderBlockExpression {Body = anyBody}),
+                Nested(new ConstantValueExpression {Value = "v"}),
+                Nested(new NullExpression()),
+                Nested(new ReferenceExpression {Reference = anyVarRef}),
+                Nested(new UnknownExpression()),
+                //
+                Nested(new EventReference {Reference = anyVarRef, EventName = Names.Event("[?] [?].e")}),
+                Nested(new FieldReference {Reference = anyVarRef, FieldName = Names.Field("[?] [?]._f")}),
+                Nested(
+                    new IndexAccessReference
+                    {
+                        Expression = new IndexAccessExpression {Reference = anyVarRef, Indices = {anyExpr}}
+                    }),
+                Nested(new MethodReference {Reference = anyVarRef, MethodName = Names.Method("[?] [?].M()")}),
+                Nested(new PropertyReference {Reference = anyVarRef, PropertyName = Names.Property("get [?] [?].P()")}),
+                Nested(new UnknownReference()),
+                Nested(new VariableReference {Identifier = "id"})
                 //
                 );
         }
