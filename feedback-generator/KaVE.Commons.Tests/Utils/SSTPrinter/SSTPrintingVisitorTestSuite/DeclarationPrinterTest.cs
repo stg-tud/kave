@@ -162,7 +162,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new PropertyDeclaration
                     {
-                        Name = Names.Property("get set [PropertyType,P] [TestClass,P].SomeProperty")
+                        Name = Names.Property("get set [PropertyType,P] [TestClass,P].SomeProperty()")
                     }
                 },
                 Methods =
@@ -346,7 +346,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = Names.Property("get [PropertyType,P] [DeclaringType,P].P")
+                Name = Names.Property("get [PropertyType,P] [DeclaringType,P].P()")
             };
 
             AssertPrint(sst, "PropertyType P { get; }");
@@ -357,7 +357,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = Names.Property("set [PropertyType,P] [DeclaringType,P].P")
+                Name = Names.Property("set [PropertyType,P] [DeclaringType,P].P()")
             };
 
             AssertPrint(sst, "PropertyType P { set; }");
@@ -368,7 +368,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P")
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P()")
             };
 
             AssertPrint(sst, "PropertyType P { get; set; }");
@@ -379,7 +379,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P()"),
                 Get =
                 {
                     new ContinueStatement(),
@@ -414,7 +414,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P()"),
                 Get =
                 {
                     new BreakStatement()
@@ -438,7 +438,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyDeclaration
             {
-                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
+                Name = Names.Property("get set [PropertyType,P] [DeclaringType,P].P()"),
                 Set =
                 {
                     new BreakStatement()

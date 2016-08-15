@@ -167,6 +167,8 @@ namespace KaVE.Commons.Utils.Naming
             identifier.AppendIf(property.HasSetter, PropertyName.SetterModifier + " ");
             identifier.AppendIf(property.HasGetter, PropertyName.GetterModifier + " ");
             identifier.AppendAnonymousMemberName(property, property.ValueType);
+            var anonymize = property.DeclaringType.IsUnknown || property.DeclaringType.Assembly.IsLocalProject;
+            identifier.AppendParameters(property.Parameters, anonymize);
             return Names.Property(identifier.ToString());
         }
 

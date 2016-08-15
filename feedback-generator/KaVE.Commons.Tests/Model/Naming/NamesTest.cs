@@ -40,7 +40,7 @@ namespace KaVE.Commons.Tests.Model.Naming
             AssertInit(Names.LocalVariable("x"), typeof(LocalVariableName));
             AssertInit(Names.Method("[?] [?].M()"), typeof(MethodName));
             AssertInit(Names.Parameter("[?] p"), typeof(ParameterName));
-            AssertInit(Names.Property("x"), typeof(PropertyName));
+            AssertInit(Names.Property("get [?] [?].P()"), typeof(PropertyName));
 
             AssertInit(Names.CommandBarControl("x"), typeof(CommandBarControlName));
             AssertInit(Names.Command("x"), typeof(CommandName));

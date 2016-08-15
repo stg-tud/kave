@@ -107,7 +107,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyReference
             {
-                PropertyName = Names.Property("get set [PropertyType,P] [DeclaringType,P].P"),
+                PropertyName = Names.Property("get set [PropertyType,P] [DeclaringType,P].P()"),
                 Reference = SSTUtil.VariableReference("o")
             };
 
@@ -119,7 +119,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new PropertyReference
             {
-                PropertyName = Names.Property("static get set [PropertyType,P] [DeclaringType,P].P")
+                PropertyName = Names.Property("static get set [PropertyType,P] [DeclaringType,P].P()")
             };
 
             AssertPrint(sst, "DeclaringType.P");

@@ -104,7 +104,7 @@ namespace KaVE.Commons.Tests.Utils.Naming
          TestCase("[T,P] v", "CSharp.LocalVariableName", "0LocalVar", typeof(LocalVariableName)),
          TestCase("[RT,P] [DT,P].M()", "CSharp.MethodName", "0M", typeof(MethodName)),
          TestCase("[PT,P] p", "CSharp.ParameterName", "0Param", typeof(ParameterName)),
-         TestCase("[VT,P] [DT,P].P()", "CSharp.PropertyName", "0P", typeof(PropertyName)),
+         TestCase("get [VT,P] [DT,P].P()", "CSharp.PropertyName", "0P", typeof(PropertyName)),
         // ide components
          TestCase("a|b|c", "VisualStudio.CommandBarControlName", "0Ctrl", typeof(CommandBarControlName)),
          TestCase("a:1:abc", "VisualStudio.CommandName", "0Cmd", typeof(CommandName)),

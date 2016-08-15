@@ -54,7 +54,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         {
             Assert.True(new PropertyName().IsUnknown);
             Assert.True(new PropertyName("[?] [?].???").IsUnknown);
-            Assert.False(new PropertyName("[T1,P] [T2,P].f()").IsUnknown);
+            Assert.False(new PropertyName("get [T1,P] [T2,P].f()").IsUnknown);
         }
 
         [Test, ExpectedException(typeof(ValidationException))]
@@ -68,14 +68,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldParseGetter()
         {
-            Assert.IsFalse(new PropertyName("[T,P] [T,P].Prop()").HasGetter);
+            Assert.IsFalse(new PropertyName("set [T,P] [T,P].Prop()").HasGetter);
             Assert.IsTrue(new PropertyName("get [T,P] [T,P].Prop()").HasGetter);
         }
 
         [Test]
         public void ShouldParseSetter()
         {
-            Assert.IsFalse(new PropertyName("[T,P] [T,P].Prop()").HasSetter);
+            Assert.IsFalse(new PropertyName("get [T,P] [T,P].Prop()").HasSetter);
             Assert.IsTrue(new PropertyName("set [T,P] [T,P].Prop()").HasSetter);
         }
 
@@ -92,7 +92,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldParseParameters1()
         {
-            var sut = new PropertyName("[?] [?].P([?] p)");
+            var sut = new PropertyName("get [?] [?].P([?] p)");
             Assert.IsTrue(sut.IsIndexer);
             Assert.IsTrue(sut.HasParameters);
             Assert.AreEqual(Lists.NewList(new ParameterName("[?] p")), sut.Parameters);
@@ -101,7 +101,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldParseParameters2()
         {
-            var sut = new PropertyName("[?] [?].P([?] p1, [?] p2)");
+            var sut = new PropertyName("get [?] [?].P([?] p1, [?] p2)");
             Assert.IsTrue(sut.IsIndexer);
             Assert.IsTrue(sut.HasParameters);
             Assert.AreEqual(Lists.NewList(new ParameterName("[?] p1"), new ParameterName("[?] p2")), sut.Parameters);

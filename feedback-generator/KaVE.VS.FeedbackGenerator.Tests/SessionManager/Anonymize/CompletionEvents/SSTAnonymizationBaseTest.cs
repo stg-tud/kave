@@ -138,7 +138,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
 
         protected IPropertyName Property(string name)
         {
-            return Names.Property("[T1] [T2].{0}", name);
+            return Names.Property("get [T1] [T2].{0}()", name);
         }
 
         protected IPropertyName PropertyAnonymized(string name)

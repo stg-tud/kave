@@ -202,7 +202,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
             ITypeName declType,
             string propertyName)
         {
-            return Names.Property("[{0}] [{1}].{2}", valType, declType, propertyName);
+            return Names.Property("get set [{0}] [{1}].{2}()", valType, declType, propertyName);
         }
 
         protected static IVariableReference VarRef(string id)

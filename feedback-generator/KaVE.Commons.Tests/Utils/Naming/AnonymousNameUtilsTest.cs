@@ -424,13 +424,22 @@ namespace KaVE.Commons.Tests.Utils.Naming
         }
 
         [Test]
+        public void ShouldAnonymizePropertiesWithParameters()
+        {
+            var original = Names.Property("get [p:int] [p:int].P([p:int] p)");
+            var expected = Names.Property("get [p:int] [p:int].P([p:int] p)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
         public void ShouldKeepPropertyNameIfDeclaredInOtherAssembly()
         {
             var original = Names.Property(
-                "set get static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
+                "set get static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property()");
             var expected =
                 Names.Property(
-                    "set get static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property");
+                    "set get static [System.X, mscorlib, 4.0.0.0] [AClass, AnAssembly, 1.2.3.4].Property()");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -438,10 +447,10 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizePropertyNameIfDeclaredInEnclosingProject()
         {
-            var original = Names.Property("get [System.X, mscorlib, 4.0.0.0] [Declarator, MyProject].Property");
+            var original = Names.Property("get [System.X, mscorlib, 4.0.0.0] [Declarator, MyProject].Property()");
             var expected =
                 Names.Property(
-                    "get [System.X, mscorlib, 4.0.0.0] [UFthX8igK4OWY-bjuPcWaA==, zRLpydQJBMrk8DCiP3BwEQ==].3_9-BEZu3bkEMnTfk5eHKw==");
+                    "get [System.X, mscorlib, 4.0.0.0] [UFthX8igK4OWY-bjuPcWaA==, zRLpydQJBMrk8DCiP3BwEQ==].3_9-BEZu3bkEMnTfk5eHKw==()");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -449,10 +458,10 @@ namespace KaVE.Commons.Tests.Utils.Naming
         [Test]
         public void ShouldAnonymizePropertyValueTypeIfDeclaredInEnclosingProject()
         {
-            var original = Names.Property("set [PropType, AProject] [AType, AnAssembly, 6.5.4.3].Property");
+            var original = Names.Property("set [PropType, AProject] [AType, AnAssembly, 6.5.4.3].Property()");
             var expected =
                 Names.Property(
-                    "set [Mh2DRn_FRby9df2VWWFg4Q==, CD0OwIZmS7FL5zL5GiXZbg==] [AType, AnAssembly, 6.5.4.3].Property");
+                    "set [Mh2DRn_FRby9df2VWWFg4Q==, CD0OwIZmS7FL5zL5GiXZbg==] [AType, AnAssembly, 6.5.4.3].Property()");
 
             AssertAnonymizedEquals(original, expected);
         }

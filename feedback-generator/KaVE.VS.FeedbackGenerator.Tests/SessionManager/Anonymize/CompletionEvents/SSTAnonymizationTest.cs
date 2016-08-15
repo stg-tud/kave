@@ -129,7 +129,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void PropertyDeclarationsAreAnonymized_Name()
         {
-            var propertyName = Names.Property("set [T1,P1] [T2,P2].P");
+            var propertyName = Names.Property("set [T1,P1] [T2,P2].P()");
 
             var actual = _sut.Anonymize(
                 new SST

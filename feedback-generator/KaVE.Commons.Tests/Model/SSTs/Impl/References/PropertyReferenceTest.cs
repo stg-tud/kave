@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
 
         private static IPropertyName SomeProperty
         {
-            get { return Names.Property("[T1,P1] [T2,P2].P"); }
+            get { return Names.Property("get [T1,P1] [T2,P2].P()"); }
         }
 
         [Test]
