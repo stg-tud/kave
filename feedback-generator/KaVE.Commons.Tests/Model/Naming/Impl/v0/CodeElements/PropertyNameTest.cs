@@ -79,12 +79,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.IsTrue(new PropertyName("set [T,P] [T,P].Prop()").HasSetter);
         }
 
-
-        [Ignore("write fix and reenable"), Test, ExpectedException(typeof(ValidationException))]
-        public void ShouldRejectPropertiesThatDoNotContainParameterList()
+        [ExpectedException(typeof(ValidationException)), //
+         TestCase("get set [?] [?].P"), // no paranthesis
+         TestCase("[?] [?].P()") // neither get nor set
+        ]
+        public void ShouldRejectInvalidProperties(string invalidId)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new PropertyName("[?] [?].P");
+            new PropertyName(invalidId);
         }
 
         [Test]

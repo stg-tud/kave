@@ -166,7 +166,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 {
                     new DelegateDeclaration
                     {
-                        Name = Names.Type("d:T2,P".FixLegacyFormats()).AsDelegateTypeName
+                        Name = Names.Type("d:T2,P".FixIdentifiers()).AsDelegateTypeName
                     }
                 },
                 Events =

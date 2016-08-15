@@ -30,8 +30,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
 
         public PropertyName([NotNull] string identifier) : base(identifier)
         {
-            // TODO: NameUpdate: Write fix and reenable:
-            //Validate(IsUnknown || identifier.EndsWith(")"), "must contain (empty) parameter list");
+            Validate(IsUnknown || identifier.EndsWith(")"), "must contain (empty) parameter list");
+            Validate(HasGetter || HasSetter, "must have either a getter or a setter");
         }
 
         public sealed override bool IsUnknown

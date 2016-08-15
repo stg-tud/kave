@@ -92,6 +92,7 @@
     <Compile Include="Model\Events\InfoEventTest.cs" />
     <Compile Include="Model\Events\UserProfiles\UserProfileEventTest.cs" />
     <Compile Include="Model\Naming\BuiltInTypeAliasesTest.cs" />
+    <Compile Include="Model\Naming\Impl\v0\NameFixesTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MemberTestBase.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\CommandBarControlNameTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\IDEComponents\CommandNameTest.cs" />

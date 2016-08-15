@@ -85,6 +85,7 @@
     <Compile Include="Model\Naming\IDEComponents\ISolutionName.cs" />
     <Compile Include="Model\Naming\IDEComponents\IWindowName.cs" />
     <Compile Include="Model\Naming\Impl\v0\GeneralName.cs" />
+    <Compile Include="Model\Naming\Impl\v0\NameFixes.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\BaseTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\PredefinedTypeName.cs" />
     <Compile Include="Model\Naming\Impl\v0\Types\TypeUtils.cs" />
