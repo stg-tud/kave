@@ -72,6 +72,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
                 name.Parameters);
         }
 
+        [TestCaseSource(typeof(TestUtils), "TypeSource")]
+        public void ShouldParseReturnType(string typeId)
+        {
+            var name = new LambdaName("[{0}] ([{0}] p1, [{0}] p2)".FormatEx(typeId));
+
+            Assert.AreEqual(TypeUtils.CreateTypeName(typeId), name.ReturnType);
+        }
+
         [Test]
         public void ParameterParsingIsCached()
         {

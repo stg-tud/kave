@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Model.Naming.Types;
@@ -65,12 +64,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
                 {
                     return new TypeName();
                 }
-                var startIndexOfValueTypeIdentifier = Identifier.IndexOf('[') + 1;
-                var lastIndexOfValueTypeIdentifer = Identifier.IndexOf("]", StringComparison.Ordinal);
-                var lengthOfValueTypeIdentifier = lastIndexOfValueTypeIdentifer - startIndexOfValueTypeIdentifier;
-                return
-                    TypeUtils.CreateTypeName(
-                        Identifier.Substring(startIndexOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
+                var openR = Identifier.IndexOf('[');
+                var closeR = Identifier.FindCorrespondingCloseBracket(openR);
+                openR++; // skip bracket
+                return TypeUtils.CreateTypeName(Identifier.Substring(openR, closeR - openR));
             }
         }
 
