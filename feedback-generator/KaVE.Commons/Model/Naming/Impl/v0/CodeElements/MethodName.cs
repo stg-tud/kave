@@ -130,6 +130,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
             get { return Name.Equals(".ctor") || Name.Equals(".cctor"); }
         }
 
+        public bool IsInit
+        {
+            get { return Name.Equals(".init") || Name.Equals(".cinit"); }
+        }
+
         public ITypeName ReturnType
         {
             // TODO NameUpdate: Technically, this is not correct! the value type of a method is a delegate

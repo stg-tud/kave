@@ -86,6 +86,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             }
         }
 
+        public bool IsInit
+        {
+            get { return false; }
+        }
+
         public ITypeName ReturnType
         {
             get

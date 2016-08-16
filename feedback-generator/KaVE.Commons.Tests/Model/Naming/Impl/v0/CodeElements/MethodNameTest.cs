@@ -49,6 +49,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.False(sut.HasParameters);
             Assert.False(sut.HasTypeParameters);
             Assert.False(sut.IsConstructor);
+            Assert.False(sut.IsInit);
             Assert.False(sut.IsExtensionMethod);
             Assert.AreEqual(Lists.NewList<IParameterName>(), sut.Parameters);
             Assert.AreEqual(Lists.NewList<ITypeParameterName>(), sut.TypeParameters);
@@ -178,10 +179,17 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
         [Test]
         public void ShouldParseConstructors()
         {
-            const string voidId = "[System.Void, mscorlib, 4.0.0.0]";
-            Assert.IsFalse(new MethodName(voidId + " [D,P].M()").IsConstructor);
-            Assert.IsTrue(new MethodName(voidId + " [D,P]..ctor()").IsConstructor);
-            Assert.IsTrue(new MethodName(voidId + " [D,P]..cctor()").IsConstructor);
+            Assert.IsFalse(new MethodName("[p:void] [D,P].M()").IsConstructor);
+            Assert.IsTrue(new MethodName("[p:void] [D,P]..ctor()").IsConstructor);
+            Assert.IsTrue(new MethodName("[p:void] [D,P]..cctor()").IsConstructor);
+        }
+
+        [Test]
+        public void ShouldParseInits()
+        {
+            Assert.IsFalse(new MethodName("[p:void] [D,P].M()").IsInit);
+            Assert.IsTrue(new MethodName("[p:void] [D,P]..init()").IsInit);
+            Assert.IsTrue(new MethodName("[p:void] [D,P]..cinit()").IsInit);
         }
 
         [ExpectedException(typeof(AssertException)), //

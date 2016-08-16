@@ -21,6 +21,7 @@ namespace KaVE.Commons.Model.Naming.CodeElements
     public interface IMethodName : IMemberName, IGenericName, IParameterizedName
     {
         bool IsConstructor { get; }
+        bool IsInit { get; }
         ITypeName ReturnType { get; }
         bool IsExtensionMethod { get; }
     }
