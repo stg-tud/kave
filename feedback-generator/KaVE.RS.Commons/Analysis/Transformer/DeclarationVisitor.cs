@@ -24,6 +24,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
+using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -37,6 +38,7 @@ using KaVE.RS.Commons.Analysis.Util;
 using KaVE.RS.Commons.Utils.Naming;
 using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using IKaVEStatement = KaVE.Commons.Model.SSTs.IStatement;
+using IKaVEMethodDecl = KaVE.Commons.Model.SSTs.Declarations.IMethodDeclaration;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
 {
@@ -47,6 +49,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         private readonly CompletionTargetMarker _marker;
         private readonly CancellationToken _cancellationToken;
 
+        private readonly ExpressionVisitor _initVisitor;
+        private readonly ExpressionVisitor _cinitVisitor;
+        private IKaVEMethodDecl _init;
+        private IKaVEMethodDecl _cinit;
+
         public DeclarationVisitor(KaVELogger logger,
             ISet<IMethodName> entryPoints,
             CompletionTargetMarker marker,
@@ -56,6 +63,37 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             _entryPoints = entryPoints;
             _marker = marker;
             _cancellationToken = cancellationToken;
+
+            _initVisitor = new ExpressionVisitor(new UniqueVariableNameGenerator(), _marker);
+            _cinitVisitor = new ExpressionVisitor(new UniqueVariableNameGenerator(), _marker);
+        }
+
+        private IKaVEMethodDecl GetInit(ISST sst)
+        {
+            if (_init == null)
+            {
+                _init = new MethodDeclaration
+                {
+                    Name = Names.Method("[p:void] [{0}]..init()", sst.EnclosingType.Identifier),
+                    IsEntryPoint = false
+                };
+                sst.Methods.Add(_init);
+            }
+            return _init;
+        }
+
+        private IKaVEMethodDecl GetClassInit(ISST sst)
+        {
+            if (_cinit == null)
+            {
+                _cinit = new MethodDeclaration
+                {
+                    Name = Names.Method("static [p:void] [{0}]..cinit()", sst.EnclosingType.Identifier),
+                    IsEntryPoint = false
+                };
+                sst.Methods.Add(_cinit);
+            }
+            return _cinit;
         }
 
         public override void VisitNode(ITreeNode node, SST context)
@@ -128,25 +166,62 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         }
 
         public override void VisitEventDeclaration(IEventDeclaration decl,
-            SST context)
+            SST sst)
         {
             if (decl.DeclaredElement != null)
             {
                 var name = decl.DeclaredElement.GetName<IEventName>();
 
-                context.Events.Add(new EventDeclaration {Name = name});
+                sst.Events.Add(new EventDeclaration {Name = name});
+
+                if (decl.Initializer != null)
+                {
+                    var m = name.IsStatic ? GetClassInit(sst) : GetInit(sst);
+                    var vis = name.IsStatic ? _cinitVisitor : _initVisitor;
+                    var varRef = name.IsStatic ? new VariableReference() : new VariableReference {Identifier = "this"};
+
+                    var varInit = decl.Initializer as IVariableInitializer;
+                    m.Body.Add(
+                        new Assignment
+                        {
+                            Reference = new EventReference
+                            {
+                                EventName = name,
+                                Reference = varRef
+                            },
+                            Expression = vis.ToAssignableExpr(varInit, m.Body)
+                        });
+                }
             }
         }
 
-
         public override void VisitFieldDeclaration(IFieldDeclaration decl,
-            SST context)
+            SST sst)
         {
             if (decl.DeclaredElement != null)
             {
                 var name = decl.DeclaredElement.GetName<IFieldName>();
 
-                context.Fields.Add(new FieldDeclaration {Name = name});
+                sst.Fields.Add(new FieldDeclaration {Name = name});
+
+                if (decl.Initializer != null)
+                {
+                    var m = name.IsStatic ? GetClassInit(sst) : GetInit(sst);
+                    var vis = name.IsStatic ? _cinitVisitor : _initVisitor;
+                    var varRef = name.IsStatic ? new VariableReference() : new VariableReference {Identifier = "this"};
+
+                    var varInit = decl.Initializer as IVariableInitializer;
+                    m.Body.Add(
+                        new Assignment
+                        {
+                            Reference = new FieldReference
+                            {
+                                FieldName = name,
+                                Reference = varRef
+                            },
+                            Expression = vis.ToAssignableExpr(varInit, m.Body)
+                        });
+                }
             }
         }
 
