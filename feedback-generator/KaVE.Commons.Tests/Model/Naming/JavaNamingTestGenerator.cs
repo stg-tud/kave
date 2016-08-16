@@ -444,6 +444,8 @@ namespace KaVE.Commons.Tests.Model.Naming
             {
                 "[p:void] [T,P]..ctor()",
                 "[p:void] [T,P]..cctor()",
+                "[p:void] [T,P]..init()",
+                "[p:void] [T,P]..cinit()",
                 "static [p:void] [T,P].Ext(this [p:int] i)"
             };
             counter++;
@@ -534,6 +536,7 @@ namespace KaVE.Commons.Tests.Model.Naming
             OpenTestAndDeclareSut(counter, counter2, sut);
             _sb.AppendAreEqual(sut.ReturnType, "sut.getReturnType()");
             _sb.AppendAreEqual(sut.IsConstructor, "sut.isConstructor()");
+            _sb.AppendAreEqual(sut.IsInit, "sut.isInit()");
             _sb.AppendAreEqual(sut.IsExtensionMethod, "sut.isExtensionMethod()");
 
             _sb.AppendParameterizedNameAssert(sut);
