@@ -68,7 +68,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         public void FieldAssignment_CompletionAfter()
         {
             CompleteInClass(@"
-                private int _f = 3;
+                private int _f;
                 public void M(){
                     _f = 3;
                     $
@@ -84,7 +84,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         public void FieldAssignment_CompletionBefore()
         {
             CompleteInClass(@"
-                private int _f = 3;
+                private int _f;
                 public void M(){
                     $
                     _f = 3;
@@ -100,7 +100,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statem
         public void FieldAssignment_CompletionInEmptyAssignment()
         {
             CompleteInClass(@"
-                private int _f = 3;
+                private int _f;
                 public void M(){
                     _f = $
                 }
