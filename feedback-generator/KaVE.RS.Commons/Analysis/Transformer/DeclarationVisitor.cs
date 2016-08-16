@@ -272,22 +272,38 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 var propDecl = new PropertyDeclaration {Name = name};
                 context.Properties.Add(propDecl);
 
-                foreach (var accessor in decl.AccessorDeclarations)
+                AddAccessorDecl(decl, propDecl);
+            }
+        }
+
+        public override void VisitIndexerDeclaration(IIndexerDeclaration decl, SST sst)
+        {
+            var name = decl.DeclaredElement.GetName<IPropertyName>();
+
+            var propDecl = new PropertyDeclaration {Name = name};
+            sst.Properties.Add(propDecl);
+
+            AddAccessorDecl(decl, propDecl);
+        }
+
+        private void AddAccessorDecl(IAccessorOwnerDeclaration decl,
+            KaVE.Commons.Model.SSTs.Declarations.IPropertyDeclaration propDecl)
+        {
+            foreach (var accessor in decl.AccessorDeclarations)
+            {
+                var bodyVisitor = new BodyVisitor(new UniqueVariableNameGenerator(), _marker);
+                var body = Lists.NewList<IKaVEStatement>();
+
+                if (accessor.Kind == AccessorKind.GETTER)
                 {
-                    var bodyVisitor = new BodyVisitor(new UniqueVariableNameGenerator(), _marker);
-                    var body = Lists.NewList<IKaVEStatement>();
-
-                    if (accessor.Kind == AccessorKind.GETTER)
-                    {
-                        body = propDecl.Get;
-                    }
-                    if (accessor.Kind == AccessorKind.SETTER)
-                    {
-                        body = propDecl.Set;
-                    }
-
-                    accessor.Accept(bodyVisitor, body);
+                    body = propDecl.Get;
                 }
+                if (accessor.Kind == AccessorKind.SETTER)
+                {
+                    body = propDecl.Set;
+                }
+
+                accessor.Accept(bodyVisitor, body);
             }
         }
     }

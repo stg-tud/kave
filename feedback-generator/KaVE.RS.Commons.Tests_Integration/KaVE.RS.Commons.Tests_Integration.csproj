@@ -171,6 +171,7 @@
     <Compile Include="Analysis\ContextAnalysisEnclosingMethodTest.cs" />
     <Compile Include="Analysis\ContextAnalysisCompletionTargetTest.cs" />
     <Compile Include="Analysis\ContextAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\IndexerDeclarationAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\DifferentTypesTest.cs" />
     <Compile Include="Analysis\TypeShapeAnalysisTestSuite\MethodHierarchyTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithIncompleteReferenceSmokeTest.cs" />
