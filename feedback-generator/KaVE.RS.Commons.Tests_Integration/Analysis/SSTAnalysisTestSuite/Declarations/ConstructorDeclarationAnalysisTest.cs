@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -186,6 +188,25 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
             ");
 
             AssertAllMethods(ConstructorDecl("N.C, TestProject"));
+        }
+
+        [Test]
+        public void StaticConstructorsAreCaptured()
+        {
+            CompleteInNamespace(@"
+                class C
+                {
+                    static C() {}
+                    $
+                }
+            ");
+
+            AssertAllMethods(
+                new MethodDeclaration
+                {
+                    Name = Names.Method("static [p:void] [N.C, TestProject]..cctor()"),
+                    IsEntryPoint = true
+                });
         }
     }
 }
