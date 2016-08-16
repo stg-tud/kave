@@ -167,7 +167,9 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 
         public void RemoveRange(IEnumerable<IDEEvent> entries)
         {
-            RemoveEntries(entries.Contains);
+            // cannot use method group as compilation fails in VS15
+            // ReSharper disable once ConvertClosureToMethodGroup
+            RemoveEntries(e => entries.Contains(e));
         }
 
         public void RemoveEntriesOlderThan(DateTime time)
