@@ -24,15 +24,6 @@ using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declarations
 {
-    class SampleCollection
-    {
-        public int this[int i, int j]
-        {
-            get { return -1; }
-            set { }
-        }
-    }
-
     internal class IndexerDeclarationAnalysisTest : BaseSSTAnalysisTest
     {
         [Test]
