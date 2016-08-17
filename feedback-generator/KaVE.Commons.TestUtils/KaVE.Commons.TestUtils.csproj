@@ -75,6 +75,8 @@
     <Compile Include="UserControls\UserControlTestUtils.cs" />
     <Compile Include="Utils\Csv\CsvTestUtils.cs" />
     <Compile Include="Utils\Exceptions\TestLogger.cs" />
+    <Compile Include="Utils\SolutionFinder.cs" />
+    <Compile Include="Utils\SolutionFinderTest.cs" />
     <Compile Include="Utils\TestDateUtils.cs" />
   </ItemGroup>
   <ItemGroup>
