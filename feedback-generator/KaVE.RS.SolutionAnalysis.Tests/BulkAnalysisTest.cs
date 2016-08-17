@@ -17,140 +17,83 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.TestUtils;
+using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO.Archives;
-using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class BulkAnalysisTest : BaseTestWithExistingSolution
     {
-        private const string Root = @"C:\Data\";
-        //private const string RepositoryRoot = Root + @"Repositories-Test\";
-        //private const string RepositoryRoot = @"C:\Users\seb\versioned_code\AnalysisTestCases\";
+        private const string Root = @"E:\";
         private const string RepositoryRoot = Root + @"Repositories\";
         private const string ContextRoot = Root + @"Contexts\";
         private const string LogRoot = Root + @"Logs\";
 
+        private static readonly SolutionFinder SlnFinder = new SolutionFinder(RepositoryRoot);
+
         private string _currentSolution;
-
-        protected override FileSystemPath ExistingSolutionFilePath
-        {
-            get { return FileSystemPath.Parse(RepositoryRoot + _currentSolution); }
-        }
-
-        public static IEnumerable<string> FindSolutionFiles()
-        {
-            var shortened = ReadOrCreateIndex();
-            var notAnalyzed = shortened.Where(s => !IsAlreadyAnalyzed(s));
-            var notMarked = notAnalyzed.Where(s => !IsAlreadyStarted(s));
-            var notCrashed = notMarked.Where(s => !IsCrashed(s));
-            return notCrashed;
-        }
-
-        private static IEnumerable<string> ReadOrCreateIndex()
-        {
-            try
-            {
-                var indexFile = Path.Combine(RepositoryRoot, "index.json");
-                if (File.Exists(indexFile))
-                {
-                    Console.WriteLine("Reading index... {0}", DateTime.Now);
-                    var json = File.ReadAllText(indexFile);
-                    return json.ParseJsonTo<IEnumerable<string>>();
-                }
-
-                Console.WriteLine("Finding solutions... {0}", DateTime.Now);
-                var all = Directory.GetFiles(RepositoryRoot, "*.sln", SearchOption.AllDirectories);
-                var filtered = all.Where(sln => !sln.Contains(@"\test\data\"));
-                var shortened = filtered.Select(sln => sln.Substring(RepositoryRoot.Length));
-
-                Console.WriteLine("Creating index... {0}", DateTime.Now);
-                File.WriteAllText(indexFile, shortened.ToCompactJson());
-                return shortened;
-            }
-            catch (IOException e)
-            {
-                return new string[0];
-            }
-        }
-
-        private static bool IsCrashed(string shortenedSolution)
-        {
-            var marker = GetCrashMarkerName(shortenedSolution);
-            var isCrashed = File.Exists(marker);
-            return isCrashed;
-        }
-
-        // TODO ad hoc fix, write test!
-        private static bool IsAlreadyAnalyzed(string shortenedSolution)
-        {
-            var ctxZipName = GetZipName(shortenedSolution);
-            var isAlreadyAnalyzed = File.Exists(ctxZipName);
-            return isAlreadyAnalyzed;
-        }
-
-        // TODO ad hoc fix, write test!
-        private static bool IsAlreadyStarted(string shortenedSolution)
-        {
-            var ctxZipName = GetMarkerName(shortenedSolution, StartedMarker);
-            var isAlreadyMarked = File.Exists(ctxZipName);
-            return isAlreadyMarked;
-        }
+        private string _currentSolutionPath;
 
         private string _logName;
         private string _zipName;
         private TestRunnerLogger _logger;
-        private const string CrashMarker = ".crashed";
-        private const string StartedMarker = ".started";
-        private const string EndMarker = ".ended";
+
+        protected override FileSystemPath ExistingSolutionFilePath
+        {
+            get { return FileSystemPath.Parse(_currentSolutionPath); }
+        }
+
+        public static IEnumerable<string[]> FindSolutionFiles()
+        {
+            return SlnFinder.GetTestData();
+        }
 
         //[TestCaseSource("FindSolutionFiles")]
-        public void AnalyzeSolution(string shortenedSolution)
+        public void AnalyzeSolution(string testCaseLabel, string sln)
         {
-            _currentSolution = shortenedSolution;
-            _logName = GetLogName(_currentSolution);
-            _zipName = GetZipName(_currentSolution);
+            if (SlnFinder.ShouldIgnore(sln))
+            {
+                Assert.Ignore();
+            }
 
-            CreateMarker(shortenedSolution, StartedMarker);
-            File.Create(GetCrashMarkerName(shortenedSolution)).Close();
+            _currentSolution = sln;
+            _currentSolutionPath = SlnFinder.GetFullPath(_currentSolution);
+            SlnFinder.Start(sln);
 
             Console.WriteLine("Opening solution: {0} ({1})\n", ExistingSolutionFilePath, DateTime.Now);
-            Console.WriteLine("Log: {0}", _logName);
-            Console.WriteLine("Contexts: {0}\n", _zipName);
-            Console.WriteLine("copy&paste: {0}\n", shortenedSolution.Replace(@"\", "/"));
+            Console.WriteLine("Log: {0}", _logName = GetLogName(sln));
+            Console.WriteLine("Contexts: {0}\n", _zipName = GetZipName(sln));
+            Console.WriteLine("copy&paste: {0}\n", sln.Replace(@"\", "/"));
 
             _logger = new TestRunnerLogger(_logName);
 
             DoTestSolution(ExistingSolutionFilePath, RunAnalysis);
 
-            CreateMarker(shortenedSolution, EndMarker);
-            File.Delete(GetCrashMarkerName(shortenedSolution));
-            _logger.AssertNoError();
-        }
-
-        private static void CreateMarker(string shortenedSolution, string marker)
-        {
-            var name = GetMarkerName(shortenedSolution, marker);
-            File.Create(name).Close();
+            if (_logger.HasError)
+            {
+                SlnFinder.Crash(sln);
+                Assert.Fail("execution produced at least one error, see error log for details\n");
+            }
+            else
+            {
+                SlnFinder.End(sln);
+            }
         }
 
         private void RunAnalysis(Lifetime lifetime, ISolution solution)
         {
             Console.WriteLine("Starting analysis... ({0})", DateTime.Now);
 
-            IWritingArchive wa = null;
-            try
+            using (var wa = new WritingArchive(_zipName))
             {
-                wa = new WritingArchive(_zipName);
                 var countWithMethods = 0;
                 Action<Context> cbContext = ctx =>
                 {
@@ -168,45 +111,23 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 _logger.EndPossibleErrorBlock();
 
                 Console.WriteLine("Analysis finished! ({0})", DateTime.Now);
-                var count = wa.NumItemsAdded;
                 Console.WriteLine(
                     "found {0} context(s), {1} contain(s) method declarations",
-                    count,
+                    wa.NumItemsAdded,
                     countWithMethods);
             }
-            finally
-            {
-                if (wa != null)
-                {
-                    wa.Dispose();
-                }
-            }
+        }
+
+        private string GetLogName(string relativeSolutionPath)
+        {
+            var fileName = LogRoot + relativeSolutionPath + "-log.txt";
+            EnsureFolderExists(fileName);
+            return fileName;
         }
 
         private static string GetZipName(string relativeSolutionPath)
         {
             var fileName = ContextRoot + relativeSolutionPath + "-contexts.zip";
-            EnsureFolderExists(fileName);
-            return fileName;
-        }
-
-        private static string GetMarkerName(string relativeSolutionPath, string marker)
-        {
-            var fileName = ContextRoot + relativeSolutionPath + marker;
-            EnsureFolderExists(fileName);
-            return fileName;
-        }
-
-        private static string GetCrashMarkerName(string relativeSolutionPath)
-        {
-            var fileName = RepositoryRoot + relativeSolutionPath + CrashMarker;
-            EnsureFolderExists(fileName);
-            return fileName;
-        }
-
-        private static string GetLogName(string relativeSolutionPath)
-        {
-            var fileName = LogRoot + relativeSolutionPath + "-log.txt";
             EnsureFolderExists(fileName);
             return fileName;
         }

@@ -16,7 +16,6 @@
 
 using System;
 using KaVE.Commons.Utils.Exceptions;
-using NUnit.Framework;
 
 namespace KaVE.Commons.TestUtils
 {
@@ -24,7 +23,6 @@ namespace KaVE.Commons.TestUtils
     {
         private readonly ILogger _logger;
         private readonly string _logPath;
-        private bool _hasError;
 
         public TestRunnerLogger(string logPath)
         {
@@ -32,9 +30,11 @@ namespace KaVE.Commons.TestUtils
             _logPath = logPath;
         }
 
+        public bool HasError { get; private set; }
+
         public void Error(Exception exception, string content, params object[] args)
         {
-            _hasError = true;
+            HasError = true;
             WriteSeparator();
             Console.WriteLine(content, args);
             Console.WriteLine(exception);
@@ -48,7 +48,7 @@ namespace KaVE.Commons.TestUtils
 
         public void Error(Exception exception)
         {
-            _hasError = true;
+            HasError = true;
             WriteSeparator();
             Console.WriteLine(exception);
             _logger.Error(exception);
@@ -56,7 +56,7 @@ namespace KaVE.Commons.TestUtils
 
         public void Error(string content, params object[] args)
         {
-            _hasError = true;
+            HasError = true;
             WriteSeparator();
             Console.WriteLine(content, args);
             _logger.Error(content, args);
@@ -69,17 +69,9 @@ namespace KaVE.Commons.TestUtils
 
         public void EndPossibleErrorBlock()
         {
-            if (_hasError)
+            if (HasError)
             {
                 WriteSeparator();
-            }
-        }
-
-        public void AssertNoError()
-        {
-            if (_hasError)
-            {
-                Assert.Fail("execution produced at least one error, see log for more details: {0}\n", _logPath);
             }
         }
     }
