@@ -184,7 +184,6 @@
     <Compile Include="RelativeEditLocationAnalysisTest.cs" />
     <Compile Include="RelativeEditLocationTest.cs" />
     <Compile Include="SolutionAnalysisTest.cs" />
-    <Compile Include="InjectableTestLogger.cs" />
     <Compile Include="SortByUser\Filters\InvalidCompletionEventFilterTest.cs" />
     <Compile Include="SortByUser\Filters\NoTimeFilterTest.cs" />
     <Compile Include="SortByUser\SortByUserIoTest.cs" />

@@ -16,11 +16,11 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("KaVE.Commons.ReSharper.Tests")]
+[assembly: AssemblyTitle("KaVE.RS.Commons.Tests_Unit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("KaVE.Commons.ReSharper.Tests")]
+[assembly: AssemblyProduct("KaVE.RS.Commons.Tests_Unit")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

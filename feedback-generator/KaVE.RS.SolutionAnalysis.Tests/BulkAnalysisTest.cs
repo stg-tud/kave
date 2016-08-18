@@ -37,7 +37,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private const string ContextRoot = Root + @"Contexts\";
         private const string LogRoot = Root + @"Logs\";
 
-        private static readonly SolutionFinder SlnFinder = new SolutionFinder(RepositoryRoot);
+        private static SolutionFinder _slnFinder;
 
         private string _currentSolution;
         private string _currentSolutionPath;
@@ -53,20 +53,25 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
         public static IEnumerable<string[]> FindSolutionFiles()
         {
-            return SlnFinder.GetTestData();
+            // set field here to prevent initialization error when path is not found
+            if (_slnFinder == null)
+            {
+                _slnFinder = new SolutionFinder(RepositoryRoot);
+            }
+            return _slnFinder.GetTestData();
         }
 
         //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string testCaseLabel, string sln)
         {
-            if (SlnFinder.ShouldIgnore(sln))
+            if (_slnFinder.ShouldIgnore(sln))
             {
                 Assert.Ignore();
             }
 
             _currentSolution = sln;
-            _currentSolutionPath = SlnFinder.GetFullPath(_currentSolution);
-            SlnFinder.Start(sln);
+            _currentSolutionPath = _slnFinder.GetFullPath(_currentSolution);
+            _slnFinder.Start(sln);
 
             Console.WriteLine("Opening solution: {0} ({1})\n", ExistingSolutionFilePath, DateTime.Now);
             Console.WriteLine("Log: {0}", _logName = GetLogName(sln));
@@ -79,12 +84,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
             if (_logger.HasError)
             {
-                SlnFinder.Crash(sln);
+                _slnFinder.Crash(sln);
                 Assert.Fail("execution produced at least one error, see error log for details\n");
             }
             else
             {
-                SlnFinder.End(sln);
+                _slnFinder.End(sln);
             }
         }
 
