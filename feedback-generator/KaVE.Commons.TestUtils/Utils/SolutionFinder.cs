@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,28 +32,36 @@ namespace KaVE.Commons.TestUtils.Utils
 
         public string Root { get; private set; }
 
-        private IEnumerable<string> _solutions;
+        private readonly IDictionary<string, ISet<string>> _cache = new Dictionary<string, ISet<string>>();
 
         public IEnumerable<string> Solutions
         {
             get
             {
-                if (_solutions != null)
+                if (_cache.ContainsKey(IndexFile))
                 {
-                    return _solutions;
+                    return _cache[IndexFile];
                 }
+
                 if (HasIndex())
                 {
-                    return _solutions = Read(IndexFile);
+                    var slns = Read(IndexFile);
+                    _cache[IndexFile] = slns;
+                    return slns;
                 }
-                _solutions = FindSolutions();
-                Write(_solutions, IndexFile);
-                return _solutions;
+                else
+                {
+                    var slns = FindSolutions();
+                    Write(slns, IndexFile);
+                    return slns;
+                }
             }
         }
 
-        private void Write(IEnumerable<string> slns, string file)
+        private void Write(ISet<string> slns, string file)
         {
+            _cache[file] = slns;
+
             var json = slns.ToFormattedJson();
             var fullPath = GetFullPath(file);
             File.WriteAllText(fullPath, json);
@@ -63,6 +70,11 @@ namespace KaVE.Commons.TestUtils.Utils
 
         private ISet<string> Read(string file)
         {
+            if (_cache.ContainsKey(file))
+            {
+                return _cache[file];
+            }
+
             var fullPath = GetFullPath(file);
             if (!File.Exists(fullPath))
             {
@@ -94,34 +106,6 @@ namespace KaVE.Commons.TestUtils.Utils
             }
             Root = root;
             Asserts.That(Directory.Exists(Root));
-        }
-
-
-        public IEnumerable<string> ReadOrCreateIndex()
-        {
-            try
-            {
-                var indexFile = Path.Combine(Root, "index.json");
-                if (File.Exists(indexFile))
-                {
-                    Console.WriteLine("Reading index... {0}", DateTime.Now);
-                    var json = File.ReadAllText(indexFile);
-                    return json.ParseJsonTo<IEnumerable<string>>();
-                }
-
-                Console.WriteLine("Finding solutions... {0}", DateTime.Now);
-                var all = Directory.GetFiles(Root, "*.sln", SearchOption.AllDirectories);
-                var filtered = all.Where(sln => !sln.Contains(@"\test\data\"));
-                var shortened = filtered.Select(sln => sln.Substring(Root.Length));
-
-                Console.WriteLine("Creating index... {0}", DateTime.Now);
-                File.WriteAllText(indexFile, shortened.ToCompactJson());
-                return shortened;
-            }
-            catch (IOException e)
-            {
-                return new string[0];
-            }
         }
 
         public string GetFullPath(string file)
