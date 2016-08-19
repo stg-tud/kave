@@ -50,7 +50,7 @@ namespace KaVE.FeedbackProcessor
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
             //var file = "C:/Users/Andreas/Desktop/testrunevents.zip";
             CleanDirs(outFolder);
-            
+
             Logger.Info(@"Creating intervals now ...");
             var intervals = new IntervalTransformer(Logger).TransformFolder(inFolder).ToList();
 

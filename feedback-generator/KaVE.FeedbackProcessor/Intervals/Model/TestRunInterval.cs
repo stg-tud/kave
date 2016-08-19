@@ -107,7 +107,6 @@ namespace KaVE.FeedbackProcessor.Intervals.Model
         }
 
         public string ProjectName { get; set; }
-        public TimeSpan Duration { get; set; }
         public TestResult Result { get; set; }
         public IKaVEList<TestClassResult> TestClasses { get; set; }
 

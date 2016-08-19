@@ -49,6 +49,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Svg, Version=2.2.1.1459, Culture=neutral, PublicKeyToken=12a0bac221edeae2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Svg.2.2.1\lib\net35\Svg.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -60,6 +64,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.98.1\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -141,6 +146,7 @@
     <Compile Include="Intervals\TransformerUtils.cs" />
     <Compile Include="Intervals\Transformers\UserActiveTransformer.cs" />
     <Compile Include="Intervals\Transformers\VisualStudioOpenedTransformer.cs" />
+    <Compile Include="Intervals\Exporter\SvgExport.cs" />
     <Compile Include="Model\ConcurrentEvent.cs" />
     <Compile Include="Model\Developer.cs" />
     <Compile Include="Model\DevelopmentHistory\SSTSnapshot.cs" />
