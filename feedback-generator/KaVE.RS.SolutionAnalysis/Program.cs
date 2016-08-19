@@ -19,6 +19,7 @@ using System.IO;
 using KaVE.Commons.Tests.Model.Naming;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
+using KaVE.RS.Commons;
 using KaVE.RS.SolutionAnalysis.CleanUp;
 using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
@@ -60,7 +61,8 @@ namespace KaVE.RS.SolutionAnalysis
 
 
             // new JustReadRunner(DirEventsAll).Run();
-            new JavaNamingTestGenerator().Run();
+            //new JavaNamingTestGenerator().Run();
+            new MultiRunner().Run();
 
             return;
 

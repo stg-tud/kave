@@ -188,6 +188,7 @@
     <Compile Include="Injectables\InjectableRandomizationUtils.cs" />
     <Compile Include="Injectables\InjectableTypePathUtil.cs" />
     <Compile Include="Injectables\InjectableVersionUtil.cs" />
+    <Compile Include="MultiRunner.cs" />
     <Compile Include="Properties\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
