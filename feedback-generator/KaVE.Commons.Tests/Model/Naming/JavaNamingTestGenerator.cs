@@ -356,8 +356,16 @@ namespace KaVE.Commons.Tests.Model.Naming
                 {
                     new TestCaseResult
                     {
-                        Parameters = "..",
-                        Duration = TimeSpan.FromSeconds(5),
+                        Parameters = "without start...",
+                        Duration = TimeSpan.FromSeconds(1),
+                        Result = TestResult.Success,
+                        TestMethod = Names.Method("[?] [?].M()")
+                    },
+                    new TestCaseResult
+                    {
+                        Parameters = "with start...",
+                        StartTime = DateTime.Now,
+                        Duration = TimeSpan.FromSeconds(2),
                         Result = TestResult.Success,
                         TestMethod = Names.Method("[?] [?].M()")
                     }

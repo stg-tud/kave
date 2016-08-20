@@ -169,6 +169,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                 var singleTestResult = new TestCaseResult
                 {
                     TestMethod = methodName,
+                    StartTime = result.Value.StartTime,
                     Duration = result.Value.Duration,
                     Parameters = GetParameterSubstringFromShortName(result.Key.ShortName),
                     Result = TranslateStatus(result.Value.Status)
