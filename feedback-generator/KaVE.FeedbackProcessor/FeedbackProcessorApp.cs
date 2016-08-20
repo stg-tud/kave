@@ -16,27 +16,19 @@
 
 using System;
 using System.IO;
-using System.Linq;
-using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Exceptions;
-using KaVE.Commons.Utils.IO.Archives;
-using KaVE.FeedbackProcessor.CleanUp2;
-using KaVE.FeedbackProcessor.CleanUp2.Filters;
-using KaVE.FeedbackProcessor.Intervals;
-using KaVE.FeedbackProcessor.Intervals.Exporter;
-using KaVE.FeedbackProcessor.SortByUser;
+using KaVE.FeedbackProcessor.Preprocessing;
+using KaVE.FeedbackProcessor.Preprocessing.Filters;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
 
 namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackProcessorApp
     {
-        private static readonly ILogger Logger = new ConsoleLogger();
+        private const string TmpDir = Desktop + @"interval-tests\tmp\";
 
         private const string Desktop = @"C:\Users\seb2\Desktop\";
-        private const string InFolder = Desktop + @"interval-tests\in\";
-        private const string OrderedFolder = Desktop + @"interval-tests\ordered\";
-        private const string CleanedFolder = Desktop + @"interval-tests\cleaned\";
+        private const string InDir = Desktop + @"interval-tests\in\";
+        private const string OutDir = Desktop + @"interval-tests\out\";
         private const string WdFolder = Desktop + @"interval-tests\watchdog\";
         private const string SvgFolder = Desktop + @"interval-tests\svg\";
         private const string EventsFolder = Desktop + @"interval-tests\events\";
@@ -57,9 +49,8 @@ namespace KaVE.FeedbackProcessor
             //    })
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
-
-            RunSortByUser(InFolder, OrderedFolder);
-            RunCleanUp(OrderedFolder, CleanedFolder);
+            CleanDirs(TmpDir, OutDir);
+            RunPreprocessing(InDir, TmpDir, OutDir);
 
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
@@ -72,68 +63,41 @@ namespace KaVE.FeedbackProcessor
             //WatchdogExporter.Convert(intervals).WriteToFiles(wdFolder);
 
 
-            Logger.Info("Done!");
-
             Console.ReadKey();
         }
 
         private static void RunWatchdogDebugging()
         {
-            var svge = new SvgExport();
-
-            CleanDirs(WdFolder, SvgFolder, EventsFolder);
-            foreach (var zip in FindZips(CleanedFolder))
-            {
-                Logger.Info(@"Opening {0} ...", zip);
-                var intervals = new IntervalTransformer(Logger).TransformFile(zip).ToList();
-                Logger.Info(@"Found {0} intervals.", intervals.Count);
-
-
-                var userId = intervals[0].UserId;
-                var svgFile = SvgFolder + userId + ".svg";
-                var eventsFile = EventsFolder + userId + ".txt";
-                var wdFilesFolder = WdFolder + userId;
-
-                Logger.Info(@"Dumping Event Stream ... ({0})", eventsFile);
-                WriteEventStream(zip, eventsFile);
-
-                Logger.Info(@"Converting to WD format ... ({0})", wdFilesFolder);
-                WatchdogExporter.Convert(intervals).WriteToFiles(wdFilesFolder);
-
-                Logger.Info(@"Now exporting .svg files for debugging ...");
-                svge.Run(Lists.NewListFrom(intervals), svgFile);
-            }
+            new WatchdogExportRunner().RunWatchdogDebugging(InDir, WdFolder, SvgFolder);
         }
 
-        private static string[] FindZips(string dir)
+        private static void RunPreprocessing(string dirIn, string dirTmp, string dirOut)
         {
-            var zips = Directory.GetFiles(dir, "*.zip", SearchOption.AllDirectories);
-            return zips;
+            var io = new PreprocessingIo(dirIn, dirTmp, dirOut);
+
+            new Runner(
+                io,
+                new RunnerLogger(new ConsoleLogger()),
+                3,
+                CreateIdReader,
+                new Grouper(),
+                CreateZipMerger,
+                CreateZipCleaner).Run();
         }
 
-        private static void WriteEventStream(string zip, string file)
+        private static IdReader CreateIdReader(IPreprocessingIo io, IPrepocessingLogger log)
         {
-            var ra = new ReadingArchive(zip);
-            var events = ra.GetAll<IDEEvent>();
-            EventStreamExport.Write(events, file);
+            throw new NotImplementedException();
         }
 
-
-        private static void RunSortByUser(string dirIn, string dirOut)
+        private static GroupMerger CreateZipMerger(IPreprocessingIo io, IPrepocessingLogger log)
         {
-            CleanDirs(dirOut);
-            var log = new SortByUserLogger();
-            var io = new IndexCreatingSortByUserIo(dirIn, dirOut, log);
-            new SortByUserRunner(io, log).Run();
+            throw new NotImplementedException();
         }
 
-
-        private static void RunCleanUp(string dirIn, string dirOut)
+        private static Cleaner CreateZipCleaner(IPreprocessingIo io, IPrepocessingLogger log)
         {
-            CleanDirs(dirOut);
-            var log = new CleanUpLogger();
-            var io = new CleanUpIo(dirIn, dirOut);
-            var runner = new CleanUpRunner(io, log)
+            return new Cleaner(io, new CleanerLogger(log))
             {
                 Filters =
                 {
@@ -143,8 +107,8 @@ namespace KaVE.FeedbackProcessor
                     new InvalidCompletionEventFilter()
                 }
             };
-            runner.Run();
         }
+
 
         private static void CleanDirs(params string[] dirs)
         {

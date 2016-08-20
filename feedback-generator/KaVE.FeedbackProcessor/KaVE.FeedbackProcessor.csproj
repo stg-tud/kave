@@ -97,15 +97,14 @@
     <Compile Include="Activities\WindowEventToActivityMapper.cs" />
     <Compile Include="BaseEventMapper.cs" />
     <Compile Include="BaseEventProcessor.cs" />
-    <Compile Include="CleanUp2\CleanUpIo.cs" />
-    <Compile Include="CleanUp2\CleanUpLogger.cs" />
-    <Compile Include="CleanUp2\CleanUpRunner.cs" />
-    <Compile Include="CleanUp2\Filters\BaseFilter.cs" />
-    <Compile Include="CleanUp2\Filters\IFilter.cs" />
-    <Compile Include="CleanUp2\Filters\InvalidCompletionEventFilter.cs" />
-    <Compile Include="CleanUp2\Filters\NoSessionIdFilter.cs" />
-    <Compile Include="CleanUp2\Filters\NoTimeFilter.cs" />
-    <Compile Include="CleanUp2\Filters\VersionFilter.cs" />
+    <Compile Include="Preprocessing\Logging\CleanerLogger.cs" />
+    <Compile Include="Preprocessing\Cleaner.cs" />
+    <Compile Include="Preprocessing\Filters\BaseFilter.cs" />
+    <Compile Include="Preprocessing\Filters\IFilter.cs" />
+    <Compile Include="Preprocessing\Filters\InvalidCompletionEventFilter.cs" />
+    <Compile Include="Preprocessing\Filters\NoSessionIdFilter.cs" />
+    <Compile Include="Preprocessing\Filters\NoTimeFilter.cs" />
+    <Compile Include="Preprocessing\Filters\VersionFilter.cs" />
     <Compile Include="Cleanup\DeveloperConsolidator.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristic.cs" />
     <Compile Include="Cleanup\Heuristics\CommandCompareHeuristic.cs" />
@@ -166,6 +165,18 @@
     <Compile Include="MultiRunner.cs" />
     <Compile Include="Naming\NameScrapingUtils.cs" />
     <Compile Include="Naming\NameScrapingVisitor.cs" />
+    <Compile Include="Preprocessing\Grouper.cs" />
+    <Compile Include="Preprocessing\IdReader.cs" />
+    <Compile Include="Preprocessing\Logging\ConsoleLogger.cs" />
+    <Compile Include="Preprocessing\Logging\FileLogger.cs" />
+    <Compile Include="Preprocessing\Logging\IPreprocessingLogger.cs" />
+    <Compile Include="Preprocessing\Logging\RunnerLogger.cs" />
+    <Compile Include="Preprocessing\Model\PreprocessingData.cs" />
+    <Compile Include="Preprocessing\PreprocessingIo.cs" />
+    <Compile Include="Preprocessing\Runner.cs" />
+    <Compile Include="Preprocessing\Logging\GrouperLogger.cs" />
+    <Compile Include="Preprocessing\GroupMerger.cs" />
+    <Compile Include="Preprocessing\Logging\GroupMergerLogger.cs" />
     <Compile Include="Properties\Configuration.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -190,10 +201,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SanityCheckApp.cs" />
-    <Compile Include="SortByUser\SortByUserIo.cs" />
-    <Compile Include="SortByUser\SortByUserLogger.cs" />
-    <Compile Include="SortByUser\SortByUserRunner.cs" />
-    <Compile Include="SortByUser\User.cs" />
+    <Compile Include="Preprocessing\Model\User.cs" />
     <Compile Include="SSTSequenceExtractor.cs" />
     <Compile Include="Statistics\AnonymizationStatisticsLogger.cs" />
     <Compile Include="Statistics\AverageBreakAfterEventsCalculator.cs" />
@@ -217,6 +225,7 @@
     <Compile Include="Utils\Pair.cs" />
     <Compile Include="Utils\ResourceProvider.cs" />
     <Compile Include="Utils\SortedCommandPair.cs" />
+    <Compile Include="WatchdogExportRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">

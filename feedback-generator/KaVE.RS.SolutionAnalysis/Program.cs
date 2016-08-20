@@ -19,9 +19,6 @@ using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.FeedbackProcessor;
-using KaVE.FeedbackProcessor.CleanUp2;
-using KaVE.FeedbackProcessor.CleanUp2.Filters;
-using KaVE.FeedbackProcessor.SortByUser;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using KaVE.RS.SolutionAnalysis.CSharpVsFSharp;
@@ -66,8 +63,6 @@ namespace KaVE.RS.SolutionAnalysis
             return;
 
             /* data preparation */
-            RunSortByUser(DirEventsAll, DirEventsAll_SortedByUser);
-            RunCleanUp(DirEventsAll_SortedByUser, DirEventsAll_Clean);
             //RunFailingRepoFinder();
             //RunApiStatisticsRunner();
             //RunCompletionEventStatistics();
@@ -131,32 +126,6 @@ namespace KaVE.RS.SolutionAnalysis
         {
             var log = new FailingRepoLogger();
             new FailingRepoFinder(log).Run(DirContexts_Github);
-        }
-
-        private static void RunCleanUp(string dirIn, string dirOut)
-        {
-            CleanDirs(dirOut);
-            var log = new CleanUpLogger();
-            var io = new CleanUpIo(dirIn, dirOut);
-            var runner = new CleanUpRunner(io, log)
-            {
-                Filters =
-                {
-                    new VersionFilter(1000),
-                    new NoSessionIdFilter(),
-                    new NoTimeFilter(),
-                    new InvalidCompletionEventFilter()
-                }
-            };
-            runner.Run();
-        }
-
-        private static void RunSortByUser(string dirIn, string dirOut)
-        {
-            CleanDirs(dirOut);
-            var log = new SortByUserLogger();
-            var io = new IndexCreatingSortByUserIo(dirIn, dirOut, log);
-            new SortByUserRunner(io, log).Run();
         }
 
         private static void RunStatisticsForPaperCreation()

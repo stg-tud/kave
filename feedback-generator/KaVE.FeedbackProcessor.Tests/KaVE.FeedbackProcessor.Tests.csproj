@@ -81,13 +81,15 @@
     <Compile Include="Activities\TestFixtures.cs" />
     <Compile Include="Activities\UpdateEventMapperTest.cs" />
     <Compile Include="Activities\WindowEventMapperTest.cs" />
-    <Compile Include="CleanUp2\CleanUpIoTest.cs" />
-    <Compile Include="CleanUp2\CleanUpLoggerTest.cs" />
-    <Compile Include="CleanUp2\CleanUpRunnerTest.cs" />
-    <Compile Include="CleanUp2\Filters\InvalidCompletionEventFilterTest.cs" />
-    <Compile Include="CleanUp2\Filters\NoSessionIdFilterTest.cs" />
-    <Compile Include="CleanUp2\Filters\NoTimeFilterTest.cs" />
-    <Compile Include="CleanUp2\Filters\VersionFilterTest.cs" />
+    <Compile Include="Preprocessing\GrouperTest.cs" />
+    <Compile Include="Preprocessing\GroupMergerTest.cs" />
+    <Compile Include="Preprocessing\IdReaderTest.cs" />
+    <Compile Include="Preprocessing\Logging\CleanerLoggerTest.cs" />
+    <Compile Include="Preprocessing\CleanerTest.cs" />
+    <Compile Include="Preprocessing\Filters\InvalidCompletionEventFilterTest.cs" />
+    <Compile Include="Preprocessing\Filters\NoSessionIdFilterTest.cs" />
+    <Compile Include="Preprocessing\Filters\NoTimeFilterTest.cs" />
+    <Compile Include="Preprocessing\Filters\VersionFilterTest.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristicTest.cs" />
     <Compile Include="Cleanup\Heuristics\CommandCompareHeuristicTest.cs" />
     <Compile Include="Cleanup\Heuristics\ConcurrentEventHeuristicTest.cs" />
@@ -142,11 +144,16 @@
     <Compile Include="Model\DeveloperTest.cs" />
     <Compile Include="Model\EventUtilsTest.cs" />
     <Compile Include="Model\TestFactory.cs" />
+    <Compile Include="Preprocessing\Logging\ConsoleLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\FileLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\GrouperLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\GroupMergerLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\RunnerLoggerTest.cs" />
+    <Compile Include="Preprocessing\Model\PreprocessingDataTest.cs" />
+    <Compile Include="Preprocessing\PreprocessingIoTest.cs" />
+    <Compile Include="Preprocessing\RunnerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SortByUser\SortByUserIoTest.cs" />
-    <Compile Include="SortByUser\SortByUserLoggerTest.cs" />
-    <Compile Include="SortByUser\SortByUserRunnerTest.cs" />
-    <Compile Include="SortByUser\UserTest.cs" />
+    <Compile Include="Preprocessing\Model\UserTest.cs" />
     <Compile Include="Statistics\AverageBreakAfterEventsCalculatorTest.cs" />
     <Compile Include="Statistics\CommandIdCollectorTest.cs" />
     <Compile Include="Statistics\DeveloperDayTest.cs" />
@@ -188,6 +195,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
