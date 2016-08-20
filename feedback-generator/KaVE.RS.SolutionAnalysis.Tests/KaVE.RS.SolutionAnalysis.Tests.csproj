@@ -167,11 +167,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CleanUp\CleanUpIoTest.cs" />
-    <Compile Include="CleanUp\CleanUpLoggerTest.cs" />
-    <Compile Include="CleanUp\CleanUpRunnerTest.cs" />
-    <Compile Include="CleanUp\Filters\NoSessionIdFilterTest.cs" />
-    <Compile Include="CleanUp\Filters\VersionFilterTest.cs" />
     <Compile Include="CompletionEventFilterTest.cs" />
     <Compile Include="CompletionEventStatistics\CompletionEventStatisticsIoTest.cs" />
     <Compile Include="CompletionEventStatistics\CompletionEventStatisticsLoggerTest.cs" />
@@ -184,13 +179,7 @@
     <Compile Include="RelativeEditLocationAnalysisTest.cs" />
     <Compile Include="RelativeEditLocationTest.cs" />
     <Compile Include="SolutionAnalysisTest.cs" />
-    <Compile Include="SortByUser\Filters\InvalidCompletionEventFilterTest.cs" />
-    <Compile Include="SortByUser\Filters\NoTimeFilterTest.cs" />
-    <Compile Include="SortByUser\SortByUserIoTest.cs" />
-    <Compile Include="SortByUser\SortByUserLoggerTest.cs" />
-    <Compile Include="SortByUser\UserTest.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIoTest.cs" />
-    <Compile Include="SortByUser\SortByUserRunnerTest.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinterTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportHelperTest.cs" />
     <Compile Include="UserProfileExports\UserProfileExportRunnerTest.cs" />

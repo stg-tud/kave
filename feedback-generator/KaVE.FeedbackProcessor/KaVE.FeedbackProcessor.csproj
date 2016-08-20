@@ -97,6 +97,15 @@
     <Compile Include="Activities\WindowEventToActivityMapper.cs" />
     <Compile Include="BaseEventMapper.cs" />
     <Compile Include="BaseEventProcessor.cs" />
+    <Compile Include="CleanUp2\CleanUpIo.cs" />
+    <Compile Include="CleanUp2\CleanUpLogger.cs" />
+    <Compile Include="CleanUp2\CleanUpRunner.cs" />
+    <Compile Include="CleanUp2\Filters\BaseFilter.cs" />
+    <Compile Include="CleanUp2\Filters\IFilter.cs" />
+    <Compile Include="CleanUp2\Filters\InvalidCompletionEventFilter.cs" />
+    <Compile Include="CleanUp2\Filters\NoSessionIdFilter.cs" />
+    <Compile Include="CleanUp2\Filters\NoTimeFilter.cs" />
+    <Compile Include="CleanUp2\Filters\VersionFilter.cs" />
     <Compile Include="Cleanup\DeveloperConsolidator.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristic.cs" />
     <Compile Include="Cleanup\Heuristics\CommandCompareHeuristic.cs" />
@@ -177,6 +186,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SanityCheckApp.cs" />
+    <Compile Include="SortByUser\SortByUserIo.cs" />
+    <Compile Include="SortByUser\SortByUserLogger.cs" />
+    <Compile Include="SortByUser\SortByUserRunner.cs" />
+    <Compile Include="SortByUser\User.cs" />
     <Compile Include="SSTSequenceExtractor.cs" />
     <Compile Include="Statistics\AnonymizationStatisticsLogger.cs" />
     <Compile Include="Statistics\AverageBreakAfterEventsCalculator.cs" />

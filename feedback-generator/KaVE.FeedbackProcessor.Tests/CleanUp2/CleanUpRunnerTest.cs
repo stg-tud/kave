@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.RS.SolutionAnalysis.CleanUp;
@@ -46,13 +45,14 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
             _intermediateResults = new Dictionary<string, IDictionary<string, int>>();
 
             _io = Mock.Of<ICleanUpIo>();
-            Mock.Get(_io).Setup(io => io.GetZips()).Returns(() => _inEvents.Keys.AsList());
+            Mock.Get(_io).Setup(io => io.GetZips()).Returns(() => Lists.NewListFrom(_inEvents.Keys));
             Mock.Get(_io)
                 .Setup(io => io.ReadZip(It.IsAny<string>()))
                 .Returns<string>(zip => _inEvents[zip]);
             Mock.Get(_io)
                 .Setup(io => io.WriteZip(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<string>()))
-                .Callback<IEnumerable<IDEEvent>, string>((events, zip) => { _outEvents[zip] = events.AsList(); });
+                .Callback<IEnumerable<IDEEvent>, string>(
+                    (events, zip) => { _outEvents[zip] = Lists.NewListFrom(events); });
 
             _log = Mock.Of<ICleanUpLogger>();
             Mock.Get(_log)

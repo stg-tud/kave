@@ -172,15 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiStatisticsRunner.cs" />
-    <Compile Include="CleanUp\CleanUpIo.cs" />
-    <Compile Include="CleanUp\CleanUpLogger.cs" />
-    <Compile Include="CleanUp\CleanUpRunner.cs" />
-    <Compile Include="CleanUp\Filters\BaseFilter.cs" />
-    <Compile Include="CleanUp\Filters\IFilter.cs" />
-    <Compile Include="CleanUp\Filters\InvalidCompletionEventFilter.cs" />
-    <Compile Include="CleanUp\Filters\NoSessionIdFilter.cs" />
-    <Compile Include="CleanUp\Filters\NoTimeFilter.cs" />
-    <Compile Include="CleanUp\Filters\VersionFilter.cs" />
     <Compile Include="CommandLineLogger.cs" />
     <Compile Include="CompletionEventFilter.cs" />
     <Compile Include="CompletionEventStatistics\CompletionEventStatisticsIo.cs" />
@@ -204,10 +195,6 @@
     <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SanityCheck.cs" />
     <Compile Include="SolutionAnalysis.cs" />
-    <Compile Include="SortByUser\SortByUserIo.cs" />
-    <Compile Include="SortByUser\SortByUserLogger.cs" />
-    <Compile Include="SortByUser\SortByUserRunner.cs" />
-    <Compile Include="SortByUser\User.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIo.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinter.cs" />
     <Compile Include="StatisticsForPapers\StatisticsForPaperRunner.cs" />
@@ -234,6 +221,10 @@
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.FeedbackProcessor\KaVE.FeedbackProcessor.csproj">
+      <Project>{7b7aea61-25f5-4938-bee7-ed26ae7be477}</Project>
+      <Name>KaVE.FeedbackProcessor</Name>
     </ProjectReference>
     <ProjectReference Include="..\KaVE.RS.Commons\KaVE.RS.Commons.csproj">
       <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
