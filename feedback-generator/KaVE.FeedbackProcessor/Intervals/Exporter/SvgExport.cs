@@ -20,6 +20,7 @@ using System.Drawing;
 using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.FeedbackProcessor.Intervals.Model;
 using Svg;
+using Svg.Transforms;
 
 namespace KaVE.FeedbackProcessor.Intervals.Exporter
 {
@@ -28,6 +29,8 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
         private const int LabelWidth = 170;
         private const int BarWidth = 1000;
         private const int MaxWidth = LabelWidth + BarWidth;
+        private const int MaxHeight = 500;
+
         private DateTime earliest;
         private DateTime latest;
 
@@ -40,12 +43,17 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             _doc = new SvgDocument
             {
                 Width = MaxWidth,
-                Height = 300
+                Height = MaxHeight,
+                FontFamily = "Arial",
+                FontSize = 10
             };
 
+            AddTimeMarker();
             var rows = new Dictionary<string, int>();
-            var nextRow = 10;
+            var nextRow = 42;
             rows.Add("VisualStudioOpened", nextRow);
+            nextRow += 15;
+            rows.Add("VisualStudioActive", nextRow);
             nextRow += 15;
             rows.Add("Perspective", nextRow);
             nextRow += 15;
@@ -61,6 +69,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             foreach (var i in intervals)
             {
                 var vsOpen = i as VisualStudioOpenedInterval;
+                var vsAct = i as VisualStudioActiveInterval;
                 var pers = i as PerspectiveInterval;
                 var ua = i as UserActiveInterval;
                 var fi = i as FileInteractionInterval;
@@ -72,18 +81,22 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
                 if (vsOpen != null)
                 {
-                    AddLine(5, coords, Color.DarkGray);
+                    AddLine(rows[label], coords, Color.FromArgb(0xff, 0xcc, 0xaa, 0xff));
+                }
+                else if (vsAct != null)
+                {
+                    AddLine(rows[label], coords, Color.DarkViolet);
                 }
                 else if (pers != null)
                 {
                     AddLine(
-                        20,
+                        rows[label],
                         coords,
                         pers.Perspective == PerspectiveType.Production ? Color.DodgerBlue : Color.DarkOrange);
                 }
                 else if (ua != null)
                 {
-                    AddLine(35, coords, Color.SaddleBrown);
+                    AddLine(rows[label], coords, Color.DarkGray);
                 }
                 else if (fi != null)
                 {
@@ -143,9 +156,49 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
             _doc.Write(fileName);
         }
 
+        private void AddTimeMarker()
+        {
+            var delta = TimeSpan.FromSeconds(1);
+            for (var t = earliest; t < latest; t = t + delta)
+            {
+                var c = GetCoords(t, t);
+                var lx = c.Start;
+                var ly = 37;
+                _doc.Nodes.Add(
+                    new SvgText
+                    {
+                        X = {lx},
+                        Y = {ly},
+                        Transforms =
+                        {
+                            new SvgRotate(270, lx, ly - 3)
+                        },
+                        FontSize = 8,
+                        Nodes = {new SvgContentNode {Content = t.ToString("HH:mm:ss")}}
+                    });
+                _doc.Nodes.Add(
+                    new SvgLine
+                    {
+                        StartX = c.Start,
+                        EndX = c.Start,
+                        StartY = 37,
+                        EndY = MaxHeight,
+                        StrokeWidth = 0.5f,
+                        StrokeDashArray = new SvgUnitCollection {0.5f, 1f},
+                        Stroke = new SvgColourServer(Color.LightGray)
+                    });
+            }
+        }
+
         private static Color GetTestColor(TestResult tr)
         {
-            return tr == TestResult.Error ? Color.Red : tr == TestResult.Success ? Color.Green : Color.LightGray;
+            return tr == TestResult.Error
+                ? Color.Crimson
+                : tr == TestResult.Success
+                    ? Color.Green
+                    : tr == TestResult.Failed
+                        ? Color.RoyalBlue
+                        : tr == TestResult.Unknown ? Color.Gold : Color.LightGray;
         }
 
         private static SvgText Label(int row, string label)
@@ -155,8 +208,6 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
                 X = {LabelWidth - 10},
                 Y = {row + 3},
                 TextAnchor = SvgTextAnchor.End,
-                FontSize = 10,
-                FontFamily = "Arial",
                 Nodes = {new SvgContentNode {Content = label}}
             };
         }
@@ -212,16 +263,32 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
                     latest = i.EndTime;
                 }
             }
+            earliest = new DateTime(
+                earliest.Year,
+                earliest.Month,
+                earliest.Day,
+                earliest.Hour,
+                earliest.Minute,
+                earliest.Second,
+                0);
+            latest = new DateTime(
+                latest.Year,
+                latest.Month,
+                latest.Day,
+                latest.Hour,
+                latest.Minute,
+                latest.Second + 1,
+                0);
         }
 
         private void AddLine(int y, TimeCoordinates coords, Color color, float strokeWidth = 10)
         {
             var x1 = new SvgUnit(coords.Start);
-            var x2 = new SvgUnit(coords.End)-0.1f;
+            var x2 = new SvgUnit(Math.Max(coords.Start, coords.End - 0.1f));
 
             var mWidth = 0.5f;
-            var m1x = new SvgUnit(x1 + mWidth/2);
-            var m2x = new SvgUnit(x2 - mWidth/2);
+            var m1x = new SvgUnit(Math.Min(coords.End, x1 + mWidth/2));
+            var m2x = new SvgUnit(Math.Max(coords.Start, x2 - mWidth/2));
             _doc.Nodes.Add(
                 new SvgLine
                 {

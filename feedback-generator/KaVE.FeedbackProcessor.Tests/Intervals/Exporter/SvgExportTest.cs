@@ -53,6 +53,48 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Exporter
         }
 
         [Test]
+        public void IdeActive()
+        {
+            _input.Add(
+                new VisualStudioOpenedInterval
+                {
+                    StartTime = Date(0),
+                    Duration = Dur(5)
+                });
+            _input.Add(
+                new VisualStudioActiveInterval
+                {
+                    StartTime = Date(1),
+                    Duration = Dur(1.5)
+                });
+            _input.Add(
+                new VisualStudioActiveInterval
+                {
+                    StartTime = Date(3),
+                    Duration = Dur(1.5)
+                });
+            Render();
+        }
+
+        [Test]
+        public void IdeOpen_MakeSureMarkersAreNicelyPrintedForVeryShortIntervals()
+        {
+            _input.Add(
+                new VisualStudioOpenedInterval
+                {
+                    StartTime = Date(0),
+                    Duration = Dur(3)
+                });
+            _input.Add(
+                new UserActiveInterval
+                {
+                    StartTime = Date(1),
+                    Duration = Dur(0.000000000001)
+                });
+            Render();
+        }
+
+        [Test]
         public void IdeOpenTwice()
         {
             _input.Add(
