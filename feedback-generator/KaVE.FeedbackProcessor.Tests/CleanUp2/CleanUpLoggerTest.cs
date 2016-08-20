@@ -16,10 +16,10 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Utils.Collections;
-using KaVE.RS.SolutionAnalysis.CleanUp;
+using KaVE.FeedbackProcessor.CleanUp2;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
+namespace KaVE.FeedbackProcessor.Tests.CleanUp2
 {
     internal class CleanUpLoggerTest
     {

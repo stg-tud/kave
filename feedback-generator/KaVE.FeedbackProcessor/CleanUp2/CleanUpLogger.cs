@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace KaVE.RS.SolutionAnalysis.CleanUp
+namespace KaVE.FeedbackProcessor.CleanUp2
 {
     public interface ICleanUpLogger
     {

@@ -18,7 +18,7 @@ using System;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
 
-namespace KaVE.RS.SolutionAnalysis.CleanUp.Filters
+namespace KaVE.FeedbackProcessor.CleanUp2.Filters
 {
     public class VersionFilter : IFilter
     {

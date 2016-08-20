@@ -19,7 +19,7 @@ using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 
-namespace KaVE.RS.SolutionAnalysis.CleanUp.Filters
+namespace KaVE.FeedbackProcessor.CleanUp2.Filters
 {
     public class InvalidCompletionEventFilter : BaseFilter
     {

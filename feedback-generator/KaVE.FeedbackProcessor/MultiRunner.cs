@@ -20,7 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.RS.Commons
+namespace KaVE.FeedbackProcessor
 {
     public class MultiRunner
     {

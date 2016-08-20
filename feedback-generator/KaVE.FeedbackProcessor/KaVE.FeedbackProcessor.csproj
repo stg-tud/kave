@@ -163,6 +163,7 @@
     <Compile Include="Model\Developer.cs" />
     <Compile Include="Model\DevelopmentHistory\SSTSnapshot.cs" />
     <Compile Include="Model\EventUtils.cs" />
+    <Compile Include="MultiRunner.cs" />
     <Compile Include="Naming\NameScrapingUtils.cs" />
     <Compile Include="Naming\NameScrapingVisitor.cs" />
     <Compile Include="Properties\Configuration.Designer.cs">

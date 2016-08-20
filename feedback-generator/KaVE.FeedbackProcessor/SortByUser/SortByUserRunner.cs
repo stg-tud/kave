@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.RS.SolutionAnalysis.SortByUser
+namespace KaVE.FeedbackProcessor.SortByUser
 {
     public class SortByUserRunner
     {

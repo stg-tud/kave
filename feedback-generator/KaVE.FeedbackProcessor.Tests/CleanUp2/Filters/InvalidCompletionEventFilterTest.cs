@@ -18,10 +18,10 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.FeedbackProcessor.CleanUp2.Filters;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser.Filters
+namespace KaVE.FeedbackProcessor.Tests.CleanUp2.Filters
 {
     internal class InvalidCompletionEventFilterTest
     {

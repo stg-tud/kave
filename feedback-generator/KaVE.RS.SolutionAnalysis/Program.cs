@@ -16,16 +16,15 @@
 
 using System;
 using System.IO;
-using KaVE.Commons.Tests.Model.Naming;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.ObjectUsageExport;
-using KaVE.RS.Commons;
-using KaVE.RS.SolutionAnalysis.CleanUp;
-using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.FeedbackProcessor;
+using KaVE.FeedbackProcessor.CleanUp2;
+using KaVE.FeedbackProcessor.CleanUp2.Filters;
+using KaVE.FeedbackProcessor.SortByUser;
 using KaVE.RS.SolutionAnalysis.CompletionEventStatistics;
 using KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits;
 using KaVE.RS.SolutionAnalysis.CSharpVsFSharp;
-using KaVE.RS.SolutionAnalysis.SortByUser;
 using KaVE.RS.SolutionAnalysis.StatisticsForPapers;
 using KaVE.RS.SolutionAnalysis.UserProfileExports;
 using KaVE.RS.SolutionAnalysis.UserStatistics;

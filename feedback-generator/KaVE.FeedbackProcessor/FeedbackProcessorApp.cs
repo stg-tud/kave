@@ -18,18 +18,14 @@ using System;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Events.TestRunEvents;
-using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Naming;
-using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.FeedbackProcessor.CleanUp2;
+using KaVE.FeedbackProcessor.CleanUp2.Filters;
 using KaVE.FeedbackProcessor.Intervals;
 using KaVE.FeedbackProcessor.Intervals.Exporter;
-using KaVE.RS.SolutionAnalysis.CleanUp;
-using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
-using KaVE.RS.SolutionAnalysis.SortByUser;
+using KaVE.FeedbackProcessor.SortByUser;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -61,11 +57,10 @@ namespace KaVE.FeedbackProcessor
             //    })
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
-           
 
-            // RunSortByUser(inFolder, orderedFolder);
-            //RunCleanUp(orderedFolder, cleanedFolder);
-           
+            RunSortByUser(InFolder, OrderedFolder);
+            RunCleanUp(OrderedFolder, CleanedFolder);
+
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
             //var file = "C:/Users/Andreas/Desktop/testrunevents.zip";
@@ -123,7 +118,6 @@ namespace KaVE.FeedbackProcessor
             EventStreamExport.Write(events, file);
         }
 
-        
 
         private static void RunSortByUser(string dirIn, string dirOut)
         {

@@ -16,10 +16,10 @@
 
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
-using KaVE.RS.SolutionAnalysis.SortByUser;
+using KaVE.FeedbackProcessor.SortByUser;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser
+namespace KaVE.FeedbackProcessor.Tests.SortByUser
 {
     internal class UserTest
     {

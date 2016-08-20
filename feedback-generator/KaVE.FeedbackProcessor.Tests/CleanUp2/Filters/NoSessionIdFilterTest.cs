@@ -15,10 +15,10 @@
  */
 
 using KaVE.Commons.Model.Events;
-using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.FeedbackProcessor.CleanUp2.Filters;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp.Filters
+namespace KaVE.FeedbackProcessor.Tests.CleanUp2.Filters
 {
     internal class NoSessionIdFilterTest
     {

@@ -22,7 +22,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO.Archives;
 
-namespace KaVE.RS.SolutionAnalysis.CleanUp
+namespace KaVE.FeedbackProcessor.CleanUp2
 {
     public interface ICleanUpIo
     {

@@ -17,9 +17,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.FeedbackProcessor.CleanUp2.Filters;
 
-namespace KaVE.RS.SolutionAnalysis.CleanUp
+namespace KaVE.FeedbackProcessor.CleanUp2
 {
     public class CleanUpRunner
     {

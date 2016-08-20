@@ -18,12 +18,12 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
-using KaVE.RS.SolutionAnalysis.CleanUp;
-using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.FeedbackProcessor.CleanUp2;
+using KaVE.FeedbackProcessor.CleanUp2.Filters;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.CleanUp
+namespace KaVE.FeedbackProcessor.Tests.CleanUp2
 {
     internal class CleanUpRunnerTest
     {

@@ -16,10 +16,10 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.FeedbackProcessor.CleanUp2.Filters;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser.Filters
+namespace KaVE.FeedbackProcessor.Tests.CleanUp2.Filters
 {
     internal class NoTimeFilterTest
     {
@@ -34,7 +34,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests.SortByUser.Filters
         [Test]
         public void HasName()
         {
-            Assert.AreEqual(typeof (NoTimeFilter).Name, _sut.Name);
+            Assert.AreEqual(typeof(NoTimeFilter).Name, _sut.Name);
         }
 
         [Test]

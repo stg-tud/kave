@@ -17,7 +17,7 @@
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.RS.SolutionAnalysis.SortByUser
+namespace KaVE.FeedbackProcessor.SortByUser
 {
     public class User
     {

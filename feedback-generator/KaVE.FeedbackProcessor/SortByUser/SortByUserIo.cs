@@ -25,7 +25,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
 
-namespace KaVE.RS.SolutionAnalysis.SortByUser
+namespace KaVE.FeedbackProcessor.SortByUser
 {
     public interface ISortByUserIo
     {
