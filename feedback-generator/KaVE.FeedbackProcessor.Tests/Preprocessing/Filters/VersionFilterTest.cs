@@ -82,6 +82,12 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Filters
             AssertFalse("Some-Unknown-Version-Format");
         }
 
+        [Test]
+        public void UnparseableInteger()
+        {
+            AssertFalse("0.11111111111111111111111111111111111111111111-default");
+        }
+
         private static void AssertFalse(string versionStr)
         {
             Assert.False(Eval(versionStr));

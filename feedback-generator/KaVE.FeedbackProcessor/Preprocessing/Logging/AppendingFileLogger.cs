@@ -18,9 +18,9 @@ using System;
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
-    public class FileLogger : IPrepocessingLogger, IDisposable
+    public class AppendingFileLogger : IPrepocessingLogger, IDisposable
     {
-        protected FileLogger(string fileName) {}
+        protected AppendingFileLogger(string fileName) {}
 
         public void Log()
         {

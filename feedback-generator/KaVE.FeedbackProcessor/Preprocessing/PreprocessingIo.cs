@@ -25,8 +25,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 {
     public interface IPreprocessingIo
     {
-        FileLogger CreateLoggerWorker(int taskId);
-
+        AppendingFileLogger CreateLoggerWorker(int taskId);
         IKaVESet<string> FindRelativeZipPaths();
         string GetFullPath_Raw(string relativeZipPath);
         string GetFullPath_Merged(string relativeZipPath);
@@ -88,7 +87,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             return Sets.NewHashSetFrom(zips);
         }
 
-        public FileLogger CreateLoggerWorker(int taskId)
+        public AppendingFileLogger CreateLoggerWorker(int taskId)
         {
             throw new NotImplementedException();
         }

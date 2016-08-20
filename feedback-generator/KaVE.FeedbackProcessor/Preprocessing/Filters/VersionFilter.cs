@@ -17,6 +17,7 @@
 using System;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Filters
 {
@@ -42,11 +43,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Filters
 
         public bool Func2(IDEEvent e)
         {
-            if (e.KaVEVersion == null)
-            {
-                return false;
-            }
-            if ("".Equals(e.KaVEVersion))
+            if (string.IsNullOrEmpty(e.KaVEVersion))
             {
                 return false;
             }
@@ -58,10 +55,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Filters
                 return false;
             }
             var gs = ms[0].Groups;
-            if (gs.Count != 2)
-            {
-                return false;
-            }
+            Asserts.That(gs.Count == 2);
 
             try
             {

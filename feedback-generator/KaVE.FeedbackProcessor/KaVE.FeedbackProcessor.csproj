@@ -168,7 +168,7 @@
     <Compile Include="Preprocessing\Grouper.cs" />
     <Compile Include="Preprocessing\IdReader.cs" />
     <Compile Include="Preprocessing\Logging\ConsoleLogger.cs" />
-    <Compile Include="Preprocessing\Logging\FileLogger.cs" />
+    <Compile Include="Preprocessing\Logging\AppendingFileLogger.cs" />
     <Compile Include="Preprocessing\Logging\IPreprocessingLogger.cs" />
     <Compile Include="Preprocessing\Logging\RunnerLogger.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingData.cs" />

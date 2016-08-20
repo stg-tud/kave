@@ -107,7 +107,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             }
         }
 
-        private void InParallel(Action<int, FileLogger> task)
+        private void InParallel(Action<int, IPrepocessingLogger> task)
         {
             var tasks = new Task[_numProcs];
             for (var i = 0; i < _numProcs; i++)

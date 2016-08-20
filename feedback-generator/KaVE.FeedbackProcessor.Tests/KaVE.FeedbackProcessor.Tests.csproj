@@ -145,7 +145,7 @@
     <Compile Include="Model\EventUtilsTest.cs" />
     <Compile Include="Model\TestFactory.cs" />
     <Compile Include="Preprocessing\Logging\ConsoleLoggerTest.cs" />
-    <Compile Include="Preprocessing\Logging\FileLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\AppendingFileLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\GrouperLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\GroupMergerLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\RunnerLoggerTest.cs" />
