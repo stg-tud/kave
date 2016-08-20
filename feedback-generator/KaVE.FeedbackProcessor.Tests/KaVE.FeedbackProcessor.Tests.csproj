@@ -116,6 +116,7 @@
     <Compile Include="Import\FeedbackImporterTestBase.cs" />
     <Compile Include="Import\FeedbackImporterWithoutSessionIdsTest.cs" />
     <Compile Include="Import\FeedbackImporterWithoutTriggerTimesTest.cs" />
+    <Compile Include="Intervals\Exporter\EventStreamExportTest.cs" />
     <Compile Include="Intervals\Exporter\SvgExportTest.cs" />
     <Compile Include="Intervals\Exporter\WatchdogDataFormatTest.cs" />
     <Compile Include="Intervals\Exporter\WatchdogExporterTest.cs" />
