@@ -15,31 +15,53 @@
  */
 
 using System;
+using System.IO;
+using System.Text;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
     public class AppendingFileLogger : IPrepocessingLogger, IDisposable
     {
-        protected AppendingFileLogger(string fileName) {}
+        private readonly string _logFile;
+        private readonly IDateUtils _dateUtils;
+
+        private bool _isFirstLine;
+
+        public AppendingFileLogger(string logFile, IDateUtils dateUtils)
+        {
+            _logFile = logFile;
+            _dateUtils = dateUtils;
+
+            Asserts.NotNull(dateUtils);
+            Asserts.Not(string.IsNullOrEmpty(_logFile));
+            _isFirstLine = !File.Exists(logFile);
+
+            var parentDir = Path.GetDirectoryName(logFile);
+            Asserts.NotNull(parentDir);
+            Asserts.That(Directory.Exists(parentDir));
+        }
 
         public void Log()
         {
-            throw new NotImplementedException();
+            Log("");
         }
 
         public void Log(string text, params object[] args)
         {
-            throw new NotImplementedException();
+            var nl = _isFirstLine ? "" : "\n";
+            _isFirstLine = false;
+            Append("{0}{1} {2}", nl, _dateUtils.Now, args.Length == 0 ? text : string.Format(text, args));
         }
 
         public void Append(string text, params object[] args)
         {
-            throw new NotImplementedException();
+            _isFirstLine = false;
+            var content = args.Length == 0 ? text : string.Format(text, args);
+            File.AppendAllText(_logFile, content, Encoding.UTF8);
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        public void Dispose() {}
     }
 }

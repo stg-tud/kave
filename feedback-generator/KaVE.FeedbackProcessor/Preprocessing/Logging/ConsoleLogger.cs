@@ -15,11 +15,20 @@
  */
 
 using System;
+using KaVE.Commons.Utils;
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
     public class ConsoleLogger : IPrepocessingLogger
     {
+        private readonly IDateUtils _dateUtils;
+        private bool _isFirstLine = true;
+
+        public ConsoleLogger(IDateUtils dateUtils)
+        {
+            _dateUtils = dateUtils;
+        }
+
         public void Log()
         {
             Log("");
@@ -27,15 +36,20 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 
         public void Log(string text, params object[] args)
         {
-            var content = string.Format(text, args);
-            var date = DateTime.Now;
-            Console.WriteLine();
-            Console.Write(@"{0} {1}", date, content);
+            if (!_isFirstLine)
+            {
+                Console.WriteLine();
+            }
+            _isFirstLine = false;
+
+            var content = args.Length == 0 ? text : string.Format(text, args);
+            Console.Write(@"{0} {1}", _dateUtils.Now, content);
         }
 
         public void Append(string text, params object[] args)
         {
-            Console.Write(text, args);
+            _isFirstLine = false;
+            Console.Write(args.Length == 0 ? text : string.Format(text, args));
         }
     }
 }

@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using KaVE.Commons.Utils;
 using KaVE.FeedbackProcessor.Preprocessing;
 using KaVE.FeedbackProcessor.Preprocessing.Filters;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
@@ -77,7 +78,7 @@ namespace KaVE.FeedbackProcessor
 
             new Runner(
                 io,
-                new RunnerLogger(new ConsoleLogger()),
+                new RunnerLogger(new ConsoleLogger(new DateUtils())),
                 3,
                 CreateIdReader,
                 new Grouper(),

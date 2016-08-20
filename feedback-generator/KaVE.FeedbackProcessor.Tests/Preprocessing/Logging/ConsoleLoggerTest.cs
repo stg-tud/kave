@@ -14,7 +14,60 @@
  * limitations under the License.
  */
 
+using System;
+using KaVE.Commons.Utils;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using Moq;
+using NUnit.Framework;
+
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
 {
-    internal class ConsoleLoggerTest {}
+    internal class ConsoleLoggerTest
+    {
+        private ConsoleLogger _sut;
+
+        private IDateUtils _dateUtils;
+        private DateTime _now;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _now = DateTime.MinValue;
+            _dateUtils = Mock.Of<IDateUtils>();
+            Mock.Get(_dateUtils).Setup(u => u.Now).Returns(() => _now);
+
+            _sut = new ConsoleLogger(_dateUtils);
+        }
+
+        // it is hard to write a real test here...  so we just provide an integration test that is to be manually checked
+        [Test]
+        public void IntegrationTest()
+        {
+            _sut.Log("a");
+            _sut.Append("b");
+            _sut.Log("c");
+            _now = _now + TimeSpan.FromSeconds(1);
+            _sut.Log();
+            _sut.Log("d");
+        }
+
+        [Test]
+        public void CanLogInvalidReplacementStrings()
+        {
+            _sut.Log("{x}");
+        }
+
+        [Test]
+        public void CanAppendInvalidReplacementStrings()
+        {
+            _sut.Append("{x}");
+        }
+
+        [Test]
+        public void AppendAlsoBreaksFirstLine()
+        {
+            _sut.Append("a");
+            _sut.Log("b");
+        }
+    }
 }

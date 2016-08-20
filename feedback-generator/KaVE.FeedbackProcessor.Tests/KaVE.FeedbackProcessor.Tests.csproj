@@ -148,6 +148,7 @@
     <Compile Include="Preprocessing\Logging\AppendingFileLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\GrouperLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\GroupMergerLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\MemoryLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\RunnerLoggerTest.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingDataTest.cs" />
     <Compile Include="Preprocessing\PreprocessingIoTest.cs" />

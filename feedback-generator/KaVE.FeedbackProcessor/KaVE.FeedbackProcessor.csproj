@@ -170,6 +170,7 @@
     <Compile Include="Preprocessing\Logging\ConsoleLogger.cs" />
     <Compile Include="Preprocessing\Logging\AppendingFileLogger.cs" />
     <Compile Include="Preprocessing\Logging\IPreprocessingLogger.cs" />
+    <Compile Include="Preprocessing\Logging\LineLogger.cs" />
     <Compile Include="Preprocessing\Logging\RunnerLogger.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingData.cs" />
     <Compile Include="Preprocessing\PreprocessingIo.cs" />
