@@ -46,7 +46,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
         public void AdaptIntervalTimeData(Interval interval, IDEEvent ideEvent)
         {
-            if (ideEvent.TerminatedAt.GetValueOrDefault() > interval.StartTime + interval.Duration)
+            if (ideEvent.TerminatedAt.GetValueOrDefault() > interval.EndTime)
             {
                 interval.Duration = ideEvent.TerminatedAt.GetValueOrDefault() - interval.StartTime;
             }

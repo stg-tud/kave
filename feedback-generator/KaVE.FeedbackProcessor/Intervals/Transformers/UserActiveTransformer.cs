@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
     {
         private readonly IList<UserActiveInterval> _intervals;
         private readonly TimeSpan _maxInactivityTime;
-        private TransformerContext _context;
+        private readonly TransformerContext _context;
 
         public UserActiveTransformer(TransformerContext context, TimeSpan? maxInactivityTime = null)
         {
@@ -41,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             var currentEventStartTime = e.TriggeredAt.GetValueOrDefault();
             var currentEventEndTime = e.TerminatedAt.GetValueOrDefault();
 
-            if (lastInterval != null && lastInterval.EndTime +_maxInactivityTime >= currentEventStartTime)
+            if (lastInterval != null && lastInterval.EndTime + _maxInactivityTime >= currentEventStartTime)
             {
                 lastInterval.Duration = currentEventEndTime - lastInterval.StartTime;
             }
