@@ -17,15 +17,33 @@
 using System;
 using System.IO;
 using System.Linq;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.IO.Archives;
 using KaVE.FeedbackProcessor.Intervals;
 using KaVE.FeedbackProcessor.Intervals.Exporter;
+using KaVE.RS.SolutionAnalysis.CleanUp;
+using KaVE.RS.SolutionAnalysis.CleanUp.Filters;
+using KaVE.RS.SolutionAnalysis.SortByUser;
 
 namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackProcessorApp
     {
         private static readonly ILogger Logger = new ConsoleLogger();
+
+        private const string Desktop = @"C:\Users\seb2\Desktop\";
+        private const string InFolder = Desktop + @"interval-tests\in\";
+        private const string OrderedFolder = Desktop + @"interval-tests\ordered\";
+        private const string CleanedFolder = Desktop + @"interval-tests\cleaned\";
+        private const string WdFolder = Desktop + @"interval-tests\watchdog\";
+        private const string SvgFolder = Desktop + @"interval-tests\svg\";
+        private const string EventsFolder = Desktop + @"interval-tests\events\";
 
         public static void Main()
         {
@@ -43,23 +61,95 @@ namespace KaVE.FeedbackProcessor
             //    })
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
-            var inFolder = "E:\\Events\\All-Clean";
-            var outFolder = "E:\\Intervals\\All-Clean";
+           
 
+            // RunSortByUser(inFolder, orderedFolder);
+            //RunCleanUp(orderedFolder, cleanedFolder);
+           
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
             //var file = "C:/Users/Andreas/Desktop/testrunevents.zip";
-            CleanDirs(outFolder);
 
-            Logger.Info(@"Creating intervals now ...");
-            var intervals = new IntervalTransformer(Logger).TransformFolder(inFolder).ToList();
+            RunWatchdogDebugging();
 
-            Logger.Info(@"Found {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
-            WatchdogExporter.Convert(intervals).WriteToFiles(outFolder);
+            //var intervals = new IntervalTransformer(Logger).TransformFolder(cleanedFolder).ToList();
+            //Logger.Info(@"Found {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
+            //WatchdogExporter.Convert(intervals).WriteToFiles(wdFolder);
+
 
             Logger.Info("Done!");
 
             Console.ReadKey();
+        }
+
+        private static void RunWatchdogDebugging()
+        {
+            var svge = new SvgExport();
+
+            CleanDirs(WdFolder, SvgFolder, EventsFolder);
+            foreach (var zip in FindZips(CleanedFolder))
+            {
+                Logger.Info(@"Opening {0} ...", zip);
+                var intervals = new IntervalTransformer(Logger).TransformFile(zip).ToList();
+                Logger.Info(@"Found {0} intervals.", intervals.Count);
+
+
+                var userId = intervals[0].UserId;
+                var svgFile = SvgFolder + userId + ".svg";
+                var eventsFile = EventsFolder + userId + ".txt";
+                var wdFilesFolder = WdFolder + userId;
+
+                Logger.Info(@"Dumping Event Stream ... ({0})", eventsFile);
+                WriteEventStream(zip, eventsFile);
+
+                Logger.Info(@"Converting to WD format ... ({0})", wdFilesFolder);
+                WatchdogExporter.Convert(intervals).WriteToFiles(wdFilesFolder);
+
+                Logger.Info(@"Now exporting .svg files for debugging ...");
+                svge.Run(Lists.NewListFrom(intervals), svgFile);
+            }
+        }
+
+        private static string[] FindZips(string dir)
+        {
+            var zips = Directory.GetFiles(dir, "*.zip", SearchOption.AllDirectories);
+            return zips;
+        }
+
+        private static void WriteEventStream(string zip, string file)
+        {
+            var ra = new ReadingArchive(zip);
+            var events = ra.GetAll<IDEEvent>();
+            EventStreamExport.Write(events, file);
+        }
+
+        
+
+        private static void RunSortByUser(string dirIn, string dirOut)
+        {
+            CleanDirs(dirOut);
+            var log = new SortByUserLogger();
+            var io = new IndexCreatingSortByUserIo(dirIn, dirOut, log);
+            new SortByUserRunner(io, log).Run();
+        }
+
+
+        private static void RunCleanUp(string dirIn, string dirOut)
+        {
+            CleanDirs(dirOut);
+            var log = new CleanUpLogger();
+            var io = new CleanUpIo(dirIn, dirOut);
+            var runner = new CleanUpRunner(io, log)
+            {
+                Filters =
+                {
+                    //new VersionFilter(1000),
+                    new NoSessionIdFilter(),
+                    new NoTimeFilter(),
+                    new InvalidCompletionEventFilter()
+                }
+            };
+            runner.Run();
         }
 
         private static void CleanDirs(params string[] dirs)

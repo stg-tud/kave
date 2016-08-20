@@ -25,59 +25,78 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 {
     internal class FileInteractionTransformer : IEventToIntervalTransformer<FileInteractionInterval>
     {
-        private readonly IList<FileInteractionInterval> _intervals;
-        private FileInteractionInterval _currentInterval;
-        private DateTime _referenceTime;
+        private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(16);
+
         private readonly TransformerContext _context;
+
+        private readonly IList<FileInteractionInterval> _intervals;
+        private FileInteractionInterval _cur;
+
+        private readonly DateTime _referenceTime;
 
         public FileInteractionTransformer(TransformerContext context)
         {
+            _context = context;
             _intervals = new List<FileInteractionInterval>();
             _referenceTime = DateTime.MinValue;
-            _context = context;
         }
 
-        public void ProcessEvent(IDEEvent @event)
+        public void ProcessEvent(IDEEvent e)
         {
-            if (@event.ActiveDocument == null || @event.TerminatedAt.GetValueOrDefault() < _referenceTime)
+            if (e.ActiveDocument == null || !e.TerminatedAt.HasValue || !e.TriggeredAt.HasValue ||
+                e.TerminatedAt.GetValueOrDefault() < _referenceTime)
             {
                 return;
             }
 
-            var classification = ClassifyEventType(@event);
-
-            if (_currentInterval != null)
+            if (IsTimedOut(e) || HasDocumentChanged(e))
             {
-                var activeDocumentChanged = _currentInterval.FileName != @event.ActiveDocument.FileName;
-                var classificationChanged = classification != null && _currentInterval.Type != classification;
+                _cur = null;
+            }
 
-                if (activeDocumentChanged || classificationChanged)
+            var classification = ClassifyEventType(e);
+            if (classification.HasValue)
+            {
+                if (_cur == null)
                 {
-                    _currentInterval = null;
+                    CreateNewInterval(e, classification.Value);
+                }
+                else
+                {
+                    TransformerUtils.SetDocumentTypeIfNecessary(_cur, e); // updates
+                    _cur.Project = _context.CurrentProject; // might not be available from the beginning
+
+                    if (_cur.Type == classification.Value)
+                    {
+                        // extend to max duration
+                        _cur.Duration = e.TerminatedAt.Value - _cur.StartTime;
+                    }
+                    else
+                    {
+                        // cut duration to current trigger point
+                        _cur.Duration = e.TriggeredAt.Value - _cur.StartTime;
+                        CreateNewInterval(e, classification.Value);
+                    }
                 }
             }
+        }
 
-            if (_currentInterval == null && classification != null)
-            {
-                _currentInterval = _context.CreateIntervalFromEvent<FileInteractionInterval>(@event);
-                _intervals.Add(_currentInterval);
+        private void CreateNewInterval(IDEEvent e, FileInteractionType classification)
+        {
+            _intervals.Add(_cur = _context.CreateIntervalFromEvent<FileInteractionInterval>(e));
+            _cur.FileName = e.ActiveDocument.FileName;
+            _cur.Type = classification;
+            TransformerUtils.SetDocumentTypeIfNecessary(_cur, e); // initial
+        }
 
-                if (_currentInterval.StartTime < _referenceTime)
-                {
-                    _currentInterval.Duration -= _referenceTime - _currentInterval.StartTime;
-                    _currentInterval.StartTime = _referenceTime;
-                }
+        private bool HasDocumentChanged(IDEEvent e)
+        {
+            return _cur != null && _cur.FileName != e.ActiveDocument.FileName;
+        }
 
-                _currentInterval.FileName = @event.ActiveDocument.FileName;
-                _currentInterval.Type = classification.GetValueOrDefault();
-            }
-
-            if (_currentInterval != null)
-            {
-                _context.AdaptIntervalTimeData(_currentInterval, @event);
-                _referenceTime = @event.TerminatedAt.GetValueOrDefault();
-                TransformerUtils.SetDocumentTypeIfNecessary(_currentInterval, @event);
-            }
+        private bool IsTimedOut(IDEEvent e)
+        {
+            return _cur != null && e.TriggeredAt - _cur.EndTime > Timeout;
         }
 
         // The debugger creates EditEvents for some reason. We want to ignore these EditEvents
@@ -94,6 +113,15 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
             if (e is BuildEvent || IsReadingDocumentEvent(e) || IsDebuggerEvent(e))
             {
                 return FileInteractionType.Reading;
+            }
+            // not directly assignable to "type" or "read"... we prolong the existing type
+            if (e is NavigationEvent || e is WindowEvent)
+            {
+                return _cur == null || HasDocumentChanged(e) ? FileInteractionType.Reading : _cur.Type;
+            }
+            if (_cur != null && e is ActivityEvent)
+            {
+                return _cur.Type;
             }
             return null;
         }

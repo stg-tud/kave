@@ -141,6 +141,7 @@
     <Compile Include="Intervals\Model\PerspectiveInterval.cs" />
     <Compile Include="Intervals\Model\TestRunInterval.cs" />
     <Compile Include="Intervals\Model\UserActiveInterval.cs" />
+    <Compile Include="Intervals\Model\VisualStudioActiveInterval.cs" />
     <Compile Include="Intervals\Transformers\AggregateTransformer.cs" />
     <Compile Include="Intervals\Transformers\FileInteractionTransformer.cs" />
     <Compile Include="Intervals\Transformers\PerspectiveTransformer.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Intervals\Transformers\SessionIdSortingTransformer.cs" />
     <Compile Include="Intervals\Transformers\TestRunIntervalTransformer.cs" />
     <Compile Include="Intervals\Transformers\TransformerContext.cs" />
+    <Compile Include="Intervals\Transformers\VisualStudioActiveTransformer.cs" />
     <Compile Include="Intervals\Transformers\ZeroLengthIntervalFilterTransformer.cs" />
     <Compile Include="Intervals\TransformerUtils.cs" />
     <Compile Include="Intervals\Transformers\UserActiveTransformer.cs" />

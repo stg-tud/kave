@@ -48,6 +48,7 @@ namespace KaVE.FeedbackProcessor.Intervals
                         new SessionIdSortingTransformer<Interval>(
                             () =>
                                 new AggregateTransformer(
+                                    new VisualStudioActiveTransformer(context),
                                     new UserActiveTransformer(context),
                                     new PerspectiveTransformer(context),
                                     //new FileOpenTransformer(context),
