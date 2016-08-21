@@ -15,54 +15,71 @@
  */
 
 using System.Collections.Generic;
+using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.Commons.Utils.Json;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
     public class IdReader
     {
-        private readonly IPreprocessingIo _io;
+        private readonly IdReaderLogger _log;
 
-        public IdReader(IPreprocessingIo io)
+        public IdReader(IdReaderLogger log)
         {
-            _io = io;
+            _log = log;
         }
 
-        public IKaVESet<string> Read(string zip)
+        public IKaVESet<string> Read([NotNull] string zip)
         {
+            Asserts.NotNull(zip);
+            Asserts.That(File.Exists(zip));
+            Asserts.That(zip.EndsWith(".zip"));
+
+            var cacheFile = zip.Substring(0, zip.Length - 4) + ".ids";
+            if (File.Exists(cacheFile))
+            {
+                var json = File.ReadAllText(cacheFile);
+                return json.ParseJsonTo<KaVEHashSet<string>>();
+            }
+
             var ids = Sets.NewHashSet<string>();
 
             foreach (var e in GetEventsFromArchive(zip))
             {
                 var upe = e as UserProfileEvent;
-                if (upe != null)
+                if (upe != null && !string.IsNullOrEmpty(upe.ProfileId))
                 {
                     var pid = upe.ProfileId.Trim();
-                    if (!"".Equals(pid)) //TODO isNullOrEmpty
+                    if (!string.IsNullOrEmpty(pid))
                     {
                         ids.Add("pid:" + pid);
                     }
                 }
 
-                if (e.IDESessionUUID != null)
+                if (e.IDESessionUUID != null && !string.IsNullOrEmpty(e.IDESessionUUID))
                 {
                     var sid = e.IDESessionUUID.Trim();
-                    if (!"".Equals(sid)) //TODO isNullOrEmpty
+                    if (!string.IsNullOrEmpty(sid))
                     {
                         ids.Add("sid:" + sid);
                     }
                 }
             }
+            var jsonOut = ids.ToFormattedJson();
+            File.WriteAllText(cacheFile, jsonOut);
             return ids;
         }
 
-        private IEnumerable<IDEEvent> GetEventsFromArchive(string zip)
+        private static IEnumerable<IDEEvent> GetEventsFromArchive(string zip)
         {
-            var fullPath = _io.GetFullPath_Raw(zip);
-            var ra = new ReadingArchive(fullPath);
+            var ra = new ReadingArchive(zip);
             while (ra.HasNext())
             {
                 yield return ra.GetNext<IDEEvent>();

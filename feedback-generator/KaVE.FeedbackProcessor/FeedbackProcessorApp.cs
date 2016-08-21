@@ -16,10 +16,7 @@
 
 using System;
 using System.IO;
-using KaVE.Commons.Utils;
 using KaVE.FeedbackProcessor.Preprocessing;
-using KaVE.FeedbackProcessor.Preprocessing.Filters;
-using KaVE.FeedbackProcessor.Preprocessing.Logging;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -51,7 +48,7 @@ namespace KaVE.FeedbackProcessor
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
             CleanDirs(TmpDir, OutDir);
-            RunPreprocessing(InDir, TmpDir, OutDir);
+            new PreprocessingRunner(InDir, TmpDir, OutDir).Run();
 
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
@@ -70,44 +67,6 @@ namespace KaVE.FeedbackProcessor
         private static void RunWatchdogDebugging()
         {
             new WatchdogExportRunner().RunWatchdogDebugging(InDir, WdFolder, SvgFolder);
-        }
-
-        private static void RunPreprocessing(string dirIn, string dirTmp, string dirOut)
-        {
-            var io = new PreprocessingIo(dirIn, dirTmp, dirOut);
-
-            new Runner(
-                io,
-                new RunnerLogger(new ConsoleLogger(new DateUtils())),
-                3,
-                CreateIdReader,
-                new Grouper(),
-                CreateZipMerger,
-                CreateZipCleaner).Run();
-        }
-
-        private static IdReader CreateIdReader(IPreprocessingIo io, IPrepocessingLogger log)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static GroupMerger CreateZipMerger(IPreprocessingIo io, IPrepocessingLogger log)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static Cleaner CreateZipCleaner(IPreprocessingIo io, IPrepocessingLogger log)
-        {
-            return new Cleaner(io, new CleanerLogger(log))
-            {
-                Filters =
-                {
-                    //new VersionFilter(1000),
-                    new NoSessionIdFilter(),
-                    new NoTimeFilter(),
-                    new InvalidCompletionEventFilter()
-                }
-            };
         }
 
 

@@ -81,6 +81,7 @@
     <Compile Include="Activities\TestFixtures.cs" />
     <Compile Include="Activities\UpdateEventMapperTest.cs" />
     <Compile Include="Activities\WindowEventMapperTest.cs" />
+    <Compile Include="Preprocessing\FileBasedPreprocessingTestBase.cs" />
     <Compile Include="Preprocessing\GrouperTest.cs" />
     <Compile Include="Preprocessing\GroupMergerTest.cs" />
     <Compile Include="Preprocessing\IdReaderTest.cs" />
@@ -148,11 +149,12 @@
     <Compile Include="Preprocessing\Logging\AppendingFileLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\GrouperLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\GroupMergerLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\IdReaderLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\LineLoggerTest.cs" />
-    <Compile Include="Preprocessing\Logging\RunnerLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\MultiThreadedRunnerLoggerTest.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingDataTest.cs" />
     <Compile Include="Preprocessing\PreprocessingIoTest.cs" />
-    <Compile Include="Preprocessing\RunnerTest.cs" />
+    <Compile Include="Preprocessing\MultiThreadedRunnerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Preprocessing\Model\UserTest.cs" />
     <Compile Include="Statistics\AverageBreakAfterEventsCalculatorTest.cs" />

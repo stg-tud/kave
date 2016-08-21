@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
+namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
-    internal class RunnerLoggerTest {}
+    public interface IMultiThreadedRunnerLogger {}
+
+    public class MultiThreadedRunnerLogger : IMultiThreadedRunnerLogger
+    {
+        private readonly IPrepocessingLogger _log;
+
+        public MultiThreadedRunnerLogger(IPrepocessingLogger log)
+        {
+            _log = log;
+        }
+    }
 }

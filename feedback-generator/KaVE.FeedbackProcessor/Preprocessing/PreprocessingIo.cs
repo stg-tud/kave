@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-using System;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Preprocessing.Logging;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
     public interface IPreprocessingIo
     {
-        AppendingFileLogger CreateLoggerWorker(int taskId);
         IKaVESet<string> FindRelativeZipPaths();
         string GetFullPath_Raw(string relativeZipPath);
         string GetFullPath_Merged(string relativeZipPath);
@@ -39,18 +36,17 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private readonly string _dirRaw;
         private readonly string _dirMerged;
-        private readonly string _dirLogs;
         private readonly string _dirFinal;
 
-        public PreprocessingIo(string dirRaw, string dirTmp, string dirFinal)
+        public PreprocessingIo(string dirRaw, string dirMerged, string dirFinal)
         {
             if (!dirRaw.EndsWith(@"\"))
             {
                 dirRaw += @"\";
             }
-            if (!dirTmp.EndsWith(@"\"))
+            if (!dirMerged.EndsWith(@"\"))
             {
-                dirTmp += @"\";
+                dirMerged += @"\";
             }
             if (!dirFinal.EndsWith(@"\"))
             {
@@ -58,26 +54,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             }
 
             _dirRaw = dirRaw;
-            _dirMerged = dirTmp + @"merged\";
-            _dirLogs = dirTmp + @"logs\";
+            _dirMerged = dirMerged;
             _dirFinal = dirFinal;
-
-            Console.WriteLine(@"working directories:");
-            Console.WriteLine(@"- raw:  {0}", dirRaw);
-            Console.WriteLine(@"- merged: {0}", _dirMerged);
-            Console.WriteLine(@"- logs: {0}", _dirLogs);
-            Console.WriteLine(@"- final: {0}", dirFinal);
-        }
-
-
-        public void EnsureParentExists(string fullName)
-        {
-            var parent = Path.GetDirectoryName(fullName);
-            Asserts.NotNull(parent);
-            if (!Directory.Exists(parent))
-            {
-                Directory.CreateDirectory(parent);
-            }
         }
 
         public IKaVESet<string> FindRelativeZipPaths()
@@ -87,24 +65,29 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             return Sets.NewHashSetFrom(zips);
         }
 
-        public AppendingFileLogger CreateLoggerWorker(int taskId)
-        {
-            throw new NotImplementedException();
-        }
-
         public string GetFullPath_Raw(string zip)
         {
-            throw new NotImplementedException();
+            return Path.Combine(_dirRaw, zip);
         }
 
         public string GetFullPath_Merged(string zip)
         {
-            throw new NotImplementedException();
+            return Path.Combine(_dirMerged, zip);
         }
 
         public string GetFullPath_Final(string zip)
         {
-            throw new NotImplementedException();
+            return Path.Combine(_dirFinal, zip);
+        }
+
+        public void EnsureParentExists(string fullName)
+        {
+            var parent = Path.GetDirectoryName(fullName);
+            Asserts.NotNull(parent);
+            if (!Directory.Exists(parent))
+            {
+                Directory.CreateDirectory(parent);
+            }
         }
     }
 }

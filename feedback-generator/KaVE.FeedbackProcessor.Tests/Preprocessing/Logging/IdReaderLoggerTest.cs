@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace KaVE.FeedbackProcessor.Tests.Preprocessing
+namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
 {
-    internal class RunnerTest {}
+    internal class IdReaderLoggerTest {}
 }

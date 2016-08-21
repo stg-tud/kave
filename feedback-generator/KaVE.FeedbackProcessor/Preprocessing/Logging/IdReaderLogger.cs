@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,8 @@
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
-    public interface IRunnerLogger {}
-
-    public class RunnerLogger : IRunnerLogger
+    public class IdReaderLogger
     {
-        private readonly IPrepocessingLogger _log;
-
-        public RunnerLogger(IPrepocessingLogger log)
-        {
-            _log = log;
-        }
+        public IdReaderLogger(IPrepocessingLogger log) {}
     }
 }

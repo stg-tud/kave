@@ -16,5 +16,5 @@
 
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 {
-    internal class IdReaderTest {}
+    internal class MultiThreadedRunnerTest {}
 }

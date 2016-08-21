@@ -97,6 +97,8 @@
     <Compile Include="Activities\WindowEventToActivityMapper.cs" />
     <Compile Include="BaseEventMapper.cs" />
     <Compile Include="BaseEventProcessor.cs" />
+    <Compile Include="Preprocessing\Logging\IdReaderLogger.cs" />
+    <Compile Include="Preprocessing\PreprocessingRunner.cs" />
     <Compile Include="Preprocessing\Logging\CleanerLogger.cs" />
     <Compile Include="Preprocessing\Cleaner.cs" />
     <Compile Include="Preprocessing\Filters\BaseFilter.cs" />
@@ -171,10 +173,10 @@
     <Compile Include="Preprocessing\Logging\AppendingFileLogger.cs" />
     <Compile Include="Preprocessing\Logging\IPreprocessingLogger.cs" />
     <Compile Include="Preprocessing\Logging\LineLogger.cs" />
-    <Compile Include="Preprocessing\Logging\RunnerLogger.cs" />
+    <Compile Include="Preprocessing\Logging\MultiThreadedRunnerLogger.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingData.cs" />
     <Compile Include="Preprocessing\PreprocessingIo.cs" />
-    <Compile Include="Preprocessing\Runner.cs" />
+    <Compile Include="Preprocessing\MultiThreadedRunner.cs" />
     <Compile Include="Preprocessing\Logging\GrouperLogger.cs" />
     <Compile Include="Preprocessing\GroupMerger.cs" />
     <Compile Include="Preprocessing\Logging\GroupMergerLogger.cs" />

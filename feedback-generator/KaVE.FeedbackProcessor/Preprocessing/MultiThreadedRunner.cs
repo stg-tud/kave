@@ -22,25 +22,25 @@ using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
-    public class Runner
+    public class MultiThreadedRunner
     {
         private readonly IPreprocessingIo _io;
         private readonly int _numProcs;
-        private readonly Func<IPreprocessingIo, IPrepocessingLogger, IdReader> _idReaderFactory;
+        private readonly Func<int, IdReader> _idReaderFactory;
         private readonly Grouper _grouper;
-        private readonly Func<IPreprocessingIo, IPrepocessingLogger, GroupMerger> _zipGroupMergerFactory;
-        private readonly Func<IPreprocessingIo, IPrepocessingLogger, Cleaner> _zipCleanerFactory;
+        private readonly Func<int, GroupMerger> _groupMergerFactory;
+        private readonly Func<int, Cleaner> _cleanerFactory;
         private PreprocessingData _data;
 
-        private IRunnerLogger _log;
+        private IMultiThreadedRunnerLogger _log;
 
-        public Runner(IPreprocessingIo io,
-            IRunnerLogger log,
+        public MultiThreadedRunner(IPreprocessingIo io,
+            IMultiThreadedRunnerLogger log,
             int numProcs,
-            Func<IPreprocessingIo, IPrepocessingLogger, IdReader> idReaderFactory,
+            Func<int, IdReader> idReaderFactory,
             Grouper grouper,
-            Func<IPreprocessingIo, IPrepocessingLogger, GroupMerger> zipGroupMergerFactory,
-            Func<IPreprocessingIo, IPrepocessingLogger, Cleaner> zipCleanerFactory)
+            Func<int, GroupMerger> groupMergerFactory,
+            Func<int, Cleaner> cleanerFactory)
         {
             _io = io;
             _log = log;
@@ -48,8 +48,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
             _idReaderFactory = idReaderFactory;
             _grouper = grouper;
-            _zipGroupMergerFactory = zipGroupMergerFactory;
-            _zipCleanerFactory = zipCleanerFactory;
+            _groupMergerFactory = groupMergerFactory;
+            _cleanerFactory = cleanerFactory;
         }
 
         public void Run()
@@ -67,9 +67,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _data = new PreprocessingData(zips);
         }
 
-        private void ReadIds(int taskId, IPrepocessingLogger log)
+        private void ReadIds(int taskId)
         {
-            var idReader = _idReaderFactory(_io, log);
+            var idReader = _idReaderFactory(taskId);
 
             string zip;
             while (_data.AcquireNextUnindexedZip(out zip))
@@ -85,9 +85,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _data.StoreZipGroups(zipGroups);
         }
 
-        private void MergeZipGroups(int taskId, IPrepocessingLogger log)
+        private void MergeZipGroups(int taskId)
         {
-            var zipMerger = _zipGroupMergerFactory(_io, log);
+            var zipMerger = _groupMergerFactory(taskId);
 
             IKaVESet<string> zips;
             while (_data.AcquireNextUnmergedZipGroup(out zips))
@@ -96,9 +96,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             }
         }
 
-        private void CleanZips(int taskId, IPrepocessingLogger log)
+        private void CleanZips(int taskId)
         {
-            var cleaner = _zipCleanerFactory(_io, log);
+            var cleaner = _cleanerFactory(taskId);
 
             string zip;
             while (_data.AcquireNextUncleansedZip(out zip))
@@ -107,20 +107,14 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             }
         }
 
-        private void InParallel(Action<int, IPrepocessingLogger> task)
+        private void InParallel(Action<int> task)
         {
             var tasks = new Task[_numProcs];
             for (var i = 0; i < _numProcs; i++)
             {
                 var taskId = i;
                 tasks[i] = Task.Factory.StartNew(
-                    () =>
-                    {
-                        using (var logger = _io.CreateLoggerWorker(taskId))
-                        {
-                            task(taskId, logger);
-                        }
-                    });
+                    () => { task(taskId); });
             }
             Task.WaitAll(tasks);
         }
