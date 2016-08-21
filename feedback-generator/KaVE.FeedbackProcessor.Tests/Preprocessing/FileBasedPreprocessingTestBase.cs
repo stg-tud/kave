@@ -2,7 +2,7 @@
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
-using KaVE.FeedbackProcessor.Preprocessing;
+using KaVE.FeedbackProcessor.Preprocessing.Model;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing

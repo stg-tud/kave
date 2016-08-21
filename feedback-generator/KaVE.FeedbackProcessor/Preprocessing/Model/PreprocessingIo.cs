@@ -18,8 +18,9 @@ using System.IO;
 using System.Linq;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.FeedbackProcessor.Preprocessing
+namespace KaVE.FeedbackProcessor.Preprocessing.Model
 {
     public interface IPreprocessingIo
     {
@@ -38,8 +39,15 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         private readonly string _dirMerged;
         private readonly string _dirFinal;
 
-        public PreprocessingIo(string dirRaw, string dirMerged, string dirFinal)
+        public PreprocessingIo([NotNull] string dirRaw, [NotNull] string dirMerged, [NotNull] string dirFinal)
         {
+            Asserts.NotNull(dirRaw);
+            Asserts.NotNull(dirMerged);
+            Asserts.NotNull(dirFinal);
+            Asserts.That(Directory.Exists(dirRaw));
+            Asserts.That(Directory.Exists(dirMerged));
+            Asserts.That(Directory.Exists(dirFinal));
+
             if (!dirRaw.EndsWith(@"\"))
             {
                 dirRaw += @"\";
@@ -60,33 +68,48 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         public IKaVESet<string> FindRelativeZipPaths()
         {
-            var zips = Directory.EnumerateFiles(_dirRaw, "*.zip", SearchOption.AllDirectories)
-                                .Select(f => f.Replace(_dirRaw, ""));
-            return Sets.NewHashSetFrom(zips);
+            lock (_lock)
+            {
+                var zips = Directory.EnumerateFiles(_dirRaw, "*.zip", SearchOption.AllDirectories)
+                                    .Select(f => f.Replace(_dirRaw, ""));
+                return Sets.NewHashSetFrom(zips);
+            }
         }
 
         public string GetFullPath_Raw(string zip)
         {
-            return Path.Combine(_dirRaw, zip);
+            lock (_lock)
+            {
+                return Path.Combine(_dirRaw, zip);
+            }
         }
 
         public string GetFullPath_Merged(string zip)
         {
-            return Path.Combine(_dirMerged, zip);
+            lock (_lock)
+            {
+                return Path.Combine(_dirMerged, zip);
+            }
         }
 
         public string GetFullPath_Final(string zip)
         {
-            return Path.Combine(_dirFinal, zip);
+            lock (_lock)
+            {
+                return Path.Combine(_dirFinal, zip);
+            }
         }
 
         public void EnsureParentExists(string fullName)
         {
-            var parent = Path.GetDirectoryName(fullName);
-            Asserts.NotNull(parent);
-            if (!Directory.Exists(parent))
+            lock (_lock)
             {
-                Directory.CreateDirectory(parent);
+                var parent = Path.GetDirectoryName(fullName);
+                Asserts.NotNull(parent);
+                if (!Directory.Exists(parent))
+                {
+                    Directory.CreateDirectory(parent);
+                }
             }
         }
     }

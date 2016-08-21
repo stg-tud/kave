@@ -3,6 +3,7 @@ using System.IO;
 using KaVE.Commons.Utils;
 using KaVE.FeedbackProcessor.Preprocessing.Filters;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {

@@ -14,7 +14,19 @@
  * limitations under the License.
  */
 
+using KaVE.FeedbackProcessor.Preprocessing;
+using NUnit.Framework;
+
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 {
-    internal class GroupMergerTest {}
+    internal class GroupMergerTest : FileBasedPreprocessingTestBase
+    {
+        private GroupMerger _sut;
+
+        [SetUp]
+        public void Setup()
+        {
+            _sut = new GroupMerger(Io);
+        }
+    }
 }

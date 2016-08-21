@@ -19,6 +19,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {

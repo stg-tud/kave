@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.FeedbackProcessor.Preprocessing.Filters;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
