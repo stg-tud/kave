@@ -29,42 +29,35 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             return Sets.NewHashSetFrom(users.Select(u => u.Files));
         }
 
-        private static IKaVESet<User> AssembleUsers(IDictionary<string, IKaVESet<string>> archivesWithIdentifiers)
+        private static IKaVESet<User> AssembleUsers(IDictionary<string, IKaVESet<string>> zipToIds)
         {
             var users = Sets.NewHashSet<User>();
 
-            foreach (var archive in archivesWithIdentifiers)
+            var sortedKeysToPreserveOrdering = zipToIds.Keys.Reverse();
+            foreach (var zip in sortedKeysToPreserveOrdering)
             {
-                var currentUser = new User {Files = {archive.Key}, Identifiers = archive.Value};
-                var matches = FindMatchingEntries(users, archive.Value);
+                var ids = zipToIds[zip];
+                var currentUser = new User
+                {
+                    Files = {zip},
+                    Identifiers = ids
+                };
 
+                var matches = FindMatchingEntries(users, ids);
                 if (matches.Any())
                 {
                     foreach (var match in matches)
                     {
                         users.Remove(match);
+                        currentUser.Files.AddAll(match.Files);
+                        currentUser.Identifiers.AddAll(match.Identifiers);
                     }
-                    matches.Add(currentUser);
-                    currentUser = MergeUsers(matches);
                 }
 
                 users.Add(currentUser);
             }
 
             return users;
-        }
-
-        private static User MergeUsers(IEnumerable<User> usersToMerge)
-        {
-            var newUser = new User();
-
-            foreach (var oldUser in usersToMerge)
-            {
-                newUser.Files.AddAll(oldUser.Files);
-                newUser.Identifiers.AddAll(oldUser.Identifiers);
-            }
-
-            return newUser;
         }
 
         private static ISet<User> FindMatchingEntries(IEnumerable<User> users,
