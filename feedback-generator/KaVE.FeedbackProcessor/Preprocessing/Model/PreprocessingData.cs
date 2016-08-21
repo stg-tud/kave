@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Model
 {
@@ -24,53 +26,114 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
     {
         private readonly object _lock = new object();
 
+        private readonly IKaVESet<string> _allZips;
+        private readonly IKaVESet<string> _unindexedZips;
+        private readonly IDictionary<string, IKaVESet<string>> _idsByZip;
+        private readonly IKaVESet<IKaVESet<string>> _zipGroups;
+        private readonly IKaVESet<string> _uncleansedZips;
+
         public PreprocessingData(IKaVESet<string> zips)
         {
-            throw new NotImplementedException();
+            _allZips = zips;
+            _unindexedZips = Sets.NewHashSetFrom(_allZips);
+            _idsByZip = new Dictionary<string, IKaVESet<string>>();
+            _zipGroups = Sets.NewHashSet<IKaVESet<string>>();
+            _uncleansedZips = Sets.NewHashSet<string>();
         }
 
-        public bool FindNextUnindexedZip(out string zip)
+        public bool AcquireNextUnindexedZip(out string zip)
         {
-            zip = null;
-            return false;
+            lock (_lock)
+            {
+                zip = _unindexedZips.FirstOrDefault();
+                if (zip != null)
+                {
+                    _unindexedZips.Remove(zip);
+                    return true;
+                }
+                return false;
+            }
         }
 
-        public void StoreIds(string zip, IKaVESet<string> ids)
+        public void StoreIds([NotNull] string zip, [NotNull] IKaVESet<string> ids)
         {
-            throw new NotImplementedException();
+            lock (_lock)
+            {
+                Asserts.NotNull(zip);
+                Asserts.NotNull(ids);
+                Asserts.That(_allZips.Contains(zip));
+                Asserts.Not(_idsByZip.ContainsKey(zip));
+                _idsByZip[zip] = ids;
+            }
         }
 
         public IDictionary<string, IKaVESet<string>> GetIdsByZip()
         {
-            throw new NotImplementedException();
-        }
-
-        public ISet<string> GetIds(string zip)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void StoreZipGroups(IKaVESet<IKaVESet<string>> zipGroups)
-        {
-            foreach (var zipGroup in zipGroups)
+            lock (_lock)
             {
-                StoreZipGroup(zipGroup);
+                return _idsByZip;
             }
         }
 
-        private void StoreZipGroup(IKaVESet<string> ids)
+        public void StoreZipGroups([NotNull] IKaVESet<IKaVESet<string>> zipGroups)
         {
-            throw new NotImplementedException();
+            lock (_lock)
+            {
+                Asserts.NotNull(zipGroups);
+                Asserts.Not(zipGroups.Count == 0);
+                foreach (var zipGroup in zipGroups)
+                {
+                    Asserts.Not(zipGroup.Count == 0);
+                    foreach (var zip in zipGroup)
+                    {
+                        Asserts.That(_allZips.Contains(zip));
+                    }
+                }
+                _zipGroups.AddAll(zipGroups);
+            }
         }
 
         public bool AcquireNextUnmergedZipGroup(out IKaVESet<string> zips)
         {
-            throw new NotImplementedException();
+            lock (_lock)
+            {
+                zips = _zipGroups.FirstOrDefault();
+                if (zips != null)
+                {
+                    _zipGroups.Remove(zips);
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public void StoreMergedZip([NotNull] string zip)
+        {
+            lock (_lock)
+            {
+                Asserts.NotNull(zip);
+                Asserts.That(_allZips.Contains(zip));
+                Asserts.Not(_uncleansedZips.Contains(zip));
+                foreach (var zipGroup in _zipGroups)
+                {
+                    Asserts.Not(zipGroup.Contains(zip));
+                }
+                _uncleansedZips.Add(zip);
+            }
         }
 
         public bool AcquireNextUncleansedZip(out string zip)
         {
-            throw new NotImplementedException();
+            lock (_lock)
+            {
+                zip = _uncleansedZips.FirstOrDefault();
+                if (zip != null)
+                {
+                    _uncleansedZips.Remove(zip);
+                    return true;
+                }
+                return false;
+            }
         }
     }
 }

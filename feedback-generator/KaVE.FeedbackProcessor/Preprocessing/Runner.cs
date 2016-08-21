@@ -72,7 +72,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             var idReader = _idReaderFactory(_io, log);
 
             string zip;
-            while (_data.FindNextUnindexedZip(out zip))
+            while (_data.AcquireNextUnindexedZip(out zip))
             {
                 var ids = idReader.Read(zip);
                 _data.StoreIds(zip, ids);
