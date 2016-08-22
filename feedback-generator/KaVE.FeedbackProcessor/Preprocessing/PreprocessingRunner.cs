@@ -28,9 +28,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         public void Run()
         {
-            new MultiThreadedRunner(
+            new MultiThreadedPreprocessing(
                 _io,
-                new MultiThreadedRunnerLogger(new ConsoleLogger(new DateUtils())),
+                new MultiThreadedPreprocessingLogger(new ConsoleLogger(new DateUtils())),
                 3,
                 CreateIdReader,
                 new Grouper(new GrouperLogger(CreateWorkerLogger(0))),

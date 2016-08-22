@@ -152,10 +152,10 @@
     <Compile Include="Preprocessing\Logging\IdReaderLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\LineLoggerTest.cs" />
     <Compile Include="Preprocessing\Logging\LoggerTestBase.cs" />
-    <Compile Include="Preprocessing\Logging\MultiThreadedRunnerLoggerTest.cs" />
+    <Compile Include="Preprocessing\Logging\MultiThreadedPreprocessingLoggerTest.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingDataTest.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingIoTest.cs" />
-    <Compile Include="Preprocessing\MultiThreadedRunnerTest.cs" />
+    <Compile Include="Preprocessing\MultiThreadedPreprocessingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Preprocessing\Model\UserTest.cs" />
     <Compile Include="Statistics\AverageBreakAfterEventsCalculatorTest.cs" />

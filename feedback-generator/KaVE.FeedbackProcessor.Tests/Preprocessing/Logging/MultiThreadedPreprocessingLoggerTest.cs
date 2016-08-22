@@ -16,5 +16,5 @@
 
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
 {
-    internal class MultiThreadedRunnerLoggerTest {}
+    internal class MultiThreadedPreprocessingLoggerTest {}
 }

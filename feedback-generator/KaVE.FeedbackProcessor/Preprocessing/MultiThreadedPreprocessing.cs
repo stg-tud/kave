@@ -22,7 +22,7 @@ using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
-    public class MultiThreadedRunner
+    public class MultiThreadedPreprocessing
     {
         private readonly IPreprocessingIo _io;
         private readonly int _numProcs;
@@ -30,12 +30,12 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         private readonly Grouper _grouper;
         private readonly Func<int, GroupMerger> _groupMergerFactory;
         private readonly Func<int, Cleaner> _cleanerFactory;
-        private readonly IMultiThreadedRunnerLogger _log;
+        private readonly IMultiThreadedPreprocessingLogger _log;
 
         private PreprocessingData _data;
 
-        public MultiThreadedRunner(IPreprocessingIo io,
-            IMultiThreadedRunnerLogger log,
+        public MultiThreadedPreprocessing(IPreprocessingIo io,
+            IMultiThreadedPreprocessingLogger log,
             int numProcs,
             Func<int, IdReader> idReaderFactory,
             Grouper grouper,

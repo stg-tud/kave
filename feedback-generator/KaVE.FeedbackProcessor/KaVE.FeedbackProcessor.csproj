@@ -173,10 +173,10 @@
     <Compile Include="Preprocessing\Logging\AppendingFileLogger.cs" />
     <Compile Include="Preprocessing\Logging\IPreprocessingLogger.cs" />
     <Compile Include="Preprocessing\Logging\LineLogger.cs" />
-    <Compile Include="Preprocessing\Logging\MultiThreadedRunnerLogger.cs" />
+    <Compile Include="Preprocessing\Logging\MultiThreadedPreprocessingLogger.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingData.cs" />
     <Compile Include="Preprocessing\Model\PreprocessingIo.cs" />
-    <Compile Include="Preprocessing\MultiThreadedRunner.cs" />
+    <Compile Include="Preprocessing\MultiThreadedPreprocessing.cs" />
     <Compile Include="Preprocessing\Logging\GrouperLogger.cs" />
     <Compile Include="Preprocessing\GroupMerger.cs" />
     <Compile Include="Preprocessing\Logging\GroupMergerLogger.cs" />
