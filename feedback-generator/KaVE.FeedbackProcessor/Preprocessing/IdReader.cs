@@ -29,9 +29,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 {
     public class IdReader
     {
-        private readonly IdReaderLogger _log;
+        private readonly IIdReaderLogger _log;
 
-        public IdReader(IdReaderLogger log)
+        public IdReader(IIdReaderLogger log)
         {
             _log = log;
         }
@@ -42,13 +42,54 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             Asserts.That(File.Exists(zip));
             Asserts.That(zip.EndsWith(".zip"));
 
-            var cacheFile = zip.Substring(0, zip.Length - 4) + ".ids";
-            if (File.Exists(cacheFile))
-            {
-                var json = File.ReadAllText(cacheFile);
-                return json.ParseJsonTo<KaVEHashSet<string>>();
-            }
+            _log.Processing(zip);
 
+            IKaVESet<string> ids;
+            if (IsCached(zip))
+            {
+                _log.CacheHit();
+
+                ids = ReadCache(zip);
+            }
+            else
+            {
+                _log.CacheMiss();
+
+                ids = ReadZip(zip);
+                WriteCache(ids, zip);
+            }
+            _log.FoundIds(ids);
+            return ids;
+        }
+
+        private static bool IsCached(string zip)
+        {
+            var cacheFile = GetCacheFile(zip);
+            return File.Exists(cacheFile);
+        }
+
+        private static string GetCacheFile(string zip)
+        {
+            return zip.Substring(0, zip.Length - 4) + ".ids";
+        }
+
+        private static void WriteCache(IKaVESet<string> ids, string zip)
+        {
+            var json = ids.ToFormattedJson();
+            var cacheFile = GetCacheFile(zip);
+            File.WriteAllText(cacheFile, json);
+        }
+
+        private static IKaVESet<string> ReadCache(string zip)
+        {
+            var cacheFile = GetCacheFile(zip);
+            var json = File.ReadAllText(cacheFile);
+            var ids = json.ParseJsonTo<KaVEHashSet<string>>();
+            return ids;
+        }
+
+        private static IKaVESet<string> ReadZip(string zip)
+        {
             var ids = Sets.NewHashSet<string>();
 
             foreach (var e in GetEventsFromArchive(zip))
@@ -72,8 +113,6 @@ namespace KaVE.FeedbackProcessor.Preprocessing
                     }
                 }
             }
-            var jsonOut = ids.ToFormattedJson();
-            File.WriteAllText(cacheFile, jsonOut);
             return ids;
         }
 

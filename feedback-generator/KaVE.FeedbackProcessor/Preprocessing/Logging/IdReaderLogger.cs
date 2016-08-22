@@ -14,10 +14,28 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Utils.Collections;
+
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
-    public class IdReaderLogger
+    public interface IIdReaderLogger
+    {
+        void Processing(string zip);
+        void CacheHit();
+        void CacheMiss();
+        void FoundIds(IKaVESet<string> ids);
+    }
+
+    public class IdReaderLogger : IIdReaderLogger
     {
         public IdReaderLogger(IPrepocessingLogger log) {}
+
+        public void Processing(string zip) {}
+
+        public void CacheHit() {}
+
+        public void CacheMiss() {}
+
+        public void FoundIds(IKaVESet<string> ids) {}
     }
 }

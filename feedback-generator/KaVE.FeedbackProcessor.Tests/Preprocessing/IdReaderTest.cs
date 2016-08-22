@@ -22,6 +22,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Json;
 using KaVE.FeedbackProcessor.Preprocessing;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing
@@ -29,11 +30,19 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
     internal class IdReaderTest : FileBasedPreprocessingTestBase
     {
         private IdReader _sut;
+        private IIdReaderLogger _log;
+        private IKaVEList<IKaVESet<string>> _foundIds;
+
 
         [SetUp]
         public void Setup()
         {
-            _sut = new IdReader(new IdReaderLogger(new LineLogger()));
+            _foundIds = Lists.NewList<IKaVESet<string>>();
+            _log = Mock.Of<IIdReaderLogger>();
+            Mock.Get(_log)
+                .Setup(l => l.FoundIds(It.IsAny<IKaVESet<string>>()))
+                .Callback<IKaVESet<string>>(s => _foundIds.Add(s));
+            _sut = new IdReader(_log);
         }
 
         private void Given(params IDEEvent[] es)
@@ -107,6 +116,24 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             var cacheFile = Path.Combine(RawDir, "a.ids");
             File.WriteAllText(cacheFile, @"[""sid:s2""]");
             AssertIds("sid:s2");
+        }
+
+        [Test]
+        public void LoggerTest()
+        {
+            ReadingIdsWorks();
+            ReadingIdsWorks();
+
+            var zip = Path.Combine(RawDir, "a.zip");
+
+            Mock.Get(_log).Verify(l => l.Processing(zip), Times.Exactly(2));
+            Mock.Get(_log).Verify(l => l.CacheHit(), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.CacheMiss(), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.FoundIds(It.IsAny<IKaVESet<string>>()), Times.Exactly(2));
+
+            Assert.AreEqual(2, _foundIds.Count);
+            Assert.AreEqual(Sets.NewHashSet("sid:s1", "sid:s2", "pid:p1"), _foundIds[0]);
+            Assert.AreEqual(Sets.NewHashSet("sid:s1", "sid:s2", "pid:p1"), _foundIds[1]);
         }
     }
 }
