@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Utils.Collections;
+using System.Collections.Generic;
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
@@ -23,19 +23,45 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
         void Processing(string zip);
         void CacheHit();
         void CacheMiss();
-        void FoundIds(IKaVESet<string> ids);
+        void FoundIds(IEnumerable<string> ids);
     }
 
     public class IdReaderLogger : IIdReaderLogger
     {
-        public IdReaderLogger(IPrepocessingLogger log) {}
+        private readonly IPrepocessingLogger _log;
 
-        public void Processing(string zip) {}
+        public IdReaderLogger(IPrepocessingLogger log)
+        {
+            _log = log;
 
-        public void CacheHit() {}
+            _log.Log();
+            _log.Log(new string('#', 60));
+            _log.Log("# reading ids");
+            _log.Log(new string('#', 60));
+        }
 
-        public void CacheMiss() {}
+        public void Processing(string zip)
+        {
+            _log.Log();
+            _log.Log("#### {0}", zip);
+        }
 
-        public void FoundIds(IKaVESet<string> ids) {}
+        public void CacheHit()
+        {
+            _log.Log("cache hit, reading cache...");
+        }
+
+        public void CacheMiss()
+        {
+            _log.Log("reading zip...");
+        }
+
+        public void FoundIds(IEnumerable<string> ids)
+        {
+            foreach (var id in ids)
+            {
+                _log.Log("- {0}", id);
+            }
+        }
     }
 }

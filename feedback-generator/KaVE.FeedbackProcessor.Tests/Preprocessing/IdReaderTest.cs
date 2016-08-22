@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
@@ -31,17 +32,17 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
     {
         private IdReader _sut;
         private IIdReaderLogger _log;
-        private IKaVEList<IKaVESet<string>> _foundIds;
+        private IKaVEList<IEnumerable<string>> _foundIds;
 
 
         [SetUp]
         public void Setup()
         {
-            _foundIds = Lists.NewList<IKaVESet<string>>();
+            _foundIds = Lists.NewList<IEnumerable<string>>();
             _log = Mock.Of<IIdReaderLogger>();
             Mock.Get(_log)
-                .Setup(l => l.FoundIds(It.IsAny<IKaVESet<string>>()))
-                .Callback<IKaVESet<string>>(s => _foundIds.Add(s));
+                .Setup(l => l.FoundIds(It.IsAny<IEnumerable<string>>()))
+                .Callback<IEnumerable<string>>(s => _foundIds.Add(s));
             _sut = new IdReader(_log);
         }
 
@@ -132,8 +133,8 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Mock.Get(_log).Verify(l => l.FoundIds(It.IsAny<IKaVESet<string>>()), Times.Exactly(2));
 
             Assert.AreEqual(2, _foundIds.Count);
-            Assert.AreEqual(Sets.NewHashSet("sid:s1", "sid:s2", "pid:p1"), _foundIds[0]);
-            Assert.AreEqual(Sets.NewHashSet("sid:s1", "sid:s2", "pid:p1"), _foundIds[1]);
+            CollectionAssert.AreEquivalent(Sets.NewHashSet("sid:s1", "sid:s2", "pid:p1"), _foundIds[0]);
+            CollectionAssert.AreEquivalent(Sets.NewHashSet("sid:s1", "sid:s2", "pid:p1"), _foundIds[1]);
         }
     }
 }
