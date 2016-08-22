@@ -17,15 +17,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
 using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
     public class Grouper
     {
+        private readonly IGrouperLogger _log;
+
+        public Grouper(IGrouperLogger log)
+        {
+            _log = log;
+        }
+
         public IKaVESet<IKaVESet<string>> GroupRelatedZips(IDictionary<string, IKaVESet<string>> zipToIds)
         {
+            _log.Zips(zipToIds);
             var users = AssembleUsers(zipToIds);
+            _log.Users(users);
             return Sets.NewHashSetFrom(users.Select(u => u.Files));
         }
 
@@ -36,14 +46,14 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             var sortedKeysToPreserveOrdering = zipToIds.Keys.Reverse();
             foreach (var zip in sortedKeysToPreserveOrdering)
             {
-                var ids = zipToIds[zip];
+                var ids = Sets.NewHashSetFrom(zipToIds[zip]); // clone
                 var currentUser = new User
                 {
                     Files = {zip},
                     Identifiers = ids
                 };
-
                 var matches = FindMatchingEntries(users, ids);
+
                 if (matches.Any())
                 {
                     foreach (var match in matches)

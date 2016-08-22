@@ -19,6 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Preprocessing;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using KaVE.FeedbackProcessor.Preprocessing.Model;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing
@@ -29,11 +32,13 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 
         private IDictionary<string, IKaVESet<string>> _zipToIds;
         private const int MaxShuffleIterations = 10;
+        private IGrouperLogger _log;
 
         [SetUp]
         public void Setup()
         {
             _zipToIds = new Dictionary<string, IKaVESet<string>>();
+            _log = Mock.Of<IGrouperLogger>();
         }
 
         private void Given(string zip, params string[] ids)
@@ -60,10 +65,10 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             }
         }
 
-        private static void ExpectSpecific(IDictionary<string, IKaVESet<string>> zipToIds,
+        private void ExpectSpecific(IDictionary<string, IKaVESet<string>> zipToIds,
             params IKaVESet<string>[] expecteds)
         {
-            var actuals = new Grouper().GroupRelatedZips(zipToIds);
+            var actuals = new Grouper(_log).GroupRelatedZips(zipToIds);
             if (expecteds.Length != actuals.Count)
             {
                 Assert.Fail("incorrect number of groups, expected {0}, but was {1}", expecteds.Length, actuals.Count);
@@ -151,11 +156,67 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Given("b", "1", "2");
             Given("c", "2", "3");
 
-            var actuals = new Grouper().GroupRelatedZips(_zipToIds);
+            var actuals = new Grouper(_log).GroupRelatedZips(_zipToIds);
             Assert.AreEqual(1, actuals.Count);
             var actual = actuals.First();
             var expected = ToSet("a", "b", "c");
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GrouperShouldNotChangeInput()
+        {
+            Setup();
+            Given("a", "0", "1");
+            Given("b", "1", "2");
+            Given("c", "2", "3");
+            new Grouper(_log).GroupRelatedZips(_zipToIds);
+            var actual = _zipToIds;
+
+            Setup();
+            Given("a", "0", "1");
+            Given("b", "1", "2");
+            Given("c", "2", "3");
+            var expected = _zipToIds;
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void LoggerTest()
+        {
+            var actualZips = new IDictionary<string, IKaVESet<string>>[1];
+            var actualUsers = new IKaVESet<User>[1];
+
+            Mock.Get(_log)
+                .Setup(l => l.Zips(It.IsAny<IDictionary<string, IKaVESet<string>>>()))
+                .Callback<IDictionary<string, IKaVESet<string>>>(m => { actualZips[0] = m; });
+            Mock.Get(_log)
+                .Setup(l => l.Users(It.IsAny<IKaVESet<User>>()))
+                .Callback<IKaVESet<User>>(us => { actualUsers[0] = us; });
+
+            Given("a", "0", "1");
+            Given("b", "1", "2");
+            Given("c", "3", "4");
+            new Grouper(_log).GroupRelatedZips(_zipToIds);
+
+            Mock.Get(_log).Verify(l => l.Zips(It.IsAny<IDictionary<string, IKaVESet<string>>>()), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.Users(It.IsAny<IKaVESet<User>>()), Times.Exactly(1));
+
+            // zips
+            var expectedZips = new Dictionary<string, IKaVESet<string>>
+            {
+                {"a", Sets.NewHashSet("0", "1")},
+                {"b", Sets.NewHashSet("1", "2")},
+                {"c", Sets.NewHashSet("3", "4")}
+            };
+            CollectionAssert.AreEqual(expectedZips, actualZips[0]);
+
+            // users
+            var expectedUsers = Sets.NewHashSet(
+                new User {Files = {"a", "b"}, Identifiers = {"0", "1", "2"}},
+                new User {Files = {"c"}, Identifiers = {"3", "4"}});
+            CollectionAssert.AreEquivalent(expectedUsers, actualUsers[0]);
         }
     }
 }

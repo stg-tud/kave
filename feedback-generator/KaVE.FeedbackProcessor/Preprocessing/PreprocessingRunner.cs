@@ -33,7 +33,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
                 new MultiThreadedRunnerLogger(new ConsoleLogger(new DateUtils())),
                 3,
                 CreateIdReader,
-                new Grouper(),
+                new Grouper(new GrouperLogger(CreateWorkerLogger(0))),
                 CreateGroupMerger,
                 CreateCleaner).Run();
         }

@@ -14,7 +14,71 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using KaVE.FeedbackProcessor.Preprocessing.Model;
+using NUnit.Framework;
+
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
 {
-    internal class GrouperLoggerTest {}
+    internal class GrouperLoggerTest : LoggerTestBase
+    {
+        private GrouperLogger _sut;
+
+        [SetUp]
+        public void Setup()
+        {
+            _sut = new GrouperLogger(Log);
+        }
+
+        [Test]
+        public void Integration()
+        {
+            _sut.Zips(
+                new Dictionary<string, IKaVESet<string>>
+                {
+                    {"a", Sets.NewHashSet("1", "2")},
+                    {"b", Sets.NewHashSet("3")}
+                });
+            _sut.Users(
+                Sets.NewHashSet(
+                    new User
+                    {
+                        Files = {"a", "b"},
+                        Identifiers = {"1", "2"}
+                    },
+                    new User
+                    {
+                        Files = {"a", "b"},
+                        Identifiers = {"1", "2"}
+                    }));
+
+            AssertLog(
+                "",
+                "############################################################",
+                "# identifying users",
+                "############################################################",
+                "",
+                "2 zips as input:",
+                "",
+                "#### zip: a",
+                "ids: 1, 2, ",
+                "",
+                "#### zip: b",
+                "ids: 3, ",
+                "",
+                "------------------------------------------------------------",
+                "",
+                "identified 1 users:",
+                "",
+                "#### user 0",
+                "",
+                "Files:",
+                "a, b, ",
+                "",
+                "Identifier:",
+                "1, 2, ");
+        }
+    }
 }
