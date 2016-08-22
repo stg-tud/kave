@@ -20,6 +20,8 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.FeedbackProcessor.Preprocessing;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing
@@ -29,11 +31,13 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         #region setup & helpers
 
         private GroupMerger _sut;
+        private IGroupMergerLogger _log;
 
         [SetUp]
         public void Setup()
         {
-            _sut = new GroupMerger(Io);
+            _log = Mock.Of<IGroupMergerLogger>();
+            _sut = new GroupMerger(Io, _log);
         }
 
         private static CommandEvent Event(string id)
@@ -96,6 +100,25 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Add(@"sub\a.zip", Event("a"));
             Merge(@"sub\a.zip");
             Expect(@"sub\a.zip", Event("a"));
+        }
+
+        [Test]
+        public void LoggerTest()
+        {
+            var readZips = Lists.NewList<string>();
+            Mock.Get(_log).Setup(l => l.Reading(It.IsAny<string>())).Callback<string>(s => readZips.Add(s));
+
+            MergingWorks();
+            SubfoldersWork();
+
+            Mock.Get(_log).Verify(l => l.WorkingIn(RawDir + "\\", MergedDir + "\\"), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.NextGroup(3), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.NextGroup(1), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.Reading(It.IsAny<string>()), Times.Exactly(4));
+            Mock.Get(_log).Verify(l => l.Result(3), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.Result(1), Times.Exactly(1));
+
+            CollectionAssert.AreEquivalent(new[] {"a.zip", "b.zip", "c.zip", "sub\\a.zip"}, readZips);
         }
 
         [Test, ExpectedException(typeof(AssertException))]

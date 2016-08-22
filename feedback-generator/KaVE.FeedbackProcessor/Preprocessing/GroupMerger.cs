@@ -21,6 +21,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
 using KaVE.FeedbackProcessor.Preprocessing.Model;
 using KaVE.JetBrains.Annotations;
 
@@ -29,10 +30,14 @@ namespace KaVE.FeedbackProcessor.Preprocessing
     public class GroupMerger
     {
         private readonly IPreprocessingIo _io;
+        private readonly IGroupMergerLogger _log;
 
-        public GroupMerger(IPreprocessingIo io)
+        public GroupMerger(IPreprocessingIo io, IGroupMergerLogger log)
         {
             _io = io;
+            _log = log;
+
+            _log.WorkingIn(io.GetFullPath_Raw(""), io.GetFullPath_Merged(""));
         }
 
         public void Merge([NotNull] IKaVESet<string> relZips)
@@ -45,25 +50,29 @@ namespace KaVE.FeedbackProcessor.Preprocessing
                 Asserts.That(File.Exists(zip));
             }
 
-            if (relZips.Count > 0)
-            {
-                var zipOut = _io.GetFullPath_Merged(relZips.First());
-                _io.EnsureParentExists(zipOut);
+            _log.NextGroup(relZips.Count);
 
-                using (var wa = new WritingArchive(zipOut))
+            var zipOut = _io.GetFullPath_Merged(relZips.First());
+            _io.EnsureParentExists(zipOut);
+
+            var numEvents = 0;
+            using (var wa = new WritingArchive(zipOut))
+            {
+                foreach (var e in ReadArchives(relZips))
                 {
-                    foreach (var e in ReadArchives(relZips))
-                    {
-                        wa.Add(e);
-                    }
+                    numEvents++;
+                    wa.Add(e);
                 }
             }
+
+            _log.Result(numEvents);
         }
 
         private IEnumerable<IDEEvent> ReadArchives(IEnumerable<string> relZips)
         {
             foreach (var relZip in relZips)
             {
+                _log.Reading(relZip);
                 var zip = _io.GetFullPath_Raw(relZip);
                 var ra = new ReadingArchive(zip);
                 while (ra.HasNext())

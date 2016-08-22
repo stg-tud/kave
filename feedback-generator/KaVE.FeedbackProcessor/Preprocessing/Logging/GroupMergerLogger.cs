@@ -16,5 +16,22 @@
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
-    public class GroupMergerLogger {}
+    public interface IGroupMergerLogger
+    {
+        void NextGroup(int count);
+        void Reading(string relZip);
+        void Result(int numEvents);
+        void WorkingIn(string getFullPathRaw, string getFullPathMerged);
+    }
+
+    public class GroupMergerLogger : IGroupMergerLogger
+    {
+        public void NextGroup(int count) {}
+
+        public void Reading(string relZip) {}
+
+        public void Result(int numEvents) {}
+
+        public void WorkingIn(string getFullPathRaw, string getFullPathMerged) {}
+    }
 }
