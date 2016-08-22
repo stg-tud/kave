@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Preprocessing;
 using KaVE.FeedbackProcessor.Preprocessing.Filters;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
@@ -34,15 +35,22 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         private Cleaner _sut;
         private ICleanerLogger _log;
         private IList<IDictionary<string, int>> _reportedCounts;
+        private IKaVEList<string> _registeredFilters;
 
         [SetUp]
         public void Setup()
         {
             _reportedCounts = new List<IDictionary<string, int>>();
+            _registeredFilters = Lists.NewList<string>();
+
             _log = Mock.Of<ICleanerLogger>();
             Mock.Get(_log)
                 .Setup(l => l.FinishedWriting(It.IsAny<IDictionary<string, int>>()))
                 .Callback<IDictionary<string, int>>(d => _reportedCounts.Add(d));
+            Mock.Get(_log)
+                .Setup(l => l.RegisteredFilters(It.IsAny<IEnumerable<string>>()))
+                .Callback<IEnumerable<string>>(fs => _registeredFilters.AddAll(fs));
+
             _sut = new Cleaner(Io, _log);
         }
 
@@ -157,12 +165,13 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             _sut.Dispose();
 
             Mock.Get(_log).Verify(l => l.WorkingIn(MergedDir + @"\", FinalDir + @"\"), Times.Exactly(1));
-            Mock.Get(_log).Verify(l => l.RegisteredFilters(new[] {"command filter: b"}), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.RegisteredFilters(It.IsAny<IEnumerable<string>>()), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.ReadingZip("a"), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.ReadingZip("b"), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.WritingEvents(), Times.Exactly(2));
             Mock.Get(_log).Verify(l => l.FinishedWriting(It.IsAny<IDictionary<string, int>>()), Times.Exactly(2));
 
+            CollectionAssert.AreEquivalent(new[] {"command filter: b"}, _registeredFilters);
             CollectionAssert.Contains(_reportedCounts, Res(4, 3, 2, 2));
             CollectionAssert.Contains(_reportedCounts, Res(1, 1, 1, 1));
         }

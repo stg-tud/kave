@@ -32,6 +32,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         private Dictionary<string, int> _counts;
 
         public ISet<IFilter> Filters { get; private set; }
+        private bool _hasReportedFilters;
 
         public Cleaner(IPreprocessingIo io, ICleanerLogger log)
         {
@@ -39,13 +40,14 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _log = log;
 
             _log.WorkingIn(io.GetFullPath_Merged(""), io.GetFullPath_Final(""));
-            _log.RegisteredFilters(Filters.Select(f => f.Name));
 
             Filters = new HashSet<IFilter>();
         }
 
         public void Clean(string relZip)
         {
+            ReportFilters();
+
             _counts = new Dictionary<string, int>();
 
             var events = ReadEvents(relZip);
@@ -57,6 +59,15 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             WriteResults(events, relZip);
 
             _log.FinishedWriting(_counts);
+        }
+
+        private void ReportFilters()
+        {
+            if (!_hasReportedFilters)
+            {
+                _log.RegisteredFilters(Filters.Select(f => f.Name));
+            }
+            _hasReportedFilters = true;
         }
 
         private IEnumerable<IDEEvent> ReadEvents(string relZip)
