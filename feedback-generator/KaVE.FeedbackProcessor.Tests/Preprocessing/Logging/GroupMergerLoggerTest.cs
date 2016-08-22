@@ -14,7 +14,48 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Utils;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using NUnit.Framework;
+
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
 {
-    internal class GroupMergerLoggerTest {}
+    internal class GroupMergerLoggerTest : LoggerTestBase
+    {
+        private GroupMergerLogger _sut;
+
+        [SetUp]
+        public void Setup()
+        {
+            _sut = new GroupMergerLogger(new ConsoleLogger(new DateUtils()));
+        }
+
+        [Test]
+        public void Integration()
+        {
+            _sut.WorkingIn("<in>", "<out>");
+            _sut.NextGroup(3, "a");
+            _sut.Reading("a");
+            _sut.Reading("b");
+            _sut.Reading("c");
+            _sut.Result(123);
+        }
+
+        [Test]
+        public void Integration_Multiple()
+        {
+            _sut.WorkingIn("<in>", "<out>");
+
+            _sut.NextGroup(3, "a");
+            _sut.Reading("a");
+            _sut.Reading("b");
+            _sut.Reading("c");
+            _sut.Result(123);
+
+            _sut.NextGroup(2, "d");
+            _sut.Reading("d");
+            _sut.Reading("e");
+            _sut.Result(45);
+        }
+    }
 }

@@ -50,9 +50,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
                 Asserts.That(File.Exists(zip));
             }
 
-            _log.NextGroup(relZips.Count);
-
-            var zipOut = _io.GetFullPath_Merged(relZips.First());
+            var relZipOut = relZips.First();
+            _log.NextGroup(relZips.Count, relZipOut);
+            var zipOut = _io.GetFullPath_Merged(relZipOut);
             _io.EnsureParentExists(zipOut);
 
             var numEvents = 0;

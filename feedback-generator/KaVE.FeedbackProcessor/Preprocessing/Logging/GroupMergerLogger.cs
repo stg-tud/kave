@@ -18,7 +18,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
     public interface IGroupMergerLogger
     {
-        void NextGroup(int count);
+        void NextGroup(int count, string relZipOut);
         void Reading(string relZip);
         void Result(int numEvents);
         void WorkingIn(string getFullPathRaw, string getFullPathMerged);
@@ -26,12 +26,40 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 
     public class GroupMergerLogger : IGroupMergerLogger
     {
-        public void NextGroup(int count) {}
+        private readonly IPrepocessingLogger _log;
 
-        public void Reading(string relZip) {}
+        public GroupMergerLogger(IPrepocessingLogger log)
+        {
+            _log = log;
 
-        public void Result(int numEvents) {}
+            _log.Log();
+            _log.Log(new string('#', 60));
+            _log.Log("# merging multiple zips into one");
+            _log.Log(new string('#', 60));
+        }
 
-        public void WorkingIn(string getFullPathRaw, string getFullPathMerged) {}
+        public void NextGroup(int count, string relZipOut)
+        {
+            _log.Log();
+            _log.Log("#### merging {0} zips into {1}", count, relZipOut);
+        }
+
+        public void Reading(string relZip)
+        {
+            _log.Log("- {0} ...", relZip);
+        }
+
+        public void Result(int numEvents)
+        {
+            _log.Log("==> merged {0} events", numEvents);
+        }
+
+        public void WorkingIn(string dirIn, string dirOut)
+        {
+            _log.Log();
+            _log.Log("working directories:");
+            _log.Log("- in: {0}", dirIn);
+            _log.Log("- out: {0}", dirOut);
+        }
     }
 }

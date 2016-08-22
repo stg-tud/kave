@@ -112,8 +112,8 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             SubfoldersWork();
 
             Mock.Get(_log).Verify(l => l.WorkingIn(RawDir + "\\", MergedDir + "\\"), Times.Exactly(1));
-            Mock.Get(_log).Verify(l => l.NextGroup(3), Times.Exactly(1));
-            Mock.Get(_log).Verify(l => l.NextGroup(1), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.NextGroup(3, "a.zip"), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.NextGroup(1, "sub\\a.zip"), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.Reading(It.IsAny<string>()), Times.Exactly(4));
             Mock.Get(_log).Verify(l => l.Result(3), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.Result(1), Times.Exactly(1));
