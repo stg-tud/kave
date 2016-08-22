@@ -120,6 +120,15 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Model
         }
 
         [Test, ExpectedException(typeof(AssertException))]
+        public void ShouldRejectSecondStoreZipGroups()
+        {
+            Init("a", "b", "c");
+
+            _sut.StoreZipGroups(Sets.NewHashSet(ToSet("a", "b"), ToSet("c")));
+            _sut.StoreZipGroups(Sets.NewHashSet(ToSet("a", "b"), ToSet("c")));
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
         public void ShouldRejectEmptyZipGrouping()
         {
             _sut.StoreZipGroups(Sets.NewHashSet<IKaVESet<string>>());
@@ -158,14 +167,16 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Model
         [Test, ExpectedException(typeof(AssertException))]
         public void ShouldRejectStoreUnknownZip()
         {
-            Init();
+            Init("b");
+            _sut.StoreZipGroups(Sets.NewHashSet(ToSet("b")));
             _sut.StoreMergedZip("a");
         }
 
         [Test, ExpectedException(typeof(AssertException))]
         public void ShouldRejectRepeatedStoreMerged()
         {
-            Init("a");
+            Init("a", "b");
+            _sut.StoreZipGroups(Sets.NewHashSet(ToSet("b")));
             _sut.StoreMergedZip("a");
             _sut.StoreMergedZip("a");
         }
@@ -176,6 +187,67 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Model
             Init("a");
             _sut.StoreZipGroups(Sets.NewHashSet(ToSet("a")));
             _sut.StoreMergedZip("a");
+        }
+
+        [Test]
+        public void NumUnindexed_SetDuringConstruction()
+        {
+            Init();
+            Assert.AreEqual(0, _sut.NumUnindexedZips);
+            Init("a");
+            Assert.AreEqual(1, _sut.NumUnindexedZips);
+            Init("a", "b");
+            Assert.AreEqual(2, _sut.NumUnindexedZips);
+        }
+
+        [Test]
+        public void NumUnindexed_IsReducedByAcquisition()
+        {
+            Init("a", "b");
+            string zip;
+            Assert.IsTrue(_sut.AcquireNextUnindexedZip(out zip));
+            Assert.AreEqual(1, _sut.NumUnindexedZips);
+            Assert.IsTrue(_sut.AcquireNextUnindexedZip(out zip));
+            Assert.AreEqual(0, _sut.NumUnindexedZips);
+            Assert.IsFalse(_sut.AcquireNextUnindexedZip(out zip));
+        }
+
+        [Test]
+        public void NumGroups_ZeroByDefault()
+        {
+            Init();
+            Assert.AreEqual(0, _sut.NumGroups);
+        }
+
+        [Test]
+        public void NumGroups_IncreasedWithResults()
+        {
+            Init("a", "b");
+            _sut.StoreZipGroups(Sets.NewHashSet(ToSet("a", "b")));
+            Assert.AreEqual(1, _sut.NumGroups);
+
+            Init("a", "b", "c");
+            _sut.StoreZipGroups(Sets.NewHashSet(ToSet("a", "b"), ToSet("c")));
+            Assert.AreEqual(2, _sut.NumGroups);
+        }
+
+        [Test]
+        public void NumUnclean_ZeroByDefault()
+        {
+            Init();
+            Assert.AreEqual(0, _sut.NumUnclean);
+        }
+
+        [Test]
+        public void NumUnclean_IncreasedWithResults()
+        {
+            Init("a", "b", "c");
+            _sut.StoreZipGroups(Sets.NewHashSet(ToSet("c")));
+            _sut.StoreMergedZip("a");
+            Assert.AreEqual(1, _sut.NumUnclean);
+
+            _sut.StoreMergedZip("b");
+            Assert.AreEqual(2, _sut.NumUnclean);
         }
     }
 }

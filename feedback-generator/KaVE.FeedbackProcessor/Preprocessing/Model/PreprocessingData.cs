@@ -29,7 +29,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
         private readonly IKaVESet<string> _allZips;
         private readonly IKaVESet<string> _unindexedZips;
         private readonly IDictionary<string, IKaVESet<string>> _idsByZip;
-        private readonly IKaVESet<IKaVESet<string>> _zipGroups;
+        private IKaVESet<IKaVESet<string>> _zipGroups;
         private readonly IKaVESet<string> _uncleansedZips;
 
         public PreprocessingData(IKaVESet<string> zips)
@@ -37,8 +37,40 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
             _allZips = zips;
             _unindexedZips = Sets.NewHashSetFrom(_allZips);
             _idsByZip = new Dictionary<string, IKaVESet<string>>();
-            _zipGroups = Sets.NewHashSet<IKaVESet<string>>();
             _uncleansedZips = Sets.NewHashSet<string>();
+        }
+
+        public int NumUnindexedZips
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _unindexedZips.Count;
+                }
+            }
+        }
+
+        public int NumGroups
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _zipGroups == null ? 0 : _zipGroups.Count;
+                }
+            }
+        }
+
+        public int NumUnclean
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _uncleansedZips.Count;
+                }
+            }
         }
 
         public bool AcquireNextUnindexedZip(out string zip)
@@ -79,6 +111,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
         {
             lock (_lock)
             {
+                Asserts.That(_zipGroups == null);
                 Asserts.NotNull(zipGroups);
                 Asserts.Not(zipGroups.Count == 0);
                 foreach (var zipGroup in zipGroups)
@@ -89,7 +122,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
                         Asserts.That(_allZips.Contains(zip));
                     }
                 }
-                _zipGroups.AddAll(zipGroups);
+                _zipGroups = Sets.NewHashSetFrom(zipGroups);
             }
         }
 
@@ -111,6 +144,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
         {
             lock (_lock)
             {
+                Asserts.NotNull(_zipGroups);
                 Asserts.NotNull(zip);
                 Asserts.That(_allZips.Contains(zip));
                 Asserts.Not(_uncleansedZips.Contains(zip));
