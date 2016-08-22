@@ -27,7 +27,12 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
-    public class IdReader
+    public interface IIdReader
+    {
+        IKaVESet<string> Read([NotNull] string zip);
+    }
+
+    public class IdReader : IIdReader
     {
         private readonly IIdReaderLogger _log;
 
@@ -36,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _log = log;
         }
 
-        public IKaVESet<string> Read([NotNull] string zip)
+        public IKaVESet<string> Read(string zip)
         {
             Asserts.NotNull(zip);
             Asserts.That(File.Exists(zip));

@@ -26,10 +26,10 @@ namespace KaVE.FeedbackProcessor.Preprocessing
     {
         private readonly IPreprocessingIo _io;
         private readonly int _numProcs;
-        private readonly Func<int, IdReader> _idReaderFactory;
-        private readonly Grouper _grouper;
-        private readonly Func<int, GroupMerger> _groupMergerFactory;
-        private readonly Func<int, Cleaner> _cleanerFactory;
+        private readonly Func<int, IIdReader> _idReaderFactory;
+        private readonly IGrouper _grouper;
+        private readonly Func<int, IGroupMerger> _groupMergerFactory;
+        private readonly Func<int, ICleaner> _cleanerFactory;
         private readonly IMultiThreadedPreprocessingLogger _log;
 
         private PreprocessingData _data;
@@ -37,10 +37,10 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         public MultiThreadedPreprocessing(IPreprocessingIo io,
             IMultiThreadedPreprocessingLogger log,
             int numProcs,
-            Func<int, IdReader> idReaderFactory,
-            Grouper grouper,
-            Func<int, GroupMerger> groupMergerFactory,
-            Func<int, Cleaner> cleanerFactory)
+            Func<int, IIdReader> idReaderFactory,
+            IGrouper grouper,
+            Func<int, IGroupMerger> groupMergerFactory,
+            Func<int, ICleaner> cleanerFactory)
         {
             _io = io;
             _log = log;
@@ -93,7 +93,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private void GroupZipsByIds()
         {
-            var zipGroups = _grouper.GroupRelatedZips(_data.GetIdsByZip());
+            var idsByZip = _data.GetIdsByZip();
+            var zipGroups = _grouper.GroupRelatedZips(idsByZip);
             _data.StoreZipGroups(zipGroups);
         }
 
@@ -104,8 +105,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             IKaVESet<string> zips;
             while (_data.AcquireNextUnmergedZipGroup(out zips))
             {
-                zipMerger.Merge(zips);
-                //_data.StoreMergedZip(zips.First());
+                var relZipOut = zipMerger.Merge(zips);
+                _data.StoreMergedZip(relZipOut);
             }
         }
 

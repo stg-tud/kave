@@ -76,7 +76,9 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 
         private void Merge(params string[] relFiles)
         {
-            _sut.Merge(Sets.NewHashSetFrom(relFiles));
+            var actual = _sut.Merge(Sets.NewHashSetFrom(relFiles));
+            var expected = relFiles[0];
+            Assert.AreEqual(expected, actual);
         }
 
         #endregion

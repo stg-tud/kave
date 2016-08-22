@@ -25,7 +25,12 @@ using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
-    public class Cleaner : IDisposable
+    public interface ICleaner : IDisposable
+    {
+        void Clean(string relZip);
+    }
+
+    public class Cleaner : ICleaner
     {
         private readonly IPreprocessingIo _io;
         private readonly ICleanerLogger _log;

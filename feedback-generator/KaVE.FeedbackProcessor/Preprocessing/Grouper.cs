@@ -22,7 +22,12 @@ using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
-    public class Grouper
+    public interface IGrouper
+    {
+        IKaVESet<IKaVESet<string>> GroupRelatedZips(IDictionary<string, IKaVESet<string>> zipToIds);
+    }
+
+    public class Grouper : IGrouper
     {
         private readonly IGrouperLogger _log;
 

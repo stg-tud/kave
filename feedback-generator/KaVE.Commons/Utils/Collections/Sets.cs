@@ -81,7 +81,7 @@ namespace KaVE.Commons.Utils.Collections
 
         public override int GetHashCode()
         {
-            var init = typeof (T).GetHashCode();
+            var init = typeof(T).GetHashCode();
             return Seed*this.Aggregate(init, (current, e) => current + e.GetHashCode());
         }
 
@@ -123,7 +123,7 @@ namespace KaVE.Commons.Utils.Collections
 
         public override int GetHashCode()
         {
-            var init = typeof (T).GetHashCode();
+            var init = typeof(T).GetHashCode();
             return Seed*this.Aggregate(init, (current, e) => current + e.GetHashCode());
         }
 

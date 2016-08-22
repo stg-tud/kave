@@ -27,7 +27,12 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
-    public class GroupMerger
+    public interface IGroupMerger
+    {
+        string Merge([NotNull] IKaVESet<string> relZips);
+    }
+
+    public class GroupMerger : IGroupMerger
     {
         private readonly IPreprocessingIo _io;
         private readonly IGroupMergerLogger _log;
@@ -40,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _log.WorkingIn(io.GetFullPath_Raw(""), io.GetFullPath_Merged(""));
         }
 
-        public void Merge([NotNull] IKaVESet<string> relZips)
+        public string Merge(IKaVESet<string> relZips)
         {
             Asserts.NotNull(relZips);
             Asserts.That(relZips.Count > 0);
@@ -66,6 +71,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             }
 
             _log.Result(numEvents);
+
+            return relZipOut;
         }
 
         private IEnumerable<IDEEvent> ReadArchives(IEnumerable<string> relZips)
