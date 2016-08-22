@@ -14,72 +14,93 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
-    public interface ICleanerLogger
+    public interface ICleanerLogger : IDisposable
     {
+        void WorkingIn(string dirIn, string dirOut);
+        void RegisteredFilters(IEnumerable<string> filters);
         void ReadingZip(string zip);
-        void ApplyingFilters();
-        void ApplyingFilter(string name);
-        void RemovingDuplicates();
-        void OrderingEvents();
         void WritingEvents();
-        void Finish(IDictionary<string, int> counts);
+        void FinishedWriting(IDictionary<string, int> counts);
     }
 
     public class CleanerLogger : ICleanerLogger
     {
         private readonly IPrepocessingLogger _log;
+        private readonly IDictionary<string, int> _aggregatedCounts;
 
         public CleanerLogger(IPrepocessingLogger log)
         {
             _log = log;
+            _aggregatedCounts = new Dictionary<string, int>();
+        }
+
+        public void WorkingIn(string dirIn, string dirOut)
+        {
+            _log.Log();
+            _log.Log(new string('#', 60));
+            _log.Log("# started cleaning...");
+            _log.Log(new string('#', 60));
+            _log.Log();
+            _log.Log("folders:");
+            _log.Log("- in: {0}", dirIn);
+            _log.Log("- out: {0}", dirOut);
+        }
+
+        public void RegisteredFilters(IEnumerable<string> filters)
+        {
+            _log.Log();
+            _log.Log("registered filters:");
+            foreach (var filter in filters)
+            {
+                _log.Log("- {0}", filter);
+            }
         }
 
         public void ReadingZip(string zip)
         {
             _log.Log();
-            _log.Log("#### reading zip: {0}", zip);
-        }
-
-        public void ApplyingFilters()
-        {
-            _log.Log();
-            _log.Log("applying filters:");
-        }
-
-        public void ApplyingFilter(string name)
-        {
-            _log.Log("\t- {0}", name);
-        }
-
-        public void RemovingDuplicates()
-        {
-            _log.Log();
-            _log.Log("removing duplicates... ");
-        }
-
-        public void OrderingEvents()
-        {
-            _log.Append("done");
-            _log.Log("ordering events... ");
+            _log.Log("#### zip: {0}", zip);
+            _log.Log("reading... ", zip);
         }
 
         public void WritingEvents()
         {
             _log.Append("done");
-            _log.Log("writing events... ");
+            _log.Log("writing... ");
         }
 
-        public void Finish(IDictionary<string, int> counts)
+        public void FinishedWriting(IDictionary<string, int> counts)
         {
-            _log.Log();
-            _log.Log("results:");
+            _log.Append("done");
             foreach (var k in counts.Keys)
             {
-                _log.Log("\t- {0}: {1}", k, counts[k]);
+                _log.Log("- {0}: {1}", k, counts[k]);
+                Count(k, counts[k]);
+            }
+        }
+
+        private void Count(string k, int count)
+        {
+            var newCount = count;
+            if (_aggregatedCounts.ContainsKey(k))
+            {
+                newCount += _aggregatedCounts[k];
+            }
+            _aggregatedCounts[k] = newCount;
+        }
+
+        public void Dispose()
+        {
+            _log.Log();
+            _log.Log("#### cleaning stats over all files ####");
+            foreach (var k in _aggregatedCounts.Keys)
+            {
+                _log.Log("- {0}: {1}", k, _aggregatedCounts[k]);
             }
         }
     }

@@ -16,8 +16,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Preprocessing;
 using KaVE.FeedbackProcessor.Preprocessing.Filters;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
@@ -26,28 +27,23 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 {
-    internal class CleanerTest
+    internal class CleanerTest : FileBasedPreprocessingTestBase
     {
         #region setup and helper
 
         private Cleaner _sut;
         private ICleanerLogger _log;
-
-        private IDictionary<string, IList<IDEEvent>> _inEvents;
-        private IDictionary<string, IEnumerable<IDEEvent>> _outEvents;
-        private IDictionary<string, IDictionary<string, int>> _intermediateResults;
+        private IList<IDictionary<string, int>> _reportedCounts;
 
         [SetUp]
         public void Setup()
         {
-            _inEvents = new Dictionary<string, IList<IDEEvent>>();
-            _outEvents = new Dictionary<string, IEnumerable<IDEEvent>>();
-            _intermediateResults = new Dictionary<string, IDictionary<string, int>>();
-        }
-
-        private void Add(string fileName, params IDEEvent[] es)
-        {
-            _inEvents[fileName] = Lists.NewListFrom(es);
+            _reportedCounts = new List<IDictionary<string, int>>();
+            _log = Mock.Of<ICleanerLogger>();
+            Mock.Get(_log)
+                .Setup(l => l.FinishedWriting(It.IsAny<IDictionary<string, int>>()))
+                .Callback<IDictionary<string, int>>(d => _reportedCounts.Add(d));
+            _sut = new Cleaner(Io, _log);
         }
 
         private static IDEEvent E(string id, int timeOffset)
@@ -59,10 +55,22 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             };
         }
 
-        private void AssertEvents(string fileName, params IDEEvent[] expectedEvents)
+        private void Add(string relFile, params IDEEvent[] events)
         {
-            Assert.That(_outEvents.ContainsKey(fileName));
-            CollectionAssert.AreEqual(expectedEvents, _outEvents[fileName]);
+            var file = Path.Combine(MergedDir, relFile);
+            WriteZip(file, events);
+        }
+
+        private void Clean(string relZip)
+        {
+            _sut.Clean(relZip);
+        }
+
+        private void AssertEvents(string relFile, params IDEEvent[] expecteds)
+        {
+            var file = Path.Combine(FinalDir, relFile);
+            var actuals = ReadZip<IDEEvent>(file);
+            CollectionAssert.AreEqual(expecteds, actuals);
         }
 
         #endregion
@@ -75,18 +83,23 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         }
 
         [Test]
-        public void DuplicatesAreRemoved()
+        public void HappyPath()
         {
-            Add("a", E("a", 1), E("a", 1));
+            Add("a", E("a", 1));
 
-            Clean();
+            Clean("a");
 
             AssertEvents("a", E("a", 1));
         }
 
-        private void Clean()
+        [Test]
+        public void DuplicatesAreRemoved()
         {
-            throw new NotImplementedException();
+            Add("a", E("a", 1), E("a", 1));
+
+            Clean("a");
+
+            AssertEvents("a", E("a", 1));
         }
 
         [Test]
@@ -94,9 +107,19 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         {
             Add("a", E("a", 2), E("b", 1));
 
-            Clean();
+            Clean("a");
 
             AssertEvents("a", E("b", 1), E("a", 2));
+        }
+
+        [Test]
+        public void SufoldersWork()
+        {
+            Add(@"sub\a", E("a", 2), E("b", 1));
+
+            Clean(@"sub\a");
+
+            AssertEvents(@"sub\a", E("b", 1), E("a", 2));
         }
 
         [Test]
@@ -106,9 +129,15 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 
             Add("a", E("a", 1), E("b", 2), E("c", 3));
 
-            Clean();
+            Clean("a");
 
             AssertEvents("a", E("a", 1), E("c", 3));
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
+        public void ZipMustExist()
+        {
+            Clean("a");
         }
 
         [Test]
@@ -119,22 +148,23 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Add("a", E("a", 3), E("b", 2), E("c", 1), E("a", 3));
             Add("b", E("d", 1));
 
-            Clean();
+            Clean("a");
+            Clean("b");
 
             AssertEvents("a", E("c", 1), E("a", 3));
             AssertEvents("b", E("d", 1));
 
+            _sut.Dispose();
 
+            Mock.Get(_log).Verify(l => l.WorkingIn(MergedDir + @"\", FinalDir + @"\"), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.RegisteredFilters(new[] {"command filter: b"}), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.ReadingZip("a"), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.ReadingZip("b"), Times.Exactly(1));
-            Mock.Get(_log).Verify(l => l.ApplyingFilters(), Times.Exactly(2));
-            Mock.Get(_log).Verify(l => l.ApplyingFilter("command filter: b"), Times.Exactly(2));
-            Mock.Get(_log).Verify(l => l.RemovingDuplicates(), Times.Exactly(2));
-            Mock.Get(_log).Verify(l => l.OrderingEvents(), Times.Exactly(2));
             Mock.Get(_log).Verify(l => l.WritingEvents(), Times.Exactly(2));
+            Mock.Get(_log).Verify(l => l.FinishedWriting(It.IsAny<IDictionary<string, int>>()), Times.Exactly(2));
 
-            CollectionAssert.AreEquivalent(Res(4, 3, 2, 2), _intermediateResults["a"]);
-            CollectionAssert.AreEquivalent(Res(1, 1, 1, 1), _intermediateResults["b"]);
+            CollectionAssert.Contains(_reportedCounts, Res(4, 3, 2, 2));
+            CollectionAssert.Contains(_reportedCounts, Res(1, 1, 1, 1));
         }
 
         private static IDictionary<string, int> Res(int numBefore,

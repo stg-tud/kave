@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
@@ -24,7 +25,7 @@ using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
-    public class Cleaner
+    public class Cleaner : IDisposable
     {
         private readonly IPreprocessingIo _io;
         private readonly ICleanerLogger _log;
@@ -36,27 +37,33 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         {
             _io = io;
             _log = log;
+
+            _log.WorkingIn(io.GetFullPath_Merged(""), io.GetFullPath_Final(""));
+            _log.RegisteredFilters(Filters.Select(f => f.Name));
+
             Filters = new HashSet<IFilter>();
         }
 
-        public void Clean(string zip)
+        public void Clean(string relZip)
         {
             _counts = new Dictionary<string, int>();
 
-            var events = ReadEvents(zip);
+            var events = ReadEvents(relZip);
 
             events = ApplyFilters(events);
             events = RemoveDuplicates(events);
             events = OrderEvents(events);
 
-            WriteResults(events, zip);
+            WriteResults(events, relZip);
 
-            _log.Finish(_counts);
+            _log.FinishedWriting(_counts);
         }
 
-        private IEnumerable<IDEEvent> ReadEvents(string zip)
+        private IEnumerable<IDEEvent> ReadEvents(string relZip)
         {
-            _log.ReadingZip(_io.GetFullPath_Merged(zip));
+            _log.ReadingZip(relZip);
+
+            var zip = _io.GetFullPath_Merged(relZip);
             var ra = new ReadingArchive(zip);
             var events = ra.GetAll<IDEEvent>();
             return events;
@@ -64,11 +71,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private IEnumerable<IDEEvent> ApplyFilters(IEnumerable<IDEEvent> events)
         {
-            _log.ApplyingFilters();
             events = AddCounter(events, "before applying any filter");
             foreach (var filter in Filters)
             {
-                _log.ApplyingFilter(filter.Name);
                 events = events.Where(filter.Func2);
                 events = AddCounter(events, string.Format("after applying '{0}'", filter.Name));
             }
@@ -77,7 +82,6 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private IEnumerable<IDEEvent> RemoveDuplicates(IEnumerable<IDEEvent> events)
         {
-            _log.RemovingDuplicates();
             events = events.Distinct();
             events = AddCounter(events, "after removing duplicates");
             return events;
@@ -85,16 +89,17 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private IEnumerable<IDEEvent> OrderEvents(IEnumerable<IDEEvent> events)
         {
-            _log.OrderingEvents();
             events = events.OrderBy(e => e.TriggeredAt);
             events = AddCounter(events, "after ordering");
             return events;
         }
 
-        private void WriteResults(IEnumerable<IDEEvent> events, string zip)
+        private void WriteResults(IEnumerable<IDEEvent> events, string relZip)
         {
             _log.WritingEvents();
-            using (var wa = new WritingArchive(_io.GetFullPath_Final(zip)))
+            var zip = _io.GetFullPath_Final(relZip);
+            _io.EnsureParentExists(zip);
+            using (var wa = new WritingArchive(zip))
             {
                 wa.AddAll(events);
             }
@@ -120,6 +125,11 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             {
                 _counts[filterName] = 1;
             }
+        }
+
+        public void Dispose()
+        {
+            _log.Dispose();
         }
     }
 }

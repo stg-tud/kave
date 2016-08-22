@@ -14,7 +14,103 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using KaVE.FeedbackProcessor.Preprocessing.Logging;
+using NUnit.Framework;
+
 namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
 {
-    internal class CleanerLoggerTest {}
+    internal class CleanerLoggerTest : LoggerTestBase
+    {
+        private CleanerLogger _sut;
+
+        [SetUp]
+        public void Setup()
+        {
+            _sut = new CleanerLogger(Log);
+        }
+
+        [Test]
+        public void IntegrationTest()
+        {
+            _sut.WorkingIn("<dirIn>", "<dirOut>");
+            _sut.RegisteredFilters(new[] {"f1", "f2"});
+            _sut.ReadingZip("a");
+            _sut.WritingEvents();
+            _sut.FinishedWriting(new Dictionary<string, int> {{"f1", 1}, {"f2", 2}});
+            _sut.Dispose();
+
+            AssertLog(
+                "",
+                "############################################################",
+                "# started cleaning...",
+                "############################################################",
+                "",
+                "folders:",
+                "- in: <dirIn>",
+                "- out: <dirOut>",
+                "",
+                "registered filters:",
+                "- f1",
+                "- f2",
+                "",
+                "#### zip: a",
+                "reading... done",
+                "writing... done",
+                "- f1: 1",
+                "- f2: 2",
+                "",
+                "#### cleaning stats over all files ####",
+                "- f1: 1",
+                "- f2: 2");
+        }
+
+        [Test]
+        public void IntegrationTest_TwoTimes()
+        {
+            _sut.WorkingIn("<dirIn>", "<dirOut>");
+            _sut.RegisteredFilters(new[] {"f1", "f2"});
+
+            _sut.ReadingZip("a");
+            _sut.WritingEvents();
+            _sut.FinishedWriting(new Dictionary<string, int> {{"f1", 1}, {"f2", 2}});
+
+            _sut.ReadingZip("b");
+            _sut.WritingEvents();
+            _sut.FinishedWriting(new Dictionary<string, int> {{"f2", 1}, {"f3", 2}});
+
+            _sut.Dispose();
+
+            AssertLog(
+                "",
+                "############################################################",
+                "# started cleaning...",
+                "############################################################",
+                "",
+                "folders:",
+                "- in: <dirIn>",
+                "- out: <dirOut>",
+                "",
+                "registered filters:",
+                "- f1",
+                "- f2",
+                "",
+                "#### zip: a",
+                "reading... done",
+                "writing... done",
+                "- f1: 1",
+                "- f2: 2",
+                "",
+                "#### zip: b",
+                "reading... done",
+                "writing... done",
+                "- f2: 1",
+                "- f3: 2",
+                "",
+                "#### cleaning stats over all files ####",
+                "- f1: 1",
+                "- f2: 3",
+                "- f3: 2");
+        }
+    }
 }

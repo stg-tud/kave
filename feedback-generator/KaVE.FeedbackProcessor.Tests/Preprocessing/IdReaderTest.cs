@@ -38,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 
         private void Given(params IDEEvent[] es)
         {
-            Write(Path.Combine(RawDir, "a.zip"), es);
+            WriteZip(Path.Combine(RawDir, "a.zip"), es);
         }
 
         private void AssertIds(params string[] expecteds)

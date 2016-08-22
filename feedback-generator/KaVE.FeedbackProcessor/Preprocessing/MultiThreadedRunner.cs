@@ -30,9 +30,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         private readonly Grouper _grouper;
         private readonly Func<int, GroupMerger> _groupMergerFactory;
         private readonly Func<int, Cleaner> _cleanerFactory;
-        private PreprocessingData _data;
+        private readonly IMultiThreadedRunnerLogger _log;
 
-        private IMultiThreadedRunnerLogger _log;
+        private PreprocessingData _data;
 
         public MultiThreadedRunner(IPreprocessingIo io,
             IMultiThreadedRunnerLogger log,
@@ -54,17 +54,29 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         public void Run()
         {
-            FindZips();
+            Initialize();
+
             InParallel(ReadIds);
             GroupZipsByIds();
             InParallel(MergeZipGroups);
             InParallel(CleanZips);
         }
 
-        private void FindZips()
+        private void Initialize()
         {
             var zips = _io.FindRelativeZipPaths();
             _data = new PreprocessingData(zips);
+        }
+
+        private void InParallel(Action<int> task)
+        {
+            var tasks = new Task[_numProcs];
+            for (var i = 0; i < _numProcs; i++)
+            {
+                var taskId = i;
+                tasks[i] = Task.Factory.StartNew(() => { task(taskId); });
+            }
+            Task.WaitAll(tasks);
         }
 
         private void ReadIds(int taskId)
@@ -93,30 +105,20 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             while (_data.AcquireNextUnmergedZipGroup(out zips))
             {
                 zipMerger.Merge(zips);
+                //_data.StoreMergedZip(zips.First());
             }
         }
 
         private void CleanZips(int taskId)
         {
-            var cleaner = _cleanerFactory(taskId);
-
-            string zip;
-            while (_data.AcquireNextUncleansedZip(out zip))
+            using (var cleaner = _cleanerFactory(taskId))
             {
-                cleaner.Clean(zip);
+                string zip;
+                while (_data.AcquireNextUncleansedZip(out zip))
+                {
+                    cleaner.Clean(zip);
+                }
             }
-        }
-
-        private void InParallel(Action<int> task)
-        {
-            var tasks = new Task[_numProcs];
-            for (var i = 0; i < _numProcs; i++)
-            {
-                var taskId = i;
-                tasks[i] = Task.Factory.StartNew(
-                    () => { task(taskId); });
-            }
-            Task.WaitAll(tasks);
         }
     }
 }

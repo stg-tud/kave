@@ -15,11 +15,14 @@
  */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.FeedbackProcessor.Preprocessing.Model;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Preprocessing
 {
@@ -32,8 +35,16 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _io = io;
         }
 
-        public void Merge(IKaVESet<string> relZips)
+        public void Merge([NotNull] IKaVESet<string> relZips)
         {
+            Asserts.NotNull(relZips);
+            Asserts.That(relZips.Count > 0);
+            foreach (var relZip in relZips)
+            {
+                var zip = _io.GetFullPath_Raw(relZip);
+                Asserts.That(File.Exists(zip));
+            }
+
             if (relZips.Count > 0)
             {
                 var zipOut = _io.GetFullPath_Merged(relZips.First());
