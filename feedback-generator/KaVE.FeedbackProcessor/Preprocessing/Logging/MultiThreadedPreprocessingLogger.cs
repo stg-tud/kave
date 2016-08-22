@@ -16,7 +16,25 @@
 
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
-    public interface IMultiThreadedPreprocessingLogger {}
+    public interface IMultiThreadedPreprocessingLogger
+    {
+        void ReadingIds(int numUnindexedZips);
+        void StartWorkerReadIds(int taskId);
+        void ReadIds(int taskId, string zip);
+        void StopWorkerReadIds(int taskId);
+
+        void GroupZipsByIds();
+
+        void MergeGroups(int numGroups);
+        void StartWorkerMergeGroup(int taskId);
+        void MergeGroup(int taskId, int count);
+        void StopWorkerMergeGroup(int taskId);
+
+        void Cleaning(int numUnclean);
+        void StartWorkerCleanZip(int taskId);
+        void CleanZip(int taskId, string zip);
+        void StopWorkerCleanZip(int taskId);
+    }
 
     public class MultiThreadedPreprocessingLogger : IMultiThreadedPreprocessingLogger
     {
@@ -26,5 +44,33 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
         {
             _log = log;
         }
+
+        public void ReadingIds(int numUnindexedZips) {}
+
+        public void StartWorkerReadIds(int taskId) {}
+
+        public void ReadIds(int taskId, string zip) {}
+
+        public void StopWorkerReadIds(int taskId) {}
+
+        public void GroupZipsByIds() {}
+
+        public void MergeGroups(int numGroups) {}
+
+        public void StartWorkerMergeGroup(int taskId) {}
+
+        public void MergeGroup(int taskId, int count) {}
+
+        public void StopWorkerMergeGroup(int taskId) {}
+
+        public void Cleaning(int numUnclean) {}
+
+        public void StartWorkerCleanZip(int taskId) {}
+
+        public void CleanZip(int taskId, string zip) {}
+
+        public void StopWorkerCleanZip(int taskId) {}
+
+        // TODO add lock!!
     }
 }

@@ -27,6 +27,10 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 {
     internal class MultiThreadedPreprocessingTest
     {
+        private const int NumWorker = 4;
+        private const int NumGroups = 10;
+        private const int NumZipsPerGroup = 100;
+
         private readonly object _lock = new object();
         private IPreprocessingIo _io;
         private IMultiThreadedPreprocessingLogger _log;
@@ -50,11 +54,10 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Mock.Get(_io).Setup(io => io.FindRelativeZipPaths()).Returns(GetExpectedZips());
             _log = Mock.Of<IMultiThreadedPreprocessingLogger>();
 
-
             _sut = new MultiThreadedPreprocessing(
                 _io,
                 _log,
-                4,
+                NumWorker,
                 IdReaderFactory,
                 CreateGrouper(),
                 GroupMergerFactory,
@@ -64,9 +67,9 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         private IKaVESet<string> GetExpectedZips()
         {
             var zips = Sets.NewHashSet<string>();
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < NumGroups; i++)
             {
-                for (var j = 0; j < 100; j++)
+                for (var j = 0; j < NumZipsPerGroup; j++)
                 {
                     zips.Add("zip_" + i + "_" + j);
                 }
@@ -189,6 +192,41 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             CollectionAssert.AreEquivalent(e3, _actualGroups);
             var e4 = GetExpectedCleanedZips();
             CollectionAssert.AreEquivalent(e4, _actualCleanedZips);
+        }
+
+        [Test]
+        public void LoggerTest()
+        {
+            AssertAllValuesAreCompletelyProcessed();
+
+            Mock.Get(_log).Verify(l => l.ReadingIds(NumGroups*NumZipsPerGroup));
+            for (var i = 0; i < NumWorker; i++)
+            {
+                var workerId = i;
+                Mock.Get(_log).Verify(l => l.StartWorkerReadIds(workerId), Times.Exactly(1));
+                Mock.Get(_log).Verify(l => l.StopWorkerReadIds(workerId), Times.Exactly(1));
+                Mock.Get(_log).Verify(l => l.StartWorkerMergeGroup(workerId), Times.Exactly(1));
+                Mock.Get(_log).Verify(l => l.StopWorkerMergeGroup(workerId), Times.Exactly(1));
+                Mock.Get(_log).Verify(l => l.StartWorkerCleanZip(workerId), Times.Exactly(1));
+                Mock.Get(_log).Verify(l => l.StopWorkerCleanZip(workerId), Times.Exactly(1));
+            }
+            foreach (var zip in GetExpectedZips())
+            {
+                var zip1 = zip;
+                Mock.Get(_log).Verify(l => l.ReadIds(It.IsAny<int>(), zip1), Times.Exactly(1));
+            }
+
+            Mock.Get(_log).Verify(l => l.GroupZipsByIds(), Times.Exactly(1));
+
+            Mock.Get(_log).Verify(l => l.MergeGroups(NumGroups), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.MergeGroup(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(NumGroups));
+
+            Mock.Get(_log).Verify(l => l.Cleaning(NumGroups), Times.Exactly(1));
+            foreach (var zip in GetExpectedCleanedZips())
+            {
+                var zip1 = zip;
+                Mock.Get(_log).Verify(l => l.CleanZip(It.IsAny<int>(), zip1), Times.Exactly(1));
+            }
         }
     }
 }
