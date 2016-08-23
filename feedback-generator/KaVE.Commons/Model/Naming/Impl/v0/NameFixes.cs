@@ -193,8 +193,9 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             }
         };
 
-        private static readonly Regex IsLegacyTypeParameterList = new Regex("([^+.]+`([0-9]+))[^\\[]");
-        private static readonly Regex AllLegacyTypeParameterLists = new Regex("([^+.]+`([0-9]+))");
+        // second (non) numbers at the end are req, because -for some reason- regex ist not greedy
+        private static readonly Regex IsLegacyTypeParameterList = new Regex("([^+.]+`([0-9]+))[^0-9\\[]");
+        private static readonly Regex AllLegacyTypeParameterLists = new Regex("([^+.]+`([0-9]+))[^0-9]");
 
         // initially, we used markers on the types (e.g., T`1) and only had a single typeParameterList at the end
         [NotNull]

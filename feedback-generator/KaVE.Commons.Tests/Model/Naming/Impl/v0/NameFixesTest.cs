@@ -225,5 +225,22 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
         {
             Assert.AreEqual(corrected, id.FixIdentifiers(prefix));
         }
+
+        public static IEnumerable<string> ValidIdSource()
+        {
+            var ids = new List<string>();
+            var delTypeId = "d:[TR] [C`10[[T1]], P].()";
+            // not valid, but counts as a minimal example
+            ids.Add("[{0}] [{0}]..ctor()".FormatEx(delTypeId));
+            ids.Add("N.C`10[[T]],P");
+            return ids;
+        }
+
+        [TestCaseSource("ValidIdSource")]
+        public void FixDoesNotBreakValidIds(string id)
+        {
+            var corrected = id.FixIdentifiers();
+            Assert.AreEqual(id, corrected);
+        }
     }
 }

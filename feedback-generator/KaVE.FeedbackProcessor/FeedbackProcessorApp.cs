@@ -23,7 +23,6 @@ namespace KaVE.FeedbackProcessor
     internal class FeedbackProcessorApp
     {
         private const string TmpDir = Desktop + @"interval-tests\tmp\";
-
         private const string Desktop = @"C:\Users\seb2\Desktop\";
         private const string InDir = Desktop + @"interval-tests\in\";
         private const string OutDir = Desktop + @"interval-tests\out\";
@@ -57,7 +56,7 @@ namespace KaVE.FeedbackProcessor
             //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
 
             CleanDirs(TmpDir, OutDir);
-            new PreprocessingRunner(InDir, TmpDir, OutDir).Run();
+            new PreprocessingRunner(InDir, TmpDir, OutDir, 2).Run();
 
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
