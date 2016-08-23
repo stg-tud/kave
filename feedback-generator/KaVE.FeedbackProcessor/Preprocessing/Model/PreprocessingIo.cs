@@ -25,9 +25,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
     public interface IPreprocessingIo
     {
         IKaVESet<string> FindRelativeZipPaths();
-        string GetFullPath_Raw(string relativeZipPath);
+        string GetFullPath_In(string relativeZipPath);
         string GetFullPath_Merged(string relativeZipPath);
-        string GetFullPath_Final(string relativeZipPath);
+        string GetFullPath_Out(string relativeZipPath);
         void EnsureParentExists(string fullPath);
     }
 
@@ -76,7 +76,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
             }
         }
 
-        public string GetFullPath_Raw(string zip)
+        public string GetFullPath_In(string zip)
         {
             lock (_lock)
             {
@@ -92,7 +92,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
             }
         }
 
-        public string GetFullPath_Final(string zip)
+        public string GetFullPath_Out(string zip)
         {
             lock (_lock)
             {

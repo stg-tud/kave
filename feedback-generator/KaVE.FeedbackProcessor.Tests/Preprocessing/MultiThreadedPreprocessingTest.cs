@@ -52,6 +52,10 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 
             _io = Mock.Of<IPreprocessingIo>();
             Mock.Get(_io).Setup(io => io.FindRelativeZipPaths()).Returns(GetExpectedZips());
+            Mock.Get(_io).Setup(io => io.GetFullPath_In(It.IsAny<string>())).Returns("<dirIn>");
+            Mock.Get(_io).Setup(io => io.GetFullPath_Merged(It.IsAny<string>())).Returns("<dirMerged>");
+            Mock.Get(_io).Setup(io => io.GetFullPath_Out(It.IsAny<string>())).Returns("<dirOut>");
+
             _log = Mock.Of<IMultiThreadedPreprocessingLogger>();
 
             _sut = new MultiThreadedPreprocessing(
@@ -197,6 +201,11 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         [Test]
         public void LoggerTest()
         {
+            Mock.Get(_io).Verify(io => io.GetFullPath_In(""), Times.Exactly(1));
+            Mock.Get(_io).Verify(io => io.GetFullPath_Merged(""), Times.Exactly(1));
+            Mock.Get(_io).Verify(io => io.GetFullPath_Out(""), Times.Exactly(1));
+            Mock.Get(_log).Verify(l => l.Init(NumWorker, @"<dirIn>", @"<dirMerged>", @"<dirOut>"), Times.Exactly(1));
+
             AssertAllValuesAreCompletelyProcessed();
 
             Mock.Get(_log).Verify(l => l.ReadingIds(NumGroups*NumZipsPerGroup));

@@ -42,7 +42,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _io = io;
             _log = log;
 
-            _log.WorkingIn(io.GetFullPath_Raw(""), io.GetFullPath_Merged(""));
+            _log.WorkingIn(io.GetFullPath_In(""), io.GetFullPath_Merged(""));
         }
 
         public string Merge(IKaVESet<string> relZips)
@@ -51,7 +51,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             Asserts.That(relZips.Count > 0);
             foreach (var relZip in relZips)
             {
-                var zip = _io.GetFullPath_Raw(relZip);
+                var zip = _io.GetFullPath_In(relZip);
                 Asserts.That(File.Exists(zip));
             }
 
@@ -80,7 +80,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             foreach (var relZip in relZips)
             {
                 _log.Reading(relZip);
-                var zip = _io.GetFullPath_Raw(relZip);
+                var zip = _io.GetFullPath_In(relZip);
                 var ra = new ReadingArchive(zip);
                 while (ra.HasNext())
                 {

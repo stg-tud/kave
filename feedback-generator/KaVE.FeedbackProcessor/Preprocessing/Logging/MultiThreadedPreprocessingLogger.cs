@@ -18,6 +18,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
     public interface IMultiThreadedPreprocessingLogger
     {
+        void Init(int numWorkers, string dirIn, string dirMerged, string dirOut);
+
         void ReadingIds(int numUnindexedZips);
         void StartWorkerReadIds(int taskId);
         void ReadIds(int taskId, string zip);
@@ -44,6 +46,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
         {
             _log = log;
         }
+
+        public void Init(int numWorkers, string dirIn, string dirMerged, string dirOut) {}
 
         public void ReadingIds(int numUnindexedZips) {}
 

@@ -45,6 +45,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _io = io;
             _log = log;
             _numProcs = numProcs;
+            _log.Init(4, _io.GetFullPath_In(""), _io.GetFullPath_Merged(""), _io.GetFullPath_Out(""));
 
             _idReaderFactory = idReaderFactory;
             _grouper = grouper;

@@ -56,7 +56,7 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Model
         public void FullPathRaw()
         {
             Assert.IsFalse(RawDir.EndsWith(@"\"));
-            var actual = _sut.GetFullPath_Raw("a.zip");
+            var actual = _sut.GetFullPath_In("a.zip");
             var expected = Path.Combine(RawDir, "a.zip");
             Assert.AreEqual(expected, actual);
         }
@@ -74,7 +74,7 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Model
         public void FullPathFinal()
         {
             Assert.IsFalse(FinalDir.EndsWith(@"\"));
-            var actual = _sut.GetFullPath_Final("a.zip");
+            var actual = _sut.GetFullPath_Out("a.zip");
             var expected = Path.Combine(FinalDir, "a.zip");
             Assert.AreEqual(expected, actual);
         }

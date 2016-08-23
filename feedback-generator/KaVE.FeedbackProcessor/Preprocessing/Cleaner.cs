@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _io = io;
             _log = log;
 
-            _log.WorkingIn(io.GetFullPath_Merged(""), io.GetFullPath_Final(""));
+            _log.WorkingIn(io.GetFullPath_Merged(""), io.GetFullPath_Out(""));
 
             Filters = new HashSet<IFilter>();
         }
@@ -113,7 +113,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         private void WriteResults(IEnumerable<IDEEvent> events, string relZip)
         {
             _log.WritingEvents();
-            var zip = _io.GetFullPath_Final(relZip);
+            var zip = _io.GetFullPath_Out(relZip);
             _io.EnsureParentExists(zip);
             using (var wa = new WritingArchive(zip))
             {
