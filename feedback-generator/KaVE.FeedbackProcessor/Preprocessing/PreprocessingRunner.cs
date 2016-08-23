@@ -36,7 +36,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         {
             new MultiThreadedPreprocessing(
                 _io,
-                new MultiThreadedPreprocessingLogger(CreateWorkerLogger(-1)),
+                new MultiThreadedPreprocessingLogger(new ConsoleLogger(new DateUtils())),
+                //new MultiThreadedPreprocessingLogger(CreateWorkerLogger(-1)),
                 _numWorkers,
                 CreateIdReader,
                 new Grouper(new GrouperLogger(CreateWorkerLogger(0))),
@@ -56,7 +57,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private Cleaner CreateCleaner(int taskId)
         {
-            return new Cleaner(null, new CleanerLogger(CreateWorkerLogger(taskId)))
+            return new Cleaner(_io, new CleanerLogger(CreateWorkerLogger(taskId)))
             {
                 Filters =
                 {

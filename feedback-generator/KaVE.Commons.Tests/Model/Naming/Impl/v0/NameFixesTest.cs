@@ -242,5 +242,70 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             var corrected = id.FixIdentifiers();
             Assert.AreEqual(id, corrected);
         }
+
+
+        public static IEnumerable<string[]> ManualTypeFixSource()
+        {
+            var baseIds = new List<string[]>
+            {
+                new[]
+                {
+                    "s:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1+Enumerator, EntityFramework, 6.0.0.0",
+                    "s:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1[[T]]+Enumerator, EntityFramework, 6.0.0.0"
+                },
+                new[]
+                {
+                    "System.Collections.Generic.Dictionary`2+KeyCollection, mscorlib, 4.0.0.0",
+                    "System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+KeyCollection, mscorlib, 4.0.0.0"
+                },
+                new[]
+                {
+                    "System.Collections.Generic.Dictionary`2+ValueCollection, mscorlib, 4.0.0.0",
+                    "System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+ValueCollection, mscorlib, 4.0.0.0"
+                },
+                new[]
+                {
+                    "System.Collections.ObjectModel.ReadOnlyDictionary`2+KeyCollection, mscorlib, 4.0.0.0",
+                    "System.Collections.ObjectModel.ReadOnlyDictionary`2[[TKey],[TValue]]+KeyCollection, mscorlib, 4.0.0.0"
+                },
+                new[]
+                {
+                    "System.Collections.ObjectModel.ReadOnlyDictionary`2+ValueCollection, mscorlib, 4.0.0.0",
+                    "System.Collections.ObjectModel.ReadOnlyDictionary`2[[TKey],[TValue]]+ValueCollection, mscorlib, 4.0.0.0"
+                },
+                new[]
+                {
+                    "s:System.Collections.Generic.Dictionary`2+Enumerator, mscorlib, 4.0.0.0",
+                    "s:System.Collections.Generic.Dictionary`2[[TKey],[TValue]]+Enumerator, mscorlib, 4.0.0.0"
+                },
+                new[]
+                {
+                    "s:System.Collections.Immutable.ImmutableArray`1+Enumerator, System.Collections.Immutable, 1.1.37.0",
+                    "s:System.Collections.Immutable.ImmutableArray`1[[T]]+Enumerator, System.Collections.Immutable, 1.1.37.0"
+                },
+                new[]
+                {
+                    "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)",
+                    "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2[[TKey],[TValue]]+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)"
+                }
+            };
+
+
+            var ids = new List<string[]>();
+            foreach (var baseId in baseIds)
+            {
+                ids.Add(baseId);
+                // create nested case
+                ids.Add(new[] {"C`1[[{0}]], P".FormatEx(baseId[0]), "C`1[[{0}]], P".FormatEx(baseId[1])});
+            }
+
+            return ids;
+        }
+
+        [TestCaseSource("ManualTypeFixSource")]
+        public void ShouldFixManualParameterLists(string id, string corrected)
+        {
+            Assert.AreEqual(corrected, id.FixIdentifiers());
+        }
     }
 }

@@ -190,38 +190,49 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             {
                 "s:System.Collections.Immutable.ImmutableArray`1+Enumerator, System.Collections.Immutable, 1.1.37.0",
                 "s:System.Collections.Immutable.ImmutableArray`1[[T]]+Enumerator, System.Collections.Immutable, 1.1.37.0"
+            },
+            {
+                "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)",
+                "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2[[TKey],[TValue]]+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)"
             }
         };
 
         // second (non) numbers at the end are req, because -for some reason- regex ist not greedy
-        private static readonly Regex IsLegacyTypeParameterList = new Regex("([^+.]+`([0-9]+))[^0-9\\[]");
+        private static readonly Regex IsLegacyTypeParameterListMatcher = new Regex("([^+.]+`([0-9]+))[^0-9\\[]");
         private static readonly Regex AllLegacyTypeParameterLists = new Regex("([^+.]+`([0-9]+))[^0-9]");
 
         // initially, we used markers on the types (e.g., T`1) and only had a single typeParameterList at the end
         [NotNull]
         private static string FixLegacyTypeParameterLists([NotNull] this string id)
         {
-            if (id.StartsWith("vsWindowTypeDocument ") || id.StartsWith("CSharp ") || id.EndsWith(".cs") ||
-                !IsLegacyTypeParameterList.IsMatch(id))
+            if (IsNoLegacyTypeParameterList(id))
+            {
+                return id;
+            }
+
+            foreach (var invalidId in ManualTypeParameterFixes.Keys)
+            {
+                var validId = ManualTypeParameterFixes[invalidId];
+                id = id.Replace(invalidId, validId);
+            }
+
+            if (IsNoLegacyTypeParameterList(id))
             {
                 return id;
             }
 
             var matches = AllLegacyTypeParameterLists.Match(id);
 
-            var endParams = id.LastIndexOf(']');
+            var endParams = id.LastIndexOf("]]", StringComparison.Ordinal);
             if (endParams == -1)
             {
                 if (!ManualTypeParameterFixes.Keys.Contains(id))
                 {
                     Console.WriteLine("has tick, but no type parameters: '{0}'", id);
+                    return id;
                 }
-                foreach (var invalidId in ManualTypeParameterFixes.Keys)
-                {
-                    id = id.Replace(invalidId, ManualTypeParameterFixes[invalidId]);
-                }
-                return id;
             }
+            endParams++; // outer bracket
             var startParams = id.FindCorrespondingOpenBracket(endParams);
             if (startParams == -1)
             {
@@ -258,6 +269,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             }
 
             return before + after;
+        }
+
+        private static bool IsNoLegacyTypeParameterList(string id)
+        {
+            return id.StartsWith("vsWindowTypeDocument ") || id.StartsWith("CSharp ") || id.EndsWith(".cs") ||
+                   !IsLegacyTypeParameterListMatcher.IsMatch(id);
         }
 
         private static IList<string> ParseParams(this string id, int open, int close)
