@@ -37,7 +37,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return id.FixSerializedNames_PropertiesWithoutSetterAndGetter(prefix);
         }
 
-        private static readonly Regex NoSetterAndGetterMatcher = new Regex("^\\s*\\[");
+        private static readonly Regex NoSetterAndGetterMatcher = new Regex("^\\s*(static)?\\s*\\[");
 
         [NotNull]
         private static string FixSerializedNames_PropertiesWithoutSetterAndGetter([NotNull] this string id,
@@ -52,9 +52,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             {
                 return id;
             }
+            var staticModifier = match.Groups[1].Success ? "static " : "";
             var open = id.IndexOf('[');
             var rest = id.Substring(open);
-            return "set get {0}".FormatEx(rest);
+            return "set get {0}{1}".FormatEx(staticModifier, rest);
         }
 
 

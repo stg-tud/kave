@@ -212,6 +212,9 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
                 cases.Add(new[] {prefix, "[?] [?].P", "set get [?] [?].P"});
                 cases.Add(new[] {prefix, " [?] [?].P", "set get [?] [?].P"});
                 cases.Add(new[] {prefix, "  [?] [?].P", "set get [?] [?].P"});
+                cases.Add(new[] {prefix, "static [?] [?].P", "set get static [?] [?].P"});
+                cases.Add(new[] {prefix, " static [?] [?].P", "set get static [?] [?].P"});
+                cases.Add(new[] {prefix, "  static  [?] [?].P", "set get static [?] [?].P"});
             }
 
             return cases;
