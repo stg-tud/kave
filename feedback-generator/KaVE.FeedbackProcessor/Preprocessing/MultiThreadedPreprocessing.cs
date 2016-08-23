@@ -92,14 +92,15 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _log.StartWorkerReadIds(taskId);
             var idReader = _idReaderFactory(taskId);
 
-            string zip;
-            while (_data.AcquireNextUnindexedZip(out zip))
+            string relZip;
+            while (_data.AcquireNextUnindexedZip(out relZip))
             {
                 try
                 {
-                    _log.ReadIds(taskId, zip);
+                    _log.ReadIds(taskId, relZip);
+                    var zip = _io.GetFullPath_In(relZip);
                     var ids = idReader.Read(zip);
-                    _data.StoreIds(zip, ids);
+                    _data.StoreIds(relZip, ids);
                 }
                 catch (Exception e)
                 {

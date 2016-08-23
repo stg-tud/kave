@@ -1,6 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Preprocessing.Filters;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
 using KaVE.FeedbackProcessor.Preprocessing.Model;
@@ -9,21 +9,27 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 {
     internal class PreprocessingRunner
     {
-        private readonly string _dirIn;
+        private readonly int _numWorkers;
         private readonly string _dirLogs;
-        private readonly string _dirMerged;
-        private readonly string _dirOut;
 
         private readonly PreprocessingIo _io;
 
-        public PreprocessingRunner(string dirIn, string dirTmp, string dirOut)
+        public PreprocessingRunner(string dirIn, string dirTmp, string dirOut, int numWorkers = 1)
         {
-            _dirIn = dirIn;
-            _dirLogs = dirTmp + @"Logs\";
-            _dirMerged = dirTmp + @"Merged\";
-            _dirOut = dirOut;
+            _numWorkers = numWorkers;
+            Asserts.That(Directory.Exists(dirIn));
+            Asserts.That(Directory.Exists(dirOut));
 
-            _io = new PreprocessingIo(_dirIn, _dirMerged, _dirOut);
+            Asserts.That(Directory.Exists(dirTmp));
+            _dirLogs = dirTmp + @"Preprocessing-Logs\";
+            var dirMerged = dirTmp + @"Preprocessing-Merged\";
+
+            Asserts.Not(Directory.Exists(_dirLogs));
+            Directory.CreateDirectory(_dirLogs);
+            Asserts.Not(Directory.Exists(dirMerged));
+            Directory.CreateDirectory(dirMerged);
+
+            _io = new PreprocessingIo(dirIn, dirMerged, dirOut);
         }
 
         public void Run()
@@ -31,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             new MultiThreadedPreprocessing(
                 _io,
                 new MultiThreadedPreprocessingLogger(new ConsoleLogger(new DateUtils())),
-                3,
+                _numWorkers,
                 CreateIdReader,
                 new Grouper(new GrouperLogger(CreateWorkerLogger(0))),
                 CreateGroupMerger,
@@ -45,7 +51,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private GroupMerger CreateGroupMerger(int taskId)
         {
-            throw new NotImplementedException();
+            return new GroupMerger(_io, new GroupMergerLogger(CreateWorkerLogger(taskId)));
         }
 
         private Cleaner CreateCleaner(int taskId)
@@ -64,7 +70,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private IPrepocessingLogger CreateWorkerLogger(int taskId)
         {
-            var logFile = Path.Combine(_dirLogs + @"Preprocessing-worker{0}.log".FormatEx(taskId));
+            var relFile = taskId == -1 ? "main.log" : @"worker{0}.log".FormatEx(taskId);
+            var logFile = Path.Combine(_dirLogs + relFile);
             return new AppendingFileLogger(logFile, new DateUtils());
         }
     }

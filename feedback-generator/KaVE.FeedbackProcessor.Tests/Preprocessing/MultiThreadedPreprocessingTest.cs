@@ -55,9 +55,15 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
 
             _io = Mock.Of<IPreprocessingIo>();
             Mock.Get(_io).Setup(io => io.FindRelativeZipPaths()).Returns(GetExpectedZips());
-            Mock.Get(_io).Setup(io => io.GetFullPath_In(It.IsAny<string>())).Returns("<dirIn>");
-            Mock.Get(_io).Setup(io => io.GetFullPath_Merged(It.IsAny<string>())).Returns("<dirMerged>");
-            Mock.Get(_io).Setup(io => io.GetFullPath_Out(It.IsAny<string>())).Returns("<dirOut>");
+            Mock.Get(_io)
+                .Setup(io => io.GetFullPath_In(It.IsAny<string>()))
+                .Returns<string>(relZip => "<dirIn>\\" + relZip);
+            Mock.Get(_io)
+                .Setup(io => io.GetFullPath_Merged(It.IsAny<string>()))
+                .Returns<string>(relZip => "<dirMerged>\\" + relZip);
+            Mock.Get(_io)
+                .Setup(io => io.GetFullPath_Out(It.IsAny<string>()))
+                .Returns<string>(relZip => "<dirOut>\\" + relZip);
 
             _log = Mock.Of<IMultiThreadedPreprocessingLogger>();
             Mock.Get(_log)
@@ -91,11 +97,11 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         {
             var d = new Dictionary<string, IKaVESet<string>>();
 
-            foreach (var zip in GetExpectedZips())
+            foreach (var relZip in GetExpectedZips())
             {
-                var irrelevantId = zip + "_..."; // no overlap ever
-                var overlappingId = zip.Substring(0, 5);
-                d[zip] = Sets.NewHashSet(irrelevantId, overlappingId);
+                var irrelevantId = relZip + "_..."; // no overlap ever
+                var overlappingId = relZip.Substring(0, 5);
+                d[relZip] = Sets.NewHashSet(irrelevantId, overlappingId);
             }
 
             return d;
@@ -132,7 +138,8 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
                         _actualProcessedZips.Add(zip);
                     }
                     var ids = GetExpectedIds();
-                    return ids[zip];
+                    var relZip = zip.Substring(8);
+                    return ids[relZip];
                 });
             return m;
         }
@@ -193,8 +200,7 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         {
             _sut.Run();
 
-            var e1 = GetExpectedZips();
-            Assert.IsTrue(e1.Equals(_actualProcessedZips));
+            var e1 = GetExpectedZips().Select(zip => "<dirIn>\\" + zip);
             CollectionAssert.AreEquivalent(e1, _actualProcessedZips);
             var e2 = GetExpectedIds();
             CollectionAssert.AreEquivalent(e2, _actualGroupedIds);
@@ -210,7 +216,8 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Mock.Get(_io).Verify(io => io.GetFullPath_In(""), Times.Exactly(1));
             Mock.Get(_io).Verify(io => io.GetFullPath_Merged(""), Times.Exactly(1));
             Mock.Get(_io).Verify(io => io.GetFullPath_Out(""), Times.Exactly(1));
-            Mock.Get(_log).Verify(l => l.Init(NumWorker, @"<dirIn>", @"<dirMerged>", @"<dirOut>"), Times.Exactly(1));
+            Mock.Get(_log)
+                .Verify(l => l.Init(NumWorker, @"<dirIn>\", @"<dirMerged>\", @"<dirOut>\"), Times.Exactly(1));
 
             AssertAllValuesAreCompletelyProcessed();
 

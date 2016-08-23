@@ -27,6 +27,7 @@ namespace KaVE.FeedbackProcessor
         private const string Desktop = @"C:\Users\seb2\Desktop\";
         private const string InDir = Desktop + @"interval-tests\in\";
         private const string OutDir = Desktop + @"interval-tests\out\";
+
         private const string WdFolder = Desktop + @"interval-tests\watchdog\";
         private const string SvgFolder = Desktop + @"interval-tests\svg\";
         private const string EventsFolder = Desktop + @"interval-tests\events\";
@@ -54,7 +55,7 @@ namespace KaVE.FeedbackProcessor
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
             //var file = "C:/Users/Andreas/Desktop/testrunevents.zip";
 
-            RunWatchdogDebugging();
+            //RunWatchdogDebugging();
 
             //var intervals = new IntervalTransformer(Logger).TransformFolder(cleanedFolder).ToList();
             //Logger.Info(@"Found {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
