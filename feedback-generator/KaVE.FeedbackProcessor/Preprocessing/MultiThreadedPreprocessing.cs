@@ -95,9 +95,16 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             string zip;
             while (_data.AcquireNextUnindexedZip(out zip))
             {
-                _log.ReadIds(taskId, zip);
-                var ids = idReader.Read(zip);
-                _data.StoreIds(zip, ids);
+                try
+                {
+                    _log.ReadIds(taskId, zip);
+                    var ids = idReader.Read(zip);
+                    _data.StoreIds(zip, ids);
+                }
+                catch (Exception e)
+                {
+                    _log.Error(taskId, e);
+                }
             }
             _log.StopWorkerReadIds(taskId);
         }
@@ -117,9 +124,16 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             IKaVESet<string> zips;
             while (_data.AcquireNextUnmergedZipGroup(out zips))
             {
-                _log.MergeGroup(taskId, zips.Count);
-                var relZipOut = zipMerger.Merge(zips);
-                _data.StoreMergedZip(relZipOut);
+                try
+                {
+                    _log.MergeGroup(taskId, zips.Count);
+                    var relZipOut = zipMerger.Merge(zips);
+                    _data.StoreMergedZip(relZipOut);
+                }
+                catch (Exception e)
+                {
+                    _log.Error(taskId, e);
+                }
             }
             _log.StopWorkerMergeGroup(taskId);
         }
@@ -134,8 +148,15 @@ namespace KaVE.FeedbackProcessor.Preprocessing
                 string zip;
                 while (_data.AcquireNextUncleansedZip(out zip))
                 {
-                    _log.CleanZip(taskId, zip);
-                    cleaner.Clean(zip);
+                    try
+                    {
+                        _log.CleanZip(taskId, zip);
+                        cleaner.Clean(zip);
+                    }
+                    catch (Exception e)
+                    {
+                        _log.Error(taskId, e);
+                    }
                 }
             }
             _log.StopWorkerCleanZip(taskId);

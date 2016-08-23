@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
     public interface IMultiThreadedPreprocessingLogger
@@ -36,6 +38,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
         void StartWorkerCleanZip(int taskId);
         void CleanZip(int taskId, string zip);
         void StopWorkerCleanZip(int taskId);
+
+        void Error(int taskId, Exception exception);
     }
 
     public class MultiThreadedPreprocessingLogger : IMultiThreadedPreprocessingLogger
@@ -47,33 +51,134 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
             _log = log;
         }
 
-        public void Init(int numWorkers, string dirIn, string dirMerged, string dirOut) {}
+        public void Init(int numWorkers, string dirIn, string dirMerged, string dirOut)
+        {
+            _log.Log(new string('#', 60));
+            _log.Log("# MultiThreadedPreprocessing");
+            _log.Log(new string('#', 60));
+            _log.Log();
+            _log.Log("workers: {0}", numWorkers);
+            _log.Log("dirIn: {0}", dirIn);
+            _log.Log("dirMerged: {0}", dirMerged);
+            _log.Log("dirOut: {0}", dirOut);
+        }
 
-        public void ReadingIds(int numUnindexedZips) {}
+        private int _numZips;
+        private int _curZip;
 
-        public void StartWorkerReadIds(int taskId) {}
+        public void ReadingIds(int numUnindexedZips)
+        {
+            _numZips = numUnindexedZips;
 
-        public void ReadIds(int taskId, string zip) {}
+            _log.Log();
+            _log.Log(new string('-', 60));
+            _log.Log("Reading ids from {0} zips", numUnindexedZips);
+            _log.Log(new string('-', 60));
+        }
 
-        public void StopWorkerReadIds(int taskId) {}
+        public void StartWorkerReadIds(int taskId)
+        {
+            _log.Log("({0}) Starting worker", taskId);
+        }
 
-        public void GroupZipsByIds() {}
+        public void ReadIds(int taskId, string zip)
+        {
+            _curZip++;
+            var perc = 100*_curZip/(double) _numZips;
+            _log.Log("({0}) Reading zip {1}/{2} ({3:0.00}% started): {4}", taskId, _curZip, _numZips, perc, zip);
+        }
 
-        public void MergeGroups(int numGroups) {}
+        public void StopWorkerReadIds(int taskId)
+        {
+            _log.Log("({0}) Stopping worker", taskId);
+        }
 
-        public void StartWorkerMergeGroup(int taskId) {}
+        public void GroupZipsByIds()
+        {
+            _log.Log();
+            _log.Log(new string('-', 60));
+            _log.Log("GroupZipsByIds");
+            _log.Log(new string('-', 60));
+        }
 
-        public void MergeGroup(int taskId, int count) {}
+        private int _numGroups;
+        private int _curGroup;
 
-        public void StopWorkerMergeGroup(int taskId) {}
+        public void MergeGroups(int numGroups)
+        {
+            _numGroups = numGroups;
 
-        public void Cleaning(int numUnclean) {}
+            _log.Log();
+            _log.Log(new string('-', 60));
+            _log.Log("Merging {0} groups", numGroups);
+            _log.Log(new string('-', 60));
+        }
 
-        public void StartWorkerCleanZip(int taskId) {}
+        public void StartWorkerMergeGroup(int taskId)
+        {
+            _log.Log("({0}) Starting worker", taskId);
+        }
 
-        public void CleanZip(int taskId, string zip) {}
+        public void MergeGroup(int taskId, int count)
+        {
+            _curGroup++;
+            var perc = 100*_curGroup/(double) _numGroups;
+            _log.Log(
+                "({0}) Merging group {1}/{2} ({3:0.0}% started), contains {4} zips",
+                taskId,
+                _curGroup,
+                _numGroups,
+                perc,
+                count);
+        }
 
-        public void StopWorkerCleanZip(int taskId) {}
+        public void StopWorkerMergeGroup(int taskId)
+        {
+            _log.Log("({0}) Stopping worker", taskId);
+        }
+
+        private int _numUnclean;
+        private int _curUnclean;
+
+        public void Cleaning(int numUnclean)
+        {
+            _numUnclean = numUnclean;
+
+            _log.Log();
+            _log.Log(new string('-', 60));
+            _log.Log("Cleaning {0} zips", numUnclean);
+            _log.Log(new string('-', 60));
+        }
+
+        public void StartWorkerCleanZip(int taskId)
+        {
+            _log.Log("({0}) Starting worker", taskId);
+        }
+
+        public void CleanZip(int taskId, string zip)
+        {
+            _curUnclean++;
+            var perc = 100*_curUnclean/(double) _numUnclean;
+            _log.Log("({0}) Cleaning zip {1}/{2} ({3:0.0}% started): {4}", taskId, _curUnclean, _numUnclean, perc, zip);
+        }
+
+        public void StopWorkerCleanZip(int taskId)
+        {
+            _log.Log("({0}) Stopping worker", taskId);
+        }
+
+        public void Error(int taskId, Exception e)
+        {
+            _log.Log(new string('#', 60));
+            _log.Log("# exception for worker {0}: {1}", taskId, e.Message);
+
+            var frames = e.StackTrace.Replace("\r\n", "\n").Split('\n');
+            foreach (var frame in frames)
+            {
+                _log.Log("# {0}", frame);
+            }
+            _log.Log(new string('#', 60));
+        }
 
         // TODO add lock!!
     }

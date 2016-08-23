@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Utils.Collections;
@@ -42,6 +43,8 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         private IList<IKaVESet<string>> _actualGroups;
         private IKaVEList<string> _actualCleanedZips;
 
+        private Exception _lastLoggedException;
+
         [SetUp]
         public void Setup()
         {
@@ -57,6 +60,9 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Mock.Get(_io).Setup(io => io.GetFullPath_Out(It.IsAny<string>())).Returns("<dirOut>");
 
             _log = Mock.Of<IMultiThreadedPreprocessingLogger>();
+            Mock.Get(_log)
+                .Setup(l => l.Error(It.IsAny<int>(), It.IsAny<Exception>()))
+                .Callback<int, Exception>((taskId, ex) => _lastLoggedException = ex);
 
             _sut = new MultiThreadedPreprocessing(
                 _io,
@@ -235,6 +241,122 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             {
                 var zip1 = zip;
                 Mock.Get(_log).Verify(l => l.CleanZip(It.IsAny<int>(), zip1), Times.Exactly(1));
+            }
+        }
+
+        [Test]
+        public void ErrorsInZipReadingAreReportedAndExcecutionContinues()
+        {
+            var ex = CaptureException();
+
+            _sut = new MultiThreadedPreprocessing(
+                _io,
+                _log,
+                NumWorker,
+                taskId => new CrashingIdReader(ex),
+                CreateGrouper(),
+                GroupMergerFactory,
+                CleanerFactory);
+
+            _sut.Run();
+
+            Assert.AreSame(ex, _lastLoggedException);
+        }
+
+        [Test]
+        public void ErrorsInZipMergingAreReportedAndExcecutionContinues()
+        {
+            var ex = CaptureException();
+
+            _sut = new MultiThreadedPreprocessing(
+                _io,
+                _log,
+                NumWorker,
+                IdReaderFactory,
+                CreateGrouper(),
+                taskId => new CrashingGroupMerger(ex),
+                CleanerFactory);
+
+            _sut.Run();
+
+            Assert.AreSame(ex, _lastLoggedException);
+        }
+
+        [Test]
+        public void ErrorsInZipCleaningAreReportedAndExcecutionContinues()
+        {
+            var ex = CaptureException();
+
+            _sut = new MultiThreadedPreprocessing(
+                _io,
+                _log,
+                NumWorker,
+                IdReaderFactory,
+                CreateGrouper(),
+                GroupMergerFactory,
+                taskId => new CrashingCleaner(ex));
+
+            _sut.Run();
+
+            Assert.AreSame(ex, _lastLoggedException);
+        }
+
+        private static Exception CaptureException()
+        {
+            try
+            {
+                throw new Exception("test exception");
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
+        }
+
+        private class CrashingIdReader : IIdReader
+        {
+            private readonly Exception _e;
+
+            public CrashingIdReader(Exception e)
+            {
+                _e = e;
+            }
+
+            public IKaVESet<string> Read(string zip)
+            {
+                throw _e;
+            }
+        }
+
+        private class CrashingGroupMerger : IGroupMerger
+        {
+            private readonly Exception _e;
+
+            public CrashingGroupMerger(Exception e)
+            {
+                _e = e;
+            }
+
+            public string Merge(IKaVESet<string> relZips)
+            {
+                throw _e;
+            }
+        }
+
+        private class CrashingCleaner : ICleaner
+        {
+            private readonly Exception _e;
+
+            public CrashingCleaner(Exception e)
+            {
+                _e = e;
+            }
+
+            public void Dispose() {}
+
+            public void Clean(string relZip)
+            {
+                throw _e;
             }
         }
     }
