@@ -32,10 +32,31 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         /// <summary>
         ///     repairs legacy formats in the serialized form (i.e., incl. the prefix)
         /// </summary>
-        public static string FixSerializedNames([NotNull] this string id)
+        public static string FixIdentifiers([NotNull] this string id, [NotNull] string prefix)
         {
-            return id;
+            return id.FixSerializedNames_PropertiesWithoutSetterAndGetter(prefix);
         }
+
+        private static readonly Regex NoSetterAndGetterMatcher = new Regex("^\\s*\\[");
+
+        [NotNull]
+        private static string FixSerializedNames_PropertiesWithoutSetterAndGetter([NotNull] this string id,
+            [NotNull] string prefix)
+        {
+            if (!("0P".Equals(prefix) || "CSharp.PropertyName".Equals(prefix)))
+            {
+                return id;
+            }
+            var match = NoSetterAndGetterMatcher.Match(id);
+            if (!match.Success)
+            {
+                return id;
+            }
+            var open = id.IndexOf('[');
+            var rest = id.Substring(open);
+            return "set get {0}".FormatEx(rest);
+        }
+
 
         /// <summary>
         ///     repairs legacy formats in arbitrary strings

@@ -136,6 +136,15 @@ namespace KaVE.Commons.Tests.Utils.Naming
             }
         }
 
+        [TestCase("0P:[?] [?].P()", "set get [?] [?].P()"), // serialized name fix
+         TestCase("0P:set [?] [?].P", "set [?] [?].P()") // id fix
+        ]
+        public void ShouldApplyBothSerializedAndIdFixes(string id, string corrected)
+        {
+            var n = id.Deserialize<IName>();
+            Assert.AreEqual(corrected, n.Identifier);
+        }
+
         [Ignore, TestCase("1T", "T,P", typeof(Commons.Model.Naming.Impl.v1.TypeName)),
          TestCase("1Ta", "arr(1):T,P", typeof(Commons.Model.Naming.Impl.v1.ArrayTypeName))]
         public void ShouldDeserializeV1Types(string prefix, string id, Type expectedType)

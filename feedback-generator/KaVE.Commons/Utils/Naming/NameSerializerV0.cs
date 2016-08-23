@@ -79,6 +79,11 @@ namespace KaVE.Commons.Utils.Naming
                 "CSharp.TypeParameterName");
         }
 
+        protected override string FixLegacySerializedNameId(string prefix, string id)
+        {
+            return id.FixIdentifiers(prefix);
+        }
+
         protected override string FixLegacyIdentifiers(string id)
         {
             return id.FixIdentifiers();

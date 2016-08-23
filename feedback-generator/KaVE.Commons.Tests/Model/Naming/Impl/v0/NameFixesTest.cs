@@ -22,34 +22,6 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
 {
-    public class C
-    {
-        private int P0 { get; set; }
-        static private int sP0 { get; set; }
-
-        static int sP1
-        {
-            set { }
-        }
-
-        static int sP2
-        {
-            get { return -1; }
-        }
-
-        int P1
-        {
-            set { }
-        }
-
-        int P2
-        {
-            get { return -1; }
-        }
-
-        public void M() {}
-    }
-
     internal class NameFixesTest
     {
         [ // field
@@ -228,6 +200,27 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             cases.Add(new[] {old1, new1});
 
             return cases;
+        }
+
+
+        public static IEnumerable<string[]> BrokenSerializedPropertyNamesSource()
+        {
+            var cases = Sets.NewHashSet<string[]>();
+            var prefixes = new[] {"0P", "CSharp.PropertyName"};
+            foreach (var prefix in prefixes)
+            {
+                cases.Add(new[] {prefix, "[?] [?].P", "set get [?] [?].P"});
+                cases.Add(new[] {prefix, " [?] [?].P", "set get [?] [?].P"});
+                cases.Add(new[] {prefix, "  [?] [?].P", "set get [?] [?].P"});
+            }
+
+            return cases;
+        }
+
+        [TestCaseSource("BrokenSerializedPropertyNamesSource")]
+        public void ShouldFixBrokenPropertyNames(string prefix, string id, string corrected)
+        {
+            Assert.AreEqual(corrected, id.FixIdentifiers(prefix));
         }
     }
 }
