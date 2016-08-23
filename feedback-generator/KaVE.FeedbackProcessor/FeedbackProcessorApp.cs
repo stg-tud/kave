@@ -28,13 +28,21 @@ namespace KaVE.FeedbackProcessor
         private const string InDir = Desktop + @"interval-tests\in\";
         private const string OutDir = Desktop + @"interval-tests\out\";
 
+        //private const string Desktop = @"C:\Users\seb2\Desktop\";
+        //private const string InDir = @"E:\Events\All\";
+        //private const string OutDir = @"E:\New-Debug\Out\";
+        //private const string TmpDir = @"E:\New-Debug\Tmp\";
+
         private const string WdFolder = Desktop + @"interval-tests\watchdog\";
         private const string SvgFolder = Desktop + @"interval-tests\svg\";
         private const string EventsFolder = Desktop + @"interval-tests\events\";
 
         public static void Main()
         {
+            var startedAt = DateTime.Now;
+            Console.WriteLine(startedAt);
             //new SanityCheckApp().Run();
+
 
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
@@ -62,6 +70,9 @@ namespace KaVE.FeedbackProcessor
             //WatchdogExporter.Convert(intervals).WriteToFiles(wdFolder);
 
 
+            var endedAt = DateTime.Now;
+            Console.WriteLine(@"ended at:" + endedAt);
+            Console.WriteLine(@"took: " + (endedAt - startedAt));
             Console.ReadKey();
         }
 

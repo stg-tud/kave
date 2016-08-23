@@ -36,7 +36,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         {
             new MultiThreadedPreprocessing(
                 _io,
-                new MultiThreadedPreprocessingLogger(new ConsoleLogger(new DateUtils())),
+                new MultiThreadedPreprocessingLogger(CreateWorkerLogger(-1)),
                 _numWorkers,
                 CreateIdReader,
                 new Grouper(new GrouperLogger(CreateWorkerLogger(0))),
