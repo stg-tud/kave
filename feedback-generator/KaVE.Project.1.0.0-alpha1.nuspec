@@ -11,9 +11,9 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Intelligent Code Completion for Visual Studio. Support research and share information about how you use Visual Studio.</description>
         <releaseNotes></releaseNotes>
-        <copyright>Copyright 2013, 2014</copyright>
+        <copyright>Copyright 2013-2016</copyright>
         <dependencies>
-            <dependency id="Wave" version="[5.0]" />
+            <dependency id="Wave" version="[6.0]" />
         </dependencies>
     </metadata>
     <files>

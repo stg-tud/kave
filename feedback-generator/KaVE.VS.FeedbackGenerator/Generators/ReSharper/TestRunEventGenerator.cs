@@ -21,9 +21,9 @@ using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
-using JetBrains.ReSharper.UnitTestExplorer.Session;
-using JetBrains.ReSharper.UnitTestExplorer.Session.ViewModels;
 using JetBrains.ReSharper.UnitTestFramework;
+using JetBrains.ReSharper.UnitTestFramework.Launch;
+using JetBrains.ReSharper.UnitTestFramework.Session;
 using JetBrains.Threading;
 using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.Commons.Model.Naming;
@@ -53,7 +53,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _resultManager = resultManager;
             _threading = threading;
 
-            var testSessionLifetimes = new Dictionary<IUnitTestSessionTreeViewModel, LifetimeDefinition>();
+            var testSessionLifetimes = new Dictionary<IUnitTestSessionTreeViewModelBase, LifetimeDefinition>();
 
             sessionManager.SessionOpened.Advise(
                 lifetime,
@@ -99,7 +99,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             IUnitTestLaunch unitTestLaunch)
         {
             var aborted = false;
-            unitTestLaunch.State.Change.Advise(
+            unitTestLaunch.Status.Change.Advise(
                 launchLifetime,
                 args =>
                 {
@@ -107,12 +107,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                     {
                         switch (args.New)
                         {
-                            case UnitTestSessionState.Building:
-                            case UnitTestSessionState.Starting:
-                            case UnitTestSessionState.Running:
+                            case UnitTestLaunchStatus.Building:
+                            case UnitTestLaunchStatus.Starting:
+                            case UnitTestLaunchStatus.Running:
                                 aborted = false;
                                 break;
-                            case UnitTestSessionState.Stopping:
+                            case UnitTestLaunchStatus.Stopping:
                                 // This will happen if the build failed.
                                 if (session.Launch.Value == null)
                                 {
@@ -121,7 +121,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                                 // These need to be declared here because session.Launch.Value is null by 
                                 // the time the Dispatcher executes the action.
                                 var relevantTestElements = session.Launch.Value.Elements.Where(e => !e.Children.Any());
-                                var launchTime = session.Launch.Value.DateTimeStarted;
+                                var launchTime = session.Launch.Value.StartedOn;
                                 _threading.Dispatcher.BeginOrInvoke(
                                     "KaVE::TestStopping",
                                     () =>
@@ -135,7 +135,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                                             });
                                     });
                                 break;
-                            case UnitTestSessionState.Aborting:
+                            case UnitTestLaunchStatus.Aborting:
                                 aborted = true;
                                 break;
                         }
