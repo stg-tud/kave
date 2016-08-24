@@ -200,6 +200,7 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
             Given("c", "3", "4");
             new Grouper(_log).GroupRelatedZips(_zipToIds);
 
+            Mock.Get(_log).Verify(l => l.Init(), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.Zips(It.IsAny<IDictionary<string, IKaVESet<string>>>()), Times.Exactly(1));
             Mock.Get(_log).Verify(l => l.Users(It.IsAny<IKaVESet<User>>()), Times.Exactly(1));
 

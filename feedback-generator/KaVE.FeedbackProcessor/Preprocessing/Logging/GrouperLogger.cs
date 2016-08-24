@@ -22,6 +22,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 {
     public interface IGrouperLogger
     {
+        void Init();
         void Zips(IDictionary<string, IKaVESet<string>> zipToIds);
         void Users(IKaVESet<User> users);
     }
@@ -33,7 +34,10 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
         public GrouperLogger(IPrepocessingLogger log)
         {
             _log = log;
+        }
 
+        public void Init()
+        {
             _log.Log();
             _log.Log(new string('#', 60));
             _log.Log("# identifying users");

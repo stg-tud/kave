@@ -38,6 +38,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         public IKaVESet<IKaVESet<string>> GroupRelatedZips(IDictionary<string, IKaVESet<string>> zipToIds)
         {
+            _log.Init();
             _log.Zips(zipToIds);
             var users = AssembleUsers(zipToIds);
             _log.Users(users);

@@ -35,6 +35,7 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
         [Test]
         public void Integration()
         {
+            _sut.Init();
             _sut.Zips(
                 new Dictionary<string, IKaVESet<string>>
                 {
