@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
@@ -29,6 +30,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
         private readonly string _dirLogs;
 
         private readonly PreprocessingIo _io;
+        private readonly IDictionary<int, AppendingFileLogger> _loggers;
 
         public PreprocessingRunner(string dirIn, string dirTmp, string dirOut, int numWorkers = 1)
         {
@@ -45,6 +47,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             Asserts.Not(Directory.Exists(dirMerged));
             Directory.CreateDirectory(dirMerged);
 
+            _loggers = new Dictionary<int, AppendingFileLogger>();
+
+
             _io = new PreprocessingIo(dirIn, dirMerged, dirOut);
         }
 
@@ -59,6 +64,12 @@ namespace KaVE.FeedbackProcessor.Preprocessing
                 new Grouper(new GrouperLogger(CreateWorkerLogger(-2))),
                 CreateGroupMerger,
                 CreateCleaner).Run();
+
+
+            foreach (var log in _loggers.Values)
+            {
+                log.Dispose();
+            }
         }
 
         private IdReader CreateIdReader(int taskId)
@@ -85,11 +96,19 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             };
         }
 
-        private IPrepocessingLogger CreateWorkerLogger(int taskId)
+        private AppendingFileLogger CreateWorkerLogger(int taskId)
         {
+            if (_loggers.ContainsKey(taskId))
+            {
+                return _loggers[taskId];
+            }
+
             var relFile = taskId == -1 ? "main.log" : taskId == -2 ? "grouper.log" : @"worker{0}.log".FormatEx(taskId);
             var logFile = Path.Combine(_dirLogs + relFile);
-            return new AppendingFileLogger(logFile, new DateUtils());
+            var logger = new AppendingFileLogger(logFile, new DateUtils());
+
+            _loggers[taskId] = logger;
+            return logger;
         }
     }
 }

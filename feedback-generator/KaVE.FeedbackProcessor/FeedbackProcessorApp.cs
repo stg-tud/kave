@@ -22,15 +22,15 @@ namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackProcessorApp
     {
-        //private const string TmpDir = Desktop + @"interval-tests\tmp\";
-        //private const string Desktop = @"C:\Users\seb2\Desktop\";
-        //private const string InDir = Desktop + @"interval-tests\in\";
-        //private const string OutDir = Desktop + @"interval-tests\out\";
-
+        private const string TmpDir = Desktop + @"interval-tests\tmp\";
         private const string Desktop = @"C:\Users\seb2\Desktop\";
-        private const string InDir = @"E:\Events\All\";
-        private const string OutDir = @"E:\New-Debug\Out\";
-        private const string TmpDir = @"E:\New-Debug\Tmp\";
+        private const string InDir = Desktop + @"interval-tests\in\";
+        private const string OutDir = Desktop + @"interval-tests\out\";
+
+        //private const string Desktop = @"C:\Users\seb2\Desktop\";
+        //private const string InDir = @"E:\Events\All\";
+        //private const string OutDir = @"E:\New-Debug\Out\";
+        //private const string TmpDir = @"E:\New-Debug\Tmp\";
 
         private const string WdFolder = Desktop + @"interval-tests\watchdog\";
         private const string SvgFolder = Desktop + @"interval-tests\svg\";
@@ -58,7 +58,7 @@ namespace KaVE.FeedbackProcessor
             //new NameFixesIntegrationTest().TryToNameFixSomeNamesFromContexts();
 
             CleanDirs(TmpDir, OutDir);
-            new PreprocessingRunner(InDir, TmpDir, OutDir, 2).Run();
+            new PreprocessingRunner(InDir, TmpDir, OutDir, 1).Run();
 
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
