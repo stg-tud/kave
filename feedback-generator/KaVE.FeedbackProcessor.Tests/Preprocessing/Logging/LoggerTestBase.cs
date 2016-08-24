@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Utils;
 using KaVE.FeedbackProcessor.Preprocessing.Logging;
 using NUnit.Framework;
 
@@ -26,6 +27,7 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
         [SetUp]
         public void LoggerTestBaseSetup()
         {
+            CultureUtils.SetDefaultCultureForThisThread();
             Log = new LineLogger();
         }
 
