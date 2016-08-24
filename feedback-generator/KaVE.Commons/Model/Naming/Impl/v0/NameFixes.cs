@@ -71,6 +71,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                 return
                     "[s:System.Collections.Generic.List`1[[T -> T]]+Enumerator, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> T]], mscorlib, 4.0.0.0].GetEnumerator()";
             }
+
+            const string fail3 = "[p:void] ..ctor()";
+            if (fail3.Equals(id))
+            {
+                return "[?] [?].???()";
+            }
             return id;
         }
 
