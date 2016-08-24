@@ -16,7 +16,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 
@@ -28,6 +27,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
         private readonly IDateUtils _dateUtils;
 
         private bool _isFirstLine;
+        private readonly FileStream _fs;
+        private readonly StreamWriter _sw;
 
         public AppendingFileLogger(string logFile, IDateUtils dateUtils)
         {
@@ -41,6 +42,9 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
             var parentDir = Path.GetDirectoryName(logFile);
             Asserts.NotNull(parentDir);
             Asserts.That(Directory.Exists(parentDir));
+
+            _fs = new FileStream(logFile, FileMode.Append, FileAccess.Write);
+            _sw = new StreamWriter(_fs);
         }
 
         public void Log()
@@ -50,18 +54,26 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Logging
 
         public void Log(string text, params object[] args)
         {
-            var nl = _isFirstLine ? "" : "\n";
+            if (!_isFirstLine)
+            {
+                _sw.Write('\n');
+                _sw.Flush();
+            }
             _isFirstLine = false;
-            Append("{0}{1} {2}", nl, _dateUtils.Now, args.Length == 0 ? text : string.Format(text, args));
+            Append("{0} {1}", _dateUtils.Now, args.Length == 0 ? text : string.Format(text, args));
         }
 
         public void Append(string text, params object[] args)
         {
             _isFirstLine = false;
             var content = args.Length == 0 ? text : string.Format(text, args);
-            File.AppendAllText(_logFile, content, Encoding.UTF8);
+            _sw.Write(content);
         }
 
-        public void Dispose() {}
+        public void Dispose()
+        {
+            _sw.Dispose();
+            _fs.Dispose();
+        }
     }
 }

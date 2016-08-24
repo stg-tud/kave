@@ -56,7 +56,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
                 //new MultiThreadedPreprocessingLogger(CreateWorkerLogger(-1)),
                 _numWorkers,
                 CreateIdReader,
-                new Grouper(new GrouperLogger(CreateWorkerLogger(0))),
+                new Grouper(new GrouperLogger(CreateWorkerLogger(-2))),
                 CreateGroupMerger,
                 CreateCleaner).Run();
         }
@@ -87,7 +87,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private IPrepocessingLogger CreateWorkerLogger(int taskId)
         {
-            var relFile = taskId == -1 ? "main.log" : @"worker{0}.log".FormatEx(taskId);
+            var relFile = taskId == -1 ? "main.log" : taskId == -2 ? "grouper.log" : @"worker{0}.log".FormatEx(taskId);
             var logFile = Path.Combine(_dirLogs + relFile);
             return new AppendingFileLogger(logFile, new DateUtils());
         }
