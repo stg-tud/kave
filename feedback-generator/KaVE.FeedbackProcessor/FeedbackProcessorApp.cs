@@ -22,24 +22,23 @@ namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackProcessorApp
     {
-        //private const string TmpDir = Desktop + @"interval-tests\tmp2\";
-        //private const string Desktop = @"C:\Users\seb2\Desktop\";
-        //private const string InDir = Desktop + @"interval-tests\in\";
-        //private const string OutDir = Desktop + @"interval-tests\out\";
+        private const int NumWorkers = 8;
 
         private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
-        private const string InDir = Root + @"Events\";
-        private const string OutDir = Root + @"Events-Out\";
-        private const string TmpDir = Root + @"Tmp\";
+        //private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
 
-        private const string WdFolder = Root + @"interval-tests\watchdog\";
-        private const string SvgFolder = Root + @"interval-tests\svg\";
-        private const string EventsFolder = Root + @"interval-tests\events\";
+        private const string DirTmp = Root + @"Tmp\";
+
+        private const string DirEventsIn = Root + @"Events\";
+        private const string DirEventsOut = Root + @"Events-Out\";
+
+        private const string WdFolder = Root + @"watchdog\";
+        private const string SvgFolder = Root + @"svg\";
 
         public static void Main()
         {
             var startedAt = DateTime.Now;
-            Console.WriteLine(startedAt);
+            Console.WriteLine(@"started at: {0}", startedAt);
             //new SanityCheckApp().Run();
 
 
@@ -57,8 +56,8 @@ namespace KaVE.FeedbackProcessor
 
             //new NameFixesIntegrationTest().TryToNameFixSomeNamesFromContexts();
 
-            CleanDirs(TmpDir, OutDir);
-            new PreprocessingRunner(InDir, TmpDir, OutDir, 8).Run();
+            CleanDirs(DirTmp, DirEventsOut);
+            new PreprocessingRunner(DirEventsIn, DirTmp, DirEventsOut, NumWorkers).Run();
 
             //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
             //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
@@ -72,14 +71,14 @@ namespace KaVE.FeedbackProcessor
 
 
             var endedAt = DateTime.Now;
-            Console.WriteLine(@"ended at:" + endedAt);
-            Console.WriteLine(@"took: " + (endedAt - startedAt));
+            Console.WriteLine(@"ended at: " + endedAt);
+            Console.WriteLine(@"took:     " + (endedAt - startedAt));
             Console.ReadKey();
         }
 
         private static void RunWatchdogDebugging()
         {
-            new WatchdogExportRunner().RunWatchdogDebugging(InDir, WdFolder, SvgFolder);
+            new WatchdogExportRunner().RunWatchdogDebugging(DirEventsIn, WdFolder, SvgFolder);
         }
 
 
