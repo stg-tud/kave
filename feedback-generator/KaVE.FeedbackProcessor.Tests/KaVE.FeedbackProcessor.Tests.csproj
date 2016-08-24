@@ -82,6 +82,7 @@
     <Compile Include="Activities\UpdateEventMapperTest.cs" />
     <Compile Include="Activities\WindowEventMapperTest.cs" />
     <Compile Include="Preprocessing\FileBasedPreprocessingTestBase.cs" />
+    <Compile Include="Preprocessing\Filters\ErrorAndInfoEventFilterTest.cs" />
     <Compile Include="Preprocessing\GrouperTest.cs" />
     <Compile Include="Preprocessing\GroupMergerTest.cs" />
     <Compile Include="Preprocessing\IdReaderTest.cs" />

@@ -98,6 +98,7 @@
     <Compile Include="BaseEventMapper.cs" />
     <Compile Include="BaseEventProcessor.cs" />
     <Compile Include="Naming\NameFixesIntegrationTest.cs" />
+    <Compile Include="Preprocessing\Filters\ErrorAndInfoEventFilter.cs" />
     <Compile Include="Preprocessing\Logging\IdReaderLogger.cs" />
     <Compile Include="Preprocessing\PreprocessingRunner.cs" />
     <Compile Include="Preprocessing\Logging\CleanerLogger.cs" />
