@@ -56,7 +56,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         private void InitNums()
         {
-            foreach (var uc in Enum.GetValues(typeof (UseCase)))
+            foreach (var uc in Enum.GetValues(typeof(UseCase)))
             {
                 _nums[(UseCase) uc] = 0;
             }
@@ -73,27 +73,29 @@ namespace KaVE.RS.SolutionAnalysis
 
                 _logger.ProgressZip(current++, zips.Length, inZip, outZip);
 
-                var ra = _io.ReadArchive(inZip);
-                using (var wa = _io.CreateArchive(outZip))
+                using (var ra = _io.ReadArchive(inZip))
                 {
-                    _logger.FoundEvents(ra.Count);
-
-                    while (ra.HasNext())
+                    using (var wa = _io.CreateArchive(outZip))
                     {
-                        var e = ra.GetNext<IDEEvent>();
+                        _logger.FoundEvents(ra.Count);
 
-                        _numTotal++;
-                        var useCase = Categorize(e);
-                        _nums[useCase]++;
-
-                        _logger.ProgressEvent((char) useCase);
-                        var isOk = useCase == UseCase.Ok;
-                        var shouldKeepNoTrigger = useCase == UseCase.NoTrigger &&
-                                                  _noTriggerPointOption == NoTriggerPointOption.Keep;
-                        if (isOk || shouldKeepNoTrigger)
+                        while (ra.HasNext())
                         {
-                            _numAdded++;
-                            wa.Add(e);
+                            var e = ra.GetNext<IDEEvent>();
+
+                            _numTotal++;
+                            var useCase = Categorize(e);
+                            _nums[useCase]++;
+
+                            _logger.ProgressEvent((char) useCase);
+                            var isOk = useCase == UseCase.Ok;
+                            var shouldKeepNoTrigger = useCase == UseCase.NoTrigger &&
+                                                      _noTriggerPointOption == NoTriggerPointOption.Keep;
+                            if (isOk || shouldKeepNoTrigger)
+                            {
+                                _numAdded++;
+                                wa.Add(e);
+                            }
                         }
                     }
                 }

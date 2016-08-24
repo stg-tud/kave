@@ -56,10 +56,12 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static IEnumerable<IDEEvent> ReadEventsFromZip(string zip)
         {
-            var ra = new ReadingArchive(zip);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(zip))
             {
-                yield return ra.GetNext<IDEEvent>();
+                while (ra.HasNext())
+                {
+                    yield return ra.GetNext<IDEEvent>();
+                }
             }
         }
     }

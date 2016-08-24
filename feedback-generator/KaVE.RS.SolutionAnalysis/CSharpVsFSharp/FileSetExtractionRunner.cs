@@ -82,10 +82,12 @@ namespace KaVE.RS.SolutionAnalysis.CSharpVsFSharp
 
         private IEnumerable<IDEEvent> ReadEventsForUser(string userZip)
         {
-            var ra = new ReadingArchive(_root + userZip);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(_root + userZip))
             {
-                yield return ra.GetNext<IDEEvent>();
+                while (ra.HasNext())
+                {
+                    yield return ra.GetNext<IDEEvent>();
+                }
             }
         }
 

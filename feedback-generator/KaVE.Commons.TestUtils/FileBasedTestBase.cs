@@ -78,8 +78,10 @@ namespace KaVE.Commons.TestUtils
         protected IList<T> ReadZip<T>(string file)
         {
             Assert.IsTrue(file.StartsWith(DirTestRoot));
-            var ra = new ReadingArchive(file);
-            return ra.GetAll<T>();
+            using (var ra = new ReadingArchive(file))
+            {
+                return ra.GetAll<T>();
+            }
         }
 
         private static void EnsureParentExists(string file)

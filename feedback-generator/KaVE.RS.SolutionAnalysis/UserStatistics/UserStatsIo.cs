@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.RS.SolutionAnalysis.UserStatistics
@@ -52,13 +51,15 @@ namespace KaVE.RS.SolutionAnalysis.UserStatistics
         public IEnumerable<IDEEvent> Read(string zip)
         {
             var fullPath = Path.Combine(_dirEvents, zip);
-            var ra = new ReadingArchive(fullPath);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(fullPath))
             {
-                var e = ra.GetNext<IDEEvent>();
-                if (e != null)
+                while (ra.HasNext())
                 {
-                    yield return e;
+                    var e = ra.GetNext<IDEEvent>();
+                    if (e != null)
+                    {
+                        yield return e;
+                    }
                 }
             }
         }
@@ -68,7 +69,7 @@ namespace KaVE.RS.SolutionAnalysis.UserStatistics
             //new Directory
             using (var fs = File.Create(Path.Combine(_dirStats, "UserStats.json")))
             {
-              //  JsonUtils.
+                //  JsonUtils.
             }
         }
 

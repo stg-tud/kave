@@ -62,37 +62,38 @@ namespace KaVE.RS.SolutionAnalysis
 
                         var fullFileIn = _dirIn + fileName;
 
-                        var ra = new ReadingArchive(fullFileIn);
-                        Log("reading contexts...");
-                        var ctxs = ra.GetAll<Context>();
-                        var numCtxs = ctxs.Count;
-                        Log("found {0} contexts, exporting usages...\n\n", numCtxs);
-
-                        var colCounter = 0;
-                        foreach (var ctx in ctxs)
+                        using (var ra = new ReadingArchive(fullFileIn))
                         {
-                            if (colCounter == 25)
+                            Log("reading contexts...");
+                            var ctxs = ra.GetAll<Context>();
+                            var numCtxs = ctxs.Count;
+                            Log("found {0} contexts, exporting usages...\n\n", numCtxs);
+
+                            var colCounter = 0;
+                            foreach (var ctx in ctxs)
                             {
-                                Console.WriteLine();
-                                colCounter = 0;
+                                if (colCounter == 25)
+                                {
+                                    Console.WriteLine();
+                                    colCounter = 0;
+                                }
+                                colCounter++;
+
+                                var usages = ExtractUsages(ctx);
+                                var msg = usages.Count == 0
+                                    ? "."
+                                    : string.Format("{0}", usages.Count);
+                                Console.Write(msg.PadLeft(5));
+
+                                foreach (var u in usages)
+                                {
+                                    cache.GetArchive(u.type).Add(u);
+                                }
+
+                                numLocalCtxs++;
+                                numLocalUsages += usages.Count;
                             }
-                            colCounter++;
-
-                            var usages = ExtractUsages(ctx);
-                            var msg = usages.Count == 0
-                                ? "."
-                                : string.Format("{0}", usages.Count);
-                            Console.Write(msg.PadLeft(5));
-
-                            foreach (var u in usages)
-                            {
-                                cache.GetArchive(u.type).Add(u);
-                            }
-
-                            numLocalCtxs++;
-                            numLocalUsages += usages.Count;
                         }
-
                         Append("\n");
                         Log(
                             "--> {0} contexts, {1} usages\n\n",

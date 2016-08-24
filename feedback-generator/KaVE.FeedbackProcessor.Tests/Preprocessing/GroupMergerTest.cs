@@ -69,9 +69,11 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing
         private void Expect(string relFile, params IDEEvent[] expecteds)
         {
             var file = Path.Combine(MergedDir, relFile);
-            var ra = new ReadingArchive(file);
-            var actuals = ra.GetAll<IDEEvent>();
-            CollectionAssert.AreEqual(expecteds, actuals);
+            using (var ra = new ReadingArchive(file))
+            {
+                var actuals = ra.GetAll<IDEEvent>();
+                CollectionAssert.AreEqual(expecteds, actuals);
+            }
         }
 
         private void Merge(params string[] relFiles)

@@ -81,10 +81,12 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             {
                 _log.Reading(relZip);
                 var zip = _io.GetFullPath_In(relZip);
-                var ra = new ReadingArchive(zip);
-                while (ra.HasNext())
+                using (var ra = new ReadingArchive(zip))
                 {
-                    yield return ra.GetNext<IDEEvent>();
+                    while (ra.HasNext())
+                    {
+                        yield return ra.GetNext<IDEEvent>();
+                    }
                 }
             }
         }

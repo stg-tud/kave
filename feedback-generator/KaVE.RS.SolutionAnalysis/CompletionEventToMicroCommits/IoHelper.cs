@@ -56,10 +56,12 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventToMicroCommits
 
         public IEnumerable<IDEEvent> ReadEvents(string exportFile)
         {
-            var ra = new ReadingArchive(exportFile);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(exportFile))
             {
-                yield return ra.GetNext<IDEEvent>();
+                while (ra.HasNext())
+                {
+                    yield return ra.GetNext<IDEEvent>();
+                }
             }
         }
 

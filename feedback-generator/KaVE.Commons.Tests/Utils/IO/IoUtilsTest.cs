@@ -54,7 +54,7 @@ namespace KaVE.Commons.Tests.Utils.IO
             }
         }
 
-        [Test, ExpectedException(typeof (NotImplementedException))]
+        [Test, ExpectedException(typeof(NotImplementedException))]
         public void TransferByHttpIsNotImplemented()
         {
             _sut.TransferByHttp(new Mock<HttpContent>().Object, new Uri("http://any"));
@@ -359,12 +359,14 @@ namespace KaVE.Commons.Tests.Utils.IO
                     wa.Add(c);
                 }
             }
-            var ra = _sut.ReadArchive(zipFileName);
-            var actuals = ra.GetAll<string>();
-            CollectionAssert.AreEquivalent(expecteds, actuals);
+            using (var ra = _sut.ReadArchive(zipFileName))
+            {
+                var actuals = ra.GetAll<string>();
+                CollectionAssert.AreEquivalent(expecteds, actuals);
+            }
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void ReadArchive_NonExisting()
         {
             var zipFileName = Path.Combine(_testRoot, "NonExisting.zip");
@@ -390,7 +392,7 @@ namespace KaVE.Commons.Tests.Utils.IO
             CollectionAssert.AreEquivalent(expecteds, actuals);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void CreateArchive_FileExists()
         {
             var zipFileName = Path.Combine(_testRoot, "Existing.zip");
@@ -398,7 +400,7 @@ namespace KaVE.Commons.Tests.Utils.IO
             _sut.CreateArchive(zipFileName);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void CreateArchive_NonExistingParent()
         {
             var zipFileName = Path.Combine(_testRoot, "NonExistingParent", "a.zip");
@@ -424,7 +426,7 @@ namespace KaVE.Commons.Tests.Utils.IO
         public void ShouldManageToCountLinesInLargeLinesInReasonableAmountOfTime()
         {
             const int maxLines = 20000;
-            
+
             var rnd = new Random();
             var file = Path.Combine(_testRoot, "x.txt");
             var lines = new List<string>();

@@ -64,9 +64,11 @@ namespace KaVE.FeedbackProcessor
 
         private static void WriteEventStream(string zip, string file)
         {
-            var ra = new ReadingArchive(zip);
-            var events = ra.GetAll<IDEEvent>();
-            EventStreamExport.Write(events, file);
+            using (var ra = new ReadingArchive(zip))
+            {
+                var events = ra.GetAll<IDEEvent>();
+                EventStreamExport.Write(events, file);
+            }
         }
     }
 }

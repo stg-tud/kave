@@ -24,7 +24,7 @@ using KaVE.Commons.Utils.Json;
 
 namespace KaVE.Commons.Utils.IO.Archives
 {
-    public interface IReadingArchive
+    public interface IReadingArchive : IDisposable
     {
         int Count { get; }
         bool HasNext();
@@ -34,13 +34,24 @@ namespace KaVE.Commons.Utils.IO.Archives
 
     public class ReadingArchive : IReadingArchive
     {
-        private List<string>.Enumerator _eventEnumerator;
+        public int Count { get; private set; }
+
+        private readonly ZipInputStream _zipStream;
+        private ZipEntry _nextEntry;
+        private string _nextJson;
 
         public ReadingArchive(string zipPath)
         {
-            Count = 0;
             Asserts.That(File.Exists(zipPath), "could not read zip '{0}'", zipPath);
+            Count = 0;
+            CountEntries(zipPath);
 
+            _zipStream = new ZipInputStream(File.OpenRead(zipPath));
+            FindNextUsableEntry();
+        }
+
+        private void CountEntries(string zipPath)
+        {
             using (var s = new ZipInputStream(File.OpenRead(zipPath)))
             {
                 ZipEntry theEntry;
@@ -52,58 +63,54 @@ namespace KaVE.Commons.Utils.IO.Archives
                     }
                 }
             }
-
-            var events = new List<string>();
-            var data = new byte[4096];
-            using (var s = new ZipInputStream(File.OpenRead(zipPath)))
-            {
-                ZipEntry theEntry;
-                while ((theEntry = s.GetNextEntry()) != null)
-                {
-                    if (theEntry.IsFile)
-                    {
-                        var sb = new StringBuilder();
-                        var size = s.Read(data, 0, data.Length);
-                        while (size > 0)
-                        {
-                            sb.Append(Encoding.UTF8.GetString(data, 0, size));
-                            size = s.Read(data, 0, data.Length);
-                        }
-                        events.Add(sb.ToString());
-                    }
-                }
-            }
-
-            _eventEnumerator = events.GetEnumerator();
         }
 
-        public int Count { get; private set; }
+        private void FindNextUsableEntry()
+        {
+            ForwardStreamToNextFileEntry();
+            while (_nextEntry != null && IsNullOrEmpty(_nextJson))
+            {
+                ForwardStreamToNextFileEntry();
+            }
+        }
+
+        private void ForwardStreamToNextFileEntry()
+        {
+            while ((_nextEntry = _zipStream.GetNextEntry()) != null)
+            {
+                if (_nextEntry.IsFile)
+                {
+                    var data = new byte[4096];
+                    var sb = new StringBuilder();
+                    var size = _zipStream.Read(data, 0, data.Length);
+                    while (size > 0)
+                    {
+                        sb.Append(Encoding.UTF8.GetString(data, 0, size));
+                        size = _zipStream.Read(data, 0, data.Length);
+                    }
+                    _nextJson = sb.ToString();
+                    return;
+                }
+            }
+            _nextJson = null;
+        }
 
         public bool HasNext()
         {
-            var hasMoved = _eventEnumerator.MoveNext();
-            while (hasMoved && ShouldMoveFurther(_eventEnumerator.Current))
-            {
-                hasMoved = _eventEnumerator.MoveNext();
-            }
-            return hasMoved;
+            return _nextJson != null;
         }
 
-        private static bool ShouldMoveFurther(string current)
+        private static bool IsNullOrEmpty(string json)
         {
-            var isNullJson = current == "null";
-            var isEmptyJson = string.IsNullOrEmpty(current);
-            return isNullJson || isEmptyJson;
+            return string.IsNullOrEmpty(json) || "null".Equals(json);
         }
 
         public T GetNext<T>()
         {
-            if (_eventEnumerator.Current != null)
-            {
-                var obj = _eventEnumerator.Current.ParseJsonTo<T>();
-                return obj;
-            }
-            throw new ArgumentOutOfRangeException();
+            Asserts.That(HasNext());
+            var json = _nextJson;
+            FindNextUsableEntry();
+            return json.ParseJsonTo<T>();
         }
 
         public IList<T> GetAll<T>()
@@ -114,6 +121,11 @@ namespace KaVE.Commons.Utils.IO.Archives
                 all.Add(GetNext<T>());
             }
             return all;
+        }
+
+        public void Dispose()
+        {
+            _zipStream.Dispose();
         }
     }
 }

@@ -51,16 +51,18 @@ namespace KaVE.RS.SolutionAnalysis
                         Console.WriteLine();
                         Console.WriteLine("@@ {0} @@", zip);
                         var zipPath = Path.Combine(repoPath, zip);
-                        var ra = new ReadingArchive(zipPath);
-                        while (ra.HasNext())
+                        using (var ra = new ReadingArchive(zipPath))
                         {
-                            numSSTs++;
+                            while (ra.HasNext())
+                            {
+                                numSSTs++;
 
-                            Console.Write('.');
-                            var ctx = ra.GetNext<Context>();
+                                Console.Write('.');
+                                var ctx = ra.GetNext<Context>();
 
-                            var sstloc = CountLoc(ctx.SST);
-                            loc += sstloc;
+                                var sstloc = CountLoc(ctx.SST);
+                                loc += sstloc;
+                            }
                         }
                     }
                 }

@@ -80,9 +80,11 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             _log.ReadingZip(relZip);
 
             var zip = _io.GetFullPath_Merged(relZip);
-            var ra = new ReadingArchive(zip);
-            var events = ra.GetAll<IDEEvent>();
-            return events;
+            using (var ra = new ReadingArchive(zip))
+            {
+                var events = ra.GetAll<IDEEvent>();
+                return events;
+            }
         }
 
         private IEnumerable<IDEEvent> ApplyFilters(IEnumerable<IDEEvent> events)

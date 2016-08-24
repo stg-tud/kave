@@ -15,8 +15,8 @@
  */
 
 using System.Collections.Generic;
-using System.IO;
 using Ionic.Zip;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
@@ -24,7 +24,7 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.IO.Archives
 {
-    internal class ReadingArchiveTest
+    internal class ReadingArchiveTest : FileBasedTestBase
     {
         private const string EmptyString = "EMPTY_STRING";
 
@@ -35,16 +35,13 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         [SetUp]
         public void SetUp()
         {
-            _zipPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            _zipPath = DirTestRoot + "\\a.zip";
         }
 
         [TearDown]
         public void TearDown()
         {
-            if (File.Exists(_zipPath))
-            {
-                File.Delete(_zipPath);
-            }
+            _sut.Dispose();
         }
 
         [Test, ExpectedException(typeof(AssertException))]
@@ -87,6 +84,22 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
             Assert.AreEqual("a", _sut.GetNext<string>());
             Assert.True(_sut.HasNext());
             Assert.AreEqual("b", _sut.GetNext<string>());
+            Assert.False(_sut.HasNext());
+        }
+
+        [Test]
+        public void NonEmptyZip_FancyContents()
+        {
+            PrepareZip("a", "b", "\"\"", "null");
+
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("a", _sut.GetNext<string>());
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("b", _sut.GetNext<string>());
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("\"\"", _sut.GetNext<string>());
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("null", _sut.GetNext<string>());
             Assert.False(_sut.HasNext());
         }
 

@@ -141,19 +141,21 @@ namespace KaVE.RS.SolutionAnalysis
         private IEnumerable<ICompletionEvent> ReadCce(string zipName)
         {
             var fullPath = Path.Combine(_dirIn, zipName);
-            var ra = new ReadingArchive(fullPath);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(fullPath))
             {
-                var e = ra.GetNext<IDEEvent>();
-                var ce = e as CompletionEvent;
-                if (ce != null)
+                while (ra.HasNext())
                 {
-                    Console.Write('x');
-                    yield return ce;
-                }
-                else
-                {
-                    Console.Write('.');
+                    var e = ra.GetNext<IDEEvent>();
+                    var ce = e as CompletionEvent;
+                    if (ce != null)
+                    {
+                        Console.Write('x');
+                        yield return ce;
+                    }
+                    else
+                    {
+                        Console.Write('.');
+                    }
                 }
             }
         }

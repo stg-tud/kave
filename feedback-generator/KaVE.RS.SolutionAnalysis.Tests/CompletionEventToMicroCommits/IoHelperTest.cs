@@ -160,11 +160,13 @@ namespace KaVE.RS.SolutionAnalysis.Tests.CompletionEventToMicroCommits
             _sut.AddTuple(expected);
             _sut.CloseCache();
 
-            var ra = new ReadingArchive(Path.Combine(_dirHistories, "Ln", "T", "0.zip"));
-            var ts = ra.GetAll<Tuple<Query, Query>>();
+            using (var ra = new ReadingArchive(Path.Combine(_dirHistories, "Ln", "T", "0.zip")))
+            {
+                var ts = ra.GetAll<Tuple<Query, Query>>();
 
-            Assert.AreEqual(1, ts.Count);
-            Assert.AreEqual(expected, ts[0]);
+                Assert.AreEqual(1, ts.Count);
+                Assert.AreEqual(expected, ts[0]);
+            }
         }
 
         private void Write(params IDEEvent[] es)

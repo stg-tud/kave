@@ -60,20 +60,22 @@ namespace KaVE.RS.SolutionAnalysis
 
                 var fullFileIn = _dirIn + fileName;
 
-                var ra = new ReadingArchive(fullFileIn);
-                Log("reading contexts...");
-                var numCtxs = 0;
-                while (ra.HasNext())
+                using (var ra = new ReadingArchive(fullFileIn))
                 {
-                    var context = ra.GetNext<Context>();
-                    var list = new KaVEList<string>();
-                    // TODO: grab names in a NameToJsonConverter
-                    numCtxs++;
-                }
-                Log("found {0} contexts\n\n", numCtxs);
-                if (_numMaxZips != -1 && currentZip == _numMaxZips + 1)
-                {
-                    break;
+                    Log("reading contexts...");
+                    var numCtxs = 0;
+                    while (ra.HasNext())
+                    {
+                        var context = ra.GetNext<Context>();
+                        var list = new KaVEList<string>();
+                        // TODO: grab names in a NameToJsonConverter
+                        numCtxs++;
+                    }
+                    Log("found {0} contexts\n\n", numCtxs);
+                    if (_numMaxZips != -1 && currentZip == _numMaxZips + 1)
+                    {
+                        break;
+                    }
                 }
             }
             var typeNameNullCount = 0;

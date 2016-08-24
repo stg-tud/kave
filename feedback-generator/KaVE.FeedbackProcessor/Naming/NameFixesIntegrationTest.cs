@@ -63,13 +63,15 @@ namespace KaVE.FeedbackProcessor.Naming
             while (_zips.TryTake(out zip))
             {
                 Console.WriteLine();
-                Console.WriteLine("({0}) Next Zip", taskId);
-                var ra = new ReadingArchive(zip);
-                while (ra.HasNext())
+                Console.WriteLine(@"({0}) Next Zip", taskId);
+                using (var ra = new ReadingArchive(zip))
                 {
-                    var context = ra.GetNext<Context>();
-                    Console.Write('.');
-                    context.SST.Accept(new NameFixTester(), -1);
+                    while (ra.HasNext())
+                    {
+                        var context = ra.GetNext<Context>();
+                        Console.Write('.');
+                        context.SST.Accept(new NameFixTester(), -1);
+                    }
                 }
             }
         }

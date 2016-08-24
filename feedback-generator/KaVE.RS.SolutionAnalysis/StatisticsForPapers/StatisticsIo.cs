@@ -36,9 +36,9 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
         private readonly string _dirCcEvents;
         private readonly string _dirAllEvents;
 
-        public StatisticsIo(string dirCCEvents, string dirAllEvents)
+        public StatisticsIo(string dirCcEvents, string dirAllEvents)
         {
-            _dirCcEvents = dirCCEvents;
+            _dirCcEvents = dirCcEvents;
             _dirAllEvents = dirAllEvents;
         }
 
@@ -52,13 +52,15 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
         public IUserProfileEvent TryGetUserProfile(string zipName)
         {
             var fullPath = Path.Combine(_dirAllEvents, zipName);
-            var ra = new ReadingArchive(fullPath);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(fullPath))
             {
-                var e = ra.GetNext<IDEEvent>() as IUserProfileEvent;
-                if (e != null)
+                while (ra.HasNext())
                 {
-                    return e;
+                    var e = ra.GetNext<IDEEvent>() as IUserProfileEvent;
+                    if (e != null)
+                    {
+                        return e;
+                    }
                 }
             }
             return null;
@@ -67,13 +69,15 @@ namespace KaVE.RS.SolutionAnalysis.StatisticsForPapers
         public IEnumerable<CompletionEvent> ReadCce(string zipName)
         {
             var fullPath = Path.Combine(_dirCcEvents, zipName);
-            var ra = new ReadingArchive(fullPath);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(fullPath))
             {
-                var e = ra.GetNext<IDEEvent>() as CompletionEvent;
-                if (e != null)
+                while (ra.HasNext())
                 {
-                    yield return e;
+                    var e = ra.GetNext<IDEEvent>() as CompletionEvent;
+                    if (e != null)
+                    {
+                        yield return e;
+                    }
                 }
             }
         }

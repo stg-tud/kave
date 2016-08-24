@@ -169,11 +169,13 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
 
         private void AssertZipContent(string fileName, params string[] expectedsArr)
         {
-            var ra = new ReadingArchive(fileName);
-            var expecteds = new List<string>();
-            expecteds.AddRange(expectedsArr);
-            var actuals = ra.GetAll<string>();
-            Assert.AreEqual(expecteds, actuals);
+            using (var ra = new ReadingArchive(fileName))
+            {
+                var expecteds = new List<string>();
+                expecteds.AddRange(expectedsArr);
+                var actuals = ra.GetAll<string>();
+                Assert.AreEqual(expecteds, actuals);
+            }
         }
 
         [Test]

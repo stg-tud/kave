@@ -132,16 +132,18 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
                     Assert.True(entries.Contains("c"));
                     Assert.True(entries.Contains("d"));
                 }
+
+                ra.Dispose();
             }
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void DirectoryHasToExist()
         {
             new ZipFolder(@"c:\does\not\exist\");
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void DirectoryMustNotBeAFile()
         {
             new ZipFolder(@"c:\Windows\notepad.exe");

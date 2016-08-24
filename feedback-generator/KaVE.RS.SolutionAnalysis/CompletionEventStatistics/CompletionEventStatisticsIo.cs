@@ -59,18 +59,20 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventStatistics
         private IEnumerable<ICompletionEvent> ReadCce(string zipName)
         {
             var fullPath = Path.Combine(_dirIn, zipName);
-            var ra = new ReadingArchive(fullPath);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(fullPath))
             {
-                var e = ra.GetNext<IDEEvent>() as CompletionEvent;
-                if (e != null)
+                while (ra.HasNext())
                 {
-                    if (e.TerminatedState == TerminationState.Applied)
+                    var e = ra.GetNext<IDEEvent>() as CompletionEvent;
+                    if (e != null)
                     {
-                        var sel = e.LastSelectedProposal;
-                        if (sel != null && sel.Name is IMethodName)
+                        if (e.TerminatedState == TerminationState.Applied)
                         {
-                            yield return e;
+                            var sel = e.LastSelectedProposal;
+                            if (sel != null && sel.Name is IMethodName)
+                            {
+                                yield return e;
+                            }
                         }
                     }
                 }

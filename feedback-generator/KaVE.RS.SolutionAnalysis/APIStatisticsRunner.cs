@@ -68,24 +68,25 @@ namespace KaVE.RS.SolutionAnalysis
                         Console.WriteLine("({1}) @@ {0} (sln #{2}) @@", zip, DateTime.Now, numSolutions);
                         var slnApis = new HashSet<IAssemblyName>();
                         var zipPath = Path.Combine(repoPath, zip);
-                        var ra = new ReadingArchive(zipPath);
-
-                        while (ra.HasNext())
+                        using (var ra = new ReadingArchive(zipPath))
                         {
-                            numSSTs++;
-                            Console.Write('.');
-                            var ctx = ra.GetNext<Context>();
-                            var sstloc = CountLoc(ctx.SST);
-                            repoLoc += sstloc;
-                            var apis = FindAPIs(ctx.SST);
-
-                            foreach (var api in apis)
+                            while (ra.HasNext())
                             {
-                                repoApis.Add(api);
-                                slnApis.Add(api);
-                            }
+                                numSSTs++;
+                                Console.Write('.');
+                                var ctx = ra.GetNext<Context>();
+                                var sstloc = CountLoc(ctx.SST);
+                                repoLoc += sstloc;
+                                var apis = FindAPIs(ctx.SST);
 
-                            CountApis(apis, sstCounts);
+                                foreach (var api in apis)
+                                {
+                                    repoApis.Add(api);
+                                    slnApis.Add(api);
+                                }
+
+                                CountApis(apis, sstCounts);
+                            }
                         }
                         CountApis(slnApis, slnCounts);
                     }

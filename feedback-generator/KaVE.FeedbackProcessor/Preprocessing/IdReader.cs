@@ -123,10 +123,12 @@ namespace KaVE.FeedbackProcessor.Preprocessing
 
         private static IEnumerable<IDEEvent> GetEventsFromArchive(string zip)
         {
-            var ra = new ReadingArchive(zip);
-            while (ra.HasNext())
+            using (var ra = new ReadingArchive(zip))
             {
-                yield return ra.GetNext<IDEEvent>();
+                while (ra.HasNext())
+                {
+                    yield return ra.GetNext<IDEEvent>();
+                }
             }
         }
     }

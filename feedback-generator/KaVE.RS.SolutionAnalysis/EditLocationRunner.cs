@@ -79,76 +79,78 @@ namespace KaVE.RS.SolutionAnalysis
                     numTotal);
                 Log(@"zip: {0}", zip);
 
-                var ra = new ReadingArchive(zip);
-                Log(@"{0} events: ", ra.Count);
-                while (ra.HasNext())
+                using (var ra = new ReadingArchive(zip))
                 {
-                    var @event = ra.GetNext<IDEEvent>();
-                    numEvents++;
-
-                    var complEvent = @event as CompletionEvent;
-                    if (complEvent == null)
+                    Log(@"{0} events: ", ra.Count);
+                    while (ra.HasNext())
                     {
-                        Console.Write('.');
-                        continue;
-                    }
+                        var @event = ra.GetNext<IDEEvent>();
+                        numEvents++;
 
-                    var fileName = complEvent.ActiveDocument.FileName;
-                    if (fileName != null && !fileName.EndsWith(".cs"))
-                    {
-                        Console.Write(':');
-                        continue;
-                    }
+                        var complEvent = @event as CompletionEvent;
+                        if (complEvent == null)
+                        {
+                            Console.Write('.');
+                            continue;
+                        }
 
-                    numCompletionEvents++;
+                        var fileName = complEvent.ActiveDocument.FileName;
+                        if (fileName != null && !fileName.EndsWith(".cs"))
+                        {
+                            Console.Write(':');
+                            continue;
+                        }
 
-                    var loc = _locationAnalysis.Analyze(complEvent.Context2.SST);
-                    if (!loc.HasEditLocation || loc.Size < 2)
-                    {
-                        Console.Write('o');
-                        continue;
-                    }
+                        numCompletionEvents++;
 
-                    numHistoryTuples++;
+                        var loc = _locationAnalysis.Analyze(complEvent.Context2.SST);
+                        if (!loc.HasEditLocation || loc.Size < 2)
+                        {
+                            Console.Write('o');
+                            continue;
+                        }
 
-                    Console.Write('x');
+                        numHistoryTuples++;
 
-                    _flatHist.Add(loc.Location, loc.Size);
-                    if (complEvent.TerminatedState == TerminationState.Applied)
-                    {
-                        numCompletionEventsApplied++;
-                        _flatHistExec.Add(loc.Location, loc.Size);
-                    }
+                        Console.Write('x');
 
-                    switch (loc.Size)
-                    {
-                        case 2:
-                            _histogram2.Add(loc.Location);
-                            break;
-                        case 3:
-                            _histogram3.Add(loc.Location);
-                            break;
-                        case 4:
-                            _histogram4.Add(loc.Location);
-                            break;
-                        case 5:
-                            _histogram5.Add(loc.Location);
-                            break;
-                        case 6:
-                            _histogram6.Add(loc.Location);
-                            break;
-                        case 7:
-                            _histogram7.Add(loc.Location);
-                            break;
-                        case 8:
-                            _histogram8.Add(loc.Location);
-                            break;
-                        case 9:
-                            _histogram9.Add(loc.Location);
-                            break;
-                        default:
-                            _histogram10P.AddRatio(loc.Location, loc.Size);
-                            break;
+                        _flatHist.Add(loc.Location, loc.Size);
+                        if (complEvent.TerminatedState == TerminationState.Applied)
+                        {
+                            numCompletionEventsApplied++;
+                            _flatHistExec.Add(loc.Location, loc.Size);
+                        }
+
+                        switch (loc.Size)
+                        {
+                            case 2:
+                                _histogram2.Add(loc.Location);
+                                break;
+                            case 3:
+                                _histogram3.Add(loc.Location);
+                                break;
+                            case 4:
+                                _histogram4.Add(loc.Location);
+                                break;
+                            case 5:
+                                _histogram5.Add(loc.Location);
+                                break;
+                            case 6:
+                                _histogram6.Add(loc.Location);
+                                break;
+                            case 7:
+                                _histogram7.Add(loc.Location);
+                                break;
+                            case 8:
+                                _histogram8.Add(loc.Location);
+                                break;
+                            case 9:
+                                _histogram9.Add(loc.Location);
+                                break;
+                            default:
+                                _histogram10P.AddRatio(loc.Location, loc.Size);
+                                break;
+                        }
                     }
                 }
                 Console.WriteLine();
