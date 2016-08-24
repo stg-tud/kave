@@ -39,14 +39,20 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Filters
 
         private static bool IsValid(CompletionEvent ce)
         {
-            return IsCSharpFile(ce) && HasNonDefaultContext(ce);
+            return (IsCSharpFile(ce) || IsHashedCSharpFile(ce)) && HasNonDefaultContext(ce);
         }
 
         private static bool IsCSharpFile(IDEEvent e)
         {
-            var extension = Path.GetExtension(e.ActiveDocument.FileName);
-            var isCSharpFile = extension != null && extension.EndsWith("cs");
+            var file = Path.GetExtension(e.ActiveDocument.FileName);
+            var isCSharpFile = file != null && file.EndsWith("cs");
             return isCSharpFile;
+        }
+
+        private static bool IsHashedCSharpFile(IDEEvent e)
+        {
+            var file = e.ActiveDocument.FileName;
+            return "CSharp".Equals(e.ActiveDocument.Language) && file != null && file.Contains("==");
         }
 
         private static bool HasNonDefaultContext(CompletionEvent ce)

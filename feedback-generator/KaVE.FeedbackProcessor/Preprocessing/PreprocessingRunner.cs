@@ -88,7 +88,8 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             {
                 Filters =
                 {
-                    //new VersionFilter(1000),
+                    new VersionFilter(1000),
+                    new ErrorAndInfoEventFilter(),
                     new NoSessionIdFilter(),
                     new NoTimeFilter(),
                     new InvalidCompletionEventFilter()

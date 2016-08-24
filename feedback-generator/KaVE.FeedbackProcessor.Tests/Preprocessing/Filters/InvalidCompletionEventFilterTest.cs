@@ -83,5 +83,18 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Filters
             e.Context2 = new Context();
             Assert.False(_sut.Func(e));
         }
+
+        [Test]
+        public void ShouldNotRemoveHashedEvents()
+        {
+            var e = CreateValidCompletionEvent();
+            e.ActiveDocument = Names.Document("CSharp oKrm8Y9igaDnmoGY4ttfVA==");
+            e.Context2.SST = new SST
+            {
+                EnclosingType =
+                    Names.Type("0T:abcdefghuDNCSFMxQ_MGQ==.8X2eMCvJrgE6_iyTEOS44g==, abcdefghluDNCSFMxQ_MGQ==")
+            };
+            Assert.True(_sut.Func(e));
+        }
     }
 }
