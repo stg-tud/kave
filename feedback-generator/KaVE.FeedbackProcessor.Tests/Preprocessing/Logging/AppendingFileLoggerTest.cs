@@ -37,6 +37,8 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Logging
         [SetUp]
         public void SetUp()
         {
+            CultureUtils.SetDefaultCultureForThisThread();
+
             _now = DateTime.MinValue;
             _dateUtils = Mock.Of<IDateUtils>();
             Mock.Get(_dateUtils).Setup(u => u.Now).Returns(() => _now);

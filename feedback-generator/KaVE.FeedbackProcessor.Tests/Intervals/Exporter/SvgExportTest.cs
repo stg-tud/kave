@@ -26,6 +26,7 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Exporter
     /// <summary>
     ///     this test class is disabled by default, because it creates files that need to be manually checked
     /// </summary>
+    [Ignore("results have to be checked manually")]
     internal class SvgExportTest
     {
         private const string FileOut = @"C:\Users\seb2\Desktop\SvgExportTest.svg";
