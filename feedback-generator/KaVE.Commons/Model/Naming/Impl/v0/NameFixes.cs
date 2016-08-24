@@ -244,6 +244,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             {
                 "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)",
                 "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2[[TKey],[TValue]]+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)"
+            },
+            {
+                "s:System.Collections.Generic.List`1+Enumerator, mscorlib, 4.0.0.0",
+                "s:System.Collections.Generic.List`1[[T]]+Enumerator, mscorlib, 4.0.0.0"
+            },
+            {
+                "System.Collections.Generic.List`1+SynchronizedList, mscorlib, 4.0.0.0",
+                "System.Collections.Generic.List`1[[T]]+SynchronizedList, mscorlib, 4.0.0.0"
             }
         };
 

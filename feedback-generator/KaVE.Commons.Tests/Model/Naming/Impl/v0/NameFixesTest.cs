@@ -292,6 +292,16 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
                 {
                     "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)",
                     "d:[TValue] [System.Runtime.CompilerServices.ConditionalWeakTable`2[[TKey],[TValue]]+CreateValueCallback, mscorlib, 4.0.0.0].([TKey] key)"
+                },
+                new[]
+                {
+                    "s:System.Collections.Generic.List`1+Enumerator, mscorlib, 4.0.0.0",
+                    "s:System.Collections.Generic.List`1[[T]]+Enumerator, mscorlib, 4.0.0.0"
+                },
+                new[]
+                {
+                    "System.Collections.Generic.List`1+SynchronizedList, mscorlib, 4.0.0.0",
+                    "System.Collections.Generic.List`1[[T]]+SynchronizedList, mscorlib, 4.0.0.0"
                 }
             };
 
@@ -341,6 +351,14 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
         public void ShouldFixBrokenFixes(string prefix, string id, string expected)
         {
             Assert.AreEqual(expected, id.FixIdentifiers(prefix));
+        }
+
+        [Test]
+        public void ShouldNotCreateInvalidIdsWhenFixingTypeParameterLists()
+        {
+            const string id = "N.C`1+N, P";
+            Assert.AreEqual(id, id.FixIdentifiers());
+            Assert.AreEqual(id, id.FixIdentifiers("0T"));
         }
     }
 }
