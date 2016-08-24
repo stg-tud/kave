@@ -46,6 +46,22 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void NonExistingZip_ContainsHint()
+        {
+            const string fileInUnknownDir = @"C:\does\not\exist.zip";
+            try
+            {
+                // ReSharper disable once ObjectCreationAsStatement
+                new ReadingArchive(fileInUnknownDir);
+                Assert.Fail();
+            }
+            catch (AssertException e)
+            {
+                Assert.That(e.Message.Contains(fileInUnknownDir));
+            }
+        }
+
+        [Test]
         public void WriteEmptyDoesNotCreateFile()
         {
             Write();

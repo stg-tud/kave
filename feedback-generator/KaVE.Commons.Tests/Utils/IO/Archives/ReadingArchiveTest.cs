@@ -47,11 +47,27 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
             }
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void NonExistingZip()
         {
             // ReSharper disable once ObjectCreationAsStatement
             new ReadingArchive(@"C:\does\not\exist.zip");
+        }
+
+        [Test]
+        public void NonExistingZip_ContainsHint()
+        {
+            const string missingFile = @"C:\does\not\exist.zip";
+            try
+            {
+                // ReSharper disable once ObjectCreationAsStatement
+                new ReadingArchive(missingFile);
+                Assert.Fail();
+            }
+            catch (AssertException e)
+            {
+                Assert.That(e.Message.Contains(missingFile));
+            }
         }
 
         [Test]

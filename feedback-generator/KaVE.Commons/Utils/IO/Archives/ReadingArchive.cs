@@ -39,7 +39,7 @@ namespace KaVE.Commons.Utils.IO.Archives
         public ReadingArchive(string zipPath)
         {
             Count = 0;
-            Asserts.That(File.Exists(zipPath));
+            Asserts.That(File.Exists(zipPath), "could not read zip '{0}'", zipPath);
 
             using (var s = new ZipInputStream(File.OpenRead(zipPath)))
             {

@@ -40,11 +40,17 @@ namespace KaVE.Commons.Utils.IO.Archives
 
         public WritingArchive(string path)
         {
-            var parent = Path.GetDirectoryName(path);
-            Asserts.NotNull(parent);
-            Asserts.That(Directory.Exists(parent));
+            AssertParentExist(path);
             _path = path;
             NumItemsAdded = 0;
+        }
+
+        private static void AssertParentExist(string path)
+        {
+            const string err = "cannot create '{0}', parent does not exist";
+            var parent = Path.GetDirectoryName(path);
+            Asserts.NotNull(parent, err, path);
+            Asserts.That(Directory.Exists(parent), err, path);
         }
 
 
