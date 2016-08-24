@@ -22,6 +22,7 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Intervals.Transformers
 {
+    [Ignore("ignore these tests -for now- until the work on the interval export continues")]
     internal class FileInteractionTransformerTest : TransformerTestBase<FileInteractionInterval>
     {
         private BuildEvent TestReadingEvent(int startOffset, int endOffset, string filename)
