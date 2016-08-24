@@ -83,6 +83,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.AreEqual(expected, actual);
         }
 
+        // 0M:[s:System.Collections.Generic.List`1[][[[T -> T]]]+Enumerator, mscorlib, 4.0.0.0] .GetEnumerator()
         [TestCase("T`1,P", "T`1,P"), // in general, invalid names are recognized and ignored
          TestCase("T`1!],P", "T`1!],P"), // artificial (invalid) example to test robustness
          TestCase("System.Collections.Generic.Dictionary`2+KeyCollection, mscorlib, 4.0.0.0",
@@ -90,8 +91,7 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
         // should not be hit/changed...
          TestCase("{661F-8B...} SomeClass`1.cs", "{661F-8B...} SomeClass`1.cs"),
          TestCase("vsWindowTypeDocument SomeClass`2.cs", "vsWindowTypeDocument SomeClass`2.cs"),
-         TestCase("CSharp SomeClass`2.cs", "CSharp SomeClass`2.cs")
-        ]
+         TestCase("CSharp SomeClass`2.cs", "CSharp SomeClass`2.cs")]
         public void FixesLegacyTypeParameterLists_SomeInvalidsAreHardcodedRestGetsIgnored(string legacy,
             string corrected)
         {
@@ -209,12 +209,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             var prefixes = new[] {"0P", "CSharp.PropertyName"};
             foreach (var prefix in prefixes)
             {
-                cases.Add(new[] {prefix, "[?] [?].P", "set get [?] [?].P"});
-                cases.Add(new[] {prefix, " [?] [?].P", "set get [?] [?].P"});
-                cases.Add(new[] {prefix, "  [?] [?].P", "set get [?] [?].P"});
-                cases.Add(new[] {prefix, "static [?] [?].P", "set get static [?] [?].P"});
-                cases.Add(new[] {prefix, " static [?] [?].P", "set get static [?] [?].P"});
-                cases.Add(new[] {prefix, "  static  [?] [?].P", "set get static [?] [?].P"});
+                cases.Add(new[] {prefix, "[?] [?].P", "set get [?] [?].P()"});
+                cases.Add(new[] {prefix, " [?] [?].P", "set get [?] [?].P()"});
+                cases.Add(new[] {prefix, "  [?] [?].P", "set get [?] [?].P()"});
+                cases.Add(new[] {prefix, "static [?] [?].P", "set get static [?] [?].P()"});
+                cases.Add(new[] {prefix, " static [?] [?].P", "set get static [?] [?].P()"});
+                cases.Add(new[] {prefix, "  static  [?] [?].P", "set get static [?] [?].P()"});
             }
 
             return cases;
@@ -226,21 +226,26 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.AreEqual(corrected, id.FixIdentifiers(prefix));
         }
 
-        public static IEnumerable<string> ValidIdSource()
+        public static IEnumerable<string[]> ValidIdSource()
         {
-            var ids = new List<string>();
+            var ids = new List<string[]>();
             var delTypeId = "d:[TR] [C`10[[T1]], P].()";
             // not valid, but counts as a minimal example
-            ids.Add("[{0}] [{0}]..ctor()".FormatEx(delTypeId));
-            ids.Add("N.C`10[[T]],P");
+            ids.Add(new[] {"[{0}] [{0}]..ctor()".FormatEx(delTypeId), "0M"});
+            ids.Add(new[] {"N.C`10[[T]],P", "0T"});
+            ids.Add(new[] {"getdatetime.Program, getdatetime", "0T"});
+            ids.Add(new[] {"[?] [?].???", "0P"});
+            ids.Add(new[] {"[?] [?].???", "0F"});
+            ids.Add(new[] {"[?] [?].???", "0E"});
+            ids.Add(new[] {"[?] [?].???()", "0M"});
             return ids;
         }
 
         [TestCaseSource("ValidIdSource")]
-        public void FixDoesNotBreakValidIds(string id)
+        public void FixDoesNotBreakValidIds(string id, string prefix)
         {
-            var corrected = id.FixIdentifiers();
-            Assert.AreEqual(id, corrected);
+            Assert.AreEqual(id, id.FixIdentifiers());
+            Assert.AreEqual(id, id.FixIdentifiers(prefix));
         }
 
 
@@ -306,6 +311,35 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
         public void ShouldFixManualParameterLists(string id, string corrected)
         {
             Assert.AreEqual(corrected, id.FixIdentifiers());
+        }
+
+        public static IEnumerable<string[]> BrokenFixesSource()
+        {
+            var cases = Sets.NewHashSet<string[]>();
+
+            var delTypeId =
+                "d:[TResult] [System.Func`10[[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8],[T9],[TResult]], System.Core, 4.0.0.0].([T1] arg1, [T2] arg2, [T3] arg3, [T4] arg4, [T5] arg5, [T6] arg6, [T7] arg7, [T8] arg8, [T9] arg9))";
+            cases.Add(
+                new[]
+                {
+                    "0M",
+                    "[d:[TResult] [System.Func`10[[T9]][[TResult],[System.Func`10[[T9]][[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8],[T9],[TResult]], System.Core, 4.0.0.0],[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8]][[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8],[T9],[TResult]], System.Core, 4.0.0.0].([T1] arg1, [T2] arg2, [T3] arg3, [T4] arg4, [T5] arg5, [T6] arg6, [T7] arg7, [T8] arg8, [T9] arg9)] ..ctor()",
+                    "[{0}] [{0}]..ctor()".FormatEx(delTypeId)
+                });
+            cases.Add(
+                new[]
+                {
+                    "0M",
+                    "[s:System.Collections.Generic.List`1[][[[T -> T]]]+Enumerator, mscorlib, 4.0.0.0] .GetEnumerator()",
+                    "[s:System.Collections.Generic.List`1[[T -> T]]+Enumerator, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> T]], mscorlib, 4.0.0.0].GetEnumerator()"
+                });
+            return cases;
+        }
+
+        [TestCaseSource("BrokenFixesSource")]
+        public void ShouldFixBrokenFixes(string prefix, string id, string expected)
+        {
+            Assert.AreEqual(expected, id.FixIdentifiers(prefix));
         }
     }
 }

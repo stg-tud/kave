@@ -32,10 +32,48 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         /// <summary>
         ///     repairs legacy formats in the serialized form (i.e., incl. the prefix)
         /// </summary>
-        public static string FixIdentifiers([NotNull] this string id, [NotNull] string prefix)
+        public static string FixIdentifiers([NotNull] this string id, [CanBeNull] string prefix = null)
         {
-            return id.FixSerializedNames_PropertiesWithoutSetterAndGetter(prefix);
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                id =
+                    id.FixSerializedNames_BrokenFixes(prefix)
+                      .FixSerializedNames_PropertiesWithoutSetterAndGetter(prefix);
+            }
+            return id.FixGeneralIdentifiers();
         }
+
+
+        // unfortunately, name fixing was broken at some point... this is fixed here for one common case
+        [NotNull]
+        private static string FixSerializedNames_BrokenFixes([NotNull] this string id,
+            [NotNull] string prefix)
+        {
+            if (!"0M".Equals(prefix))
+            {
+                return id;
+            }
+
+            const string fail =
+                "[d:[TResult] [System.Func`10[[T9]][[TResult],[System.Func`10[[T9]][[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8],[T9],[TResult]], System.Core, 4.0.0.0],[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8]][[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8],[T9],[TResult]], System.Core, 4.0.0.0].([T1] arg1, [T2] arg2, [T3] arg3, [T4] arg4, [T5] arg5, [T6] arg6, [T7] arg7, [T8] arg8, [T9] arg9)] ..ctor()";
+
+            if (fail.Equals(id))
+            {
+                const string delTypeId =
+                    "d:[TResult] [System.Func`10[[T1],[T2],[T3],[T4],[T5],[T6],[T7],[T8],[T9],[TResult]], System.Core, 4.0.0.0].([T1] arg1, [T2] arg2, [T3] arg3, [T4] arg4, [T5] arg5, [T6] arg6, [T7] arg7, [T8] arg8, [T9] arg9))";
+                return "[{0}] [{0}]..ctor()".FormatEx(delTypeId);
+            }
+
+            const string fail2 =
+                "[s:System.Collections.Generic.List`1[][[[T -> T]]]+Enumerator, mscorlib, 4.0.0.0] .GetEnumerator()";
+            if (fail2.Equals(id))
+            {
+                return
+                    "[s:System.Collections.Generic.List`1[[T -> T]]+Enumerator, mscorlib, 4.0.0.0] [System.Collections.Generic.List`1[[T -> T]], mscorlib, 4.0.0.0].GetEnumerator()";
+            }
+            return id;
+        }
+
 
         private static readonly Regex NoSetterAndGetterMatcher = new Regex("^\\s*(static)?\\s*\\[");
 
@@ -47,6 +85,12 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             {
                 return id;
             }
+
+            if ("[?] [?].???".Equals(id))
+            {
+                return id;
+            }
+
             var match = NoSetterAndGetterMatcher.Match(id);
             if (!match.Success)
             {
@@ -62,7 +106,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
         /// <summary>
         ///     repairs legacy formats in arbitrary strings
         /// </summary>
-        public static string FixIdentifiers([NotNull] this string id)
+        public static string FixGeneralIdentifiers([NotNull] this string id)
         {
             return
                 id.FixPredefinedTypes().FixLegacyNullable()
@@ -72,7 +116,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                   .FixJaggedArrays().FixMissingParenthesisForProperties();
         }
 
-        private static readonly Regex MissingParenthesisMatcher = new Regex("^(get|set).*[^)]$");
+        private static readonly Regex MissingParenthesisMatcher = new Regex("^(get|set) .*[^)]$");
 
         [NotNull]
         private static string FixMissingParenthesisForProperties([NotNull] this string id)
