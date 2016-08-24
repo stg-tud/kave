@@ -122,6 +122,7 @@
     <Compile Include="Model\Naming\JavaNamingTestGenerator.cs" />
     <Compile Include="Model\Naming\TypeNamePropertyDebuggerTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\NamesV1Test.cs" />
+    <Compile Include="Utils\CultureUtilsTest.cs" />
     <Compile Include="Utils\Naming\AnonymousNameUtilsTest.cs" />
     <Compile Include="Utils\Naming\NameSerializationTest.cs" />
     <Compile Include="Model\Naming\NamesTest.cs" />
