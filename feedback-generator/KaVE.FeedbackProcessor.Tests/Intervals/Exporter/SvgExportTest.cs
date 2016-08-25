@@ -54,6 +54,18 @@ namespace KaVE.FeedbackProcessor.Tests.Intervals.Exporter
         }
 
         [Test]
+        public void LongMiniSession()
+        {
+            _input.Add(
+                new VisualStudioOpenedInterval
+                {
+                    StartTime = Date(0),
+                    Duration = Dur(250)
+                });
+            Render();
+        }
+
+        [Test]
         public void IdeActive()
         {
             _input.Add(

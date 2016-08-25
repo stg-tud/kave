@@ -51,9 +51,21 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
                         foreach (var testMethod in testClass)
                         {
+                            // TODO untested
+                            if (testMethod.StartTime.HasValue && @event.TriggeredAt.HasValue)
+                            {
+                                var delta =
+                                    Math.Round((@event.TriggeredAt.Value - testMethod.StartTime.Value).TotalHours);
+
+                                var now = DateTime.Now;
+                                var detltaTs = now.AddHours(delta) - now;
+                                testMethod.StartTime = testMethod.StartTime.Value + detltaTs;
+                            }
                             var testMethodResult = new TestRunInterval.TestMethodResult
                             {
                                 TestMethodName = testMethod.TestMethod.Name + testMethod.Parameters,
+                                // TODO untested
+                                StartedAt = testMethod.StartTime,
                                 Duration = testMethod.Duration,
                                 Result = testMethod.Result
                             };

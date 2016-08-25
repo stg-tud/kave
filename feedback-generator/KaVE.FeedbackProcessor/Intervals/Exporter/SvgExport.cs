@@ -27,7 +27,7 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
     public class SvgExport
     {
         private const int LabelWidth = 170;
-        private const int BarWidth = 1000;
+        private const int BarWidth = 1200;
         private const int MaxWidth = LabelWidth + BarWidth;
         private const int MaxHeight = 500;
 
@@ -135,13 +135,16 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
                     {
                         var tCoords = GetCoords(lastClassEnd, lastClassEnd + tc.Duration);
                         lastClassEnd += tc.Duration;
-                        AddLine(tcRow, tCoords, GetTestColor(tc.Result), 5);
+                        //AddLine(tcRow, tCoords, GetTestColor(tc.Result), 5);
 
                         foreach (var tm in tc.TestMethods)
                         {
-                            var mCoords = GetCoords(lastMethodEnd, lastMethodEnd + tm.Duration);
-                            lastMethodEnd += tm.Duration;
-                            AddLine(mRow, mCoords, GetTestColor(tm.Result), 5);
+                            // this only works because it is either all or none
+                            if (tm.StartedAt.HasValue)
+                            {
+                                var mCoords = GetCoords(tm.StartedAt.Value, tm.StartedAt.Value + tm.Duration);
+                                AddLine(mRow, mCoords, GetTestColor(tm.Result), 5);
+                            }
                         }
                     }
                 }
@@ -158,24 +161,31 @@ namespace KaVE.FeedbackProcessor.Intervals.Exporter
 
         private void AddTimeMarker()
         {
-            var delta = TimeSpan.FromSeconds(1);
-            for (var t = earliest; t < latest; t = t + delta)
+            var tickDelta = TimeSpan.FromSeconds(1);
+            var seconds = (latest - earliest).TotalSeconds;
+            var labelDelta = (int) Math.Floor(seconds/110) + 1;
+
+            var num = 0;
+            for (var t = earliest; t < latest; t = t + tickDelta)
             {
                 var c = GetCoords(t, t);
                 var lx = c.Start;
                 var ly = 37;
-                _doc.Nodes.Add(
-                    new SvgText
-                    {
-                        X = {lx},
-                        Y = {ly},
-                        Transforms =
+                if (num++%labelDelta == 0)
+                {
+                    _doc.Nodes.Add(
+                        new SvgText
                         {
-                            new SvgRotate(270, lx, ly - 3)
-                        },
-                        FontSize = 8,
-                        Nodes = {new SvgContentNode {Content = t.ToString("HH:mm:ss")}}
-                    });
+                            X = {lx},
+                            Y = {ly},
+                            Transforms =
+                            {
+                                new SvgRotate(270, lx, ly - 3)
+                            },
+                            FontSize = 8,
+                            Nodes = {new SvgContentNode {Content = t.ToString("HH:mm:ss")}}
+                        });
+                }
                 _doc.Nodes.Add(
                     new SvgLine
                     {

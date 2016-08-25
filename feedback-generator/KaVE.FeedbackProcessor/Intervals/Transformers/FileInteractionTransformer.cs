@@ -43,6 +43,11 @@ namespace KaVE.FeedbackProcessor.Intervals.Transformers
 
         public void ProcessEvent(IDEEvent e)
         {
+            if (!e.TerminatedAt.HasValue || e is EditEvent)
+            {
+                e.TerminatedAt = e.TriggeredAt;
+            }
+
             if (e.ActiveDocument == null || !e.TerminatedAt.HasValue || !e.TriggeredAt.HasValue ||
                 e.TerminatedAt.GetValueOrDefault() < _referenceTime)
             {
