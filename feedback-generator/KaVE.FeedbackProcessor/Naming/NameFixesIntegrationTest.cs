@@ -30,20 +30,28 @@ using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.FeedbackProcessor.Naming
 {
-    // thsi test serves as a debugger to find valid ids that are broken by the fixes
+    // this app serves as a debugger to find valid ids that are broken by the fixes.
+    // It searches for cases for which "id != fix(id)", which should not be the case for any context
     public class NameFixesIntegrationTest
     {
-        private const string DirContexts = @"E:\Contexts\";
-        private const string DirLogs = @"C:\Users\seb2\Desktop\NameFixesIntegrationTest.txt";
+        private readonly int _numWorkers;
+        private readonly string _dirContexts;
 
         private ConcurrentBag<string> _zips;
+
+        public NameFixesIntegrationTest(int numWorkers, string dirContexts)
+        {
+            _numWorkers = numWorkers;
+            _dirContexts = dirContexts;
+        }
 
         public void TryToNameFixSomeNamesFromContexts()
         {
             var zips = FindZips();
             _zips = new ConcurrentBag<string>(zips);
 
-            var tasks = new Task[2];
+
+            var tasks = new Task[_numWorkers];
             for (var i = 0; i < tasks.Length; i ++)
             {
                 var taskId = i;
@@ -52,9 +60,9 @@ namespace KaVE.FeedbackProcessor.Naming
             Task.WaitAll(tasks);
         }
 
-        private static IEnumerable<string> FindZips()
+        private IEnumerable<string> FindZips()
         {
-            return Directory.EnumerateFiles(DirContexts, "*.zip", SearchOption.AllDirectories);
+            return Directory.EnumerateFiles(_dirContexts, "*.zip", SearchOption.AllDirectories);
         }
 
         private void Run(int taskId)

@@ -16,16 +16,18 @@
 
 using System;
 using System.IO;
+using System.Threading;
+using KaVE.FeedbackProcessor.Naming;
 using KaVE.FeedbackProcessor.Preprocessing;
 
 namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackProcessorApp
     {
-        private const int NumWorkers = 8;
+        private const int NumWorkers = 2;
 
-        private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
-        //private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
+        //private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
+        private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
 
         private const string DirTmp = Root + @"Tmp\";
 
@@ -35,52 +37,41 @@ namespace KaVE.FeedbackProcessor
         private const string WdFolder = Root + @"watchdog\";
         private const string SvgFolder = Root + @"svg\";
 
+        private const string DirContexts = @"E:\Contexts\";
+
         public static void Main()
         {
             var startedAt = DateTime.Now;
             Console.WriteLine(@"started at: {0}", startedAt);
+
+            CleanDirs(DirTmp, DirEventsOut, WdFolder, SvgFolder);
+
             //new SanityCheckApp().Run();
-
-
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
-
-            //var events = new EventStreamFilter(
-            //    e =>
-            //    {
-            //        var se = e as SolutionEvent;
-            //        return se != null && se.Action == SolutionEvent.SolutionAction.OpenSolution &&
-            //               string.IsNullOrWhiteSpace(se.Target.Identifier);
-            //    })
-            //    .Filter("C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip").ToList();
-
-            //new NameFixesIntegrationTest().TryToNameFixSomeNamesFromContexts();
-
-            CleanDirs(DirTmp, DirEventsOut);
-            new PreprocessingRunner(DirEventsIn, DirTmp, DirEventsOut, NumWorkers).Run();
-
-            //var folder = "C:/Users/Andreas/Desktop/OSS-Events/test";
-            //var file = "C:/Users/Andreas/Desktop/OSS-Events/target/be8f9fdb-d75e-4ec1-8b54-7b57bd47706a.zip";
-            //var file = "C:/Users/Andreas/Desktop/testrunevents.zip";
-
-            //RunWatchdogDebugging();
-
-            //var intervals = new IntervalTransformer(Logger).TransformFolder(cleanedFolder).ToList();
-            //Logger.Info(@"Found {0} intervals. Now transforming to Watchdog format ...", intervals.Count);
-            //WatchdogExporter.Convert(intervals).WriteToFiles(wdFolder);
-
+            //RunExhaustiveNamesFixTests();
+            RunPreprocessing();
+            RunWatchdogDebugging();
 
             var endedAt = DateTime.Now;
-            Console.WriteLine(@"ended at: " + endedAt);
-            Console.WriteLine(@"took:     " + (endedAt - startedAt));
+            Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
             Console.ReadKey();
+        }
+
+        private static void RunExhaustiveNamesFixTests()
+        {
+            new NameFixesIntegrationTest(NumWorkers, DirContexts).TryToNameFixSomeNamesFromContexts();
+        }
+
+        private static void RunPreprocessing()
+        {
+            new PreprocessingRunner(DirEventsIn, DirTmp, DirEventsOut, NumWorkers).Run();
         }
 
         private static void RunWatchdogDebugging()
         {
-            new WatchdogExportRunner().RunWatchdogDebugging(DirEventsIn, WdFolder, SvgFolder);
+            new WatchdogExportRunner().RunWatchdogDebugging(DirEventsOut, WdFolder, SvgFolder);
         }
-
 
         private static void CleanDirs(params string[] dirs)
         {
@@ -90,6 +81,10 @@ namespace KaVE.FeedbackProcessor
                 if (Directory.Exists(dir))
                 {
                     Directory.Delete(dir, true);
+                    while (Directory.Exists(dir))
+                    {
+                        Thread.Sleep(250);
+                    }
                 }
                 Directory.CreateDirectory(dir);
             }
