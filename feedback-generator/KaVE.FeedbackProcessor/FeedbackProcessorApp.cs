@@ -19,6 +19,7 @@ using System.IO;
 using System.Threading;
 using KaVE.FeedbackProcessor.Naming;
 using KaVE.FeedbackProcessor.Preprocessing;
+using KaVE.FeedbackProcessor.WatchdogExports;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -51,7 +52,7 @@ namespace KaVE.FeedbackProcessor
             //new SSTSequenceExtractor(Logger).Run();
             //RunExhaustiveNamesFixTests();
             RunPreprocessing();
-            RunWatchdogDebugging();
+            RunWatchdogExport();
 
             var endedAt = DateTime.Now;
             Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
@@ -68,9 +69,9 @@ namespace KaVE.FeedbackProcessor
             new PreprocessingRunner(DirEventsIn, DirTmp, DirEventsOut, NumWorkers).Run();
         }
 
-        private static void RunWatchdogDebugging()
+        private static void RunWatchdogExport()
         {
-            new WatchdogExportRunner().RunWatchdogDebugging(DirEventsOut, WdFolder, SvgFolder);
+            new WatchdogExportRunner(DirEventsOut, WdFolder, SvgFolder).RunWatchdogDebugging();
         }
 
         private static void CleanDirs(params string[] dirs)
