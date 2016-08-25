@@ -20,7 +20,6 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    [TestFixture]
     internal class BuildEventSerializationTest
     {
         [Test]
@@ -39,7 +38,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
                         Project = "SomeProject",
                         ProjectConfiguration = "SomeConfiguration",
                         SolutionConfiguration = "SomeOtherConfiguration",
-                        StartedAt = new System.DateTime(2014, 01, 01, 13, 45, 54),
+                        StartedAt = new DateTime(2014, 01, 01, 13, 45, 54),
                         Successful = true
                     }
                 }

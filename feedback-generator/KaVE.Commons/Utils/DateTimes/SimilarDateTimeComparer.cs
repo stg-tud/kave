@@ -15,14 +15,28 @@
  */
 
 using System;
+using System.Collections.Generic;
 
-namespace KaVE.Commons.Utils.DateTime
+namespace KaVE.Commons.Utils.DateTimes
 {
-    public static class DateTimeEx
+    public class SimilarDateTimeComparer : IComparer<DateTime>
     {
-        public static TimeSpan Times(this TimeSpan span, double factor)
+        private readonly int _diffMillis;
+
+        public SimilarDateTimeComparer(int diffMillis)
         {
-            return TimeSpan.FromTicks((long) (factor*span.Ticks));
+            _diffMillis = diffMillis;
+        }
+
+        public int Compare(DateTime x, DateTime y)
+        {
+            var diff = Math.Abs((x - y).TotalMilliseconds);
+            return (diff <= _diffMillis) ? 0 : x.CompareTo(y);
+        }
+
+        public bool Equal(DateTime x, DateTime y)
+        {
+            return Compare(x, y) == 0;
         }
     }
 }

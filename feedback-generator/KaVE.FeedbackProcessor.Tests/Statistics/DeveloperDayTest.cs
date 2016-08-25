@@ -16,15 +16,14 @@
 
 using System;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.Utils.DateTime;
+using KaVE.Commons.Utils.DateTimes;
 using KaVE.FeedbackProcessor.Statistics;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
 {
-    [TestFixture]
-    class DeveloperDayTest
+    internal class DeveloperDayTest
     {
         private EventsPerDeveloperDayStatisticCalculator.DeveloperDay _uut;
         private static readonly TimeSpan BreakThreshold = TimeSpan.FromMinutes(5);
@@ -99,8 +98,10 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt));
             _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
-            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
-            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
+            _uut.AddEvent(
+                TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
+            _uut.AddEvent(
+                TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
 
             Assert.AreEqual(2, _uut.NumberOfBreaks);
         }
@@ -112,8 +113,10 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt));
             _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
-            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
-            _uut.AddEvent(TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
+            _uut.AddEvent(
+                TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
+            _uut.AddEvent(
+                TestEventFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
 
             var breaks = new[] {TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(14)};
 

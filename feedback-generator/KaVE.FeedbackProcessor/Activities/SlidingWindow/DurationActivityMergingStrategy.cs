@@ -16,7 +16,7 @@
 
 using System;
 using System.Linq;
-using KaVE.Commons.Utils.DateTime;
+using KaVE.Commons.Utils.DateTimes;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
@@ -47,7 +47,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private static TimeSpan GetMinimalDuration(Window window)
         {
-            var relativeMinimum = window.Span.Times(1.0 / window.Events.Count);
+            var relativeMinimum = window.Span.Times(1.0/window.Events.Count);
             return relativeMinimum < MinimalActivityDuration ? relativeMinimum : MinimalActivityDuration;
         }
     }

@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.DateTime;
+using KaVE.Commons.Utils.DateTimes;
 using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
             "TextControl.Down.Selection",
             "TextControl.Left.Selection",
             "TextControl.Right.Selection"
-        }; 
+        };
 
         public static bool AreConcurrent(IDEEvent evt1, IDEEvent evt2)
         {

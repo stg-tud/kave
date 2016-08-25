@@ -13,29 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Collections.Generic;
 
-namespace KaVE.Commons.Utils.DateTime
+namespace KaVE.Commons.Utils.DateTimes
 {
-    public class SimilarDateTimeComparer : IComparer<System.DateTime>
+    public static class DateTimeEx
     {
-        private readonly int _diffMillis;
-
-        public SimilarDateTimeComparer(int diffMillis)
+        public static TimeSpan Times(this TimeSpan span, double factor)
         {
-            _diffMillis = diffMillis;
-        }
-
-        public int Compare(System.DateTime x, System.DateTime y)
-        {
-            var diff = Math.Abs((x - y).TotalMilliseconds);
-            return (diff <= _diffMillis) ? 0 : x.CompareTo(y);
-        }
-
-        public bool Equal(System.DateTime x, System.DateTime y)
-        {
-            return Compare(x, y) == 0;
+            return TimeSpan.FromTicks((long) (factor*span.Ticks));
         }
     }
 }

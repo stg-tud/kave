@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.Utils.DateTime;
+using KaVE.Commons.Utils.DateTimes;
 using KaVE.VS.FeedbackGenerator.Settings;
 using NUnit.Framework;
 

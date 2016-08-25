@@ -158,7 +158,7 @@
     <Compile Include="Utils\Csv\CsvBuilder.cs" />
     <Compile Include="Utils\Csv\CsvBuilderEx.cs" />
     <Compile Include="Utils\Csv\CsvTable.cs" />
-    <Compile Include="Utils\DateTime\DateTimeEx.cs" />
+    <Compile Include="Utils\DateTimes\DateTimeEx.cs" />
     <Compile Include="Utils\DateUtils.cs" />
     <Compile Include="Utils\EnumerableUtils.cs" />
     <Compile Include="Utils\Exceptions\FileLogger.cs" />
@@ -395,7 +395,7 @@
     <Compile Include="Utils\Collections\ThreadSafeDictionary.cs" />
     <Compile Include="Utils\Collections\WeakNameCache.cs" />
     <Compile Include="Utils\Concurrency\Task.cs" />
-    <Compile Include="Utils\DateTime\SimilarDateTimeComparer.cs" />
+    <Compile Include="Utils\DateTimes\SimilarDateTimeComparer.cs" />
     <Compile Include="Utils\EqualityUtils.cs" />
     <Compile Include="Utils\Exceptions\ConsoleLogger.cs" />
     <Compile Include="Utils\Exceptions\Execute.cs" />

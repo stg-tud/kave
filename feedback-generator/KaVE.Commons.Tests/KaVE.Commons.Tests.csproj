@@ -123,6 +123,7 @@
     <Compile Include="Model\Naming\TypeNamePropertyDebuggerTest.cs" />
     <Compile Include="Model\Naming\Impl\v1\NamesV1Test.cs" />
     <Compile Include="Utils\CultureUtilsTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\DateTimeSerializationTest.cs" />
     <Compile Include="Utils\Naming\AnonymousNameUtilsTest.cs" />
     <Compile Include="Utils\Naming\NameSerializationTest.cs" />
     <Compile Include="Model\Naming\NamesTest.cs" />
@@ -239,7 +240,7 @@
     <Compile Include="Utils\Csv\CsvBuilderHelperTest.cs" />
     <Compile Include="Utils\Csv\CsvBuilderTest.cs" />
     <Compile Include="Utils\Csv\ReadCsvTest.cs" />
-    <Compile Include="Utils\DateTime\SimilarDateTimeComparerTest.cs" />
+    <Compile Include="Utils\DateTimes\SimilarDateTimeComparerTest.cs" />
     <Compile Include="Utils\EnumerableUtilsTest.cs" />
     <Compile Include="Utils\EqualityUtilsTest.cs" />
     <Compile Include="Utils\Events\EventHandlingTest.cs" />

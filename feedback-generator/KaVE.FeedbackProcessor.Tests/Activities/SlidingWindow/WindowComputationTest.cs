@@ -16,7 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-using KaVE.Commons.Utils.DateTime;
+using KaVE.Commons.Utils.DateTimes;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Model;
@@ -232,7 +232,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var event2P3 = SomeEvent(_someDateTime + WindowSpan + WindowSpan, WindowSpan);
             var parallelEventP1 = SomeEvent(parallelEvent.GetTriggeredAt(), WindowSpan.Times(0.3));
             var parallelEventP2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan.Times(0.3));
-            AssertWindows(WindowFrom(event1, event2P1, parallelEventP1), WindowFrom(event2P2, parallelEventP2), WindowFrom(event2P3));
+            AssertWindows(
+                WindowFrom(event1, event2P1, parallelEventP1),
+                WindowFrom(event2P2, parallelEventP2),
+                WindowFrom(event2P3));
         }
 
         [Test]
@@ -278,7 +281,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 
         private static ActivityEvent SomeEvent(DateTime triggeredAt, TimeSpan duration)
         {
-            return new ActivityEvent { TriggeredAt = triggeredAt, Duration = duration };
+            return new ActivityEvent {TriggeredAt = triggeredAt, Duration = duration};
         }
 
         private static Window EmptyWindow(DateTime windowStart)

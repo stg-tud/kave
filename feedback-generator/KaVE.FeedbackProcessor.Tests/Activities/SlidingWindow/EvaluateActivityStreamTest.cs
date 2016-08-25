@@ -15,14 +15,13 @@
  */
 
 using System;
-using KaVE.Commons.Utils.DateTime;
+using KaVE.Commons.Utils.DateTimes;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 {
-    [TestFixture]
     internal class EvaluateActivityStreamTest
     {
         private static readonly TimeSpan WindowSpan = TimeSpan.FromSeconds(2);
@@ -51,7 +50,12 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test(Description = "A Inactive window can only occur in between other windows (see WindowComputationTest)")]
         public void CountsLongInactiveIfInactivePeriodExceedsThreshold()
         {
-            var uut = Stream(Activity.Any, Activity.Inactive, Activity.Inactive, Activity.Inactive, Activity.Development);
+            var uut = Stream(
+                Activity.Any,
+                Activity.Inactive,
+                Activity.Inactive,
+                Activity.Inactive,
+                Activity.Development);
 
             var statistic = uut.Evaluate(TimeSpan.Zero, WindowSpan.Times(2));
 
@@ -64,7 +68,12 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void CountsInactiveIfIndividualPeriodsAreShorterThanThreshold()
         {
-            var uut = Stream(Activity.Inactive, Activity.Inactive, Activity.Development, Activity.Inactive, Activity.Inactive);
+            var uut = Stream(
+                Activity.Inactive,
+                Activity.Inactive,
+                Activity.Development,
+                Activity.Inactive,
+                Activity.Inactive);
 
             var statistic = uut.Evaluate(TimeSpan.Zero, WindowSpan.Times(3));
 
