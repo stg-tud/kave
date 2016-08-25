@@ -169,7 +169,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                 var singleTestResult = new TestCaseResult
                 {
                     TestMethod = methodName,
-                    StartTime = result.Value.StartTime,
+                    StartTime = TimeZone.CurrentTimeZone.ToLocalTime(result.Value.StartTime), // R# bug, time is utc
                     Duration = result.Value.Duration,
                     Parameters = GetParameterSubstringFromShortName(result.Key.ShortName),
                     Result = TranslateStatus(result.Value.Status)
