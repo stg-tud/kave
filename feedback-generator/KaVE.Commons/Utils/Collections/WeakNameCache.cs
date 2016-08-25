@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Naming;
@@ -53,10 +54,7 @@ namespace KaVE.Commons.Utils.Collections
                 if (_cache.ContainsKey(identifier))
                 {
                     var weakRef = _cache[identifier];
-                    if (weakRef.IsAlive())
-                    {
-                        name = weakRef.Target;
-                    }
+                    weakRef.TryGetTarget(out name);
                 }
 
                 if (name == null)
@@ -84,7 +82,8 @@ namespace KaVE.Commons.Utils.Collections
             // .ToList is necessary to prevent concurrent modification
             foreach (var k in _cache.Keys.ToList())
             {
-                if (!_cache[k].IsAlive())
+                TName name;
+                if (!_cache[k].TryGetTarget(out name))
                 {
                     _cache.Remove(k);
                 }

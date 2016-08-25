@@ -36,7 +36,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
     internal class VsWindowButtonClickEventGenerator : EventGeneratorBase
     {
-        private static readonly ISet<WeakReference<Button>> ButtonRegistry = new HashSet<WeakReference<Button>>();
+        private static readonly ISet<WeakReference<Button>> ButtonRegistry =
+            new HashSet<WeakReference<Button>>();
 
         private readonly object _frame;
         private FrameworkElement _frameContent;
