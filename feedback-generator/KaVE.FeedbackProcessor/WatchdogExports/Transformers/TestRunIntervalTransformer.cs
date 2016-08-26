@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.WatchdogExports.Model;
 
 namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
@@ -36,6 +37,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
 
         public void ProcessEvent(IDEEvent @event)
         {
+            Asserts.That(@event.TriggeredAt.HasValue);
+
             var testRunEvent = @event as TestRunEvent;
             if (testRunEvent != null)
             {
@@ -49,10 +52,13 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
                     {
                         var testClassResult = new TestRunInterval.TestClassResult {TestClassName = testClass.Key};
 
+                        var firstStarted = DateTime.MaxValue;
+                        var lastEnded = DateTime.MinValue;
+
                         foreach (var testMethod in testClass)
                         {
-                            // TODO untested
-                            if (testMethod.StartTime.HasValue && @event.TriggeredAt.HasValue)
+                            // TODO untested (
+                            if (testMethod.StartTime.HasValue)
                             {
                                 var delta =
                                     Math.Round((@event.TriggeredAt.Value - testMethod.StartTime.Value).TotalHours);
@@ -61,18 +67,29 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
                                 var detltaTs = now.AddHours(delta) - now;
                                 testMethod.StartTime = testMethod.StartTime.Value + detltaTs;
                             }
+                            var startedAt = testMethod.StartTime ?? @event.TriggeredAt.Value;
+                            var endedAt = startedAt + testMethod.Duration;
+
+                            if (startedAt < firstStarted)
+                            {
+                                firstStarted = startedAt;
+                            }
+                            if (endedAt > lastEnded)
+                            {
+                                lastEnded = endedAt;
+                            }
+                            // )
+
                             var testMethodResult = new TestRunInterval.TestMethodResult
                             {
                                 TestMethodName = testMethod.TestMethod.Name + testMethod.Parameters,
                                 // TODO untested
-                                StartedAt = testMethod.StartTime,
+                                StartedAt = startedAt,
                                 Duration = testMethod.Duration,
                                 Result = testMethod.Result
                             };
 
                             testClassResult.TestMethods.Add(testMethodResult);
-
-                            testClassResult.Duration += testMethod.Duration;
 
                             testClassResult.Result = UpdateCumulativeTestResult(
                                 testClassResult.Result,
@@ -82,7 +99,10 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
                                 testClassResult.Result,
                                 testMethod.Result);
                         }
-
+                        // untested (
+                        testClassResult.StartedAt = firstStarted;
+                        testClassResult.Duration = lastEnded - firstStarted;
+                        // )
                         interval.TestClasses.Add(testClassResult);
 
                         interval.Duration += testClassResult.Duration;

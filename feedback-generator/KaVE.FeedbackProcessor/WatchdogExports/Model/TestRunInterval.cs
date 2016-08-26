@@ -26,7 +26,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Model
         {
             public string TestClassName { get; set; }
             // TODO untested (and not part of hc/eq)
-            public DateTime? StartedAt { get; set; }
+            public DateTime StartedAt { get; set; }
+
             public TimeSpan Duration { get; set; }
             public TestResult Result { get; set; }
             public IKaVEList<TestMethodResult> TestMethods { get; set; }
@@ -75,7 +76,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Model
         {
             public string TestMethodName { get; set; }
             // TODO untested (and not part of hc/eq)
-            public DateTime? StartedAt { get; set; }
+            public DateTime StartedAt { get; set; }
+
             public TimeSpan Duration { get; set; }
             public TestResult Result { get; set; }
 
