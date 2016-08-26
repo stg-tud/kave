@@ -99,6 +99,58 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
             CollectionAssert.AreEqual(expecteds, actuals);
         }
 
+        [Test]
+        public void FiltersDuplicateCommandWithTheSameIdThatHappenAtTheSameTime_1()
+        {
+            var actuals =
+                _sut.FixAndFilter(
+                    new[]
+                    {
+                        new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(2), CommandId = "a:b:id1"},
+                        new CommandEvent {TriggeredAt = Date(1), CommandId = "c:d:id1"}
+                    });
+            var expecteds = new[]
+            {
+                new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(2), CommandId = "a:b:id1"}
+            };
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
+        public void FiltersDuplicateCommandWithTheSameIdThatHappenAtTheSameTime_2()
+        {
+            var actuals =
+                _sut.FixAndFilter(
+                    new IDEEvent[]
+                    {
+                        new CommandEvent {TriggeredAt = Date(1), CommandId = "c:d:id1"},
+                        new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(2), CommandId = "a:b:id1"}
+                    });
+            var expecteds = new[]
+            {
+                new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(2), CommandId = "a:b:id1"}
+            };
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
+        public void DoesNotFiltersDuplicateCommandWithTheSameIdIfTimeChagnes()
+        {
+            var actuals =
+                _sut.FixAndFilter(
+                    new[]
+                    {
+                        new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(3), CommandId = "a:b:id1"},
+                        new CommandEvent {TriggeredAt = Date(2), TerminatedAt = Date(3), CommandId = "a:b:id1"}
+                    });
+            var expecteds = new[]
+            {
+                new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(3), CommandId = "a:b:id1"},
+                new CommandEvent {TriggeredAt = Date(2), TerminatedAt = Date(3), CommandId = "a:b:id1"}
+            };
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
         private DateTime Date(int i)
         {
             return DateTime.MinValue.AddSeconds(i);

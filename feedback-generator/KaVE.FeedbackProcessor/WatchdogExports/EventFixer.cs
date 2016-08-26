@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.WatchdogExports
 {
@@ -30,33 +32,127 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
     {
         public IEnumerable<IDEEvent> FixAndFilter(IEnumerable<IDEEvent> events)
         {
-            foreach (var e in events)
+            IDEEvent cur;
+            IDEEvent next;
+
+            using (var en = events.GetEnumerator())
             {
-                if (!e.TriggeredAt.HasValue)
+                if (!en.MoveNext())
                 {
-                    continue;
-                }
-                if (!e.TerminatedAt.HasValue || e is EditEvent)
-                {
-                    e.TerminatedAt = e.TriggeredAt;
+                    yield break;
                 }
 
-                var tre = e as TestRunEvent;
-                if (tre != null)
+                cur = en.Current;
+                while (en.MoveNext())
                 {
-                    var lastEnd = e.TriggeredAt.Value;
-                    foreach (var tr in tre.Tests)
+                    next = en.Current;
+
+                    if (IsRepeatedEvent(cur, next, out cur))
                     {
-                        if (!tr.StartTime.HasValue)
-                        {
-                            tr.StartTime = lastEnd;
-                            lastEnd += tr.Duration;
-                        }
+                        continue;
+                    }
+
+                    if (!cur.TriggeredAt.HasValue)
+                    {
+                        cur = next;
+                        continue;
+                    }
+                    Fix(cur);
+                    yield return cur;
+
+                    cur = next;
+                }
+
+                if (!cur.TriggeredAt.HasValue)
+                {
+                    yield break;
+                }
+                Fix(cur);
+                yield return cur;
+            }
+        }
+
+        private static void Fix(IDEEvent cur)
+        {
+            Asserts.That(cur.TriggeredAt.HasValue);
+            if (!cur.TerminatedAt.HasValue || cur is EditEvent)
+            {
+                cur.TerminatedAt = cur.TriggeredAt;
+            }
+
+            var tre = cur as TestRunEvent;
+            if (tre != null)
+            {
+                var lastEnd = cur.TriggeredAt.Value;
+                foreach (var tr in tre.Tests)
+                {
+                    if (!tr.StartTime.HasValue)
+                    {
+                        tr.StartTime = lastEnd;
+                        lastEnd += tr.Duration;
                     }
                 }
-
-                yield return e;
             }
+        }
+
+        private bool IsRepeatedEvent(IDEEvent cur, IDEEvent next, out IDEEvent newCur)
+        {
+            var ce1 = cur as CommandEvent;
+            var ce2 = next as CommandEvent;
+
+            var bothAreCmds = ce1 != null && ce2 != null;
+            if (!bothAreCmds)
+            {
+                newCur = cur;
+                return false;
+            }
+
+            if (!ce1.TriggeredAt.HasValue || !ce2.TriggeredAt.HasValue)
+            {
+                newCur = cur;
+                return false;
+            }
+
+            var haveSameTiming = (ce1.TriggeredAt.Value - ce2.TriggeredAt.Value).Duration() <
+                                 TimeSpan.FromMilliseconds(100);
+            if (!haveSameTiming)
+            {
+                newCur = cur;
+                return false;
+            }
+
+            var id1 = GetId(ce1);
+            var id2 = GetId(ce2);
+            var haveSameIds = id1.Equals(id2);
+            if (!haveSameIds)
+            {
+                newCur = cur;
+                return false;
+            }
+
+            if (ce1.TerminatedAt.HasValue)
+            {
+                newCur = ce1;
+                return true;
+            }
+
+            newCur = ce2;
+            return true;
+        }
+
+        private string GetId(CommandEvent ce1)
+        {
+            var cid = ce1.CommandId;
+            if (!cid.Contains(":"))
+            {
+                return cid;
+            }
+            var cid2 = cid.Substring(cid.LastIndexOf(':') + 1);
+            if (cid2.Length >= 3)
+            {
+                return cid2;
+            }
+            return cid;
         }
     }
 }
