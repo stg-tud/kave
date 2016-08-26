@@ -26,6 +26,7 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Exporter
 {
+    [Ignore]
     internal class EventStreamExportTest : FileBasedTestBase
     {
         #region setup & helpers

@@ -25,6 +25,7 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Transformers
 {
+    [Ignore]
     internal class TestRunTransformerTest : TransformerTestBase<TestRunInterval>
     {
         private static readonly IMethodName TestMethod1 =
