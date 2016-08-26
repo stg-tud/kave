@@ -46,8 +46,11 @@ namespace KaVE.FeedbackProcessor
             Console.WriteLine(@"started at: {0}", startedAt);
 
             CleanDirs(DirTmp, DirEventsOut, WdFolder, SvgFolder);
+            Console.WriteLine(@"Running with {0}bit.", Is64BitWindows() ? 64 : 32);
 
             //new SanityCheckApp().Run();
+            RunMemExample();
+
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
             //RunExhaustiveNamesFixTests();
@@ -57,6 +60,16 @@ namespace KaVE.FeedbackProcessor
             var endedAt = DateTime.Now;
             Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
             Console.ReadKey();
+        }
+
+        private static void RunMemExample()
+        {
+            var arr = new long[540000000];
+        }
+
+        private static bool Is64BitWindows()
+        {
+            return IntPtr.Size == 8;
         }
 
         private static void RunExhaustiveNamesFixTests()
