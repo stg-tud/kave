@@ -54,7 +54,7 @@ namespace KaVE.Commons.Model.Events.TestRunEvents
         private bool Equals(TestCaseResult other)
         {
             return TestMethod.Equals(other.TestMethod) && string.Equals(Parameters, other.Parameters) &&
-                   Duration.Equals(other.Duration) && Result == other.Result;
+                   StartTime.Equals(other.StartTime) && Duration.Equals(other.Duration) && Result == other.Result;
         }
 
         public override int GetHashCode()
@@ -63,6 +63,7 @@ namespace KaVE.Commons.Model.Events.TestRunEvents
             {
                 var hashCode = TestMethod.GetHashCode();
                 hashCode = (hashCode*397) ^ Parameters.GetHashCode();
+                hashCode = (hashCode*397) ^ StartTime.GetHashCode();
                 hashCode = (hashCode*397) ^ Duration.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) Result;
                 return hashCode;

@@ -24,12 +24,15 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
 {
     internal class TestCaseResultTest
     {
+        private readonly DateTime _someDateTime = DateTime.MinValue.AddSeconds(1);
+
         [Test]
         public void DefaultValues()
         {
             var sut = new TestCaseResult();
             Assert.AreEqual(Names.UnknownMethod, sut.TestMethod);
             Assert.AreEqual("", sut.Parameters);
+            Assert.False(sut.StartTime.HasValue);
             Assert.AreEqual(TimeSpan.Zero, sut.Duration);
             Assert.AreEqual(TestResult.Unknown, sut.Result);
 
@@ -44,11 +47,13 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
             {
                 TestMethod = Names.Method("[T,P] [T,P].M()"),
                 Parameters = "p",
+                StartTime = _someDateTime,
                 Duration = TimeSpan.FromSeconds(3),
                 Result = TestResult.Success
             };
             Assert.AreEqual(Names.Method("[T,P] [T,P].M()"), sut.TestMethod);
             Assert.AreEqual("p", sut.Parameters);
+            Assert.AreEqual(_someDateTime, sut.StartTime);
             Assert.AreEqual(TimeSpan.FromSeconds(3), sut.Duration);
             Assert.AreEqual(TestResult.Success, sut.Result);
         }
@@ -70,6 +75,7 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
             {
                 TestMethod = Names.Method("[T,P] [T,P].M()"),
                 Parameters = "p",
+                StartTime = _someDateTime,
                 Duration = TimeSpan.FromSeconds(3),
                 Result = TestResult.Success
             };
@@ -77,6 +83,7 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
             {
                 TestMethod = Names.Method("[T,P] [T,P].M()"),
                 Parameters = "p",
+                StartTime = _someDateTime,
                 Duration = TimeSpan.FromSeconds(3),
                 Result = TestResult.Success
             };
@@ -104,6 +111,19 @@ namespace KaVE.Commons.Tests.Model.Events.TestRunEvents
             var a = new TestCaseResult
             {
                 Parameters = "p"
+            };
+            var b = new TestCaseResult();
+
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentStartTime()
+        {
+            var a = new TestCaseResult
+            {
+                StartTime = _someDateTime
             };
             var b = new TestCaseResult();
 
