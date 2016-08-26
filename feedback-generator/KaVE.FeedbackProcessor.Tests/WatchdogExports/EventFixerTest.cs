@@ -17,6 +17,7 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.FeedbackProcessor.WatchdogExports;
 using NUnit.Framework;
 
@@ -33,18 +34,34 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
         }
 
         [Test]
-        public void ReturnsUnaffectedEventsUnchanged()
-        {
-            var actuals = _sut.FixAndFilter(new[] {new CommandEvent {TriggeredAt = DateTime.Now}});
-            var expecteds = new[] {new CommandEvent {TriggeredAt = DateTime.Now}};
-            CollectionAssert.AreEqual(expecteds, actuals);
-        }
-
-        [Test]
         public void FiltersEventsWithoutTriggeredAt()
         {
             var actuals = _sut.FixAndFilter(new[] {new CommandEvent()});
             var expecteds = new IDEEvent[0];
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
+        public void ReturnsUnaffectedEventsUnchanged()
+        {
+            var actuals = _sut.FixAndFilter(new[] {new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(2)}});
+            var expecteds = new[] {new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(2)}};
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
+        public void SetsTerminatedAtIfNotSet()
+        {
+            var actuals = _sut.FixAndFilter(new[] {new CommandEvent {TriggeredAt = Date(1)}});
+            var expecteds = new[] {new CommandEvent {TriggeredAt = Date(1), TerminatedAt = Date(1)}};
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
+        public void ResetsTerminatedAtForEditEvents()
+        {
+            var actuals = _sut.FixAndFilter(new[] {new EditEvent {TriggeredAt = Date(1), TerminatedAt = Date(123)}});
+            var expecteds = new[] {new EditEvent {TriggeredAt = Date(1), TerminatedAt = Date(1)}};
             CollectionAssert.AreEqual(expecteds, actuals);
         }
 

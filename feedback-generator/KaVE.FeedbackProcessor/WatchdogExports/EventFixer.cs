@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
 
 namespace KaVE.FeedbackProcessor.WatchdogExports
 {
@@ -34,6 +35,10 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
                 if (!e.TriggeredAt.HasValue)
                 {
                     continue;
+                }
+                if (!e.TerminatedAt.HasValue || e is EditEvent)
+                {
+                    e.TerminatedAt = e.TriggeredAt;
                 }
 
                 var tre = e as TestRunEvent;
