@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Import;
 using KaVE.FeedbackProcessor.WatchdogExports.Model;
@@ -30,10 +31,12 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
     public class IntervalTransformer
     {
         private readonly ILogger _logger;
+        private readonly IEventFixer _fixer;
 
-        public IntervalTransformer(ILogger logger)
+        public IntervalTransformer(ILogger logger, IEventFixer fixer)
         {
             _logger = logger;
+            _fixer = fixer;
         }
 
         public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
@@ -77,6 +80,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
         public IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events,
             IEventToIntervalTransformer<Interval> transformer)
         {
+            events = _fixer.FixAndFilter(events);
+
             _logger.Info(@"Transforming event stream with {0} ...", transformer.GetType().Name);
 
             var currentEventTime = DateTime.MinValue;
@@ -93,10 +98,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
                     continue;
                 }
 
-                if (e.TriggeredAt.GetValueOrDefault() < currentEventTime)
-                {
-                    throw new InvalidDataException("Event stream must be ordered by the 'TriggeredAt' property.");
-                }
+                Asserts.IsLessOrEqual(currentEventTime, e.TriggeredAt.GetValueOrDefault());
 
                 currentEventTime = e.TriggeredAt.GetValueOrDefault();
 

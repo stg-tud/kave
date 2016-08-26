@@ -47,7 +47,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             foreach (var zip in FindZips(_dirIn))
             {
                 _logger.Info(@"Opening {0} ...", zip);
-                var intervals = new IntervalTransformer(_logger).TransformFile(zip).ToList();
+                var intervals = new IntervalTransformer(_logger, new EventFixer()).TransformFile(zip).ToList();
                 _logger.Info(@"Found {0} intervals.", intervals.Count);
 
 

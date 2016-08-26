@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.WatchdogExports;
 using KaVE.FeedbackProcessor.WatchdogExports.Model;
@@ -30,6 +30,17 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
 {
     internal class IntervalTransformerTest
     {
+        private IEventFixer _fixer;
+
+        [SetUp]
+        public void Setup()
+        {
+            _fixer = Mock.Of<IEventFixer>();
+            Mock.Get(_fixer)
+                .Setup(f => f.FixAndFilter(It.IsAny<IEnumerable<IDEEvent>>()))
+                .Returns<IEnumerable<IDEEvent>>(es => es);
+        }
+
         [Test]
         public void DoesntProcessEventsWithInsufficientTimeData()
         {
@@ -43,14 +54,17 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
                 .Setup(t => t.ProcessEvent(It.IsAny<IDEEvent>()))
                 .Callback<IDEEvent>(processedEvents.Add);
 
-            new IntervalTransformer(new NullLogger()).TransformWithCustomTransformer(
+
+            new IntervalTransformer(new NullLogger(), _fixer).TransformWithCustomTransformer(
                 new[] {goodEvent, badEvent},
                 mockTransformer);
+
+            Mock.Get(_fixer).Verify(f => f.FixAndFilter(It.IsAny<IEnumerable<IDEEvent>>()));
 
             CollectionAssert.AreEqual(new[] {goodEvent}, processedEvents);
         }
 
-        [Test, ExpectedException(typeof(InvalidDataException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void FailsIfEventsAreNotOrdered()
         {
             var unorderedEvents = new[]
@@ -61,7 +75,9 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
 
             var mockTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
 
-            new IntervalTransformer(new NullLogger()).TransformWithCustomTransformer(unorderedEvents, mockTransformer);
+            new IntervalTransformer(new NullLogger(), _fixer).TransformWithCustomTransformer(
+                unorderedEvents,
+                mockTransformer);
         }
     }
 }
