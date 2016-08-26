@@ -36,6 +36,9 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
 
         private SvgDocument _doc;
 
+        private readonly int _testStrokeSize = 6;
+        private readonly int _testSpacing = 3;
+
         public void Run(IList<Interval> intervals, string fileName)
         {
             SetBoundaries(intervals);
@@ -59,6 +62,12 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
             nextRow += 15;
             rows.Add("UserActive", nextRow);
             nextRow += 15;
+
+            // tests
+            rows.Add("TestRun", nextRow);
+            rows.Add("TestRun-Class", rows["TestRun"] + _testStrokeSize + _testSpacing);
+            rows.Add("TestRun-Method", rows["TestRun-Class"] + _testStrokeSize + _testSpacing);
+            nextRow = rows["TestRun-Method"] + 15;
 
             foreach (var label in rows.Keys)
             {
@@ -118,33 +127,17 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
                 }
                 else if (tr != null)
                 {
-                    var strokeSize = 6;
-                    var spacing = 3;
+                    AddLine(rows["TestRun"], coords, GetTestColor(tr.Result), 5);
 
-                    var row = nextRow;
-                    var tcRow = row + strokeSize + spacing;
-                    var mRow = tcRow + strokeSize + spacing;
-                    nextRow = mRow + 15;
-
-                    _doc.Nodes.Add(Label(row, label));
-                    AddLine(row, coords, GetTestColor(tr.Result), 5);
-
-                    var lastClassEnd = tr.StartTime;
-                    var lastMethodEnd = tr.StartTime;
                     foreach (var tc in tr.TestClasses)
                     {
-                        var tCoords = GetCoords(lastClassEnd, lastClassEnd + tc.Duration);
-                        lastClassEnd += tc.Duration;
-                        //AddLine(tcRow, tCoords, GetTestColor(tc.Result), 5);
+                        var tCoords = GetCoords(tc.StartedAt, tc.StartedAt + tc.Duration);
+                        AddLine(rows["TestRun-Class"], tCoords, GetTestColor(tc.Result), 5);
 
                         foreach (var tm in tc.TestMethods)
                         {
-                            // this only works because it is either all or none
-                            if (tm.StartedAt.HasValue)
-                            {
-                                var mCoords = GetCoords(tm.StartedAt.Value, tm.StartedAt.Value + tm.Duration);
-                                AddLine(mRow, mCoords, GetTestColor(tm.Result), 5);
-                            }
+                            var mCoords = GetCoords(tm.StartedAt, tm.StartedAt + tm.Duration);
+                            AddLine(rows["TestRun-Method"], mCoords, GetTestColor(tm.Result), 5);
                         }
                     }
                 }

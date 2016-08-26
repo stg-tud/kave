@@ -233,34 +233,38 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Exporter
                 new UserActiveInterval
                 {
                     StartTime = Date(0),
-                    Duration = Dur(10)
+                    Duration = Dur(13)
                 });
             _input.Add(
                 new TestRunInterval
                 {
                     StartTime = Date(0),
-                    Duration = Dur(10),
+                    Duration = Dur(13),
                     Result = TestResult.Error,
                     TestClasses =
                     {
                         new TestRunInterval.TestClassResult
                         {
+                            StartedAt = Date(1),
                             Duration = Dur(6),
                             Result = TestResult.Error,
                             TestMethods =
                             {
                                 new TestRunInterval.TestMethodResult
                                 {
+                                    StartedAt = Date(1),
                                     Duration = Dur(1),
                                     Result = TestResult.Error
                                 },
                                 new TestRunInterval.TestMethodResult
                                 {
+                                    StartedAt = Date(2),
                                     Duration = Dur(2),
                                     Result = TestResult.Success
                                 },
                                 new TestRunInterval.TestMethodResult
                                 {
+                                    StartedAt = Date(4),
                                     Duration = Dur(3),
                                     Result = TestResult.Failed
                                 }
@@ -268,17 +272,20 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Exporter
                         },
                         new TestRunInterval.TestClassResult
                         {
+                            StartedAt = Date(8),
                             Duration = Dur(4),
                             Result = TestResult.Error,
                             TestMethods =
                             {
                                 new TestRunInterval.TestMethodResult
                                 {
+                                    StartedAt = Date(8),
                                     Duration = Dur(2),
                                     Result = TestResult.Ignored
                                 },
                                 new TestRunInterval.TestMethodResult
                                 {
+                                    StartedAt = Date(10),
                                     Duration = Dur(2),
                                     Result = TestResult.Unknown
                                 }
@@ -291,9 +298,29 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Exporter
                 new FileInteractionInterval
                 {
                     StartTime = Date(0),
-                    Duration = Dur(10),
+                    Duration = Dur(13),
                     Type = FileInteractionType.Reading,
                     FileName = @"a\b\c\y.cs"
+                });
+            Render();
+        }
+
+        [Test]
+        public void TestRun_AllAreMergedInOneLine()
+        {
+            _input.Add(
+                new TestRunInterval
+                {
+                    StartTime = Date(0),
+                    Duration = Dur(10),
+                    Result = TestResult.Error
+                });
+            _input.Add(
+                new TestRunInterval
+                {
+                    StartTime = Date(11),
+                    Duration = Dur(8),
+                    Result = TestResult.Success
                 });
             Render();
         }
