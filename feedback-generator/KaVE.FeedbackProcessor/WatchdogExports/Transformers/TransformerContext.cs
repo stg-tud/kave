@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.WatchdogExports.Model;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
 {
@@ -69,6 +72,22 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
         public IEnumerable<Interval> SignalEndOfEventStream()
         {
             return Enumerable.Empty<Interval>();
+        }
+
+        public void UpdateDurationForIntervalToMaximum([NotNull] Interval i, DateTime newPossibleEnd)
+        {
+            Asserts.NotNull(i);
+            var newDuration = newPossibleEnd - i.StartTime;
+            if (newDuration > i.Duration)
+            {
+                i.Duration = newDuration;
+            }
+        }
+
+        public void UpdateDurationForIntervalToThis([NotNull] Interval i, DateTime newEnforcedEnd)
+        {
+            Asserts.NotNull(i);
+            i.Duration = newEnforcedEnd - i.StartTime;
         }
     }
 }

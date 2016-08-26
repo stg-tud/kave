@@ -16,8 +16,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.WatchdogExports.Model;
 
 namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
@@ -28,6 +28,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
         private readonly TimeSpan _maxInactivityTime;
         private readonly TransformerContext _context;
 
+        private UserActiveInterval curInt;
+
         public UserActiveTransformer(TransformerContext context, TimeSpan? maxInactivityTime = null)
         {
             _intervals = new List<UserActiveInterval>();
@@ -37,18 +39,32 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
 
         public void ProcessEvent(IDEEvent e)
         {
-            var lastInterval = _intervals.LastOrDefault();
-            var currentEventStartTime = e.TriggeredAt.GetValueOrDefault();
-            var currentEventEndTime = e.TerminatedAt.GetValueOrDefault();
+            Asserts.That(e.TriggeredAt.HasValue);
+            Asserts.That(e.TerminatedAt.HasValue);
 
-            if (lastInterval != null && lastInterval.EndTime + _maxInactivityTime >= currentEventStartTime)
+            var curEnd = e.TerminatedAt.Value;
+
+            if (IsTimeout(e))
             {
-                lastInterval.Duration = currentEventEndTime - lastInterval.StartTime;
+                curInt = null;
             }
-            else
+
+            if (curInt == null)
             {
-                _intervals.Add(_context.CreateIntervalFromEvent<UserActiveInterval>(e));
+                _intervals.Add(curInt = _context.CreateIntervalFromEvent<UserActiveInterval>(e));
             }
+
+            _context.UpdateDurationForIntervalToMaximum(curInt, curEnd);
+        }
+
+        private bool IsTimeout(IIDEEvent e)
+        {
+            if (curInt == null)
+            {
+                return false;
+            }
+            Asserts.That(e.TriggeredAt.HasValue);
+            return curInt.EndTime + _maxInactivityTime < e.TriggeredAt.Value;
         }
 
         public IEnumerable<UserActiveInterval> SignalEndOfEventStream()

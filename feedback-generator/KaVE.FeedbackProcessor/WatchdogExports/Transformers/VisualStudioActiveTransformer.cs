@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.WatchdogExports.Model;
 
@@ -39,12 +40,15 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
 
         public void ProcessEvent(IDEEvent e)
         {
+            Asserts.That(e.TriggeredAt.HasValue);
+            Asserts.That(e.TerminatedAt.HasValue);
+
             if (IsFocusGain(e))
             {
                 _hasFocus = true;
             }
 
-            if (!(e.TriggeredAt.HasValue && _hasFocus))
+            if (!_hasFocus)
             {
                 return;
             }
@@ -54,31 +58,37 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
                 _intervals.Add(_cur = _context.CreateIntervalFromEvent<VisualStudioActiveInterval>(e));
             }
 
-            _cur.Duration = e.TriggeredAt.Value - _cur.StartTime;
+            _context.UpdateDurationForIntervalToMaximum(_cur, e.TerminatedAt.Value);
 
             if (IsFocusLost(e))
             {
-                EndCurrentInterval();
+                EndCurrentInterval(e);
             }
         }
 
-        private void EndCurrentInterval()
+        private void EndCurrentInterval(IIDEEvent e = null)
         {
+            if (e != null)
+            {
+                Asserts.That(e.TriggeredAt.HasValue);
+                _context.UpdateDurationForIntervalToThis(_cur, e.TriggeredAt.Value);
+            }
             _hasFocus = false;
             _cur = null;
         }
 
         private static bool IsFocusGain(IDEEvent e)
         {
-            return IsFocusChange(e, WindowAction.Activate);
+            var we = e as WindowEvent;
+            if (we == null)
+            {
+                return false;
+            }
+            // all VS windows can activate VS
+            return we.Action == WindowAction.Activate;
         }
 
         private static bool IsFocusLost(IDEEvent e)
-        {
-            return IsFocusChange(e, WindowAction.Deactivate);
-        }
-
-        private static bool IsFocusChange(IDEEvent e, WindowAction windowAction)
         {
             var we = e as WindowEvent;
             if (we == null)
@@ -86,8 +96,9 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
                 return false;
             }
 
+            // but only the main window can loose the focus
             return we.Window.Equals(Names.Window("main Microsoft Visual Studio")) &&
-                   we.Action == windowAction;
+                   we.Action == WindowAction.Deactivate;
         }
 
         public IEnumerable<VisualStudioActiveInterval> SignalEndOfEventStream()

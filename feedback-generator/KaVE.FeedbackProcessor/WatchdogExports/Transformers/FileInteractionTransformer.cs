@@ -47,21 +47,27 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
         {
             Asserts.That(e.TriggeredAt.HasValue);
             Asserts.That(e.TerminatedAt.HasValue);
+
+            /*if (e.TriggeredAt.Value > new DateTime(2016, 08, 19, 19, 17, 38))
+            {
+                Console.WriteLine();
+            }*/
+
             if (e.ActiveDocument == null || e.TerminatedAt < _referenceTime)
             {
                 // TODO include case: doc.Type != "CSharp"
                 return;
             }
 
-            if (IsTimedOut(e) || HasDocumentChanged(e))
+            if (IsTimedOut(e))
             {
                 _cur = null;
             }
 
             // untested (
-            if (_cur != null && e is TestRunEvent)
+            if (_cur != null && (e is TestRunEvent || HasDocumentChanged(e)))
             {
-                _cur.Duration = e.TriggeredAt.Value - _cur.StartTime;
+                _context.UpdateDurationForIntervalToThis(_cur, e.TriggeredAt.Value);
                 _cur = null;
             }
             // )
@@ -81,12 +87,12 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
                     if (_cur.Type == classification.Value)
                     {
                         // extend to max duration
-                        _cur.Duration = e.TerminatedAt.Value - _cur.StartTime;
+                        _context.UpdateDurationForIntervalToMaximum(_cur, e.TerminatedAt.Value);
                     }
                     else
                     {
                         // cut duration to current trigger point
-                        _cur.Duration = e.TriggeredAt.Value - _cur.StartTime;
+                        _context.UpdateDurationForIntervalToThis(_cur, e.TriggeredAt.Value);
                         CreateNewInterval(e, classification.Value);
                     }
                 }
