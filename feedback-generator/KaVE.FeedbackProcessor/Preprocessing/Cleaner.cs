@@ -82,8 +82,10 @@ namespace KaVE.FeedbackProcessor.Preprocessing
             var zip = _io.GetFullPath_Merged(relZip);
             using (var ra = new ReadingArchive(zip))
             {
-                var events = ra.GetAll<IDEEvent>();
-                return events;
+                while (ra.HasNext())
+                {
+                    yield return ra.GetNext<IDEEvent>();
+                }
             }
         }
 
