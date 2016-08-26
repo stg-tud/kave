@@ -16,8 +16,14 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.TestRunEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 
 namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
@@ -53,11 +59,15 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
 
         private static string Print(IIDEEvent e)
         {
-            /*
             var ise = e as IDEStateEvent;
             if (ise != null)
             {
                 return "IDEStateEvent({0})".FormatEx(ise.IDELifecyclePhase);
+            }
+            var de = e as DebuggerEvent;
+            if (de != null)
+            {
+                return "DebuggerEvent({0}, {1})".FormatEx(de.Action, de.Mode);
             }
             var we = e as WindowEvent;
             if (we != null)
@@ -88,9 +98,37 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
             if (tre != null)
             {
                 return "TestRunEvent({0} tests)".FormatEx(tre.Tests.Count);
-            }*/
+            }
+            var ne = e as NavigationEvent;
+            if (ne != null)
+            {
+                switch (ne.TypeOfNavigation)
+                {
+                    case NavigationType.CtrlClick:
+                        return "NavigationEvent({0} -> {1})".FormatEx(Simple(ne.Location), Simple(ne.Target));
+                    case NavigationType.Unknown:
+                        return "NavigationEvent(unknown)";
+                    default:
+                        return "NavigationEvent({0})".FormatEx(Simple(ne.Location));
+                }
+            }
 
             return e.GetType().Name;
+        }
+
+        private static string Simple(IName n)
+        {
+            var t = n as ITypeName;
+            if (t != null)
+            {
+                return t.Name;
+            }
+            var m = n as IMemberName;
+            if (m != null)
+            {
+                return "{0}.{1}".FormatEx(m.DeclaringType.Name, m.Name);
+            }
+            return n.Identifier;
         }
     }
 }
