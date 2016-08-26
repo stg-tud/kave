@@ -30,14 +30,16 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
         private readonly string _dirWd;
         private readonly string _dirSvg;
         private readonly ILogger _logger = new ConsoleLogger();
-        private readonly EventStreamExport export;
+        private readonly EventStreamExport _export;
+        private readonly EventFixer _eventFixer;
 
         public WatchdogExportRunner(string dirIn, string dirWd, string dirSvg)
         {
             _dirIn = dirIn;
             _dirWd = dirWd;
             _dirSvg = dirSvg;
-            export = new EventStreamExport(dirSvg);
+            _eventFixer = new EventFixer();
+            _export = new EventStreamExport(dirSvg, _eventFixer);
         }
 
         public void RunWatchdogDebugging()
@@ -47,7 +49,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             foreach (var zip in FindZips(_dirIn))
             {
                 _logger.Info(@"Opening {0} ...", zip);
-                var intervals = new IntervalTransformer(_logger, new EventFixer()).TransformFile(zip).ToList();
+                var intervals = new IntervalTransformer(_logger, _eventFixer).TransformFile(zip).ToList();
                 _logger.Info(@"Found {0} intervals.", intervals.Count);
 
 
@@ -78,7 +80,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             using (var ra = new ReadingArchive(zip))
             {
                 var events = ra.GetAll<IDEEvent>();
-                export.Write(events, relFile);
+                _export.Write(events, relFile);
             }
         }
     }

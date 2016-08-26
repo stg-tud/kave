@@ -31,26 +31,34 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
     public class EventStreamExport
     {
         private readonly string _dirRoot;
+        private readonly IEventFixer _eventFixer;
 
-        public EventStreamExport(string dirRoot)
+        public EventStreamExport(string dirRoot, IEventFixer eventFixer)
         {
             _dirRoot = dirRoot;
+            _eventFixer = eventFixer;
         }
 
-        public void Write(IEnumerable<IIDEEvent> events, string relFile)
+        public void Write(IEnumerable<IDEEvent> events, string relFile)
         {
             var contents = CreateString(events);
             File.WriteAllText(Path.Combine(_dirRoot, relFile), contents);
         }
 
-        private string CreateString(IEnumerable<IIDEEvent> events)
+        private string CreateString(IEnumerable<IDEEvent> events)
         {
+            events = _eventFixer.FixAndFilter(events);
             var sb = new StringBuilder();
             foreach (var e in events)
             {
+                var hasArtificialEndDate = e.TerminatedAt == e.TriggeredAt;
                 var start = e.TriggeredAt.HasValue ? e.TriggeredAt.Value.ToString("HH:mm:ss") : "--:--:--";
-                var end = e.TerminatedAt.HasValue ? e.TerminatedAt.Value.ToString("HH:mm:ss") : "";
-                var duration = e.Duration.HasValue ? "{0:0.0s}".FormatEx(e.Duration.Value.TotalMilliseconds/1000) : "";
+                var end = e.TerminatedAt.HasValue && !hasArtificialEndDate
+                    ? e.TerminatedAt.Value.ToString("HH:mm:ss")
+                    : "";
+                var duration = e.Duration.HasValue && !hasArtificialEndDate
+                    ? "{0:0.0s}".FormatEx(e.Duration.Value.TotalMilliseconds/1000)
+                    : "";
                 var file = e.ActiveDocument != null ? e.ActiveDocument.FileName : "";
                 sb.AppendLine("{0}  {4,8} {1,6}  {2,-50} {3}".FormatEx(start, duration, Print(e), file, end));
             }

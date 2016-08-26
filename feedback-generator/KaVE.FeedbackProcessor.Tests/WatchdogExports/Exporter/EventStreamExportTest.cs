@@ -19,7 +19,9 @@ using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.FeedbackProcessor.WatchdogExports;
 using KaVE.FeedbackProcessor.WatchdogExports.Exporter;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Exporter
@@ -31,18 +33,24 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Exporter
         private EventStreamExport _sut;
         private string _someRelFileName;
         private string _someFileName;
-        private IList<IIDEEvent> _events;
+        private IList<IDEEvent> _events;
 
         [SetUp]
         public void SetUp()
         {
-            _events = new List<IIDEEvent>();
+            _events = new List<IDEEvent>();
             _someRelFileName = "logFile.log";
             _someFileName = Path.Combine(DirTestRoot, _someRelFileName);
-            _sut = new EventStreamExport(DirTestRoot);
+
+            var fixer = Mock.Of<IEventFixer>();
+            Mock.Get(fixer)
+                .Setup(f => f.FixAndFilter(It.IsAny<IEnumerable<IDEEvent>>()))
+                .Returns<IEnumerable<IDEEvent>>(es => es);
+
+            _sut = new EventStreamExport(DirTestRoot, fixer);
         }
 
-        private void Given(IIDEEvent e)
+        private void Given(IDEEvent e)
         {
             _events.Add(e);
         }
@@ -61,7 +69,7 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports.Exporter
         public void RootMustExist()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new EventStreamExport(@"C:\Does\Not\Exist\");
+            new EventStreamExport(@"C:\Does\Not\Exist\", null);
         }
 
         [Test]

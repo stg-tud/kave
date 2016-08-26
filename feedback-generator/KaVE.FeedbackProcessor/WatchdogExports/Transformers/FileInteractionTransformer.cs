@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.WatchdogExports.Model;
@@ -56,6 +57,14 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
             {
                 _cur = null;
             }
+
+            // untested (
+            if (_cur != null && e is TestRunEvent)
+            {
+                _cur.Duration = e.TriggeredAt.Value - _cur.StartTime;
+                _cur = null;
+            }
+            // )
 
             var classification = ClassifyEventType(e);
             if (classification.HasValue)
