@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
@@ -39,7 +38,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             _fixer = fixer;
         }
 
-        public IEnumerable<Interval> Transform(IEnumerable<IDEEvent> events)
+        private static ZeroLengthIntervalFilterTransformer CreateDefaultTransformer()
         {
             var context = new TransformerContext();
             var transformer =
@@ -60,14 +59,21 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
                             )
                         )
                     );
-
-            return TransformWithCustomTransformer(events, transformer);
+            return transformer;
         }
 
         public IEnumerable<Interval> TransformFile(string filename)
         {
-            return
-                Transform(GetAllEventsFromFile(filename)).Select(SetUserId(Path.GetFileNameWithoutExtension(filename)));
+            return TransformFileWithCustomTransformer(filename, CreateDefaultTransformer());
+        }
+
+        public IEnumerable<Interval> TransformFileWithCustomTransformer(string filename,
+            IEventToIntervalTransformer<Interval> transformer)
+        {
+            _logger.Info("Loading events from {0} ...", filename);
+            var events = GetAllEventsFromFile(filename);
+            var intervals = TransformWithCustomTransformer(events, transformer);
+            return SetUserId(intervals, filename);
         }
 
         public IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events,
@@ -78,12 +84,17 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             _logger.Info(@"Transforming event stream with {0} ...", transformer.GetType().Name);
 
             var currentEventTime = DateTime.MinValue;
-            int i = 0;
+            var i = 0;
             foreach (var e in events)
             {
-                if ((i++)%5000 == 0)
+                i++;
+                if (i%500 == 0)
                 {
-                    _logger.Info("Processed {0} events ...", i - 1);
+                    Console.Write('.');
+                }
+                if (i%50000 == 0)
+                {
+                    Console.WriteLine();
                 }
 
                 if (TransformerUtils.EventHasNoTimeData(e))
@@ -97,29 +108,23 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
 
                 transformer.ProcessEvent(e);
             }
+            Console.WriteLine();
+            _logger.Info("--> Done processing {0} events...", i);
 
             return transformer.SignalEndOfEventStream();
         }
 
-        public IEnumerable<Interval> TransformFileWithCustomTransformer(string filename,
-            IEventToIntervalTransformer<Interval> transformer)
+        private static IEnumerable<Interval> SetUserId(IEnumerable<Interval> intervals, string userId)
         {
-            _logger.Info("Loading events from {0} ...", filename);
-            return
-                TransformWithCustomTransformer(GetAllEventsFromFile(filename), transformer)
-                    .Select(SetUserId(Path.GetFileNameWithoutExtension(filename)));
+            return intervals.Select(
+                i =>
+                {
+                    i.UserId = userId;
+                    return i;
+                });
         }
 
-        private Func<Interval, Interval> SetUserId(string filename)
-        {
-            return i =>
-            {
-                i.UserId = filename;
-                return i;
-            };
-        }
-
-        private IEnumerable<IDEEvent> GetAllEventsFromFile(string file)
+        private static IEnumerable<IDEEvent> GetAllEventsFromFile(string file)
         {
             var zip = ZipFile.Read(file);
             var fileLoader = new FeedbackArchiveReader();

@@ -70,12 +70,14 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
                         proc,
                         zip,
                         sizeInMb);
-                    return transformer.TransformFile(zip);
+                    var intervalsForFile = transformer.TransformFile(zip).ToList();
+                    Console.WriteLine(@"--> Extracted {0} intervals.", intervalsForFile.Count);
+                    return intervalsForFile;
                 }).ToList();
 
             Console.WriteLine();
             Console.WriteLine(new string('#', 60));
-            Console.WriteLine(@"Converting to WatchDog Data...");
+            Console.WriteLine(@"Found {0} intervals, converting to WatchDog Data...", intervals.Count);
             var data = WatchdogExporter.Convert(intervals);
             Console.WriteLine(@"Wrtiting...");
             data.WriteToFiles(_dirWd);
