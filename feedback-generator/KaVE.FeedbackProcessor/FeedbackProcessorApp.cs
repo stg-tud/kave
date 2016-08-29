@@ -25,7 +25,7 @@ namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackProcessorApp
     {
-        private const int NumWorkers = 2;
+        private static readonly int NumWorkers = Environment.ProcessorCount;
 
         //private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
         private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
@@ -44,17 +44,18 @@ namespace KaVE.FeedbackProcessor
         {
             var startedAt = DateTime.Now;
             Console.WriteLine(@"started at: {0}", startedAt);
+            Console.WriteLine(
+                @"Running a {0}bit process with {1} CPUs.",
+                Environment.Is64BitProcess ? 64 : 32,
+                NumWorkers);
 
-            CleanDirs(DirTmp, DirEventsOut, WdFolder, SvgFolder);
-            Console.WriteLine(@"Running with {0}bit.", Is64BitWindows() ? 64 : 32);
-
-            //new SanityCheckApp().Run();
             RunMemExample();
 
+            //new SanityCheckApp().Run(); 
             //new TimeBudgetEvaluationApp(Logger).Run();
             //new SSTSequenceExtractor(Logger).Run();
             //RunExhaustiveNamesFixTests();
-            RunPreprocessing();
+            //RunPreprocessing();
             RunWatchdogExport();
 
             var endedAt = DateTime.Now;
@@ -64,12 +65,8 @@ namespace KaVE.FeedbackProcessor
 
         private static void RunMemExample()
         {
+            // ReSharper disable once UnusedVariable
             var arr = new long[540000000];
-        }
-
-        private static bool Is64BitWindows()
-        {
-            return IntPtr.Size == 8;
         }
 
         private static void RunExhaustiveNamesFixTests()
@@ -79,12 +76,15 @@ namespace KaVE.FeedbackProcessor
 
         private static void RunPreprocessing()
         {
+            CleanDirs(DirTmp, DirEventsOut);
             new PreprocessingRunner(DirEventsIn, DirTmp, DirEventsOut, NumWorkers).Run();
         }
 
         private static void RunWatchdogExport()
         {
-            new WatchdogExportRunner(DirEventsOut, WdFolder, SvgFolder).RunWatchdogDebugging();
+            CleanDirs(WdFolder, SvgFolder);
+            //new WatchdogExportRunner(DirEventsOut, WdFolder, SvgFolder).RunDebugging();
+            new WatchdogExportRunner(DirEventsOut, WdFolder, SvgFolder).RunTransformation();
         }
 
         private static void CleanDirs(params string[] dirs)
