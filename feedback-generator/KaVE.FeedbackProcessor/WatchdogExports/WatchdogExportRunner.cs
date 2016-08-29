@@ -47,14 +47,29 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
         {
             var transformer = new IntervalTransformer(_logger, _eventFixer);
 
-            Console.WriteLine(@"Finding Zips...");
+            Console.Write(@"Finding Zips... ");
             var zips = FindZips(_dirIn);
+
+            Console.WriteLine(@"found {0}.", zips.Length);
+
+            var total = zips.Length;
+            var cur = 0;
+
             var intervals = zips.SelectMany(
                 zip =>
                 {
                     Console.WriteLine();
                     Console.WriteLine(new string('#', 60));
-                    Console.WriteLine(@"Transforming {0}...", zip);
+                    var proc = 100*cur/(double) total;
+                    var size = new FileInfo(zip).Length;
+                    var sizeInMb = size/(1024*1024);
+                    Console.WriteLine(
+                        @"Transforming .zip {0}/{1} ({2:0.0}% done): {3} [{4:0.0}MB]...",
+                        ++cur,
+                        total,
+                        proc,
+                        zip,
+                        sizeInMb);
                     return transformer.TransformFile(zip);
                 }).ToList();
 

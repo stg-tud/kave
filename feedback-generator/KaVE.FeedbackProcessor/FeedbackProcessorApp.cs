@@ -49,7 +49,7 @@ namespace KaVE.FeedbackProcessor
                 Environment.Is64BitProcess ? 64 : 32,
                 NumWorkers);
 
-            RunMemExample();
+            RunMemExampleToEnsureSupportForBigObjects();
 
             //new SanityCheckApp().Run(); 
             //new TimeBudgetEvaluationApp(Logger).Run();
@@ -63,7 +63,7 @@ namespace KaVE.FeedbackProcessor
             Console.ReadKey();
         }
 
-        private static void RunMemExample()
+        private static void RunMemExampleToEnsureSupportForBigObjects()
         {
             // ReSharper disable once UnusedVariable
             var arr = new long[540000000];
