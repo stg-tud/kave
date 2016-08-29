@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
@@ -42,7 +43,30 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             _export = new EventStreamExport(dirSvg, _eventFixer);
         }
 
-        public void RunWatchdogDebugging()
+        public void RunTransformation()
+        {
+            var transformer = new IntervalTransformer(_logger, _eventFixer);
+
+            Console.WriteLine(@"Finding Zips...");
+            var zips = FindZips(_dirIn);
+            var intervals = zips.SelectMany(
+                zip =>
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(new string('#', 60));
+                    Console.WriteLine(@"Transforming {0}...", zip);
+                    return transformer.TransformFile(zip);
+                }).ToList();
+
+            Console.WriteLine();
+            Console.WriteLine(new string('#', 60));
+            Console.WriteLine(@"Converting to WatchDog Data...");
+            var data = WatchdogExporter.Convert(intervals);
+            Console.WriteLine(@"Wrtiting...");
+            data.WriteToFiles(_dirWd);
+        }
+
+        public void RunDebugging()
         {
             var svge = new SvgExport();
 

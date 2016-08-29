@@ -56,25 +56,18 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
                                     new PerspectiveTransformer(context),
                                     //new FileOpenTransformer(context),
                                     new FileInteractionTransformer(context)
-                                )
+                                    )
+                            )
                         )
-                    )
-                );
+                    );
 
             return TransformWithCustomTransformer(events, transformer);
         }
 
         public IEnumerable<Interval> TransformFile(string filename)
         {
-            Console.WriteLine("Transforming {0}...", filename);
             return
                 Transform(GetAllEventsFromFile(filename)).Select(SetUserId(Path.GetFileNameWithoutExtension(filename)));
-        }
-
-        public IEnumerable<Interval> TransformFolder(string path)
-        {
-            var zips = Directory.GetFiles(path, "*.zip", SearchOption.AllDirectories);
-            return zips.SelectMany(TransformFile);
         }
 
         public IEnumerable<Interval> TransformWithCustomTransformer(IEnumerable<IDEEvent> events,
