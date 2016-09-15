@@ -23,6 +23,12 @@ namespace KaVE.Commons.Tests.Utils
 {
     public class ToStringUtilsTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            CultureUtils.SetDefaultCultureForThisThread();
+        }
+
         [Test]
         public void DifferentVisibilities()
         {

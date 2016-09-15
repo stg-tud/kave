@@ -423,9 +423,10 @@ namespace KaVE.Commons.Tests.Utils.IO
         }
 
         [Test]
-        public void ShouldManageToCountLinesInLargeLinesInReasonableAmountOfTime()
+        public void ShouldManageToCountLinesInLargeFilesInReasonableAmountOfTime()
         {
             const int maxLines = 20000;
+            const int maxDuration = 5 * 1000; // in sec
 
             var rnd = new Random();
             var file = Path.Combine(_testRoot, "x.txt");
@@ -446,7 +447,7 @@ namespace KaVE.Commons.Tests.Utils.IO
             Assert.AreEqual(maxLines, _sut.CountLines(file));
             var duration = sw.ElapsedMilliseconds;
 
-            Assert.That(duration < 3*1000); // 3s
+            Assert.That(duration < maxDuration, "should not take longer than {0:0.0}s, but took {1:0.0}s".FormatEx(maxDuration/1000.0, duration/1000.0)); // 3s
         }
 
         private static void CreateContentInFile(string fileName, int numLines)
