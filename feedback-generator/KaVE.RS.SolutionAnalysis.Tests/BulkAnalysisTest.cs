@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
@@ -32,8 +33,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class BulkAnalysisTest : BaseTestWithExistingSolution
     {
-        private const string Root = @"E:\";
-        private const string RepositoryRoot = Root + @"Repositories\";
+        private const string Root = @"F:\";
+        private const string RepositoryRoot = Root + @"R\";
         private const string ContextRoot = Root + @"Contexts\";
         private const string LogRoot = Root + @"Logs\";
 
@@ -64,6 +65,16 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string testCaseLabel, string sln)
         {
+            using (var proc = Process.GetCurrentProcess())
+            {
+                ReportMem(proc);
+                var memInMb = proc.VirtualMemorySize64/(1024*1024);
+                if (memInMb > 1700)
+                {
+                    Assert.Fail("analysis aborted, available memory is low (VirtualMemorySize64 is at {0}MB)", memInMb);
+                }
+            }
+
             if (_slnFinder.ShouldIgnore(sln))
             {
                 Assert.Ignore();
@@ -91,6 +102,30 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             {
                 _slnFinder.End(sln);
             }
+        }
+
+        private void ReportMem(Process proc)
+        {
+            Console.WriteLine("-------------");
+            Console.WriteLine("memory consumption:");
+            //ReportMem("GC.GetTotalMemory(false)", GC.GetTotalMemory(false));
+            //ReportMem("GC.GetTotalMemory(true)", GC.GetTotalMemory(true));
+
+            //ReportMem("PagedMemorySize64", proc.PagedMemorySize64);
+            //ReportMem("NonpagedSystemMemorySize64", proc.NonpagedSystemMemorySize64);
+            //ReportMem("PagedSystemMemorySize64", proc.PagedSystemMemorySize64);
+            //ReportMem("PeakPagedMemorySize64", proc.PeakPagedMemorySize64);
+            //ReportMem("PeakVirtualMemorySize64", proc.PeakVirtualMemorySize64);
+            //ReportMem("PeakWorkingSet64", proc.PeakWorkingSet64);
+            //ReportMem("PrivateMemorySize64", proc.PrivateMemorySize64);
+            ReportMem("VirtualMemorySize64", proc.VirtualMemorySize64);
+            Console.WriteLine("-------------");
+        }
+
+        private void ReportMem(string title, long sizeInByte)
+        {
+            var sizeInMB = sizeInByte/(1024.0*1024.0);
+            Console.WriteLine("  {0}:\t{1:#,0.00}MB", title, sizeInMB);
         }
 
         private void RunAnalysis(Lifetime lifetime, ISolution solution)
