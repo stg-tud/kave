@@ -419,6 +419,8 @@
     <Compile Include="Utils\StringBuilderUtils.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\ToStringUtils.cs" />
+    <Compile Include="Utils\TypeShapeIndex\TypeShapeIndexReader.cs" />
+    <Compile Include="Utils\TypeShapeIndex\TypeShapeIndexUtil.cs" />
     <Compile Include="Utils\ValueTypeWrapper.cs" />
     <Compile Include="Utils\VersionUtil.cs" />
     <Compile Include="Utils\XamlUtils.cs" />

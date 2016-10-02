@@ -319,6 +319,8 @@
     <Compile Include="Utils\StringBuilderUtilsTest.cs" />
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\ToStringUtilsTest.cs" />
+    <Compile Include="Utils\TypeShapeIndex\TypeShapeIndexReaderTest.cs" />
+    <Compile Include="Utils\TypeShapeIndex\TypeShapeIndexUtilTest.cs" />
     <Compile Include="Utils\VersionUtilTestSuite\$(KaVEProduct)Test.cs" />
     <Compile Include="Utils\VersionUtilTestSuite\ParsingTest.cs" />
     <Compile Include="Utils\XamlUtilsTest.cs" />

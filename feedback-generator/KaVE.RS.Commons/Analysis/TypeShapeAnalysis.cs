@@ -27,9 +27,10 @@ using KaVE.RS.Commons.Utils.Naming;
 
 namespace KaVE.RS.Commons.Analysis
 {
-    internal class TypeShapeAnalysis
+    public class TypeShapeAnalysis
     {
         private ITypeDeclaration _typeDeclaration;
+        private ITypeElement _typeElement;
 
         public TypeShape Analyze(ITypeDeclaration typeDeclaration)
         {
@@ -58,12 +59,48 @@ namespace KaVE.RS.Commons.Analysis
             return typeShape;
         }
 
+        public TypeShape Analyze(ITypeElement typeElement)
+        {
+            _typeElement = typeElement;
+            var typeShape = new TypeShape();
+
+            foreach (var m in FindImplementedConstructorsInType())
+            {
+                var name = m.GetName<IMethodName>();
+                typeShape.MethodHierarchies.Add(new MethodHierarchy { Element = name });
+            }
+
+            foreach (var m in FindImplementedMethodsInType())
+            {
+                var name = m.GetName<IMethodName>();
+                var declaration = m.CollectDeclarationInfo(name);
+                typeShape.MethodHierarchies.Add(declaration);
+            }
+
+            typeShape.TypeHierarchy = CreateTypeHierarchy(
+                typeElement,
+                EmptySubstitution.INSTANCE,
+                Lists.NewList<ITypeName>());
+
+            return typeShape;
+        }
+
         private IEnumerable<IConstructor> FindImplementedConstructorsInType()
         {
             var ctors = new HashSet<IConstructor>();
             if (_typeDeclaration != null && _typeDeclaration.DeclaredElement != null)
             {
                 foreach (var ctor in _typeDeclaration.DeclaredElement.Constructors)
+                {
+                    if (!ctor.IsImplicit)
+                    {
+                        ctors.Add(ctor);
+                    }
+                }
+            }
+            if (_typeElement != null)
+            {
+                foreach (var ctor in _typeElement.Constructors)
                 {
                     if (!ctor.IsImplicit)
                     {
@@ -79,6 +116,10 @@ namespace KaVE.RS.Commons.Analysis
             if (_typeDeclaration != null && _typeDeclaration.DeclaredElement != null)
             {
                 return _typeDeclaration.DeclaredElement.Methods;
+            }
+            if (_typeElement != null)
+            {
+                return _typeElement.Methods;
             }
             return new HashSet<IMethod>();
         }

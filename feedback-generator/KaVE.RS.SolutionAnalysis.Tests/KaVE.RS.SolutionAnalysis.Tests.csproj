@@ -169,6 +169,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BulkTypeShapeAnalysisTest.cs" />
     <Compile Include="CompletionEventFilterTest.cs" />
     <Compile Include="CompletionEventStatistics\CompletionEventStatisticsIoTest.cs" />
     <Compile Include="CompletionEventStatistics\CompletionEventStatisticsLoggerTest.cs" />

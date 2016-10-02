@@ -196,6 +196,7 @@
     <Compile Include="RelativeEditLocation.cs" />
     <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SanityCheck.cs" />
+    <Compile Include="TypeShapeSolutionAnalysis.cs" />
     <Compile Include="SolutionAnalysis.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIo.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinter.cs" />
