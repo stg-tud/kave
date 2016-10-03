@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
@@ -28,10 +30,41 @@ namespace KaVE.Commons.Model.TypeShapes
         ITypeHierarchy TypeHierarchy { get; set; }
 
         /// <summary>
+        ///     All Nested Types in the enclosing class
+        /// </summary>
+        [NotNull]
+        IKaVESet<ITypeHierarchy> NestedTypes { get; set; }
+
+        /// <summary>
+        ///     All Delegates in the enclosing class
+        /// </summary>
+        [NotNull]
+        IKaVESet<IDelegateTypeName> Delegates { get; set; }
+
+        /// <summary>
+        ///     All Events in the enclosing class (including information about the first and super declarations)
+        /// </summary>
+        [NotNull]
+        IKaVESet<IHierarchy<IEventName>> EventHierarchies { get; set; }
+
+        /// <summary>
+        ///     All Fields in the enclosing class
+        /// </summary>
+        [NotNull]
+        IKaVESet<IFieldName> Fields { get; set; }
+
+        /// <summary>
         ///     All Methods that are overridden in the class under edit (including information about the first and super
         ///     declaration).
         /// </summary>
         [NotNull]
-        IKaVESet<IMethodHierarchy> MethodHierarchies { get; set; }
+        IKaVESet<IHierarchy<IMethodName>> MethodHierarchies { get; set; }
+
+        /// <summary>
+        ///     All Properties in the enclosing class (including information about the first and super
+        ///     declaration).
+        /// </summary>
+        [NotNull]
+        IKaVESet<IHierarchy<IPropertyName>> PropertyHierarchies { get; set; }
     }
 }

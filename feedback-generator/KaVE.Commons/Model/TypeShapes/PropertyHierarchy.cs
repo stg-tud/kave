@@ -23,45 +23,30 @@ using KaVE.JetBrains.Annotations;
 namespace KaVE.Commons.Model.TypeShapes
 {
     [DataContract]
-    public class MethodHierarchy : IHierarchy<IMethodName>
+    public class PropertyHierarchy : IHierarchy<IPropertyName>
     {
-        /// <summary>
-        ///     The name of a method.
-        /// </summary>
         [DataMember]
-        public IMethodName Element { get; set; }
+        public IPropertyName Element { get; set; }
 
-        /// <summary>
-        ///     The implementation of the enclosing method that is referred to by calling
-        ///     <code>super.'methodName'(...)</code>.
-        /// </summary>
         [DataMember]
-        public IMethodName Super { get; set; }
+        public IPropertyName Super { get; set; }
 
-        /// <summary>
-        ///     The declarations of the enclosing method, i.e., the method names specified in interfaces or the highest
-        ///     parent class that the enclosing method is an implementation of.
-        /// </summary>
         [DataMember]
-        public IMethodName First { get; set; }
+        public IPropertyName First { get; set; }
 
-        /// <summary>
-        ///     Whether or not this is a hierarchy of a method that overrides or implements a declaration from further up in the
-        ///     type hierarchy.
-        /// </summary>
         public bool IsDeclaredInParentHierarchy
         {
             get { return First != null; }
         }
 
-        public MethodHierarchy()
+        public PropertyHierarchy()
         {
-            Element = Names.UnknownMethod;
+            Element = Names.UnknownProperty;
         }
 
-        public MethodHierarchy([NotNull] IMethodName methodName)
+        public PropertyHierarchy([NotNull] IPropertyName propertyName)
         {
-            Element = methodName;
+            Element = propertyName;
         }
 
         public override bool Equals(object obj)
@@ -69,7 +54,7 @@ namespace KaVE.Commons.Model.TypeShapes
             return this.Equals(obj, Equals);
         }
 
-        private bool Equals(MethodHierarchy other)
+        private bool Equals(PropertyHierarchy other)
         {
             return Element.Equals(other.Element) && Equals(Super, other.Super) && Equals(First, other.First);
         }

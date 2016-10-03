@@ -117,6 +117,9 @@
     <Compile Include="Model\Naming\Impl\v1\Parser\TypeNamingVisitor.cs" />
     <Compile Include="Model\Naming\CodeElements\ILocalVariableName.cs" />
     <Compile Include="Model\Naming\Types\IPredefinedTypeName.cs" />
+    <Compile Include="Model\TypeShapes\IHierarchy.cs" />
+    <Compile Include="Model\TypeShapes\EventHierarchy.cs" />
+    <Compile Include="Model\TypeShapes\PropertyHierarchy.cs" />
     <Compile Include="Utils\CultureUtils.cs" />
     <Compile Include="Utils\Exceptions\ValidationException.cs" />
     <Compile Include="Utils\Naming\AnonymousNameUtils.cs" />
@@ -382,7 +385,6 @@
     <Compile Include="Model\SSTs\Statements\IUnknownStatement.cs" />
     <Compile Include="Model\SSTs\Visitor\ISSTNode.cs" />
     <Compile Include="Model\SSTs\Visitor\ISSTNodeVisitor.cs" />
-    <Compile Include="Model\TypeShapes\IMethodHierarchy.cs" />
     <Compile Include="Model\TypeShapes\ITypeHierarchy.cs" />
     <Compile Include="Model\TypeShapes\ITypeShape.cs" />
     <Compile Include="Model\TypeShapes\MethodHierarchy.cs" />

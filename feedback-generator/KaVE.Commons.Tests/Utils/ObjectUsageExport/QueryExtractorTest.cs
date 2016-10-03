@@ -297,7 +297,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         }
 
         private Context NewContextWithDefaults(ITypeHierarchy typeHierarchy,
-            IMethodHierarchy methodHierarchy,
+            IHierarchy<IMethodName> methodHierarchy,
             params IStatement[] statements)
         {
             return new Context

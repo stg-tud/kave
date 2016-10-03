@@ -201,7 +201,7 @@ namespace KaVE.RS.SolutionAnalysis
             }
         }
 
-        public void Visit(IMethodHierarchy mh, ISet<IAssemblyName> apis)
+        public void Visit(IHierarchy<IMethodName> mh, ISet<IAssemblyName> apis)
         {
             Visit(mh.Element, apis);
             if (mh.Super != null)

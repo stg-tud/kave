@@ -21,6 +21,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -96,9 +97,9 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
             return new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier);
         }
 
-        public static ISet<IMethodHierarchy> GetAnonymousMethodHierarchies(uint numberOfElements)
+        public static ISet<IHierarchy<IMethodName>> GetAnonymousMethodHierarchies(uint numberOfElements)
         {
-            var hierarchies = Sets.NewHashSet<IMethodHierarchy>();
+            var hierarchies = Sets.NewHashSet<IHierarchy<IMethodName>>();
             for (var i = 0; i < numberOfElements; i++)
             {
                 hierarchies.Add(GetAnonymousMethodHierarchy());

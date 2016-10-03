@@ -15,6 +15,8 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 
@@ -27,18 +29,43 @@ namespace KaVE.Commons.Model.TypeShapes
         public ITypeHierarchy TypeHierarchy { get; set; }
 
         [DataMember]
-        public IKaVESet<IMethodHierarchy> MethodHierarchies { get; set; }
+        public IKaVESet<ITypeHierarchy> NestedTypes { get; set; }
+
+        [DataMember]
+        public IKaVESet<IDelegateTypeName> Delegates { get; set; }
+
+        [DataMember]
+        public IKaVESet<IHierarchy<IEventName>> EventHierarchies { get; set; }
+
+        [DataMember]
+        public IKaVESet<IFieldName> Fields { get; set; }
+
+        [DataMember]
+        public IKaVESet<IHierarchy<IMethodName>> MethodHierarchies { get; set; }
+
+        [DataMember]
+        public IKaVESet<IHierarchy<IPropertyName>> PropertyHierarchies { get; set; }
 
         public TypeShape()
         {
             TypeHierarchy = new TypeHierarchy();
-            MethodHierarchies = Sets.NewHashSet<IMethodHierarchy>();
+            NestedTypes = Sets.NewHashSet<ITypeHierarchy>();
+            Delegates = Sets.NewHashSet<IDelegateTypeName>();
+            EventHierarchies = Sets.NewHashSet<IHierarchy<IEventName>>();
+            Fields = Sets.NewHashSet<IFieldName>();
+            MethodHierarchies = Sets.NewHashSet<IHierarchy<IMethodName>>();
+            PropertyHierarchies = Sets.NewHashSet<IHierarchy<IPropertyName>>();
         }
 
         private bool Equals(TypeShape other)
         {
             return Equals(TypeHierarchy, other.TypeHierarchy) &&
-                   Equals(MethodHierarchies, other.MethodHierarchies);
+                   Equals(NestedTypes, other.NestedTypes) &&
+                   Equals(Delegates, other.Delegates) &&
+                   Equals(EventHierarchies, other.EventHierarchies) &&
+                   Equals(Fields, other.Fields) &&
+                   Equals(MethodHierarchies, other.MethodHierarchies) &&
+                   Equals(PropertyHierarchies, other.PropertyHierarchies);
         }
 
         public override bool Equals(object obj)
@@ -51,7 +78,12 @@ namespace KaVE.Commons.Model.TypeShapes
             unchecked
             {
                 return (TypeHierarchy.GetHashCode()*397) ^
-                       MethodHierarchies.GetSetHashCode();
+                       NestedTypes.GetSetHashCode() ^
+                       Delegates.GetSetHashCode() ^
+                       EventHierarchies.GetSetHashCode() ^
+                       Fields.GetSetHashCode() ^
+                       MethodHierarchies.GetSetHashCode() ^
+                       PropertyHierarchies.GetSetHashCode();
             }
         }
 

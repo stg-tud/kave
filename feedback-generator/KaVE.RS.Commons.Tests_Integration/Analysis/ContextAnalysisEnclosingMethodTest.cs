@@ -27,7 +27,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
     [Ignore]
     internal class ContextAnalysisEnclosingMethodTest : BaseCSharpCodeCompletionTest
     {
-        private static IMethodHierarchy FindEnclosingMethodHierarchy(Context context)
+        private static IHierarchy<IMethodName> FindEnclosingMethodHierarchy(Context context)
         {
             IMethodName enclosingMethod = null; //context.EnclosingMethod;
             var enclosingMethodHierarchies =

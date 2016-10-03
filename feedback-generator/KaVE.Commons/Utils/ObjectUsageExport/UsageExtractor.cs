@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -171,7 +172,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             return cName.Name.Contains("$Lambda");
         }
 
-        private static CoReMethodName GetMethodContext(CoReMethodName method, IEnumerable<IMethodHierarchy> hierarchies)
+        private static CoReMethodName GetMethodContext(CoReMethodName method, IEnumerable<IHierarchy<IMethodName>> hierarchies)
         {
             var orig = method;
             var wasLambdaName = IsLambdaContext(method);
