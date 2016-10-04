@@ -176,6 +176,10 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\IndexerDeclarationAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\MemberInitializationAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\DifferentTypesTest.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysisTestSuite\DelegateTest.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysisTestSuite\PropertyHierarchyTest.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysisTestSuite\FieldsTest.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysisTestSuite\EventHierarchyTest.cs" />
     <Compile Include="Analysis\TypeShapeAnalysisTestSuite\MethodHierarchyTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithIncompleteReferenceSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
@@ -232,6 +236,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\UncheckedTest.cs" />
     <Compile Include="Analysis\TestAnalysisTrigger.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysisTestSuite\NestedTypesTest.cs" />
     <Compile Include="Analysis\TypeShapeAnalysisTestSuite\TypeHierarchyTest.cs" />
     <Compile Include="BaseCodeCompletionTest.cs" />
     <Compile Include="BaseCSharpCodeCompletionTest.cs" />

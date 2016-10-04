@@ -15,6 +15,7 @@
  */
 
 using System.Linq;
+using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Naming;
@@ -47,7 +48,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
-        private static IMethodHierarchy AnonymizeCodeNames(IMethodHierarchy raw)
+        private static IHierarchy<IMethodName> AnonymizeCodeNames(IHierarchy<IMethodName> raw)
         {
             return new MethodHierarchy
             {

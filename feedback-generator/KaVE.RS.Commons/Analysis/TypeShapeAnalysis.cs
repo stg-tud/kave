@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.TypeShapes;
@@ -29,53 +33,34 @@ namespace KaVE.RS.Commons.Analysis
 {
     public class TypeShapeAnalysis
     {
-        private ITypeDeclaration _typeDeclaration;
         private ITypeElement _typeElement;
 
         public TypeShape Analyze(ITypeDeclaration typeDeclaration)
         {
-            _typeDeclaration = typeDeclaration;
-
-            var typeShape = new TypeShape();
-
-            foreach (var m in FindImplementedConstructorsInType())
-            {
-                var name = m.GetName<IMethodName>();
-                typeShape.MethodHierarchies.Add(new MethodHierarchy {Element = name});
-            }
-
-            foreach (var m in FindImplementedMethodsInType())
-            {
-                var name = m.GetName<IMethodName>();
-                var declaration = m.CollectDeclarationInfo(name);
-                typeShape.MethodHierarchies.Add(declaration);
-            }
-
-            typeShape.TypeHierarchy = CreateTypeHierarchy(
-                typeDeclaration.DeclaredElement,
-                EmptySubstitution.INSTANCE,
-                Lists.NewList<ITypeName>());
-
-            return typeShape;
+            return Analyze(typeDeclaration.DeclaredElement);
         }
 
         public TypeShape Analyze(ITypeElement typeElement)
         {
             _typeElement = typeElement;
+            return AnalyzeInternal(typeElement);
+        }
+
+        private TypeShape AnalyzeInternal(ITypeElement typeElement)
+        {
             var typeShape = new TypeShape();
 
-            foreach (var m in FindImplementedConstructorsInType())
-            {
-                var name = m.GetName<IMethodName>();
-                typeShape.MethodHierarchies.Add(new MethodHierarchy { Element = name });
-            }
+            AddEventHierarchies(typeShape);
 
-            foreach (var m in FindImplementedMethodsInType())
-            {
-                var name = m.GetName<IMethodName>();
-                var declaration = m.CollectDeclarationInfo(name);
-                typeShape.MethodHierarchies.Add(declaration);
-            }
+            AddDelegates(typeShape);
+
+            AddFields(typeShape);
+
+            AddMethodHierarchies(typeShape);
+
+            AddNestedTypes(typeShape);
+
+            AddPropertyHierarchies(typeShape);
 
             typeShape.TypeHierarchy = CreateTypeHierarchy(
                 typeElement,
@@ -85,19 +70,94 @@ namespace KaVE.RS.Commons.Analysis
             return typeShape;
         }
 
+        private void AddEventHierarchies(ITypeShape typeShape)
+        {
+            foreach (var m in FindImplementedEventsInType())
+            {
+                var name = m.GetName<IEventName>();
+                var declaration = m.CollectDeclarationInfo<IEventName, EventHierarchy>(name);
+                typeShape.EventHierarchies.Add(declaration);
+            }
+        }
+
+        private void AddDelegates(ITypeShape typeShape)
+        {
+            var typeMembers = _typeElement.GetMembers();
+            var delegateTypeNames =
+                typeMembers.OfType<IDelegate>()
+                           .Select(d => d.GetName<IDelegateTypeName>());
+            typeShape.Delegates.AddAll(delegateTypeNames);
+        }
+
+        private void AddFields(ITypeShape typeShape)
+        {
+            var typeMembers = _typeElement.GetMembers();
+            foreach (var typeMember in typeMembers)
+            {
+                var field = typeMember as IField;
+                if (field != null)
+                {
+                    if (field.IsAutoPropertyBackingField())
+                    {
+                        continue;
+                    }
+                    var fieldName = field.GetName<IFieldName>();
+                    if (field.IsEnumMember)
+                    {
+                        var shortName = field.ShortName;
+                        fieldName = Names.Field("[{0}] [{0}].{1}", fieldName.DeclaringType, shortName);
+                    }
+                    typeShape.Fields.Add(fieldName);
+                }
+            }
+        }
+
+        private void AddNestedTypes(ITypeShape typeShape)
+        {
+            var nestedTypes = _typeElement.NestedTypes;
+            foreach (var typeElement in nestedTypes)
+            {
+                if (typeElement is IDelegate)
+                {
+                    continue;
+                }
+                var typeHierarchy = CreateTypeHierarchy(
+                    typeElement,
+                    EmptySubstitution.INSTANCE,
+                    Lists.NewList<ITypeName>());
+                typeShape.NestedTypes.Add(typeHierarchy);
+            }
+        }
+
+        private void AddMethodHierarchies(ITypeShape typeShape)
+        {
+            foreach (var m in FindImplementedConstructorsInType())
+            {
+                var name = m.GetName<IMethodName>();
+                typeShape.MethodHierarchies.Add(new MethodHierarchy {Element = name});
+            }
+
+            foreach (var m in FindImplementedMethodsInType())
+            {
+                var name = m.GetName<IMethodName>();
+                var declaration = m.CollectDeclarationInfo<IMethodName, MethodHierarchy>(name);
+                typeShape.MethodHierarchies.Add(declaration);
+            }
+        }
+
+        private void AddPropertyHierarchies(ITypeShape typeShape)
+        {
+            foreach (var m in FindImplementedPropertiesInType())
+            {
+                var name = m.GetName<IPropertyName>();
+                var declaration = m.CollectDeclarationInfo<IPropertyName, PropertyHierarchy>(name);
+                typeShape.PropertyHierarchies.Add(declaration);
+            }
+        }
+
         private IEnumerable<IConstructor> FindImplementedConstructorsInType()
         {
             var ctors = new HashSet<IConstructor>();
-            if (_typeDeclaration != null && _typeDeclaration.DeclaredElement != null)
-            {
-                foreach (var ctor in _typeDeclaration.DeclaredElement.Constructors)
-                {
-                    if (!ctor.IsImplicit)
-                    {
-                        ctors.Add(ctor);
-                    }
-                }
-            }
             if (_typeElement != null)
             {
                 foreach (var ctor in _typeElement.Constructors)
@@ -113,18 +173,19 @@ namespace KaVE.RS.Commons.Analysis
 
         private IEnumerable<IMethod> FindImplementedMethodsInType()
         {
-            if (_typeDeclaration != null && _typeDeclaration.DeclaredElement != null)
-            {
-                return _typeDeclaration.DeclaredElement.Methods;
-            }
-            if (_typeElement != null)
-            {
-                return _typeElement.Methods;
-            }
-            return new HashSet<IMethod>();
+            return _typeElement != null ? _typeElement.Methods : new HashSet<IMethod>();
         }
 
+        private IEnumerable<IEvent> FindImplementedEventsInType()
+        {
+            return _typeElement != null ? _typeElement.Events : new HashSet<IEvent>();
+        }
 
+        private IEnumerable<IProperty> FindImplementedPropertiesInType()
+        {
+            return _typeElement != null ? _typeElement.Properties : new HashSet<IProperty>();
+        }
+        
         private static TypeHierarchy CreateTypeHierarchy(ITypeElement type,
             ISubstitution substitution,
             IKaVEList<ITypeName> seenTypes)

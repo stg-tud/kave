@@ -68,6 +68,29 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                             {
                                 Element = method
                             }
+                        },
+                        Delegates =
+                        {
+                            Names.Type("d:[p:int] [N.C+D, TestProject].()").AsDelegateTypeName
+                        },
+                        Fields =
+                        {
+                            Names.Field("[p:int] [N.C, TestProject].F")
+                        },
+                        EventHierarchies =
+                        {
+                            new EventHierarchy
+                            {
+                                Element = Names.Event(
+                                        "[d:[p:void] [System.Action, mscorlib, 4.0.0.0].()] [N.C, TestProject].E")
+                            }
+                        },
+                        PropertyHierarchies =
+                        {
+                            new PropertyHierarchy
+                            {
+                                Element = Names.Property("set get [p:int] [N.C, TestProject].P()")
+                            }
                         }
                     },
                     SST = new SST
@@ -133,6 +156,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                         TypeHierarchy = new TypeHierarchy
                         {
                             Element = type
+                        },
+                        Fields =
+                        {
+                            Names.Field("[{0}] [{0}].X", type),
+                            Names.Field("[{0}] [{0}].Y", type)
                         }
                     },
                     SST = new SST
@@ -188,6 +216,21 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                             new MethodHierarchy
                             {
                                 Element = method
+                            }
+                        },
+                        EventHierarchies =
+                        {
+                            new EventHierarchy
+                            {
+                                Element = Names.Event(
+                                        "[d:[p:void] [System.Action, mscorlib, 4.0.0.0].()] [i:N.I, TestProject].E")
+                            }
+                        },
+                        PropertyHierarchies =
+                        {
+                            new PropertyHierarchy
+                            {
+                                Element = Names.Property("set get [p:int] [i:N.I, TestProject].P()")
                             }
                         }
                     },
@@ -258,6 +301,29 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                             new MethodHierarchy
                             {
                                 Element = method
+                            }
+                        },
+                        Delegates =
+                        {
+                            Names.Type("d:[p:int] [N.S+D, TestProject].()").AsDelegateTypeName
+                        },
+                        Fields =
+                        {
+                            Names.Field("[p:int] [s:N.S, TestProject].F")
+                        },
+                        EventHierarchies =
+                        {
+                            new EventHierarchy
+                            {
+                                Element = Names.Event(
+                                        "[d:[p:void] [System.Action, mscorlib, 4.0.0.0].()] [s:N.S, TestProject].E")
+                            }
+                        },
+                        PropertyHierarchies =
+                        {
+                            new PropertyHierarchy
+                            {
+                                Element = Names.Property("set get [p:int] [s:N.S, TestProject].P()")
                             }
                         }
                     },

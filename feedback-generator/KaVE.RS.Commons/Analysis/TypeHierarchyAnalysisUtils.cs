@@ -18,6 +18,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.RS.Commons.Utils.Naming;
@@ -26,15 +27,17 @@ namespace KaVE.RS.Commons.Analysis
 {
     internal static class TypeHierarchyAnalysisUtils
     {
-        public static MethodHierarchy CollectDeclarationInfo([NotNull] this IMethod method, [NotNull] IMethodName name)
+        public static TH CollectDeclarationInfo<T, TH>([NotNull] this IOverridableMember member, [NotNull] T name) 
+            where T:class, IMemberName
+            where TH:IHierarchy<T>, new()
         {
-            var decl = new MethodHierarchy(name);
+            var decl = new TH {Element = name};
 
-            OverridableMemberInstance superMethod = null;
+            OverridableMemberInstance superMember = null;
 
-            foreach (var super in method.GetImmediateSuperMembers())
+            foreach (var super in member.GetImmediateSuperMembers())
             {
-                superMethod = super;
+                superMember = super;
 
                 if (super.DeclaringType.IsInterfaceType() ||
                     super.GetRootSuperMembers(false).Any(m => m.DeclaringType.IsInterfaceType()))
@@ -43,13 +46,13 @@ namespace KaVE.RS.Commons.Analysis
                 }
             }
 
-            if (superMethod != null)
+            if (superMember != null)
             {
-                decl.Super = superMethod.GetName<IMethodName>();
+                decl.Super = superMember.GetName<T>();
 
-                var firstMethod = superMethod.GetRootSuperMembers(false).FirstOrDefault() ?? superMethod;
+                var firstMember = superMember.GetRootSuperMembers(false).FirstOrDefault() ?? superMember;
 
-                decl.First = firstMethod.GetName<IMethodName>();
+                decl.First = firstMember.GetName<T>();
             }
 
             if (decl.First != null && decl.Super != null && decl.First.Equals(decl.Super))

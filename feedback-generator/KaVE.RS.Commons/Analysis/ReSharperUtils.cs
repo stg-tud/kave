@@ -23,6 +23,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.RS.Commons.Analysis
@@ -87,7 +88,7 @@ namespace KaVE.RS.Commons.Analysis
         {
             if (self.Method != null)
             {
-                var hierarchy = self.Method.CollectDeclarationInfo(self.Name);
+                var hierarchy = self.Method.CollectDeclarationInfo<IMethodName, MethodHierarchy>(self.Name);
 
                 if (hierarchy.First == null && hierarchy.Super != null)
                 {
