@@ -72,10 +72,10 @@ namespace KaVE.RS.Commons.Analysis
 
         private void AddEventHierarchies(ITypeShape typeShape)
         {
-            foreach (var m in FindImplementedEventsInType())
+            foreach (var e in FindImplementedEventsInType())
             {
-                var name = m.GetName<IEventName>();
-                var declaration = m.CollectDeclarationInfo<IEventName, EventHierarchy>(name);
+                var name = e.GetName<IEventName>();
+                var declaration = e.CollectDeclarationInfo<IEventName, EventHierarchy>(name);
                 typeShape.EventHierarchies.Add(declaration);
             }
         }
@@ -147,10 +147,10 @@ namespace KaVE.RS.Commons.Analysis
 
         private void AddPropertyHierarchies(ITypeShape typeShape)
         {
-            foreach (var m in FindImplementedPropertiesInType())
+            foreach (var p in FindImplementedPropertiesInType())
             {
-                var name = m.GetName<IPropertyName>();
-                var declaration = m.CollectDeclarationInfo<IPropertyName, PropertyHierarchy>(name);
+                var name = p.GetName<IPropertyName>();
+                var declaration = p.CollectDeclarationInfo<IPropertyName, PropertyHierarchy>(name);
                 typeShape.PropertyHierarchies.Add(declaration);
             }
         }

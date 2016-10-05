@@ -122,6 +122,11 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
             new TypeShapeSolutionAnalysis(solution, _logger, cbTypeShape).AnalyzeAllProjects();
 
+            foreach (var writingArchive in _writingArchives)
+            {
+                writingArchive.Value.Dispose();
+            }
+
             _logger.EndPossibleErrorBlock();
 
             Console.WriteLine("Analysis finished! ({0})", DateTime.Now);
@@ -129,10 +134,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 "Generated {0} Assembly Zips",
                 _writingArchives.Count);
 
-            foreach (var writingArchive in _writingArchives)
-            {
-                writingArchive.Value.Dispose();
-            }
+
         }
 
         private bool AssemblyAlreadyExists(IAssemblyName assemblyName)

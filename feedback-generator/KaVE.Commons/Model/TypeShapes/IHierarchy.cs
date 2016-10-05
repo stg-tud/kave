@@ -3,16 +3,16 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.TypeShapes
 {
-    public interface IHierarchy<T>
+    public interface IHierarchy<TMember> where TMember : IMemberName
     {
         [NotNull]
-        T Element { get; set; }
+        TMember Element { get; set; }
 
         [CanBeNull]
-        T Super { get; set; }
+        TMember Super { get; set; }
 
         [CanBeNull]
-        T First { get; set; }
+        TMember First { get; set; }
 
         bool IsDeclaredInParentHierarchy { get; }
     }

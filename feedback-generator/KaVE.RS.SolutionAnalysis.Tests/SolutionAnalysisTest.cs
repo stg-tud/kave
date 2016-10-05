@@ -29,7 +29,7 @@ using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
-    [Ignore]
+
     internal class SolutionAnalysisTest : BaseTestWithExistingSolution
     {
         protected override FileSystemPath ExistingSolutionFilePath
@@ -109,7 +109,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.Contains(results.AnalyzedTypesNames, "Project1.Struct");
         }
 
-        [Test]
+        [Test, Ignore]
         public void DoesNotAnalyzeInterface()
         {
             var results = RunAnalysis();
@@ -118,7 +118,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.DoesNotContain(results.AnalyzedTypesNames, "Project1.IInterface");
         }
 
-        [Test]
+        [Test, Ignore]
         public void DoesNotAnalyzeEnum()
         {
             var results = RunAnalysis();
@@ -127,7 +127,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.DoesNotContain(results.AnalyzedTypesNames, "Project1.Enum");
         }
 
-        [Test]
+        [Test, Ignore]
         public void DoesNotAnalyzeDelegate()
         {
             var results = RunAnalysis();
@@ -154,7 +154,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             var expectedDeclaration = new FieldDeclaration
             {
                 Name = Names.Field(
-                    "[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [Project1.ClassWithCoreLibDependency, Project1].MyList")
+                    "[i:System.Collections.Generic.IList`1[[T -> p:string]], mscorlib, 4.0.0.0] [Project1.ClassWithCoreLibDependency, Project1].MyList")
             };
             CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
         }
@@ -176,7 +176,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private Results RunAnalysis()
         {
             IList<string> infos = new List<string>();
-            var testLogger = Registry.GetComponent<TestLogger>();
+            var testLogger = new TestLogger(false);
             testLogger.InfoLogged += infos.Add;
 
             IList<Context> results = null;

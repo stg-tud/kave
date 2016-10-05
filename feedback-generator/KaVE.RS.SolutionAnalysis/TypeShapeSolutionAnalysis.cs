@@ -70,6 +70,7 @@ namespace KaVE.RS.SolutionAnalysis
             var symbolScope = psiServices.Symbols.GetSymbolScope(primaryPsiModule, true, true);
             var globalNamespace = symbolScope.GlobalNamespace;
             var nestedNamespaces = globalNamespace.GetNestedNamespaces(symbolScope);
+            // TODO @seb: Rekursion umbauen in Einzelaufrufe
             AnalyzeNamespaces(nestedNamespaces, symbolScope);
         }
 
@@ -80,12 +81,14 @@ namespace KaVE.RS.SolutionAnalysis
                 var nestedTypeElements = nestedNamespace.GetNestedTypeElements(symbolScope);
                 foreach (var typeElement in nestedTypeElements)
                 {
+                    // TODO @seb: TypeShapeAnalysis für RootTypes implementieren
                     if (IsRootType(typeElement))
                     {
                         continue;
                     }
                     var typeShapeAnalysis = new TypeShapeAnalysis();
                     var typeShape = typeShapeAnalysis.Analyze(typeElement);
+                    // TODO: no local projects (check TypeShape)
                     var assemblyAlreadyAnalyzed = _cbTypeShape(typeShape);
                     if (assemblyAlreadyAnalyzed)
                     {

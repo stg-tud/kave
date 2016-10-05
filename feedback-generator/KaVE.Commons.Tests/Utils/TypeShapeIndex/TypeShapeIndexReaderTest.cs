@@ -75,13 +75,13 @@ namespace KaVE.Commons.Tests.Utils.TypeShapeIndex
             Assert.AreEqual(expected, typeShape);
         }
 
-        private static TypeShape GetTypeShape(string type, string assembly1)
+        private static TypeShape GetTypeShape(string type, string assembly)
         {
             return new TypeShape
             {
                 TypeHierarchy = new TypeHierarchy
                 {
-                    Element = GetTypeName(type, assembly1)
+                    Element = GetTypeName(type, assembly)
                 }
             };
         }
