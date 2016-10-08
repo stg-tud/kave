@@ -65,7 +65,6 @@ namespace KaVE.RS.SolutionAnalysis
             var psiModules = _solution.PsiModules();
             var primaryPsiModule = psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default);
             Asserts.NotNull(primaryPsiModule, "no psi module");
-            
             var psiServices = primaryPsiModule.GetPsiServices();
             var symbolScope = psiServices.Symbols.GetSymbolScope(primaryPsiModule, true, true);
             var globalNamespace = symbolScope.GlobalNamespace;
@@ -78,21 +77,25 @@ namespace KaVE.RS.SolutionAnalysis
         {
             foreach (var nestedNamespace in namespaces)
             {
-                var nestedTypeElements = nestedNamespace.GetNestedTypeElements(symbolScope);
-                foreach (var typeElement in nestedTypeElements)
+                var nestedTypeElements = new Queue<ITypeElement>(nestedNamespace.GetNestedTypeElements(symbolScope));
+                while (!nestedTypeElements.IsEmpty())
                 {
-                    // TODO @seb: TypeShapeAnalysis für RootTypes implementieren
-                    if (IsRootType(typeElement))
+                    var typeElement = nestedTypeElements.Dequeue();
+                    var typeShape = AnalyzeTypeElement(typeElement);
+                    if (typeShape == null)
                     {
                         continue;
                     }
-                    var typeShapeAnalysis = new TypeShapeAnalysis();
-                    var typeShape = typeShapeAnalysis.Analyze(typeElement);
-                    // TODO: no local projects (check TypeShape)
                     var assemblyAlreadyAnalyzed = _cbTypeShape(typeShape);
                     if (assemblyAlreadyAnalyzed)
                     {
                         break;
+                    }
+
+                    var nestedTypes = typeElement.NestedTypes;
+                    if (nestedTypes.Count > 0)
+                    {
+                        nestedTypeElements.EnqueueRange(nestedTypes);
                     }
                 }
                 var nestedNamespaces = nestedNamespace.GetNestedNamespaces(symbolScope);
@@ -100,8 +103,23 @@ namespace KaVE.RS.SolutionAnalysis
                 {
                     AnalyzeNamespaces(nestedNamespaces, symbolScope);
                 }
-                
             }
+        }
+
+        private TypeShape AnalyzeTypeElement(ITypeElement typeElement)
+        {
+            // TODO @seb: TypeShapeAnalysis für RootTypes implementieren
+            if (IsRootType(typeElement))
+            {
+                return null;
+            }
+            var typeShapeAnalysis = new TypeShapeAnalysis();
+            var typeShape = typeShapeAnalysis.Analyze(typeElement);
+            if (typeShape.TypeHierarchy.Element.Assembly.IsLocalProject)
+            {
+                return null;
+            }
+            return typeShape;
         }
 
         private static bool IsRootType(ITypeElement type)

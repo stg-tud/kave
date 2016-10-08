@@ -159,7 +159,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
         }
 
-        [Test, Ignore("This test runs on my machine, but not on the build server. I have no idea why... - Sven")]
+        [Test]
         public void AnalysisResolvesNuGetDependencies()
         {
             var results = RunAnalysis();
