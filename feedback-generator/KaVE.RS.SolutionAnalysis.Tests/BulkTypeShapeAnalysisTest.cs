@@ -64,7 +64,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             return _slnFinder.GetTestData();
         }
 
-        [TestCaseSource("FindSolutionFiles")]
+        //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string testCaseLabel, string sln)
         {
             if (_slnFinder.ShouldIgnore(sln))
@@ -120,7 +120,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 return false;
             };
 
-            new TypeShapeSolutionAnalysis(solution, _logger, cbTypeShape).AnalyzeAllProjects();
+            new TypeShapeSolutionAnalysis(lifetime,solution, _logger, cbTypeShape).AnalyzeAllProjects();
 
             foreach (var writingArchive in _writingArchives)
             {

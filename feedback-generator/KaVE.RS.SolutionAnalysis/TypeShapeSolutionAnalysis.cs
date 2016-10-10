@@ -16,10 +16,12 @@
 
 using System;
 using System.Collections.Generic;
+using JetBrains.DataFlow;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
+using JetBrains.ReSharper.Psi.Impl.Reflection2;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.Util;
 using KaVE.Commons.Model.TypeShapes;
@@ -34,13 +36,16 @@ namespace KaVE.RS.SolutionAnalysis
         private readonly ISolution _solution;
         private readonly ILogger _logger;
         private readonly Func<TypeShape, bool> _cbTypeShape;
+        private Lifetime _lifetime;
 
-        public TypeShapeSolutionAnalysis(ISolution solution, ILogger logger, Func<TypeShape, bool> cbTypeShape)
+        public TypeShapeSolutionAnalysis(Lifetime lifetime,ISolution solution, ILogger logger, Func<TypeShape, bool> cbTypeShape)
         {
+            _lifetime = lifetime;
             _solution = solution;
             _logger = logger;
             _cbTypeShape = cbTypeShape;
         }
+
 
         /// <summary>
         ///     Requires re-entrency guard (ReentrancyGuard.Current.Execute) and read lock (ReadLockCookie.Execute).
@@ -67,10 +72,22 @@ namespace KaVE.RS.SolutionAnalysis
             Asserts.NotNull(primaryPsiModule, "no psi module");
             var psiServices = primaryPsiModule.GetPsiServices();
             var symbolScope = psiServices.Symbols.GetSymbolScope(primaryPsiModule, true, true);
+
+            //@seb: replace with iteration on assemblies 
+            //psiServices.Symbols.AssemblyPsiFiles.View(_lifetime, Viewer);
             var globalNamespace = symbolScope.GlobalNamespace;
             var nestedNamespaces = globalNamespace.GetNestedNamespaces(symbolScope);
             // TODO @seb: Rekursion umbauen in Einzelaufrufe
             AnalyzeNamespaces(nestedNamespaces, symbolScope);
+        }
+
+        private void Viewer(Lifetime lifetime, AssemblyPsiFile assemblyPsiFile)
+        {
+            var compiledTypeElements = assemblyPsiFile.Types;
+            foreach (var compiledTypeElement in compiledTypeElements)
+            {
+                //@seb: add nested types
+            }
         }
 
         private void AnalyzeNamespaces(ICollection<INamespace> namespaces, ISymbolScope symbolScope)

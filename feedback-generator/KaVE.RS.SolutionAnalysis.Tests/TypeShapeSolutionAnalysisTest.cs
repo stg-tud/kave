@@ -266,7 +266,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             DoTestSolution(
                 (lifetime, solution) =>
                 {
-                    new TypeShapeSolutionAnalysis(solution, testLogger, cbTypeShape).AnalyzeAllProjects();
+                    new TypeShapeSolutionAnalysis(lifetime,solution, testLogger, cbTypeShape).AnalyzeAllProjects();
                 });
 
             testLogger.InfoLogged -= infos.Add;
