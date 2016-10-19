@@ -160,6 +160,16 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void GetAllLazy()
+        {
+            PrepareZip("a", "b", "c");
+
+            var actual = _sut.GetAllLazy<string>();
+            var expected = new List<string> {"a", "b", "c"};
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void GetAllRemovesNullValues()
         {
             PrepareZip("a", null, "b");

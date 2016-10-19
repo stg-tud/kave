@@ -123,6 +123,14 @@ namespace KaVE.Commons.Utils.IO.Archives
             return all;
         }
 
+        public IEnumerable<T> GetAllLazy<T>()
+        {
+            while (HasNext())
+            {
+                yield return GetNext<T>();
+            }
+        }
+
         public void Dispose()
         {
             _zipStream.Dispose();
