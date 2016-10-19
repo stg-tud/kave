@@ -19,6 +19,8 @@ using System.IO;
 using System.Threading;
 using KaVE.FeedbackProcessor.Naming;
 using KaVE.FeedbackProcessor.Preprocessing;
+using KaVE.FeedbackProcessor.Preprocessing.Model;
+using KaVE.FeedbackProcessor.StatisticsUltimate;
 using KaVE.FeedbackProcessor.WatchdogExports;
 
 namespace KaVE.FeedbackProcessor
@@ -27,8 +29,8 @@ namespace KaVE.FeedbackProcessor
     {
         private static readonly int NumWorkers = Environment.ProcessorCount;
 
-        //private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
-        private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
+        private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
+        //private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
 
         private const string DirTmp = Root + @"Tmp\";
 
@@ -56,11 +58,19 @@ namespace KaVE.FeedbackProcessor
             //new SSTSequenceExtractor(Logger).Run();
             //RunExhaustiveNamesFixTests();
             //RunPreprocessing();
-            RunWatchdogExport();
+            //RunWatchdogExport();
+            RunStatistics();
 
             var endedAt = DateTime.Now;
             Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
             Console.ReadKey();
+        }
+
+        private static void RunStatistics()
+        {
+            // reuse existing component
+            var io = new PreprocessingIo(DirEventsOut, DirTmp, DirTmp);
+            new StatisticsRunner(io, new StatisticsLogger(), NumWorkers).Run();
         }
 
         private static void RunMemExampleToEnsureSupportForBigObjects()

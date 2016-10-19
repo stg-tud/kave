@@ -130,6 +130,10 @@
     <Compile Include="Cleanup\Processors\CommandFollowupProcessor.cs" />
     <Compile Include="Cleanup\Processors\ToConcurrentEventMapper.cs" />
     <Compile Include="Cleanup\Processors\ErrorFilterProcessor.cs" />
+    <Compile Include="StatisticsUltimate\StatisticsExtractor.cs" />
+    <Compile Include="StatisticsUltimate\StatisticsLogger.cs" />
+    <Compile Include="StatisticsUltimate\StatisticsRunner.cs" />
+    <Compile Include="StatisticsUltimate\UserStatistics.cs" />
     <Compile Include="WatchdogExports\EventFixer.cs" />
     <Compile Include="WatchdogExports\Exporter\EventStreamExport.cs" />
     <Compile Include="EventStreamFilter.cs" />
