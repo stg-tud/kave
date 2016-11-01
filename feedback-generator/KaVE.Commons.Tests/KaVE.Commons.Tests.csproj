@@ -94,6 +94,7 @@
     <Compile Include="Model\Events\IDEEventTest.cs" />
     <Compile Include="Model\Events\InfoEventTest.cs" />
     <Compile Include="Model\Events\UserProfiles\UserProfileEventTest.cs" />
+    <Compile Include="Model\KaVEVersionTest.cs" />
     <Compile Include="Model\Naming\BuiltInTypeAliasesTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\NameFixesTest.cs" />
     <Compile Include="Model\Naming\Impl\v0\CodeElements\MemberTestBase.cs" />

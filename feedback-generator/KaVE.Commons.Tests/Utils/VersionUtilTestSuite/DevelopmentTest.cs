@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 
@@ -42,7 +43,7 @@ namespace KaVE.Commons.Tests.Utils.VersionUtilTestSuite
         public void CurrentVariant()
         {
             var actual = new VersionUtil().GetCurrentVariant();
-            var expected = VersionUtil.Variant.Development;
+            var expected = Variant.Development;
             Assert.AreEqual(expected, actual);
         }
 

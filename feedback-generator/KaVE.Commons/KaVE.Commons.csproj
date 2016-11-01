@@ -79,6 +79,7 @@
     <Compile Include="Model\Events\UserProfiles\YesNoUnknown.cs" />
     <Compile Include="Model\Events\SystemEvent.cs" />
     <Compile Include="Model\Events\TestRunEvents\TestRunEvent.cs" />
+    <Compile Include="Model\KaVEVersion.cs" />
     <Compile Include="Model\Naming\CodeElements\IAliasName.cs" />
     <Compile Include="Model\Naming\IDEComponents\ICommandBarControlName.cs" />
     <Compile Include="Model\Naming\IDEComponents\ICommandName.cs" />

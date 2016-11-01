@@ -16,6 +16,7 @@
 
 using System;
 using System.Reflection;
+using KaVE.Commons.Model;
 
 namespace KaVE.Commons.Utils
 {
@@ -23,7 +24,7 @@ namespace KaVE.Commons.Utils
     {
         private Assembly GetAssembly()
         {
-            return typeof (VersionUtil).Assembly;
+            return typeof(VersionUtil).Assembly;
         }
 
         public virtual Version GetCurrentVersion()
@@ -35,7 +36,7 @@ namespace KaVE.Commons.Utils
         {
             try
             {
-                var attributeType = typeof (AssemblyInformationalVersionAttribute);
+                var attributeType = typeof(AssemblyInformationalVersionAttribute);
                 var versions = GetAssembly().GetCustomAttributes(attributeType, true);
                 // ReSharper disable once PossibleNullReferenceException
                 return (versions[0] as AssemblyInformationalVersionAttribute).InformationalVersion;
@@ -52,7 +53,7 @@ namespace KaVE.Commons.Utils
             {
                 var informalVersion = GetCurrentInformalVersion();
                 var variantStr = informalVersion.Substring(informalVersion.LastIndexOf('-') + 1);
-                return (Variant) Enum.Parse(typeof (Variant), variantStr);
+                return (Variant) Enum.Parse(typeof(Variant), variantStr);
             }
             catch
             {
@@ -60,12 +61,7 @@ namespace KaVE.Commons.Utils
             }
         }
 
-        public enum Variant
         {
-            Unknown,
-            Development,
-            Default,
-            Datev
         }
     }
 }
