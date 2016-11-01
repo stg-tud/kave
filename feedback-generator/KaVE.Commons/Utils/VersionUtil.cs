@@ -16,7 +16,10 @@
 
 using System;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils
 {
@@ -61,7 +64,24 @@ namespace KaVE.Commons.Utils
             }
         }
 
+        private static readonly Regex VersionExpr = new Regex("^0\\.(\\d+)-(\\w+)$");
+
+        [NotNull]
+        public static IKaVEVersion Parse([NotNull] string versionStr)
         {
+            Asserts.Not(string.IsNullOrEmpty(versionStr));
+
+            var res = VersionExpr.Match(versionStr);
+            Asserts.That(res.Success);
+
+            var version = int.Parse(res.Groups[1].ToString());
+            var variant = (Variant) Enum.Parse(typeof(Variant), res.Groups[2].ToString());
+
+            return new KaVEVersion
+            {
+                KaVEVersionNumber = version,
+                Variant = variant
+            };
         }
     }
 }

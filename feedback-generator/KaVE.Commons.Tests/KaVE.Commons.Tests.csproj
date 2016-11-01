@@ -320,6 +320,7 @@
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\ToStringUtilsTest.cs" />
     <Compile Include="Utils\VersionUtilTestSuite\$(KaVEProduct)Test.cs" />
+    <Compile Include="Utils\VersionUtilTestSuite\ParsingTest.cs" />
     <Compile Include="Utils\XamlUtilsTest.cs" />
   </ItemGroup>
   <ItemGroup>
