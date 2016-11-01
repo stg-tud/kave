@@ -38,7 +38,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private const string ContextRoot = Root + @"Contexts\";
         private const string LogRoot = Root + @"Logs\";
 
-        private static SolutionFinder _slnFinder;
+        private static SolutionFinder SlnFinder;
 
         private string _currentSolution;
         private string _currentSolutionPath;
@@ -55,34 +55,26 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         public static IEnumerable<string[]> FindSolutionFiles()
         {
             // set field here to prevent initialization error when path is not found
-            if (_slnFinder == null)
+            if (SlnFinder == null)
             {
-                _slnFinder = new SolutionFinder(RepositoryRoot);
+                SlnFinder = new SolutionFinder(RepositoryRoot);
             }
-            return _slnFinder.GetTestData();
+            return SlnFinder.GetTestData();
         }
 
         //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string testCaseLabel, string sln)
         {
-            using (var proc = Process.GetCurrentProcess())
-            {
-                ReportMem(proc);
-                var memInMb = proc.VirtualMemorySize64/(1024*1024);
-                if (memInMb > 1700)
-                {
-                    Assert.Fail("analysis aborted, available memory is low (VirtualMemorySize64 is at {0}MB)", memInMb);
-                }
-            }
+            PrintFreeMemoryAndCheckConsumption();
 
-            if (_slnFinder.ShouldIgnore(sln))
+            if (SlnFinder.ShouldIgnore(sln))
             {
                 Assert.Ignore();
             }
 
             _currentSolution = sln;
-            _currentSolutionPath = _slnFinder.GetFullPath(_currentSolution);
-            _slnFinder.Start(sln);
+            _currentSolutionPath = SlnFinder.GetFullPath(_currentSolution);
+            SlnFinder.Start(sln);
 
             Console.WriteLine("Opening solution: {0} ({1})\n", ExistingSolutionFilePath, DateTime.Now);
             Console.WriteLine("Log: {0}", _logName = GetLogName(sln));
@@ -95,37 +87,30 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
             if (_logger.HasError)
             {
-                _slnFinder.Crash(sln);
+                SlnFinder.Crash(sln);
                 Assert.Fail("execution produced at least one error, see error log for details\n");
             }
             else
             {
-                _slnFinder.End(sln);
+                SlnFinder.End(sln);
             }
         }
 
-        private void ReportMem(Process proc)
+        private static void PrintFreeMemoryAndCheckConsumption()
         {
-            Console.WriteLine("-------------");
-            Console.WriteLine("memory consumption:");
-            //ReportMem("GC.GetTotalMemory(false)", GC.GetTotalMemory(false));
-            //ReportMem("GC.GetTotalMemory(true)", GC.GetTotalMemory(true));
+            using (var proc = Process.GetCurrentProcess())
+            {
+                var sizeInByte = proc.VirtualMemorySize64;
+                var sizeInMB = sizeInByte/(1024.0*1024.0);
 
-            //ReportMem("PagedMemorySize64", proc.PagedMemorySize64);
-            //ReportMem("NonpagedSystemMemorySize64", proc.NonpagedSystemMemorySize64);
-            //ReportMem("PagedSystemMemorySize64", proc.PagedSystemMemorySize64);
-            //ReportMem("PeakPagedMemorySize64", proc.PeakPagedMemorySize64);
-            //ReportMem("PeakVirtualMemorySize64", proc.PeakVirtualMemorySize64);
-            //ReportMem("PeakWorkingSet64", proc.PeakWorkingSet64);
-            //ReportMem("PrivateMemorySize64", proc.PrivateMemorySize64);
-            ReportMem("VirtualMemorySize64", proc.VirtualMemorySize64);
-            Console.WriteLine("-------------");
-        }
-
-        private void ReportMem(string title, long sizeInByte)
-        {
-            var sizeInMB = sizeInByte/(1024.0*1024.0);
-            Console.WriteLine("  {0}:\t{1:#,0.00}MB", title, sizeInMB);
+                Console.WriteLine("Current memory consumption: {0:#,0.00}MB (VirtualMemorySize64)", sizeInMB);
+                if (sizeInMB > 1700)
+                {
+                    Assert.Fail(
+                        "analysis aborted, available memory is too low (VirtualMemorySize64 is at {0}MB)",
+                        sizeInMB);
+                }
+            }
         }
 
         private void RunAnalysis(Lifetime lifetime, ISolution solution)
