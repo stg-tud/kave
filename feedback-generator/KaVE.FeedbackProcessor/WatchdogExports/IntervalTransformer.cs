@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Import;
@@ -31,11 +32,14 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
     {
         private readonly ILogger _logger;
         private readonly IEventFixer _fixer;
+        private readonly int _firstVersionToInclude;
 
-        public IntervalTransformer(ILogger logger, IEventFixer fixer)
+        public IntervalTransformer(ILogger logger, IEventFixer fixer, int firstVersionToInclude)
         {
+            Asserts.That(firstVersionToInclude >= 0);
             _logger = logger;
             _fixer = fixer;
+            _firstVersionToInclude = firstVersionToInclude;
         }
 
         private static ZeroLengthIntervalFilterTransformer CreateDefaultTransformer()
@@ -98,6 +102,12 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
                 }
 
                 if (TransformerUtils.EventHasNoTimeData(e))
+                {
+                    continue;
+                }
+
+                var version = VersionUtil.Parse(e.KaVEVersion);
+                if (version.KaVEVersionNumber < _firstVersionToInclude)
                 {
                     continue;
                 }
