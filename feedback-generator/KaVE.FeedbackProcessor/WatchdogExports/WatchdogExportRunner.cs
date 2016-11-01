@@ -27,6 +27,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
 {
     public class WatchdogExportRunner
     {
+        private const int FirstVersionToInclude = 1010;
+
         private readonly string _dirIn;
         private readonly string _dirWd;
         private readonly string _dirSvg;
@@ -36,6 +38,9 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
 
         public WatchdogExportRunner(string dirIn, string dirWd, string dirSvg)
         {
+            Console.WriteLine(
+                "Initializing WatchdogExportRunner (first version to include: 0.{0})",
+                FirstVersionToInclude);
             _dirIn = dirIn;
             _dirWd = dirWd;
             _dirSvg = dirSvg;
@@ -43,9 +48,14 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             _export = new EventStreamExport(dirSvg, _eventFixer);
         }
 
+        private IntervalTransformer InitTransformer()
+        {
+            return new IntervalTransformer(_logger, _eventFixer, FirstVersionToInclude);
+        }
+
         public void RunTransformation()
         {
-            var transformer = new IntervalTransformer(_logger, _eventFixer);
+            var transformer = InitTransformer();
 
             Console.Write(@"Finding Zips... ");
             var zips = FindZips(_dirIn);
@@ -90,7 +100,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
             foreach (var zip in FindZips(_dirIn))
             {
                 _logger.Info(@"Opening {0} ...", zip);
-                var intervals = new IntervalTransformer(_logger, _eventFixer).TransformFile(zip).ToList();
+                var intervals = InitTransformer().TransformFile(zip).ToList();
                 _logger.Info(@"Found {0} intervals.", intervals.Count);
 
 
