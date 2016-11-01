@@ -27,8 +27,8 @@ using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.Commons.Utils.TypeShapeIndex;
 using NUnit.Framework;
-using static KaVE.Commons.Utils.TypeShapeIndex.TypeShapeIndexUtil;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
@@ -120,7 +120,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 return false;
             };
 
-            new TypeShapeSolutionAnalysis(lifetime,solution, _logger, cbTypeShape).AnalyzeAllProjects();
+            new TypeShapeSolutionAnalysis(lifetime, solution, _logger, cbTypeShape).AnalyzeAllProjects();
 
             foreach (var writingArchive in _writingArchives)
             {
@@ -133,8 +133,6 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             Console.WriteLine(
                 "Generated {0} Assembly Zips",
                 _writingArchives.Count);
-
-
         }
 
         private bool AssemblyAlreadyExists(IAssemblyName assemblyName)
@@ -152,8 +150,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
         private static string GetZipName(IAssemblyName assemblyName)
         {
-            var assemblyFileName = GetAssemblyFileName(assemblyName);
-            var fileName = $"{TypeShapeRoot}\\{assemblyFileName}.zip";
+            var assemblyFileName = TypeShapeIndexUtil.GetAssemblyFileName(assemblyName);
+            var fileName = TypeShapeRoot + "\\" + assemblyFileName + ".zip";
             EnsureFolderExists(fileName);
             return fileName;
         }

@@ -30,7 +30,7 @@ namespace KaVE.Commons.Utils.TypeShapeIndex
                 if (assemblyFileName != null)
                 {
                     var assemblyNameStrings = assemblyFileName.Split('-');
-                    var assembly = Names.Assembly($"{assemblyNameStrings[0]}, {assemblyNameStrings[1]}");
+                    var assembly = Names.Assembly(assemblyNameStrings[0] + ", " + assemblyNameStrings[1]);
                     result.Add(assembly);
                 }
             }
@@ -81,7 +81,7 @@ namespace KaVE.Commons.Utils.TypeShapeIndex
 
         private string GetZipPath(string assemblyFileName)
         {
-            return $"{_path}\\{assemblyFileName}.zip";
+            return _path + @"\" + assemblyFileName + ".zip";
         }
     }
 }

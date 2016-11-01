@@ -16,7 +16,7 @@ namespace KaVE.Commons.Utils.TypeShapeIndex
             {
                 versionString = assemblyVersion.Identifier;
             }
-            return $"{asm.Name}-{versionString}";
+            return asm.Name + "-" + versionString;
         }
     }
 }

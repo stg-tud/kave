@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using KaVE.Commons.Model.Naming;
+﻿using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils;
@@ -30,7 +27,7 @@ namespace KaVE.Commons.Tests.Utils.TypeShapeIndex
                 Names.Assembly("Assembly1, 0.0.0.0"),
                 Names.Assembly("Assembly2, 0.0.0.0"),
                 Names.Assembly("Assembly3, 0.0.0.0")
-            );
+                );
 
             Assert.AreEqual(expected, allAssemblies);
         }
@@ -44,7 +41,7 @@ namespace KaVE.Commons.Tests.Utils.TypeShapeIndex
                 GetTypeName("T1", "Assembly1"),
                 GetTypeName("T2", "Assembly1"),
                 GetTypeName("T3", "Assembly1")
-            );
+                );
             Assert.AreEqual(expected, typeNames);
         }
 
@@ -88,23 +85,23 @@ namespace KaVE.Commons.Tests.Utils.TypeShapeIndex
 
         private void PrepareAssemblyZips()
         {
-            string assembly1 = "Assembly1";
-            string assembly2 = "Assembly2";
-            string assembly3 = "Assembly3";
+            const string assembly1 = "Assembly1";
+            const string assembly2 = "Assembly2";
+            const string assembly3 = "Assembly3";
             WriteZip(
-                $"{DirTestRoot}\\{assembly1}-0.0.0.0.zip",
+                DirTestRoot + "\\" + assembly1 + "-0.0.0.0.zip",
                 GetTypeShape("T1", assembly1),
                 GetTypeShape("T2", assembly1),
                 GetTypeShape("T3", assembly1)
-            );
+                );
             WriteZip(
-                $"{DirTestRoot}\\{assembly2}-0.0.0.0.zip",
+                DirTestRoot + "\\" + assembly2 + "-0.0.0.0.zip",
                 GetTypeShape("T4", assembly2)
-            );
+                );
             WriteZip(
-                $"{DirTestRoot}\\{assembly3}-0.0.0.0.zip",
+                DirTestRoot + "\\" + assembly3 + "-0.0.0.0.zip",
                 GetTypeShape("T5", assembly3)
-            );
+                );
         }
 
         private static ITypeName GetTypeName(string name, string assembly)
