@@ -32,15 +32,23 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
     {
         private IEventFixer _fixer;
         private int _firstVersionToInclude;
+        private List<IDEEvent> _processedEvents;
+        private IEventToIntervalTransformer<Interval> _testTransformer;
 
         [SetUp]
         public void Setup()
         {
+            _processedEvents = new List<IDEEvent>();
             _firstVersionToInclude = 0;
             _fixer = Mock.Of<IEventFixer>();
             Mock.Get(_fixer)
                 .Setup(f => f.FixAndFilter(It.IsAny<IEnumerable<IDEEvent>>()))
                 .Returns<IEnumerable<IDEEvent>>(es => es);
+
+            _testTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
+            Mock.Get(_testTransformer)
+                .Setup(t => t.ProcessEvent(It.IsAny<IDEEvent>()))
+                .Callback<IDEEvent>(_processedEvents.Add);
         }
 
         private IntervalTransformer InitTransformer()
@@ -70,21 +78,14 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
                 TriggeredAt = DateTime.Now.AddMinutes(-1)
             };
 
-            var processedEvents = new List<IDEEvent>();
-
-            var mockTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
-            Mock.Get(mockTransformer)
-                .Setup(t => t.ProcessEvent(It.IsAny<IDEEvent>()))
-                .Callback<IDEEvent>(processedEvents.Add);
-
 
             InitTransformer().TransformWithCustomTransformer(
                 new[] {goodEvent, badEvent},
-                mockTransformer);
+                _testTransformer);
 
             Mock.Get(_fixer).Verify(f => f.FixAndFilter(It.IsAny<IEnumerable<IDEEvent>>()));
 
-            CollectionAssert.AreEqual(new[] {goodEvent}, processedEvents);
+            CollectionAssert.AreEqual(new[] {goodEvent}, _processedEvents);
         }
 
         [Test]
@@ -108,21 +109,16 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
                 TriggeredAt = DateTime.Now,
                 TerminatedAt = DateTime.Now
             };
-            _firstVersionToInclude = 1;
-            var processedEvents = new List<IDEEvent>();
 
-            var mockTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
-            Mock.Get(mockTransformer)
-                .Setup(t => t.ProcessEvent(It.IsAny<IDEEvent>()))
-                .Callback<IDEEvent>(processedEvents.Add);
+            _firstVersionToInclude = 1;
 
             InitTransformer().TransformWithCustomTransformer(
                 new[] {e0, e1, e2},
-                mockTransformer);
+                _testTransformer);
 
             Mock.Get(_fixer).Verify(f => f.FixAndFilter(It.IsAny<IEnumerable<IDEEvent>>()));
 
-            CollectionAssert.AreEqual(new[] {e1, e2}, processedEvents);
+            CollectionAssert.AreEqual(new[] {e1, e2}, _processedEvents);
         }
 
         [Test, ExpectedException(typeof(AssertException))]
@@ -134,11 +130,9 @@ namespace KaVE.FeedbackProcessor.Tests.WatchdogExports
                 new TestIDEEvent {TriggeredAt = DateTime.Now.AddMinutes(-1), TerminatedAt = DateTime.Now}
             };
 
-            var mockTransformer = Mock.Of<IEventToIntervalTransformer<Interval>>();
-
             InitTransformer().TransformWithCustomTransformer(
                 unorderedEvents,
-                mockTransformer);
+                _testTransformer);
         }
     }
 }
