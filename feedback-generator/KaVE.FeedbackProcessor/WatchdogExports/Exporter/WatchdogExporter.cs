@@ -125,8 +125,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
         {
             var obj = new WatchdogObject();
             obj.Properties.Add("it", String(WatchdogUtils.GetSerializedIntervalTypeName(interval)));
-            obj.Properties.Add("ts", Wrapped("$numberLong", interval.StartTime.ToJavaTimestamp()));
-            obj.Properties.Add("te", Wrapped("$numberLong", (interval.StartTime + interval.Duration).ToJavaTimestamp()));
+            obj.Properties.Add("ts", Wrapped("$numberLong", interval.StartTime.AsUtcTimestamp()));
+            obj.Properties.Add("te", Wrapped("$numberLong", (interval.StartTime + interval.Duration).AsUtcTimestamp()));
             obj.Properties.Add("ss", String(WatchdogUtils.Sha1Hash(interval.IDESessionId)));
             obj.Properties.Add("wdv", String("KaVE " + (interval.KaVEVersion ?? "?")));
             obj.Properties.Add("ide", String("vs"));
@@ -164,8 +164,8 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
             doc.Properties.Add("fn", String(WatchdogUtils.Sha1Hash(Path.GetFileName(fileInteractionInterval.FileName))));
             doc.Properties.Add("sloc", Int(0));
             doc.Properties.Add(
-                   "dt",
-                   String(WatchdogUtils.GetSerializedDocumentTypeName(fileInteractionInterval.FileType)));
+                "dt",
+                String(WatchdogUtils.GetSerializedDocumentTypeName(fileInteractionInterval.FileType)));
             return doc;
         }
 
@@ -238,7 +238,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
             obj.Properties.Add("productionPercentage", Int(0));
             obj.Properties.Add("useJunitOnlyForUnitTesting", String("No"));
             obj.Properties.Add("followTestDrivenDesign", String("Unknown"));
-            obj.Properties.Add("localRegistrationDate", Wrapped("$numberLong", interval.CreationTime.ToJavaTimestamp()));
+            obj.Properties.Add("localRegistrationDate", Wrapped("$numberLong", interval.CreationTime.AsUtcTimestamp()));
             obj.Properties.Add("userId", String(WatchdogUtils.Sha1Hash(interval.UserId)));
             obj.Properties.Add("website", String(""));
             obj.Properties.Add("wdv", String("KaVE"));
@@ -256,7 +256,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
             obj.Properties.Add("organization", String("Unknown"));
             obj.Properties.Add("programmingExperience", String("Unknown"));
             obj.Properties.Add("mayContactUser", Literal("false"));
-            obj.Properties.Add("localRegistrationDate", Wrapped("$numberLong", interval.StartTime.ToJavaTimestamp()));
+            obj.Properties.Add("localRegistrationDate", Wrapped("$numberLong", interval.StartTime.AsUtcTimestamp()));
             obj.Properties.Add("operatingSystem", String("Unknown"));
             obj.Properties.Add("wdv", String("KaVE"));
             obj.Properties.Add("ide", String("vs"));

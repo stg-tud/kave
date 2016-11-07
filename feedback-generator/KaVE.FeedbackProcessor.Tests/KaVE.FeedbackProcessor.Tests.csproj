@@ -131,6 +131,7 @@
     <Compile Include="WatchdogExports\Exporter\SvgExportTest.cs" />
     <Compile Include="WatchdogExports\Exporter\WatchdogDataFormatTest.cs" />
     <Compile Include="WatchdogExports\Exporter\WatchdogExporterTest.cs" />
+    <Compile Include="WatchdogExports\Exporter\WatchdogUtilsTest.cs" />
     <Compile Include="WatchdogExports\Model\FileInteractionIntervalTest.cs" />
     <Compile Include="WatchdogExports\Model\FileOpenIntervalTest.cs" />
     <Compile Include="WatchdogExports\Model\IntervalTest.cs" />

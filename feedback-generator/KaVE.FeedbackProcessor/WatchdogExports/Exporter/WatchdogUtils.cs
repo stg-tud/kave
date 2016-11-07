@@ -103,11 +103,12 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
             }
         }
 
-        public static long ToJavaTimestamp(this DateTime date)
+        public static long AsUtcTimestamp(this DateTime date)
         {
-            long unixTimestamp = date.Ticks - new DateTime(1970, 1, 1).Ticks;
-            unixTimestamp /= TimeSpan.TicksPerSecond;
-            return unixTimestamp*1000;
+            var start = new DateTime(1970, 1, 1);
+            var unixTimestamp = date.Ticks - start.Ticks;
+            unixTimestamp /= TimeSpan.TicksPerMillisecond;
+            return unixTimestamp;
         }
 
         public static string ToIsoDate(this DateTime date)
