@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.TestRunEvents;
@@ -132,6 +133,12 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
             {
                 return FileInteractionType.Reading;
             }
+
+            if (ShouldFilterOutToolWindowEvents(e))
+            {
+                return null;
+            }
+
             // not directly assignable to "type" or "read"... we prolong the existing type
             if (e is NavigationEvent || e is WindowEvent)
             {
@@ -142,6 +149,20 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Transformers
                 return _cur.Type;
             }
             return null;
+        }
+
+        private static bool ShouldFilterOutToolWindowEvents(IDEEvent e)
+        {
+            var we = e as WindowEvent;
+            if (we == null)
+            {
+                return false;
+            }
+
+            var expectedCaptionForFileWindow = Path.GetFileName(e.ActiveDocument.FileName);
+            var isFileWindowEvent = we.Window.Caption.Equals(expectedCaptionForFileWindow);
+
+            return !isFileWindowEvent;
         }
 
         private bool IsDebuggerEvent(IDEEvent ideEvent)

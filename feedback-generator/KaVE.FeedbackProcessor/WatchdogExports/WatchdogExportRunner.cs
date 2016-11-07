@@ -104,7 +104,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports
                 _logger.Info(@"Found {0} intervals.", intervals.Count);
 
 
-                var userId = intervals[0].UserId;
+                var userId = zip.Substring(_dirIn.Length, zip.Length - _dirIn.Length - 4); // strip baseDir and extension
                 var svgFile = _dirSvg + userId + ".svg";
                 var relEventsFile = userId + ".txt";
                 var wdFilesFolder = _dirWd + userId;
