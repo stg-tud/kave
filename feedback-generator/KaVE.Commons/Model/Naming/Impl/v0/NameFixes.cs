@@ -252,6 +252,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             {
                 "System.Collections.Generic.List`1+SynchronizedList, mscorlib, 4.0.0.0",
                 "System.Collections.Generic.List`1[[T]]+SynchronizedList, mscorlib, 4.0.0.0"
+            },
+            {
+                "s:System.Collections.Generic.LinkedList`1+Enumerator, System, 4.0.0.0",
+                "s:System.Collections.Generic.LinkedList`1[[T]]+Enumerator, System, 4.0.0.0"
+            },
+            {
+                "System.Collections.Generic.SortedDictionary`2+KeyCollection, System, 4.0.0.0",
+                "System.Collections.Generic.SortedDictionary`2[[TKey],[TValue]]+KeyCollection, System, 4.0.0.0"
             }
         };
 
