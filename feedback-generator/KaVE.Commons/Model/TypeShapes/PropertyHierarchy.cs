@@ -14,65 +14,16 @@
  * limitations under the License.
  */
 
-using System.Runtime.Serialization;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.TypeShapes
 {
-    [DataContract]
-    public class PropertyHierarchy : IHierarchy<IPropertyName>
+    public class PropertyHierarchy : BaseMemberHierarchy<IPropertyName>
     {
-        [DataMember]
-        public IPropertyName Element { get; set; }
+        public PropertyHierarchy() : base(Names.UnknownProperty) {}
 
-        [DataMember]
-        public IPropertyName Super { get; set; }
-
-        [DataMember]
-        public IPropertyName First { get; set; }
-
-        public bool IsDeclaredInParentHierarchy
-        {
-            get { return First != null; }
-        }
-
-        public PropertyHierarchy()
-        {
-            Element = Names.UnknownProperty;
-        }
-
-        public PropertyHierarchy([NotNull] IPropertyName propertyName)
-        {
-            Element = propertyName;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        private bool Equals(PropertyHierarchy other)
-        {
-            return Element.Equals(other.Element) && Equals(Super, other.Super) && Equals(First, other.First);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = Element.GetHashCode();
-                hashCode = (hashCode*397) ^ (Super != null ? Super.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (First != null ? First.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        public override string ToString()
-        {
-            return this.ToStringReflection();
-        }
+        public PropertyHierarchy([NotNull] IPropertyName n) : base(n) {}
     }
 }

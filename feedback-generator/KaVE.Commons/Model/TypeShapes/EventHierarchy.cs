@@ -14,65 +14,16 @@
  * limitations under the License.
  */
 
-using System.Runtime.Serialization;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
-using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.TypeShapes
 {
-    [DataContract]
-    public class EventHierarchy : IHierarchy<IEventName>
+    public class EventHierarchy : BaseMemberHierarchy<IEventName>
     {
-        [DataMember]
-        public IEventName Element { get; set; }
+        public EventHierarchy() : base(Names.UnknownEvent) {}
 
-        [DataMember]
-        public IEventName Super { get; set; }
-
-        [DataMember]
-        public IEventName First { get; set; }
-
-        public bool IsDeclaredInParentHierarchy
-        {
-            get { return First != null; }
-        }
-
-        public EventHierarchy()
-        {
-            Element = Names.UnknownEvent;
-        }
-
-        public EventHierarchy([NotNull] IEventName eventName)
-        {
-            Element = eventName;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        private bool Equals(EventHierarchy other)
-        {
-            return Element.Equals(other.Element) && Equals(Super, other.Super) && Equals(First, other.First);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = Element.GetHashCode();
-                hashCode = (hashCode*397) ^ (Super != null ? Super.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (First != null ? First.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        public override string ToString()
-        {
-            return this.ToStringReflection();
-        }
+        public EventHierarchy([NotNull] IEventName n) : base(n) {}
     }
 }
