@@ -202,6 +202,7 @@
     <Compile Include="Generators\Git\GitLogFileChangedRegistration.cs" />
     <Compile Include="Generators\Activity\MouseActivityEventGenerator.cs" />
     <Compile Include="Generators\Navigation\NavigationUtils.cs" />
+    <Compile Include="Generators\ReSharper\BuildEventGenerator.cs" />
     <Compile Include="Generators\ReSharper\TestRunEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\SystemEventGenerator.cs" />
     <Compile Include="SessionManager\Anonymize\TestRunEventAnonymizer.cs" />
