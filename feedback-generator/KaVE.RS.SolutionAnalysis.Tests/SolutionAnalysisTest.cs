@@ -24,12 +24,10 @@ using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.TestUtils.Utils.Exceptions;
 using KaVE.Commons.Utils.Collections;
-using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
-
     internal class SolutionAnalysisTest : BaseTestWithExistingSolution
     {
         protected override FileSystemPath ExistingSolutionFilePath
@@ -109,31 +107,31 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.Contains(results.AnalyzedTypesNames, "Project1.Struct");
         }
 
-        [Test, Ignore]
-        public void DoesNotAnalyzeInterface()
+        [Test]
+        public void AnalyzesInterface()
         {
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFilesNames, @"<Project1>\IInterface.cs");
-            CollectionAssert.DoesNotContain(results.AnalyzedTypesNames, "Project1.IInterface");
+            CollectionAssert.Contains(results.AnalyzedTypesNames, "Project1.IInterface");
         }
 
-        [Test, Ignore]
-        public void DoesNotAnalyzeEnum()
+        [Test]
+        public void AnalyzesEnum()
         {
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFilesNames, @"<Project1>\Enum.cs");
-            CollectionAssert.DoesNotContain(results.AnalyzedTypesNames, "Project1.Enum");
+            CollectionAssert.Contains(results.AnalyzedTypesNames, "Project1.Enum");
         }
 
-        [Test, Ignore]
-        public void DoesNotAnalyzeDelegate()
+        [Test]
+        public void AnalyzesDelegate()
         {
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFilesNames, @"<Project1>\Delegate.cs");
-            CollectionAssert.DoesNotContain(results.AnalyzedTypesNames, "Project1.SomeDelegate");
+            CollectionAssert.Contains(results.AnalyzedTypesNames, "Project1.SomeDelegate");
         }
 
         [Test]
