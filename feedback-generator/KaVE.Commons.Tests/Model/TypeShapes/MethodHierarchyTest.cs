@@ -17,122 +17,26 @@
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.Commons.TestUtils;
-using KaVE.Commons.TestUtils.Model.Naming;
-using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.TypeShapes
 {
-    internal class MethodHierarchyTest
+    internal class MethodHierarchyTest : MemberHierarchyTestBase<IMethodName>
     {
-        [Test]
-        public void DefaultValues()
+        protected override IMemberHierarchy<IMethodName> CreateSut()
         {
-            var sut = new MethodHierarchy();
-            Assert.AreEqual(Names.UnknownMethod, sut.Element);
-            Assert.Null(sut.Super);
-            Assert.Null(sut.First);
-            Assert.IsFalse(sut.IsDeclaredInParentHierarchy);
+            return new MethodHierarchy();
         }
 
-        [Test]
-        public void DefaultValues_CustomConstructor()
+        protected override IMemberHierarchy<IMethodName> CreateSut(IMethodName n)
         {
-            var sut = new MethodHierarchy(M("x"));
-            Assert.AreEqual(M("x"), sut.Element);
-            Assert.Null(sut.Super);
-            Assert.Null(sut.First);
-            Assert.IsFalse(sut.IsDeclaredInParentHierarchy);
+            return new MethodHierarchy(n);
         }
 
-        [Test]
-        public void SettingValues()
+        protected override IMethodName Get(int num = 0)
         {
-            var sut = new MethodHierarchy
-            {
-                Element = M("a"),
-                Super = M("b"),
-                First = M("c")
-            };
-            Assert.AreEqual(M("a"), sut.Element);
-            Assert.AreEqual(M("b"), sut.Super);
-            Assert.AreEqual(M("c"), sut.First);
-        }
-
-        [Test]
-        public void ShouldBeOverrideOrImplementationWhenFirstIsSet()
-        {
-            var uut = new MethodHierarchy
-            {
-                First = TestNameFactory.GetAnonymousMethodName()
-            };
-            Assert.IsTrue(uut.IsDeclaredInParentHierarchy);
-        }
-
-        [Test]
-        public void Equality_Default()
-        {
-            var a = new MethodHierarchy();
-            var b = new MethodHierarchy();
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_ReallyTheSame()
-        {
-            var a = new MethodHierarchy
-            {
-                Element = M("a"),
-                Super = M("b"),
-                First = M("c")
-            };
-            var b = new MethodHierarchy
-            {
-                Element = M("a"),
-                Super = M("b"),
-                First = M("c")
-            };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentElement()
-        {
-            var a = new MethodHierarchy {Element = M("a")};
-            var b = new MethodHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentSuper()
-        {
-            var a = new MethodHierarchy {Super = M("b")};
-            var b = new MethodHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentFirst()
-        {
-            var a = new MethodHierarchy {First = M("c")};
-            var b = new MethodHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void ToStringReflection()
-        {
-            ToStringAssert.Reflection(new MethodHierarchy());
-        }
-
-        private static IMethodName M(string s)
-        {
-            return Names.Method(string.Format("[T1,P1] [T2,P2].{0}()", s));
+            return num == 0
+                ? Names.UnknownMethod
+                : Names.Method(string.Format("[T1,P1] [T2,P2].M{0}()", num));
         }
     }
 }

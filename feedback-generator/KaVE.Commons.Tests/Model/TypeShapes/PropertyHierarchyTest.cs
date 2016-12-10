@@ -17,121 +17,26 @@
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.Commons.TestUtils;
-using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.TypeShapes
 {
-    internal class PropertyHierarchyTest
+    internal class PropertyHierarchyTest : MemberHierarchyTestBase<IPropertyName>
     {
-        [Test]
-        public void DefaultValues()
+        protected override IMemberHierarchy<IPropertyName> CreateSut()
         {
-            var sut = new PropertyHierarchy();
-            Assert.AreEqual(Names.UnknownProperty, sut.Element);
-            Assert.Null(sut.Super);
-            Assert.Null(sut.First);
-            Assert.IsFalse(sut.IsDeclaredInParentHierarchy);
+            return new PropertyHierarchy();
         }
 
-        [Test]
-        public void DefaultValues_CustomConstructor()
+        protected override IMemberHierarchy<IPropertyName> CreateSut(IPropertyName n)
         {
-            var sut = new PropertyHierarchy(P("x"));
-            Assert.AreEqual(P("x"), sut.Element);
-            Assert.Null(sut.Super);
-            Assert.Null(sut.First);
-            Assert.IsFalse(sut.IsDeclaredInParentHierarchy);
+            return new PropertyHierarchy(n);
         }
 
-        [Test]
-        public void SettingValues()
+        protected override IPropertyName Get(int num = 0)
         {
-            var sut = new PropertyHierarchy
-            {
-                Element = P("a"),
-                Super = P("b"),
-                First = P("c")
-            };
-            Assert.AreEqual(P("a"), sut.Element);
-            Assert.AreEqual(P("b"), sut.Super);
-            Assert.AreEqual(P("c"), sut.First);
-        }
-
-        [Test]
-        public void ShouldBeOverrideOrImplementationWhenFirstIsSet()
-        {
-            var uut = new PropertyHierarchy
-            {
-                First = P("first")
-            };
-            Assert.IsTrue(uut.IsDeclaredInParentHierarchy);
-        }
-
-        [Test]
-        public void Equality_Default()
-        {
-            var a = new PropertyHierarchy();
-            var b = new PropertyHierarchy();
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_ReallyTheSame()
-        {
-            var a = new PropertyHierarchy
-            {
-                Element = P("a"),
-                Super = P("b"),
-                First = P("c")
-            };
-            var b = new PropertyHierarchy
-            {
-                Element = P("a"),
-                Super = P("b"),
-                First = P("c")
-            };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentElement()
-        {
-            var a = new PropertyHierarchy {Element = P("a")};
-            var b = new PropertyHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentSuper()
-        {
-            var a = new PropertyHierarchy {Super = P("b")};
-            var b = new PropertyHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentFirst()
-        {
-            var a = new PropertyHierarchy {First = P("c")};
-            var b = new PropertyHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void ToStringReflection()
-        {
-            ToStringAssert.Reflection(new PropertyHierarchy());
-        }
-
-        private static IPropertyName P(string s)
-        {
-            return Names.Property(string.Format("get set [T1,P1] [T2,P2].{0}()", s));
+            return num == 0
+                ? Names.UnknownProperty
+                : Names.Property(string.Format("get set [T1,P1] [T2,P2].P{0}()", num));
         }
     }
 }

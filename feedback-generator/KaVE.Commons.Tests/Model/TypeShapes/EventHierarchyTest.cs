@@ -17,121 +17,26 @@
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.Commons.TestUtils;
-using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.TypeShapes
 {
-    internal class EventHierarchyTest
+    internal class EventHierarchyTest : MemberHierarchyTestBase<IEventName>
     {
-        [Test]
-        public void DefaultValues()
+        protected override IMemberHierarchy<IEventName> CreateSut()
         {
-            var sut = new EventHierarchy();
-            Assert.AreEqual(Names.UnknownEvent, sut.Element);
-            Assert.Null(sut.Super);
-            Assert.Null(sut.First);
-            Assert.IsFalse(sut.IsDeclaredInParentHierarchy);
+            return new EventHierarchy();
         }
 
-        [Test]
-        public void DefaultValues_CustomConstructor()
+        protected override IMemberHierarchy<IEventName> CreateSut(IEventName n)
         {
-            var sut = new EventHierarchy(E("x"));
-            Assert.AreEqual(E("x"), sut.Element);
-            Assert.Null(sut.Super);
-            Assert.Null(sut.First);
-            Assert.IsFalse(sut.IsDeclaredInParentHierarchy);
+            return new EventHierarchy(n);
         }
 
-        [Test]
-        public void SettingValues()
+        protected override IEventName Get(int num = 0)
         {
-            var sut = new EventHierarchy
-            {
-                Element = E("a"),
-                Super = E("b"),
-                First = E("c")
-            };
-            Assert.AreEqual(E("a"), sut.Element);
-            Assert.AreEqual(E("b"), sut.Super);
-            Assert.AreEqual(E("c"), sut.First);
-        }
-
-        [Test]
-        public void ShouldBeOverrideOrImplementationWhenFirstIsSet()
-        {
-            var uut = new EventHierarchy
-            {
-                First = E("first")
-            };
-            Assert.IsTrue(uut.IsDeclaredInParentHierarchy);
-        }
-
-        [Test]
-        public void Equality_Default()
-        {
-            var a = new EventHierarchy();
-            var b = new EventHierarchy();
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_ReallyTheSame()
-        {
-            var a = new EventHierarchy
-            {
-                Element = E("a"),
-                Super = E("b"),
-                First = E("c")
-            };
-            var b = new EventHierarchy
-            {
-                Element = E("a"),
-                Super = E("b"),
-                First = E("c")
-            };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentElement()
-        {
-            var a = new EventHierarchy {Element = E("a")};
-            var b = new EventHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentSuper()
-        {
-            var a = new EventHierarchy {Super = E("b")};
-            var b = new EventHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentFirst()
-        {
-            var a = new EventHierarchy {First = E("c")};
-            var b = new EventHierarchy();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void ToStringReflection()
-        {
-            ToStringAssert.Reflection(new EventHierarchy());
-        }
-
-        private static IEventName E(string s)
-        {
-            return Names.Event(string.Format("[T1,P1] [T2,P2].{0}", s));
+            return num == 0
+                ? Names.UnknownEvent
+                : Names.Event(string.Format("[T1,P1] [T2,P2].E{0}", num));
         }
     }
 }
