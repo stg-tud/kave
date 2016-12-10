@@ -45,7 +45,7 @@ namespace KaVE.Commons.Model.TypeShapes
         ///     All Events in the enclosing class (including information about the first and super declarations)
         /// </summary>
         [NotNull]
-        IKaVESet<IHierarchy<IEventName>> EventHierarchies { get; set; }
+        IKaVESet<IMemberHierarchy<IEventName>> EventHierarchies { get; set; }
 
         /// <summary>
         ///     All Fields in the enclosing class
@@ -58,13 +58,13 @@ namespace KaVE.Commons.Model.TypeShapes
         ///     declaration).
         /// </summary>
         [NotNull]
-        IKaVESet<IHierarchy<IMethodName>> MethodHierarchies { get; set; }
+        IKaVESet<IMemberHierarchy<IMethodName>> MethodHierarchies { get; set; }
 
         /// <summary>
         ///     All Properties in the enclosing class (including information about the first and super
         ///     declaration).
         /// </summary>
         [NotNull]
-        IKaVESet<IHierarchy<IPropertyName>> PropertyHierarchies { get; set; }
+        IKaVESet<IMemberHierarchy<IPropertyName>> PropertyHierarchies { get; set; }
     }
 }

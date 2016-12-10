@@ -41,9 +41,9 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
             Assert.AreEqual(Sets.NewHashSet<ITypeHierarchy>(), sut.NestedTypes);
             Assert.AreEqual(Sets.NewHashSet<IDelegateTypeName>(), sut.Delegates);
             Assert.AreEqual(Sets.NewHashSet<IFieldName>(), sut.Fields);
-            Assert.AreEqual(Sets.NewHashSet<IHierarchy<IEventName>>(), sut.EventHierarchies);
-            Assert.AreEqual(Sets.NewHashSet<IHierarchy<IMethodName>>(), sut.MethodHierarchies);
-            Assert.AreEqual(Sets.NewHashSet<IHierarchy<IPropertyName>>(), sut.PropertyHierarchies);
+            Assert.AreEqual(Sets.NewHashSet<IMemberHierarchy<IEventName>>(), sut.EventHierarchies);
+            Assert.AreEqual(Sets.NewHashSet<IMemberHierarchy<IMethodName>>(), sut.MethodHierarchies);
+            Assert.AreEqual(Sets.NewHashSet<IMemberHierarchy<IPropertyName>>(), sut.PropertyHierarchies);
         }
 
         [Test]
@@ -64,8 +64,10 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
             Assert.AreEqual(Sets.NewHashSet<ITypeHierarchy>(new TypeHierarchy()), sut.NestedTypes);
             Assert.AreEqual(Sets.NewHashSet<IDelegateTypeName>(new DelegateTypeName()), sut.Delegates);
             Assert.AreEqual(Sets.NewHashSet<IFieldName>(new FieldName()), sut.Fields);
-            Assert.AreEqual(Sets.NewHashSet<IHierarchy<IEventName>>(new EventHierarchy()), sut.EventHierarchies);
-            Assert.AreEqual(Sets.NewHashSet<IHierarchy<IPropertyName>>(new PropertyHierarchy()), sut.PropertyHierarchies);
+            Assert.AreEqual(Sets.NewHashSet<IMemberHierarchy<IEventName>>(new EventHierarchy()), sut.EventHierarchies);
+            Assert.AreEqual(
+                Sets.NewHashSet<IMemberHierarchy<IPropertyName>>(new PropertyHierarchy()),
+                sut.PropertyHierarchies);
         }
 
         [Test]
@@ -83,22 +85,22 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
             var a = new TypeShape
             {
                 TypeHierarchy = SomeTypeHierarchy,
-                NestedTypes = { new TypeHierarchy() },
-                Delegates = { new DelegateTypeName() },
-                EventHierarchies = { new EventHierarchy() },
-                Fields = { new FieldName() },
-                MethodHierarchies = { new MethodHierarchy() },
-                PropertyHierarchies = { new PropertyHierarchy() }
+                NestedTypes = {new TypeHierarchy()},
+                Delegates = {new DelegateTypeName()},
+                EventHierarchies = {new EventHierarchy()},
+                Fields = {new FieldName()},
+                MethodHierarchies = {new MethodHierarchy()},
+                PropertyHierarchies = {new PropertyHierarchy()}
             };
             var b = new TypeShape
             {
                 TypeHierarchy = SomeTypeHierarchy,
-                NestedTypes = { new TypeHierarchy() },
-                Delegates = { new DelegateTypeName() },
-                EventHierarchies = { new EventHierarchy() },
-                Fields = { new FieldName() },
-                MethodHierarchies = { new MethodHierarchy() },
-                PropertyHierarchies = { new PropertyHierarchy() }
+                NestedTypes = {new TypeHierarchy()},
+                Delegates = {new DelegateTypeName()},
+                EventHierarchies = {new EventHierarchy()},
+                Fields = {new FieldName()},
+                MethodHierarchies = {new MethodHierarchy()},
+                PropertyHierarchies = {new PropertyHierarchy()}
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -133,7 +135,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         {
             var a = new TypeShape
             {
-                Delegates= {new DelegateTypeName()}
+                Delegates = {new DelegateTypeName()}
             };
             var b = new TypeShape();
             Assert.AreNotEqual(a, b);
@@ -181,7 +183,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         {
             var a = new TypeShape
             {
-                PropertyHierarchies= {new PropertyHierarchy()}
+                PropertyHierarchies = {new PropertyHierarchy()}
             };
             var b = new TypeShape();
             Assert.AreNotEqual(a, b);

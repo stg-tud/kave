@@ -172,7 +172,8 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             return cName.Name.Contains("$Lambda");
         }
 
-        private static CoReMethodName GetMethodContext(CoReMethodName method, IEnumerable<IHierarchy<IMethodName>> hierarchies)
+        private static CoReMethodName GetMethodContext(CoReMethodName method,
+            IEnumerable<IMemberHierarchy<IMethodName>> hierarchies)
         {
             var orig = method;
             var wasLambdaName = IsLambdaContext(method);
@@ -190,7 +191,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 var elem = methodHierarchy.Element.ToCoReName();
                 if (elem.Equals(method))
                 {
-                    CoReMethodName outMethod = method;
+                    var outMethod = method;
                     if (methodHierarchy.First != null)
                     {
                         outMethod = methodHierarchy.First.ToCoReName();

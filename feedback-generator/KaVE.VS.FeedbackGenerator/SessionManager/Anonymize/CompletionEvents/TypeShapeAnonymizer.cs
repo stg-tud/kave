@@ -48,7 +48,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
-        private static IHierarchy<IMethodName> AnonymizeCodeNames(IHierarchy<IMethodName> raw)
+        private static IMemberHierarchy<IMethodName> AnonymizeCodeNames(IMemberHierarchy<IMethodName> raw)
         {
             return new MethodHierarchy
             {

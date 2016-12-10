@@ -35,26 +35,26 @@ namespace KaVE.Commons.Model.TypeShapes
         public IKaVESet<IDelegateTypeName> Delegates { get; set; }
 
         [DataMember]
-        public IKaVESet<IHierarchy<IEventName>> EventHierarchies { get; set; }
+        public IKaVESet<IMemberHierarchy<IEventName>> EventHierarchies { get; set; }
 
         [DataMember]
         public IKaVESet<IFieldName> Fields { get; set; }
 
         [DataMember]
-        public IKaVESet<IHierarchy<IMethodName>> MethodHierarchies { get; set; }
+        public IKaVESet<IMemberHierarchy<IMethodName>> MethodHierarchies { get; set; }
 
         [DataMember]
-        public IKaVESet<IHierarchy<IPropertyName>> PropertyHierarchies { get; set; }
+        public IKaVESet<IMemberHierarchy<IPropertyName>> PropertyHierarchies { get; set; }
 
         public TypeShape()
         {
             TypeHierarchy = new TypeHierarchy();
             NestedTypes = Sets.NewHashSet<ITypeHierarchy>();
             Delegates = Sets.NewHashSet<IDelegateTypeName>();
-            EventHierarchies = Sets.NewHashSet<IHierarchy<IEventName>>();
+            EventHierarchies = Sets.NewHashSet<IMemberHierarchy<IEventName>>();
             Fields = Sets.NewHashSet<IFieldName>();
-            MethodHierarchies = Sets.NewHashSet<IHierarchy<IMethodName>>();
-            PropertyHierarchies = Sets.NewHashSet<IHierarchy<IPropertyName>>();
+            MethodHierarchies = Sets.NewHashSet<IMemberHierarchy<IMethodName>>();
+            PropertyHierarchies = Sets.NewHashSet<IMemberHierarchy<IPropertyName>>();
         }
 
         private bool Equals(TypeShape other)

@@ -97,9 +97,9 @@ namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
             return new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier);
         }
 
-        public static ISet<IHierarchy<IMethodName>> GetAnonymousMethodHierarchies(uint numberOfElements)
+        public static ISet<IMemberHierarchy<IMethodName>> GetAnonymousMethodHierarchies(uint numberOfElements)
         {
-            var hierarchies = Sets.NewHashSet<IHierarchy<IMethodName>>();
+            var hierarchies = Sets.NewHashSet<IMemberHierarchy<IMethodName>>();
             for (var i = 0; i < numberOfElements; i++)
             {
                 hierarchies.Add(GetAnonymousMethodHierarchy());

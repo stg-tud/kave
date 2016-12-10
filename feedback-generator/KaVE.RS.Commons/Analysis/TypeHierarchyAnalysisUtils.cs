@@ -18,7 +18,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
-using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.RS.Commons.Utils.Naming;
@@ -27,9 +26,9 @@ namespace KaVE.RS.Commons.Analysis
 {
     internal static class TypeHierarchyAnalysisUtils
     {
-        public static TH CollectDeclarationInfo<T, TH>([NotNull] this IOverridableMember member, [NotNull] T name) 
-            where T:class, IMemberName
-            where TH:IHierarchy<T>, new()
+        public static TH CollectDeclarationInfo<T, TH>([NotNull] this IOverridableMember member, [NotNull] T name)
+            where T : class, IMemberName
+            where TH : IMemberHierarchy<T>, new()
         {
             var decl = new TH {Element = name};
 

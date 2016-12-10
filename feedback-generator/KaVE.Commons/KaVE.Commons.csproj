@@ -117,7 +117,7 @@
     <Compile Include="Model\Naming\Impl\v1\Parser\TypeNamingVisitor.cs" />
     <Compile Include="Model\Naming\CodeElements\ILocalVariableName.cs" />
     <Compile Include="Model\Naming\Types\IPredefinedTypeName.cs" />
-    <Compile Include="Model\TypeShapes\IHierarchy.cs" />
+    <Compile Include="Model\TypeShapes\IMemberHierarchy.cs" />
     <Compile Include="Model\TypeShapes\EventHierarchy.cs" />
     <Compile Include="Model\TypeShapes\PropertyHierarchy.cs" />
     <Compile Include="Utils\CultureUtils.cs" />

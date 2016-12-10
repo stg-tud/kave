@@ -34,9 +34,9 @@ namespace KaVE.RS.SolutionAnalysis
     {
         public void Run(string rootDir)
         {
-            int numRepos = 0;
-            int numSolutions = 0;
-            int numSSTs = 0;
+            var numRepos = 0;
+            var numSolutions = 0;
+            var numSSTs = 0;
             long loc = 0;
 
             var repoSizes = new Dictionary<string, long>();
@@ -201,7 +201,7 @@ namespace KaVE.RS.SolutionAnalysis
             }
         }
 
-        public void Visit(IHierarchy<IMethodName> mh, ISet<IAssemblyName> apis)
+        public void Visit(IMemberHierarchy<IMethodName> mh, ISet<IAssemblyName> apis)
         {
             Visit(mh.Element, apis);
             if (mh.Super != null)

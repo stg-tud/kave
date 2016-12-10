@@ -104,7 +104,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.UsageExtractorTestSuite
         {
             SetupLambdaExample();
 
-            Context.TypeShape.MethodHierarchies = Sets.NewHashSet<IHierarchy<IMethodName>>(
+            Context.TypeShape.MethodHierarchies = Sets.NewHashSet<IMemberHierarchy<IMethodName>>(
                 new MethodHierarchy
                 {
                     Element = DefaultMethodContext,
