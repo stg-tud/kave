@@ -21,51 +21,15 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
-    internal class TypeShapeSerializationTest : SerializationTestBase
+    internal class TypeShapeSerializationTest
     {
-        [Test]
-        public void VerifyToJson()
-        {
-            var actual = GetExample().ToCompactJson();
-            var expected = GetExampleJson_Current();
-            Assert.AreEqual(expected, actual);
-        }
+        // please note that the tests are migrated to ExternalSerializationTestSuite
+        // Use this class as a test data generator in case of changes (set a break point).
 
         [Test]
-        public void VerifyFromCurrentJson()
+        public void SmokeTest()
         {
-            var actual = GetExampleJson_Current().ParseJsonTo<ITypeShape>();
-            var expected = GetExample();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void VerifyFromJson_Legacy_BeforeVersionedNames()
-        {
-            var actual = GetExampleJson_Legacy_BeforeVersionedNames().ParseJsonTo<ITypeShape>();
-            var expected = GetExample();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void VerifyFromJson_Legacy_BeforeRestructuringProjects()
-        {
-            var actual = GetExampleJson_Legacy_BeforeRestructuringProjects().ParseJsonTo<ITypeShape>();
-            var expected = GetExample();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void VerifyObjToObjEquality()
-        {
-            var actual = GetExample().ToCompactJson().ParseJsonTo<ITypeShape>();
-            var expected = GetExample();
-            Assert.AreEqual(expected, actual);
-        }
-
-        private static ITypeShape GetExample()
-        {
-            return new TypeShape
+            var sut = new TypeShape
             {
                 TypeHierarchy = new TypeHierarchy
                 {
@@ -82,6 +46,41 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                         }
                     }
                 },
+                NestedTypes =
+                {
+                    new TypeHierarchy
+                    {
+                        Element = Names.Type("T2,P"),
+                        Extends = new TypeHierarchy
+                        {
+                            Element = Names.Type("S2,P")
+                        },
+                        Implements =
+                        {
+                            new TypeHierarchy
+                            {
+                                Element = Names.Type("I2,P")
+                            }
+                        }
+                    }
+                },
+                Delegates =
+                {
+                    Names.Type("d:[T3,P] [T3,P].M([p:int] p)").AsDelegateTypeName
+                },
+                EventHierarchies =
+                {
+                    new EventHierarchy
+                    {
+                        Element = Names.Event("[T,P] [T,P].E1"),
+                        Super = Names.Event("[T,P] [T,P].E2"),
+                        First = Names.Event("[T,P] [T,P].E3")
+                    }
+                },
+                Fields =
+                {
+                    Names.Field("[T1,P] [T2,P]._f")
+                },
                 MethodHierarchies =
                 {
                     new MethodHierarchy
@@ -90,29 +89,22 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                         Super = Names.Method("[T,P] [T,P].M2()"),
                         First = Names.Method("[T,P] [T,P].M3()")
                     }
+                },
+                PropertyHierarchies =
+                {
+                    new PropertyHierarchy
+                    {
+                        Element = Names.Property("get set [T,P] [T,P].P1()"),
+                        Super = Names.Property("get set [T,P] [T,P].P2()"),
+                        First = Names.Property("get set [T,P] [T,P].P3()")
+                    }
                 }
             };
-        }
 
-        private static string GetExampleJson_Current()
-        {
-            // do not change! keep for checking exception free reading of old formats!
-            return
-                "{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeShape, KaVE.Commons\",\"TypeHierarchy\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"0T:T,P\",\"Extends\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"0T:S,P\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"0T:I,P\",\"Implements\":[]}]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.MethodHierarchy, KaVE.Commons\",\"Element\":\"0M:[T,P] [T,P].M1()\",\"Super\":\"0M:[T,P] [T,P].M2()\",\"First\":\"0M:[T,P] [T,P].M3()\"}]}";
-        }
+            var compact = sut.ToCompactJson();
+            var formatted = sut.ToFormattedJson();
 
-        private static string GetExampleJson_Legacy_BeforeVersionedNames()
-        {
-            // do not change! keep for checking exception free reading of old formats!
-            return
-                "{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeShape, KaVE.Commons\",\"TypeHierarchy\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"CSharp.TypeName:T,P\",\"Extends\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"CSharp.TypeName:S,P\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"CSharp.TypeName:I,P\",\"Implements\":[]}]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.MethodHierarchy, KaVE.Commons\",\"Element\":\"CSharp.MethodName:[T,P] [T,P].M1()\",\"Super\":\"CSharp.MethodName:[T,P] [T,P].M2()\",\"First\":\"CSharp.MethodName:[T,P] [T,P].M3()\"}]}";
-        }
-
-        private static string GetExampleJson_Legacy_BeforeRestructuringProjects()
-        {
-            // do not change! keep for checking exception free reading of old formats!
-            return
-                "{\"$type\":\"KaVE.Model.TypeShapes.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:T,P\",\"Extends\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:S,P\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:I,P\",\"Implements\":[]}]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Model.TypeShapes.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[T,P] [T,P].M1()\",\"Super\":\"CSharp.MethodName:[T,P] [T,P].M2()\",\"First\":\"CSharp.MethodName:[T,P] [T,P].M3()\"}]}";
+            // set breakpoint here and copy string to files
         }
     }
 }
