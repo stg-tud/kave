@@ -32,8 +32,22 @@ namespace KaVE.Commons.Model.SSTs.Impl
         [DataMember]
         public ITypeName EnclosingType { get; set; }
 
+        private string _partialClassIdentifier;
+
         [DataMember]
-        public string PartialClassIdentifier { get; set; }
+        public string PartialClassIdentifier
+        {
+            get { return _partialClassIdentifier; }
+            set
+            {
+                // prevent setting empty string
+                if (value != null && string.IsNullOrEmpty(value))
+                {
+                    return;
+                }
+                _partialClassIdentifier = value;
+            }
+        }
 
         public bool IsPartialClass
         {

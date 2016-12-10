@@ -47,6 +47,18 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         }
 
         [Test]
+        public void PartialClassIdentifierCannotBeSetToEmpty()
+        {
+            var sut = new SST();
+
+            Assert.Null(sut.PartialClassIdentifier);
+            sut.PartialClassIdentifier = "";
+            Assert.Null(sut.PartialClassIdentifier);
+            sut.PartialClassIdentifier = "a";
+            Assert.NotNull(sut.PartialClassIdentifier);
+        }
+
+        [Test]
         public void DifferentStylesOfPartialClassIdentifierAreEqual()
         {
             var a = new SST {PartialClassIdentifier = null};
