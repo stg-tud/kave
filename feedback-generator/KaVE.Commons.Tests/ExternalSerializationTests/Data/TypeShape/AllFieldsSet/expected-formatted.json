@@ -1,0 +1,67 @@
+{
+    "$type": "KaVE.Commons.Model.TypeShapes.TypeShape, KaVE.Commons",
+    "TypeHierarchy": {
+        "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
+        "Element": "0T:T,P",
+        "Extends": {
+            "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
+            "Element": "0T:S,P",
+            "Implements": []
+        },
+        "Implements": [
+            {
+                "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
+                "Element": "0T:I,P",
+                "Implements": []
+            }
+        ]
+    },
+    "NestedTypes": [
+        {
+            "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
+            "Element": "0T:T2,P",
+            "Extends": {
+                "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
+                "Element": "0T:S2,P",
+                "Implements": []
+            },
+            "Implements": [
+                {
+                    "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
+                    "Element": "0T:I2,P",
+                    "Implements": []
+                }
+            ]
+        }
+    ],
+    "Delegates": [
+        "0T:d:[T3,P] [T3,P].M([p:int] p)"
+    ],
+    "EventHierarchies": [
+        {
+            "$type": "KaVE.Commons.Model.TypeShapes.EventHierarchy, KaVE.Commons",
+            "Element": "0E:[T,P] [T,P].E1",
+            "Super": "0E:[T,P] [T,P].E2",
+            "First": "0E:[T,P] [T,P].E3"
+        }
+    ],
+    "Fields": [
+        "0F:[T1,P] [T2,P]._f"
+    ],
+    "MethodHierarchies": [
+        {
+            "$type": "KaVE.Commons.Model.TypeShapes.MethodHierarchy, KaVE.Commons",
+            "Element": "0M:[T,P] [T,P].M1()",
+            "Super": "0M:[T,P] [T,P].M2()",
+            "First": "0M:[T,P] [T,P].M3()"
+        }
+    ],
+    "PropertyHierarchies": [
+        {
+            "$type": "KaVE.Commons.Model.TypeShapes.PropertyHierarchy, KaVE.Commons",
+            "Element": "0P:get set [T,P] [T,P].P1()",
+            "Super": "0P:get set [T,P] [T,P].P2()",
+            "First": "0P:get set [T,P] [T,P].P3()"
+        }
+    ]
+}
