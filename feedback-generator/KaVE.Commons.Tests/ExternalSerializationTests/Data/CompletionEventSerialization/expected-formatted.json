@@ -9,7 +9,12 @@
                 "Element": "0T:?",
                 "Implements": []
             },
-            "MethodHierarchies": []
+            "NestedTypes": [],
+            "Delegates": [],
+            "EventHierarchies": [],
+            "Fields": [],
+            "MethodHierarchies": [],
+            "PropertyHierarchies": []
         },
         "SST": {
             "$type": "[SST:SST]",
