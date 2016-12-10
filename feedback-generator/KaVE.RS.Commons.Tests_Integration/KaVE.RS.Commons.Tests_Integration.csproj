@@ -238,6 +238,7 @@
     <Compile Include="Analysis\TestAnalysisTrigger.cs" />
     <Compile Include="Analysis\TypeShapeAnalysisTestSuite\NestedTypesTest.cs" />
     <Compile Include="Analysis\TypeShapeAnalysisTestSuite\TypeHierarchyTest.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysisTestSuite\ComplexExample.cs" />
     <Compile Include="BaseCodeCompletionTest.cs" />
     <Compile Include="BaseCSharpCodeCompletionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

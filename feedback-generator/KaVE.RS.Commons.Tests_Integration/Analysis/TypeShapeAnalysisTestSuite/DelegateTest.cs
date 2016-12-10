@@ -15,9 +15,9 @@
  */
 
 using KaVE.Commons.Model.Naming;
-using KaVE.Commons.TestUtils.Model.Naming;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
+using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
 {
@@ -52,13 +52,13 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var expected = Sets.NewHashSet(
                 Names.Type(
                     "d:[{0}] [N.C+D1, TestProject].([{1}] o)",
-                    NameFixture.Void,
-                    NameFixture.Object)
+                    Fix.Void,
+                    Fix.Object)
                      .AsDelegateTypeName,
                 Names.Type(
                     "d:[{0}] [N.C+D2, TestProject].([{1}] o)",
-                    NameFixture.Void,
-                    NameFixture.Int)
+                    Fix.Void,
+                    Fix.Int)
                      .AsDelegateTypeName);
 
             Assert.AreEqual(expected, ResultContext.TypeShape.Delegates);

@@ -54,7 +54,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                         public void Doit()
                         {
                             this.Doit();
-                            {caret}
+                            $
                         }
 
                         public class N1 {}
@@ -86,7 +86,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                         public void Doit()
                         {
                             this.Doit();
-                            {caret}
+                            $
                         }
                     }
                 }");
@@ -100,6 +100,35 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                     Implements =
                         Sets.NewHashSet<ITypeHierarchy>(new TypeHierarchy("i:TestNamespace.AnInterface, TestProject"))
                 });
+        }
+
+        [Test]
+        public void DoesNotStepIntoNestedTypes()
+        {
+            CompleteInNamespace(@"
+                class C
+                    {
+                        $
+
+                        public class N
+                        {
+                            // should not include any of these
+                            public delegate void D();
+                            public event Action E;
+                            public int F;
+                            public void M() {}
+                            public int P { get; set; }
+                        }
+                    }
+                ");
+
+            var actual = ResultContext.TypeShape;
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy("N.C, TestProject"),
+                NestedTypes = {new TypeHierarchy("N.C+N, TestProject")}
+            };
+            Assert.AreEqual(expected, actual);
         }
     }
 }
