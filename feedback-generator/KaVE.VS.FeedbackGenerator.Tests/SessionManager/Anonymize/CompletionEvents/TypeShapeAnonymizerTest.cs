@@ -61,6 +61,113 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         }
 
         [Test]
+        public void NestedTypes()
+        {
+            var actual = _sut.Anonymize(
+                new TypeShape
+                {
+                    NestedTypes =
+                    {
+                        new TypeHierarchy
+                        {
+                            Element = T("elem"),
+                            Extends = H("ext"),
+                            Implements = {H("impl")}
+                        }
+                    }
+                });
+            var expected = new TypeShape
+            {
+                NestedTypes =
+                {
+                    new TypeHierarchy
+                    {
+                        Element = T("elem").ToAnonymousName(),
+                        Extends = AnonH("ext"),
+                        Implements = {AnonH("impl")}
+                    }
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Delegates()
+        {
+            var delType = Names.Type("d:[T,P] [T,P].D()").AsDelegateTypeName;
+            var actual = _sut.Anonymize(
+                new TypeShape
+                {
+                    Delegates =
+                    {
+                        delType
+                    }
+                });
+            var expected = new TypeShape
+            {
+                Delegates =
+                {
+                    delType.ToAnonymousName()
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void EventHierarchies()
+        {
+            var actual = _sut.Anonymize(
+                new TypeShape
+                {
+                    EventHierarchies =
+                    {
+                        new EventHierarchy
+                        {
+                            Element = E("A"),
+                            Super = E("B"),
+                            First = E("C")
+                        }
+                    }
+                });
+            var expected =
+                new TypeShape
+                {
+                    EventHierarchies =
+                    {
+                        new EventHierarchy
+                        {
+                            Element = E("A").ToAnonymousName(),
+                            Super = E("B").ToAnonymousName(),
+                            First = E("C").ToAnonymousName()
+                        }
+                    }
+                };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Fields()
+        {
+            var field = Names.Field("[T,P] [T,P]._f");
+            var actual = _sut.Anonymize(
+                new TypeShape
+                {
+                    Fields =
+                    {
+                        field
+                    }
+                });
+            var expected = new TypeShape
+            {
+                Fields =
+                {
+                    field.ToAnonymousName()
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void MethodHierarchies()
         {
             var actual = _sut.Anonymize(
@@ -86,6 +193,38 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
                             Element = M("A").ToAnonymousName(),
                             Super = M("B").ToAnonymousName(),
                             First = M("C").ToAnonymousName()
+                        }
+                    }
+                };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void PropertyHierarchies()
+        {
+            var actual = _sut.Anonymize(
+                new TypeShape
+                {
+                    PropertyHierarchies =
+                    {
+                        new PropertyHierarchy
+                        {
+                            Element = P("A"),
+                            Super = P("B"),
+                            First = P("C")
+                        }
+                    }
+                });
+            var expected =
+                new TypeShape
+                {
+                    PropertyHierarchies =
+                    {
+                        new PropertyHierarchy
+                        {
+                            Element = P("A").ToAnonymousName(),
+                            Super = P("B").ToAnonymousName(),
+                            First = P("C").ToAnonymousName()
                         }
                     }
                 };
@@ -143,9 +282,19 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
             };
         }
 
+        private static IEventName E(string name)
+        {
+            return Names.Event(string.Format("[T1,P1] [T2,P2].{0}", name));
+        }
+
         private static IMethodName M(string name)
         {
             return Names.Method(string.Format("[T1,P1] [T2,P2].{0}()", name));
+        }
+
+        private static IPropertyName P(string name)
+        {
+            return Names.Property(string.Format("get set [T1,P1] [T2,P2].{0}()", name));
         }
     }
 }

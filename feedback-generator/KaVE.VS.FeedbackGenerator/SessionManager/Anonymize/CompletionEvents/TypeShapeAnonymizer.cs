@@ -29,7 +29,12 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return new TypeShape
             {
                 TypeHierarchy = AnonymizeCodeNames(typeShape.TypeHierarchy),
-                MethodHierarchies = Sets.NewHashSetFrom(typeShape.MethodHierarchies.Select(AnonymizeCodeNames))
+                NestedTypes = Sets.NewHashSetFrom(typeShape.NestedTypes.Select(AnonymizeCodeNames)),
+                Delegates = Sets.NewHashSetFrom(typeShape.Delegates.Select(n => n.ToAnonymousName())),
+                EventHierarchies = Sets.NewHashSetFrom(typeShape.EventHierarchies.Select(AnonymizeCodeNames)),
+                Fields = Sets.NewHashSetFrom(typeShape.Fields.Select(n => n.ToAnonymousName())),
+                MethodHierarchies = Sets.NewHashSetFrom(typeShape.MethodHierarchies.Select(AnonymizeCodeNames)),
+                PropertyHierarchies = Sets.NewHashSetFrom(typeShape.PropertyHierarchies.Select(AnonymizeCodeNames))
             };
         }
 
@@ -48,9 +53,29 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
+        private static IMemberHierarchy<IEventName> AnonymizeCodeNames(IMemberHierarchy<IEventName> raw)
+        {
+            return new EventHierarchy
+            {
+                Element = raw.Element.ToAnonymousName(),
+                Super = raw.Super.ToAnonymousName(),
+                First = raw.First.ToAnonymousName()
+            };
+        }
+
         private static IMemberHierarchy<IMethodName> AnonymizeCodeNames(IMemberHierarchy<IMethodName> raw)
         {
             return new MethodHierarchy
+            {
+                Element = raw.Element.ToAnonymousName(),
+                Super = raw.Super.ToAnonymousName(),
+                First = raw.First.ToAnonymousName()
+            };
+        }
+
+        private static IMemberHierarchy<IPropertyName> AnonymizeCodeNames(IMemberHierarchy<IPropertyName> raw)
+        {
+            return new PropertyHierarchy
             {
                 Element = raw.Element.ToAnonymousName(),
                 Super = raw.Super.ToAnonymousName(),
