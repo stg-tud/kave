@@ -33,7 +33,19 @@ namespace KaVE.RS.SolutionAnalysis.Tests
     {
         protected override FileSystemPath ExistingSolutionFilePath
         {
-            get { return GetTestDataFilePath2(Path.Combine("..", "TestSolution", "TestSolution.sln")); }
+            get
+            {
+                return BaseTestDataPath.Combine(
+                    Path.Combine(
+                        "..",
+                        "..",
+                        "..",
+                        "KaVE.RS.SolutionAnalysis.Tests",
+                        "test",
+                        "data",
+                        "TestSolution",
+                        "TestSolution.sln"));
+            }
         }
 
         [Test]
