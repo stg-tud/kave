@@ -64,7 +64,8 @@ namespace KaVE.RS.Commons.Analysis
             typeShape.TypeHierarchy = CreateTypeHierarchy(
                 typeElement,
                 EmptySubstitution.INSTANCE,
-                Lists.NewList<ITypeName>());
+                Lists.NewList<ITypeName>(),
+                false);
 
             return typeShape;
         }
@@ -106,10 +107,6 @@ namespace KaVE.RS.Commons.Analysis
                         var shortName = field.ShortName;
                         fieldName = Names.Field("[{0}] [{0}].{1}", fieldName.DeclaringType, shortName);
                     }
-                    if (fieldName == null)
-                    {
-                        continue;
-                    }
                     typeShape.Fields.Add(fieldName);
                 }
             }
@@ -127,7 +124,8 @@ namespace KaVE.RS.Commons.Analysis
                 var typeHierarchy = CreateTypeHierarchy(
                     typeElement,
                     EmptySubstitution.INSTANCE,
-                    Lists.NewList<ITypeName>());
+                    Lists.NewList<ITypeName>(),
+                    true);
                 typeShape.NestedTypes.Add(typeHierarchy);
             }
         }
@@ -191,11 +189,12 @@ namespace KaVE.RS.Commons.Analysis
 
         private static TypeHierarchy CreateTypeHierarchy(ITypeElement type,
             ISubstitution substitution,
-            IKaVEList<ITypeName> seenTypes)
+            IKaVEList<ITypeName> seenTypes,
+            bool shouldIgnoreRootTypes)
         {
-            if (type == null || IsRootType(type))
+            if (shouldIgnoreRootTypes && (type == null || IsRootType(type)))
             {
-                // TODO (seb): add type "element" instead of ignoring completely
+                // ignore implicite extensions in type hierarchy
                 return null;
             }
             var typeName = type.GetName<ITypeName>(substitution);
@@ -222,7 +221,7 @@ namespace KaVE.RS.Commons.Analysis
 
                 var superTypeElement = superType.GetTypeElement();
                 var superTypeSubstitution = superType.GetSubstitution();
-                var superHierarchy = CreateTypeHierarchy(superTypeElement, superTypeSubstitution, seenTypes);
+                var superHierarchy = CreateTypeHierarchy(superTypeElement, superTypeSubstitution, seenTypes, true);
 
                 if (declElem is IClass || declElem is IStruct)
                 {

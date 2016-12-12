@@ -22,6 +22,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.Modules;
 using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Analysis;
@@ -31,48 +32,47 @@ namespace KaVE.RS.SolutionAnalysis
     public class TypeShapeSolutionAnalysis : BaseSolutionAnalysis
     {
         private readonly Action<ITypeShape> _cbTypeShape;
+        private readonly IKaVESet<string> _seenClrNames;
 
         public TypeShapeSolutionAnalysis(ISolution solution,
             ILogger logger,
             Action<ITypeShape> cbTypeShape) : base(solution, logger)
         {
             _cbTypeShape = cbTypeShape;
+            _seenClrNames = Sets.NewHashSet<string>();
         }
 
         protected override void AnalyzePrimaryPsiModule(IPsiModule primaryPsiModule)
         {
             var psiServices = primaryPsiModule.GetPsiServices();
             var symbolScope = psiServices.Symbols.GetSymbolScope(primaryPsiModule, true, true);
-
             var globalNamespace = symbolScope.GlobalNamespace;
+
             foreach (var te in FindTypeElements(globalNamespace, symbolScope))
             {
-                var clrTypeName = te.GetClrName();
-                Console.WriteLine(clrTypeName);
-
+                // ignore private and internal types
                 if (!te.CanBeVisibleToSolution())
                 {
-                    Console.WriteLine("--> skip (invisible)\n");
                     continue;
                 }
 
+                // ignore types defined in solution
                 if (!IsDefinedInDependency(te))
                 {
-                    Console.WriteLine("--> skip (no dependency)\n");
+                    continue;
+                }
+
+                // ignore types that are already processed
+                var clrName = te.GetClrName().FullName;
+                if (!_seenClrNames.Add(clrName))
+                {
                     continue;
                 }
 
                 var ts = AnalyzeTypeElement(te);
-                Console.WriteLine("--> ok\n", ts);
+
                 _cbTypeShape(ts);
             }
-        }
-
-        private static bool IsDefinedInDependency(ITypeElement te)
-        {
-            var containingModule = te.Module.ContainingProjectModule;
-            var asm = containingModule as IAssembly;
-            return asm != null;
         }
 
         private static IEnumerable<ITypeElement> FindTypeElements(INamespace ns,
@@ -97,23 +97,18 @@ namespace KaVE.RS.SolutionAnalysis
             }
         }
 
+        private static bool IsDefinedInDependency(IClrDeclaredElement te)
+        {
+            var containingModule = te.Module.ContainingProjectModule;
+            var asm = containingModule as IAssembly;
+            return asm != null;
+        }
+
         [NotNull]
         private static TypeShape AnalyzeTypeElement(ITypeElement typeElement)
         {
-            // TODO @seb: TypeShapeAnalysis für RootTypes implementieren
-            if (IsRootType(typeElement))
-            {
-                return new TypeShape();
-            }
-            var typeShapeAnalysis = new TypeShapeAnalysis();
-            var typeShape = typeShapeAnalysis.Analyze(typeElement);
+            var typeShape = new TypeShapeAnalysis().Analyze(typeElement);
             return typeShape;
-        }
-
-        private static bool IsRootType(ITypeElement type)
-        {
-            var fn = type.GetClrName().FullName;
-            return "System.Object".Equals(fn) || "System.ValueType".Equals(fn) || "System.Enum".Equals(fn);
         }
     }
 }

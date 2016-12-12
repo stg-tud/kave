@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Commons.Model.Naming;
@@ -31,6 +31,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class TypeShapeSolutionAnalysisTest : BaseTestWithExistingSolution
     {
+        #region setup
+
         protected override FileSystemPath ExistingSolutionFilePath
         {
             get
@@ -48,67 +50,31 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             }
         }
 
-        public Dictionary<IAssemblyName, ISet<ITypeShape>> TypeShapeIndex;
+        private IList<ITypeShape> _typeShapes;
 
         public List<IAssemblyName> AssemblyNames
         {
-            get { return TypeShapeIndex.Keys.AsList(); }
+            get { return _typeShapes.Select(ts => ts.TypeHierarchy.Element.Assembly).Distinct().AsList(); }
         }
 
-        private void AddResult(ITypeShape ts)
+        [TestFixtureSetUp]
+        public void FixtureSetup()
         {
-            try
-            {
-                var assembly = ts.TypeHierarchy.Element.Assembly;
-                if (TypeShapeIndex.ContainsKey(assembly))
-                {
-                    TypeShapeIndex[assembly].Add(ts);
-                }
-                else
-                {
-                    TypeShapeIndex.Add(assembly, Sets.NewHashSet(ts));
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("### error: " + ts);
-            }
-        }
-
-        [Test]
-        public void RunAllAnalyses()
-        {
-            RunAnalysis();
-
-            DoesNotAnalyzeProjectDependencies();
-            AnalyzesAllStandardReferences();
-            AnalyzesNugetDependency();
-            ContainsOneExampleTypeFromStandardDependency();
-            ContainsOneExampleTypeFromNugetDependency();
-            AnalyzesNestedTypes();
-        }
-
-        private void RunAnalysis()
-        {
-            TypeShapeIndex = new Dictionary<IAssemblyName, ISet<ITypeShape>>();
+            _typeShapes = Lists.NewList<ITypeShape>();
 
             DoTestSolution(
                 (lifetime, solution) =>
                 {
                     var logger = new TestLogger(false);
-                    new TypeShapeSolutionAnalysis(solution, logger, AddResult).AnalyzeAllProjects();
+                    new TypeShapeSolutionAnalysis(solution, logger, ts => _typeShapes.Add(ts)).AnalyzeAllProjects();
                 });
         }
 
-        private void DoesNotAnalyzeProjectDependencies()
-        {
-            var assemblyNames = AssemblyNames;
-            CollectionAssert.DoesNotContain(assemblyNames, Names.Assembly("Project1"));
-        }
+        #endregion
 
-        private void AnalyzesAllStandardReferences()
+        [Test]
+        public void IncludesAllDependencies()
         {
-            var assemblyNames = AssemblyNames;
             CollectionAssert.IsSubsetOf(
                 new[]
                 {
@@ -119,28 +85,86 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                     Names.Assembly("Microsoft.CSharp, 4.0.0.0"),
                     Names.Assembly("System.Data, 4.0.0.0"),
                     Names.Assembly("System.Xml, 4.0.0.0"),
-                    Names.Assembly("mscorlib, 4.0.0.0")
+                    Names.Assembly("mscorlib, 4.0.0.0"),
+                    Names.Assembly("Newtonsoft.Json, 6.0.0.0")
                 },
-                assemblyNames);
+                AssemblyNames);
         }
 
-        private void AnalyzesNugetDependency()
+        [Test]
+        public void DoesNotIncludeLocalProjects()
         {
-            var assemblyNames = AssemblyNames;
-            CollectionAssert.Contains(assemblyNames, Names.Assembly("Newtonsoft.Json, 6.0.0.0"));
+            CollectionAssert.DoesNotContain(AssemblyNames, Names.Assembly("Project1"));
         }
 
-        private void ContainsOneExampleTypeFromStandardDependency()
+        [Test]
+        public void TypesAreNotReportedMultipleTimes()
         {
-            var assemblyName = Names.Assembly("System, 4.0.0.0");
-            CollectionAssert.Contains(AssemblyNames, assemblyName);
+            var a = _typeShapes.Count;
+            var b = _typeShapes.Distinct().Count();
+            Assert.AreEqual(a, b);
+        }
 
-            var expectedType = Names.Type("System.UriTypeConverter, System, 4.0.0.0");
-            var expectedTypeShape = new TypeShape
+        [Test]
+        public void Example_RootType()
+        {
+            // root types (i.e., Object, ValueType, Enum) should not occur in hierarchies, but we want to include them as type shapes
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy("p:object"),
+                MethodHierarchies =
+                {
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("[p:void] [p:object]..ctor()")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("[p:string] [p:object].ToString()")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("[p:bool] [p:object].Equals([p:object] obj)")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("static [p:bool] [p:object].Equals([p:object] objA, [p:object] objB)")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element =
+                            Names.Method("static [p:bool] [p:object].ReferenceEquals([p:object] objA, [p:object] objB)")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("[p:int] [p:object].GetHashCode()")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("[System.Type, mscorlib, 4.0.0.0] [p:object].GetType()")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("[p:void] [p:object].Finalize()")
+                    },
+                    new MethodHierarchy
+                    {
+                        Element = Names.Method("[p:object] [p:object].MemberwiseClone()")
+                    }
+                }
+            };
+            var filter = _typeShapes.Where(ts => ts.TypeHierarchy.Element.Identifier.Contains("p:"));
+            CollectionAssert.Contains(_typeShapes, expected);
+        }
+
+        [Test]
+        public void Example_FromStandardLibrary()
+        {
+            var expected = new TypeShape
             {
                 TypeHierarchy = new TypeHierarchy
                 {
-                    Element = expectedType,
+                    Element = Names.Type("System.UriTypeConverter, System, 4.0.0.0"),
                     Extends = new TypeHierarchy("System.ComponentModel.TypeConverter, System, 4.0.0.0")
                 },
                 MethodHierarchies =
@@ -194,21 +218,17 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 }
             };
 
-            var typeShapes = TypeShapeIndex[assemblyName];
-            CollectionAssert.Contains(typeShapes, expectedTypeShape);
+            CollectionAssert.Contains(_typeShapes, expected);
         }
 
-        private void ContainsOneExampleTypeFromNugetDependency()
+        [Test]
+        public void Example_FromNugetDependency()
         {
-            var assemblyName = Names.Assembly("Newtonsoft.Json, 6.0.0.0");
-            CollectionAssert.Contains(AssemblyNames, assemblyName);
-
-            var expectedType = Names.Type("Newtonsoft.Json.Converters.BinaryConverter, Newtonsoft.Json, 6.0.0.0");
-            var expectedTypeShape = new TypeShape
+            var expected = new TypeShape
             {
                 TypeHierarchy = new TypeHierarchy
                 {
-                    Element = expectedType,
+                    Element = Names.Type("Newtonsoft.Json.Converters.BinaryConverter, Newtonsoft.Json, 6.0.0.0"),
                     Extends = new TypeHierarchy("Newtonsoft.Json.JsonConverter, Newtonsoft.Json, 6.0.0.0")
                 },
                 Fields =
@@ -263,42 +283,37 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                     }
                 }
             };
-            var typeShapes = TypeShapeIndex[assemblyName];
-            CollectionAssert.Contains(typeShapes, expectedTypeShape);
+            CollectionAssert.Contains(_typeShapes, expected);
         }
 
-        private void AnalyzesNestedTypes()
+        [Test]
+        public void FindsNestedTypes()
         {
-            var assemblyName = Names.Assembly("Newtonsoft.Json, 6.0.0.0");
-            CollectionAssert.Contains(AssemblyNames, assemblyName);
-
-            var nestedTypeName = "e:Newtonsoft.Json.JsonReader+State, Newtonsoft.Json, 6.0.0.0";
-            var expectedTypeShape = new TypeShape
+            const string nested = "e:Newtonsoft.Json.JsonReader+State, Newtonsoft.Json, 6.0.0.0";
+            var expected = new TypeShape
             {
-                TypeHierarchy =
-                    new TypeHierarchy(nestedTypeName),
+                TypeHierarchy = new TypeHierarchy(nested),
                 Fields =
                 {
-                    EnumField(nestedTypeName, "Start"),
-                    EnumField(nestedTypeName, "Complete"),
-                    EnumField(nestedTypeName, "Property"),
-                    EnumField(nestedTypeName, "ObjectStart"),
-                    EnumField(nestedTypeName, "Object"),
-                    EnumField(nestedTypeName, "ArrayStart"),
-                    EnumField(nestedTypeName, "Array"),
-                    EnumField(nestedTypeName, "Closed"),
-                    EnumField(nestedTypeName, "PostValue"),
-                    EnumField(nestedTypeName, "ConstructorStart"),
-                    EnumField(nestedTypeName, "Constructor"),
-                    EnumField(nestedTypeName, "Error"),
-                    EnumField(nestedTypeName, "Finished")
+                    Enum(nested, "Start"),
+                    Enum(nested, "Complete"),
+                    Enum(nested, "Property"),
+                    Enum(nested, "ObjectStart"),
+                    Enum(nested, "Object"),
+                    Enum(nested, "ArrayStart"),
+                    Enum(nested, "Array"),
+                    Enum(nested, "Closed"),
+                    Enum(nested, "PostValue"),
+                    Enum(nested, "ConstructorStart"),
+                    Enum(nested, "Constructor"),
+                    Enum(nested, "Error"),
+                    Enum(nested, "Finished")
                 }
             };
-            var typeShapes = TypeShapeIndex[assemblyName];
-            CollectionAssert.Contains(typeShapes, expectedTypeShape);
+            CollectionAssert.Contains(_typeShapes, expected);
         }
 
-        private static IFieldName EnumField(string declaringType, string shortName)
+        private static IFieldName Enum(string declaringType, string shortName)
         {
             return Names.Field("[{0}] [{0}].{1}", declaringType, shortName);
         }

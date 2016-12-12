@@ -535,7 +535,7 @@ namespace KaVE.RS.Commons.Utils.Naming
         ///     for projects. Therefore, we decided for this consistent solution.
         /// </summary>
         [NotNull]
-        private static string GetQualifiedName([NotNull] this IModule module)
+        public static string GetQualifiedName([NotNull] this IModule module)
         {
             AssemblyNameInfo assembly = null;
             var containingAssembly = module as IAssembly;
