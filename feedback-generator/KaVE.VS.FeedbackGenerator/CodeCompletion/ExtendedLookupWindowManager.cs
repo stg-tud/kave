@@ -39,7 +39,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
     public class ExtendedLookupWindowManager : IExtendedLookupWindowManager
     {
         private static readonly FieldInfo LookupWindowField =
-            typeof (LookupWindowManager).GetField(
+            typeof(LookupWindowManager).GetField(
                 "myCachedLookupWindow",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -84,10 +84,10 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
     public class ExtendedLookup : IExtendedLookup
     {
         private static readonly FieldInfo LookupLifetime =
-            typeof (Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
+            typeof(Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static readonly FieldInfo LookupListBox =
-            typeof (VirtualLookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
+            typeof(VirtualLookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private readonly Lookup _baseLookup;
         private readonly ExtendedLookupWindowManager _manager;

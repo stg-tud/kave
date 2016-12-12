@@ -22,8 +22,6 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.UI.ActionSystem.Text;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
@@ -33,7 +31,7 @@ using Key = System.Windows.Input.Key;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
-    [SolutionComponent, Language(typeof(CSharpLanguage))]
+    [SolutionComponent]
     public class CodeCompletionLifecycleManager : IDisposable
     {
         private readonly IExtendedLookupWindowManager _lookupWindowManager;
@@ -55,7 +53,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;
         }
 
-        private void OnBeforeLookupShown(Object sender, EventArgs e)
+        private void OnBeforeLookupShown(object sender, EventArgs e)
         {
             FinishLifecycle();
 

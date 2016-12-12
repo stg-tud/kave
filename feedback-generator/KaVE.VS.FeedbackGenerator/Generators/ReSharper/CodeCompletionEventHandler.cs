@@ -37,7 +37,7 @@ using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    [SolutionComponent, Language(typeof(CSharpLanguage))]
+    [SolutionComponent]
     internal class CodeCompletionEventGeneratorRegistration
     {
         public CodeCompletionEventGeneratorRegistration(CodeCompletionLifecycleManager manager,
