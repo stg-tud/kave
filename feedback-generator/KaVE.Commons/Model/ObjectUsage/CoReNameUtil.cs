@@ -134,8 +134,18 @@ namespace KaVE.Commons.Model.ObjectUsage
                 return "LUnknown";
             }
             var builder = new StringBuilder();
-            builder.Append("L", name.Namespace.ToName(), name.Name);
+            builder.Append("L", name.Namespace.ToName(), GetName(name));
             return builder.ToString();
+        }
+
+        private static string GetName(ITypeName name)
+        {
+            if (name.IsPredefined)
+            {
+                // TODO (seb): get rid of this ugly hack, once models have been rebuild.
+                return char.ToUpper(name.Name[0]) + name.Name.Substring(1);
+            }
+            return name.Name;
         }
     }
 }
