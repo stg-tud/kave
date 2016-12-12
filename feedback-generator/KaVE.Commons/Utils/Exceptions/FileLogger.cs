@@ -23,29 +23,32 @@ namespace KaVE.Commons.Utils.Exceptions
     {
         private readonly string _logFilePath;
 
-        public FileLogger(String logFilePath)
+        public FileLogger(string logFilePath)
         {
             _logFilePath = logFilePath;
         }
 
         public virtual void Error(Exception exception, string content, params object[] args)
         {
-            LogLine("[ERROR] {0} - {1}\r\n{2}", System.DateTime.Now, string.Format(content, args), exception);
+            var msg = args.Length == 0 ? content : string.Format(content, args);
+            LogLine("[ERROR] {0} - {1}\r\n{2}", DateTime.Now, msg, exception);
         }
 
         public virtual void Error(Exception exception)
         {
-            LogLine("[ERROR] {0} - {1}", System.DateTime.Now, exception);
+            LogLine("[ERROR] {0} - {1}", DateTime.Now, exception);
         }
 
         public virtual void Error(string content, params object[] args)
         {
-            LogLine("[ERROR] {0} - {1}", System.DateTime.Now, string.Format(content, args));
+            var msg = args.Length == 0 ? content : string.Format(content, args);
+            LogLine("[ERROR] {0} - {1}", DateTime.Now, msg);
         }
 
-        public virtual void Info(string info, params object[] args)
+        public virtual void Info(string content, params object[] args)
         {
-            LogLine("[INFO] {0} - {1}", System.DateTime.Now, string.Format(info, args));
+            var msg = args.Length == 0 ? content : string.Format(content, args);
+            LogLine("[INFO] {0} - {1}", DateTime.Now, msg);
         }
 
         private void LogLine(string message, params object[] args)
