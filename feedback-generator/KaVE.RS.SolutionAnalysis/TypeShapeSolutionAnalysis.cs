@@ -69,9 +69,73 @@ namespace KaVE.RS.SolutionAnalysis
                     continue;
                 }
 
-                var ts = AnalyzeTypeElement(te);
+                // see http://stackoverflow.com/questions/4603139/a-c-sharp-class-with-a-null-namespace
+                var isMetaDataClass = "FXAssembly".Equals(clrName) || "ThisAssembly".Equals(clrName) ||
+                                      "AssemblyRef".Equals(clrName);
+                if (isMetaDataClass)
+                {
+                    continue;
+                }
 
-                _cbTypeShape(ts);
+                // ignore private
+                if (clrName.StartsWith("<PrivateImplementationDetails>"))
+                {
+                    continue;
+                }
+
+                // ignore c++ impl details
+                if (clrName.StartsWith("<CppImplementationDetails>"))
+                {
+                    continue;
+                }
+
+                // ignore crt impl details
+                if (clrName.StartsWith("<CrtImplementationDetails>"))
+                {
+                    continue;
+                }
+
+                // ignore anonymous
+                if (clrName.StartsWith("<>"))
+                {
+                    continue;
+                }
+
+                // ignore gcroots
+                if (clrName.StartsWith("gcroot<"))
+                {
+                    continue;
+                }
+
+                // ignore global module
+                if (clrName.Equals("<Module>"))
+                {
+                    continue;
+                }
+
+                // ignore unnnamed type values
+                if (clrName.Contains("<unnamed-type-value>"))
+                {
+                    continue;
+                }
+
+                // ignore anonymous
+                if (clrName.StartsWith("<"))
+                {
+                    Console.WriteLine("Inspect: " + clrName);
+                }
+
+                Execute.WithExceptionCallback(
+                    () =>
+                    {
+                        var ts = AnalyzeTypeElement(te);
+                        _cbTypeShape(ts);
+                    },
+                    e =>
+                    {
+                        Console.WriteLine("error: " + e.Message);
+                        Console.WriteLine(te);
+                    });
             }
         }
 

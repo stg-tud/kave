@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
@@ -26,6 +27,7 @@ using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.TypeShapeIndex;
 using NUnit.Framework;
@@ -34,7 +36,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class BulkTypeShapeAnalysisTest : BaseTestWithExistingSolution
     {
-        private const string Root = @"D:\Analysis\";
+        private const string Root = @"E:\ts-test\";
         private const string RepositoryRoot = Root + @"Repositories\";
         private const string TypeShapeRoot = Root + @"TypeShapes\";
         private const string LogRoot = Root + @"Logs\";
@@ -44,6 +46,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private string _currentSolution;
         private string _currentSolutionPath;
 
+        private ISet<IAssemblyName> _existingAssemblies;
         private Dictionary<IAssemblyName, WritingArchive> _writingArchives;
 
         private string _logName;
@@ -67,6 +70,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string testCaseLabel, string sln)
         {
+            PrintFreeMemoryAndCheckConsumption();
+
             if (_slnFinder.ShouldIgnore(sln))
             {
                 Assert.Ignore();
@@ -82,6 +87,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
             _logger = new TestRunnerLogger(_logName);
 
+            _existingAssemblies = Sets.NewHashSet<IAssemblyName>();
             _writingArchives = new Dictionary<IAssemblyName, WritingArchive>();
 
             DoTestSolution(ExistingSolutionFilePath, RunAnalysis);
@@ -97,37 +103,70 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             }
         }
 
+        private static void PrintFreeMemoryAndCheckConsumption()
+        {
+            using (var proc = Process.GetCurrentProcess())
+            {
+                var sizeInByte = proc.VirtualMemorySize64;
+                var sizeInMB = sizeInByte/(1024.0*1024.0);
+
+                Console.WriteLine("Current memory consumption: {0:#,0.00}MB (VirtualMemorySize64)", sizeInMB);
+                if (sizeInMB > 1700)
+                {
+                    Assert.Fail(
+                        "analysis aborted, available memory is too low (VirtualMemorySize64 is at {0}MB)",
+                        sizeInMB);
+                }
+            }
+        }
+
         private void RunAnalysis(Lifetime lifetime, ISolution solution)
         {
-            Console.WriteLine("Starting analysis... ({0})", DateTime.Now);
-
-            Action<ITypeShape> cbTypeShape = tS =>
+            try
             {
-                var assemblyName = tS.TypeHierarchy.Element.Assembly;
-                _logger.Info("\t> {0}".FormatEx(tS.TypeHierarchy.Element));
-                if (_writingArchives.ContainsKey(assemblyName))
-                {
-                    _writingArchives[assemblyName].Add(tS);
-                }
-                else
-                {
-                    _writingArchives.Add(assemblyName, new WritingArchive(GetZipName(assemblyName)));
-                }
-            };
+                Console.WriteLine("Starting analysis... ({0})", DateTime.Now);
 
-            new TypeShapeSolutionAnalysis(solution, _logger, cbTypeShape).AnalyzeAllProjects();
-
-            foreach (var writingArchive in _writingArchives)
+                new TypeShapeSolutionAnalysis(solution, _logger, Add).AnalyzeAllProjects();
+            }
+            finally
             {
-                writingArchive.Value.Dispose();
+                foreach (var writingArchive in _writingArchives)
+                {
+                    writingArchive.Value.Dispose();
+                }
             }
 
             _logger.EndPossibleErrorBlock();
 
             Console.WriteLine("Analysis finished! ({0})", DateTime.Now);
             Console.WriteLine(
-                "Generated {0} Assembly Zips",
-                _writingArchives.Count);
+                "Generated {0} Assembly Zips, {1} additional ones already existed",
+                _writingArchives.Count,
+                _existingAssemblies.Count);
+        }
+
+        private void Add(ITypeShape tS)
+        {
+            var assemblyName = tS.TypeHierarchy.Element.Assembly;
+            _logger.Info("{0}".FormatEx(tS.TypeHierarchy.Element));
+
+            if (AssemblyAlreadyExists(assemblyName))
+            {
+                _logger.Info("\tassembly exists, ignore");
+                _existingAssemblies.Add(assemblyName);
+                return;
+            }
+
+            if (_writingArchives.ContainsKey(assemblyName))
+            {
+                _writingArchives[assemblyName].Add(tS);
+            }
+            else
+            {
+                var zip = GetZipName(assemblyName);
+                _writingArchives.Add(assemblyName, new WritingArchive(zip));
+                _logger.Info("\tcreated new zip ({0})", zip);
+            }
         }
 
         private bool AssemblyAlreadyExists(IAssemblyName assemblyName)
@@ -138,7 +177,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
         private string GetLogName(string relativeSolutionPath)
         {
-            var fileName = LogRoot + relativeSolutionPath + "-log.txt";
+            var fileName = LogRoot + relativeSolutionPath + "-" + GetType().Name + ".log";
             EnsureFolderExists(fileName);
             return fileName;
         }
@@ -146,7 +185,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private static string GetZipName(IAssemblyName assemblyName)
         {
             var assemblyFileName = TypeShapeIndexUtil.GetAssemblyFileName(assemblyName);
-            var fileName = TypeShapeRoot + "\\" + assemblyFileName + ".zip";
+            var fileName = TypeShapeRoot + "\\" + assemblyFileName + ".typeshapes.zip";
             EnsureFolderExists(fileName);
             return fileName;
         }

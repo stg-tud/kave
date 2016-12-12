@@ -504,7 +504,7 @@ namespace KaVE.RS.Commons.Utils.Naming
                 myName = myFullName;
             }
 
-            return String.Format(
+            return string.Format(
                 "{0}{1}, {2}",
                 myName,
                 typeParameters,
