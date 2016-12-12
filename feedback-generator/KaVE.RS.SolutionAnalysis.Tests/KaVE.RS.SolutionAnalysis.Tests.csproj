@@ -181,7 +181,7 @@
     <Compile Include="BulkAnalysisTest.cs" />
     <Compile Include="RelativeEditLocationAnalysisTest.cs" />
     <Compile Include="RelativeEditLocationTest.cs" />
-    <Compile Include="SolutionAnalysisTest.cs" />
+    <Compile Include="ContextSolutionAnalysisTest.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIoTest.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinterTest.cs" />
     <Compile Include="TypeShapeSolutionAnalysisTest.cs" />

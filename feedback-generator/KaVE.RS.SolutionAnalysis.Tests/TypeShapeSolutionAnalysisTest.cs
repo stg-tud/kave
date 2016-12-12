@@ -48,23 +48,69 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             }
         }
 
-        [Test]
-        public void DoesNotAnalyzeProjectDependencies()
-        {
-            var results = RunAnalysis();
+        public Dictionary<IAssemblyName, ISet<ITypeShape>> TypeShapeIndex;
 
-            var assemblyNames = results.AssemblyNames;
-            CollectionAssert.DoesNotContain(assemblyNames, Names.Assembly("Project1"));
+        public List<IAssemblyName> AssemblyNames
+        {
+            get { return TypeShapeIndex.Keys.AsList(); }
+        }
+
+        private void AddResult(ITypeShape ts)
+        {
+            try
+            {
+                var assembly = ts.TypeHierarchy.Element.Assembly;
+                if (TypeShapeIndex.ContainsKey(assembly))
+                {
+                    TypeShapeIndex[assembly].Add(ts);
+                }
+                else
+                {
+                    TypeShapeIndex.Add(assembly, Sets.NewHashSet(ts));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("### error: " + ts);
+            }
         }
 
         [Test]
-        public void AnalyzesAllStandardReferences()
+        public void RunAllAnalyses()
         {
-            var results = RunAnalysis();
+            RunAnalysis();
 
-            var assemblyNames = results.AssemblyNames;
+            DoesNotAnalyzeProjectDependencies();
+            AnalyzesAllStandardReferences();
+            AnalyzesNugetDependency();
+            ContainsOneExampleTypeFromStandardDependency();
+            ContainsOneExampleTypeFromNugetDependency();
+            AnalyzesNestedTypes();
+        }
+
+        private void RunAnalysis()
+        {
+            TypeShapeIndex = new Dictionary<IAssemblyName, ISet<ITypeShape>>();
+
+            DoTestSolution(
+                (lifetime, solution) =>
+                {
+                    var logger = new TestLogger(false);
+                    new TypeShapeSolutionAnalysis(solution, logger, AddResult).AnalyzeAllProjects();
+                });
+        }
+
+        private void DoesNotAnalyzeProjectDependencies()
+        {
+            var assemblyNames = AssemblyNames;
+            CollectionAssert.DoesNotContain(assemblyNames, Names.Assembly("Project1"));
+        }
+
+        private void AnalyzesAllStandardReferences()
+        {
+            var assemblyNames = AssemblyNames;
             CollectionAssert.IsSubsetOf(
-                new List<IAssemblyName>
+                new[]
                 {
                     Names.Assembly("System, 4.0.0.0"),
                     Names.Assembly("System.Core, 4.0.0.0"),
@@ -78,23 +124,17 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 assemblyNames);
         }
 
-        [Test]
-        public void AnalyzesNugetDependency()
+        private void AnalyzesNugetDependency()
         {
-            var results = RunAnalysis();
-
-            var assemblyNames = results.AssemblyNames;
+            var assemblyNames = AssemblyNames;
             CollectionAssert.Contains(assemblyNames, Names.Assembly("Newtonsoft.Json, 6.0.0.0"));
         }
 
-        [Test]
-        public void ContainsOneExampleTypeFromStandardDependency()
+        private void ContainsOneExampleTypeFromStandardDependency()
         {
-            var results = RunAnalysis();
-
-            var typeShapeIndex = results.TypeShapeIndex;
             var assemblyName = Names.Assembly("System, 4.0.0.0");
-            CollectionAssert.Contains(results.AssemblyNames, assemblyName);
+            CollectionAssert.Contains(AssemblyNames, assemblyName);
+
             var expectedType = Names.Type("System.UriTypeConverter, System, 4.0.0.0");
             var expectedTypeShape = new TypeShape
             {
@@ -154,18 +194,14 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 }
             };
 
-            var typeShapes = typeShapeIndex[assemblyName];
+            var typeShapes = TypeShapeIndex[assemblyName];
             CollectionAssert.Contains(typeShapes, expectedTypeShape);
         }
 
-        [Test]
-        public void ContainsOneExampleTypeFromNugetDependency()
+        private void ContainsOneExampleTypeFromNugetDependency()
         {
-            var results = RunAnalysis();
-
-            var typeShapeIndex = results.TypeShapeIndex;
             var assemblyName = Names.Assembly("Newtonsoft.Json, 6.0.0.0");
-            CollectionAssert.Contains(results.AssemblyNames, assemblyName);
+            CollectionAssert.Contains(AssemblyNames, assemblyName);
 
             var expectedType = Names.Type("Newtonsoft.Json.Converters.BinaryConverter, Newtonsoft.Json, 6.0.0.0");
             var expectedTypeShape = new TypeShape
@@ -227,18 +263,15 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                     }
                 }
             };
-            var typeShapes = typeShapeIndex[assemblyName];
+            var typeShapes = TypeShapeIndex[assemblyName];
             CollectionAssert.Contains(typeShapes, expectedTypeShape);
         }
 
-        [Test]
-        public void AnalyzesNestedTypes()
+        private void AnalyzesNestedTypes()
         {
-            var results = RunAnalysis();
-
-            var typeShapeIndex = results.TypeShapeIndex;
             var assemblyName = Names.Assembly("Newtonsoft.Json, 6.0.0.0");
-            CollectionAssert.Contains(results.AssemblyNames, assemblyName);
+            CollectionAssert.Contains(AssemblyNames, assemblyName);
+
             var nestedTypeName = "e:Newtonsoft.Json.JsonReader+State, Newtonsoft.Json, 6.0.0.0";
             var expectedTypeShape = new TypeShape
             {
@@ -261,73 +294,13 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                     EnumField(nestedTypeName, "Finished")
                 }
             };
-            var typeShapes = typeShapeIndex[assemblyName];
+            var typeShapes = TypeShapeIndex[assemblyName];
             CollectionAssert.Contains(typeShapes, expectedTypeShape);
         }
 
-        private IFieldName EnumField(string declaringType, string shortName)
+        private static IFieldName EnumField(string declaringType, string shortName)
         {
             return Names.Field("[{0}] [{0}].{1}", declaringType, shortName);
-        }
-
-        private Results RunAnalysis()
-        {
-            IList<string> infos = new List<string>();
-            var testLogger = new TestLogger(false);
-            testLogger.InfoLogged += infos.Add;
-
-            var results = new Results();
-            Func<TypeShape, bool> cbTypeShape = tS =>
-            {
-                var typeShapeIndex = results.TypeShapeIndex;
-                var assembly = tS.TypeHierarchy.Element.Assembly;
-                if (typeShapeIndex.ContainsKey(assembly))
-                {
-                    typeShapeIndex[assembly].Add(tS);
-                }
-                else
-                {
-                    typeShapeIndex.Add(assembly, Sets.NewHashSet(tS));
-                }
-                return false;
-            };
-            DoTestSolution(
-                (lifetime, solution) =>
-                {
-                    new TypeShapeSolutionAnalysis(lifetime, solution, testLogger, cbTypeShape).AnalyzeAllProjects();
-                });
-
-            testLogger.InfoLogged -= infos.Add;
-            return results;
-        }
-
-
-        private class Results
-        {
-            public Results()
-            {
-                TypeShapeIndex = new Dictionary<IAssemblyName, ISet<TypeShape>>();
-            }
-
-            public Dictionary<IAssemblyName, ISet<TypeShape>> TypeShapeIndex { get; private set; }
-
-            public List<IAssemblyName> AssemblyNames
-            {
-                get { return TypeShapeIndex.Keys.AsList(); }
-            }
-
-            public IKaVEList<ITypeShape> AllTypeShapes
-            {
-                get
-                {
-                    var typeShapes = Lists.NewList<ITypeShape>();
-                    foreach (var typeshapeSet in TypeShapeIndex.Values)
-                    {
-                        typeShapes.AddAll(typeshapeSet);
-                    }
-                    return typeShapes;
-                }
-            }
         }
     }
 }

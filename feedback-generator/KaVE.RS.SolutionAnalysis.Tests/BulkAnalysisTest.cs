@@ -131,7 +131,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                     }
                 };
 
-                new SolutionAnalysis(solution, _logger, cbContext).AnalyzeAllProjects();
+                new ContextSolutionAnalysis(solution, _logger, cbContext).AnalyzeAllProjects();
 
                 _logger.EndPossibleErrorBlock();
 

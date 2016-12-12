@@ -16,126 +16,97 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.DataFlow;
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
+using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
-using JetBrains.ReSharper.Psi.Impl.Reflection2;
 using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.Util;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
+using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Analysis;
-using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.RS.SolutionAnalysis
 {
-    public class TypeShapeSolutionAnalysis
+    public class TypeShapeSolutionAnalysis : BaseSolutionAnalysis
     {
-        private readonly ISolution _solution;
-        private readonly ILogger _logger;
-        private readonly Func<TypeShape, bool> _cbTypeShape;
-        private Lifetime _lifetime;
+        private readonly Action<ITypeShape> _cbTypeShape;
 
-        public TypeShapeSolutionAnalysis(Lifetime lifetime,ISolution solution, ILogger logger, Func<TypeShape, bool> cbTypeShape)
+        public TypeShapeSolutionAnalysis(ISolution solution,
+            ILogger logger,
+            Action<ITypeShape> cbTypeShape) : base(solution, logger)
         {
-            _lifetime = lifetime;
-            _solution = solution;
-            _logger = logger;
             _cbTypeShape = cbTypeShape;
         }
 
-
-        /// <summary>
-        ///     Requires re-entrency guard (ReentrancyGuard.Current.Execute) and read lock (ReadLockCookie.Execute).
-        /// </summary>
-        public void AnalyzeAllProjects()
+        protected override void AnalyzePrimaryPsiModule(IPsiModule primaryPsiModule)
         {
-            var projects = _solution.GetAllProjects();
-            projects.Remove(_solution.MiscFilesProject);
-            projects.Remove(_solution.SolutionProject);
-            foreach (var project in projects)
-            {
-                AnalyzeProject(project);
-            }
-        }
-
-        private void AnalyzeProject(IProject project)
-        {
-            _logger.Info("");
-            _logger.Info("");
-            _logger.Info("###### Analyzing project '{0}'... ################################", project.Name);
-
-            var psiModules = _solution.PsiModules();
-            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default);
-            Asserts.NotNull(primaryPsiModule, "no psi module");
             var psiServices = primaryPsiModule.GetPsiServices();
             var symbolScope = psiServices.Symbols.GetSymbolScope(primaryPsiModule, true, true);
 
-            //@seb: replace with iteration on assemblies 
-            //psiServices.Symbols.AssemblyPsiFiles.View(_lifetime, Viewer);
             var globalNamespace = symbolScope.GlobalNamespace;
-            var nestedNamespaces = globalNamespace.GetNestedNamespaces(symbolScope);
-            // TODO @seb: Rekursion umbauen in Einzelaufrufe
-            AnalyzeNamespaces(nestedNamespaces, symbolScope);
-        }
-
-        private void Viewer(Lifetime lifetime, AssemblyPsiFile assemblyPsiFile)
-        {
-            var compiledTypeElements = assemblyPsiFile.Types;
-            foreach (var compiledTypeElement in compiledTypeElements)
+            foreach (var te in FindTypeElements(globalNamespace, symbolScope))
             {
-                //@seb: add nested types
+                var clrTypeName = te.GetClrName();
+                Console.WriteLine(clrTypeName);
+
+                if (!te.CanBeVisibleToSolution())
+                {
+                    Console.WriteLine("--> skip (invisible)\n");
+                    continue;
+                }
+
+                if (!IsDefinedInDependency(te))
+                {
+                    Console.WriteLine("--> skip (no dependency)\n");
+                    continue;
+                }
+
+                var ts = AnalyzeTypeElement(te);
+                Console.WriteLine("--> ok\n", ts);
+                _cbTypeShape(ts);
             }
         }
 
-        private void AnalyzeNamespaces(ICollection<INamespace> namespaces, ISymbolScope symbolScope)
+        private static bool IsDefinedInDependency(ITypeElement te)
         {
-            foreach (var nestedNamespace in namespaces)
-            {
-                var nestedTypeElements = new Queue<ITypeElement>(nestedNamespace.GetNestedTypeElements(symbolScope));
-                while (!nestedTypeElements.IsEmpty())
-                {
-                    var typeElement = nestedTypeElements.Dequeue();
-                    var typeShape = AnalyzeTypeElement(typeElement);
-                    if (typeShape == null)
-                    {
-                        continue;
-                    }
-                    var assemblyAlreadyAnalyzed = _cbTypeShape(typeShape);
-                    if (assemblyAlreadyAnalyzed)
-                    {
-                        break;
-                    }
+            var containingModule = te.Module.ContainingProjectModule;
+            var asm = containingModule as IAssembly;
+            return asm != null;
+        }
 
-                    var nestedTypes = typeElement.NestedTypes;
-                    if (nestedTypes.Count > 0)
-                    {
-                        nestedTypeElements.EnqueueRange(nestedTypes);
-                    }
-                }
-                var nestedNamespaces = nestedNamespace.GetNestedNamespaces(symbolScope);
-                if (!nestedNamespaces.IsEmpty())
+        private static IEnumerable<ITypeElement> FindTypeElements(INamespace ns,
+            ISymbolScope symbolScope)
+        {
+            foreach (var te in ns.GetNestedTypeElements(symbolScope))
+            {
+                yield return te;
+
+                foreach (var nte in te.NestedTypes)
                 {
-                    AnalyzeNamespaces(nestedNamespaces, symbolScope);
+                    yield return nte;
+                }
+            }
+
+            foreach (var nsNested in ns.GetNestedNamespaces(symbolScope))
+            {
+                foreach (var te in FindTypeElements(nsNested, symbolScope))
+                {
+                    yield return te;
                 }
             }
         }
 
-        private TypeShape AnalyzeTypeElement(ITypeElement typeElement)
+        [NotNull]
+        private static TypeShape AnalyzeTypeElement(ITypeElement typeElement)
         {
             // TODO @seb: TypeShapeAnalysis für RootTypes implementieren
             if (IsRootType(typeElement))
             {
-                return null;
+                return new TypeShape();
             }
             var typeShapeAnalysis = new TypeShapeAnalysis();
             var typeShape = typeShapeAnalysis.Analyze(typeElement);
-            if (typeShape.TypeHierarchy.Element.Assembly.IsLocalProject)
-            {
-                return null;
-            }
             return typeShape;
         }
 

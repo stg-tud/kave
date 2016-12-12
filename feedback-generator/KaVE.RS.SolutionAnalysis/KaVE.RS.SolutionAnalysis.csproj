@@ -174,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiStatisticsRunner.cs" />
+    <Compile Include="BaseSolutionAnalysis.cs" />
     <Compile Include="CommandLineLogger.cs" />
     <Compile Include="CompletionEventFilter.cs" />
     <Compile Include="CompletionEventStatistics\CompletionEventStatisticsIo.cs" />
@@ -197,7 +198,7 @@
     <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SanityCheck.cs" />
     <Compile Include="TypeShapeSolutionAnalysis.cs" />
-    <Compile Include="SolutionAnalysis.cs" />
+    <Compile Include="ContextSolutionAnalysis.cs" />
     <Compile Include="StatisticsForPapers\StatisticsIo.cs" />
     <Compile Include="StatisticsForPapers\StatisticsPrinter.cs" />
     <Compile Include="StatisticsForPapers\StatisticsForPaperRunner.cs" />

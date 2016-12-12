@@ -28,7 +28,7 @@ using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
-    internal class SolutionAnalysisTest : BaseTestWithExistingSolution
+    internal class ContextSolutionAnalysisTest : BaseTestWithExistingSolution
     {
         protected override FileSystemPath ExistingSolutionFilePath
         {
@@ -194,7 +194,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 (lifetime, solution) =>
                 {
                     results = Lists.NewList<Context>();
-                    new SolutionAnalysis(solution, testLogger, ctx => results.Add(ctx)).AnalyzeAllProjects();
+                    new ContextSolutionAnalysis(solution, testLogger, ctx => results.Add(ctx)).AnalyzeAllProjects();
                 });
 
             testLogger.InfoLogged -= infos.Add;

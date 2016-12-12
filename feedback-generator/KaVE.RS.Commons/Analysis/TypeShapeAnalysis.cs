@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi;
@@ -107,6 +106,10 @@ namespace KaVE.RS.Commons.Analysis
                         var shortName = field.ShortName;
                         fieldName = Names.Field("[{0}] [{0}].{1}", fieldName.DeclaringType, shortName);
                     }
+                    if (fieldName == null)
+                    {
+                        continue;
+                    }
                     typeShape.Fields.Add(fieldName);
                 }
             }
@@ -185,13 +188,14 @@ namespace KaVE.RS.Commons.Analysis
         {
             return _typeElement != null ? _typeElement.Properties : new HashSet<IProperty>();
         }
-        
+
         private static TypeHierarchy CreateTypeHierarchy(ITypeElement type,
             ISubstitution substitution,
             IKaVEList<ITypeName> seenTypes)
         {
             if (type == null || IsRootType(type))
             {
+                // TODO (seb): add type "element" instead of ignoring completely
                 return null;
             }
             var typeName = type.GetName<ITypeName>(substitution);

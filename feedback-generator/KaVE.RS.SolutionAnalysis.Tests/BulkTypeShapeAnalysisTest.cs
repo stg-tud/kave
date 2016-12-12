@@ -101,13 +101,9 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         {
             Console.WriteLine("Starting analysis... ({0})", DateTime.Now);
 
-            Func<TypeShape, bool> cbTypeShape = tS =>
+            Action<ITypeShape> cbTypeShape = tS =>
             {
                 var assemblyName = tS.TypeHierarchy.Element.Assembly;
-                if (AssemblyAlreadyExists(assemblyName))
-                {
-                    return true;
-                }
                 _logger.Info("\t> {0}".FormatEx(tS.TypeHierarchy.Element));
                 if (_writingArchives.ContainsKey(assemblyName))
                 {
@@ -117,10 +113,9 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 {
                     _writingArchives.Add(assemblyName, new WritingArchive(GetZipName(assemblyName)));
                 }
-                return false;
             };
 
-            new TypeShapeSolutionAnalysis(lifetime, solution, _logger, cbTypeShape).AnalyzeAllProjects();
+            new TypeShapeSolutionAnalysis(solution, _logger, cbTypeShape).AnalyzeAllProjects();
 
             foreach (var writingArchive in _writingArchives)
             {

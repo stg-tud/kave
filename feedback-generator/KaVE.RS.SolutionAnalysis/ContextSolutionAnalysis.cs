@@ -16,7 +16,6 @@
 
 using System;
 using System.Linq;
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -27,49 +26,25 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.RS.Commons.Analysis;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.RS.SolutionAnalysis
 {
-    public class SolutionAnalysis
+    public class ContextSolutionAnalysis : BaseSolutionAnalysis
     {
-        private readonly ISolution _solution;
         private readonly ILogger _logger;
         private readonly Action<Context> _cbContext;
 
-        public SolutionAnalysis(ISolution solution, ILogger logger, Action<Context> cbContext)
+        public ContextSolutionAnalysis(ISolution solution, ILogger logger, Action<Context> cbContext)
+            : base(solution, logger)
         {
-            _solution = solution;
             _logger = logger;
             _cbContext = cbContext;
         }
 
-        /// <summary>
-        ///     Requires re-entrency guard (ReentrancyGuard.Current.Execute) and read lock (ReadLockCookie.Execute).
-        /// </summary>
-        public void AnalyzeAllProjects()
+        protected override void AnalyzePrimaryPsiModule(IPsiModule primaryPsiModule)
         {
-            var projects = _solution.GetAllProjects();
-            projects.Remove(_solution.MiscFilesProject);
-            projects.Remove(_solution.SolutionProject);
-            foreach (var project in projects)
-            {
-                AnalyzeProject(project);
-            }
-        }
-
-        private void AnalyzeProject(IProject project)
-        {
-            _logger.Info("");
-            _logger.Info("");
-            _logger.Info("###### Analyzing project '{0}'... ################################", project.Name);
-
-            var psiModules = _solution.PsiModules();
-            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default);
-            Asserts.NotNull(primaryPsiModule, "no psi module");
-
             foreach (var file in primaryPsiModule.SourceFiles)
             {
                 var isCSharpFile = file.LanguageType.Is<CSharpProjectFileType>();
