@@ -58,7 +58,7 @@ namespace KaVE.Commons.Model.Naming
         [NotNull]
         public static IFieldName Field(string id, params object[] args)
         {
-            return new FieldName(string.Format(id, args));
+            return args.Length == 0 ? new FieldName(id) : new FieldName(string.Format(id, args));
         }
 
         [NotNull]
@@ -160,7 +160,7 @@ namespace KaVE.Commons.Model.Naming
         [NotNull]
         public static ITypeName Type(string id, params object[] args)
         {
-            return TypeUtils.CreateTypeName(string.Format(id, args));
+            return args.Length == 0 ? TypeUtils.CreateTypeName(id) : TypeUtils.CreateTypeName(string.Format(id, args));
         }
 
         [NotNull]
