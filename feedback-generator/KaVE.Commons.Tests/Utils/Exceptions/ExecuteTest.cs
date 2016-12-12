@@ -25,7 +25,6 @@ using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Exceptions
 {
-    [TestFixture]
     internal class ExecuteTest
     {
         private Mock<ILogger> _mockLogger;
@@ -58,13 +57,29 @@ namespace KaVE.Commons.Tests.Utils.Exceptions
             _mockLogger.Verify(logger => logger.Error(e, "executing action failed"));
         }
 
-        [Test, ExpectedException(typeof (Exception))]
+        [Test, ExpectedException(typeof(Exception))]
         public void ShouldNotHandleGeneralException()
         {
             Execute.WithExceptionLogging(_mockLogger.Object, () => { throw new Exception(); });
         }
 
-        [Test, ExpectedException(typeof (ThreadInterruptedException))]
+        [Test, TestCaseSource("_blockedAndLoggedExceptions")]
+        public void ShouldLogAssertException_Callback(Exception e)
+        {
+            var wasCalled = false;
+            Execute.WithExceptionCallback(() => { throw e; }, cb => { wasCalled = true; });
+            Assert.That(wasCalled);
+        }
+
+        [Test, ExpectedException(typeof(Exception))]
+        public void ShouldNotHandleGeneralException_Callback()
+        {
+            var wasCalled = false;
+            Execute.WithExceptionCallback(() => { throw new Exception(); }, cb => { wasCalled = true; });
+            Assert.False(wasCalled);
+        }
+
+        [Test, ExpectedException(typeof(ThreadInterruptedException))]
         public void ShouldNotHandleThreadInterruptedException()
         {
             Execute.WithExceptionLogging(_mockLogger.Object, () => { throw new ThreadInterruptedException(); });
@@ -92,7 +107,7 @@ namespace KaVE.Commons.Tests.Utils.Exceptions
             Execute.AndSupressExceptions(() => { throw e; });
         }
 
-        [Test, ExpectedException(typeof (IOException))]
+        [Test, ExpectedException(typeof(IOException))]
         public void ShouldNotSuppressOtherExceptions()
         {
             Execute.AndSupressExceptions(() => { throw new IOException(); });

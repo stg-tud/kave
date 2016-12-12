@@ -25,16 +25,16 @@ namespace KaVE.Commons.Utils.Exceptions
     {
         private static readonly Type[] SupressedExceptionTypes =
         {
-            typeof (AssertException),
-            typeof (JsonException),
-            typeof (NullReferenceException),
-            typeof (ArgumentException),
-            typeof (ArithmeticException),
-            typeof (IndexOutOfRangeException),
-            typeof (FormatException),
-            typeof (InvalidCastException),
-            typeof (InvalidOperationException),
-            typeof (NotSupportedException)
+            typeof(AssertException),
+            typeof(JsonException),
+            typeof(NullReferenceException),
+            typeof(ArgumentException),
+            typeof(ArithmeticException),
+            typeof(IndexOutOfRangeException),
+            typeof(FormatException),
+            typeof(InvalidCastException),
+            typeof(InvalidOperationException),
+            typeof(NotSupportedException)
         };
 
         public static void WithExceptionLogging(ILogger logger, Action action)
@@ -48,6 +48,23 @@ namespace KaVE.Commons.Utils.Exceptions
                 if (SupressedExceptionTypes.Contains(e.GetType()))
                 {
                     logger.Error(e, "executing action failed");
+                    return;
+                }
+                throw;
+            }
+        }
+
+        public static void WithExceptionCallback(Action action, Action<Exception> cb)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                if (SupressedExceptionTypes.Contains(e.GetType()))
+                {
+                    cb(e);
                     return;
                 }
                 throw;
