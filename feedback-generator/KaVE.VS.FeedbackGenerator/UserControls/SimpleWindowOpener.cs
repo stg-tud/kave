@@ -35,7 +35,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls
 
     public interface ISimpleWindowOpener
     {
-        void OpenForcedSettingUpdateWindow(string test);
+        void OpenForcedSettingUpdateWindow(string text);
 
         void OpenFirstStartWindow();
     }

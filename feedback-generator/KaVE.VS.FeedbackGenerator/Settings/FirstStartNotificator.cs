@@ -16,6 +16,7 @@
 
 using JetBrains.Application;
 using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
@@ -43,6 +44,13 @@ namespace KaVE.VS.FeedbackGenerator.Settings
                                             "so we generated a random one for you." +
                                             NewLine + NewLine +
                                             "Please visit the KaVE options now and update your profile.";
+
+
+        public const string UploadUrlText = ThankYou +
+                                            "We recently improved the KaVE server infrastructur and the old server will be shut " +
+                                            "down soon. Your client still used the old server, so we updated your config accordingly." +
+                                            NewLine + NewLine +
+                                            "No further actions are necessary on your side.";
 
 
         private readonly ISettingsStore _settingsStore;
@@ -95,6 +103,24 @@ namespace KaVE.VS.FeedbackGenerator.Settings
                 {
                     _windows.OpenForcedSettingUpdateWindow(ProfileIdText);
                 }
+            }
+
+            const string stgUrl = "kave.st.informatik.tu-darmstadt.de";
+            const string kaveUrl = "upload.kave.cc";
+            const string stgIp = "130.83.165.51";
+
+            var exportSettings = _settingsStore.GetSettings<ExportSettings>();
+            if (exportSettings.UploadUrl.Contains(stgUrl) || exportSettings.UploadUrl.Contains(stgIp))
+            {
+                exportSettings.UploadUrl = exportSettings.UploadUrl.Replace(stgUrl, kaveUrl);
+                exportSettings.UploadUrl = exportSettings.UploadUrl.Replace(stgIp, kaveUrl);
+
+                if (!exportSettings.UploadUrl.EndsWith("/"))
+                {
+                    exportSettings.UploadUrl += "/";
+                }
+                _settingsStore.SetSettings(exportSettings);
+                _windows.OpenForcedSettingUpdateWindow(UploadUrlText);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite
     // WARNING: Do not change classname, as it is used to identify settings
     public class ExportSettings
     {
-        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de/test/", "KaVE FeedbackGenerator UploadUrl")]
+        [SettingsEntry("http://upload.kave.cc/test/", "KaVE FeedbackGenerator UploadUrl")]
         public string UploadUrl;
 
         [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
