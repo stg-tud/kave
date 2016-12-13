@@ -47,10 +47,11 @@ namespace KaVE.VS.FeedbackGenerator.Settings
 
 
         public const string UploadUrlText = ThankYou +
-                                            "We recently improved the KaVE server infrastructur and the old server will be shut " +
-                                            "down soon. Your client still used the old server, so we updated your config accordingly." +
+                                            "We recently improved the KaVE server infrastructur and moved to a new server, the old " +
+                                            "server will be shut down soon. Your client was still configured to used the old server, " +
+                                            "so we updated your server configuration accordingly." +
                                             NewLine + NewLine +
-                                            "No further actions are necessary on your side.";
+                                            "No further actions are required on your side.";
 
 
         private readonly ISettingsStore _settingsStore;
