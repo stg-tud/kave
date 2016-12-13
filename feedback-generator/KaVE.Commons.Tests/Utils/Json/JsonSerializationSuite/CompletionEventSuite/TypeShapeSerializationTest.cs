@@ -48,21 +48,7 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSu
                 },
                 NestedTypes =
                 {
-                    new TypeHierarchy
-                    {
-                        Element = Names.Type("T2,P"),
-                        Extends = new TypeHierarchy
-                        {
-                            Element = Names.Type("S2,P")
-                        },
-                        Implements =
-                        {
-                            new TypeHierarchy
-                            {
-                                Element = Names.Type("I2,P")
-                            }
-                        }
-                    }
+                    Names.Type("T2,P")
                 },
                 Delegates =
                 {

@@ -52,7 +52,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
             var sut = new TypeShape
             {
                 TypeHierarchy = SomeTypeHierarchy,
-                NestedTypes = {new TypeHierarchy()},
+                NestedTypes = {Names.Type("T2,P")},
                 Delegates = {new DelegateTypeName()},
                 EventHierarchies = {new EventHierarchy()},
                 Fields = {new FieldName()},
@@ -61,7 +61,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
             };
             Assert.AreEqual(SomeTypeHierarchy, sut.TypeHierarchy);
             Assert.AreEqual(Sets.NewHashSet(new MethodHierarchy()), sut.MethodHierarchies);
-            Assert.AreEqual(Sets.NewHashSet<ITypeHierarchy>(new TypeHierarchy()), sut.NestedTypes);
+            Assert.AreEqual(Sets.NewHashSet(Names.Type("T2,P")), sut.NestedTypes);
             Assert.AreEqual(Sets.NewHashSet<IDelegateTypeName>(new DelegateTypeName()), sut.Delegates);
             Assert.AreEqual(Sets.NewHashSet<IFieldName>(new FieldName()), sut.Fields);
             Assert.AreEqual(Sets.NewHashSet<IMemberHierarchy<IEventName>>(new EventHierarchy()), sut.EventHierarchies);
@@ -85,7 +85,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
             var a = new TypeShape
             {
                 TypeHierarchy = SomeTypeHierarchy,
-                NestedTypes = {new TypeHierarchy()},
+                NestedTypes = {Names.Type("T2,P")},
                 Delegates = {new DelegateTypeName()},
                 EventHierarchies = {new EventHierarchy()},
                 Fields = {new FieldName()},
@@ -95,7 +95,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
             var b = new TypeShape
             {
                 TypeHierarchy = SomeTypeHierarchy,
-                NestedTypes = {new TypeHierarchy()},
+                NestedTypes = {Names.Type("T2,P")},
                 Delegates = {new DelegateTypeName()},
                 EventHierarchies = {new EventHierarchy()},
                 Fields = {new FieldName()},
@@ -123,7 +123,7 @@ namespace KaVE.Commons.Tests.Model.TypeShapes
         {
             var a = new TypeShape
             {
-                NestedTypes = {SomeTypeHierarchy}
+                NestedTypes = {Names.Type("T2,P")}
             };
             var b = new TypeShape();
             Assert.AreNotEqual(a, b);

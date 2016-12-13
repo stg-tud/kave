@@ -33,7 +33,7 @@ namespace KaVE.Commons.Model.TypeShapes
         ///     All Nested Types in the enclosing class
         /// </summary>
         [NotNull]
-        IKaVESet<ITypeHierarchy> NestedTypes { get; set; }
+        IKaVESet<ITypeName> NestedTypes { get; set; }
 
         /// <summary>
         ///     All Delegates in the enclosing class

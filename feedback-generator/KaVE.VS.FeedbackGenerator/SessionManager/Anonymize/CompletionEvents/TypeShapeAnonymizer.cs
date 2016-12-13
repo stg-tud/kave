@@ -29,7 +29,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return new TypeShape
             {
                 TypeHierarchy = AnonymizeCodeNames(typeShape.TypeHierarchy),
-                NestedTypes = Sets.NewHashSetFrom(typeShape.NestedTypes.Select(AnonymizeCodeNames)),
+                NestedTypes = Sets.NewHashSetFrom(typeShape.NestedTypes.Select(tn => tn.ToAnonymousName())),
                 Delegates = Sets.NewHashSetFrom(typeShape.Delegates.Select(n => n.ToAnonymousName())),
                 EventHierarchies = Sets.NewHashSetFrom(typeShape.EventHierarchies.Select(AnonymizeCodeNames)),
                 Fields = Sets.NewHashSetFrom(typeShape.Fields.Select(n => n.ToAnonymousName())),

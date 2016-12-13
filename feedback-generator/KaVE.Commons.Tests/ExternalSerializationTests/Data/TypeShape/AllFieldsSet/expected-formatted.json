@@ -17,22 +17,7 @@
         ]
     },
     "NestedTypes": [
-        {
-            "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
-            "Element": "0T:T2,P",
-            "Extends": {
-                "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
-                "Element": "0T:S2,P",
-                "Implements": []
-            },
-            "Implements": [
-                {
-                    "$type": "KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons",
-                    "Element": "0T:I2,P",
-                    "Implements": []
-                }
-            ]
-        }
+        "0T:T2,P"
     ],
     "Delegates": [
         "0T:d:[T3,P] [T3,P].M([p:int] p)"

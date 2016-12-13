@@ -114,19 +114,14 @@ namespace KaVE.RS.Commons.Analysis
 
         private void AddNestedTypes(ITypeShape typeShape)
         {
-            var nestedTypes = _typeElement.NestedTypes;
-            foreach (var typeElement in nestedTypes)
+            foreach (var typeElement in _typeElement.NestedTypes)
             {
                 if (typeElement is IDelegate)
                 {
                     continue;
                 }
-                var typeHierarchy = CreateTypeHierarchy(
-                    typeElement,
-                    EmptySubstitution.INSTANCE,
-                    Lists.NewList<ITypeName>(),
-                    true);
-                typeShape.NestedTypes.Add(typeHierarchy);
+                var type = typeElement.GetName<ITypeName>();
+                typeShape.NestedTypes.Add(type);
             }
         }
 

@@ -64,42 +64,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
                 }");
             Assert.AreEqual(
                 Sets.NewHashSet(
-                    new TypeHierarchy("TestNamespace.TestClass+N1, TestProject"),
-                    new TypeHierarchy("TestNamespace.TestClass+N2, TestProject"),
-                    new TypeHierarchy("TestNamespace.TestClass+N3, TestProject")),
+                    Names.Type("TestNamespace.TestClass+N1, TestProject"),
+                    Names.Type("TestNamespace.TestClass+N2, TestProject"),
+                    Names.Type("TestNamespace.TestClass+N3, TestProject")),
                 ResultContext.TypeShape.NestedTypes);
-        }
-
-        [Test]
-        public void ShouldRetrieveFullTypeHierarchyForNestedType()
-        {
-            CompleteInCSharpFile(@"
-                namespace TestNamespace
-                {
-                    public interface AnInterface {}
-
-                    public class SuperClass {}
-
-                    public class TestClass 
-                    {
-                        public class NestedClass : SuperClass, AnInterface {}
-                        public void Doit()
-                        {
-                            this.Doit();
-                            $
-                        }
-                    }
-                }");
-
-            CollectionAssert.Contains(
-                ResultContext.TypeShape.NestedTypes,
-                new TypeHierarchy
-                {
-                    Element = Names.Type("TestNamespace.TestClass+NestedClass, TestProject"),
-                    Extends = new TypeHierarchy("TestNamespace.SuperClass, TestProject"),
-                    Implements =
-                        Sets.NewHashSet<ITypeHierarchy>(new TypeHierarchy("i:TestNamespace.AnInterface, TestProject"))
-                });
         }
 
         [Test]
@@ -126,7 +94,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             var expected = new TypeShape
             {
                 TypeHierarchy = new TypeHierarchy("N.C, TestProject"),
-                NestedTypes = {new TypeHierarchy("N.C+N, TestProject")}
+                NestedTypes = {Names.Type("N.C+N, TestProject")}
             };
             Assert.AreEqual(expected, actual);
         }

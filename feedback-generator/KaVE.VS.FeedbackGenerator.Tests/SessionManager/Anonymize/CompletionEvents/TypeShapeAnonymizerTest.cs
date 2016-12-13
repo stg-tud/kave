@@ -68,24 +68,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
                 {
                     NestedTypes =
                     {
-                        new TypeHierarchy
-                        {
-                            Element = T("elem"),
-                            Extends = H("ext"),
-                            Implements = {H("impl")}
-                        }
+                        T("TN")
                     }
                 });
             var expected = new TypeShape
             {
                 NestedTypes =
                 {
-                    new TypeHierarchy
-                    {
-                        Element = T("elem").ToAnonymousName(),
-                        Extends = AnonH("ext"),
-                        Implements = {AnonH("impl")}
-                    }
+                    T("TN").ToAnonymousName()
                 }
             };
             Assert.AreEqual(expected, actual);

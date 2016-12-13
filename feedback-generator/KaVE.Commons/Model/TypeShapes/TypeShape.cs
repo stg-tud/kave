@@ -29,7 +29,7 @@ namespace KaVE.Commons.Model.TypeShapes
         public ITypeHierarchy TypeHierarchy { get; set; }
 
         [DataMember]
-        public IKaVESet<ITypeHierarchy> NestedTypes { get; set; }
+        public IKaVESet<ITypeName> NestedTypes { get; set; }
 
         [DataMember]
         public IKaVESet<IDelegateTypeName> Delegates { get; set; }
@@ -49,7 +49,7 @@ namespace KaVE.Commons.Model.TypeShapes
         public TypeShape()
         {
             TypeHierarchy = new TypeHierarchy();
-            NestedTypes = Sets.NewHashSet<ITypeHierarchy>();
+            NestedTypes = Sets.NewHashSet<ITypeName>();
             Delegates = Sets.NewHashSet<IDelegateTypeName>();
             EventHierarchies = Sets.NewHashSet<IMemberHierarchy<IEventName>>();
             Fields = Sets.NewHashSet<IFieldName>();
