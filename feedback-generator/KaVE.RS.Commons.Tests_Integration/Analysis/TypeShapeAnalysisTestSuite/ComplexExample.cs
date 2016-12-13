@@ -107,9 +107,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.TypeShapeAnalysisTestSuite
             CompleteInNamespace(_src);
 
             var actuals = ResultContext.TypeShape.NestedTypes;
-            var expecteds = Sets.NewHashSet<ITypeHierarchy>(
-                new TypeHierarchy("N.BasicCases.TypeShapeElem+N, TestProject"),
-                new TypeHierarchy("N.BasicCases.TypeShapeElem+SN, TestProject"));
+            var expecteds = Sets.NewHashSet(
+                Names.Type("N.BasicCases.TypeShapeElem+N, TestProject"),
+                Names.Type("N.BasicCases.TypeShapeElem+SN, TestProject"));
             Assert.AreEqual(expecteds, actuals);
         }
 
