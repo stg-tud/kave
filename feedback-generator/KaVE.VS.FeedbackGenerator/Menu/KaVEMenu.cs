@@ -17,7 +17,6 @@
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.MenuGroups;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
-using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 
 namespace KaVE.VS.FeedbackGenerator.Menu
 {
@@ -26,6 +25,10 @@ namespace KaVE.VS.FeedbackGenerator.Menu
     {
         public const string Id = "KaVE.Menu";
 
-        public KaVEMenu(SessionManagerWindowAction b, UploadWizardAction d, OptionPageAction c, AboutAction a) {}
+        public KaVEMenu(SessionManagerWindowAction b,
+            UploadWizardAction d,
+            OptionPageAction c,
+            IntelligentCodeCompletionAction e,
+            AboutAction a) {}
     }
 }
