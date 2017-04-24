@@ -18,6 +18,7 @@ using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.RS.Commons.Analysis.CompletionTarget
 {
@@ -66,11 +67,7 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                 }
 
                 var isAssign = CSharpTokenType.EQ == tNode.GetTokenType();
-
-                var isLBrace = CSharpTokenType.LBRACE == tNode.GetTokenType();
-                var isRBrace = CSharpTokenType.RBRACE == tNode.GetTokenType();
-
-                if (target.IsWhitespaceToken() || isAssign || isLBrace || isRBrace)
+                if (IsWhitespaceOrBraceToken(target) || isAssign)
                 {
                     FindAvailableTarget(target);
                 }
@@ -139,8 +136,40 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                 {
                     var expr = prev as IExpressionStatement;
                     var decl = prev as IDeclarationStatement;
+                    var scl = prev as ISwitchCaseLabel;
+                    var ss = prev as ISwitchSection; // can be both
 
-                    if (expr != null)
+                    if (ss != null)
+                    {
+                        // strange bug in ReSharper AST
+                        if (next == null && ss.Statements.Count > 0)
+                        {
+                            Result.AffectedNode = ss.Statements.LastOrDefault();
+                            Result.Case = CompletionCase.EmptyCompletionAfter;
+                            return;
+                        }
+                        scl = ss.CaseLabels.FirstOrDefault();
+                    }
+
+                    if (scl != null)
+                    {
+                        var isInBetweenLabels = next is ISwitchCaseLabel;
+
+                        ss = scl.Parent as ISwitchSection;
+                        Asserts.NotNull(ss);
+
+                        if (ss.Statements.Count == 0 || isInBetweenLabels)
+                        {
+                            Result.AffectedNode = scl;
+                            Result.Case = CompletionCase.InBody;
+                        }
+                        else
+                        {
+                            Result.AffectedNode = ss.Statements.First();
+                            Result.Case = CompletionCase.EmptyCompletionBefore;
+                        }
+                    }
+                    else if (expr != null)
                     {
                         Result.AffectedNode = prev.FirstChild as ICSharpTreeNode;
                         Result.Case = CompletionCase.EmptyCompletionAfter;
@@ -269,11 +298,11 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
 
             private static ICSharpTreeNode FindNextNonWhitespaceNode(ITreeNode node)
             {
-                if (node == null || node.NextSibling == null)
+                if (node == null)
                 {
                     return null;
                 }
-                if (node.IsWhitespaceToken())
+                if (IsWhitespaceOrBraceToken(node))
                 {
                     node = FindNextNonWhitespaceNode(node.NextSibling);
                 }
@@ -284,13 +313,20 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                 return node as ICSharpTreeNode;
             }
 
+            private static bool IsWhitespaceOrBraceToken(ITreeNode node)
+            {
+                var isLBrace = CSharpTokenType.LBRACE == node.GetTokenType();
+                var isRBrace = CSharpTokenType.RBRACE == node.GetTokenType();
+                return node.IsWhitespaceToken() || isLBrace || isRBrace;
+            }
+
             private ICSharpTreeNode FindPrevNonWhitespaceNode(ITreeNode node)
             {
-                if (node == null || node.PrevSibling == null)
+                if (node == null)
                 {
                     return null;
                 }
-                if (node.IsWhitespaceToken())
+                if (IsWhitespaceOrBraceToken(node))
                 {
                     node = FindPrevNonWhitespaceNode(node.PrevSibling);
                 }

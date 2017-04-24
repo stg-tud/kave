@@ -88,5 +88,124 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Trigge
                 new ReturnStatement {IsVoid = true},
                 Fix.EmptyCompletion);
         }
+
+        #region switch
+
+        [Test]
+        public void CompletionInSwitchBlock_Before()
+        {
+            CompleteInMethod(@"
+                $
+                switch (this)
+                {
+                    default:
+                        break;
+                }");
+
+            AssertCompletionMarker<ISwitchStatement>(CompletionCase.EmptyCompletionBefore);
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_AfterLabel()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        $
+                }");
+
+            AssertCompletionMarker<ISwitchCaseLabel>(CompletionCase.InBody);
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_AfterLabelMulti()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    case 0:
+                        $
+                    case 1:
+                        continue;
+                }");
+
+            AssertCompletionMarker<ISwitchCaseLabel>(CompletionCase.InBody);
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_AfterLabelNonEmpty()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        $
+                        continue;
+                }");
+
+            AssertCompletionMarker<IContinueStatement>(CompletionCase.EmptyCompletionBefore);
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_Nested()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        continue;
+                        $
+                }");
+
+            AssertCompletionMarker<IContinueStatement>(CompletionCase.EmptyCompletionAfter);
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_Nested2()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        int i;
+                        continue;
+                        $
+                }");
+
+            AssertCompletionMarker<IContinueStatement>(CompletionCase.EmptyCompletionAfter);
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_Nested3()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        continue;
+                        $
+                        int i;
+                }");
+
+            AssertCompletionMarker<IContinueStatement>(CompletionCase.EmptyCompletionAfter);
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_After()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        continue;
+                }
+                $
+            ");
+
+            AssertCompletionMarker<ISwitchStatement>(CompletionCase.EmptyCompletionAfter);
+        }
+
+        #endregion
     }
 }
