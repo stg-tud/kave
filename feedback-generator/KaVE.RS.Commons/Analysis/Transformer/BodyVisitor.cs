@@ -644,9 +644,9 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             };
             body.Add(loop);
 
-            if (stmt.IteratorDeclaration != null && stmt.IteratorDeclaration.DeclaredElement != null)
+            foreach (var itDecl in stmt.IteratorDeclarations)
             {
-                var localVar = stmt.IteratorDeclaration.DeclaredElement.GetName<ILocalVariableName>();
+                var localVar = itDecl.DeclaredElement.GetName<ILocalVariableName>();
                 loop.Declaration = new VariableDeclaration
                 {
                     Reference = new VariableReference {Identifier = localVar.Name},
@@ -769,16 +769,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             var switchBlock = new SwitchBlock {Reference = _exprVisitor.ToVariableRef(block.Condition, body)};
 
             var currentSection = new KaVEList<IStatement>();
-            foreach (var statement in block.Block.StatementsEnumerable)
+            foreach (var section in block.Sections)
             {
-                var switchLabel = statement as ISwitchLabelStatement;
-                if (switchLabel != null)
+                foreach (var label in section.CaseLabels)
                 {
                     currentSection = new KaVEList<IStatement>();
-
-                    AddIf(switchLabel, CompletionCase.EmptyCompletionAfter, currentSection);
-
-                    if (switchLabel.IsDefault)
+                    AddIf(label, CompletionCase.EmptyCompletionAfter, currentSection);
+                    if (label.IsDefault)
                     {
                         switchBlock.DefaultSection = currentSection;
                     }
@@ -788,21 +785,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                             new CaseBlock {Label = new ConstantValueExpression(), Body = currentSection});
                     }
                 }
-                else
-                {
-                    statement.Accept(this, currentSection);
-                }
+
+                // TODO traverse into block to capture contained statements
             }
 
             body.Add(switchBlock);
 
             AddIf(block, CompletionCase.EmptyCompletionAfter, body);
-        }
-
-        public override void VisitSwitchLabelStatement(ISwitchLabelStatement switchLabelStatementParam,
-            IList<IStatement> context)
-        {
-            throw new InvalidOperationException("VisitSwitchLabelStatement should never be hit.");
         }
 
         public override void VisitUncheckedStatement(IUncheckedStatement block, IList<IStatement> body)

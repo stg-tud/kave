@@ -69,7 +69,7 @@ namespace KaVE.RS.SolutionAnalysis
                 CSharpLanguage.Instance.LanguageService().NotNull("CSharp language service not available");
             ILexer lexer = languageService.CreateCachingLexer(psiSourceFile.Document.Buffer);
             var csharpParser = (ICSharpParser) languageService.CreateParser(lexer, primaryPsiModule, psiSourceFile);
-            csharpParser.ExpandChameleons = csharpParser.OpenChameleonStrategy;
+            csharpParser.SetChameleonExpansionMode(true);
             var psiFile = (ICSharpFile) csharpParser.ParseFile();
             SandBox.CreateSandBoxFor(psiFile, primaryPsiModule);
             return psiFile;
