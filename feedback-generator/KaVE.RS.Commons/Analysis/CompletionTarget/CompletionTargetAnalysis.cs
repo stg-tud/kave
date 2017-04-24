@@ -136,6 +136,9 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                 {
                     var expr = prev as IExpressionStatement;
                     var decl = prev as IDeclarationStatement;
+                    var isAssign = CSharpTokenType.EQ == target.GetTokenType();
+                    var tpdecl = target.Parent as ILocalVariableDeclaration;
+
                     var scl = prev as ISwitchCaseLabel;
                     var ss = prev as ISwitchSection; // can be both
 
@@ -186,6 +189,11 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                         Result.Case = CompletionCase.EmptyCompletionAfter;
                         var multi = decl.Declaration as IMultipleLocalVariableDeclaration;
                         Result.AffectedNode = multi != null ? multi.DeclaratorsEnumerable.Last() : prev;
+                    }
+                    else if (isAssign && tpdecl != null)
+                    {
+                        Result.Case = CompletionCase.Undefined;
+                        Result.AffectedNode = tpdecl;
                     }
                     else
                     {

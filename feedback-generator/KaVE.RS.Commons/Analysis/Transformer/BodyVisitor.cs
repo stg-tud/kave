@@ -768,13 +768,13 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
             var switchBlock = new SwitchBlock {Reference = _exprVisitor.ToVariableRef(block.Condition, body)};
 
-            var currentSection = new KaVEList<IStatement>();
             foreach (var section in block.Sections)
             {
+                IKaVEList<IStatement> currentSection = null;
+
                 foreach (var label in section.CaseLabels)
                 {
                     currentSection = new KaVEList<IStatement>();
-                    AddIf(label, CompletionCase.EmptyCompletionAfter, currentSection);
                     if (label.IsDefault)
                     {
                         switchBlock.DefaultSection = currentSection;
@@ -782,11 +782,27 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     else
                     {
                         switchBlock.Sections.Add(
-                            new CaseBlock {Label = new ConstantValueExpression(), Body = currentSection});
+                            new CaseBlock
+                            {
+                                Label = _exprVisitor.ToSimpleExpression(label.ValueExpression, body),
+                                Body = currentSection
+                            });
                     }
+                    AddIf(label, CompletionCase.InBody, currentSection);
                 }
 
-                // TODO traverse into block to capture contained statements
+                AddIf(section, CompletionCase.InBody, currentSection);
+                foreach (var statement in section.Statements)
+                {
+                    statement.Accept(this, currentSection);
+                }
+
+                switch (1)
+                {
+                    case 1*2:
+                    case 0:
+                        break;
+                }
             }
 
             body.Add(switchBlock);

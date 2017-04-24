@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
@@ -51,6 +53,91 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         }
 
         [Test]
+        public void MultiLabel()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    case 0:
+                    case 1:
+                        break;
+                }
+                $");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    Reference = VarRef("this"),
+                    Sections =
+                    {
+                        new CaseBlock
+                        {
+                            Label = Const("0")
+                        },
+                        new CaseBlock
+                        {
+                            Label = Const("1"),
+                            Body = {new BreakStatement()}
+                        }
+                    }
+                },
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
+        public void ExprLabel()
+        {
+            CompleteInMethod(@"
+                const int l = 4;
+                switch ()
+                {
+                    case 1*2:
+                        continue;
+                    case 3:
+                        break;
+                    case l:
+                        continue;
+                        break
+                }
+                $");
+
+            AssertBody(
+                VarDecl("l", Fix.Int),
+                Assign("l", new ConstantValueExpression()),
+                VarDecl("$0", Fix.Int),
+                Assign(
+                    "$0",
+                    new BinaryExpression
+                    {
+                        LeftOperand = Const("1"),
+                        Operator = BinaryOperator.Multiply,
+                        RightOperand = Const("2")
+                    }),
+                new SwitchBlock
+                {
+                    Sections =
+                    {
+                        new CaseBlock
+                        {
+                            Label = RefExpr("$0"),
+                            Body = {new ContinueStatement()}
+                        },
+                        new CaseBlock
+                        {
+                            Label = new ConstantValueExpression(),
+                            Body = {new BreakStatement()}
+                        },
+                        new CaseBlock
+                        {
+                            Label = RefExpr("l"),
+                            Body = {new ContinueStatement(), new BreakStatement()}
+                        }
+                    }
+                },
+                Fix.EmptyCompletion);
+        }
+
+        [Test]
         public void Standard()
         {
             CompleteInMethod(@"
@@ -66,6 +153,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
 
                     default:
                         break;
+                        break;
+                        break;
                 }
                 $");
 
@@ -75,11 +164,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                     Reference = VarRef("this"),
                     Sections =
                     {
-                        new CaseBlock {Label = new ConstantValueExpression()},
-                        new CaseBlock {Label = new ConstantValueExpression(), Body = {new BreakStatement()}},
+                        new CaseBlock {Label = Const("0")},
+                        new CaseBlock {Label = Const("1"), Body = {new BreakStatement()}},
                         new CaseBlock
                         {
-                            Label = new ConstantValueExpression(),
+                            Label = Const("2"),
                             Body =
                             {
                                 new BreakStatement(),
@@ -87,7 +176,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                             }
                         }
                     },
-                    DefaultSection = {new BreakStatement()}
+                    DefaultSection = {new BreakStatement(), new BreakStatement(), new BreakStatement()}
                 },
                 Fix.EmptyCompletion);
         }
@@ -96,7 +185,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void CompletionInCaseBlock_First()
         {
             CompleteInMethod(@"
-                switch (this)
+                switch ()
                 {
                     default:
                         $
@@ -106,7 +195,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new SwitchBlock
                 {
-                    Reference = VarRef("this"),
                     DefaultSection = {Fix.EmptyCompletion, new BreakStatement()}
                 });
         }
@@ -115,7 +203,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void CompletionInCaseBlock_Second()
         {
             CompleteInMethod(@"
-                switch (this)
+                switch ()
                 {
                     default:
                         break;
@@ -125,7 +213,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new SwitchBlock
                 {
-                    Reference = VarRef("this"),
                     DefaultSection = {new BreakStatement(), Fix.EmptyCompletion}
                 });
         }
@@ -134,7 +221,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
         public void CompletionOutsideCaseBlockIsIgnored_BeforeFirst()
         {
             CompleteInMethod(@"
-                switch (this)
+                switch ()
                 {
                     $
 
@@ -145,7 +232,6 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
             AssertBody(
                 new SwitchBlock
                 {
-                    Reference = VarRef("this"),
                     DefaultSection = {new BreakStatement()}
                 });
         }
@@ -160,6 +246,181 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Blocks
                 }");
 
             AssertBody(new SwitchBlock());
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_Before()
+        {
+            CompleteInMethod(@"
+                $
+                switch ()
+                {
+                    default:
+                        break;
+                }");
+
+            AssertBody(
+                Fix.EmptyCompletion,
+                new SwitchBlock
+                {
+                    DefaultSection = {new BreakStatement()}
+                });
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_AfterLabel()
+        {
+            CompleteInMethod(@"
+                switch ()
+                {
+                    default:
+                        $
+                }");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    DefaultSection = {Fix.EmptyCompletion}
+                });
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_AfterLabelMulti()
+        {
+            CompleteInMethod(@"
+                switch ()
+                {
+                    case 0:
+                        $
+                    case 1:
+                        continue;
+                }");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    Sections =
+                    {
+                        new CaseBlock {Label = Const("0"), Body = {Fix.EmptyCompletion}},
+                        new CaseBlock {Label = Const("1"), Body = {new ContinueStatement()}}
+                    }
+                });
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_AfterLabelNonEmpty()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        $
+                        continue;
+                }");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    Reference = VarRef("this"),
+                    DefaultSection =
+                    {
+                        Fix.EmptyCompletion,
+                        new ContinueStatement()
+                    }
+                });
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_Nested()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        continue;
+                        $
+                }");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    Reference = VarRef("this"),
+                    DefaultSection =
+                    {
+                        new ContinueStatement(),
+                        Fix.EmptyCompletion
+                    }
+                });
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_Nested2()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        int i;
+                        continue;
+                        $
+                }");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    Reference = VarRef("this"),
+                    DefaultSection =
+                    {
+                        VarDecl("i", Fix.Int),
+                        new ContinueStatement(),
+                        Fix.EmptyCompletion
+                    }
+                });
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_Nested3()
+        {
+            CompleteInMethod(@"
+                switch (this)
+                {
+                    default:
+                        continue;
+                        $
+                        int i;
+                }");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    Reference = VarRef("this"),
+                    DefaultSection =
+                    {
+                        new ContinueStatement(),
+                        Fix.EmptyCompletion,
+                        VarDecl("i", Fix.Int)
+                    }
+                });
+        }
+
+        [Test]
+        public void CompletionInSwitchBlock_After()
+        {
+            CompleteInMethod(@"
+                switch ()
+                {
+                    default:
+                        continue;
+                }
+                $
+            ");
+
+            AssertBody(
+                new SwitchBlock
+                {
+                    DefaultSection = {new ContinueStatement()}
+                },
+                Fix.EmptyCompletion);
         }
     }
 }
