@@ -51,9 +51,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
             return visitor.Visit(this, context);
         }
 
+        private const string ToStringText = "ContinueStatement@13";
+
         public override string ToString()
         {
-            return this.ToStringReflection();
+            return ToStringText;
         }
     }
 }
