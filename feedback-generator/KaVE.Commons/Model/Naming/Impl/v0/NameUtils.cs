@@ -147,6 +147,8 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                         var complete = id.Substring(open, close - open);
                         replacements[complete] = param;
                     }
+
+                    open = close + 1; // skip everything in between
                 }
                 tick = id.FindNext(tick + 1, '`');
             }

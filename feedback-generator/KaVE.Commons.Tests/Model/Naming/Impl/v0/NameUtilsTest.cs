@@ -133,5 +133,25 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             var actual = new TypeName(boundId).RemoveGenerics();
             Assert.AreEqual(new TypeName(expected), actual);
         }
+
+
+        [TestCase(
+             "[p:double] [i:Accord.Math.Distances.IDistance`2[[T -> System.Collections.BitArray, mscorlib, 4.0.0.0],[U -> System.Collections.BitArray, mscorlib, 4.0.0.0]], Accord.Math].Distance([T] x, [U] y)",
+             "[p:double] [i:Accord.Math.Distances.IDistance`2[[T],[U]], Accord.Math].Distance([T] x, [U] y)"),
+         TestCase(
+             "[p:double] [i:Accord.Math.Distances.IDistance`2[[T -> System.Tuple`2[[T1 -> p:double],[T2 -> p:double]], mscorlib, 4.0.0.0],[U -> System.Tuple`2[[T1 -> p:double],[T2 -> p:double]], mscorlib, 4.0.0.0]], Accord.Math].Distance([T] x, [U] y)",
+             "[p:double] [i:Accord.Math.Distances.IDistance`2[[T],[U]], Accord.Math].Distance([T] x, [U] y)"),
+         TestCase(
+             "[p:double] [i:Accord.Math.Distances.IDistance`2[[T],[U -> System.Tuple`2[[T1],[U1]], mscorlib, 4.0.0.0]], Accord.Math].Distance([T] x, [U] y)",
+             "[p:double] [i:Accord.Math.Distances.IDistance`2[[T],[U]], Accord.Math].Distance([T] x, [U] y)"),
+         TestCase(
+             "[p:double] [Accord.Math.ADistance`2[[A -> T],[B -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo].Distance([A] x, [B] y)",
+             "[p:double] [Accord.Math.ADistance`2[[A],[B]], Demo].Distance([A] x, [B] y)")]
+        public void RemoveGenericsFromMethods(string boundId, string expectedId)
+        {
+            var actual = new MethodName(boundId).RemoveGenerics();
+            var expected = new MethodName(expectedId);
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
