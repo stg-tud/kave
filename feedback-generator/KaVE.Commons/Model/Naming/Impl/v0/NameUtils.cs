@@ -102,6 +102,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return parameters;
         }
 
+        public static ITypeName RemoveGenerics(this ITypeName name)
+        {
+            return new TypeName(RemoveGenerics(name.Identifier));
+        }
+
         public static IMethodName RemoveGenerics(this IMethodName name)
         {
             return new MethodName(RemoveGenerics(name.Identifier));
@@ -125,6 +130,11 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                 var numStr = id.Substring(tick + 1, length).Trim();
                 var numGenerics = int.Parse(numStr);
 
+                while (IsArray(id, open))
+                {
+                    open = id.FindNext(open + 1, '[');
+                }
+
                 for (var i = 0; i < numGenerics; i++)
                 {
                     open = id.FindNext(open + 1, '[');
@@ -147,6 +157,14 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
                 res = res.Replace(k, with);
             }
             return res;
+        }
+
+        private static bool IsArray(string id, int open)
+        {
+            Asserts.That(id[open] == '[', "not pointed to opening brace");
+            var is1DArr = id[open + 1] == ']';
+            var isNdArr = id[open + 1] == ',';
+            return is1DArr || isNdArr;
         }
     }
 }

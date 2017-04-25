@@ -17,6 +17,7 @@
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Impl.v0.CodeElements;
+using KaVE.Commons.Model.Naming.Impl.v0.Types;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -115,6 +116,22 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             var actual = new MethodName("[T`1[[A->A2,P]],P] [T2`1[[B->B2,P]], P].Add([T] item)").RemoveGenerics();
             var expected = new MethodName("[T`1[[A]],P] [T2`1[[B]], P].Add([T] item)");
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase("Demo.G1`1[][[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+             "Demo.G1`1[][[T]], Demo"),
+         TestCase("Demo.G1`2[][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+             "Demo.G1`2[][[S],[T]], Demo"),
+         TestCase("Demo.G1`2[][][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+             "Demo.G1`2[][][[S],[T]], Demo"),
+         TestCase("Demo.G1`2[,][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+             "Demo.G1`2[,][[S],[T]], Demo"),
+         TestCase("Demo.G1`2[][[S],[T -> System.Tuple`2[[T1],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+             "Demo.G1`2[][[S],[T]], Demo")]
+        public void RemoveBoundGenericsFromArray(string boundId, string expected)
+        {
+            var actual = new TypeName(boundId).RemoveGenerics();
+            Assert.AreEqual(new TypeName(expected), actual);
         }
     }
 }
