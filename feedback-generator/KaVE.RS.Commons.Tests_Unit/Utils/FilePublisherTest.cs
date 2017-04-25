@@ -17,13 +17,14 @@
 using System;
 using System.IO;
 using System.Linq;
+using JetBrains.Util;
+using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
-    [TestFixture]
     internal class FilePublisherTest : PublisherTestBase
     {
         private const string SomeTargetLocation = "existing target file";
@@ -37,14 +38,14 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils
             _ioUtilsMock.Verify(m => m.OpenFile(SomeTargetLocation, FileMode.Create, FileAccess.Write));
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void ShouldThrowExceptionOnNullArgument()
         {
             var uut = new FilePublisher(() => null);
             uut.Publish(_userProfileEvent, TestEventSource(1), () => { });
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof(AssertException))]
         public void ShouldThrowExceptionOnEmptyArgument()
         {
             var uut = new FilePublisher(() => "");
@@ -53,7 +54,7 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils
 
         private const string CopyFailureMessage = "File export failed: XYZ";
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = CopyFailureMessage)]
+        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = CopyFailureMessage)]
         public void ShouldThrowExceptionIfSomething()
         {
             _ioUtilsMock.Setup(io => io.OpenFile(SomeTargetLocation, FileMode.Create, FileAccess.Write))
@@ -63,16 +64,17 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils
         }
 
         [Test]
-        public void AllSourceEventsArePublished()
+        public void AllSourceEventsArePublishedTogetherWithProfile()
         {
+            var upe = new UserProfileEvent();
             var testEvents = TestEventSource(10).ToList();
 
             var uut = new FilePublisher(() => SomeTargetLocation);
-            uut.Publish(null, testEvents, () => { });
+            uut.Publish(upe, testEvents, () => { });
 
             Assert.AreEqual(1, _exportedPackages.Count);
             var exported = _exportedPackages.SelectMany(e => e).ToList();
-            CollectionAssert.AreEqual(testEvents, exported);
+            CollectionAssert.AreEqual(testEvents.Prepend(upe), exported);
         }
 
         [Test]
@@ -82,8 +84,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils
             var count = 0;
             var uut = new FilePublisher(() => SomeTargetLocation);
             uut.Publish(null, TestEventSource(expected), () => count++);
-
-            Assert.AreEqual(expected, count);
+            // +upe
+            Assert.AreEqual(expected+1, count);
         }
     }
 }

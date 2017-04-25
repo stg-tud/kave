@@ -51,7 +51,7 @@ namespace KaVE.RS.Commons.Utils
             {
                 using (var file = _ioUtils.OpenFile(filename, FileMode.Create, FileAccess.Write))
                 {
-                    _publisherUtils.WriteEventsToZipStream(events, file, progress);
+                    _publisherUtils.WriteEventsToZipStream(events.Prepend(upe), file, progress);
                 }
             }
             catch (Exception e)
