@@ -26,21 +26,24 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
     {
         public static WatchdogObject Convert(Interval interval)
         {
-            if (interval is VisualStudioOpenedInterval ||
+            if (interval is VisualStudioOpenedInterval || interval is VisualStudioActiveInterval ||
                 interval is UserActiveInterval)
             {
                 return ConvertBasicInterval(interval);
             }
+
             var perspectiveInterval = interval as PerspectiveInterval;
             if (perspectiveInterval != null)
             {
                 return ConvertPerspectiveInterval(perspectiveInterval);
             }
+
             var testRunInterval = interval as TestRunInterval;
             if (testRunInterval != null)
             {
                 return ConvertTestRunInterval(testRunInterval);
             }
+
             var fileInteractionInterval = interval as FileInteractionInterval;
             if (fileInteractionInterval != null)
             {
@@ -53,6 +56,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
                     return ConvertTypingInterval(fileInteractionInterval);
                 }
             }
+
             throw new NotImplementedException("Unsupported interval type.");
         }
 
@@ -66,14 +70,7 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
 
             foreach (var interval in intervals)
             {
-                try
-                {
-                    data.Intervals.Add(Convert(interval));
-                }
-                catch
-                {
-                    continue;
-                }
+                data.Intervals.Add(Convert(interval));
 
                 if (!createdUserObjects.Contains(interval.UserId))
                 {

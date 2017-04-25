@@ -33,6 +33,10 @@ namespace KaVE.FeedbackProcessor.WatchdogExports.Exporter
             {
                 return "eo";
             }
+            if (t is VisualStudioActiveInterval)
+            {
+                return "ea";
+            }
             if (t is UserActiveInterval)
             {
                 return "ua";
