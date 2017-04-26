@@ -25,6 +25,7 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupI
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.AspectLookupItems;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Utils.Naming;
 
 namespace KaVE.RS.Commons.Utils.LookupItems
@@ -62,34 +63,38 @@ namespace KaVE.RS.Commons.Utils.LookupItems
 
         private static IName GetName([NotNull] this ILookupItem lookupItem)
         {
-            // TODO create debug cases to decide for a final version of this utility class
-            var displayName = lookupItem.DisplayName;
-            //
-            var n1 = TryGetNameFromLookupItem<BasicInfo>(lookupItem);
-            var n2 = TryGetNameFromLookupItem<ConstructorInfo>(lookupItem);
-            var n3 = TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem);
-            var n4 = TryGetNameFromLookupItem<DelegateInfo>(lookupItem);
-            var n5 = TryGetNameFromLookupItem<MethodsInfo>(lookupItem);
-            var n6 = TryGetNameFromLookupItem<TypeInfo>(lookupItem);
-            var n7 = TryGetNameFromLookupItem<TextualInfo>(lookupItem);
-            //
-            var n8 = TryGetNameFromLookupItem<ShortArrayConstructorInfo>(lookupItem);
-
-            var pbnItem = TryGetNameFromPBNProposal(lookupItem);
-            var csDeclItem = TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem);
-            var declElemItem = TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem);
-            var methodItem = TryGetNameFromLookupItem<MethodsInfo>(lookupItem);
-            var typeItem = TryGetNameFromLookupItem<TypeElementInfo>(lookupItem);
-            var initItem = TryGetNameFromConstructorInfoLookupItem(lookupItem);
-
-            // TODO inline variables again, after debugging is over
-            return pbnItem ??
-                   csDeclItem ??
-                   declElemItem ??
-                   methodItem ??
-                   typeItem ??
-                   initItem ??
-                   GetNameFromLookupItemDisplayName(lookupItem);
+            // switched from null-coalescing syntax (??) to these ugly ifs to make it easier to debug
+            IName name;
+            if ((name = TryGetNameFromPBNProposal(lookupItem)) != null)
+            {
+                return name;
+            }
+            if ((name = TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem)) != null)
+            {
+                return name;
+            }
+            if ((name = TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem)) != null)
+            {
+                return name;
+            }
+            if ((name = TryGetNameFromLookupItem<MethodsInfo>(lookupItem)) != null)
+            {
+                return name;
+            }
+            if ((name = TryGetNameFromLookupItem<TypeElementInfo>(lookupItem)) != null)
+            {
+                return name;
+            }
+            if ((name = TryGetNameFromConstructorInfoLookupItem(lookupItem)) != null)
+            {
+                return name;
+            }
+            if ((name = TryGetNameFromTextualLookupItem(lookupItem)) != null)
+            {
+                return name;
+            }
+            name = FallBackOnLookupItemDisplayName(lookupItem);
+            return name;
         }
 
         private static IName TryGetNameFromPBNProposal(ILookupItem lookupItem)
@@ -132,7 +137,17 @@ namespace KaVE.RS.Commons.Utils.LookupItems
             return Names.Method(string.Format("[p:void] [{0}]..ctor()", typeName));
         }
 
-        private static IName GetNameFromLookupItemDisplayName(ILookupItem item)
+        private static IName TryGetNameFromTextualLookupItem(ILookupItem lookupItem)
+        {
+            var li = lookupItem as LookupItem<TextualInfo>;
+            if (li == null || li.Info == null)
+            {
+                return null;
+            }
+            return Names.General("text:{0}".FormatEx(li.DisplayName.Text));
+        }
+
+        private static IName FallBackOnLookupItemDisplayName(ILookupItem item)
         {
             return Names.General(string.Format("{0}:{1}", GetPossiblyGenericTypeName(item), item.DisplayName.Text));
         }

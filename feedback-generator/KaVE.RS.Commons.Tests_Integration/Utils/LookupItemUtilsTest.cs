@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Linq;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -24,6 +25,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
 {
     internal class LookupItemUtilsTest : BaseCSharpCodeCompletionTest
     {
+        [TearDown]
+        public void DisableTestProposalProvider()
+        {
+            TestProposalProvider.Enabled = false;
+        }
+
         private void ThenProposalCollectionContainsMulti(params string[] proposalNameIdentifiers)
         {
             foreach (var proposalNameIdentifier in proposalNameIdentifiers)
@@ -35,10 +42,17 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
         [StringFormatMethod("formatIdentifier")]
         private void ThenProposalCollectionContains(string formatIdentifier, params object[] args)
         {
-            var expectedIdentifier = args.Length > 0 ? formatIdentifier.FormatEx(args) : formatIdentifier;
+            var expectedId = args.Length > 0 ? formatIdentifier.FormatEx(args) : formatIdentifier;
             // ReSharper disable once PossibleNullReferenceException
-            var proposalCollection = ResultProposalCollection.Proposals.Select(prop => prop.Name.Identifier);
-            CollectionAssert.Contains(proposalCollection, expectedIdentifier);
+            var proposalIds = ResultProposalCollection.Proposals.Select(prop => prop.Name.Identifier).ToList();
+            if (!proposalIds.Contains(expectedId))
+            {
+                foreach (var p in proposalIds)
+                {
+                    Console.WriteLine("* {0}", p);
+                }
+                Assert.Fail("expected identifier was not captured in proposal list");
+            }
         }
 
         [Test]
@@ -683,7 +697,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 Fix.Void);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldTranslateNewArrayInstanceProposals()
         {
             CompleteInCSharpFile(@"
@@ -696,8 +710,8 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 }");
 
             ThenProposalCollectionContainsMulti(
-                "CombinedLookupItem:new C[]",
-                "CombinedLookupItem:new [] { }");
+                "CSharpCombinedLookupItem:new C[]",
+                "CSharpCombinedLookupItem:new [] { }");
         }
 
         [Test]
@@ -919,14 +933,63 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 Fix.String);
         }
 
-        [TearDown]
-        public void DisableTestProposalProvider()
+        [Test]
+        public void ShouldCaptureTextualLookupItems()
         {
-            TestProposalProvider.Enabled = false;
+            CompleteInMethod("$");
+            ThenProposalCollectionContains("text:async");
         }
 
-        // Test cases for keywords (e.g., private), templates (e.g., for), and
-        // combined proposals (e.g., return true) donnot seem possible, as such
-        // proposals are not made by the test environment's completion engine.
+        [Test]
+        public void ShouldFallBackOnGenericNameForUnknownLookupItems()
+        {
+            CompleteInCSharpFile(@"
+                interface MyInterface
+                {
+                    public void M();
+                }
+                
+                class C
+                {
+                    void M(MyInterface i)
+                    {
+                        i.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("LookupItem`1[[PostfixTemplateInfo]]:notnull");
+        }
+
+        [Test]
+        public void ShouldCaptureTypeLookupItems()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    class C {}
+                    class Test {
+                        public void M() {
+                            C$
+                        }
+                    }
+                }
+            ");
+            ThenProposalCollectionContains("N.C, TestProject");
+        }
+
+        [Test]
+        public void ShouldCaptureDelegateLookupItems()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    delegate int D(double d);
+                    class Test {
+                        public void M() {
+                            D$
+                        }
+                    }
+                }
+            ");
+            ThenProposalCollectionContains("d:[p:int] [N.D, TestProject].([p:double] d)");
+        }
     }
 }
