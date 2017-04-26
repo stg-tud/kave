@@ -87,7 +87,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine(
-                    "make sure to set the (Excel) cell format of ActiveTime to 'd.hh:mm:ss' to improve readbility");
+                    "make sure to set the (Excel) cell format of ActiveTime to 'd.hh:mm:ss' or '[h]:mm:ss' to improve readbility");
                 Console.WriteLine();
                 Console.WriteLine(
                     "zip\tDayFirst\tDayLast\tNumDays\tNumMonths\tNumEvents\tEducation\tPosition\tNumCodeCompletion\tNumTestRuns\tActiveTime");
@@ -95,7 +95,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 {
                     var stats = results[zip];
                     Console.WriteLine(
-                        "{0}\t{1:MM/dd/yy}\t{2:MM/dd/yy}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10:#}{11:\\:mm\\:ss}",
+                        "{0}\t{1:MM/dd/yy}\t{2:MM/dd/yy}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10:00}{11:\\:mm\\:ss}",
                         zip,
                         stats.DayFirst,
                         stats.DayLast,

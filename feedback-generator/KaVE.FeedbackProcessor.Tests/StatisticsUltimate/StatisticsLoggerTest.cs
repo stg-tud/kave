@@ -81,6 +81,19 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTestRuns = 10,
                 ActiveTime = TimeSpan.FromDays(2).Add(TimeSpan.FromHours(10))
             };
+            res["e.zip"] = new UserStatistics
+            {
+                DayFirst = DateTime.Now.AddDays(-5),
+                DayLast = DateTime.Now.AddDays(-3),
+                NumDays = 6,
+                NumMonth = 7,
+                NumEvents = 8,
+                Education = Educations.Master,
+                Position = Positions.SoftwareEngineer,
+                NumCodeCompletion = 9,
+                NumTestRuns = 10,
+                ActiveTime = TimeSpan.FromSeconds(1)
+            };
 
 
             sut.Result(res);
