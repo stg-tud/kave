@@ -20,19 +20,53 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.TestRunEvents;
 using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
     public class StatisticsExtractor
     {
-        public UserStatistics CreateStatistics(IEnumerable<IDEEvent> events)
+        private const int TimeOutInS = 16;
+
+        public UserStatistics CreateStatistics(IEnumerable<IIDEEvent> events)
         {
             var stats = new UserStatistics();
             var days = new HashSet<DateTime>();
             var months = new HashSet<DateTime>();
 
+            var lastTriggeredAt = DateTime.MinValue;
+
+            DateTime? curStart = null;
+            DateTime? curEnd = null;
+
             foreach (var e in events)
             {
+                if (e.TriggeredAt.HasValue && e.TerminatedAt.HasValue)
+                {
+                    // make sure it is ordered!
+                    Asserts.IsLessOrEqual(lastTriggeredAt, e.TriggeredAt.Value);
+                    lastTriggeredAt = e.TriggeredAt.Value;
+
+                    // if timeout
+                    if (curStart.HasValue && curEnd.Value.AddSeconds(TimeOutInS) < e.TriggeredAt.Value)
+                    {
+                        stats.ActiveTime += curEnd.Value - curStart.Value;
+                        curStart = null;
+                        curEnd = null;
+                    }
+
+                    // start new interva, if required
+                    if (curStart.HasValue)
+                    {
+                        curEnd = curEnd > e.TerminatedAt ? curEnd : e.TerminatedAt;
+                    }
+                    else
+                    {
+                        curStart = e.TriggeredAt;
+                        curEnd = e.TerminatedAt;
+                    }
+                }
+
                 stats.NumEvents++;
 
                 if (!e.TriggeredAt.HasValue)
@@ -80,6 +114,11 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 {
                     stats.NumTestRuns++;
                 }
+            }
+
+            if (curStart.HasValue)
+            {
+                stats.ActiveTime += curEnd.Value - curStart.Value;
             }
 
             stats.NumDays = days.Count;
