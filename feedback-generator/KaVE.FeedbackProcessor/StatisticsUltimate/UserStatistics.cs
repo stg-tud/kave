@@ -31,6 +31,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         Positions Position { get; }
         int NumCodeCompletion { get; }
         int NumTestRuns { get; }
+        TimeSpan ActiveTime { get; }
     }
 
     public class UserStatistics : IUserStatistics
@@ -48,33 +49,41 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public int NumCodeCompletion { get; set; }
         public int NumTestRuns { get; set; }
 
+        public TimeSpan ActiveTime { get; set; }
+
+        public UserStatistics()
+        {
+            ActiveTime = TimeSpan.Zero;
+        }
 
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
         }
 
-        private bool Equals(UserStatistics other)
+        protected bool Equals(UserStatistics other)
         {
             return DayFirst.Equals(other.DayFirst) && DayLast.Equals(other.DayLast) && NumDays == other.NumDays &&
                    NumMonth == other.NumMonth && NumEvents == other.NumEvents && Education == other.Education &&
                    Position == other.Position && NumCodeCompletion == other.NumCodeCompletion &&
-                   NumTestRuns == other.NumTestRuns;
+                   NumTestRuns == other.NumTestRuns && ActiveTime.Equals(other.ActiveTime);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = 397 ^ DayFirst.GetHashCode();
-                hashCode = (hashCode*397) ^ DayLast.GetHashCode();
-                hashCode = (hashCode*397) ^ NumDays;
-                hashCode = (hashCode*397) ^ NumMonth;
-                hashCode = (hashCode*397) ^ NumEvents;
-                hashCode = (hashCode*397) ^ (int) Education;
-                hashCode = (hashCode*397) ^ (int) Position;
-                hashCode = (hashCode*397) ^ NumCodeCompletion;
-                hashCode = (hashCode*397) ^ NumTestRuns;
+                var hashCode = 2954786;
+                hashCode = (hashCode * 397) ^ DayFirst.GetHashCode();
+                hashCode = (hashCode * 397) ^ DayLast.GetHashCode();
+                hashCode = (hashCode * 397) ^ NumDays;
+                hashCode = (hashCode * 397) ^ NumMonth;
+                hashCode = (hashCode * 397) ^ NumEvents;
+                hashCode = (hashCode * 397) ^ (int) Education;
+                hashCode = (hashCode * 397) ^ (int) Position;
+                hashCode = (hashCode * 397) ^ NumCodeCompletion;
+                hashCode = (hashCode * 397) ^ NumTestRuns;
+                hashCode = (hashCode * 397) ^ ActiveTime.GetHashCode();
                 return hashCode;
             }
         }

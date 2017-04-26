@@ -36,8 +36,10 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(Positions.Unknown, sut.Position);
             Assert.AreEqual(0, sut.NumCodeCompletion);
             Assert.AreEqual(0, sut.NumTestRuns);
+            Assert.AreEqual(TimeSpan.Zero, sut.ActiveTime);
 
             Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
@@ -54,7 +56,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 Education = Educations.Bachelor,
                 Position = Positions.Student,
                 NumCodeCompletion = 4,
-                NumTestRuns = 5
+                NumTestRuns = 5,
+                ActiveTime = TimeSpan.FromSeconds(3)
             };
             Assert.AreEqual(now, sut.DayFirst);
             Assert.AreEqual(now, sut.DayLast);
@@ -65,6 +68,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(Positions.Student, sut.Position);
             Assert.AreEqual(4, sut.NumCodeCompletion);
             Assert.AreEqual(5, sut.NumTestRuns);
+            Assert.AreEqual(TimeSpan.FromSeconds(3), sut.ActiveTime);
         }
 
         [Test]
@@ -90,7 +94,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 Education = Educations.Bachelor,
                 Position = Positions.Student,
                 NumCodeCompletion = 4,
-                NumTestRuns = 5
+                NumTestRuns = 5,
+                ActiveTime = TimeSpan.FromSeconds(3)
             };
             var b = new UserStatistics
             {
@@ -102,7 +107,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 Education = Educations.Bachelor,
                 Position = Positions.Student,
                 NumCodeCompletion = 4,
-                NumTestRuns = 5
+                NumTestRuns = 5,
+                ActiveTime = TimeSpan.FromSeconds(3)
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -213,6 +219,18 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             var b = new UserStatistics
             {
                 NumTestRuns = 5
+            };
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Different_ActiveTime()
+        {
+            var a = new UserStatistics();
+            var b = new UserStatistics
+            {
+                ActiveTime = TimeSpan.FromSeconds(3)
             };
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
