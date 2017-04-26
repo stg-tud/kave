@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.BaseInfrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Info;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
@@ -63,13 +62,34 @@ namespace KaVE.RS.Commons.Utils.LookupItems
 
         private static IName GetName([NotNull] this ILookupItem lookupItem)
         {
-            return TryGetNameFromPBNProposal(lookupItem) ??
-                   TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem) ??
-                   TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem) ??
-                   TryGetNameFromLookupItem<MethodsInfo>(lookupItem) ??
-                   TryGetNameFromConstructorInfoLookupItem(lookupItem) ??
-                   TryGetNameFromCombinedLookupItem(lookupItem) ??
-                   GetNameFromLookupItemIdentity(lookupItem);
+            // TODO create debug cases to decide for a final version of this utility class
+            var displayName = lookupItem.DisplayName;
+            //
+            var n1 = TryGetNameFromLookupItem<BasicInfo>(lookupItem);
+            var n2 = TryGetNameFromLookupItem<ConstructorInfo>(lookupItem);
+            var n3 = TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem);
+            var n4 = TryGetNameFromLookupItem<DelegateInfo>(lookupItem);
+            var n5 = TryGetNameFromLookupItem<MethodsInfo>(lookupItem);
+            var n6 = TryGetNameFromLookupItem<TypeInfo>(lookupItem);
+            var n7 = TryGetNameFromLookupItem<TextualInfo>(lookupItem);
+            //
+            var n8 = TryGetNameFromLookupItem<ShortArrayConstructorInfo>(lookupItem);
+
+            var pbnItem = TryGetNameFromPBNProposal(lookupItem);
+            var csDeclItem = TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem);
+            var declElemItem = TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem);
+            var methodItem = TryGetNameFromLookupItem<MethodsInfo>(lookupItem);
+            var typeItem = TryGetNameFromLookupItem<TypeElementInfo>(lookupItem);
+            var initItem = TryGetNameFromConstructorInfoLookupItem(lookupItem);
+
+            // TODO inline variables again, after debugging is over
+            return pbnItem ??
+                   csDeclItem ??
+                   declElemItem ??
+                   methodItem ??
+                   typeItem ??
+                   initItem ??
+                   GetNameFromLookupItemDisplayName(lookupItem);
         }
 
         private static IName TryGetNameFromPBNProposal(ILookupItem lookupItem)
@@ -112,19 +132,9 @@ namespace KaVE.RS.Commons.Utils.LookupItems
             return Names.Method(string.Format("[p:void] [{0}]..ctor()", typeName));
         }
 
-        private static IName TryGetNameFromCombinedLookupItem(ILookupItem lookupItem)
+        private static IName GetNameFromLookupItemDisplayName(ILookupItem item)
         {
-            var cli = lookupItem as CombinedLookupItem;
-            if (cli == null)
-            {
-                return null;
-            }
-            return Names.General(string.Format("CombinedLookupItem:{0}", cli.DisplayName.Text));
-        }
-
-        private static IName GetNameFromLookupItemIdentity(ILookupItem item)
-        {
-            return Names.General(GetPossiblyGenericTypeName(item) + ":" + item.Identity);
+            return Names.General(string.Format("{0}:{1}", GetPossiblyGenericTypeName(item), item.DisplayName.Text));
         }
 
         private static string GetPossiblyGenericTypeName(ILookupItem item)

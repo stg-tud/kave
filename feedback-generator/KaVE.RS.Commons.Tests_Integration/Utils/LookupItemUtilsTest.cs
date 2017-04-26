@@ -683,7 +683,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 Fix.Void);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldTranslateNewArrayInstanceProposals()
         {
             CompleteInCSharpFile(@"
