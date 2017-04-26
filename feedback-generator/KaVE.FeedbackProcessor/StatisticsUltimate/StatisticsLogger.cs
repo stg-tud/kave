@@ -23,6 +23,14 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
     {
         private readonly object _lock = new object();
 
+        public void ReportTimeout()
+        {
+            lock (_lock)
+            {
+                Log("Using an interaction timeout of {0}s to merge active times ...", StatisticsExtractor.TimeOutInS);
+            }
+        }
+
         public void SearchingZips(string dirIn)
         {
             lock (_lock)
@@ -57,7 +65,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             lock (_lock)
             {
                 _current++;
-                var perc = 100*_current/(double) _total;
+                var perc = 100 * _current / (double) _total;
                 Log("({0}) CreatingStats for {1} ({2}/{3} started -- {4:0.0}%)", taskId, zip, _current, _total, perc);
             }
         }
@@ -79,12 +87,15 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine(
-                    "zip\tDayFirst\tDayLast\tNumDays\tNumMonths\tNumEvents\tEducation\tPosition\tNumCodeCompletion\tNumTestRuns");
+                    "make sure to set the (Excel) cell format of ActiveTime to 'd.hh:mm:ss' to improve readbility");
+                Console.WriteLine();
+                Console.WriteLine(
+                    "zip\tDayFirst\tDayLast\tNumDays\tNumMonths\tNumEvents\tEducation\tPosition\tNumCodeCompletion\tNumTestRuns\tActiveTime");
                 foreach (var zip in results.Keys)
                 {
                     var stats = results[zip];
                     Console.WriteLine(
-                        "{0}\t{1:MM/dd/yy}\t{2:MM/dd/yy}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}",
+                        "{0}\t{1:MM/dd/yy}\t{2:MM/dd/yy}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10:#}{11:\\:mm\\:ss}",
                         zip,
                         stats.DayFirst,
                         stats.DayLast,
@@ -94,7 +105,9 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                         stats.Education,
                         stats.Position,
                         stats.NumCodeCompletion,
-                        stats.NumTestRuns);
+                        stats.NumTestRuns,
+                        stats.ActiveTime.TotalHours,
+                        stats.ActiveTime);
                 }
             }
         }

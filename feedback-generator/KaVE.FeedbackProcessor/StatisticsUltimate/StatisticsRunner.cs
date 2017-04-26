@@ -48,6 +48,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             _ids = new HashSet<string>();
             _results = new Dictionary<string, UserStatistics>();
 
+            _log.ReportTimeout();
+
             FindZips();
             InParallel(CreateStatistics);
 

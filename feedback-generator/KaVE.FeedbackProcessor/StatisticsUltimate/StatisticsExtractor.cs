@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
     public class StatisticsExtractor
     {
-        private const int TimeOutInS = 16;
+        public const int TimeOutInS = 16;
 
         public UserStatistics CreateStatistics(IEnumerable<IIDEEvent> events)
         {

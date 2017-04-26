@@ -29,6 +29,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var sut = new StatisticsLogger();
 
+            sut.ReportTimeout();
             sut.SearchingZips("C:\\a\\b\\");
             sut.FoundZips(123);
 
@@ -51,7 +52,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 Education = Educations.Bachelor,
                 Position = Positions.Student,
                 NumCodeCompletion = 4,
-                NumTestRuns = 5
+                NumTestRuns = 5,
+                ActiveTime = TimeSpan.FromSeconds(123456.789)
             };
             res["b/c.zip"] = new UserStatistics
             {
@@ -63,7 +65,21 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 Education = Educations.Master,
                 Position = Positions.SoftwareEngineer,
                 NumCodeCompletion = 9,
-                NumTestRuns = 10
+                NumTestRuns = 10,
+                ActiveTime = TimeSpan.FromSeconds(234567.8901)
+            };
+            res["d.zip"] = new UserStatistics
+            {
+                DayFirst = DateTime.Now.AddDays(-5),
+                DayLast = DateTime.Now.AddDays(-3),
+                NumDays = 6,
+                NumMonth = 7,
+                NumEvents = 8,
+                Education = Educations.Master,
+                Position = Positions.SoftwareEngineer,
+                NumCodeCompletion = 9,
+                NumTestRuns = 10,
+                ActiveTime = TimeSpan.FromDays(2).Add(TimeSpan.FromHours(10))
             };
 
 
