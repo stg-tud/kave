@@ -149,7 +149,9 @@ namespace KaVE.RS.Commons.Utils.LookupItems
 
         private static IName FallBackOnLookupItemDisplayName(ILookupItem item)
         {
-            return Names.General(string.Format("{0}:{1}", GetPossiblyGenericTypeName(item), item.DisplayName.Text));
+            var type = GetPossiblyGenericTypeName(item);
+            var title = item.DisplayName.Text;
+            return Names.General(string.Format("{0}:{1}", type, title));
         }
 
         private static string GetPossiblyGenericTypeName(ILookupItem item)

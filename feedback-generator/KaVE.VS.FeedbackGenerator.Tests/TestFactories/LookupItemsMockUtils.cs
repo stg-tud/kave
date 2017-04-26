@@ -20,6 +20,7 @@ using System.Globalization;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
+using JetBrains.UI.RichText;
 using KaVE.RS.Commons.Tests_Unit.TestFactories;
 using Moq;
 
@@ -45,7 +46,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.TestFactories
         {
             var lengthOfName = Random.Next(2, 6);
             var name = GetRandomUpperCaseLetter().ToString(CultureInfo.InvariantCulture);
-            for (int i = 0; i < lengthOfName; i++)
+            for (var i = 0; i < lengthOfName; i++)
             {
                 name += GetRandomLowerCaseLetter();
             }
@@ -72,6 +73,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.TestFactories
                     TypeMockUtils.MockTypeElement(typeName, assemblyName, "1.2.3.4"),
                     new SubstitutionImpl());
             lookupItem.Setup(i => i.PreferredDeclaredElement).Returns(declaredElementInstance);
+            lookupItem.Setup(i => i.DisplayName).Returns(new RichText(GetRandomName()));
             return lookupItem.Object;
         }
     }

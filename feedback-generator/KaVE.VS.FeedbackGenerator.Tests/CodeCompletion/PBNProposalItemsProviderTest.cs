@@ -25,7 +25,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         [Test, Ignore]
         public void PBNProposalProviderIsDisabled()
         {
-            var attributes = typeof (PBNProposalItemsProvider).GetCustomAttributes(typeof (LanguageAttribute), false);
+            var attributes = typeof(PBNProposalItemsProvider).GetCustomAttributes(typeof(LanguageAttribute), false);
             Assert.IsEmpty(attributes);
         }
     }
