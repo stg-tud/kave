@@ -123,6 +123,7 @@
     <Compile Include="Import\FeedbackImporterTestBase.cs" />
     <Compile Include="Import\FeedbackImporterWithoutSessionIdsTest.cs" />
     <Compile Include="Import\FeedbackImporterWithoutTriggerTimesTest.cs" />
+    <Compile Include="StatisticsUltimate\ContextStatisticsTest.cs" />
     <Compile Include="StatisticsUltimate\StatisticsExtractorTest.cs" />
     <Compile Include="StatisticsUltimate\StatisticsLoggerTest.cs" />
     <Compile Include="StatisticsUltimate\UserStatisticsTest.cs" />
