@@ -44,8 +44,9 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumDelegates);
             Assert.AreEqual(0, sut.NumStructs);
             Assert.AreEqual(0, sut.NumEnums);
+            Assert.AreEqual(0, sut.NumUnusualType);
 
-            Assert.AreEqual(0, sut.NumClassExtendOrImplement);
+            Assert.AreEqual(0, sut.NumTypeExtendsOrImplements);
             Assert.AreEqual(0, sut.NumMethodDecls);
             Assert.AreEqual(0, sut.NumMethodOverridesOrImplements);
 
@@ -80,7 +81,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumDelegates = 8,
                 NumStructs = 9,
                 NumEnums = 10,
-                NumClassExtendOrImplement = 11,
+                NumUnusualType = 111,
+                NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -105,8 +107,9 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(8, sut.NumDelegates);
             Assert.AreEqual(9, sut.NumStructs);
             Assert.AreEqual(10, sut.NumEnums);
+            Assert.AreEqual(111, sut.NumUnusualType);
 
-            Assert.AreEqual(11, sut.NumClassExtendOrImplement);
+            Assert.AreEqual(11, sut.NumTypeExtendsOrImplements);
             Assert.AreEqual(12, sut.NumMethodDecls);
             Assert.AreEqual(13, sut.NumMethodOverridesOrImplements);
 
@@ -156,7 +159,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumDelegates = 8,
                 NumStructs = 9,
                 NumEnums = 10,
-                NumClassExtendOrImplement = 11,
+                NumUnusualType = 111,
+                NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -180,7 +184,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumDelegates = 8,
                 NumStructs = 9,
                 NumEnums = 10,
-                NumClassExtendOrImplement = 11,
+                NumUnusualType = 111,
+                NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -328,11 +333,23 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         }
 
         [Test]
+        public void Equality_DifferentNumUnusualType()
+        {
+            var a = new ContextStatistics
+            {
+                NumUnusualType = 111
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void Equality_DifferentNumClassExtendOrImplement()
         {
             var a = new ContextStatistics
             {
-                NumClassExtendOrImplement = 11
+                NumTypeExtendsOrImplements = 11
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -463,7 +480,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumDelegates = 8,
                 NumStructs = 9,
                 NumEnums = 10,
-                NumClassExtendOrImplement = 11,
+                NumUnusualType = 111,
+                NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -488,7 +506,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumDelegates = 8 + 1,
                     NumStructs = 9 + 1,
                     NumEnums = 10 + 1,
-                    NumClassExtendOrImplement = 11 + 1,
+                    NumUnusualType = 111 + 1,
+                    NumTypeExtendsOrImplements = 11 + 1,
                     NumMethodDecls = 12 + 1,
                     NumMethodOverridesOrImplements = 13 + 1,
                     UniqueAssemblies = {Names.Assembly("B,1.2.3.4")},
@@ -513,7 +532,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumDelegates = 8 * 2 + 1,
                 NumStructs = 9 * 2 + 1,
                 NumEnums = 10 * 2 + 1,
-                NumClassExtendOrImplement = 11 * 2 + 1,
+                NumUnusualType = 111 * 2 + 1,
+                NumTypeExtendsOrImplements = 11 * 2 + 1,
                 NumMethodDecls = 12 * 2 + 1,
                 NumMethodOverridesOrImplements = 13 * 2 + 1,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4"), Names.Assembly("B,1.2.3.4")},

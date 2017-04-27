@@ -29,7 +29,6 @@ using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.StatisticsUltimate;
 using NUnit.Framework;
@@ -198,10 +197,10 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(1, actual.NumEnums);
         }
 
-        [TestCase("p:int"), TestCase("T[],P"), ExpectedException(typeof(AssertException))]
-        public void ShouldCrashOnUnusualDeclarations(string id)
+        [TestCase("p:int"), TestCase("T[],P"), TestCase("?")]
+        public void ShouldCountUnusualDeclarations(string id)
         {
-            Extract(
+            var actual = Extract(
                 new Context
                 {
                     SST = new SST
@@ -209,6 +208,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                         EnclosingType = Names.Type(id)
                     }
                 });
+            Assert.AreEqual(1, actual.NumUnusualType);
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     }
                 });
             Assert.AreEqual(3, actual.NumTopLevelType);
-            Assert.AreEqual(2, actual.NumClassExtendOrImplement);
+            Assert.AreEqual(2, actual.NumTypeExtendsOrImplements);
         }
 
         [Test]
@@ -289,7 +289,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                         EnclosingType = Names.Type("C,P")
                     }
                 });
-            Assert.AreEqual(1, actual.NumClassExtendOrImplement);
+            Assert.AreEqual(1, actual.NumTypeExtendsOrImplements);
         }
 
         [Test]

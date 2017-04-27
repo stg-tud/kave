@@ -20,7 +20,6 @@ using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.References;
-using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
@@ -49,7 +48,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             var th = ctx.TypeShape.TypeHierarchy;
             if (th.Implements.Count > 0 || th.Extends != null)
             {
-                stats.NumClassExtendOrImplement++;
+                stats.NumTypeExtendsOrImplements++;
             }
 
             foreach (var md in ctx.SST.Methods)
@@ -84,12 +83,11 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 stats.NumTopLevelType++;
             }
 
-            if (type.IsPredefined)
+            if (type.IsUnknown || type.IsPredefined || type.IsArray)
             {
-                Asserts.Fail("unusual type declaration: {0}", type);
+                stats.NumUnusualType++;
             }
-
-            if (type.IsClassType)
+            else if (type.IsClassType)
             {
                 stats.NumClasses++;
             }
@@ -108,10 +106,6 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             else if (type.IsEnumType)
             {
                 stats.NumEnums++;
-            }
-            else
-            {
-                Asserts.Fail("unusual type declaration: {0}", type);
             }
         }
 

@@ -52,7 +52,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumDelegates = 8,
                     NumStructs = 9,
                     NumEnums = 10,
-                    NumClassExtendOrImplement = 11,
+                    NumUnusualType = 111,
+                    NumTypeExtendsOrImplements = 11,
                     NumMethodDecls = 12,
                     NumMethodOverridesOrImplements = 13,
                     UniqueAssemblies =
