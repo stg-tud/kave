@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
@@ -31,6 +32,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             }
         }
 
+        [SuppressMessage("ReSharper", "LocalizableElement")]
         public void Result(IDictionary<string, InteractionStatistics> results)
         {
             lock (Lock)

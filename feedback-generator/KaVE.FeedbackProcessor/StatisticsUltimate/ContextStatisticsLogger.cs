@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
@@ -25,6 +26,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
     public class ContextStatisticsLogger : StatisticsLoggerBase, IContextStatisticsLogger
     {
+        [SuppressMessage("ReSharper", "LocalizableElement")]
         public void Results(IContextStatistics stats)
         {
             lock (Lock)
@@ -46,6 +48,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 stats.UniqueAsmFields.Clear();
                 stats.UniqueAsmProperties.Clear();
 
+                Console.WriteLine("NumTypesTotal {0}", stats.NumNestedType + stats.NumTopLevelType);
                 Console.WriteLine(stats.ToString());
             }
         }
