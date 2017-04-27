@@ -132,6 +132,7 @@
     <Compile Include="Cleanup\Processors\ToConcurrentEventMapper.cs" />
     <Compile Include="Cleanup\Processors\ErrorFilterProcessor.cs" />
     <Compile Include="StatisticsUltimate\ContextStatistics.cs" />
+    <Compile Include="StatisticsUltimate\ContextStatisticsExtractor.cs" />
     <Compile Include="StatisticsUltimate\StatisticsExtractor.cs" />
     <Compile Include="StatisticsUltimate\StatisticsLogger.cs" />
     <Compile Include="StatisticsUltimate\StatisticsRunner.cs" />
