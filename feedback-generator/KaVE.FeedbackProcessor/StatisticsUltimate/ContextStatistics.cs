@@ -27,6 +27,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         int NumRepositories { get; }
         int NumUsers { get; }
         int NumSolutions { get; }
+        int EstimatedLinesOfCode { get; }
 
         int NumTopLevelType { get; }
         int NumNestedType { get; }
@@ -44,20 +45,20 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         [NotNull]
         IKaVESet<IAssemblyName> UniqueAssemblies { get; }
 
-        int NumCalls { get; }
+        int NumAsmCalls { get; }
 
         [NotNull]
-        IKaVESet<IMethodName> UniqueMethods { get; }
+        IKaVESet<IMethodName> UniqueAsmMethods { get; }
 
-        int NumFieldRead { get; }
-
-        [NotNull]
-        IKaVESet<IFieldName> UniqueFields { get; }
-
-        int NumPropertyRead { get; }
+        int NumAsmFieldRead { get; }
 
         [NotNull]
-        IKaVESet<IPropertyName> UniqueProperties { get; }
+        IKaVESet<IFieldName> UniqueAsmFields { get; }
+
+        int NumAsmPropertyRead { get; }
+
+        [NotNull]
+        IKaVESet<IPropertyName> UniqueAsmProperties { get; }
 
         void Add([NotNull] IContextStatistics stats);
     }
@@ -67,6 +68,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public int NumRepositories { get; set; }
         public int NumUsers { get; set; }
         public int NumSolutions { get; set; }
+        public int EstimatedLinesOfCode { get; set; }
 
         public int NumTopLevelType { get; set; }
         public int NumNestedType { get; set; }
@@ -82,19 +84,19 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public int NumMethodOverridesOrImplements { get; set; }
 
         public IKaVESet<IAssemblyName> UniqueAssemblies { get; set; }
-        public int NumCalls { get; set; }
-        public IKaVESet<IMethodName> UniqueMethods { get; set; }
-        public int NumFieldRead { get; set; }
-        public IKaVESet<IFieldName> UniqueFields { get; set; }
-        public int NumPropertyRead { get; set; }
-        public IKaVESet<IPropertyName> UniqueProperties { get; set; }
+        public int NumAsmCalls { get; set; }
+        public IKaVESet<IMethodName> UniqueAsmMethods { get; set; }
+        public int NumAsmFieldRead { get; set; }
+        public IKaVESet<IFieldName> UniqueAsmFields { get; set; }
+        public int NumAsmPropertyRead { get; set; }
+        public IKaVESet<IPropertyName> UniqueAsmProperties { get; set; }
 
         public ContextStatistics()
         {
             UniqueAssemblies = Sets.NewHashSet<IAssemblyName>();
-            UniqueMethods = Sets.NewHashSet<IMethodName>();
-            UniqueFields = Sets.NewHashSet<IFieldName>();
-            UniqueProperties = Sets.NewHashSet<IPropertyName>();
+            UniqueAsmMethods = Sets.NewHashSet<IMethodName>();
+            UniqueAsmFields = Sets.NewHashSet<IFieldName>();
+            UniqueAsmProperties = Sets.NewHashSet<IPropertyName>();
         }
 
         public void Add(IContextStatistics stats)
@@ -102,6 +104,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             NumRepositories += stats.NumRepositories;
             NumUsers += stats.NumUsers;
             NumSolutions += stats.NumSolutions;
+            EstimatedLinesOfCode += stats.EstimatedLinesOfCode;
             NumTopLevelType += stats.NumTopLevelType;
             NumNestedType += stats.NumNestedType;
             NumClasses += stats.NumClasses;
@@ -112,14 +115,14 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             NumClassExtendOrImplement += stats.NumClassExtendOrImplement;
             NumMethodDecls += stats.NumMethodDecls;
             NumMethodOverridesOrImplements += stats.NumMethodOverridesOrImplements;
-            NumCalls += stats.NumCalls;
-            NumFieldRead += stats.NumFieldRead;
-            NumPropertyRead += stats.NumPropertyRead;
+            NumAsmCalls += stats.NumAsmCalls;
+            NumAsmFieldRead += stats.NumAsmFieldRead;
+            NumAsmPropertyRead += stats.NumAsmPropertyRead;
 
             UniqueAssemblies.AddAll(stats.UniqueAssemblies);
-            UniqueMethods.AddAll(stats.UniqueMethods);
-            UniqueFields.AddAll(stats.UniqueFields);
-            UniqueProperties.AddAll(stats.UniqueProperties);
+            UniqueAsmMethods.AddAll(stats.UniqueAsmMethods);
+            UniqueAsmFields.AddAll(stats.UniqueAsmFields);
+            UniqueAsmProperties.AddAll(stats.UniqueAsmProperties);
         }
 
         public override bool Equals(object obj)
@@ -130,17 +133,17 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         protected bool Equals(ContextStatistics other)
         {
             return NumRepositories == other.NumRepositories && NumUsers == other.NumUsers &&
-                   NumSolutions == other.NumSolutions && NumTopLevelType == other.NumTopLevelType &&
-                   NumNestedType == other.NumNestedType && NumClasses == other.NumClasses &&
-                   NumInterfaces == other.NumInterfaces && NumDelegates == other.NumDelegates &&
-                   NumStructs == other.NumStructs && NumEnums == other.NumEnums &&
+                   NumSolutions == other.NumSolutions && EstimatedLinesOfCode == other.EstimatedLinesOfCode &&
+                   NumTopLevelType == other.NumTopLevelType && NumNestedType == other.NumNestedType &&
+                   NumClasses == other.NumClasses && NumInterfaces == other.NumInterfaces &&
+                   NumDelegates == other.NumDelegates && NumStructs == other.NumStructs && NumEnums == other.NumEnums &&
                    NumClassExtendOrImplement == other.NumClassExtendOrImplement &&
                    NumMethodDecls == other.NumMethodDecls &&
                    NumMethodOverridesOrImplements == other.NumMethodOverridesOrImplements &&
-                   UniqueAssemblies.Equals(other.UniqueAssemblies) && NumCalls == other.NumCalls &&
-                   UniqueMethods.Equals(other.UniqueMethods) && NumFieldRead == other.NumFieldRead &&
-                   UniqueFields.Equals(other.UniqueFields) && NumPropertyRead == other.NumPropertyRead &&
-                   Equals(UniqueProperties, other.UniqueProperties);
+                   UniqueAssemblies.Equals(other.UniqueAssemblies) && NumAsmCalls == other.NumAsmCalls &&
+                   UniqueAsmMethods.Equals(other.UniqueAsmMethods) && NumAsmFieldRead == other.NumAsmFieldRead &&
+                   UniqueAsmFields.Equals(other.UniqueAsmFields) && NumAsmPropertyRead == other.NumAsmPropertyRead &&
+                   Equals(UniqueAsmProperties, other.UniqueAsmProperties);
         }
 
         public override int GetHashCode()
@@ -151,6 +154,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 hashCode = (hashCode * 397) ^ NumRepositories;
                 hashCode = (hashCode * 397) ^ NumUsers;
                 hashCode = (hashCode * 397) ^ NumSolutions;
+                hashCode = (hashCode * 397) ^ EstimatedLinesOfCode;
                 hashCode = (hashCode * 397) ^ NumTopLevelType;
                 hashCode = (hashCode * 397) ^ NumNestedType;
                 hashCode = (hashCode * 397) ^ NumClasses;
@@ -162,12 +166,12 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 hashCode = (hashCode * 397) ^ NumMethodDecls;
                 hashCode = (hashCode * 397) ^ NumMethodOverridesOrImplements;
                 hashCode = (hashCode * 397) ^ UniqueAssemblies.GetHashCode();
-                hashCode = (hashCode * 397) ^ NumCalls;
-                hashCode = (hashCode * 397) ^ UniqueMethods.GetHashCode();
-                hashCode = (hashCode * 397) ^ NumFieldRead;
-                hashCode = (hashCode * 397) ^ UniqueFields.GetHashCode();
-                hashCode = (hashCode * 397) ^ NumPropertyRead;
-                hashCode = (hashCode * 397) ^ UniqueProperties.GetHashCode();
+                hashCode = (hashCode * 397) ^ NumAsmCalls;
+                hashCode = (hashCode * 397) ^ UniqueAsmMethods.GetHashCode();
+                hashCode = (hashCode * 397) ^ NumAsmFieldRead;
+                hashCode = (hashCode * 397) ^ UniqueAsmFields.GetHashCode();
+                hashCode = (hashCode * 397) ^ NumAsmPropertyRead;
+                hashCode = (hashCode * 397) ^ UniqueAsmProperties.GetHashCode();
                 return hashCode;
             }
         }

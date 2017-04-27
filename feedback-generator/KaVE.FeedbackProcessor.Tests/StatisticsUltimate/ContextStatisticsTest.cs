@@ -34,6 +34,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumRepositories);
             Assert.AreEqual(0, sut.NumUsers);
             Assert.AreEqual(0, sut.NumSolutions);
+            Assert.AreEqual(0, sut.EstimatedLinesOfCode);
 
             Assert.AreEqual(0, sut.NumTopLevelType);
             Assert.AreEqual(0, sut.NumNestedType);
@@ -50,14 +51,14 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
 
             Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), sut.UniqueAssemblies);
 
-            Assert.AreEqual(0, sut.NumCalls);
-            Assert.AreEqual(Sets.NewHashSet<IMethodName>(), sut.UniqueMethods);
+            Assert.AreEqual(0, sut.NumAsmCalls);
+            Assert.AreEqual(Sets.NewHashSet<IMethodName>(), sut.UniqueAsmMethods);
 
-            Assert.AreEqual(0, sut.NumFieldRead);
-            Assert.AreEqual(Sets.NewHashSet<IFieldName>(), sut.UniqueFields);
+            Assert.AreEqual(0, sut.NumAsmFieldRead);
+            Assert.AreEqual(Sets.NewHashSet<IFieldName>(), sut.UniqueAsmFields);
 
-            Assert.AreEqual(0, sut.NumPropertyRead);
-            Assert.AreEqual(Sets.NewHashSet<IPropertyName>(), sut.UniqueProperties);
+            Assert.AreEqual(0, sut.NumAsmPropertyRead);
+            Assert.AreEqual(Sets.NewHashSet<IPropertyName>(), sut.UniqueAsmProperties);
 
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -71,6 +72,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumRepositories = 1,
                 NumUsers = 2,
                 NumSolutions = 3,
+                EstimatedLinesOfCode = 31,
                 NumTopLevelType = 4,
                 NumNestedType = 5,
                 NumClasses = 6,
@@ -82,17 +84,18 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
-                NumCalls = 14,
-                UniqueMethods = {Names.Method("[p:bool] [T,P].M()")},
-                NumFieldRead = 15,
-                UniqueFields = {Names.Field("[p:int] [T,P]._f")},
-                NumPropertyRead = 16,
-                UniqueProperties = {Names.Property("get set [p:double] [T,P].P()")}
+                NumAsmCalls = 14,
+                UniqueAsmMethods = {Names.Method("[p:bool] [T,P].M()")},
+                NumAsmFieldRead = 15,
+                UniqueAsmFields = {Names.Field("[p:int] [T,P]._f")},
+                NumAsmPropertyRead = 16,
+                UniqueAsmProperties = {Names.Property("get set [p:double] [T,P].P()")}
             };
 
             Assert.AreEqual(1, sut.NumRepositories);
             Assert.AreEqual(2, sut.NumUsers);
             Assert.AreEqual(3, sut.NumSolutions);
+            Assert.AreEqual(31, sut.EstimatedLinesOfCode);
 
             Assert.AreEqual(4, sut.NumTopLevelType);
             Assert.AreEqual(5, sut.NumNestedType);
@@ -109,14 +112,14 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
 
             Assert.AreEqual(Sets.NewHashSet(Names.Assembly("A,1.2.3.4")), sut.UniqueAssemblies);
 
-            Assert.AreEqual(14, sut.NumCalls);
-            Assert.AreEqual(Sets.NewHashSet(Names.Method("[p:bool] [T,P].M()")), sut.UniqueMethods);
+            Assert.AreEqual(14, sut.NumAsmCalls);
+            Assert.AreEqual(Sets.NewHashSet(Names.Method("[p:bool] [T,P].M()")), sut.UniqueAsmMethods);
 
-            Assert.AreEqual(15, sut.NumFieldRead);
-            Assert.AreEqual(Sets.NewHashSet(Names.Field("[p:int] [T,P]._f")), sut.UniqueFields);
+            Assert.AreEqual(15, sut.NumAsmFieldRead);
+            Assert.AreEqual(Sets.NewHashSet(Names.Field("[p:int] [T,P]._f")), sut.UniqueAsmFields);
 
-            Assert.AreEqual(16, sut.NumPropertyRead);
-            Assert.AreEqual(Sets.NewHashSet(Names.Property("get set [p:double] [T,P].P()")), sut.UniqueProperties);
+            Assert.AreEqual(16, sut.NumAsmPropertyRead);
+            Assert.AreEqual(Sets.NewHashSet(Names.Property("get set [p:double] [T,P].P()")), sut.UniqueAsmProperties);
 
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -145,6 +148,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumRepositories = 1,
                 NumUsers = 2,
                 NumSolutions = 3,
+                EstimatedLinesOfCode = 31,
                 NumTopLevelType = 4,
                 NumNestedType = 5,
                 NumClasses = 6,
@@ -156,18 +160,19 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
-                NumCalls = 14,
-                UniqueMethods = {Names.Method("[p:bool] [T,P].M()")},
-                NumFieldRead = 15,
-                UniqueFields = {Names.Field("[p:int] [T,P]._f")},
-                NumPropertyRead = 16,
-                UniqueProperties = {Names.Property("get set [p:double] [T,P].P()")}
+                NumAsmCalls = 14,
+                UniqueAsmMethods = {Names.Method("[p:bool] [T,P].M()")},
+                NumAsmFieldRead = 15,
+                UniqueAsmFields = {Names.Field("[p:int] [T,P]._f")},
+                NumAsmPropertyRead = 16,
+                UniqueAsmProperties = {Names.Property("get set [p:double] [T,P].P()")}
             };
             var b = new ContextStatistics
             {
                 NumRepositories = 1,
                 NumUsers = 2,
                 NumSolutions = 3,
+                EstimatedLinesOfCode = 31,
                 NumTopLevelType = 4,
                 NumNestedType = 5,
                 NumClasses = 6,
@@ -179,12 +184,12 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
-                NumCalls = 14,
-                UniqueMethods = {Names.Method("[p:bool] [T,P].M()")},
-                NumFieldRead = 15,
-                UniqueFields = {Names.Field("[p:int] [T,P]._f")},
-                NumPropertyRead = 16,
-                UniqueProperties = {Names.Property("get set [p:double] [T,P].P()")}
+                NumAsmCalls = 14,
+                UniqueAsmMethods = {Names.Method("[p:bool] [T,P].M()")},
+                NumAsmFieldRead = 15,
+                UniqueAsmFields = {Names.Field("[p:int] [T,P]._f")},
+                NumAsmPropertyRead = 16,
+                UniqueAsmProperties = {Names.Property("get set [p:double] [T,P].P()")}
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -220,6 +225,18 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             var a = new ContextStatistics
             {
                 NumSolutions = 3
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentEstimatedLinesOfCode()
+        {
+            var a = new ContextStatistics
+            {
+                EstimatedLinesOfCode = 31
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -363,7 +380,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var a = new ContextStatistics
             {
-                NumCalls = 14
+                NumAsmCalls = 14
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -375,7 +392,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var a = new ContextStatistics
             {
-                UniqueMethods = {Names.Method("[p:bool] [T,P].M()")}
+                UniqueAsmMethods = {Names.Method("[p:bool] [T,P].M()")}
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -387,7 +404,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var a = new ContextStatistics
             {
-                NumFieldRead = 15
+                NumAsmFieldRead = 15
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -399,7 +416,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var a = new ContextStatistics
             {
-                UniqueFields = {Names.Field("[p:int] [T,P]._f")}
+                UniqueAsmFields = {Names.Field("[p:int] [T,P]._f")}
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -411,7 +428,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var a = new ContextStatistics
             {
-                NumPropertyRead = 16
+                NumAsmPropertyRead = 16
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -423,7 +440,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var a = new ContextStatistics
             {
-                UniqueProperties = {Names.Property("get set [p:double] [T,P].P()")}
+                UniqueAsmProperties = {Names.Property("get set [p:double] [T,P].P()")}
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -438,6 +455,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumRepositories = 1,
                 NumUsers = 2,
                 NumSolutions = 3,
+                EstimatedLinesOfCode = 31,
                 NumTopLevelType = 4,
                 NumNestedType = 5,
                 NumClasses = 6,
@@ -449,12 +467,12 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
-                NumCalls = 14,
-                UniqueMethods = {Names.Method("[p:bool] [T,P].MA()")},
-                NumFieldRead = 15,
-                UniqueFields = {Names.Field("[p:int] [T,P]._fA")},
-                NumPropertyRead = 16,
-                UniqueProperties = {Names.Property("get set [p:double] [T,P].PA()")}
+                NumAsmCalls = 14,
+                UniqueAsmMethods = {Names.Method("[p:bool] [T,P].MA()")},
+                NumAsmFieldRead = 15,
+                UniqueAsmFields = {Names.Field("[p:int] [T,P]._fA")},
+                NumAsmPropertyRead = 16,
+                UniqueAsmProperties = {Names.Property("get set [p:double] [T,P].PA()")}
             };
             a.Add(
                 new ContextStatistics
@@ -462,6 +480,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumRepositories = 1 + 1,
                     NumUsers = 2 + 1,
                     NumSolutions = 3 + 1,
+                    EstimatedLinesOfCode = 31 + 1,
                     NumTopLevelType = 4 + 1,
                     NumNestedType = 5 + 1,
                     NumClasses = 6 + 1,
@@ -473,12 +492,12 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumMethodDecls = 12 + 1,
                     NumMethodOverridesOrImplements = 13 + 1,
                     UniqueAssemblies = {Names.Assembly("B,1.2.3.4")},
-                    NumCalls = 14 + 1,
-                    UniqueMethods = {Names.Method("[p:bool] [T,P].MB()")},
-                    NumFieldRead = 15 + 1,
-                    UniqueFields = {Names.Field("[p:int] [T,P]._fB")},
-                    NumPropertyRead = 16 + 1,
-                    UniqueProperties = {Names.Property("get set [p:double] [T,P].PB()")}
+                    NumAsmCalls = 14 + 1,
+                    UniqueAsmMethods = {Names.Method("[p:bool] [T,P].MB()")},
+                    NumAsmFieldRead = 15 + 1,
+                    UniqueAsmFields = {Names.Field("[p:int] [T,P]._fB")},
+                    NumAsmPropertyRead = 16 + 1,
+                    UniqueAsmProperties = {Names.Property("get set [p:double] [T,P].PB()")}
                 });
 
             var c = new ContextStatistics
@@ -486,6 +505,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumRepositories = 1 * 2 + 1,
                 NumUsers = 2 * 2 + 1,
                 NumSolutions = 3 * 2 + 1,
+                EstimatedLinesOfCode = 31 * 2 + 1,
                 NumTopLevelType = 4 * 2 + 1,
                 NumNestedType = 5 * 2 + 1,
                 NumClasses = 6 * 2 + 1,
@@ -497,12 +517,12 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumMethodDecls = 12 * 2 + 1,
                 NumMethodOverridesOrImplements = 13 * 2 + 1,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4"), Names.Assembly("B,1.2.3.4")},
-                NumCalls = 14 * 2 + 1,
-                UniqueMethods = {Names.Method("[p:bool] [T,P].MA()"), Names.Method("[p:bool] [T,P].MB()")},
-                NumFieldRead = 15 * 2 + 1,
-                UniqueFields = {Names.Field("[p:int] [T,P]._fA"), Names.Field("[p:int] [T,P]._fB")},
-                NumPropertyRead = 16 * 2 + 1,
-                UniqueProperties =
+                NumAsmCalls = 14 * 2 + 1,
+                UniqueAsmMethods = {Names.Method("[p:bool] [T,P].MA()"), Names.Method("[p:bool] [T,P].MB()")},
+                NumAsmFieldRead = 15 * 2 + 1,
+                UniqueAsmFields = {Names.Field("[p:int] [T,P]._fA"), Names.Field("[p:int] [T,P]._fB")},
+                NumAsmPropertyRead = 16 * 2 + 1,
+                UniqueAsmProperties =
                 {
                     Names.Property("get set [p:double] [T,P].PA()"),
                     Names.Property("get set [p:double] [T,P].PB()")
