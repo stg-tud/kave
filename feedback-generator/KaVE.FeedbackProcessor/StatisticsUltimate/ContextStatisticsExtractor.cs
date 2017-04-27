@@ -133,6 +133,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 var f = fieldRef.FieldName;
                 if (!f.DeclaringType.Assembly.IsLocalProject)
                 {
+                    stats.NumAsmFieldRead++;
                     stats.UniqueAsmFields.Add(f);
                     stats.UniqueAssemblies.Add(f.DeclaringType.Assembly);
                 }
@@ -153,6 +154,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 var p = propRef.PropertyName;
                 if (!p.DeclaringType.Assembly.IsLocalProject)
                 {
+                    stats.NumAsmPropertyRead++;
                     stats.UniqueAsmProperties.Add(p);
                     stats.UniqueAssemblies.Add(p.DeclaringType.Assembly);
                 }

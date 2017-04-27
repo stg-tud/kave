@@ -463,6 +463,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     CreateContextWithSSTAndMethodBody(
                         Stmt(RefExpr(new FieldReference {FieldName = Names.Field("[p:int] [T,A,1.2.3.4]._f")}))));
 
+            Assert.AreEqual(1, actual.NumAsmFieldRead);
             Assert.AreEqual(Sets.NewHashSet(Names.Field("[p:int] [T,A,1.2.3.4]._f")), actual.UniqueAsmFields);
             Assert.AreEqual(Sets.NewHashSet(Names.Assembly("A,1.2.3.4")), actual.UniqueAssemblies);
         }
@@ -475,6 +476,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     CreateContextWithSSTAndMethodBody(
                         Stmt(RefExpr(new FieldReference {FieldName = Names.Field("[p:int] [T,P]._f")}))));
 
+            Assert.AreEqual(0, actual.NumAsmFieldRead);
             Assert.AreEqual(Sets.NewHashSet<IFieldName>(), actual.UniqueAsmFields);
             Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
         }
@@ -492,6 +494,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                                     PropertyName = Names.Property("get set [p:int] [T,A,1.2.3.4].P()")
                                 }))));
 
+            Assert.AreEqual(1, actual.NumAsmPropertyRead);
             Assert.AreEqual(
                 Sets.NewHashSet(Names.Property("get set [p:int] [T,A,1.2.3.4].P()")),
                 actual.UniqueAsmProperties);
@@ -507,6 +510,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                         Stmt(
                             RefExpr(new PropertyReference {PropertyName = Names.Property("get set [p:int] [T,P].P()")}))));
 
+            Assert.AreEqual(0, actual.NumAsmPropertyRead);
             Assert.AreEqual(Sets.NewHashSet<IPropertyName>(), actual.UniqueAsmProperties);
             Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
         }
