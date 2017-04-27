@@ -70,7 +70,7 @@ namespace KaVE.FeedbackProcessor
         {
             // reuse existing component
             var io = new PreprocessingIo(DirEventsOut, DirTmp, DirTmp);
-            new StatisticsRunner(io, new StatisticsLogger(), NumWorkers).Run();
+            new InteractionStatisticsRunner(io, new InteractionStatisticsLogger(), NumWorkers).Run();
         }
 
         private static void RunMemExampleToEnsureSupportForBigObjects()

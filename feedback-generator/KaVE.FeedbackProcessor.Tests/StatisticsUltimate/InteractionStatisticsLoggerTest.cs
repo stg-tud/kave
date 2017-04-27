@@ -22,12 +22,12 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
 {
-    internal class StatisticsLoggerTest
+    internal class InteractionStatisticsLoggerTest
     {
         [Test]
         public void IntegrationTest()
         {
-            var sut = new StatisticsLogger();
+            var sut = new InteractionStatisticsLogger();
 
             sut.ReportTimeout();
             sut.SearchingZips("C:\\a\\b\\");
@@ -41,8 +41,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             sut.FinishedStatCreation(1);
             sut.FinishedStatCreation(2);
 
-            var res = new Dictionary<string, UserStatistics>();
-            res["a.zip"] = new UserStatistics
+            var res = new Dictionary<string, InteractionStatistics>();
+            res["a.zip"] = new InteractionStatistics
             {
                 DayFirst = DateTime.Now.AddDays(-1),
                 DayLast = DateTime.Now,
@@ -55,7 +55,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTestRuns = 5,
                 ActiveTime = TimeSpan.FromSeconds(123456.789)
             };
-            res["b/c.zip"] = new UserStatistics
+            res["b/c.zip"] = new InteractionStatistics
             {
                 DayFirst = DateTime.Now.AddDays(-5),
                 DayLast = DateTime.Now.AddDays(-3),
@@ -68,7 +68,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTestRuns = 10,
                 ActiveTime = TimeSpan.FromSeconds(234567.8901)
             };
-            res["d.zip"] = new UserStatistics
+            res["d.zip"] = new InteractionStatistics
             {
                 DayFirst = DateTime.Now.AddDays(-5),
                 DayLast = DateTime.Now.AddDays(-3),
@@ -81,7 +81,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTestRuns = 10,
                 ActiveTime = TimeSpan.FromDays(2).Add(TimeSpan.FromHours(10))
             };
-            res["e.zip"] = new UserStatistics
+            res["e.zip"] = new InteractionStatistics
             {
                 DayFirst = DateTime.Now.AddDays(-5),
                 DayLast = DateTime.Now.AddDays(-3),

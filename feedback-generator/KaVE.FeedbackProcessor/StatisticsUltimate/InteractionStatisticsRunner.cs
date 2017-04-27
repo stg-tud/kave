@@ -24,19 +24,19 @@ using KaVE.FeedbackProcessor.Preprocessing.Model;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
-    public class StatisticsRunner
+    public class InteractionStatisticsRunner
     {
         private readonly object _lock = new object();
 
         private readonly IPreprocessingIo _io;
-        private readonly StatisticsLogger _log;
+        private readonly InteractionStatisticsLogger _log;
         private readonly int _numProcs;
 
 
         private ISet<string> _ids;
-        private IDictionary<string, UserStatistics> _results;
+        private IDictionary<string, InteractionStatistics> _results;
 
-        public StatisticsRunner(IPreprocessingIo io, StatisticsLogger log, int numProcs)
+        public InteractionStatisticsRunner(IPreprocessingIo io, InteractionStatisticsLogger log, int numProcs)
         {
             _io = io;
             _log = log;
@@ -46,7 +46,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public void Run()
         {
             _ids = new HashSet<string>();
-            _results = new Dictionary<string, UserStatistics>();
+            _results = new Dictionary<string, InteractionStatistics>();
 
             _log.ReportTimeout();
 
@@ -70,7 +70,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         {
             _log.StartingStatCreation(taskId);
 
-            var extractor = new StatisticsExtractor();
+            var extractor = new InteractionStatisticsExtractor();
 
             string zip;
             while (GetNextZip(out zip))
@@ -116,7 +116,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             }
         }
 
-        private void StoreResult(string zip, UserStatistics stats)
+        private void StoreResult(string zip, InteractionStatistics stats)
         {
             lock (_lock)
             {

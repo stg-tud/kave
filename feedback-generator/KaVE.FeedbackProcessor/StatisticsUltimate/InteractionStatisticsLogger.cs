@@ -19,17 +19,19 @@ using System.Collections.Generic;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
-    public class StatisticsLogger : StatisticsLoggerBase
+    public class InteractionStatisticsLogger : StatisticsLoggerBase
     {
         public void ReportTimeout()
         {
             lock (Lock)
             {
-                Log("Using an interaction timeout of {0}s to merge active times ...", StatisticsExtractor.TimeOutInS);
+                Log(
+                    "Using an interaction timeout of {0}s to merge active times ...",
+                    InteractionStatisticsExtractor.TimeOutInS);
             }
         }
 
-        public void Result(IDictionary<string, UserStatistics> results)
+        public void Result(IDictionary<string, InteractionStatistics> results)
         {
             lock (Lock)
             {

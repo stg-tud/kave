@@ -20,7 +20,7 @@ using KaVE.Commons.Utils;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
-    public interface IUserStatistics
+    public interface IInteractionStatistics
     {
         DateTime DayFirst { get; }
         DateTime DayLast { get; }
@@ -34,7 +34,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         TimeSpan ActiveTime { get; }
     }
 
-    public class UserStatistics : IUserStatistics
+    public class InteractionStatistics : IInteractionStatistics
     {
         public DateTime DayFirst { get; set; }
         public DateTime DayLast { get; set; }
@@ -51,7 +51,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         public TimeSpan ActiveTime { get; set; }
 
-        public UserStatistics()
+        public InteractionStatistics()
         {
             ActiveTime = TimeSpan.Zero;
         }
@@ -61,7 +61,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(UserStatistics other)
+        protected bool Equals(InteractionStatistics other)
         {
             return DayFirst.Equals(other.DayFirst) && DayLast.Equals(other.DayLast) && NumDays == other.NumDays &&
                    NumMonth == other.NumMonth && NumEvents == other.NumEvents && Education == other.Education &&

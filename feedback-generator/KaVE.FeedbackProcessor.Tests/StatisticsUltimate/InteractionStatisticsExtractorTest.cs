@@ -26,17 +26,17 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
 {
-    internal class StatisticsExtractorTest
+    internal class InteractionStatisticsExtractorTest
     {
         private Random _rng;
 
-        private StatisticsExtractor _sut;
+        private InteractionStatisticsExtractor _sut;
 
         [SetUp]
         public void Setup()
         {
             _rng = new Random();
-            _sut = new StatisticsExtractor();
+            _sut = new InteractionStatisticsExtractor();
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             };
         }
 
-        private IUserStatistics Analyze(params IIDEEvent[] es)
+        private IInteractionStatistics Analyze(params IIDEEvent[] es)
         {
             return _sut.CreateStatistics(es);
         }

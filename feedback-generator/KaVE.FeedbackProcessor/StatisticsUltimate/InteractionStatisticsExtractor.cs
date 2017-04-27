@@ -24,13 +24,13 @@ using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
-    public class StatisticsExtractor
+    public class InteractionStatisticsExtractor
     {
         public const int TimeOutInS = 16;
 
-        public UserStatistics CreateStatistics(IEnumerable<IIDEEvent> events)
+        public InteractionStatistics CreateStatistics(IEnumerable<IIDEEvent> events)
         {
-            var stats = new UserStatistics();
+            var stats = new InteractionStatistics();
             var days = new HashSet<DateTime>();
             var months = new HashSet<DateTime>();
 

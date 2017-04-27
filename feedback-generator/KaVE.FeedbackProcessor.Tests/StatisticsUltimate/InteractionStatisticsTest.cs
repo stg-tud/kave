@@ -21,12 +21,12 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
 {
-    internal class UserStatisticsTest
+    internal class InteractionStatisticsTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new UserStatistics();
+            var sut = new InteractionStatistics();
             Assert.AreEqual(DateTime.MinValue, sut.DayFirst);
             Assert.AreEqual(DateTime.MinValue, sut.DayLast);
             Assert.AreEqual(0, sut.NumDays);
@@ -46,7 +46,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         public void SettingValues()
         {
             var now = DateTime.Now;
-            var sut = new UserStatistics
+            var sut = new InteractionStatistics
             {
                 DayFirst = now,
                 DayLast = now,
@@ -74,8 +74,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void EqualityDefault()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics();
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -84,7 +84,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         public void ReallyEqual()
         {
             var now = DateTime.Now;
-            var a = new UserStatistics
+            var a = new InteractionStatistics
             {
                 DayFirst = now,
                 DayLast = now,
@@ -97,7 +97,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTestRuns = 5,
                 ActiveTime = TimeSpan.FromSeconds(3)
             };
-            var b = new UserStatistics
+            var b = new InteractionStatistics
             {
                 DayFirst = now,
                 DayLast = now,
@@ -118,8 +118,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         public void Different_DayFirst()
         {
             var now = DateTime.Now;
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 DayFirst = now
             };
@@ -131,8 +131,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         public void Different_DayLast()
         {
             var now = DateTime.Now;
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 DayLast = now
             };
@@ -143,8 +143,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_NumDays()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 NumDays = 1
             };
@@ -155,8 +155,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_NumMonth()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 NumMonth = 2
             };
@@ -167,8 +167,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_NumEvents()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 NumEvents = 3
             };
@@ -179,8 +179,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_Education()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 Education = Educations.Bachelor
             };
@@ -191,8 +191,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_Position()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 Position = Positions.Student
             };
@@ -203,8 +203,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_NumCodeCompletion()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 NumCodeCompletion = 4
             };
@@ -215,8 +215,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_NumTestRuns()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 NumTestRuns = 5
             };
@@ -227,8 +227,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void Different_ActiveTime()
         {
-            var a = new UserStatistics();
-            var b = new UserStatistics
+            var a = new InteractionStatistics();
+            var b = new InteractionStatistics
             {
                 ActiveTime = TimeSpan.FromSeconds(3)
             };
