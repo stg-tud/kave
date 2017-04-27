@@ -19,68 +19,19 @@ using System.Collections.Generic;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
-    public class StatisticsLogger
+    public class StatisticsLogger : StatisticsLoggerBase
     {
-        private readonly object _lock = new object();
-
         public void ReportTimeout()
         {
-            lock (_lock)
+            lock (Lock)
             {
                 Log("Using an interaction timeout of {0}s to merge active times ...", StatisticsExtractor.TimeOutInS);
             }
         }
 
-        public void SearchingZips(string dirIn)
-        {
-            lock (_lock)
-            {
-                Log("Searching for .zip files in '{0}' ...", dirIn);
-            }
-        }
-
-        private int _total;
-
-        public void FoundZips(int count)
-        {
-            lock (_lock)
-            {
-                _total = count;
-                Append(" found {0} files", count);
-            }
-        }
-
-        public void StartingStatCreation(int taskId)
-        {
-            lock (_lock)
-            {
-                Log("({0}) StartingStatCreation", taskId);
-            }
-        }
-
-        private int _current;
-
-        public void CreatingStats(int taskId, string zip)
-        {
-            lock (_lock)
-            {
-                _current++;
-                var perc = 100 * _current / (double) _total;
-                Log("({0}) CreatingStats for {1} ({2}/{3} started -- {4:0.0}%)", taskId, zip, _current, _total, perc);
-            }
-        }
-
-        public void FinishedStatCreation(int taskId)
-        {
-            lock (_lock)
-            {
-                Log("({0}) FinishedStatCreation", taskId);
-            }
-        }
-
         public void Result(IDictionary<string, UserStatistics> results)
         {
-            lock (_lock)
+            lock (Lock)
             {
                 Log("done!");
 
@@ -110,25 +61,6 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                         stats.ActiveTime);
                 }
             }
-        }
-
-        private static void Append(string msg, params object[] args)
-        {
-            Console.Write(msg, args);
-        }
-
-        private bool _isFirstLine = true;
-
-        private void Log(string msg, params object[] args)
-        {
-            if (!_isFirstLine)
-            {
-                Console.WriteLine();
-            }
-            _isFirstLine = false;
-            Console.Write(DateTime.Now);
-            Console.Write('\t');
-            Append(msg, args);
         }
     }
 }
