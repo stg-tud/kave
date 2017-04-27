@@ -126,9 +126,9 @@
     <Compile Include="StatisticsUltimate\ContextStatisticsExtractorTest.cs" />
     <Compile Include="StatisticsUltimate\ContextStatisticsLoggerTest.cs" />
     <Compile Include="StatisticsUltimate\ContextStatisticsTest.cs" />
-    <Compile Include="StatisticsUltimate\StatisticsExtractorTest.cs" />
-    <Compile Include="StatisticsUltimate\StatisticsLoggerTest.cs" />
-    <Compile Include="StatisticsUltimate\UserStatisticsTest.cs" />
+    <Compile Include="StatisticsUltimate\InteractionStatisticsExtractorTest.cs" />
+    <Compile Include="StatisticsUltimate\InteractionStatisticsLoggerTest.cs" />
+    <Compile Include="StatisticsUltimate\InteractionStatisticsTest.cs" />
     <Compile Include="WatchdogExports\EventFixerTest.cs" />
     <Compile Include="WatchdogExports\Exporter\EventStreamExportTest.cs" />
     <Compile Include="WatchdogExports\Exporter\SvgExportTest.cs" />

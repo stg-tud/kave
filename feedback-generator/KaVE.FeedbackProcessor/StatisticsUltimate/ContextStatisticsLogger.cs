@@ -23,7 +23,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         void Results(IContextStatistics contextStatistics);
     }
 
-    public class ContextStatisticsLogger : StatisticsLoggerBase
+    public class ContextStatisticsLogger : StatisticsLoggerBase, IContextStatisticsLogger
     {
         public void Results(IContextStatistics stats)
         {

@@ -32,7 +32,8 @@ namespace KaVE.FeedbackProcessor
         private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
         //private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
 
-        private const string DirTmp = Root + @"Tmp\";
+        //private const string DirTmp = Root + @"Tmp\";
+        private const string DirTmp = @"E:\Tmp\";
 
         private const string DirEventsIn = Root + @"Events\";
         private const string DirEventsOut = Root + @"Events-Out\";
@@ -40,7 +41,7 @@ namespace KaVE.FeedbackProcessor
         private const string WdFolder = Root + @"watchdog\";
         private const string SvgFolder = Root + @"svg\";
 
-        private const string DirContexts = @"E:\Contexts\";
+        private const string DirContexts = @"E:\Contexts-some\";
 
         public static void Main()
         {
@@ -59,18 +60,26 @@ namespace KaVE.FeedbackProcessor
             //RunExhaustiveNamesFixTests();
             //RunPreprocessing();
             //RunWatchdogExport();
-            RunStatistics();
+            //RunInteractionStatistics();
+            RunContextStatistics();
 
             var endedAt = DateTime.Now;
             Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
             Console.ReadKey();
         }
 
-        private static void RunStatistics()
+        private static void RunInteractionStatistics()
         {
             // reuse existing component
             var io = new PreprocessingIo(DirEventsOut, DirTmp, DirTmp);
             new InteractionStatisticsRunner(io, new InteractionStatisticsLogger(), NumWorkers).Run();
+        }
+
+        private static void RunContextStatistics()
+        {
+            // reuse existing component
+            var io = new PreprocessingIo(DirContexts, DirTmp, DirTmp);
+            new ContextStatisticsRunner(io, new ContextStatisticsLogger(), NumWorkers).Run();
         }
 
         private static void RunMemExampleToEnsureSupportForBigObjects()
