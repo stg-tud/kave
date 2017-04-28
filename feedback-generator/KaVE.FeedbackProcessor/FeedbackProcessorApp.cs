@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using KaVE.FeedbackProcessor.DebuggingHacks;
 using KaVE.FeedbackProcessor.Naming;
 using KaVE.FeedbackProcessor.Preprocessing;
 using KaVE.FeedbackProcessor.Preprocessing.Model;
@@ -29,19 +30,20 @@ namespace KaVE.FeedbackProcessor
     {
         private static readonly int NumWorkers = Environment.ProcessorCount;
 
-        private const string Root = @"C:\Users\Sebastian\Desktop\Test\";
+        private const string Root = @"C:\Users\Sebastian\Desktop\kave-data-dir\";
+        //private const string Root = @"E:\";
         //private const string Root = @"C:\Users\seb2\Desktop\interval-tests\";
 
-        //private const string DirTmp = Root + @"Tmp\";
-        private const string DirTmp = @"E:\Tmp\";
+        private const string DirTmp = Root + @"Tmp\";
+        //private const string DirTmp = @"E:\Tmp\";
 
-        private const string DirEventsIn = Root + @"Events\";
-        private const string DirEventsOut = Root + @"Events-Out\";
+        private const string DirEventsIn = Root + @"Events-raw\";
+        private const string DirEventsOut = Root + @"Events\";
 
         private const string WdFolder = Root + @"watchdog\";
         private const string SvgFolder = Root + @"svg\";
 
-        private const string DirContexts = @"E:\Contexts-some\";
+        private const string DirContexts = Root + @"Contexts\";
 
         public static void Main()
         {
@@ -62,10 +64,18 @@ namespace KaVE.FeedbackProcessor
             //RunWatchdogExport();
             //RunInteractionStatistics();
             RunContextStatistics();
+            //RunSSTTransformationComparison(Root + @"Contexts-161031", Root + @"Contexts-170428");
 
             var endedAt = DateTime.Now;
             Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
             Console.ReadKey();
+        }
+
+        private static void RunSSTTransformationComparison(string oldContexts, string newContexts)
+        {
+            var oldIo = new PreprocessingIo(oldContexts, DirTmp, DirTmp);
+            var newIo = new PreprocessingIo(newContexts, DirTmp, DirTmp);
+            new SSTTransformationComparison(oldIo, newIo).Run();
         }
 
         private static void RunInteractionStatistics()
