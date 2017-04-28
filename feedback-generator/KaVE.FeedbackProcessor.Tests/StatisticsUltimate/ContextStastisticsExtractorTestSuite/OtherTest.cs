@@ -18,42 +18,21 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
 using KaVE.Commons.Model.Naming.Types.Organization;
-using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
-using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.StatisticsUltimate;
 using NUnit.Framework;
 
-namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
+namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtractorTestSuite
 {
-    internal class ContextStatisticsExtractorTest
+    internal class OtherTest : ContextStatisticsExtractorTestBase
     {
-        private ContextStatisticsExtractor _sut;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _sut = new ContextStatisticsExtractor();
-        }
-
-        private IContextStatistics Extract(params Context[] contexts)
-        {
-            return _sut.Extract(contexts);
-        }
-
         [Test]
         public void UserAndRepoIsLeftAlone()
         {
-            var actual = _sut.Extract(
+            var actual = Sut.Extract(
                 new[]
                 {
                     new Context
@@ -71,7 +50,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [Test]
         public void SolutionIsOnlyCountedOnce()
         {
-            var actual = _sut.Extract(
+            var actual = Sut.Extract(
                 new[]
                 {
                     new Context
@@ -95,7 +74,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         [TestCase("C,P"), TestCase("i:I,P"), TestCase("s:S,P"), TestCase("e:E,P"), TestCase("d:[p:void] [D,P].()")]
         public void CountsTopLevelTypes(string id)
         {
-            var actual = _sut.Extract(
+            var actual = Sut.Extract(
                 new[]
                 {
                     new Context
@@ -113,7 +92,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
          TestCase("d:[p:void] [T+D,P].()")]
         public void CountsNestedTypes(string nestedId)
         {
-            var actual = _sut.Extract(
+            var actual = Sut.Extract(
                 new[]
                 {
                     new Context
@@ -406,46 +385,6 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         }
 
         [Test]
-        public void ShouldCountMethodCallsAndRegisterAssembly()
-        {
-            var actual =
-                Extract(
-                    CreateContextWithSSTAndMethodBody(
-                        InvStmt("[p:void] [T,A,1.2.3.4].M()"),
-                        InvStmt("[p:void] [T,A,1.2.3.4].M()")));
-
-            Assert.AreEqual(0, actual.NumUnknownInvocations);
-            Assert.AreEqual(2, actual.NumAsmCalls);
-            Assert.AreEqual(Sets.NewHashSet(Names.Method("[p:void] [T,A,1.2.3.4].M()")), actual.UniqueAsmMethods);
-            Assert.AreEqual(Sets.NewHashSet(Names.Assembly("A,1.2.3.4")), actual.UniqueAssemblies);
-        }
-
-        [Test]
-        public void ShouldCountUnknownMethodCalls()
-        {
-            var actual =
-                Extract(
-                    CreateContextWithSSTAndMethodBody(
-                        InvStmt(Names.UnknownMethod.Identifier)));
-
-            Assert.AreEqual(1, actual.NumUnknownInvocations);
-            Assert.AreEqual(0, actual.NumAsmCalls);
-            Assert.AreEqual(Sets.NewHashSet<IMethodName>(), actual.UniqueAsmMethods);
-            Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
-        }
-
-        [Test]
-        public void ShouldNotCountLocalMethodCallsAndRegisterAssembly()
-        {
-            var actual = Extract(CreateContextWithSSTAndMethodBody(InvStmt("[p:void] [T,P].M()")));
-
-            Assert.AreEqual(0, actual.NumUnknownInvocations);
-            Assert.AreEqual(0, actual.NumAsmCalls);
-            Assert.AreEqual(Sets.NewHashSet<IMethodName>(), actual.UniqueAsmMethods);
-            Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
-        }
-
-        [Test]
         public void ShouldCountMethodRefsAndRegisterAssembly()
         {
             var actual =
@@ -584,51 +523,6 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 CreateContextWithSSTAndMethodBody(InvStmt("[p:void] [T,P].M2()"), InvStmt("[p:void] [T,P].M2()")));
 
             Assert.AreEqual(7, actual.EstimatedLinesOfCode);
-        }
-
-        private static IExpressionStatement InvStmt(string methodId)
-        {
-            return Stmt(
-                new InvocationExpression
-                {
-                    MethodName = Names.Method(methodId)
-                }
-            );
-        }
-
-        private static IExpressionStatement Stmt(IAssignableExpression expr)
-        {
-            return new ExpressionStatement
-            {
-                Expression = expr
-            };
-        }
-
-        private IReferenceExpression RefExpr(IReference aref)
-        {
-            return new ReferenceExpression
-            {
-                Reference = aref
-            };
-        }
-
-        private static Context CreateContextWithSSTAndMethodBody(params IStatement[] stmts)
-        {
-            return new Context
-            {
-                SST = new SST
-                {
-                    EnclosingType = Names.Type("C,P"),
-                    Methods =
-                    {
-                        new MethodDeclaration
-                        {
-                            Name = Names.Method("[p:void] [T,P].M()"),
-                            Body = Lists.NewListFrom(stmts)
-                        }
-                    }
-                }
-            };
         }
     }
 }

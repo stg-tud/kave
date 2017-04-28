@@ -49,10 +49,12 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumTypeExtendsOrImplements);
             Assert.AreEqual(0, sut.NumMethodDecls);
             Assert.AreEqual(0, sut.NumMethodOverridesOrImplements);
+            Assert.AreEqual(0, sut.NumValidInvocations);
             Assert.AreEqual(0, sut.NumUnknownInvocations);
 
             Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), sut.UniqueAssemblies);
 
+            Assert.AreEqual(0, sut.NumAsmDelegateCalls);
             Assert.AreEqual(0, sut.NumAsmCalls);
             Assert.AreEqual(Sets.NewHashSet<IMethodName>(), sut.UniqueAsmMethods);
 
@@ -86,8 +88,10 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
+                NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
+                NumAsmDelegateCalls = 141,
                 NumAsmCalls = 14,
                 UniqueAsmMethods = {Names.Method("[p:bool] [T,P].M()")},
                 NumAsmFieldRead = 15,
@@ -114,10 +118,12 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(11, sut.NumTypeExtendsOrImplements);
             Assert.AreEqual(12, sut.NumMethodDecls);
             Assert.AreEqual(13, sut.NumMethodOverridesOrImplements);
+            Assert.AreEqual(1311, sut.NumValidInvocations);
             Assert.AreEqual(131, sut.NumUnknownInvocations);
 
             Assert.AreEqual(Sets.NewHashSet(Names.Assembly("A,1.2.3.4")), sut.UniqueAssemblies);
 
+            Assert.AreEqual(141, sut.NumAsmDelegateCalls);
             Assert.AreEqual(14, sut.NumAsmCalls);
             Assert.AreEqual(Sets.NewHashSet(Names.Method("[p:bool] [T,P].M()")), sut.UniqueAsmMethods);
 
@@ -166,6 +172,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
+                NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
                 NumAsmCalls = 14,
@@ -192,6 +199,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
+                NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
                 NumAsmCalls = 14,
@@ -386,6 +394,18 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         }
 
         [Test]
+        public void Equality_DifferentNumTotalRegularInvocations()
+        {
+            var a = new ContextStatistics
+            {
+                NumValidInvocations = 1311
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void Equality_DifferentNumUnknownInvocations()
         {
             var a = new ContextStatistics
@@ -403,6 +423,18 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             var a = new ContextStatistics
             {
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")}
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentNumAsmDelegateCalls()
+        {
+            var a = new ContextStatistics
+            {
+                NumAsmDelegateCalls = 141
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -501,8 +533,10 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeExtendsOrImplements = 11,
                 NumMethodDecls = 12,
                 NumMethodOverridesOrImplements = 13,
+                NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
+                NumAsmDelegateCalls = 141,
                 NumAsmCalls = 14,
                 UniqueAsmMethods = {Names.Method("[p:bool] [T,P].MA()")},
                 NumAsmFieldRead = 15,
@@ -528,8 +562,10 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumTypeExtendsOrImplements = 11 + 1,
                     NumMethodDecls = 12 + 1,
                     NumMethodOverridesOrImplements = 13 + 1,
+                    NumValidInvocations = 1311 + 1,
                     NumUnknownInvocations = 131 + 1,
                     UniqueAssemblies = {Names.Assembly("B,1.2.3.4")},
+                    NumAsmDelegateCalls = 141 + 1,
                     NumAsmCalls = 14 + 1,
                     UniqueAsmMethods = {Names.Method("[p:bool] [T,P].MB()")},
                     NumAsmFieldRead = 15 + 1,
@@ -555,8 +591,10 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeExtendsOrImplements = 11 * 2 + 1,
                 NumMethodDecls = 12 * 2 + 1,
                 NumMethodOverridesOrImplements = 13 * 2 + 1,
+                NumValidInvocations = 2 * 1311 + 1,
                 NumUnknownInvocations = 2 * 131 + 1,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4"), Names.Assembly("B,1.2.3.4")},
+                NumAsmDelegateCalls = 2 * 141 + 1,
                 NumAsmCalls = 14 * 2 + 1,
                 UniqueAsmMethods = {Names.Method("[p:bool] [T,P].MA()"), Names.Method("[p:bool] [T,P].MB()")},
                 NumAsmFieldRead = 15 * 2 + 1,

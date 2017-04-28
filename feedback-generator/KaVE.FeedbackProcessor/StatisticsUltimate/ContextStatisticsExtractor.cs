@@ -120,9 +120,18 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 }
                 else
                 {
+                    stats.NumValidInvocations++;
+
                     if (!m.DeclaringType.Assembly.IsLocalProject)
                     {
-                        stats.NumAsmCalls++;
+                        if (m.IsDelegateInvocation)
+                        {
+                            stats.NumAsmDelegateCalls++;
+                        }
+                        else
+                        {
+                            stats.NumAsmCalls++;
+                        }
                         stats.UniqueAsmMethods.Add(m);
                         stats.UniqueAssemblies.Add(m.DeclaringType.Assembly);
                     }
