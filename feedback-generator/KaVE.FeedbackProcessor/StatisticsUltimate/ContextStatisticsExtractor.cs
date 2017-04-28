@@ -114,18 +114,25 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             public override void Visit(IInvocationExpression expr, ContextStatistics stats)
             {
                 var m = expr.MethodName;
-                if (!m.DeclaringType.Assembly.IsLocalProject)
+                if (m.IsUnknown)
                 {
-                    stats.NumAsmCalls++;
-                    stats.UniqueAsmMethods.Add(m);
-                    stats.UniqueAssemblies.Add(m.DeclaringType.Assembly);
+                    stats.NumUnknownInvocations++;
+                }
+                else
+                {
+                    if (!m.DeclaringType.Assembly.IsLocalProject)
+                    {
+                        stats.NumAsmCalls++;
+                        stats.UniqueAsmMethods.Add(m);
+                        stats.UniqueAssemblies.Add(m.DeclaringType.Assembly);
+                    }
                 }
             }
 
             public override void Visit(IFieldReference fieldRef, ContextStatistics stats)
             {
                 var f = fieldRef.FieldName;
-                if (!f.DeclaringType.Assembly.IsLocalProject)
+                if (!f.IsUnknown && !f.DeclaringType.Assembly.IsLocalProject)
                 {
                     stats.NumAsmFieldRead++;
                     stats.UniqueAsmFields.Add(f);
@@ -136,7 +143,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             public override void Visit(IMethodReference methRef, ContextStatistics stats)
             {
                 var m = methRef.MethodName;
-                if (!m.DeclaringType.Assembly.IsLocalProject)
+                if (!m.IsUnknown && !m.DeclaringType.Assembly.IsLocalProject)
                 {
                     stats.UniqueAsmMethods.Add(m);
                     stats.UniqueAssemblies.Add(m.DeclaringType.Assembly);
@@ -146,7 +153,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             public override void Visit(IPropertyReference propRef, ContextStatistics stats)
             {
                 var p = propRef.PropertyName;
-                if (!p.DeclaringType.Assembly.IsLocalProject)
+                if (!p.IsUnknown && !p.DeclaringType.Assembly.IsLocalProject)
                 {
                     stats.NumAsmPropertyRead++;
                     stats.UniqueAsmProperties.Add(p);

@@ -42,6 +42,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         int NumTypeExtendsOrImplements { get; }
         int NumMethodDecls { get; }
         int NumMethodOverridesOrImplements { get; }
+        int NumUnknownInvocations { get; }
 
         [NotNull]
         IKaVESet<IAssemblyName> UniqueAssemblies { get; }
@@ -84,6 +85,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         public int NumMethodDecls { get; set; }
         public int NumMethodOverridesOrImplements { get; set; }
+        public int NumUnknownInvocations { get; set; }
 
         public IKaVESet<IAssemblyName> UniqueAssemblies { get; set; }
         public int NumAsmCalls { get; set; }

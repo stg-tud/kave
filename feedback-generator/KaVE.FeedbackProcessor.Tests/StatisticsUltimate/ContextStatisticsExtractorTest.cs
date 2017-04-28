@@ -414,9 +414,24 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                         InvStmt("[p:void] [T,A,1.2.3.4].M()"),
                         InvStmt("[p:void] [T,A,1.2.3.4].M()")));
 
+            Assert.AreEqual(0, actual.NumUnknownInvocations);
             Assert.AreEqual(2, actual.NumAsmCalls);
             Assert.AreEqual(Sets.NewHashSet(Names.Method("[p:void] [T,A,1.2.3.4].M()")), actual.UniqueAsmMethods);
             Assert.AreEqual(Sets.NewHashSet(Names.Assembly("A,1.2.3.4")), actual.UniqueAssemblies);
+        }
+
+        [Test]
+        public void ShouldCountUnknownMethodCalls()
+        {
+            var actual =
+                Extract(
+                    CreateContextWithSSTAndMethodBody(
+                        InvStmt(Names.UnknownMethod.Identifier)));
+
+            Assert.AreEqual(1, actual.NumUnknownInvocations);
+            Assert.AreEqual(0, actual.NumAsmCalls);
+            Assert.AreEqual(Sets.NewHashSet<IMethodName>(), actual.UniqueAsmMethods);
+            Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
         }
 
         [Test]
@@ -424,6 +439,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var actual = Extract(CreateContextWithSSTAndMethodBody(InvStmt("[p:void] [T,P].M()")));
 
+            Assert.AreEqual(0, actual.NumUnknownInvocations);
             Assert.AreEqual(0, actual.NumAsmCalls);
             Assert.AreEqual(Sets.NewHashSet<IMethodName>(), actual.UniqueAsmMethods);
             Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
@@ -437,6 +453,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     CreateContextWithSSTAndMethodBody(
                         Stmt(RefExpr(new MethodReference {MethodName = Names.Method("[p:void] [T,A,1.2.3.4].M()")}))));
 
+            Assert.AreEqual(0, actual.NumUnknownInvocations);
             Assert.AreEqual(0, actual.NumAsmCalls);
             Assert.AreEqual(Sets.NewHashSet(Names.Method("[p:void] [T,A,1.2.3.4].M()")), actual.UniqueAsmMethods);
             Assert.AreEqual(Sets.NewHashSet(Names.Assembly("A,1.2.3.4")), actual.UniqueAssemblies);
@@ -450,6 +467,21 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     CreateContextWithSSTAndMethodBody(
                         Stmt(RefExpr(new MethodReference {MethodName = Names.Method("[p:void] [T,P].M()")}))));
 
+            Assert.AreEqual(0, actual.NumUnknownInvocations);
+            Assert.AreEqual(0, actual.NumAsmCalls);
+            Assert.AreEqual(Sets.NewHashSet<IMethodName>(), actual.UniqueAsmMethods);
+            Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
+        }
+
+        [Test]
+        public void ShouldNotCountUnknownMethodRefs()
+        {
+            var actual =
+                Extract(
+                    CreateContextWithSSTAndMethodBody(
+                        Stmt(RefExpr(new MethodReference {MethodName = Names.UnknownMethod}))));
+
+            Assert.AreEqual(0, actual.NumUnknownInvocations);
             Assert.AreEqual(0, actual.NumAsmCalls);
             Assert.AreEqual(Sets.NewHashSet<IMethodName>(), actual.UniqueAsmMethods);
             Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
@@ -475,6 +507,19 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 Extract(
                     CreateContextWithSSTAndMethodBody(
                         Stmt(RefExpr(new FieldReference {FieldName = Names.Field("[p:int] [T,P]._f")}))));
+
+            Assert.AreEqual(0, actual.NumAsmFieldRead);
+            Assert.AreEqual(Sets.NewHashSet<IFieldName>(), actual.UniqueAsmFields);
+            Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
+        }
+
+        [Test]
+        public void ShouldNotCountUnknownFieldRefs()
+        {
+            var actual =
+                Extract(
+                    CreateContextWithSSTAndMethodBody(
+                        Stmt(RefExpr(new FieldReference {FieldName = Names.UnknownField}))));
 
             Assert.AreEqual(0, actual.NumAsmFieldRead);
             Assert.AreEqual(Sets.NewHashSet<IFieldName>(), actual.UniqueAsmFields);
@@ -509,6 +554,20 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     CreateContextWithSSTAndMethodBody(
                         Stmt(
                             RefExpr(new PropertyReference {PropertyName = Names.Property("get set [p:int] [T,P].P()")}))));
+
+            Assert.AreEqual(0, actual.NumAsmPropertyRead);
+            Assert.AreEqual(Sets.NewHashSet<IPropertyName>(), actual.UniqueAsmProperties);
+            Assert.AreEqual(Sets.NewHashSet<IAssemblyName>(), actual.UniqueAssemblies);
+        }
+
+        [Test]
+        public void ShouldNotCountUnknownPropertyRefs()
+        {
+            var actual =
+                Extract(
+                    CreateContextWithSSTAndMethodBody(
+                        Stmt(
+                            RefExpr(new PropertyReference {PropertyName = Names.UnknownProperty}))));
 
             Assert.AreEqual(0, actual.NumAsmPropertyRead);
             Assert.AreEqual(Sets.NewHashSet<IPropertyName>(), actual.UniqueAsmProperties);
