@@ -53,10 +53,27 @@ namespace KaVE.RS.SolutionAnalysis
             _logger.Info("");
             _logger.Info("###### Analyzing project '{0}'... ################################", project.Name);
 
-            var psiModules = _solution.PsiModules();
-            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default);
-            Asserts.NotNull(primaryPsiModule, "no psi module");
+            // the correct API usage for the following part is unclear at this point...
 
+            // problem: sometimes, the primary psi module is "null" for TargetFrameworkId.Default
+            // and, as a result, we need to code around that.
+
+            // the docu suggests that it is a bad practice to use this anyways, so we try a loop
+            // over all known ids (which also includes "default") and pick the first NonNull result
+            // Snother option that we have considered is going through all available PSI modules
+            // and pick the one that can be cast to an IProjectPSIModule
+
+            var psiModules = _solution.PsiModules();
+            IPsiModule primaryPsiModule = null;
+            foreach (var id in TargetFrameworkId.AllKnownIds)
+            {
+                primaryPsiModule = psiModules.GetPrimaryPsiModule(project, id);
+                if (primaryPsiModule != null)
+                {
+                    break;
+                }
+            }
+            Asserts.NotNull(primaryPsiModule, "ReSharper was unable to provide a valid PSI module");
             AnalyzePrimaryPsiModule(primaryPsiModule);
         }
 
