@@ -24,5 +24,6 @@ namespace KaVE.Commons.Model.Naming.CodeElements
         bool IsInit { get; }
         ITypeName ReturnType { get; }
         bool IsExtensionMethod { get; }
+        bool IsDelegateInvocation { get; }
     }
 }

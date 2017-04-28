@@ -34,7 +34,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
             {
                 return NameCache[t];
             }
-            UnknownName name = new UnknownName(t);
+            var name = new UnknownName(t);
             NameCache.Add(t, name);
             return name;
         }
@@ -413,5 +413,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         {
             get { return false; }
         }
+
+        public bool IsDelegateInvocation { get; private set; }
     }
 }

@@ -192,14 +192,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.IsTrue(new MethodName("[p:void] [D,P]..cinit()").IsInit);
         }
 
-        [ExpectedException(typeof(AssertException)), //
-         TestCase("[T,P] [D,P]..ctor()"), TestCase("[T,P] [D,P]..cctor()")
-        ]
+        [Ignore, ExpectedException(typeof(AssertException)), //
+         TestCase("[T,P] [D,P]..ctor()"), TestCase("[T,P] [D,P]..cctor()")]
         public void ShouldRejectNonVoidConstructors(string ctorId)
         {
-            Assert.Ignore();
             // ReSharper disable once ObjectCreationAsStatement
-            //new MethodName(ctorId);
+            new MethodName(ctorId);
         }
 
         [Test]
@@ -212,6 +210,15 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.CodeElements
             Assert.False(new MethodName("static [T,P] [T,P].M()").IsExtensionMethod);
             // no this modifier
             Assert.False(new MethodName("static [T,P] [T,P].M([T,P] o)").IsExtensionMethod);
+        }
+
+        [TestCase("[p:void] [T,P].M()", false), //regular
+         TestCase("[p:void] [d:[p:void] [D,P].()].M()", false), // wrong name
+         TestCase("[p:void] [T,P].Invoke()", false), // no delegate
+         TestCase("[p:void] [d:[p:void] [D,P].()].Invoke()", true)]
+        public void ShouldParseExtensionMethods(string id, bool isDelegateInvocation)
+        {
+            Assert.AreEqual(isDelegateInvocation, new MethodName(id).IsDelegateInvocation);
         }
 
         /* tests for utilities */

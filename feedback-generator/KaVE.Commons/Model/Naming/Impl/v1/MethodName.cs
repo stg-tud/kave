@@ -241,5 +241,7 @@ namespace KaVE.Commons.Model.Naming.Impl.v1
         {
             return (Identifier != null ? Identifier.GetHashCode() : 0);
         }
+
+        public bool IsDelegateInvocation { get; private set; }
     }
 }

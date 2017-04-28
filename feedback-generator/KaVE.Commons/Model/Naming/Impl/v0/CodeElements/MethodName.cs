@@ -145,5 +145,10 @@ namespace KaVE.Commons.Model.Naming.Impl.v0.CodeElements
         {
             get { return IsStatic && Parameters.Count > 0 && Parameters[0].IsExtensionMethodParameter; }
         }
+
+        public bool IsDelegateInvocation
+        {
+            get { return "Invoke".Equals(Name) && DeclaringType.IsDelegateType; }
+        }
     }
 }
