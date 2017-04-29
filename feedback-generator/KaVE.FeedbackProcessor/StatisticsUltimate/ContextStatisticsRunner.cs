@@ -27,6 +27,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
 
         private IContextStatistics _results;
+        private AssemblyCounter _asmCounter;
 
         public ContextStatisticsRunner(IPreprocessingIo io, IContextStatisticsLogger log, int numProcs)
             : base(io, log, numProcs)
@@ -38,11 +39,12 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public void Run()
         {
             _results = new ContextStatistics();
+            _asmCounter = new AssemblyCounter();
 
             FindZips();
             InParallel(CreateStatistics);
 
-            _log.Results(_results);
+            _log.Results(_results, _asmCounter.Counts);
         }
 
         private void CreateStatistics(int taskId)
@@ -72,6 +74,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             lock (_lock)
             {
                 _results.Add(stats);
+                _asmCounter.Count(stats.UniqueAssemblies);
             }
         }
     }

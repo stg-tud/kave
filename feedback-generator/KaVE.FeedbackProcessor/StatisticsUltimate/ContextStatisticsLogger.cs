@@ -15,19 +15,22 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using KaVE.Commons.Model.Naming.Types.Organization;
 
 namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
     public interface IContextStatisticsLogger : IStatisticsLogger
     {
-        void Results(IContextStatistics contextStatistics);
+        void Results(IContextStatistics contextStatistics, IDictionary<IAssemblyName, int> asmCounter);
     }
 
     public class ContextStatisticsLogger : StatisticsLoggerBase, IContextStatisticsLogger
     {
         [SuppressMessage("ReSharper", "LocalizableElement")]
-        public void Results(IContextStatistics stats)
+        public void Results(IContextStatistics stats, IDictionary<IAssemblyName, int> counts)
         {
             lock (Lock)
             {
@@ -51,7 +54,34 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 Console.WriteLine("NumTypeDecl = {0}", stats.NumNestedType + stats.NumTopLevelType);
                 Console.WriteLine("NumInvocationExpr = {0}", stats.NumUnknownInvocations + stats.NumValidInvocations);
                 Console.WriteLine(stats.ToString());
+
+                Console.WriteLine("\n## Histogram ##");
+                for (var i = 1; i < 20; i++)
+                {
+                    LogAsms(counts, i);
+                }
+                for (var i = 20; i < 60; i += 2)
+                {
+                    LogAsms(counts, i);
+                }
+                for (var i = 60; i <= 150; i += 10)
+                {
+                    LogAsms(counts, i);
+                }
+
+                Console.WriteLine("\n## Assembly Occurrences ##");
+                foreach (var asm in counts.OrderBy(p => p.Value).Reverse())
+                {
+                    Console.WriteLine("count({0}) = {1}", asm.Key, asm.Value);
+                }
             }
+        }
+
+        private void LogAsms(IDictionary<IAssemblyName, int> counts, int minNum)
+        {
+            var count = counts.Keys.Count(k => counts[k] >= minNum);
+            // ReSharper disable once LocalizableElement
+            Console.WriteLine("min({0}) = {1}", minNum, count);
         }
     }
 }

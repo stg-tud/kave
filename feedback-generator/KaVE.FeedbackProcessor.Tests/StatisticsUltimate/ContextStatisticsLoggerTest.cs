@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Naming;
+using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.FeedbackProcessor.StatisticsUltimate;
 using NUnit.Framework;
 
@@ -37,6 +39,13 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             sut.CreatingStats(1, "d.zip");
             sut.FinishedStatCreation(1);
             sut.FinishedStatCreation(2);
+
+
+            var counts = new Dictionary<IAssemblyName, int>();
+            counts[Names.Assembly("A,1.2.3.4")] = 1;
+            counts[Names.Assembly("B,1.2.3.4")] = 4;
+            counts[Names.Assembly("D,1.2.3.4")] = 3;
+            counts[Names.Assembly("C,1.2.3.4")] = 2;
 
             sut.Results(
                 new ContextStatistics
@@ -81,7 +90,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                         Names.Property("get set [p:double] [T,P].P3()"),
                         Names.Property("get set [p:double] [T,P].P4()")
                     }
-                });
+                },
+                counts);
         }
     }
 }
