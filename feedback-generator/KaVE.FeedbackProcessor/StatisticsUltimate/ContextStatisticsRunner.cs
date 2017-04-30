@@ -25,7 +25,6 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         private readonly IPreprocessingIo _io;
         private readonly IContextStatisticsLogger _log;
 
-
         private IContextStatistics _results;
         private AssemblyCounter _asmCounter;
 

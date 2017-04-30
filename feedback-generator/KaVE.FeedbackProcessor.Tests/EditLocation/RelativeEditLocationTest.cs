@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.TestUtils;
 using KaVE.FeedbackProcessor.EditLocation;
 using NUnit.Framework;
 
@@ -108,9 +107,10 @@ namespace KaVE.FeedbackProcessor.Tests.EditLocation
         #endregion
 
         [Test]
-        public void ToStringReflection()
+        public void ToStringImplementation()
         {
-            ToStringAssert.Reflection(new RelativeEditLocation());
+            var sut = new RelativeEditLocation {Location = 2, Size = 3};
+            Assert.AreEqual("RelativeEditLocation(2/3)", sut.ToString());
         }
     }
 }

@@ -48,7 +48,7 @@ namespace KaVE.FeedbackProcessor.EditLocation
 
         public override string ToString()
         {
-            return this.ToStringReflection();
+            return "{0}({1}/{2})".FormatEx(typeof(RelativeEditLocation).Name, Location, Size);
         }
     }
 }

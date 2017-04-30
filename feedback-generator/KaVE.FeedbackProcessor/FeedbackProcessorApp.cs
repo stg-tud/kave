@@ -75,7 +75,8 @@ namespace KaVE.FeedbackProcessor
 
         private static void RunEditLocationAnalysis()
         {
-            new EditLocationAnalysisRunner(DirEventsOut).Run();
+            var io = new PreprocessingIo(DirEventsOut, DirTmp, DirTmp);
+            new EditLocationAnalysisRunner(NumWorkers, io, new EditLocationAnalysisLogger()).Run();
         }
 
         private static void RunSSTTransformationComparison(string oldContexts, string newContexts)
