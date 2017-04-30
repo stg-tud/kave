@@ -37,6 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.EditLocation
             sut.CreatingStats(1, "d.zip");
 
             sut.IntermediateResults(
+                1,
                 new EditLocationResults
                 {
                     Zip = "a.zip",

@@ -61,7 +61,7 @@ namespace KaVE.FeedbackProcessor.EditLocation
                 lock (Lock)
                 {
                     _results.Add(res);
-                    _log.IntermediateResults(res);
+                    _log.IntermediateResults(taskId, res);
                 }
             }
 

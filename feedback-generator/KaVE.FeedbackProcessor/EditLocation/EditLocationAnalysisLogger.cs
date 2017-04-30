@@ -23,18 +23,18 @@ namespace KaVE.FeedbackProcessor.EditLocation
 {
     public interface IEditLocationAnalysisLogger : IStatisticsLogger
     {
-        void IntermediateResults(IEditLocationResults stats);
+        void IntermediateResults(int taskId, IEditLocationResults stats);
         void FinalResults(IEditLocationResults results);
     }
 
     [SuppressMessage("ReSharper", "LocalizableElement")]
     internal class EditLocationAnalysisLogger : StatisticsLoggerBase, IEditLocationAnalysisLogger
     {
-        public void IntermediateResults(IEditLocationResults res)
+        public void IntermediateResults(int taskId, IEditLocationResults res)
         {
             lock (Lock)
             {
-                Log("Intermediate Result:\n");
+                Log("({0}) Intermediate Result:\n", taskId);
                 LogRes(res);
             }
         }
@@ -106,7 +106,7 @@ namespace KaVE.FeedbackProcessor.EditLocation
             tmp.OtherEditLocations.Clear();
 
             Console.WriteLine("NumAppliedEditLocations = {0}", res.AppliedEditLocations.Count);
-            Console.WriteLine("OtherEditLocations = {0}", res.OtherEditLocations.Count);
+            Console.WriteLine("NumOtherEditLocations = {0}", res.OtherEditLocations.Count);
             Console.Write(tmp.ToString());
         }
 
