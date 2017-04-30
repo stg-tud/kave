@@ -71,7 +71,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         private void StoreResult(string zip, IContextStatistics stats)
         {
-            lock (_lock)
+            lock (Lock)
             {
                 _results.Add(stats);
                 _asmCounter.Count(stats.UniqueAssemblies);

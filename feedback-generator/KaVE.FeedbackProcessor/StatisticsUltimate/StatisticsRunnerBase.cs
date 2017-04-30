@@ -24,7 +24,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
     public class StatisticsRunnerBase
     {
-        protected readonly object _lock = new object();
+        protected readonly object Lock = new object();
 
         private readonly IPreprocessingIo _io;
         private readonly IStatisticsLogger _log;
@@ -63,7 +63,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         protected bool GetNextZip(out string zip)
         {
-            lock (_lock)
+            lock (Lock)
             {
                 if (_ids.Count > 0)
                 {

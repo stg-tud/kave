@@ -72,7 +72,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         private void StoreResult(string zip, InteractionStatistics stats)
         {
-            lock (_lock)
+            lock (Lock)
             {
                 _results[zip] = stats;
             }
