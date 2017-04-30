@@ -65,12 +65,12 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         //[TestCaseSource("FindSolutionFiles")]
         public void AnalyzeSolution(string testCaseLabel, string sln)
         {
-            PrintFreeMemoryAndCheckConsumption();
-
             if (SlnFinder.ShouldIgnore(sln))
             {
                 Assert.Ignore();
             }
+
+            PrintFreeMemoryAndCheckConsumption();
 
             _currentSolution = sln;
             _currentSolutionPath = SlnFinder.GetFullPath(_currentSolution);
@@ -105,6 +105,10 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
         private static void PrintFreeMemoryAndCheckConsumption()
         {
+            // the GC seems to have a significant effect on the overall memory consumption of the RS base test.
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
             using (var proc = Process.GetCurrentProcess())
             {
                 var sizeInByte = proc.VirtualMemorySize64;
