@@ -101,6 +101,9 @@
     <Compile Include="BaseEventMapper.cs" />
     <Compile Include="BaseEventProcessor.cs" />
     <Compile Include="DebuggingHacks\FailIdentifier.cs" />
+    <Compile Include="EditLocation\EditLocationAnalysisRunner.cs" />
+    <Compile Include="EditLocation\RelativeEditLocation.cs" />
+    <Compile Include="EditLocation\RelativeEditLocationAnalysis.cs" />
     <Compile Include="Naming\NameFixesIntegrationTest.cs" />
     <Compile Include="Preprocessing\Filters\ErrorAndInfoEventFilter.cs" />
     <Compile Include="Preprocessing\Logging\IdReaderLogger.cs" />

@@ -396,7 +396,6 @@
     <Compile Include="CompletionEventToMicroCommits\IoHelper.cs" />
     <Compile Include="CompletionEventToMicroCommits\MicroCommitGenerator.cs" />
     <Compile Include="CSharpVsFSharp\FileSetExtractionRunner.cs" />
-    <Compile Include="EditLocationRunner.cs" />
     <Compile Include="Episodes\Event.cs" />
     <Compile Include="Episodes\EventStreamGenerator.cs" />
     <Compile Include="EventsExportRunner.cs" />
@@ -406,8 +405,6 @@
     <Compile Include="NameGrabber.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RelativeEditLocation.cs" />
-    <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SanityCheck.cs" />
     <Compile Include="TypeShapeSolutionAnalysis.cs" />
     <Compile Include="ContextSolutionAnalysis.cs" />

@@ -16,7 +16,7 @@
 
 using KaVE.Commons.Utils;
 
-namespace KaVE.RS.SolutionAnalysis
+namespace KaVE.FeedbackProcessor.EditLocation
 {
     public class RelativeEditLocation
     {
@@ -42,7 +42,7 @@ namespace KaVE.RS.SolutionAnalysis
         {
             unchecked
             {
-                return 397 + (Size*397) ^ Location;
+                return 397 + (Size * 397) ^ Location;
             }
         }
 

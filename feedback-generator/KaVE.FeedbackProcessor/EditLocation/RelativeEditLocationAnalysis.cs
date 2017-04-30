@@ -20,7 +20,7 @@ using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.Statements;
 
-namespace KaVE.RS.SolutionAnalysis
+namespace KaVE.FeedbackProcessor.EditLocation
 {
     public class RelativeEditLocationAnalysis
     {

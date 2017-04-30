@@ -15,9 +15,10 @@
  */
 
 using KaVE.Commons.TestUtils;
+using KaVE.FeedbackProcessor.EditLocation;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests
+namespace KaVE.FeedbackProcessor.Tests.EditLocation
 {
     internal class RelativeEditLocationTest
     {

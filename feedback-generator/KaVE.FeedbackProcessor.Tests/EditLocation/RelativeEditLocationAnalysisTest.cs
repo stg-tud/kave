@@ -25,9 +25,10 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.EditLocation;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests
+namespace KaVE.FeedbackProcessor.Tests.EditLocation
 {
     internal class RelativeEditLocationAnalysisTest
     {
@@ -68,7 +69,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                     Expression = new CompletionExpression()
                 },
                 new ContinueStatement()
-                );
+            );
             AssertLocation(1, 2);
         }
 

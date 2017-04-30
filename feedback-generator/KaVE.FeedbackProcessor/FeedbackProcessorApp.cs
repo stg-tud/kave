@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.Threading;
 using KaVE.FeedbackProcessor.DebuggingHacks;
+using KaVE.FeedbackProcessor.EditLocation;
 using KaVE.FeedbackProcessor.Naming;
 using KaVE.FeedbackProcessor.Preprocessing;
 using KaVE.FeedbackProcessor.Preprocessing.Model;
@@ -63,12 +64,18 @@ namespace KaVE.FeedbackProcessor
             //RunPreprocessing();
             //RunWatchdogExport();
             //RunInteractionStatistics();
-            RunContextStatistics();
+            //RunContextStatistics();
+            RunEditLocationAnalysis();
             //RunSSTTransformationComparison(Root + @"Contexts-161031", Root + @"Contexts-170428");
 
             var endedAt = DateTime.Now;
             Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
             Console.ReadKey();
+        }
+
+        private static void RunEditLocationAnalysis()
+        {
+            new EditLocationAnalysisRunner(DirEventsOut).Run();
         }
 
         private static void RunSSTTransformationComparison(string oldContexts, string newContexts)

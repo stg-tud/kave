@@ -84,6 +84,9 @@
     <Compile Include="Activities\TestFixtures.cs" />
     <Compile Include="Activities\UpdateEventMapperTest.cs" />
     <Compile Include="Activities\WindowEventMapperTest.cs" />
+    <Compile Include="EditLocation\EditLocationAnalysisRunnerTest.cs" />
+    <Compile Include="EditLocation\RelativeEditLocationAnalysisTest.cs" />
+    <Compile Include="EditLocation\RelativeEditLocationTest.cs" />
     <Compile Include="Preprocessing\FileBasedPreprocessingTestBase.cs" />
     <Compile Include="Preprocessing\Filters\ErrorAndInfoEventFilterTest.cs" />
     <Compile Include="Preprocessing\GrouperTest.cs" />

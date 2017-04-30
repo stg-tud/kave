@@ -22,9 +22,9 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Histograms;
 using KaVE.Commons.Utils.IO.Archives;
 
-namespace KaVE.RS.SolutionAnalysis
+namespace KaVE.FeedbackProcessor.EditLocation
 {
-    internal class EditLocationRunner
+    internal class EditLocationAnalysisRunner
     {
         private readonly RelativeEditLocationAnalysis _locationAnalysis = new RelativeEditLocationAnalysis();
         private readonly string _root;
@@ -42,7 +42,7 @@ namespace KaVE.RS.SolutionAnalysis
         private readonly Histogram _histogram9 = new Histogram(9);
         private readonly MergingHistogram _histogram10P = new MergingHistogram(10);
 
-        public EditLocationRunner(string root)
+        public EditLocationAnalysisRunner(string root)
         {
             _root = root;
         }
@@ -64,12 +64,20 @@ namespace KaVE.RS.SolutionAnalysis
                 Log(@"- {0}", zip);
             }
 
-            int numTotal = zips.Count;
-            int numEvents = 0;
-            int numCompletionEvents = 0;
-            int numCompletionEventsApplied = 0;
-            int numHistoryTuples = 0;
-            int numCurrent = 1;
+            var numTotal = zips.Count;
+            var numEvents = 0;
+            var numCompletionEvents = 0;
+            var numCompletionEventsApplied = 0;
+            var numHistoryTuples = 0;
+            var numCurrent = 1;
+
+            Log("");
+            Log("symbols:");
+            Log("    . -- no completion event");
+            Log("    : -- no C# file");
+            Log("    o -- no edit location or empty method");
+            Log("    x -- sst with edit location in non-empty method");
+            Log("");
 
             foreach (var zip in zips)
             {
@@ -204,7 +212,7 @@ namespace KaVE.RS.SolutionAnalysis
             var valuesAbs = h.Values;
             foreach (var k in values.Keys)
             {
-                Console.WriteLine(@"{0}: {1,5:0.0}% ({2}x)", k, (values[k]*100), valuesAbs[k]);
+                Console.WriteLine(@"{0}: {1,5:0.0}% ({2}x)", k, (values[k] * 100), valuesAbs[k]);
             }
             Console.WriteLine();
         }
@@ -217,7 +225,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         public static string GetTemporaryDirectory()
         {
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempDirectory);
             return tempDirectory;
         }
