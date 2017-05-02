@@ -29,6 +29,7 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
         string GetFullPath_Merged(string relativeZipPath);
         string GetFullPath_Out(string relativeZipPath);
         void EnsureParentExists(string fullPath);
+        long GetSize_In(string zip);
     }
 
     public class PreprocessingIo : IPreprocessingIo
@@ -110,6 +111,15 @@ namespace KaVE.FeedbackProcessor.Preprocessing.Model
                 {
                     Directory.CreateDirectory(parent);
                 }
+            }
+        }
+
+        public long GetSize_In(string zip)
+        {
+            lock (_lock)
+            {
+                var path = GetFullPath_In(zip);
+                return new FileInfo(path).Length;
             }
         }
     }

@@ -134,5 +134,43 @@ namespace KaVE.FeedbackProcessor.Tests.Preprocessing.Model
             _sut.EnsureParentExists(file);
             Assert.IsTrue(Directory.Exists(parent));
         }
+
+        [Test]
+        public void Size_Empty()
+        {
+            var file = Path.Combine(RawDir, "a.zip");
+
+            File.Create(file).Close();
+            Assert.AreEqual(0, _sut.GetSize_In("a.zip"));
+        }
+
+        [Test]
+        public void Size_Small()
+        {
+            var file = Path.Combine(RawDir, "a.zip");
+
+            using (var fs = File.Create(file))
+            {
+                fs.WriteByte(0);
+            }
+
+            Assert.AreEqual(1, _sut.GetSize_In("a.zip"));
+        }
+
+        [Test]
+        public void Size_Large()
+        {
+            var file = Path.Combine(RawDir, "a.zip");
+
+            using (var fs = File.Create(file))
+            {
+                for (var i = 0; i < 1000; i++)
+                {
+                    fs.WriteByte(0);
+                }
+            }
+
+            Assert.AreEqual(1000, _sut.GetSize_In("a.zip"));
+        }
     }
 }
