@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Json;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.TestUtils.Utils
 {
@@ -32,8 +34,9 @@ namespace KaVE.Commons.TestUtils.Utils
 
         public string Root { get; private set; }
 
-        private readonly IDictionary<string, ISet<string>> _cache = new Dictionary<string, ISet<string>>();
+        private readonly IDictionary<string, IList<string>> _cache = new Dictionary<string, IList<string>>();
 
+        [NotNull]
         public IEnumerable<string> Solutions
         {
             get
@@ -51,14 +54,14 @@ namespace KaVE.Commons.TestUtils.Utils
                 }
                 else
                 {
-                    var slns = FindSolutions();
+                    var slns = _funFindSolution();
                     Write(slns, IndexFile);
                     return slns;
                 }
             }
         }
 
-        private void Write(ISet<string> slns, string file)
+        private void Write(IList<string> slns, string file)
         {
             _cache[file] = slns;
 
@@ -68,7 +71,7 @@ namespace KaVE.Commons.TestUtils.Utils
         }
 
 
-        private ISet<string> Read(string file)
+        private IList<string> Read(string file)
         {
             if (_cache.ContainsKey(file))
             {
@@ -78,10 +81,10 @@ namespace KaVE.Commons.TestUtils.Utils
             var fullPath = GetFullPath(file);
             if (!File.Exists(fullPath))
             {
-                return new HashSet<string>();
+                return new List<string>();
             }
             var json = File.ReadAllText(fullPath);
-            return json.ParseJsonTo<HashSet<string>>();
+            return json.ParseJsonTo<List<string>>();
         }
 
         private bool HasIndex()
@@ -89,17 +92,44 @@ namespace KaVE.Commons.TestUtils.Utils
             return File.Exists(GetFullPath(IndexFile));
         }
 
-        private ISet<string> FindSolutions()
+        private readonly Func<IList<string>> _funFindSolution;
+
+        private IList<string> FindSolutions_OrderedAlphabetically()
         {
             var all = Directory.GetFiles(Root, "*.sln", SearchOption.AllDirectories);
             var filtered = all.Where(sln => !sln.Contains(@"\test\data\"));
             var shortened = filtered.Select(sln => sln.Substring(Root.Length));
             var ordered = shortened.OrderBy(sln => sln);
-            return Sets.NewHashSetFrom(ordered);
+            return Lists.NewListFrom(ordered.Distinct());
         }
 
-        public SolutionFinder(string root)
+        private IList<string> FindSolutions_Random()
         {
+            var rng = new Random(DateTime.Now.GetHashCode());
+            var slns = FindSolutions_OrderedAlphabetically();
+            var oslns = slns.OrderBy(sln => rng.Next());
+            return Lists.NewListFrom(oslns);
+        }
+
+        /// <summary>
+        ///     be aware that the order parameter is ignored if an index already exists
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="orderBy"></param>
+        public SolutionFinder(string root, OrderBy orderBy)
+        {
+            switch (orderBy)
+            {
+                case OrderBy.Alphabetical:
+                    _funFindSolution = FindSolutions_OrderedAlphabetically;
+                    break;
+                case OrderBy.Random:
+                    _funFindSolution = FindSolutions_Random;
+                    break;
+                default:
+                    Asserts.Fail("not implemented");
+                    break;
+            }
             if (!root.EndsWith("\\"))
             {
                 root += "\\";
@@ -166,5 +196,11 @@ namespace KaVE.Commons.TestUtils.Utils
                 yield return new[] {label, sln};
             }
         }
+    }
+
+    public enum OrderBy
+    {
+        Alphabetical,
+        Random
     }
 }

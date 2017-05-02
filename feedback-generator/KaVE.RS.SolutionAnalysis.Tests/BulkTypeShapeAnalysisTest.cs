@@ -62,7 +62,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             // set field here to prevent initialization error when path is not found
             if (_slnFinder == null)
             {
-                _slnFinder = new SolutionFinder(RepositoryRoot);
+                _slnFinder = new SolutionFinder(RepositoryRoot, OrderBy.Alphabetical);
             }
             return _slnFinder.GetTestData();
         }
@@ -108,7 +108,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             using (var proc = Process.GetCurrentProcess())
             {
                 var sizeInByte = proc.VirtualMemorySize64;
-                var sizeInMB = sizeInByte/(1024.0*1024.0);
+                var sizeInMB = sizeInByte / (1024.0 * 1024.0);
 
                 Console.WriteLine("Current memory consumption: {0:#,0.00}MB (VirtualMemorySize64)", sizeInMB);
                 if (sizeInMB > 1700)

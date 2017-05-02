@@ -16,6 +16,8 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Json;
@@ -32,7 +34,7 @@ namespace KaVE.Commons.TestUtils.Utils
         public void Setup()
         {
             _dir = CreateTempDir();
-            _sut = new SolutionFinder(_dir);
+            _sut = new SolutionFinder(_dir, OrderBy.Alphabetical);
         }
 
         [TearDown]
@@ -54,21 +56,39 @@ namespace KaVE.Commons.TestUtils.Utils
         [Test, ExpectedException(typeof(AssertException))]
         public void PathDoesNotExist()
         {
-            _sut = new SolutionFinder("C:\\doesNotExist\\");
+            _sut = new SolutionFinder("C:\\doesNotExist\\", OrderBy.Alphabetical);
         }
 
         [Test]
         public void TrailingSlashIsCorrected()
         {
-            _sut = new SolutionFinder("C:\\Windows");
+            _sut = new SolutionFinder("C:\\Windows", OrderBy.Alphabetical);
             Assert.IsTrue(_sut.Root.EndsWith("\\"));
         }
 
         [Test]
-        public void FindsSolutions()
+        public void FindsSolutions_Alphabetically()
         {
-            CreateSolutions("a.sln", "b\\c.sln");
-            Assert.AreEqual(Lists.NewList("a.sln", "b\\c.sln"), _sut.Solutions);
+            CreateSolutions("a.sln", "d.sln", "b\\c.sln");
+            Assert.AreEqual(Lists.NewList("a.sln", "b\\c.sln", "d.sln"), _sut.Solutions);
+        }
+
+        [Test]
+        public void FindsSolutions_Random()
+        {
+            _sut = new SolutionFinder(_dir, OrderBy.Random);
+
+            var alphabetical = Lists.NewList<string>();
+            for (var i = 0; i < 30; i++)
+            {
+                var sln = "S{0:0000}.sln".FormatEx(i);
+                CreateSolution(sln);
+                alphabetical.Add(sln);
+            }
+
+            var actual = _sut.Solutions.ToArray();
+            CollectionAssert.AreNotEqual(alphabetical, actual);
+            CollectionAssert.AreEquivalent(alphabetical, actual);
         }
 
         [Test]
@@ -334,12 +354,17 @@ namespace KaVE.Commons.TestUtils.Utils
         {
             foreach (var sln in slns)
             {
-                var fullPath = PathOf(sln);
-                var slnDir = Path.GetDirectoryName(fullPath);
-                Asserts.NotNull(slnDir);
-                Directory.CreateDirectory(slnDir);
-                File.Create(fullPath).Close();
+                CreateSolution(sln);
             }
+        }
+
+        private void CreateSolution(string sln)
+        {
+            var fullPath = PathOf(sln);
+            var slnDir = Path.GetDirectoryName(fullPath);
+            Asserts.NotNull(slnDir);
+            Directory.CreateDirectory(slnDir);
+            File.Create(fullPath).Close();
         }
 
         private string PathOf(string file)
