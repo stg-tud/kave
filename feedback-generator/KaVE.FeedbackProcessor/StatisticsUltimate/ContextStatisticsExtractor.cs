@@ -43,6 +43,10 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         private void Extract(Context ctx, ContextStatistics stats)
         {
             var type = ctx.SST.EnclosingType;
+            if (ctx.SST.IsPartialClass)
+            {
+                stats.NumPartial++;
+            }
             ExtractTypeStats(stats, type);
 
             var th = ctx.TypeShape.TypeHierarchy;

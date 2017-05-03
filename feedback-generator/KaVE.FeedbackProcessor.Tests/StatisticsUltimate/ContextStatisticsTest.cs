@@ -40,6 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumTypeDeclTotal);
             Assert.AreEqual(0, sut.NumTypeDeclTopLevel);
             Assert.AreEqual(0, sut.NumTypeDeclNested);
+            Assert.AreEqual(0, sut.NumPartial);
             Assert.AreEqual(Sets.NewHashSet<ITypeName>(), sut.UniqueTypeDecl);
 
             Assert.AreEqual(0, sut.NumClasses);
@@ -83,6 +84,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
                 UniqueTypeDecl = {Names.Type("T,P")},
+                NumPartial = 20,
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -112,6 +114,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(9, sut.NumTypeDeclTotal);
             Assert.AreEqual(4, sut.NumTypeDeclTopLevel);
             Assert.AreEqual(5, sut.NumTypeDeclNested);
+            Assert.AreEqual(20, sut.NumPartial);
             Assert.AreEqual(Sets.NewHashSet(Names.Type("T,P")), sut.UniqueTypeDecl);
 
             Assert.AreEqual(6, sut.NumClasses);
@@ -170,6 +173,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
                 UniqueTypeDecl = {Names.Type("T,P")},
+                NumPartial = 20,
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -198,6 +202,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
                 UniqueTypeDecl = {Names.Type("T,P")},
+                NumPartial = 20,
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -299,6 +304,18 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             var a = new ContextStatistics
             {
                 UniqueTypeDecl = {Names.Type("T,P")}
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentNumPartial()
+        {
+            var a = new ContextStatistics
+            {
+                NumPartial = 20
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -545,6 +562,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
                 UniqueTypeDecl = {Names.Type("T,P")},
+                NumPartial = 20,
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -575,6 +593,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumTypeDeclTopLevel = 4 + 1,
                     NumTypeDeclNested = 5 + 1,
                     UniqueTypeDecl = {Names.Type("T2,P")},
+                    NumPartial = 20 + 1,
                     NumClasses = 6 + 1,
                     NumInterfaces = 7 + 1,
                     NumDelegates = 8 + 1,
@@ -605,6 +624,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclTopLevel = 4 * 2 + 1,
                 NumTypeDeclNested = 5 * 2 + 1,
                 UniqueTypeDecl = {Names.Type("T,P"), Names.Type("T2,P")},
+                NumPartial = 2 * 20 + 1,
                 NumClasses = 6 * 2 + 1,
                 NumInterfaces = 7 * 2 + 1,
                 NumDelegates = 8 * 2 + 1,

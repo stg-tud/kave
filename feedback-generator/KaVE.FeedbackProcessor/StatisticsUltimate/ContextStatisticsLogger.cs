@@ -38,6 +38,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
                 Console.WriteLine();
                 Console.WriteLine();
+                Console.WriteLine("UniqueTypeDecl.Count: {0}", stats.UniqueTypeDecl.Count);
                 Console.WriteLine("UniqueAssemblies.Count: {0}", stats.UniqueAssemblies.Count);
                 Console.WriteLine("UniqueAsmMethods.Count: {0}", stats.UniqueAsmMethods.Count);
                 Console.WriteLine("UniqueAsmFields.Count: {0}", stats.UniqueAsmFields.Count);
@@ -46,13 +47,17 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 Console.WriteLine("(clearing sets now ...)");
                 Console.WriteLine();
 
+                stats.UniqueTypeDecl.Clear();
                 stats.UniqueAssemblies.Clear();
                 stats.UniqueAsmMethods.Clear();
                 stats.UniqueAsmFields.Clear();
                 stats.UniqueAsmProperties.Clear();
 
-                Console.WriteLine("NumTypeDecl = {0}", stats.NumTypeDeclNested + stats.NumTypeDeclTopLevel);
-                Console.WriteLine("NumInvocationExpr = {0}", stats.NumUnknownInvocations + stats.NumValidInvocations);
+                // getter-only is not printed.
+                Console.WriteLine("NumTypeDeclTotal = {0}", stats.NumTypeDeclTotal);
+                Console.WriteLine(
+                    "NumInvocationExprTotal = {0}",
+                    stats.NumUnknownInvocations + stats.NumValidInvocations);
                 Console.WriteLine(stats.ToString());
 
                 Console.WriteLine("\n## Histogram ##");

@@ -101,6 +101,42 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                 });
             Assert.AreEqual(3, actual.NumTypeDeclTotal);
             Assert.AreEqual(Sets.NewHashSet(Names.Type("C1,P"), Names.Type("C2,P")), actual.UniqueTypeDecl);
+            Assert.AreEqual(0, actual.NumPartial);
+        }
+
+        [Test]
+        public void CountsPartialTypeDecls()
+        {
+            var actual = Sut.Extract(
+                new[]
+                {
+                    new Context
+                    {
+                        SST = new SST
+                        {
+                            EnclosingType = Names.Type("C1,P")
+                        }
+                    },
+                    new Context
+                    {
+                        SST = new SST
+                        {
+                            EnclosingType = Names.Type("C2,P"),
+                            PartialClassIdentifier = "x"
+                        }
+                    },
+                    new Context
+                    {
+                        SST = new SST
+                        {
+                            EnclosingType = Names.Type("C2,P"),
+                            PartialClassIdentifier = "y"
+                        }
+                    }
+                });
+            Assert.AreEqual(3, actual.NumTypeDeclTotal);
+            Assert.AreEqual(Sets.NewHashSet(Names.Type("C1,P"), Names.Type("C2,P")), actual.UniqueTypeDecl);
+            Assert.AreEqual(2, actual.NumPartial);
         }
 
         [TestCase("C,P"), TestCase("i:I,P"), TestCase("s:S,P"), TestCase("e:E,P"), TestCase("d:[p:void] [D,P].()")]

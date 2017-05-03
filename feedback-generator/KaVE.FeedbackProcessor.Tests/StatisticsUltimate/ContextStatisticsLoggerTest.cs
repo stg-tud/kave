@@ -56,6 +56,15 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     EstimatedLinesOfCode = 31,
                     NumTypeDeclTopLevel = 4,
                     NumTypeDeclNested = 5,
+                    UniqueTypeDecl =
+                    {
+                        Names.Type("T1,P"),
+                        Names.Type("T2,P"),
+                        Names.Type("T3,P"),
+                        Names.Type("T4,P"),
+                        Names.Type("T5,P")
+                    },
+                    NumPartial = 20,
                     NumClasses = 6,
                     NumInterfaces = 7,
                     NumDelegates = 8,

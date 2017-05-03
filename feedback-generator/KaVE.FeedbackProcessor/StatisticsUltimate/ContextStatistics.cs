@@ -38,6 +38,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         [NotNull]
         IKaVESet<ITypeName> UniqueTypeDecl { get; }
 
+        int NumPartial { get; }
+
         int NumClasses { get; }
         int NumInterfaces { get; }
         int NumDelegates { get; }
@@ -90,6 +92,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         public IKaVESet<ITypeName> UniqueTypeDecl { get; set; }
 
+        public int NumPartial { get; set; }
+
         public int NumClasses { get; set; }
         public int NumInterfaces { get; set; }
         public int NumDelegates { get; set; }
@@ -129,6 +133,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             EstimatedLinesOfCode += stats.EstimatedLinesOfCode;
             NumTypeDeclTopLevel += stats.NumTypeDeclTopLevel;
             NumTypeDeclNested += stats.NumTypeDeclNested;
+            NumPartial += stats.NumPartial;
             NumClasses += stats.NumClasses;
             NumInterfaces += stats.NumInterfaces;
             NumDelegates += stats.NumDelegates;
@@ -162,7 +167,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             return NumRepositories == other.NumRepositories && NumUsers == other.NumUsers &&
                    NumSolutions == other.NumSolutions && EstimatedLinesOfCode == other.EstimatedLinesOfCode &&
                    NumTypeDeclTopLevel == other.NumTypeDeclTopLevel && NumTypeDeclNested == other.NumTypeDeclNested &&
-                   NumClasses == other.NumClasses && NumInterfaces == other.NumInterfaces &&
+                   NumPartial == other.NumPartial && NumClasses == other.NumClasses &&
+                   NumInterfaces == other.NumInterfaces &&
                    NumDelegates == other.NumDelegates && NumStructs == other.NumStructs && NumEnums == other.NumEnums &&
                    NumUnusualType == other.NumUnusualType &&
                    NumTypeDeclExtendsOrImplements == other.NumTypeDeclExtendsOrImplements &&
@@ -189,6 +195,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 hashCode = (hashCode * 397) ^ EstimatedLinesOfCode;
                 hashCode = (hashCode * 397) ^ NumTypeDeclTopLevel;
                 hashCode = (hashCode * 397) ^ NumTypeDeclNested;
+                hashCode = (hashCode * 397) ^ NumPartial;
                 hashCode = (hashCode * 397) ^ NumClasses;
                 hashCode = (hashCode * 397) ^ NumInterfaces;
                 hashCode = (hashCode * 397) ^ NumDelegates;
