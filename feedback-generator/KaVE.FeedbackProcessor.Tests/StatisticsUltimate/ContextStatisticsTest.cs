@@ -36,6 +36,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumSolutions);
             Assert.AreEqual(0, sut.EstimatedLinesOfCode);
 
+            Assert.AreEqual(0, sut.NumTypeDeclTotal);
             Assert.AreEqual(0, sut.NumTypeDeclTopLevel);
             Assert.AreEqual(0, sut.NumTypeDeclNested);
 
@@ -105,6 +106,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(3, sut.NumSolutions);
             Assert.AreEqual(31, sut.EstimatedLinesOfCode);
 
+            Assert.AreEqual(9, sut.NumTypeDeclTotal);
             Assert.AreEqual(4, sut.NumTypeDeclTopLevel);
             Assert.AreEqual(5, sut.NumTypeDeclNested);
 

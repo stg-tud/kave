@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -29,8 +30,12 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         int NumSolutions { get; }
         int EstimatedLinesOfCode { get; }
 
+        int NumTypeDeclTotal { get; }
         int NumTypeDeclTopLevel { get; }
         int NumTypeDeclNested { get; }
+
+        [NotNull]
+        IKaVESet<ITypeName> UniqueTypeDecl { get; }
 
         int NumClasses { get; }
         int NumInterfaces { get; }
@@ -75,8 +80,15 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public int NumSolutions { get; set; }
         public int EstimatedLinesOfCode { get; set; }
 
+        public int NumTypeDeclTotal
+        {
+            get { return NumTypeDeclTopLevel + NumTypeDeclNested; }
+        }
+
         public int NumTypeDeclTopLevel { get; set; }
         public int NumTypeDeclNested { get; set; }
+
+        public IKaVESet<ITypeName> UniqueTypeDecl { get; set; }
 
         public int NumClasses { get; set; }
         public int NumInterfaces { get; set; }
