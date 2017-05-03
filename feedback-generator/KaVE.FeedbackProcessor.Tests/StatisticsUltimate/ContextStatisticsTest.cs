@@ -53,6 +53,9 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumTypeDeclExtendsOrImplements);
             Assert.AreEqual(0, sut.NumMethodDeclsTotal);
             Assert.AreEqual(0, sut.NumMethodDeclsOverrideOrImplement);
+            Assert.AreEqual(0, sut.NumMethodDeclsOverrideOrImplementAsm);
+            Assert.AreEqual(Sets.NewHashSet<IMethodName>(), sut.UniqueMethodDeclsOverrideOrImplementAsm);
+
             Assert.AreEqual(0, sut.NumValidInvocations);
             Assert.AreEqual(0, sut.NumUnknownInvocations);
 
@@ -94,6 +97,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
+                NumMethodDeclsOverrideOrImplementAsm = 21,
+                UniqueMethodDeclsOverrideOrImplementAsm = {Names.Method("[p:bool] [T,P].O1()")},
                 NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -127,6 +132,11 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(11, sut.NumTypeDeclExtendsOrImplements);
             Assert.AreEqual(12, sut.NumMethodDeclsTotal);
             Assert.AreEqual(13, sut.NumMethodDeclsOverrideOrImplement);
+            Assert.AreEqual(21, sut.NumMethodDeclsOverrideOrImplementAsm);
+            Assert.AreEqual(
+                Sets.NewHashSet(Names.Method("[p:bool] [T,P].O1()")),
+                sut.UniqueMethodDeclsOverrideOrImplementAsm);
+
             Assert.AreEqual(1311, sut.NumValidInvocations);
             Assert.AreEqual(131, sut.NumUnknownInvocations);
 
@@ -183,6 +193,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
+                NumMethodDeclsOverrideOrImplementAsm = 21,
+                UniqueMethodDeclsOverrideOrImplementAsm = {Names.Method("[p:bool] [T,P].O1()")},
                 NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -212,6 +224,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
+                NumMethodDeclsOverrideOrImplementAsm = 21,
+                UniqueMethodDeclsOverrideOrImplementAsm = {Names.Method("[p:bool] [T,P].O1()")},
                 NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -431,6 +445,30 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         }
 
         [Test]
+        public void Equality_DifferentNumMethodDeclsOverrideOrImplementAsm()
+        {
+            var a = new ContextStatistics
+            {
+                NumMethodDeclsOverrideOrImplementAsm = 21
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentUniqueMethodDeclsOverrideOrImplementAsm()
+        {
+            var a = new ContextStatistics
+            {
+                UniqueMethodDeclsOverrideOrImplementAsm = {Names.Method("[p:bool] [T,P].O1()")}
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void Equality_DifferentNumTotalRegularInvocations()
         {
             var a = new ContextStatistics
@@ -572,6 +610,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
+                NumMethodDeclsOverrideOrImplementAsm = 121,
+                UniqueMethodDeclsOverrideOrImplementAsm = {Names.Method("[p:bool] [T,P].O1()")},
                 NumValidInvocations = 1311,
                 NumUnknownInvocations = 131,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4")},
@@ -603,6 +643,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumTypeDeclExtendsOrImplements = 11 + 1,
                     NumMethodDeclsTotal = 12 + 1,
                     NumMethodDeclsOverrideOrImplement = 13 + 1,
+                    NumMethodDeclsOverrideOrImplementAsm = 122,
+                    UniqueMethodDeclsOverrideOrImplementAsm = {Names.Method("[p:bool] [T,P].O2()")},
                     NumValidInvocations = 1311 + 1,
                     NumUnknownInvocations = 131 + 1,
                     UniqueAssemblies = {Names.Assembly("B,1.2.3.4")},
@@ -634,6 +676,12 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumTypeDeclExtendsOrImplements = 11 * 2 + 1,
                 NumMethodDeclsTotal = 12 * 2 + 1,
                 NumMethodDeclsOverrideOrImplement = 13 * 2 + 1,
+                NumMethodDeclsOverrideOrImplementAsm = 121 * 2 + 1,
+                UniqueMethodDeclsOverrideOrImplementAsm =
+                {
+                    Names.Method("[p:bool] [T,P].O1()"),
+                    Names.Method("[p:bool] [T,P].O2()")
+                },
                 NumValidInvocations = 2 * 1311 + 1,
                 NumUnknownInvocations = 2 * 131 + 1,
                 UniqueAssemblies = {Names.Assembly("A,1.2.3.4"), Names.Assembly("B,1.2.3.4")},

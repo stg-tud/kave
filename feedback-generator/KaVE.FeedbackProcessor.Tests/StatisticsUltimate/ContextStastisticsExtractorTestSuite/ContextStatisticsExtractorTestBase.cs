@@ -26,6 +26,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.StatisticsUltimate;
 using NUnit.Framework;
@@ -97,6 +98,36 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                             Name = Names.Method("[p:void] [T,P].M()"),
                             Body = Lists.NewListFrom(stmts)
                         }
+                    }
+                }
+            };
+        }
+
+        protected static Context CreateContextWithMethodDeclarationAndHierarchy(string elemId,
+            string superId,
+            string firstId)
+        {
+            var mh = new MethodHierarchy
+            {
+                Element = Names.Method(elemId)
+            };
+            if (superId != null)
+            {
+                mh.Super = Names.Method(superId);
+            }
+            if (firstId != null)
+            {
+                mh.First = Names.Method(firstId);
+            }
+            return new Context
+            {
+                TypeShape = new TypeShape {MethodHierarchies = {mh}},
+                SST = new SST
+                {
+                    EnclosingType = Names.Type("C,P"),
+                    Methods =
+                    {
+                        new MethodDeclaration {Name = Names.Method(elemId)}
                     }
                 }
             };

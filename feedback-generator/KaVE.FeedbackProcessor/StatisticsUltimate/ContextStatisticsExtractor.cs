@@ -59,16 +59,26 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             {
                 stats.NumMethodDeclsTotal++;
                 var overridden = false;
+                var overriddenAsm = false;
                 foreach (var mh in ctx.TypeShape.MethodHierarchies)
                 {
-                    if (md.Name.Equals(mh.Element) && (mh.Super != null || mh.First != null))
+                    if (md.Name.Equals(mh.Element))
                     {
-                        overridden = true;
+                        overridden = mh.Super != null || mh.First != null;
+
+                        var isOverridingSuperAsm = mh.Super != null && !mh.Super.DeclaringType.Assembly.IsLocalProject;
+                        var isOverridingFirstAsm = mh.First != null && !mh.First.DeclaringType.Assembly.IsLocalProject;
+                        overriddenAsm = isOverridingSuperAsm || isOverridingFirstAsm;
                     }
                 }
                 if (overridden)
                 {
                     stats.NumMethodDeclsOverrideOrImplement++;
+                }
+                if (overriddenAsm)
+                {
+                    stats.NumMethodDeclsOverrideOrImplementAsm++;
+                    stats.UniqueMethodDeclsOverrideOrImplementAsm.Add(md.Name);
                 }
             }
 

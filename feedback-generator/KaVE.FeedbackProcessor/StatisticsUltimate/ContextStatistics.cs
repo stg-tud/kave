@@ -49,6 +49,11 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         int NumMethodDeclsTotal { get; }
         int NumMethodDeclsOverrideOrImplement { get; }
+        int NumMethodDeclsOverrideOrImplementAsm { get; }
+
+        [NotNull]
+        IKaVESet<IMethodName> UniqueMethodDeclsOverrideOrImplementAsm { get; set; }
+
         int NumValidInvocations { get; }
         int NumUnknownInvocations { get; }
 
@@ -104,6 +109,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         public int NumMethodDeclsTotal { get; set; }
         public int NumMethodDeclsOverrideOrImplement { get; set; }
+        public int NumMethodDeclsOverrideOrImplementAsm { get; set; }
+        public IKaVESet<IMethodName> UniqueMethodDeclsOverrideOrImplementAsm { get; set; }
         public int NumValidInvocations { get; set; }
         public int NumUnknownInvocations { get; set; }
 
@@ -119,6 +126,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public ContextStatistics()
         {
             UniqueTypeDecl = Sets.NewHashSet<ITypeName>();
+            UniqueMethodDeclsOverrideOrImplementAsm = Sets.NewHashSet<IMethodName>();
             UniqueAssemblies = Sets.NewHashSet<IAssemblyName>();
             UniqueAsmMethods = Sets.NewHashSet<IMethodName>();
             UniqueAsmFields = Sets.NewHashSet<IFieldName>();
@@ -143,6 +151,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             NumTypeDeclExtendsOrImplements += stats.NumTypeDeclExtendsOrImplements;
             NumMethodDeclsTotal += stats.NumMethodDeclsTotal;
             NumMethodDeclsOverrideOrImplement += stats.NumMethodDeclsOverrideOrImplement;
+            NumMethodDeclsOverrideOrImplementAsm += stats.NumMethodDeclsOverrideOrImplementAsm;
             NumValidInvocations += stats.NumValidInvocations;
             NumUnknownInvocations += stats.NumUnknownInvocations;
             NumAsmCalls += stats.NumAsmCalls;
@@ -151,6 +160,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             NumAsmPropertyRead += stats.NumAsmPropertyRead;
 
             UniqueTypeDecl.AddAll(stats.UniqueTypeDecl);
+            UniqueMethodDeclsOverrideOrImplementAsm.AddAll(stats.UniqueMethodDeclsOverrideOrImplementAsm);
             UniqueAssemblies.AddAll(stats.UniqueAssemblies);
             UniqueAsmMethods.AddAll(stats.UniqueAsmMethods);
             UniqueAsmFields.AddAll(stats.UniqueAsmFields);
@@ -174,11 +184,13 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                    NumTypeDeclExtendsOrImplements == other.NumTypeDeclExtendsOrImplements &&
                    NumMethodDeclsTotal == other.NumMethodDeclsTotal &&
                    NumMethodDeclsOverrideOrImplement == other.NumMethodDeclsOverrideOrImplement &&
+                   NumMethodDeclsOverrideOrImplementAsm == other.NumMethodDeclsOverrideOrImplementAsm &&
                    NumValidInvocations == other.NumValidInvocations &&
                    NumUnknownInvocations == other.NumUnknownInvocations &&
                    UniqueAssemblies.Equals(other.UniqueAssemblies) && NumAsmCalls == other.NumAsmCalls &&
                    NumAsmDelegateCalls == other.NumAsmDelegateCalls && UniqueTypeDecl.Equals(other.UniqueTypeDecl) &&
                    UniqueAsmMethods.Equals(other.UniqueAsmMethods) &&
+                   UniqueMethodDeclsOverrideOrImplementAsm.Equals(other.UniqueMethodDeclsOverrideOrImplementAsm) &&
                    NumAsmFieldRead == other.NumAsmFieldRead && UniqueAsmFields.Equals(other.UniqueAsmFields) &&
                    NumAsmPropertyRead == other.NumAsmPropertyRead &&
                    UniqueAsmProperties.Equals(other.UniqueAsmProperties);
@@ -205,6 +217,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 hashCode = (hashCode * 397) ^ NumTypeDeclExtendsOrImplements;
                 hashCode = (hashCode * 397) ^ NumMethodDeclsTotal;
                 hashCode = (hashCode * 397) ^ NumMethodDeclsOverrideOrImplement;
+                hashCode = (hashCode * 397) ^ NumMethodDeclsOverrideOrImplementAsm;
+                hashCode = (hashCode * 397) ^ UniqueMethodDeclsOverrideOrImplementAsm.GetHashCode();
                 hashCode = (hashCode * 397) ^ NumValidInvocations;
                 hashCode = (hashCode * 397) ^ NumUnknownInvocations;
                 hashCode = (hashCode * 397) ^ UniqueTypeDecl.GetHashCode();

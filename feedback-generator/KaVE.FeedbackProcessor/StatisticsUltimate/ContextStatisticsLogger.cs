@@ -39,6 +39,9 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("UniqueTypeDecl.Count: {0}", stats.UniqueTypeDecl.Count);
+                Console.WriteLine(
+                    "UniqueMethodDeclsOverrideOrImplementAsm.Count: {0}",
+                    stats.UniqueMethodDeclsOverrideOrImplementAsm.Count);
                 Console.WriteLine("UniqueAssemblies.Count: {0}", stats.UniqueAssemblies.Count);
                 Console.WriteLine("UniqueAsmMethods.Count: {0}", stats.UniqueAsmMethods.Count);
                 Console.WriteLine("UniqueAsmFields.Count: {0}", stats.UniqueAsmFields.Count);
@@ -48,6 +51,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 Console.WriteLine();
 
                 stats.UniqueTypeDecl.Clear();
+                stats.UniqueMethodDeclsOverrideOrImplementAsm.Clear();
                 stats.UniqueAssemblies.Clear();
                 stats.UniqueAsmMethods.Clear();
                 stats.UniqueAsmFields.Clear();

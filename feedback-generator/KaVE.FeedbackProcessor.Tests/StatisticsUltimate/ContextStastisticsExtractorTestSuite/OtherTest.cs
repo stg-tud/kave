@@ -361,64 +361,70 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
         public void ShouldCountMethodHierarchies()
         {
             var actual = Extract(
-                new Context
-                {
-                    SST = new SST
-                    {
-                        EnclosingType = Names.Type("C,P"),
-                        Methods =
-                        {
-                            new MethodDeclaration {Name = Names.Method("[p:void] [T,P].M()")}
-                        }
-                    }
-                },
-                new Context
-                {
-                    TypeShape = new TypeShape
-                    {
-                        MethodHierarchies =
-                        {
-                            new MethodHierarchy
-                            {
-                                Element = Names.Method("[p:void] [T,P].M()"),
-                                Super = Names.Method("[p:void] [S,P].M()")
-                            }
-                        }
-                    },
-                    SST = new SST
-                    {
-                        EnclosingType = Names.Type("C,P"),
-                        Methods =
-                        {
-                            new MethodDeclaration {Name = Names.Method("[p:void] [T,P].M()")}
-                        }
-                    }
-                },
-                new Context
-                {
-                    TypeShape = new TypeShape
-                    {
-                        MethodHierarchies =
-                        {
-                            new MethodHierarchy
-                            {
-                                Element = Names.Method("[p:void] [T,P].M()"),
-                                First = Names.Method("[p:void] [F,P].M()")
-                            }
-                        }
-                    },
-                    SST = new SST
-                    {
-                        EnclosingType = Names.Type("C,P"),
-                        Methods =
-                        {
-                            new MethodDeclaration {Name = Names.Method("[p:void] [T,P].M()")}
-                        }
-                    }
-                });
+                CreateContextWithMethodDeclarationAndHierarchy("[p:void] [T,P].M()", null, null),
+                CreateContextWithMethodDeclarationAndHierarchy("[p:void] [T,P].M()", "[p:void] [S,P].M()", null),
+                CreateContextWithMethodDeclarationAndHierarchy("[p:void] [T,P].M()", null, "[p:void] [F,P].M()"),
+                CreateContextWithMethodDeclarationAndHierarchy(
+                    "[p:void] [T,P].M()",
+                    "[p:void] [S,Asm,1.2.3.4].M()",
+                    null),
+                CreateContextWithMethodDeclarationAndHierarchy(
+                    "[p:void] [T,P].M()",
+                    null,
+                    "[p:void] [F,Asm,1.2.3.4].M()")
+            );
 
-            Assert.AreEqual(3, actual.NumMethodDeclsTotal);
-            Assert.AreEqual(2, actual.NumMethodDeclsOverrideOrImplement);
+            Assert.AreEqual(5, actual.NumMethodDeclsTotal);
+            Assert.AreEqual(4, actual.NumMethodDeclsOverrideOrImplement);
+            Assert.AreEqual(2, actual.NumMethodDeclsOverrideOrImplementAsm);
+        }
+
+        [Test]
+        public void ShouldCountUniqueAsmMethodHierarchies()
+        {
+            var actual = Extract(
+                CreateContextWithMethodDeclarationAndHierarchy(
+                    "[p:void] [C1,P].M()",
+                    "[p:void] [L1,P].M()",
+                    "[p:void] [L2,P].M()"),
+                CreateContextWithMethodDeclarationAndHierarchy(
+                    "[p:void] [C2,P].M()",
+                    "[p:void] [T1,Asm,1.2.3.4].M()",
+                    "[p:void] [T2,Asm,1.2.3.4].M()"),
+                CreateContextWithMethodDeclarationAndHierarchy(
+                    "[p:void] [C3,P].M()",
+                    "[p:void] [T1,Asm,1.2.3.4].M()",
+                    "[p:void] [T3,Asm,1.2.3.4].M()"),
+                CreateContextWithMethodDeclarationAndHierarchy(
+                    "[p:void] [C4,P].M()",
+                    "[p:void] [T4,Asm,1.2.3.4].M()",
+                    "[p:void] [T5,Asm,1.2.3.4].M()")
+            );
+
+            Assert.AreEqual(4, actual.NumMethodDeclsTotal);
+            Assert.AreEqual(4, actual.NumMethodDeclsOverrideOrImplement);
+            Assert.AreEqual(3, actual.NumMethodDeclsOverrideOrImplementAsm);
+            Assert.AreEqual(
+                Sets.NewHashSet(
+                    Names.Method("[p:void] [C2,P].M()"),
+                    Names.Method("[p:void] [C3,P].M()"),
+                    Names.Method("[p:void] [C4,P].M()")),
+                actual.UniqueMethodDeclsOverrideOrImplementAsm);
+        }
+
+        [Test]
+        public void ShouldCountBuiltInMethodsAsAsmMethodHierarchies()
+        {
+            var actual = Extract(
+                CreateContextWithMethodDeclarationAndHierarchy("[p:void] [C1,P].M()", "[p:void] [p:int].M()", null)
+            );
+
+            Assert.AreEqual(1, actual.NumMethodDeclsTotal);
+            Assert.AreEqual(1, actual.NumMethodDeclsOverrideOrImplement);
+            Assert.AreEqual(1, actual.NumMethodDeclsOverrideOrImplementAsm);
+            Assert.AreEqual(
+                Sets.NewHashSet(Names.Method("[p:void] [C1,P].M()")),
+                actual.UniqueMethodDeclsOverrideOrImplementAsm);
         }
 
         [Test]

@@ -74,6 +74,16 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumTypeDeclExtendsOrImplements = 11,
                     NumMethodDeclsTotal = 12,
                     NumMethodDeclsOverrideOrImplement = 13,
+                    NumMethodDeclsOverrideOrImplementAsm = 121,
+                    UniqueMethodDeclsOverrideOrImplementAsm =
+                    {
+                        Names.Method("[p:bool] [T,P].M1()"),
+                        Names.Method("[p:bool] [T,P].M2()"),
+                        Names.Method("[p:bool] [T,P].M3()"),
+                        Names.Method("[p:bool] [T,P].M4()"),
+                        Names.Method("[p:bool] [T,P].M5()"),
+                        Names.Method("[p:bool] [T,P].M6()")
+                    },
                     UniqueAssemblies =
                     {
                         Names.Assembly("A,1.2.3.4")
