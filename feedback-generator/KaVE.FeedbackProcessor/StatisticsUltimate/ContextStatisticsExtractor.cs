@@ -74,6 +74,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         private static void ExtractTypeStats(ContextStatistics stats, ITypeName type)
         {
+            stats.UniqueTypeDecl.Add(type);
+
             if (type.IsNestedType)
             {
                 stats.NumTypeDeclNested++;

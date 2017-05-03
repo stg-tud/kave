@@ -71,6 +71,38 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
             Assert.AreEqual(1, actual.NumSolutions);
         }
 
+        [Test]
+        public void CountsUniqueTypeDecls()
+        {
+            var actual = Sut.Extract(
+                new[]
+                {
+                    new Context
+                    {
+                        SST = new SST
+                        {
+                            EnclosingType = Names.Type("C1,P")
+                        }
+                    },
+                    new Context
+                    {
+                        SST = new SST
+                        {
+                            EnclosingType = Names.Type("C2,P")
+                        }
+                    },
+                    new Context
+                    {
+                        SST = new SST
+                        {
+                            EnclosingType = Names.Type("C1,P")
+                        }
+                    }
+                });
+            Assert.AreEqual(3, actual.NumTypeDeclTotal);
+            Assert.AreEqual(Sets.NewHashSet(Names.Type("C1,P"), Names.Type("C2,P")), actual.UniqueTypeDecl);
+        }
+
         [TestCase("C,P"), TestCase("i:I,P"), TestCase("s:S,P"), TestCase("e:E,P"), TestCase("d:[p:void] [D,P].()")]
         public void CountsTopLevelTypes(string id)
         {
