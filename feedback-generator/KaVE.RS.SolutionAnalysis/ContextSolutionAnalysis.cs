@@ -92,8 +92,15 @@ namespace KaVE.RS.SolutionAnalysis
         {
             _logger.Info("Analyzing type '{0}'...", aType.CLRName);
 
-            var ctx = ContextAnalysis.Analyze(aType, psiSourceFile, _logger).Context;
-            _cbContext(ctx);
+            try
+            {
+                var ctx = ContextAnalysis.Analyze(aType, psiSourceFile, _logger).Context;
+                _cbContext(ctx);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+            }
 
             foreach (var innerType in aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>())
             {

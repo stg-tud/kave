@@ -83,14 +83,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
             _logger = new TestRunnerLogger(_logName);
 
-            try
-            {
-                DoTestSolution(ExistingSolutionFilePath, RunAnalysis);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e);
-            }
+            DoTestSolution(ExistingSolutionFilePath, RunAnalysis);
 
             if (_logger.HasError)
             {
