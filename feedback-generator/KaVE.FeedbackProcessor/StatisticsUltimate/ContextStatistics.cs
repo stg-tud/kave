@@ -29,8 +29,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         int NumSolutions { get; }
         int EstimatedLinesOfCode { get; }
 
-        int NumTopLevelType { get; }
-        int NumNestedType { get; }
+        int NumTypeDeclTopLevel { get; }
+        int NumTypeDeclNested { get; }
 
         int NumClasses { get; }
         int NumInterfaces { get; }
@@ -40,8 +40,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         int NumUnusualType { get; }
 
         int NumTypeExtendsOrImplements { get; }
-        int NumMethodDecls { get; }
-        int NumMethodOverridesOrImplements { get; }
+        int NumMethodDeclsTotal { get; }
+        int NumMethodDeclsOverrideOrImplement { get; }
         int NumValidInvocations { get; }
         int NumUnknownInvocations { get; }
 
@@ -75,8 +75,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public int NumSolutions { get; set; }
         public int EstimatedLinesOfCode { get; set; }
 
-        public int NumTopLevelType { get; set; }
-        public int NumNestedType { get; set; }
+        public int NumTypeDeclTopLevel { get; set; }
+        public int NumTypeDeclNested { get; set; }
 
         public int NumClasses { get; set; }
         public int NumInterfaces { get; set; }
@@ -86,8 +86,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         public int NumUnusualType { get; set; }
         public int NumTypeExtendsOrImplements { get; set; }
 
-        public int NumMethodDecls { get; set; }
-        public int NumMethodOverridesOrImplements { get; set; }
+        public int NumMethodDeclsTotal { get; set; }
+        public int NumMethodDeclsOverrideOrImplement { get; set; }
         public int NumValidInvocations { get; set; }
         public int NumUnknownInvocations { get; set; }
 
@@ -114,8 +114,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             NumUsers += stats.NumUsers;
             NumSolutions += stats.NumSolutions;
             EstimatedLinesOfCode += stats.EstimatedLinesOfCode;
-            NumTopLevelType += stats.NumTopLevelType;
-            NumNestedType += stats.NumNestedType;
+            NumTypeDeclTopLevel += stats.NumTypeDeclTopLevel;
+            NumTypeDeclNested += stats.NumTypeDeclNested;
             NumClasses += stats.NumClasses;
             NumInterfaces += stats.NumInterfaces;
             NumDelegates += stats.NumDelegates;
@@ -123,8 +123,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             NumEnums += stats.NumEnums;
             NumUnusualType += stats.NumUnusualType;
             NumTypeExtendsOrImplements += stats.NumTypeExtendsOrImplements;
-            NumMethodDecls += stats.NumMethodDecls;
-            NumMethodOverridesOrImplements += stats.NumMethodOverridesOrImplements;
+            NumMethodDeclsTotal += stats.NumMethodDeclsTotal;
+            NumMethodDeclsOverrideOrImplement += stats.NumMethodDeclsOverrideOrImplement;
             NumValidInvocations += stats.NumValidInvocations;
             NumUnknownInvocations += stats.NumUnknownInvocations;
             NumAsmCalls += stats.NumAsmCalls;
@@ -147,13 +147,13 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         {
             return NumRepositories == other.NumRepositories && NumUsers == other.NumUsers &&
                    NumSolutions == other.NumSolutions && EstimatedLinesOfCode == other.EstimatedLinesOfCode &&
-                   NumTopLevelType == other.NumTopLevelType && NumNestedType == other.NumNestedType &&
+                   NumTypeDeclTopLevel == other.NumTypeDeclTopLevel && NumTypeDeclNested == other.NumTypeDeclNested &&
                    NumClasses == other.NumClasses && NumInterfaces == other.NumInterfaces &&
                    NumDelegates == other.NumDelegates && NumStructs == other.NumStructs && NumEnums == other.NumEnums &&
                    NumUnusualType == other.NumUnusualType &&
                    NumTypeExtendsOrImplements == other.NumTypeExtendsOrImplements &&
-                   NumMethodDecls == other.NumMethodDecls &&
-                   NumMethodOverridesOrImplements == other.NumMethodOverridesOrImplements &&
+                   NumMethodDeclsTotal == other.NumMethodDeclsTotal &&
+                   NumMethodDeclsOverrideOrImplement == other.NumMethodDeclsOverrideOrImplement &&
                    NumValidInvocations == other.NumValidInvocations &&
                    NumUnknownInvocations == other.NumUnknownInvocations &&
                    UniqueAssemblies.Equals(other.UniqueAssemblies) && NumAsmCalls == other.NumAsmCalls &&
@@ -172,8 +172,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 hashCode = (hashCode * 397) ^ NumUsers;
                 hashCode = (hashCode * 397) ^ NumSolutions;
                 hashCode = (hashCode * 397) ^ EstimatedLinesOfCode;
-                hashCode = (hashCode * 397) ^ NumTopLevelType;
-                hashCode = (hashCode * 397) ^ NumNestedType;
+                hashCode = (hashCode * 397) ^ NumTypeDeclTopLevel;
+                hashCode = (hashCode * 397) ^ NumTypeDeclNested;
                 hashCode = (hashCode * 397) ^ NumClasses;
                 hashCode = (hashCode * 397) ^ NumInterfaces;
                 hashCode = (hashCode * 397) ^ NumDelegates;
@@ -181,8 +181,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 hashCode = (hashCode * 397) ^ NumEnums;
                 hashCode = (hashCode * 397) ^ NumUnusualType;
                 hashCode = (hashCode * 397) ^ NumTypeExtendsOrImplements;
-                hashCode = (hashCode * 397) ^ NumMethodDecls;
-                hashCode = (hashCode * 397) ^ NumMethodOverridesOrImplements;
+                hashCode = (hashCode * 397) ^ NumMethodDeclsTotal;
+                hashCode = (hashCode * 397) ^ NumMethodDeclsOverrideOrImplement;
                 hashCode = (hashCode * 397) ^ NumValidInvocations;
                 hashCode = (hashCode * 397) ^ NumUnknownInvocations;
                 hashCode = (hashCode * 397) ^ UniqueAssemblies.GetHashCode();

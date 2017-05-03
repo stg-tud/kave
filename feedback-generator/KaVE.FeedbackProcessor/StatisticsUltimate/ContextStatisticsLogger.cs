@@ -51,7 +51,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 stats.UniqueAsmFields.Clear();
                 stats.UniqueAsmProperties.Clear();
 
-                Console.WriteLine("NumTypeDecl = {0}", stats.NumNestedType + stats.NumTopLevelType);
+                Console.WriteLine("NumTypeDecl = {0}", stats.NumTypeDeclNested + stats.NumTypeDeclTopLevel);
                 Console.WriteLine("NumInvocationExpr = {0}", stats.NumUnknownInvocations + stats.NumValidInvocations);
                 Console.WriteLine(stats.ToString());
 

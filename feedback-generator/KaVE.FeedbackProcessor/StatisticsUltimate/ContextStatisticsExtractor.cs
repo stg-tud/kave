@@ -53,7 +53,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
             foreach (var md in ctx.SST.Methods)
             {
-                stats.NumMethodDecls++;
+                stats.NumMethodDeclsTotal++;
                 var overridden = false;
                 foreach (var mh in ctx.TypeShape.MethodHierarchies)
                 {
@@ -64,7 +64,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 }
                 if (overridden)
                 {
-                    stats.NumMethodOverridesOrImplements++;
+                    stats.NumMethodDeclsOverrideOrImplement++;
                 }
             }
 
@@ -76,11 +76,11 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         {
             if (type.IsNestedType)
             {
-                stats.NumNestedType++;
+                stats.NumTypeDeclNested++;
             }
             else
             {
-                stats.NumTopLevelType++;
+                stats.NumTypeDeclTopLevel++;
             }
 
             if (type.IsUnknown || type.IsPredefined || type.IsArray)

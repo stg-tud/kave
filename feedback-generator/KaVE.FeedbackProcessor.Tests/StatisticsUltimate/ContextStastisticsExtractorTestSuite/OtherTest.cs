@@ -85,7 +85,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                         }
                     }
                 });
-            Assert.AreEqual(1, actual.NumTopLevelType);
+            Assert.AreEqual(1, actual.NumTypeDeclTopLevel);
         }
 
         [TestCase("T+C,P"), TestCase("i:T+I,P"), TestCase("s:T+S,P"), TestCase("e:T+E,P"),
@@ -103,7 +103,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                         }
                     }
                 });
-            Assert.AreEqual(1, actual.NumNestedType);
+            Assert.AreEqual(1, actual.NumTypeDeclNested);
         }
 
         [TestCase("C,P"), TestCase("T+C,P")]
@@ -241,7 +241,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                         EnclosingType = Names.Type("C3,P")
                     }
                 });
-            Assert.AreEqual(3, actual.NumTopLevelType);
+            Assert.AreEqual(3, actual.NumTypeDeclTopLevel);
             Assert.AreEqual(2, actual.NumTypeExtendsOrImplements);
         }
 
@@ -286,7 +286,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                         }
                     }
                 });
-            Assert.AreEqual(1, actual.NumMethodDecls);
+            Assert.AreEqual(1, actual.NumMethodDeclsTotal);
         }
 
         [Test]
@@ -349,8 +349,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                     }
                 });
 
-            Assert.AreEqual(3, actual.NumMethodDecls);
-            Assert.AreEqual(2, actual.NumMethodOverridesOrImplements);
+            Assert.AreEqual(3, actual.NumMethodDeclsTotal);
+            Assert.AreEqual(2, actual.NumMethodDeclsOverrideOrImplement);
         }
 
         [Test]
@@ -381,7 +381,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                     }
                 });
 
-            Assert.AreEqual(1, actual.NumMethodDecls);
+            Assert.AreEqual(1, actual.NumMethodDeclsTotal);
         }
 
         [Test]

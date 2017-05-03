@@ -54,8 +54,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumUsers = 2,
                     NumSolutions = 3,
                     EstimatedLinesOfCode = 31,
-                    NumTopLevelType = 4,
-                    NumNestedType = 5,
+                    NumTypeDeclTopLevel = 4,
+                    NumTypeDeclNested = 5,
                     NumClasses = 6,
                     NumInterfaces = 7,
                     NumDelegates = 8,
@@ -63,8 +63,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumEnums = 10,
                     NumUnusualType = 111,
                     NumTypeExtendsOrImplements = 11,
-                    NumMethodDecls = 12,
-                    NumMethodOverridesOrImplements = 13,
+                    NumMethodDeclsTotal = 12,
+                    NumMethodDeclsOverrideOrImplement = 13,
                     UniqueAssemblies =
                     {
                         Names.Assembly("A,1.2.3.4")
