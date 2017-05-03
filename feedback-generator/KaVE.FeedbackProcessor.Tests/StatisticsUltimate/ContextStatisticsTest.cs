@@ -16,6 +16,7 @@
 
 using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.CodeElements;
+using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
@@ -39,6 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumTypeDeclTotal);
             Assert.AreEqual(0, sut.NumTypeDeclTopLevel);
             Assert.AreEqual(0, sut.NumTypeDeclNested);
+            Assert.AreEqual(Sets.NewHashSet<ITypeName>(), sut.UniqueTypeDecl);
 
             Assert.AreEqual(0, sut.NumClasses);
             Assert.AreEqual(0, sut.NumInterfaces);
@@ -80,6 +82,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 EstimatedLinesOfCode = 31,
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
+                UniqueTypeDecl = {Names.Type("T,P")},
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -109,6 +112,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(9, sut.NumTypeDeclTotal);
             Assert.AreEqual(4, sut.NumTypeDeclTopLevel);
             Assert.AreEqual(5, sut.NumTypeDeclNested);
+            Assert.AreEqual(Sets.NewHashSet(Names.Type("T,P")), sut.UniqueTypeDecl);
 
             Assert.AreEqual(6, sut.NumClasses);
             Assert.AreEqual(7, sut.NumInterfaces);
@@ -165,6 +169,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 EstimatedLinesOfCode = 31,
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
+                UniqueTypeDecl = {Names.Type("T,P")},
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -192,6 +197,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 EstimatedLinesOfCode = 31,
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
+                UniqueTypeDecl = {Names.Type("T,P")},
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -281,6 +287,18 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             var a = new ContextStatistics
             {
                 NumTypeDeclNested = 5
+            };
+            var b = new ContextStatistics();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentUniqueTypeDecl()
+        {
+            var a = new ContextStatistics
+            {
+                UniqueTypeDecl = {Names.Type("T,P")}
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -526,6 +544,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 EstimatedLinesOfCode = 31,
                 NumTypeDeclTopLevel = 4,
                 NumTypeDeclNested = 5,
+                UniqueTypeDecl = {Names.Type("T,P")},
                 NumClasses = 6,
                 NumInterfaces = 7,
                 NumDelegates = 8,
@@ -555,6 +574,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     EstimatedLinesOfCode = 31 + 1,
                     NumTypeDeclTopLevel = 4 + 1,
                     NumTypeDeclNested = 5 + 1,
+                    UniqueTypeDecl = {Names.Type("T2,P")},
                     NumClasses = 6 + 1,
                     NumInterfaces = 7 + 1,
                     NumDelegates = 8 + 1,
@@ -584,6 +604,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 EstimatedLinesOfCode = 31 * 2 + 1,
                 NumTypeDeclTopLevel = 4 * 2 + 1,
                 NumTypeDeclNested = 5 * 2 + 1,
+                UniqueTypeDecl = {Names.Type("T,P"), Names.Type("T2,P")},
                 NumClasses = 6 * 2 + 1,
                 NumInterfaces = 7 * 2 + 1,
                 NumDelegates = 8 * 2 + 1,

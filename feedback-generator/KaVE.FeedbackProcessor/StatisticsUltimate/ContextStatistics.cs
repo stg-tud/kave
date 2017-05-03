@@ -114,6 +114,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         public ContextStatistics()
         {
+            UniqueTypeDecl = Sets.NewHashSet<ITypeName>();
             UniqueAssemblies = Sets.NewHashSet<IAssemblyName>();
             UniqueAsmMethods = Sets.NewHashSet<IMethodName>();
             UniqueAsmFields = Sets.NewHashSet<IFieldName>();
@@ -144,6 +145,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             NumAsmFieldRead += stats.NumAsmFieldRead;
             NumAsmPropertyRead += stats.NumAsmPropertyRead;
 
+            UniqueTypeDecl.AddAll(stats.UniqueTypeDecl);
             UniqueAssemblies.AddAll(stats.UniqueAssemblies);
             UniqueAsmMethods.AddAll(stats.UniqueAsmMethods);
             UniqueAsmFields.AddAll(stats.UniqueAsmFields);
@@ -169,7 +171,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                    NumValidInvocations == other.NumValidInvocations &&
                    NumUnknownInvocations == other.NumUnknownInvocations &&
                    UniqueAssemblies.Equals(other.UniqueAssemblies) && NumAsmCalls == other.NumAsmCalls &&
-                   NumAsmDelegateCalls == other.NumAsmDelegateCalls && UniqueAsmMethods.Equals(other.UniqueAsmMethods) &&
+                   NumAsmDelegateCalls == other.NumAsmDelegateCalls && UniqueTypeDecl.Equals(other.UniqueTypeDecl) &&
+                   UniqueAsmMethods.Equals(other.UniqueAsmMethods) &&
                    NumAsmFieldRead == other.NumAsmFieldRead && UniqueAsmFields.Equals(other.UniqueAsmFields) &&
                    NumAsmPropertyRead == other.NumAsmPropertyRead &&
                    UniqueAsmProperties.Equals(other.UniqueAsmProperties);
@@ -197,6 +200,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 hashCode = (hashCode * 397) ^ NumMethodDeclsOverrideOrImplement;
                 hashCode = (hashCode * 397) ^ NumValidInvocations;
                 hashCode = (hashCode * 397) ^ NumUnknownInvocations;
+                hashCode = (hashCode * 397) ^ UniqueTypeDecl.GetHashCode();
                 hashCode = (hashCode * 397) ^ UniqueAssemblies.GetHashCode();
                 hashCode = (hashCode * 397) ^ NumAsmCalls;
                 hashCode = (hashCode * 397) ^ NumAsmDelegateCalls;
