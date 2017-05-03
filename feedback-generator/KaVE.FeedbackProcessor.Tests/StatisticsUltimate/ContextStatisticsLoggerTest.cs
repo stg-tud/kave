@@ -62,7 +62,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumStructs = 9,
                     NumEnums = 10,
                     NumUnusualType = 111,
-                    NumTypeExtendsOrImplements = 11,
+                    NumTypeDeclExtendsOrImplements = 11,
                     NumMethodDeclsTotal = 12,
                     NumMethodDeclsOverrideOrImplement = 13,
                     UniqueAssemblies =

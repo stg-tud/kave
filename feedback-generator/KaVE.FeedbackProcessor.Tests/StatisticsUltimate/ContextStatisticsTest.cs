@@ -47,7 +47,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(0, sut.NumEnums);
             Assert.AreEqual(0, sut.NumUnusualType);
 
-            Assert.AreEqual(0, sut.NumTypeExtendsOrImplements);
+            Assert.AreEqual(0, sut.NumTypeDeclExtendsOrImplements);
             Assert.AreEqual(0, sut.NumMethodDeclsTotal);
             Assert.AreEqual(0, sut.NumMethodDeclsOverrideOrImplement);
             Assert.AreEqual(0, sut.NumValidInvocations);
@@ -86,7 +86,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumStructs = 9,
                 NumEnums = 10,
                 NumUnusualType = 111,
-                NumTypeExtendsOrImplements = 11,
+                NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
                 NumValidInvocations = 1311,
@@ -117,7 +117,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
             Assert.AreEqual(10, sut.NumEnums);
             Assert.AreEqual(111, sut.NumUnusualType);
 
-            Assert.AreEqual(11, sut.NumTypeExtendsOrImplements);
+            Assert.AreEqual(11, sut.NumTypeDeclExtendsOrImplements);
             Assert.AreEqual(12, sut.NumMethodDeclsTotal);
             Assert.AreEqual(13, sut.NumMethodDeclsOverrideOrImplement);
             Assert.AreEqual(1311, sut.NumValidInvocations);
@@ -171,7 +171,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumStructs = 9,
                 NumEnums = 10,
                 NumUnusualType = 111,
-                NumTypeExtendsOrImplements = 11,
+                NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
                 NumValidInvocations = 1311,
@@ -198,7 +198,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumStructs = 9,
                 NumEnums = 10,
                 NumUnusualType = 111,
-                NumTypeExtendsOrImplements = 11,
+                NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
                 NumValidInvocations = 1311,
@@ -364,7 +364,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var a = new ContextStatistics
             {
-                NumTypeExtendsOrImplements = 11
+                NumTypeDeclExtendsOrImplements = 11
             };
             var b = new ContextStatistics();
             Assert.AreNotEqual(a, b);
@@ -532,7 +532,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumStructs = 9,
                 NumEnums = 10,
                 NumUnusualType = 111,
-                NumTypeExtendsOrImplements = 11,
+                NumTypeDeclExtendsOrImplements = 11,
                 NumMethodDeclsTotal = 12,
                 NumMethodDeclsOverrideOrImplement = 13,
                 NumValidInvocations = 1311,
@@ -561,7 +561,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                     NumStructs = 9 + 1,
                     NumEnums = 10 + 1,
                     NumUnusualType = 111 + 1,
-                    NumTypeExtendsOrImplements = 11 + 1,
+                    NumTypeDeclExtendsOrImplements = 11 + 1,
                     NumMethodDeclsTotal = 12 + 1,
                     NumMethodDeclsOverrideOrImplement = 13 + 1,
                     NumValidInvocations = 1311 + 1,
@@ -590,7 +590,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
                 NumStructs = 9 * 2 + 1,
                 NumEnums = 10 * 2 + 1,
                 NumUnusualType = 111 * 2 + 1,
-                NumTypeExtendsOrImplements = 11 * 2 + 1,
+                NumTypeDeclExtendsOrImplements = 11 * 2 + 1,
                 NumMethodDeclsTotal = 12 * 2 + 1,
                 NumMethodDeclsOverrideOrImplement = 13 * 2 + 1,
                 NumValidInvocations = 2 * 1311 + 1,

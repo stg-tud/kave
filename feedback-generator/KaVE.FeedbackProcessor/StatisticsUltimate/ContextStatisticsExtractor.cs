@@ -48,7 +48,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
             var th = ctx.TypeShape.TypeHierarchy;
             if (th.Implements.Count > 0 || th.Extends != null)
             {
-                stats.NumTypeExtendsOrImplements++;
+                stats.NumTypeDeclExtendsOrImplements++;
             }
 
             foreach (var md in ctx.SST.Methods)

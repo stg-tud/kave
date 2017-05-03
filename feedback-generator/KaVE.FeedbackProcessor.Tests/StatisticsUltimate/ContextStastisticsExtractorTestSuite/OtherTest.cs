@@ -242,7 +242,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                     }
                 });
             Assert.AreEqual(3, actual.NumTypeDeclTopLevel);
-            Assert.AreEqual(2, actual.NumTypeExtendsOrImplements);
+            Assert.AreEqual(2, actual.NumTypeDeclExtendsOrImplements);
         }
 
         [Test]
@@ -268,7 +268,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
                         EnclosingType = Names.Type("C,P")
                     }
                 });
-            Assert.AreEqual(1, actual.NumTypeExtendsOrImplements);
+            Assert.AreEqual(1, actual.NumTypeDeclExtendsOrImplements);
         }
 
         [Test]
