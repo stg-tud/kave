@@ -16,6 +16,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Preprocessing.Model;
 
@@ -78,6 +79,41 @@ namespace KaVE.FeedbackProcessor.DebuggingHacks
             foreach (var zip in notInB)
             {
                 Console.WriteLine("* {0}", zip);
+            }
+
+
+            var gainedSize = Sets.NewHashSet<string>();
+            Console.WriteLine("== reduced size ==");
+            foreach (var zip in zipsA)
+            {
+                if (!notInB.Contains(zip))
+                {
+                    var sizeA = _ioA.GetSize_In(zip);
+                    var sizeB = _ioB.GetSize_In(zip);
+                    var delta = (sizeB / (double) sizeA - 1) * 100;
+                    var deltaAbs = Math.Abs(delta);
+                    if (deltaAbs >= 0.1) // 0.001 or 0.1%
+                    {
+                        var sign = delta > 0 ? '+' : '-';
+                        var str = "* {0}  ({1}{2:0.0}%)".FormatEx(zip, sign, deltaAbs);
+
+                        if (delta < 0)
+                        {
+                            Console.WriteLine(str);
+                        }
+
+                        if (delta > 0)
+                        {
+                            gainedSize.Add(str);
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("== gained size ==");
+            foreach (var str in gainedSize)
+            {
+                Console.WriteLine(str);
             }
         }
     }
