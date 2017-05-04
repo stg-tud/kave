@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
         [SetUp]
         public void SetUp()
         {
-            Sut = new ContextStatisticsExtractor();
+            Sut = new ContextStatisticsExtractor(new ContextFilter(GeneratedCode.Include, Duplication.Include));
         }
 
         protected IContextStatistics Extract(params Context[] contexts)

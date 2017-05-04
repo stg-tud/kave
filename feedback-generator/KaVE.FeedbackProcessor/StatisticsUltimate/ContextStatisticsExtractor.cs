@@ -25,6 +25,13 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
     public class ContextStatisticsExtractor
     {
+        private readonly IContextFilter _cf;
+
+        public ContextStatisticsExtractor(IContextFilter cf)
+        {
+            _cf = cf;
+        }
+
         public IContextStatistics Extract(IEnumerable<Context> contexts)
         {
             var stats = new ContextStatistics
@@ -34,7 +41,10 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
             foreach (var ctx in contexts)
             {
-                Extract(ctx, stats);
+                if (_cf.ShouldProcessOrRegister(ctx.SST))
+                {
+                    Extract(ctx, stats);
+                }
             }
 
             return stats;
@@ -57,6 +67,11 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
             foreach (var md in ctx.SST.Methods)
             {
+                if (!_cf.ShouldProcessOrRegister(md.Name))
+                {
+                    continue;
+                }
+
                 stats.NumMethodDeclsTotal++;
                 var overridden = false;
                 var overriddenAsm = false;

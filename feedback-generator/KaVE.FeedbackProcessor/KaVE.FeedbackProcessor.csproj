@@ -148,6 +148,7 @@
     <Compile Include="StatisticsUltimate\StatisticsLoggerBase.cs" />
     <Compile Include="StatisticsUltimate\InteractionStatisticsRunner.cs" />
     <Compile Include="StatisticsUltimate\InteractionStatistics.cs" />
+    <Compile Include="StatisticsUltimate\ContextFilter.cs" />
     <Compile Include="WatchdogExports\EventFixer.cs" />
     <Compile Include="WatchdogExports\Exporter\EventStreamExport.cs" />
     <Compile Include="EventStreamFilter.cs" />

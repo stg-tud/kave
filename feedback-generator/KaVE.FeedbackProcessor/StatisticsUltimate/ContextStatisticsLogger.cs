@@ -24,11 +24,17 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 {
     public interface IContextStatisticsLogger : IStatisticsLogger
     {
+        void StartUp(IContextFilter cf);
         void Results(IContextStatistics contextStatistics, IDictionary<IAssemblyName, int> asmCounter);
     }
 
     public class ContextStatisticsLogger : StatisticsLoggerBase, IContextStatisticsLogger
     {
+        public void StartUp(IContextFilter cf)
+        {
+            Log("Starting up with {0}", cf);
+        }
+
         [SuppressMessage("ReSharper", "LocalizableElement")]
         public void Results(IContextStatistics stats, IDictionary<IAssemblyName, int> counts)
         {

@@ -27,11 +27,16 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
         private IContextStatistics _results;
         private AssemblyCounter _asmCounter;
+        private readonly IContextFilter _cf;
 
-        public ContextStatisticsRunner(IPreprocessingIo io, IContextStatisticsLogger log, int numProcs)
+        public ContextStatisticsRunner(IPreprocessingIo io,
+            IContextFilter cf,
+            IContextStatisticsLogger log,
+            int numProcs)
             : base(io, log, numProcs)
         {
             _io = io;
+            _cf = cf;
             _log = log;
         }
 
@@ -39,6 +44,8 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         {
             _results = new ContextStatistics();
             _asmCounter = new AssemblyCounter();
+
+            _log.StartUp(_cf);
 
             FindZips();
             InParallel(CreateStatistics);
@@ -50,7 +57,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
         {
             _log.StartingStatCreation(taskId);
 
-            var extractor = new ContextStatisticsExtractor();
+            var extractor = new ContextStatisticsExtractor(_cf);
 
             string zip;
             while (GetNextZip(out zip))

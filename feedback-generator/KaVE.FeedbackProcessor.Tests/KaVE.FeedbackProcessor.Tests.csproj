@@ -132,11 +132,13 @@
     <Compile Include="StatisticsUltimate\ContextStastisticsExtractorTestSuite\MethodInvocationTest.cs" />
     <Compile Include="StatisticsUltimate\ContextStastisticsExtractorTestSuite\OtherTest.cs" />
     <Compile Include="StatisticsUltimate\ContextStastisticsExtractorTestSuite\ContextStatisticsExtractorTestBase.cs" />
+    <Compile Include="StatisticsUltimate\ContextStastisticsExtractorTestSuite\ContextFilterIntegrationTest.cs" />
     <Compile Include="StatisticsUltimate\ContextStatisticsLoggerTest.cs" />
     <Compile Include="StatisticsUltimate\ContextStatisticsTest.cs" />
     <Compile Include="StatisticsUltimate\InteractionStatisticsExtractorTest.cs" />
     <Compile Include="StatisticsUltimate\InteractionStatisticsLoggerTest.cs" />
     <Compile Include="StatisticsUltimate\InteractionStatisticsTest.cs" />
+    <Compile Include="StatisticsUltimate\ContextFilterTest.cs" />
     <Compile Include="WatchdogExports\EventFixerTest.cs" />
     <Compile Include="WatchdogExports\Exporter\EventStreamExportTest.cs" />
     <Compile Include="WatchdogExports\Exporter\SvgExportTest.cs" />

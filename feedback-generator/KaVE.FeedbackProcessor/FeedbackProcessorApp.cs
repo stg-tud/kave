@@ -88,16 +88,15 @@ namespace KaVE.FeedbackProcessor
 
         private static void RunInteractionStatistics()
         {
-            // reuse existing component
             var io = new PreprocessingIo(DirEventsOut, DirTmp, DirTmp);
             new InteractionStatisticsRunner(io, new InteractionStatisticsLogger(), NumWorkers).Run();
         }
 
         private static void RunContextStatistics()
         {
-            // reuse existing component
             var io = new PreprocessingIo(DirContexts, DirTmp, DirTmp);
-            new ContextStatisticsRunner(io, new ContextStatisticsLogger(), NumWorkers).Run();
+            var cf = new ContextFilter(GeneratedCode.Include, Duplication.Include);
+            new ContextStatisticsRunner(io, cf, new ContextStatisticsLogger(), NumWorkers).Run();
         }
 
         private static void RunMemExampleToEnsureSupportForBigObjects()

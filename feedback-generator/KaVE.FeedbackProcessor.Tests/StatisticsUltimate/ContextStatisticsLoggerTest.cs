@@ -29,6 +29,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate
         {
             var sut = new ContextStatisticsLogger();
 
+            sut.StartUp(new ContextFilter(GeneratedCode.Include, Duplication.Exclude));
+
             sut.SearchingZips("C:\\a\\b\\");
             sut.FoundZips(123);
 
