@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Naming;
 using KaVE.Commons.Model.Naming.Impl.v0.Types.Organization;
 using KaVE.Commons.Model.Naming.Types.Organization;
 using KaVE.Commons.Utils.Exceptions;
@@ -108,6 +109,12 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0.Types.Organization
             Assert.AreEqual("mscorlib", mscoreAssembly.Name);
             Assert.AreEqual("4.0.0.0", mscoreAssembly.Version.Identifier);
             Assert.AreEqual(identifier, mscoreAssembly.Identifier);
+        }
+
+        [Test]
+        public void MscorlibIsNotLocal()
+        {
+            Assert.False(Names.Type("p:int").Assembly.IsLocalProject);
         }
 
         private static void AssertName(IAssemblyName assemblyName, string expected)
