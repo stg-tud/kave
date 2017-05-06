@@ -98,6 +98,8 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
             const string asm = "mscorlib, 4.0.0.0";
             var id =
                 "[p:void] [d:[p:void] [System.Action`1[[T -> p:int]], {0}].([T] obj)].Invoke([T] obj)".FormatEx(asm);
+            var idNorm =
+                "[p:void] [d:[p:void] [System.Action`1[[T]], {0}].([T] obj)].Invoke([T] obj)".FormatEx(asm);
 
             var actual = ExtractFromInvocations(id);
 
@@ -106,7 +108,7 @@ namespace KaVE.FeedbackProcessor.Tests.StatisticsUltimate.ContextStastisticsExtr
             Assert.AreEqual(0, actual.NumAsmCalls);
             Assert.AreEqual(1, actual.NumAsmDelegateCalls);
 
-            AssertUniqueAsmMethods(actual, id);
+            AssertUniqueAsmMethods(actual, idNorm);
             AssertUniqueAssemblies(actual, asm);
         }
     }

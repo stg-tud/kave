@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Naming.Impl.v0;
 using KaVE.Commons.Model.Naming.Types;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
@@ -93,7 +94,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 if (overriddenAsm)
                 {
                     stats.NumMethodDeclsOverrideOrImplementAsm++;
-                    stats.UniqueMethodDeclsOverrideOrImplementAsm.Add(md.Name);
+                    stats.UniqueMethodDeclsOverrideOrImplementAsm.Add(md.Name.RemoveGenerics());
                 }
             }
 
@@ -163,7 +164,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                         {
                             stats.NumAsmCalls++;
                         }
-                        stats.UniqueAsmMethods.Add(m);
+                        stats.UniqueAsmMethods.Add(m.RemoveGenerics());
                         stats.UniqueAssemblies.Add(m.DeclaringType.Assembly);
                     }
                 }
@@ -175,7 +176,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 if (!f.IsUnknown && !f.DeclaringType.Assembly.IsLocalProject)
                 {
                     stats.NumAsmFieldRead++;
-                    stats.UniqueAsmFields.Add(f);
+                    stats.UniqueAsmFields.Add(f.RemoveGenerics());
                     stats.UniqueAssemblies.Add(f.DeclaringType.Assembly);
                 }
             }
@@ -185,7 +186,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 var m = methRef.MethodName;
                 if (!m.IsUnknown && !m.DeclaringType.Assembly.IsLocalProject)
                 {
-                    stats.UniqueAsmMethods.Add(m);
+                    stats.UniqueAsmMethods.Add(m.RemoveGenerics());
                     stats.UniqueAssemblies.Add(m.DeclaringType.Assembly);
                 }
             }
@@ -196,7 +197,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
                 if (!p.IsUnknown && !p.DeclaringType.Assembly.IsLocalProject)
                 {
                     stats.NumAsmPropertyRead++;
-                    stats.UniqueAsmProperties.Add(p);
+                    stats.UniqueAsmProperties.Add(p.RemoveGenerics());
                     stats.UniqueAssemblies.Add(p.DeclaringType.Assembly);
                 }
             }
