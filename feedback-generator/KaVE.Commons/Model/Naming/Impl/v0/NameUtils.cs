@@ -112,6 +112,16 @@ namespace KaVE.Commons.Model.Naming.Impl.v0
             return new MethodName(RemoveGenerics(name.Identifier));
         }
 
+        public static IFieldName RemoveGenerics(this IFieldName name)
+        {
+            return new FieldName(RemoveGenerics(name.Identifier));
+        }
+
+        public static IPropertyName RemoveGenerics(this IPropertyName name)
+        {
+            return new PropertyName(RemoveGenerics(name.Identifier));
+        }
+
         private static string RemoveGenerics(string id)
         {
             var startIdx = id.IndexOf('`');

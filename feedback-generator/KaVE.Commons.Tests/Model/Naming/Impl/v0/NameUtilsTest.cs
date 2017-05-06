@@ -71,10 +71,34 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
         }
 
         [Test]
-        public void CanRemoveGenericInformationFromResolvedTypes()
+        public void CanRemoveGenericInformationFromTypes()
+        {
+            var actual = new TypeName("G`1[[T -> U,P]], P").RemoveGenerics();
+            var expected = new TypeName("G`1[[T]], P");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CanRemoveGenericInformationFromMethods()
         {
             var actual = new MethodName("[T,P] [G`1[[T -> U,P]], P].Add([T] item)").RemoveGenerics();
             var expected = new MethodName("[T,P] [G`1[[T]], P].Add([T] item)");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CanRemoveGenericInformationFromFields()
+        {
+            var actual = new FieldName("[T,P] [G`1[[T -> U,P]], P]._f").RemoveGenerics();
+            var expected = new FieldName("[T,P] [G`1[[T]], P]._f");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CanRemoveGenericInformationFromProperties()
+        {
+            var actual = new PropertyName("get [T,P] [G`1[[T -> U,P]], P].P()").RemoveGenerics();
+            var expected = new PropertyName("get [T,P] [G`1[[T]], P].P()");
             Assert.AreEqual(expected, actual);
         }
 
@@ -118,15 +142,20 @@ namespace KaVE.Commons.Tests.Model.Naming.Impl.v0
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("Demo.G1`1[][[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+        [TestCase(
+             "Demo.G1`1[][[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
              "Demo.G1`1[][[T]], Demo"),
-         TestCase("Demo.G1`2[][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+         TestCase(
+             "Demo.G1`2[][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
              "Demo.G1`2[][[S],[T]], Demo"),
-         TestCase("Demo.G1`2[][][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+         TestCase(
+             "Demo.G1`2[][][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
              "Demo.G1`2[][][[S],[T]], Demo"),
-         TestCase("Demo.G1`2[,][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+         TestCase(
+             "Demo.G1`2[,][[S],[T -> System.Tuple`2[[T1 -> p:int],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
              "Demo.G1`2[,][[S],[T]], Demo"),
-         TestCase("Demo.G1`2[][[S],[T -> System.Tuple`2[[T1],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
+         TestCase(
+             "Demo.G1`2[][[S],[T -> System.Tuple`2[[T1],[T2 -> p:bool]], mscorlib, 4.0.0.0]], Demo",
              "Demo.G1`2[][[S],[T]], Demo")]
         public void RemoveBoundGenericsFromArray(string boundId, string expected)
         {
