@@ -68,7 +68,7 @@ namespace KaVE.FeedbackProcessor.StatisticsUltimate
 
             foreach (var md in ctx.SST.Methods)
             {
-                if (!_cf.ShouldProcessOrRegister(md.Name))
+                if (!_cf.ShouldProcessOrRegister(md.Name.RemoveGenerics()))
                 {
                     continue;
                 }
