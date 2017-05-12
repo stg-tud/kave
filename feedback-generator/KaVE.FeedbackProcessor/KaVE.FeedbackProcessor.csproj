@@ -142,6 +142,7 @@
     <Compile Include="StatisticsUltimate\ContextStatisticsExtractor.cs" />
     <Compile Include="StatisticsUltimate\ContextStatisticsLogger.cs" />
     <Compile Include="StatisticsUltimate\ContextStatisticsRunner.cs" />
+    <Compile Include="StatisticsUltimate\EmDebug.cs" />
     <Compile Include="StatisticsUltimate\InteractionStatisticsExtractor.cs" />
     <Compile Include="StatisticsUltimate\InteractionStatisticsLogger.cs" />
     <Compile Include="StatisticsUltimate\StatisticsRunnerBase.cs" />

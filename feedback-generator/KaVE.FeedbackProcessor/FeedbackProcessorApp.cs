@@ -67,10 +67,17 @@ namespace KaVE.FeedbackProcessor
             //RunContextStatistics();
             RunEditLocationAnalysis();
             //RunSSTTransformationComparison(Root + @"Contexts-161031", Root + @"Contexts-170428");
+            //RunEmDebug();
 
             var endedAt = DateTime.Now;
             Console.WriteLine(@"ended at {0}, took {1}", endedAt, (endedAt - startedAt));
             Console.ReadKey();
+        }
+
+        private static void RunEmDebug()
+        {
+            var io = new PreprocessingIo(DirContexts, DirTmp, DirTmp);
+            new EmDebug(io, new ContextStatisticsLogger(), NumWorkers).Run();
         }
 
         private static void RunEditLocationAnalysis()
