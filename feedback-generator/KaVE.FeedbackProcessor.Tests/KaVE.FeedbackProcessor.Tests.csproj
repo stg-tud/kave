@@ -35,8 +35,22 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr4.Runtime.Standard, Version=4.7.0.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr4.Runtime.Standard.4.7.1\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.6144.33521, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.JetBrains.Stripped.0.87.20161027.6\lib\net40\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="KaVE.Commons, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KaVE.Commons.1.0.0-v20170616-000603\lib\KaVE.Commons.dll</HintPath>
+    </Reference>
+    <Reference Include="KaVE.Commons.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\KaVE.TestCommons.1.0.0-v20170616-000603\lib\KaVE.Commons.TestUtils.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson, Version=1.10.0.62, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
       <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Bson.dll</HintPath>
@@ -48,9 +62,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="smilenet, Version=1.1.4431.20499, Culture=neutral">
+      <HintPath>..\packages\SmileNet.1.0.0\lib\smilenet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -206,14 +227,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
-      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
-      <Name>KaVE.Commons.TestUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
-      <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
-      <Name>KaVE.Commons</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KaVE.FeedbackProcessor\KaVE.FeedbackProcessor.csproj">
       <Project>{7B7AEA61-25F5-4938-BEE7-ED26AE7BE477}</Project>
       <Name>KaVE.FeedbackProcessor</Name>

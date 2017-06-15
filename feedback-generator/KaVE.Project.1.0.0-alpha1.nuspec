@@ -17,23 +17,20 @@
         </dependencies>
     </metadata>
     <files>
-		<!-- WARNING: We cannot have shared DLLs in vAny. All required DLLs need to be in v8.x in order for the plugin to load correctly. -->
-		
-		<!-- Plugin for ReSharper 8.2 -->
-			<!-- KaVE Assemblies -->
-				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="DotFiles" />
-				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="DotFiles" />
-				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="DotFiles" />
-			<!-- 3rd-Party Dependencies -->
-				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles" />
-				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Gma.System.MouseKeyHook.dll" target="DotFiles" />
-		<file src="3rd-party\MsgBox.dll" target="DotFiles" />
-        <file src="3rd-party\UserNotification.dll" target="DotFiles" />
-        <file src="3rd-party\smileNet.dll" target="DotFiles" />
-        <file src="3rd-party\System.Net.Http.dll" target="DotFiles" />
-        <file src="3rd-party\Antlr4.Runtime.dll" target="DotFiles" />
+        <!-- KaVE Commons + dependency -->
+        <file src="packages\KaVE.Commons" target="DotFiles\de" />
+        
 
-        <!-- Localization -->
+        <!-- KaVE FeedBaG -->
         <file src="KaVE.VS.FeedbackGenerator\bin\Debug\de\*.resources.dll" target="DotFiles\de" />
+		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="DotFiles" />
+		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="DotFiles" />
+		
+        <file src="KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles" />
+		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Gma.System.MouseKeyHook.dll" target="DotFiles" />
+	
+        <file src="3rd-party\MsgBox.dll" target="DotFiles" />
+        <file src="3rd-party\UserNotification.dll" target="DotFiles" />
+        <file src="3rd-party\System.Net.Http.dll" target="DotFiles" />
     </files>
 </package>
