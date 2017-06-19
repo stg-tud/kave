@@ -21,20 +21,19 @@
     </metadata>
     <files>
         <!-- KaVE Commons + dependency -->
-        <file src="packages\KaVE.Commons" target="DotFiles\de" />
+        <file src="../KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="DotFiles" />
+
         <!-- antlr4 -->
         <!-- smilenet -->
 
         <!-- KaVE FeedBaG -->
-        <file src="KaVE.VS.FeedbackGenerator\bin\Debug\de\*.resources.dll" target="DotFiles\de" />
-		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="DotFiles" />
-		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="DotFiles" />
+        <file src="../KaVE.VS.FeedbackGenerator\bin\Debug\de\*.resources.dll" target="DotFiles\de" />
+		<file src="../KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="DotFiles" />
+		<file src="../KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="DotFiles" />
 		
-        <file src="KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles" />
-		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Gma.System.MouseKeyHook.dll" target="DotFiles" />
-	
-        <file src="3rd-party\MsgBox.dll" target="DotFiles" />
-        <file src="3rd-party\UserNotification.dll" target="DotFiles" />
-        <file src="3rd-party\System.Net.Http.dll" target="DotFiles" />
+        <!-- dependencies -->
+        <file src="../KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles" />
+		<file src="../KaVE.VS.FeedbackGenerator\bin\Debug\Gma.System.MouseKeyHook.dll" target="DotFiles" />
+        <file src="../3rd-party\MsgBox.dll" target="DotFiles" />
     </files>
 </package>

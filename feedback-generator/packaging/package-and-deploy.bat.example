@@ -15,7 +15,7 @@ set TIME3=%TIME2:~0,-3%
 ::echo %TIME2%
 
 ::english system
-set DATE1=%date:~-4,4%%date:~-7,2%%date:~-10,2%
+set DATE1=%date:~-4,4%%date:~-10,2%%date:~-7,2%
 ::german system
 ::set DATE1=%date:~-4,4%%date:~-10,2%%date:~-7,2%
 ::echo %DATE1%
@@ -26,11 +26,9 @@ echo Building KaVE Feedback Generator @ %TIMESTAMP%...
 :: uncomment the following to build as part of the script
 ::msbuild /consoleloggerparameters:NoItemAndPropertyList KaVE.Feedback.sln
 
-set TARGET=<select local folder>
+set TARGET=C:\path\to\ReSharperDebugFeed\
 
-::C:\Users\Sven\Downloads\
-nuget.exe pack KaVE.Project.0.0.1-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 1.0.0-v%TIMESTAMP%
-
+nuget.exe pack KaVE.Project.nuspec -Version 1.0.0-v%TIMESTAMP% -Verbosity Detailed -NoPackageAnalysis
 
 echo Deploying into: %TARGET%
 move *.nupkg %TARGET%
