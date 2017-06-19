@@ -7,6 +7,9 @@
 *.sln.docstates
 
 /packaging/package-and-deploy.bat
+**/adhoc_test_snippet.*
+**/*.orig
+
 
 # Build results
 [Dd]ebug/
