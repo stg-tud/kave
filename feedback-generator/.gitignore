@@ -6,7 +6,7 @@
 *.user
 *.sln.docstates
 
-/package-and-deploy.bat
+/packaging/package-and-deploy.bat
 
 # Build results
 [Dd]ebug/
