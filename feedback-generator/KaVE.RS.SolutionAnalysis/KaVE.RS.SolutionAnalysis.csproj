@@ -430,11 +430,7 @@
     <Compile Include="UserStatistics\UserStatsRunner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\KaVE.licenseheader">
-      <Link>KaVE.licenseheader</Link>
-    </None>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.FeedbackProcessor\KaVE.FeedbackProcessor.csproj">

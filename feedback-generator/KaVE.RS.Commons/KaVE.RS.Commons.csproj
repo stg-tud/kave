@@ -440,11 +440,7 @@
     <Compile Include="Utils\XamlFormattingUtil.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\KaVE.licenseheader">
-      <Link>KaVE.licenseheader</Link>
-    </None>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Messages.resx">
