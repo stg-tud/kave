@@ -22,9 +22,8 @@
     <files>
         <!-- KaVE Commons + dependency -->
         <file src="../KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="DotFiles" />
-
-        <!-- antlr4 -->
-        <!-- smilenet -->
+        <file src="../KaVE.VS.FeedbackGenerator\bin\Debug\Antlr4.Runtime.Standard.dll" target="DotFiles" />
+        <file src="../KaVE.VS.FeedbackGenerator\bin\Debug\smilenet.dll" target="DotFiles" />
 
         <!-- KaVE FeedBaG -->
         <file src="../KaVE.VS.FeedbackGenerator\bin\Debug\de\*.resources.dll" target="DotFiles\de" />
