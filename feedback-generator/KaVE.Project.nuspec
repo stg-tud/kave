@@ -1,17 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+<package>
     <metadata>
         <id>KaVE.Project</id>
-        <version>1.0.0-alpha1</version>
+        <version>$version$</version>
         <title>KaVE Project</title>
-        <authors>KaVE Team</authors>
-        <owners>Technische Universitaet Darmstadt</owners>
-        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
-        <projectUrl>http://kave.cc/</projectUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        
         <description>Intelligent Code Completion for Visual Studio. Support research and share information about how you use Visual Studio.</description>
-        <releaseNotes></releaseNotes>
-        <copyright>Copyright 2013-2017</copyright>
+        <authors>KaVE Team</authors>
+        <owners>KaVE Team</owners>
+        <copyright>Copyright 2011-2017</copyright>
+
+        <projectUrl>http://kave.cc/</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/kave-cc/resources/master/images/logo-nuget.png</iconUrl>
+        <licenseUrl>https://github.com/kave-cc/resources/blob/master/LICENSE</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+
         <dependencies>
             <dependency id="Wave" version="[8.0]" />
         </dependencies>
@@ -19,7 +22,8 @@
     <files>
         <!-- KaVE Commons + dependency -->
         <file src="packages\KaVE.Commons" target="DotFiles\de" />
-        
+        <!-- antlr4 -->
+        <!-- smilenet -->
 
         <!-- KaVE FeedBaG -->
         <file src="KaVE.VS.FeedbackGenerator\bin\Debug\de\*.resources.dll" target="DotFiles\de" />
